@@ -19,7 +19,8 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
  */
 final class EnrollmentManagerNotice
 {
-    public function __construct(private readonly DatabaseInterface $db) {
+    public function __construct(private readonly DatabaseInterface $db)
+    {
     }
 
     /** The roster service is the authorization source for every proposed recipient. */
@@ -49,8 +50,10 @@ final class EnrollmentManagerNotice
         }
         $grantGroups = [];
         foreach ($groups as $group) {
-            if (Access::checkGroup((int) $group, 'jlms.enrollments.manage', 'com_jlms.course.' . $courseId)
-                || Access::checkGroup((int) $group, 'core.manage', 'com_jlms')) {
+            if (
+                Access::checkGroup((int) $group, 'jlms.enrollments.manage', 'com_jlms.course.' . $courseId)
+                || Access::checkGroup((int) $group, 'core.manage', 'com_jlms')
+            ) {
                 $grantGroups[] = (int) $group;
             }
         }
@@ -127,8 +130,10 @@ final class EnrollmentManagerNotice
                     $q = $this->db->createQuery()->select('name,email,params,block')
                         ->from('#__users')->where('id = :user')->bind(':user', $userId, ParameterType::INTEGER);
                     $recipient = $this->db->setQuery($q)->loadObject();
-                    if (!$recipient || (int) $recipient->block !== 0
-                        || !filter_var((string) $recipient->email, FILTER_VALIDATE_EMAIL)) {
+                    if (
+                        !$recipient || (int) $recipient->block !== 0
+                        || !filter_var((string) $recipient->email, FILTER_VALIDATE_EMAIL)
+                    ) {
                         continue;
                     }
                     $params = json_decode((string) ($recipient->params ?: '{}'), true);
@@ -140,9 +145,13 @@ final class EnrollmentManagerNotice
                     $name = trim((string) $recipient->name);
                     $courseTitle = (string) $request->course_title;
                     $siteName = (string) Factory::getApplication()->get('sitename');
-                    $queue->enqueue($courseId,
+                    $queue->enqueue(
+                        $courseId,
                         hash('sha256', 'enrollment.manager.request:' . (int) $request->request_id . ':' . $userId),
-                        'com_jlms.enrollment.manager_request', $language, (string) $recipient->email, $name,
+                        'com_jlms.enrollment.manager_request',
+                        $language,
+                        (string) $recipient->email,
+                        $name,
                         [
                             'REQUEST_ID' => (string) (int) $request->request_id,
                             'USER_FULLNAME' => $name,
@@ -152,7 +161,9 @@ final class EnrollmentManagerNotice
                             'COURSE_MANAGEMENT_URL' => Uri::root() . 'administrator/index.php?option=com_jlms&view=enrollments&id=' . $courseId,
                             'SITE_NAME' => $siteName,
                             'SITE_NAME_HTML' => htmlspecialchars($siteName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                        ], $userId);
+                        ],
+                        $userId
+                    );
                     ++$queued;
                 }
             } catch (\Throwable) {

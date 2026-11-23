@@ -1,13 +1,16 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Component\ComponentHelper;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+
 final class ManualenrollmentModel extends FormModel
 {
     public function getForm($data = [], $loadData = true)

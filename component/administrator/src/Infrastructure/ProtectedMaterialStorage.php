@@ -210,10 +210,12 @@ final class ProtectedMaterialStorage
     public function stageGeneratedPdf(string $pdf): array
     {
         $size = strlen($pdf);
-        if ($size < 32 || $size > $this->limit()
+        if (
+            $size < 32 || $size > $this->limit()
             || !str_starts_with($pdf, '%PDF-')
             || !str_contains(substr($pdf, -1024), '%%EOF')
-            || (new \finfo(FILEINFO_MIME_TYPE))->buffer($pdf) !== 'application/pdf') {
+            || (new \finfo(FILEINFO_MIME_TYPE))->buffer($pdf) !== 'application/pdf'
+        ) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
 
@@ -265,8 +267,10 @@ final class ProtectedMaterialStorage
 
     public function open(object $asset)
     {
-        if (($asset->storage ?? '') !== 'local'
-            || preg_match('/\\A[a-f0-9]{64}\\.(?:blob|php)\\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
+        if (
+            ($asset->storage ?? '') !== 'local'
+            || preg_match('/\\A[a-f0-9]{64}\\.(?:blob|php)\\z/D', (string) ($asset->storage_key ?? '')) !== 1
+        ) {
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $managed = str_ends_with($asset->storage_key, '.php');
@@ -292,14 +296,18 @@ final class ProtectedMaterialStorage
                 $iv = fread($handle, 12);
                 $tag = fread($handle, 16);
                 $encrypted = stream_get_contents($handle, MaterialFilePolicy::MAX_BYTES + 1);
-                if ($prefix !== self::GUARDED_HEADER || strlen((string) $iv) !== 12
+                if (
+                    $prefix !== self::GUARDED_HEADER || strlen((string) $iv) !== 12
                     || strlen((string) $tag) !== 16 || $encrypted === false
-                    || strlen($encrypted) !== (int) $asset->byte_size) {
+                    || strlen($encrypted) !== (int) $asset->byte_size
+                ) {
                     throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                 }
                 $plain = openssl_decrypt($encrypted, 'aes-256-gcm', $this->encryptionKey(), OPENSSL_RAW_DATA, $iv, $tag);
-                if (!is_string($plain) || strlen($plain) !== (int) $asset->byte_size
-                    || !hash_equals((string) $asset->sha256, hash('sha256', $plain))) {
+                if (
+                    !is_string($plain) || strlen($plain) !== (int) $asset->byte_size
+                    || !hash_equals((string) $asset->sha256, hash('sha256', $plain))
+                ) {
                     throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                 }
                 $decoded = fopen('php://temp/maxmemory:1048576', 'w+b');
@@ -332,8 +340,10 @@ final class ProtectedMaterialStorage
     /** Remove only an immutable blob addressed by its validated random key. */
     public function remove(object $asset): bool
     {
-        if (($asset->storage ?? '') !== 'local'
-            || preg_match('/\\A[a-f0-9]{64}\\.(?:blob|php)\\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
+        if (
+            ($asset->storage ?? '') !== 'local'
+            || preg_match('/\\A[a-f0-9]{64}\\.(?:blob|php)\\z/D', (string) ($asset->storage_key ?? '')) !== 1
+        ) {
             return false;
         }
         if (str_ends_with($asset->storage_key, '.php') && !$this->managed()) {

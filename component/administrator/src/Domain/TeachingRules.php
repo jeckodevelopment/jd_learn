@@ -21,14 +21,16 @@ final class TeachingRules
         $mode = $rules['mode'] ?? 'learning';
         $completionPolicy = $rules['completion_policy'] ?? '';
         $publicPreviews = $rules['public_previews'] ?? false;
-        if (($rules['_schema'] ?? 1) !== 1 || !in_array($mode, ['learning', 'consultation'], true)
+        if (
+            ($rules['_schema'] ?? 1) !== 1 || !in_array($mode, ['learning', 'consultation'], true)
             || !in_array(($rules['sequence_mode'] ?? ''), ['free', 'sequential'], true)
             || !is_bool($rules['certificate_enabled'] ?? null)
             || ($mode === 'consultation' && $rules['certificate_enabled'] !== false)
             || ($mode === 'learning' && $completionPolicy !== 'all_required')
             || ($mode === 'consultation' && ($completionPolicy !== 'none' || ($rules['sequence_mode'] ?? '') !== 'free'))
             || !is_int($threshold) || $threshold < 1 || $threshold > 10000
-            || !is_bool($publicPreviews)) {
+            || !is_bool($publicPreviews)
+        ) {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         $rules['video_threshold_basis_points'] = $threshold;
@@ -38,8 +40,10 @@ final class TeachingRules
 
     public static function basisPoints(mixed $value): int
     {
-        if ((!is_string($value) && !is_int($value))
-            || preg_match('/\A([0-9]{1,3})(?:\.([0-9]{1,2}))?\z/D', (string)$value, $parts) !== 1) {
+        if (
+            (!is_string($value) && !is_int($value))
+            || preg_match('/\A([0-9]{1,3})(?:\.([0-9]{1,2}))?\z/D', (string)$value, $parts) !== 1
+        ) {
             throw new \DomainException('COM_JLMS_TEACHING_THRESHOLD_INVALID');
         }
         $result = (int)$parts[1] * 100 + (int)str_pad($parts[2] ?? '', 2, '0');

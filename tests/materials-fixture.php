@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -112,10 +112,12 @@ if ($mode === 'cleanup') {
         throw new \RuntimeException('Private material storage is not configured.');
     }
     $now = gmdate('Y-m-d H:i:s');
-    $createOrphan = static function(int $ageHours)use($db,$rootPath,$userId,$now):array{
+    $createOrphan = static function (int $ageHours) use ($db, $rootPath, $userId, $now): array {
         $key = bin2hex(random_bytes(32)) . '.blob';
         $blob = $rootPath . DIRECTORY_SEPARATOR . $key;
-        if (file_put_contents($blob, 'orphan-fixture-' . $ageHours) === false)throw new \RuntimeException('Could not create private cleanup fixture.');
+        if (file_put_contents($blob, 'orphan-fixture-' . $ageHours) === false) {
+            throw new \RuntimeException('Could not create private cleanup fixture.');
+        }
         chmod($blob, 0600);
         $asset = (object)['storage' => 'local','storage_key' => $key,'sha256' => hash_file('sha256', $blob),'byte_size' => filesize($blob),
             'mime_type' => 'text/plain','original_name' => 'orphan.txt','asset_revision' => 1,'status' => 'ready','scan_json' => '{}',
@@ -138,8 +140,10 @@ if ($mode === 'cleanup') {
     $expiredRemaining = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id=' . $expiredId)->loadResult();
     $retainedRemaining = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id=' . $retainedId)->loadResult();
     $attached = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id=' . (int)$fixture['version_id'])->loadResult();
-    if (($event->getResultSnapshot()['status'] ?? null) !== \Joomla\Component\Scheduler\Administrator\Task\Status::OK
-        || $expiredRemaining !== 0 || $retainedRemaining !== 1 || is_file($expiredBlob) || !is_file($retainedBlob) || $attached < 1) {
+    if (
+        ($event->getResultSnapshot()['status'] ?? null) !== \Joomla\Component\Scheduler\Administrator\Task\Status::OK
+        || $expiredRemaining !== 0 || $retainedRemaining !== 1 || is_file($expiredBlob) || !is_file($retainedBlob) || $attached < 1
+    ) {
         throw new \RuntimeException('Scheduled cleanup must apply the configured retention window to unreferenced assets.');
     }
     $db->setQuery('DELETE FROM #__jlms_assets WHERE id=' . $retainedId)->execute();
@@ -172,8 +176,10 @@ $level = (int)$db->setQuery('SELECT content_access FROM #__jlms_courses WHERE id
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $fixture = [];
 foreach (['materials-fixture','materials-foreign'] as $alias) {
-    if (!$model->save(['id' => 0,'revision' => 1,'title' => $alias,'alias' => $alias,'catid' => $catid,'language' => '*',
-        'catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Protected materials fixture'])) {
+    if (
+        !$model->save(['id' => 0,'revision' => 1,'title' => $alias,'alias' => $alias,'catid' => $catid,'language' => '*',
+        'catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Protected materials fixture'])
+    ) {
         throw new \RuntimeException($model->getError());
     }
     $courseId = (int)$model->getState('course.id');

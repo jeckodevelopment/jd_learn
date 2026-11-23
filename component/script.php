@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
@@ -18,8 +17,10 @@ final class Com_JlmsInstallerScript
         if ($type === 'uninstall') {
             return true;
         }
-        if (PHP_VERSION_ID < 80300 || PHP_INT_SIZE < 8 || version_compare(JVERSION, '6.0.0', '<')
-            || version_compare(JVERSION, '7.0.0', '>=')) {
+        if (
+            PHP_VERSION_ID < 80300 || PHP_INT_SIZE < 8 || version_compare(JVERSION, '6.0.0', '<')
+            || version_compare(JVERSION, '7.0.0', '>=')
+        ) {
             throw new \RuntimeException('JD Learn requires Joomla 6 and 64-bit PHP 8.3+.');
         }
         if (!is_file(JPATH_LIBRARIES . '/jlms/bootstrap.php')) {

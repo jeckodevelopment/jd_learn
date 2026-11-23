@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
@@ -39,7 +41,7 @@ use Joomla\CMS\Router\Route;
    <p><?= $this->escape($recent['title'] !== '' ? $recent['title'] : Text::_('COM_JLMS_DASHBOARD_HISTORICAL_COURSE')) ?></p>
         <?php if ($recent['percent'] !== null) : ?>
     <p><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $recent['percent'] ?>%</p>
-   <?php endif; ?>
+        <?php endif; ?>
    <a id="jlms-dashboard-resume" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $recent['id']) ?>"><?= Text::_('COM_JLMS_DASHBOARD_RESUME') ?></a>
   </section>
  <?php endif; ?>

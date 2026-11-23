@@ -39,11 +39,13 @@ final class CatalogOptions
         $value = in_array($global, $allowed, true) ? $global : self::DEFAULTS[$key];
 
         $menu = Factory::getApplication()->getMenu()->getActive();
-        if ($menu && ($menu->query['option'] ?? '') === 'com_jlms'
+        if (
+            $menu && ($menu->query['option'] ?? '') === 'com_jlms'
             && (($menu->query['view'] ?? '') === 'courses'
                 || (($menu->query['view'] ?? '') === 'category'
                     && (int) ($menu->query['id'] ?? 0) > 0
-                    && (int) ($menu->query['id'] ?? 0) === Factory::getApplication()->getInput()->getInt('id', 0)))) {
+                    && (int) ($menu->query['id'] ?? 0) === Factory::getApplication()->getInput()->getInt('id', 0)))
+        ) {
             $local = (string) $menu->getParams()->get($key, '');
             if (in_array($local, $allowed, true)) {
                 $value = $local;

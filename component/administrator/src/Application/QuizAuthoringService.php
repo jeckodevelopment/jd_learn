@@ -12,7 +12,8 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 /** Draft authoring only: no publication, attempts, grades or student credit. */
 final class QuizAuthoringService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning) {
+    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning)
+    {
     }
 
     private function row(string $table, int $id, bool $lock = false): object
@@ -30,8 +31,10 @@ final class QuizAuthoringService
         $c = $this->row('courses', $course, $lock);
         $asset = 'com_jlms.course.' . $course;
         $own = (int) $c->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset);
-        if (!$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.quiz.manage', $asset)
-            || (!$actor->authorise('core.edit', $asset) && !$own)) {
+        if (
+            !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.quiz.manage', $asset)
+            || (!$actor->authorise('core.edit', $asset) && !$own)
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $v = $this->row('course_versions', $version, $lock);
@@ -105,9 +108,11 @@ final class QuizAuthoringService
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $threshold = (int) $match[1] * 100 + (int) str_pad($match[2] ?? '', 2, '0');
-        if ($threshold > 10000 || !in_array($assessment, ['graded', 'practice'], true) || ($required && ($assessment !== 'graded' || $threshold === 0))
+        if (
+            $threshold > 10000 || !in_array($assessment, ['graded', 'practice'], true) || ($required && ($assessment !== 'graded' || $threshold === 0))
             || !in_array($selectionMode, ['fixed', 'random'], true) || !in_array($feedback, ['pass_or_exhausted', 'never', 'after_submit'], true)
-            || ($assessment === 'graded' && $feedback === 'after_submit')) {
+            || ($assessment === 'graded' && $feedback === 'after_submit')
+        ) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         }
         $attempts = QuestionDefinition::integer($input['max_attempts'] ?? 3, 0, 100);
@@ -148,8 +153,10 @@ final class QuizAuthoringService
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
                 $category = $this->row('categories', (int) $question->catid);
-                if ((int) $question->state !== 1 || (int) $category->published !== 1 || $category->extension !== 'com_jlms.question'
-                    || !in_array($question->language, ['*', $c->language], true)) {
+                if (
+                    (int) $question->state !== 1 || (int) $category->published !== 1 || $category->extension !== 'com_jlms.question'
+                    || !in_array($question->language, ['*', $c->language], true)
+                ) {
                     throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
                 }
                 $grading = json_decode($content->grading_json, true, 16, JSON_THROW_ON_ERROR);
@@ -251,5 +258,4 @@ final class QuizAuthoringService
             throw $error;
         }
     }
-
 }

@@ -18,7 +18,8 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
  */
 final class LessonReleaseNotice
 {
-    public function __construct(private readonly DatabaseInterface $db) {
+    public function __construct(private readonly DatabaseInterface $db)
+    {
     }
 
     /** @return array{queued:int,failed:int,processed:int} */
@@ -73,11 +74,13 @@ final class LessonReleaseNotice
             }
             try {
                 $effective = LessonAvailability::effectiveStart($row->publish_up, $row->release_after_days, $row->started_at);
-                if ($effective === null || $effective > $now || $effective <= $window ||
+                if (
+                    $effective === null || $effective > $now || $effective <= $window ||
                     $effective <= new \DateTimeImmutable((string) $row->enrolled_at, new \DateTimeZone('UTC')) ||
                     $effective <= new \DateTimeImmutable((string) $row->published_at, new \DateTimeZone('UTC')) ||
                     LessonAvailability::state($row->publish_up, $row->publish_down, $row->release_after_days, $row->started_at, $now) !== 'available' ||
-                    !filter_var((string) $row->learner_email, FILTER_VALIDATE_EMAIL)) {
+                    !filter_var((string) $row->learner_email, FILTER_VALIDATE_EMAIL)
+                ) {
                     continue;
                 }
                 $params = json_decode((string) $row->learner_params ?: '{}', true);
@@ -87,9 +90,14 @@ final class LessonReleaseNotice
                     $language = 'en-GB';
                 }
                 $name = trim((string) $row->learner_name);
-                $queue->enqueue((int) $row->course_id,
+                $queue->enqueue(
+                    (int) $row->course_id,
                     hash('sha256', 'lesson.available:' . (int) $row->enrollment_id . ':' . (int) $row->lesson_id),
-                    'com_jlms.lesson.available', $language, (string) $row->learner_email, $name, [
+                    'com_jlms.lesson.available',
+                    $language,
+                    (string) $row->learner_email,
+                    $name,
+                    [
                         'ENROLLMENT_ID' => (string) (int) $row->enrollment_id,
                         'LESSON_ID' => (string) (int) $row->lesson_id,
                         'USER_FULLNAME' => $name,
@@ -101,7 +109,9 @@ final class LessonReleaseNotice
                         'DASHBOARD_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard',
                         'SITE_NAME' => (string) Factory::getApplication()->get('sitename'),
                         'SITE_NAME_HTML' => htmlspecialchars((string) Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                    ], (int) $row->user_id);
+                    ],
+                    (int) $row->user_id
+                );
                 ++$queued;
             } catch (\Throwable) {
                 ++$failed;

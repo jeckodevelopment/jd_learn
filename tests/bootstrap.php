@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 \define('_JEXEC', 1);
 require_once dirname(__DIR__) . '/libraries/jlms/bootstrap.php';
 spl_autoload_register(static function (string $class): void {

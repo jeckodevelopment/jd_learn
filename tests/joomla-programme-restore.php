@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -66,7 +66,7 @@ $factory = $component->getMVCFactory();
 require __DIR__ . '/cloudflare-fixture.php';
 [$config,$secrets,$transport,$remote] = cloudflareFixture();
 $vimeoEnabled = true;
-$registryFactory = static function () use ($config,$secrets,$transport,&$vimeoEnabled): VideoProviderRegistry {
+$registryFactory = static function () use ($config, $secrets, $transport, &$vimeoEnabled): VideoProviderRegistry {
     $registry = new VideoProviderRegistry();
     foreach ([new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider($vimeoEnabled),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
         $registry->register($provider->getDescriptor(), static fn()=>$provider);
@@ -74,28 +74,35 @@ $registryFactory = static function () use ($config,$secrets,$transport,&$vimeoEn
     return $registry;
 };
 \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->set('video_external_policy', 'embed');
-$authoring = new \Jlms\Component\Jlms\Administrator\Application\CurriculumService($db, static fn(string $body):string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), $registryFactory);
+$authoring = new \Jlms\Component\Jlms\Administrator\Application\CurriculumService($db, static fn(string $body): string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), $registryFactory);
 $component->setCurriculumService($authoring);
 $publication = $component->getPublicationService();
 $actor = $app->getIdentity();
 $checks = 0;
-function restoreExpect(bool $ok,string $message): void {global $checks;
-    if (!$ok)throw new RuntimeException($message);
+function restoreExpect(bool $ok, string $message): void
+{
+    global $checks;
+    if (!$ok) {
+        throw new RuntimeException($message);
+    }
     $checks++;
 }
-function restoreDenied(callable $work,string $key): void {try {
+function restoreDenied(callable $work, string $key): void
+{
+    try {
         $work();
-
-} catch (\DomainException | \RuntimeException $e) {
-    restoreExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
-    return;
-
-}throw new RuntimeException('Expected rejection ' . $key);
+    } catch (\DomainException | \RuntimeException $e) {
+        restoreExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
+        return;
+    }throw new RuntimeException('Expected rejection ' . $key);
 }
-function restoreRow(string $table,int $id): object {global $db;
+function restoreRow(string $table, int $id): object
+{
+    global $db;
     return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
-function restoreLearning(): array {
+function restoreLearning(): array
+{
     global $db;
  // Preserve complete rows, not only counts: a restore must not change issued
  // certificates, their original enrollment/version references or PDF metadata.
@@ -112,7 +119,8 @@ function restoreLearning(): array {
     }
     return $snapshot;
 }
-function restoreTree(int $id): array {
+function restoreTree(int $id): array
+{
     global $db;
     $out = ['version' => (array)restoreRow('course_versions', $id)];
     foreach (['modules','lessons','quizzes','attachments'] as $table) {
@@ -168,14 +176,14 @@ $course = $model->duplicate(['course_id' => $source,'version_id' => $original->i
 $copy = $model->getItem($course);
 restoreExpect($model->save(['id' => $course,'revision' => $copy->revision,'catalog_access' => 1,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent fixture has explicit learner access');
 $version = (int)$authoring->outline($actor, $course)['version']->id;
-$scope = static function()use($course,&$version):array{return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => restoreRow('course_versions', $version)->revision];
-
+$scope = static function () use ($course, &$version): array {
+    return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => restoreRow('course_versions', $version)->revision];
 };
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
 foreach (['youtube' => 'dQw4w9WgXcQ','vimeo' => '123456789','cloudflarestream' => str_repeat('b', 32)] as $key => $reference) {
     $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Historical ' . $key,'kind' => 'video','required' => '0','body' => '','provider_key' => $key,'source_reference' => $reference,'privacy_hash' => $key === 'vimeo' ? 'abcdef1234' : '','duration_seconds' => '10','duration_confirmed' => '1']);
 }
-$publish = static function(int $target)use($publication,$actor,$course):void{
+$publish = static function (int $target) use ($publication, $actor, $course): void {
     $transition = (int)$publication->transitions($actor, $course, $target)[0]->id;
     $impact = $publication->updateImpact($actor, $course, $target, $transition);
     $publication->transition($actor, $course, $target, (int)restoreRow('courses', $course)->revision, (int)restoreRow('course_versions', $target)->revision, $transition, $impact['fingerprint'] ?? null);
@@ -210,9 +218,11 @@ $db->setQuery('UPDATE #__jlms_certificates SET current_document_id=' . (int)$his
  ' WHERE id=' . (int)$historyCertificate->id)->execute();
 $certificateBefore = (array)restoreRow('certificates', (int)$historyCertificate->id);
 $documentBefore = (array)restoreRow('certificate_documents', (int)$historyDocument->id);
-restoreExpect((int)$documentBefore['certificate_id'] === (int)$historyCertificate->id
- && (int)$certificateBefore['course_version_id'] === $historical,
- 'Historical certificate and document are owned by the original course version');
+restoreExpect(
+    (int)$documentBefore['certificate_id'] === (int)$historyCertificate->id
+    && (int)$certificateBefore['course_version_id'] === $historical,
+    'Historical certificate and document are owned by the original course version'
+);
 $version = $authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision);
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
 $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Current additional text','kind' => 'text','required' => '0','body' => '<p>Current edition</p>']);
@@ -236,7 +246,6 @@ foreach ([['courses',$course],['course_versions',$historical]] as [$table,$id]) 
     $db->updateObject('#__jlms_' . $table, $locked, 'id', true);
     try {
         restoreDenied(fn()=>$authoring->restoreVersion($actor, $input), 'JERROR_ALERTNOAUTHOR');
-
     } finally {
         $locked->checked_out = $old;
         $db->updateObject('#__jlms_' . $table, $locked, 'id', true);
@@ -255,7 +264,9 @@ foreach (['modules','lessons','quizzes','attachments'] as $table) {
     foreach ($old as $i => $row) {
         restoreExpect($row['id'] !== $new[$i]['id'], 'Fresh physical ' . $table . ' identifier');
         foreach (['asset_id','title','state','logical_key','provider_key','source_json','params_json','duration_ms','required','kind','body','source_revision'] as $field) {
-            if (array_key_exists($field, $row))restoreExpect($row[$field] === $new[$i][$field], 'Preserved ' . $table . ' ' . $field);
+            if (array_key_exists($field, $row)) {
+                restoreExpect($row[$field] === $new[$i][$field], 'Preserved ' . $table . ' ' . $field);
+            }
         }
     }
 }
@@ -272,9 +283,11 @@ foreach (['revision','modified_at','modified_by'] as $field) {
 }
 restoreExpect($courseBefore == $courseAfter, 'Course presentation, teachers, access, state and current pointer are preserved');
 restoreExpect(restoreLearning() === $before && (int)restoreRow('enrollments', $enrollment)->course_version_id === $historical, 'Recovery leaves all learning history unchanged');
-restoreExpect((array)restoreRow('certificates', (int)$historyCertificate->id) === $certificateBefore
- && (array)restoreRow('certificate_documents', (int)$historyDocument->id) === $documentBefore,
- 'Restore does not alter original certificate, serial or document snapshots');
+restoreExpect(
+    (array)restoreRow('certificates', (int)$historyCertificate->id) === $certificateBefore
+    && (array)restoreRow('certificate_documents', (int)$historyDocument->id) === $documentBefore,
+    'Restore does not alter original certificate, serial or document snapshots'
+);
 restoreExpect($authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision) === $target, 'Edit programme deterministically reuses newest draft');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, $input), 'COM_JLMS_REVISION_CONFLICT');
 restoreExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id=' . $course)->loadResult() === 4, 'Stale replay creates no second recovery');

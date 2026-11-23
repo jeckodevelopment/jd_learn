@@ -44,20 +44,43 @@ final class MaterialController extends BaseController
             $revision = CurriculumService::id($data['expected_version_revision'] ?? null);
             $service = $this->app->bootComponent('com_jlms')->getMaterialService();
             if ($operation === 'reuse') {
-                $service->reuse($this->app->getIdentity(), $courseId, $versionId, $revision,
-                    CurriculumService::id($data['id'] ?? null), CurriculumService::id($data['target_lesson_id'] ?? 0, true));
+                $service->reuse(
+                    $this->app->getIdentity(),
+                    $courseId,
+                    $versionId,
+                    $revision,
+                    CurriculumService::id($data['id'] ?? null),
+                    CurriculumService::id($data['target_lesson_id'] ?? 0, true)
+                );
             } elseif ($operation === 'upload') {
                 if (!is_string($data['title'] ?? null) || !is_string($data['description'] ?? '')) {
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
                 $files = $this->input->files->get('jform', [], 'array');
-                $service->upload($this->app->getIdentity(), $courseId, $versionId,
-                    CurriculumService::id($data['lesson_id'] ?? 0, true), $revision, $data['title'], $data['description'] ?? '',
-                    $files['upload'] ?? [], CurriculumService::id($data['replace_id'] ?? 0, true),
-                    $data['publish_up'] ?? null, $data['publish_down'] ?? null, $data['preview'] ?? 0);
+                $service->upload(
+                    $this->app->getIdentity(),
+                    $courseId,
+                    $versionId,
+                    CurriculumService::id($data['lesson_id'] ?? 0, true),
+                    $revision,
+                    $data['title'],
+                    $data['description'] ?? '',
+                    $files['upload'] ?? [],
+                    CurriculumService::id($data['replace_id'] ?? 0, true),
+                    $data['publish_up'] ?? null,
+                    $data['publish_down'] ?? null,
+                    $data['preview'] ?? 0
+                );
             } else {
-                $service->mutate($this->app->getIdentity(), $courseId, $versionId,
-                    CurriculumService::id($data['id'] ?? null), $revision, $operation, $data);
+                $service->mutate(
+                    $this->app->getIdentity(),
+                    $courseId,
+                    $versionId,
+                    CurriculumService::id($data['id'] ?? null),
+                    $revision,
+                    $operation,
+                    $data
+                );
             }
             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=materials&id=' . $courseId . '&version_id=' . $versionId, false));
         } catch (\Throwable $error) {
@@ -80,15 +103,25 @@ final class MaterialController extends BaseController
         throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
     }
 
-    public function upload(): void { $this->perform('upload');
+    public function upload(): void
+    {
+        $this->perform('upload');
     }
-    public function reuse(): void { $this->perform('reuse');
+    public function reuse(): void
+    {
+        $this->perform('reuse');
     }
-    public function save(): void { $this->perform('save');
+    public function save(): void
+    {
+        $this->perform('save');
     }
-    public function delete(): void { $this->perform('delete');
+    public function delete(): void
+    {
+        $this->perform('delete');
     }
-    public function scan(): void { $this->perform('scan');
+    public function scan(): void
+    {
+        $this->perform('scan');
     }
 
     public function download(): void
@@ -97,8 +130,12 @@ final class MaterialController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
-            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->adminDownload($this->app->getIdentity(),
-                $this->input->getInt('course_id', 0), $this->input->getInt('version_id', 0), $this->input->getInt('id', 0));
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->adminDownload(
+                $this->app->getIdentity(),
+                $this->input->getInt('course_id', 0),
+                $this->input->getInt('version_id', 0),
+                $this->input->getInt('id', 0)
+            );
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $this->failure($error);

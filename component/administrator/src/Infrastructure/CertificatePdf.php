@@ -37,8 +37,13 @@ final class CertificatePdf
             $fit = min(104 / $imageWidth, 48 / $imageHeight);
             $drawWidth = $imageWidth * $fit;
             $drawHeight = $imageHeight * $fit;
-            $content .= sprintf("q %.3F 0 0 %.3F %.3F %.3F cm /Logo Do Q\n", $drawWidth, $drawHeight,
-                (self::WIDTH - $drawWidth) / 2, 512 - ($drawHeight / 2));
+            $content .= sprintf(
+                "q %.3F 0 0 %.3F %.3F %.3F cm /Logo Do Q\n",
+                $drawWidth,
+                $drawHeight,
+                (self::WIDTH - $drawWidth) / 2,
+                512 - ($drawHeight / 2)
+            );
         }
 
         $content .= self::center($heading, 457, 25, $accent, true);
@@ -129,8 +134,10 @@ final class CertificatePdf
         foreach ($lines as $index => $line) {
             $x = max(54, (self::WIDTH - strlen($line) * $size * 0.48) / 2);
             $lineY = $y - ($index * ($size + 7));
-            $output .= sprintf("%.4F %.4F %.4F rg BT /%s %.2F Tf %.2F %.2F Td (%s) Tj ET\n",
-                ...[...$color, $bold ? 'F2' : 'F1', $size, $x, $lineY, self::escape($line)]);
+            $output .= sprintf(
+                "%.4F %.4F %.4F rg BT /%s %.2F Tf %.2F %.2F Td (%s) Tj ET\n",
+                ...[...$color, $bold ? 'F2' : 'F1', $size, $x, $lineY, self::escape($line)]
+            );
         }
         return $output;
     }
@@ -162,8 +169,10 @@ final class CertificatePdf
         }
         $info = @getimagesize($path);
         $bytes = @file_get_contents($path);
-        if (!$info || !is_string($bytes) || strlen($bytes) !== $size
-            || $info[0] < 1 || $info[1] < 1 || $info[0] > 4000 || $info[1] > 4000) {
+        if (
+            !$info || !is_string($bytes) || strlen($bytes) !== $size
+            || $info[0] < 1 || $info[1] < 1 || $info[0] > 4000 || $info[1] > 4000
+        ) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
         $mime = (string) ($info['mime'] ?? '');
@@ -181,8 +190,10 @@ final class CertificatePdf
             'image/avif' => 'imagecreatefromavif',
         ];
         $decoder = $decoders[$mime] ?? '';
-        if (!function_exists($decoder) || !function_exists('imagecreatetruecolor')
-            || !function_exists('imagejpeg')) {
+        if (
+            !function_exists($decoder) || !function_exists('imagecreatetruecolor')
+            || !function_exists('imagejpeg')
+        ) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
         $source = @$decoder($path);
@@ -220,5 +231,4 @@ final class CertificatePdf
             imagedestroy($canvas);
         }
     }
-
 }

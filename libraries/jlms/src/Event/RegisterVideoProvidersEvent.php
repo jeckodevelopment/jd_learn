@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Contracts\Event;
 
 use Joomla\Event\Event;

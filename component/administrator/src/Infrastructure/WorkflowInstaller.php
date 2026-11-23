@@ -81,17 +81,26 @@ final class WorkflowInstaller
         return (int) $db->setQuery($query)->loadResult();
     }
 
-    private static function ensureTransition(DatabaseInterface $db, int $workflow, string $title, int $from, int $to,
-        string $action, int $publishing, callable $save): void
-    {
+    private static function ensureTransition(
+        DatabaseInterface $db,
+        int $workflow,
+        string $title,
+        int $from,
+        int $to,
+        string $action,
+        int $publishing,
+        callable $save
+    ): void {
         $query = $db->createQuery()->select('id, options')->from($db->quoteName('#__workflow_transitions'))
             ->where('workflow_id = :workflow')->where('from_stage_id = :source')->where('to_stage_id = :target')
             ->where('title = :title')->bind(':workflow', $workflow)->bind(':source', $from)->bind(':target', $to)
             ->bind(':title', $title);
         foreach ($db->setQuery($query)->loadObjectList() as $transition) {
             $options = json_decode((string) $transition->options, true);
-            if (is_array($options) && ($options['jlms_action'] ?? null) === $action
-                && (int) ($options['publishing'] ?? -1) === $publishing) {
+            if (
+                is_array($options) && ($options['jlms_action'] ?? null) === $action
+                && (int) ($options['publishing'] ?? -1) === $publishing
+            ) {
                 return;
             }
         }

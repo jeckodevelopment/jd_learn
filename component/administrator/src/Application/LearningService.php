@@ -56,16 +56,23 @@ final class LearningService
     private static function window(object $record): void
     {
         $now = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s.u');
-        if (($record->starts_at !== null && $record->starts_at > $now)
-            || ($record->ends_at !== null && $record->ends_at <= $now)) {
+        if (
+            ($record->starts_at !== null && $record->starts_at > $now)
+            || ($record->ends_at !== null && $record->ends_at <= $now)
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
         }
     }
 
     /** Reject an admission whose required lessons cannot all fit before the known closing windows. */
-    public function assertEnrollmentScheduleReachable(int $courseId, int $versionId, int $editionId,
-        ?string $enrollmentStartsAt = null, ?string $enrollmentEndsAt = null, ?string $startedAt = null): void
-    {
+    public function assertEnrollmentScheduleReachable(
+        int $courseId,
+        int $versionId,
+        int $editionId,
+        ?string $enrollmentStartsAt = null,
+        ?string $enrollmentEndsAt = null,
+        ?string $startedAt = null
+    ): void {
         $course = $this->row('courses', $courseId);
         $edition = $this->row('editions', $editionId);
         if ((int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId) {
@@ -144,10 +151,12 @@ final class LearningService
         $course = $this->enrolledCourse($actor, $language, (int) $enrollment->course_id);
         $version = $this->row('course_versions', (int) $enrollment->course_version_id);
         $edition = $this->row('editions', (int) $enrollment->edition_id);
-        if (!in_array($enrollment->status, ['active', 'completed'], true)
+        if (
+            !in_array($enrollment->status, ['active', 'completed'], true)
             || $version->status !== 'published' || (int) $version->course_id !== (int) $course->id
             || (int) $edition->course_id !== (int) $course->id
-            || (int) $edition->course_version_id !== (int) $version->id || $edition->status !== 'open') {
+            || (int) $edition->course_version_id !== (int) $version->id || $edition->status !== 'open'
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         try {
@@ -251,8 +260,10 @@ final class LearningService
             $actor = $this->freshActor($actor);
             $this->course($actor, $language, $courseId);
             $current = $this->row('courses', $courseId);
-            if ($current->enrollment_mode !== 'approval' || (int) $current->current_version_id !== $versionId
-                || (int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId) {
+            if (
+                $current->enrollment_mode !== 'approval' || (int) $current->current_version_id !== $versionId
+                || (int) $edition->course_id !== $courseId || (int) $edition->course_version_id !== $versionId
+            ) {
                 throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
             }
             if ($edition->status !== 'open') {
@@ -289,10 +300,15 @@ final class LearningService
             $requestId = (int) $request->id;
             $name = trim((string) $actor->name);
             (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
-                $courseId, hash('sha256', 'enrollment.requested:' . $requestId), 'com_jlms.enrollment.requested',
-                (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
+                $courseId,
+                hash('sha256', 'enrollment.requested:' . $requestId),
+                'com_jlms.enrollment.requested',
+                (string) ($actor->getParam('language', '') ?: $current->language),
+                (string) $actor->email,
+                $name,
                 ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title,
-                    'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')], (int) $actor->id
+                    'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')],
+                (int) $actor->id
             );
             return $requestId;
         });
@@ -362,8 +378,13 @@ final class LearningService
                 if ($total < 1 && $mode !== 'consultation') {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
-                $this->assertEnrollmentScheduleReachable($courseId, $versionId, $editionId,
-                    $edition->starts_at, $edition->ends_at);
+                $this->assertEnrollmentScheduleReachable(
+                    $courseId,
+                    $versionId,
+                    $editionId,
+                    $edition->starts_at,
+                    $edition->ends_at
+                );
                 $now = gmdate('Y-m-d H:i:s');
                 $record = (object) ['user_id' => (int) $actor->id, 'subject_key' => $subject, 'course_id' => $courseId,
                     'course_version_id' => $versionId, 'edition_id' => $editionId, 'status' => 'active', 'origin' => 'start',
@@ -373,10 +394,15 @@ final class LearningService
                 $id = (int) $record->id;
                 $name = trim((string) $actor->name);
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
-                    $courseId, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
-                    (string) ($actor->getParam('language', '') ?: $current->language), (string) $actor->email, $name,
+                    $courseId,
+                    hash('sha256', 'enrollment.confirmed:' . $id),
+                    'com_jlms.enrollment.confirmed',
+                    (string) ($actor->getParam('language', '') ?: $current->language),
+                    (string) $actor->email,
+                    $name,
                     ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title, 'ENROLLMENT_DATE' => $now, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id], (int) $actor->id
+                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id],
+                    (int) $actor->id
                 );
             }
             $this->ledger($actor, 'enrollment.start', $key, ['course_id' => $courseId], $id);
@@ -411,8 +437,12 @@ final class LearningService
 
     private function assertLessonAvailable(object $lesson, object $enrollment): void
     {
-        $state = LessonAvailability::state($lesson->publish_up, $lesson->publish_down,
-            $lesson->release_after_days, $enrollment->started_at);
+        $state = LessonAvailability::state(
+            $lesson->publish_up,
+            $lesson->publish_down,
+            $lesson->release_after_days,
+            $enrollment->started_at
+        );
         if ($state === 'upcoming' || $state === 'awaiting_start') {
             throw new \RuntimeException('COM_JLMS_LESSON_NOT_YET_AVAILABLE', 403);
         }
@@ -616,10 +646,14 @@ final class LearningService
             }
         }
         $audioTranscript = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
-            LessonTranscript::decode((string) $lesson->kind, (string) ($lesson->params_json ?? '{}')), 'HTML');
+            LessonTranscript::decode((string) $lesson->kind, (string) ($lesson->params_json ?? '{}')),
+            'HTML'
+        );
         $videoTranscript = $lesson->kind === 'video'
             ? \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
-                LessonTranscript::decode('video', (string) ($lesson->params_json ?? '{}')), 'HTML')
+                LessonTranscript::decode('video', (string) ($lesson->params_json ?? '{}')),
+                'HTML'
+            )
             : '';
         $publicTeachers = TeacherProfiles::current($this->db, $actor, $language, (int) $course->id);
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
@@ -754,9 +788,14 @@ final class LearningService
         $course = (string) $this->db->setQuery($q)->loadResult();
         $name = trim((string) $actor->name);
         (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
-            $courseId, hash('sha256', 'course.completed:' . $enrollmentId), 'com_jlms.course.completed',
-            (string) ($actor->getParam('language', '') ?: $language), (string) $actor->email, $name,
-            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'COMPLETION_DATE' => $completedAt, 'DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard', 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')], (int) $actor->id
+            $courseId,
+            hash('sha256', 'course.completed:' . $enrollmentId),
+            'com_jlms.course.completed',
+            (string) ($actor->getParam('language', '') ?: $language),
+            (string) $actor->email,
+            $name,
+            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'COMPLETION_DATE' => $completedAt, 'DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard', 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')],
+            (int) $actor->id
         );
     }
 
@@ -773,8 +812,13 @@ final class LearningService
             if (!in_array($lesson->kind, ['text', 'document', 'audio', 'video'], true)) {
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
-            $this->ledger($actor, 'lesson.begin', $key,
-                ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
+            $this->ledger(
+                $actor,
+                'lesson.begin',
+                $key,
+                ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId],
+                $enrollmentId
+            );
 
             $now = gmdate('Y-m-d H:i:s');
             $query = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')

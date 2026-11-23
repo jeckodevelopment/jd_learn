@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -80,24 +80,28 @@ if (($argv[2] ?? '') === 'mail-reconcile-worker') {
     exit(0);
 }
 
-function rosterExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function rosterExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function rosterDenied(callable $fn,int $code,string $message):void{try {
+function rosterDenied(callable $fn, int $code, string $message): void
+{
+    try {
         $fn();
-
-} catch (\RuntimeException $e) {
-    rosterExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $e) {
+        rosterExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
+        return;
+    }throw new \RuntimeException($message);
 }
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $course = (int)$f['course'];
 $otherCourse = (int)$db->setQuery('SELECT course_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])->loadResult();
 $version = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . (int)$f['active'])->loadResult();
-$read = static fn($who,array $filters=[])=>$db->setQuery($service->query($who, $course, $filters), 0, 50)->loadObjectList();
+$read = static fn($who, array $filters = [])=>$db->setQuery($service->query($who, $course, $filters), 0, 50)->loadObjectList();
 // SEC-P1: the original session identity must lose roster read access as soon
 // as an administrator blocks the Joomla account in another session.
 $originalBlock = (int) $db->setQuery('SELECT block FROM #__users WHERE id=' . $userId)->loadResult();
@@ -152,16 +156,24 @@ rosterExpect(count($read($actor, ['user' => $f['empty']])) === 0, 'empty filter 
 rosterExpect(count($read($actor, ['version' => $version])) === count($rows), 'version filter');
 $foreignVersion = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])->loadResult();
 rosterDenied(fn()=>$service->query($actor, $course, ['version' => $foreignVersion]), 404, 'version cannot cross course');
-foreach ([['status' => "active' OR 1=1 --"],['progress' => ['completed']],['user' => '1 OR 1=1'],['version' => -1],['user' => 1.5]]as$filters)rosterDenied(fn()=>$service->query($actor, $course, $filters), 400, 'invalid filters fail closed');
+foreach ([['status' => "active' OR 1=1 --"],['progress' => ['completed']],['user' => '1 OR 1=1'],['version' => -1],['user' => 1.5]] as $filters) {
+    rosterDenied(fn()=>$service->query($actor, $course, $filters), 400, 'invalid filters fail closed');
+}
 $payload = json_encode($rows, JSON_THROW_ON_ERROR);
-foreach (['rules_json','subject_key','email','password','LEARNING_PRIVATE_BODY','grading_json']as$secret)rosterExpect(!str_contains($payload, $secret), 'no private field ' . $secret);
+foreach (['rules_json','subject_key','email','password','LEARNING_PRIVATE_BODY','grading_json'] as $secret) {
+    rosterExpect(!str_contains($payload, $secret), 'no private field ' . $secret);
+}
 rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User(), $course), 401, 'anonymous roster denied');
 rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User($f['owner']), $course), 403, 'learner roster denied');
 $g = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
-if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI scoped enrollment reader']))throw new \RuntimeException($g->getError());
+if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI scoped enrollment reader'])) {
+    throw new \RuntimeException($g->getError());
+}
 $group = (int)$g->getState('group.id');
 // Keep backend entry separate from the course permission so revoking the latter exercises our model, not Joomla's login wall.
-if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI roster backend entry']))throw new \RuntimeException($g->getError());
+if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI roster backend entry'])) {
+    throw new \RuntimeException($g->getError());
+}
 $backendGroup = (int)$g->getState('group.id');
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('root.1');
@@ -182,7 +194,9 @@ $asset->rules = json_encode($permissions, JSON_THROW_ON_ERROR);
 $asset->store();
 $user = new \Joomla\CMS\User\User();
 $data = ['name' => 'CI Roster Reader','username' => 'cirosterreader','email' => 'cirosterreader@example.invalid','password' => 'Ci-only-Roster-Password-2026','password2' => 'Ci-only-Roster-Password-2026','groups' => [2,$group,$backendGroup],'block' => 0,'sendEmail' => 0];
-if (!$user->bind($data) || !$user->save())throw new \RuntimeException($user->getError());
+if (!$user->bind($data) || !$user->save()) {
+    throw new \RuntimeException($user->getError());
+}
 $user = new \Joomla\CMS\User\User((int)$user->id);
 rosterExpect(count($read($user)) === count($rows), 'dedicated course ACL grants roster without author permission');
 
@@ -192,8 +206,11 @@ $mailAudit = new \Jlms\Component\Jlms\Administrator\Application\MailQueueAuditSe
 $mailQueueCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult();
 $courseManager = $user;
 rosterDenied(fn()=>$mailAudit->page($courseManager), 403, 'delegated course manager denied global mail outbox');
-rosterDenied(fn()=>$mailAudit->reconcile($courseManager, 999999999, 'sent', 'Confirmed no delivery', true), 403,
-    'delegated course manager cannot reconcile global mail outbox');
+rosterDenied(
+    fn()=>$mailAudit->reconcile($courseManager, 999999999, 'sent', 'Confirmed no delivery', true),
+    403,
+    'delegated course manager cannot reconcile global mail outbox'
+);
 rosterDenied(fn()=>$mailAudit->page(new \Joomla\CMS\User\User()), 403, 'guest denied global mail outbox');
 $componentAsset = new \Joomla\CMS\Table\Asset($db);
 $componentAsset->loadByName('com_jlms');
@@ -204,21 +221,28 @@ try {
     $componentAsset->rules = json_encode($auditPermissions, JSON_THROW_ON_ERROR);
     $componentAsset->store();
     $mailPage = $mailAudit->page($courseManager, [], 0, 10);
-    rosterExpect(is_array($mailPage['rows']) && is_int($mailPage['total']),
-        'explicit component-level audit grant allows global outbox listing');
+    rosterExpect(
+        is_array($mailPage['rows']) && is_int($mailPage['total']),
+        'explicit component-level audit grant allows global outbox listing'
+    );
     foreach ($mailPage['rows'] as $outboxRow) {
         foreach (['recipient_email','recipient_name','template_data','last_error','language'] as $sensitiveField) {
-            rosterExpect(!property_exists($outboxRow, $sensitiveField),
-                'global outbox projection omits sensitive field ' . $sensitiveField);
+            rosterExpect(
+                !property_exists($outboxRow, $sensitiveField),
+                'global outbox projection omits sensitive field ' . $sensitiveField
+            );
         }
     }
-    rosterDenied(fn()=>$mailAudit->reconcile($courseManager, 999999999, 'sent', 'Confirmed no delivery', true), 409,
-        'authorized auditor receives safe conflict for nonexistent reconciliation ID');
+    rosterDenied(
+        fn()=>$mailAudit->reconcile($courseManager, 999999999, 'sent', 'Confirmed no delivery', true),
+        409,
+        'authorized auditor receives safe conflict for nonexistent reconciliation ID'
+    );
 
     // Two operator requests may race on the same stale claim. The second must
     // fail closed; free-form notes must not be duplicated in last_error.
     $mailTestIds = [];
-    $newStaleMail = static function(string $suffix) use($db,$course,&$mailTestIds):int {
+    $newStaleMail = static function (string $suffix) use ($db, $course, &$mailTestIds): int {
         $testMail = (object)[
             'event_key' => hash('sha256', 'sec-p1-reconciliation-' . $suffix . '-' . bin2hex(random_bytes(12))),
             'template_id' => 'com_jlms.enrollment.confirmed',
@@ -238,16 +262,23 @@ try {
         $staleSent = $newStaleMail('sent');
         $mailAudit->reconcile($courseManager, $staleSent, 'sent', $sensitiveNote, true);
         $sentRow = $db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email,recipient_name,template_data FROM #__jlms_mail_queue WHERE id=' . $staleSent)->loadObject();
-        rosterExpect($sentRow->state === 'sent' && $sentRow->reconciliation_note === $sensitiveNote
+        rosterExpect(
+            $sentRow->state === 'sent' && $sentRow->reconciliation_note === $sensitiveNote
             && $sentRow->last_error === 'Manual reconciliation recorded.'
             && $sentRow->recipient_email === '' && $sentRow->recipient_name === '' && $sentRow->template_data === '{}',
-            'sent reconciliation retains only dedicated audit note and clears recipient payload');
-        rosterDenied(fn()=>$mailAudit->reconcile($courseManager, $staleSent, 'retry', $sensitiveNote, true), 409,
-            'second operator cannot retry a reconciled sending claim');
+            'sent reconciliation retains only dedicated audit note and clears recipient payload'
+        );
+        rosterDenied(
+            fn()=>$mailAudit->reconcile($courseManager, $staleSent, 'retry', $sensitiveNote, true),
+            409,
+            'second operator cannot retry a reconciled sending claim'
+        );
         $sentState = $db->setQuery('SELECT state,reconciliation_note,last_error FROM #__jlms_mail_queue WHERE id=' . $staleSent)->loadAssoc();
-        rosterExpect($sentState['state'] === 'sent' && $sentState['reconciliation_note'] === $sensitiveNote
+        rosterExpect(
+            $sentState['state'] === 'sent' && $sentState['reconciliation_note'] === $sensitiveNote
             && $sentState['last_error'] === 'Manual reconciliation recorded.',
-            'repeated reconciliation does not overwrite accepted audit state');
+            'repeated reconciliation does not overwrite accepted audit state'
+        );
 
 
         // SEC-P1: simultaneous POST-like server operations on independent
@@ -300,14 +331,18 @@ try {
             }
             $workers = [];
             sort($results);
-            rosterExpect($results === ['CONFLICT:409', 'OK'],
-                'two independent mail reconcilers yield one winner and one 409 conflict');
+            rosterExpect(
+                $results === ['CONFLICT:409', 'OK'],
+                'two independent mail reconcilers yield one winner and one 409 conflict'
+            );
             $parallelRow = $db->setQuery('SELECT state,attempts,reconciliation_note,last_error,recipient_email FROM #__jlms_mail_queue WHERE id=' . (int)$parallelId)->loadObject();
-            rosterExpect($parallelRow->state === 'sent' && (int)$parallelRow->attempts === 1
+            rosterExpect(
+                $parallelRow->state === 'sent' && (int)$parallelRow->attempts === 1
                 && $parallelRow->reconciliation_note === 'CI parallel SMTP claim'
                 && $parallelRow->last_error === 'Manual reconciliation recorded.'
                 && $parallelRow->recipient_email === '',
-                'simultaneous reconciliation retains one state and sanitized audit');
+                'simultaneous reconciliation retains one state and sanitized audit'
+            );
         } finally {
             foreach ($workers as [$child, $pipes]) {
                 if (is_resource($child)) {
@@ -327,26 +362,35 @@ try {
         $staleRetry = $newStaleMail('retry');
         $mailAudit->reconcile($courseManager, $staleRetry, 'retry', $sensitiveNote, true);
         $retryRow = $db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email FROM #__jlms_mail_queue WHERE id=' . $staleRetry)->loadObject();
-        rosterExpect($retryRow->state === 'retry' && $retryRow->reconciliation_note === $sensitiveNote
+        rosterExpect(
+            $retryRow->state === 'retry' && $retryRow->reconciliation_note === $sensitiveNote
             && $retryRow->last_error === 'Manual reconciliation recorded.'
             && $retryRow->recipient_email === 'reconcile@example.invalid',
-            'retry transition keeps delivery address but does not duplicate note in last_error');
-        rosterDenied(fn()=>$mailAudit->reconcile($courseManager, $staleRetry, 'retry', $sensitiveNote, true), 409,
-            'second retry of already released mail claim denied');
+            'retry transition keeps delivery address but does not duplicate note in last_error'
+        );
+        rosterDenied(
+            fn()=>$mailAudit->reconcile($courseManager, $staleRetry, 'retry', $sensitiveNote, true),
+            409,
+            'second retry of already released mail claim denied'
+        );
     } finally {
         foreach ($mailTestIds as $mailTestId) {
             $db->setQuery('DELETE FROM #__jlms_mail_queue WHERE id=' . (int)$mailTestId)->execute();
         }
     }
-
 } finally {
     $componentAsset->rules = $mailAuditOriginalRules;
     $componentAsset->store();
 }
-rosterDenied(fn()=>$mailAudit->page($courseManager), 403,
-    'audit permission revocation applies immediately to old session identity');
-rosterExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult() === $mailQueueCount,
-    'audit ACL tests do not mutate mail queue rows');
+rosterDenied(
+    fn()=>$mailAudit->page($courseManager),
+    403,
+    'audit permission revocation applies immediately to old session identity'
+);
+rosterExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult() === $mailQueueCount,
+    'audit ACL tests do not mutate mail queue rows'
+);
 
 
  // SEC-P1: roster scope must also bind communication recipient discovery and
@@ -356,23 +400,43 @@ $communication = $component->getCourseCommunicationService();
 $outboxBefore = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->loadResult();
 $jobsBefore = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult();
 $recipientScope = $communication->editor($user, $course);
-$recipientIds = array_map(static fn($row):int=>(int)$row->enrollment_id, $recipientScope['recipients']);
+$recipientIds = array_map(static fn($row): int=>(int)$row->enrollment_id, $recipientScope['recipients']);
 rosterExpect(in_array((int)$f['active'], $recipientIds, true), 'authorized course communication lists active enrollment');
 rosterExpect(!in_array((int)$f['italian'], $recipientIds, true), 'communication list excludes foreign enrollment ID');
 rosterDenied(fn()=>$communication->editor($user, $otherCourse), 403, 'communication editor denies unauthorized course ID');
-rosterDenied(fn()=>$communication->preview($user, $otherCourse, 'SEC-P1 preview', 'Safe message', [(int)$f['italian']]), 403,
-    'communication preview denies unauthorized course ID');
-rosterDenied(fn()=>$communication->preview($user, $course, 'SEC-P1 preview', 'Safe message', [(int)$f['italian']]), 409,
-    'communication preview cannot import recipients from a foreign course');
-rosterDenied(fn()=>$communication->queue($user, $course, 'SEC-P1 preview', 'Safe message', [(int)$f['italian']],
-    str_repeat('0', 64), 'd7e332c4-7f32-4a32-bd66-1f5ac8409d13'), 409, 'invalid cross-course message cannot queue');
+rosterDenied(
+    fn()=>$communication->preview($user, $otherCourse, 'SEC-P1 preview', 'Safe message', [(int)$f['italian']]),
+    403,
+    'communication preview denies unauthorized course ID'
+);
+rosterDenied(
+    fn()=>$communication->preview($user, $course, 'SEC-P1 preview', 'Safe message', [(int)$f['italian']]),
+    409,
+    'communication preview cannot import recipients from a foreign course'
+);
+rosterDenied(fn()=>$communication->queue(
+    $user,
+    $course,
+    'SEC-P1 preview',
+    'Safe message',
+    [(int)$f['italian']],
+    str_repeat('0', 64),
+    'd7e332c4-7f32-4a32-bd66-1f5ac8409d13'
+), 409, 'invalid cross-course message cannot queue');
 rosterDenied(fn()=>$communication->editor(new \Joomla\CMS\User\User(), $course), 401, 'anonymous cannot inspect course message recipients');
-rosterDenied(fn()=>$communication->editor(new \Joomla\CMS\User\User((int)$f['owner']), $course), 403,
-    'student cannot inspect administrative message recipients');
-rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->loadResult() === $outboxBefore,
-    'denied course messages do not enqueue mail');
-rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
-    'denied course messages do not enqueue jobs');
+rosterDenied(
+    fn()=>$communication->editor(new \Joomla\CMS\User\User((int)$f['owner']), $course),
+    403,
+    'student cannot inspect administrative message recipients'
+);
+rosterExpect(
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->loadResult() === $outboxBefore,
+    'denied course messages do not enqueue mail'
+);
+rosterExpect(
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
+    'denied course messages do not enqueue jobs'
+);
 
 // SEC-P1/MAIL-REPLAY: reuse is safe only for the identical immutable payload.
 // A mutated subject, body or recipient selection with the same mutation UUID
@@ -383,26 +447,53 @@ $replayPlan = $communication->preview($user, $course, 'SEC-P1 original message',
 $alteredPlan = $communication->preview($user, $course, 'SEC-P1 altered message', 'Original safe body', $replayIds);
 $replayJob = 0;
 try {
-    $replayJob = $communication->queue($user, $course, $replayPlan['subject'], $replayPlan['body'], $replayIds,
-        $replayPlan['hash'], $replayKey);
+    $replayJob = $communication->queue(
+        $user,
+        $course,
+        $replayPlan['subject'],
+        $replayPlan['body'],
+        $replayIds,
+        $replayPlan['hash'],
+        $replayKey
+    );
     rosterExpect($replayJob > 0, 'message job was queued with one immutable payload');
     $savedPayload = (string)$db->setQuery('SELECT payload_json FROM #__jlms_jobs WHERE id=' . $replayJob)->loadResult();
-    rosterExpect($communication->queue($user, $course, $replayPlan['subject'], $replayPlan['body'], $replayIds,
-        $replayPlan['hash'], $replayKey) === $replayJob, 'identical message retry retains the same job ID');
-    rosterDenied(fn()=>$communication->queue($user, $course, $alteredPlan['subject'], $alteredPlan['body'], $replayIds,
-        $alteredPlan['hash'], $replayKey), 409, 'changed message with reused mutation ID must conflict');
-    rosterExpect((string)$db->setQuery('SELECT payload_json FROM #__jlms_jobs WHERE id=' . $replayJob)->loadResult() === $savedPayload,
-        'conflicting replay does not replace immutable message payload');
-    rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore + 1,
-        'duplicate and conflicting replays never create additional jobs');
+    rosterExpect($communication->queue(
+        $user,
+        $course,
+        $replayPlan['subject'],
+        $replayPlan['body'],
+        $replayIds,
+        $replayPlan['hash'],
+        $replayKey
+    ) === $replayJob, 'identical message retry retains the same job ID');
+    rosterDenied(fn()=>$communication->queue(
+        $user,
+        $course,
+        $alteredPlan['subject'],
+        $alteredPlan['body'],
+        $replayIds,
+        $alteredPlan['hash'],
+        $replayKey
+    ), 409, 'changed message with reused mutation ID must conflict');
+    rosterExpect(
+        (string)$db->setQuery('SELECT payload_json FROM #__jlms_jobs WHERE id=' . $replayJob)->loadResult() === $savedPayload,
+        'conflicting replay does not replace immutable message payload'
+    );
+    rosterExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore + 1,
+        'duplicate and conflicting replays never create additional jobs'
+    );
 } finally {
     if ($replayJob > 0) {
         $db->setQuery("DELETE FROM #__action_logs WHERE extension='com_jlms.coursecommunication' AND item_id=" . $replayJob)->execute();
         $db->setQuery('DELETE FROM #__jlms_jobs WHERE id=' . $replayJob . " AND kind='course_communication'")->execute();
     }
 }
-rosterExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
-    'SEC-P1 replay fixture leaves no queued communication job');
+rosterExpect(
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
+    'SEC-P1 replay fixture leaves no queued communication job'
+);
 
 
 rosterDenied(fn()=>$service->query($user, $otherCourse), 403, 'direct course ID cannot bypass scope');
@@ -414,7 +505,6 @@ $asset->rules = json_encode($permissions, JSON_THROW_ON_ERROR);
 $asset->store();
 try {
     rosterDenied(fn()=>$read($user), 403, 'explicit course deny refreshes stale identity');
-
 } finally {
     $asset->rules = $grantedRules;
     $asset->store();
@@ -422,7 +512,6 @@ try {
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$user->id, $group);
 try {
     rosterDenied(fn()=>$read($user), 403, 'group revocation refreshes stale identity');
-
 } finally {
     \Joomla\CMS\User\UserHelper::addUserToGroup((int)$user->id, $group);
 }

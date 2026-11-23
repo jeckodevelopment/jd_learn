@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Model;
 
 use Joomla\CMS\MVC\Model\FormModel;
@@ -38,7 +37,9 @@ final class CurriculumModel extends FormModel
         $app = Factory::getApplication();
         try {
             return $app->bootComponent('com_jlms')->getCurriculumService()->outline(
-            $app->getIdentity(), $app->getInput()->getInt('id', 0), $app->getInput()->getInt('version_id', 0),
+                $app->getIdentity(),
+                $app->getInput()->getInt('id', 0),
+                $app->getInput()->getInt('version_id', 0),
             );
         } catch (\DomainException $error) {
             $code = $error->getMessage() === 'JERROR_ALERTNOAUTHOR' ? 403 : 404;

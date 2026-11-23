@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -73,16 +73,17 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 $checks = 0;
-function copyExpect(bool $ok, string $message): void { global $checks;
+function copyExpect(bool $ok, string $message): void
+{
+    global $checks;
     if (!$ok) {
         throw new RuntimeException($message);
-
     } $checks++;
 }
-function copyDenied(callable $work, string $message): void {
+function copyDenied(callable $work, string $message): void
+{
     try {
         $work();
-
     } catch (Throwable $e) {
         copyExpect(true, $message);
         return;
@@ -125,7 +126,7 @@ foreach ($sourceLessons as $n => $lesson) {
 copyExpect($identityRows() === $beforeLearning, 'Course duplication never copies or modifies learning data');
 $outline = $authoring->outline($actor, $copy, (int)$draft->id);
 $module = $outline['modules'][0];
-$rev = static fn():int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . (int)$draft->id)->loadResult();
+$rev = static fn(): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . (int)$draft->id)->loadResult();
 $moduleInput = ['course_id' => $copy,'version_id' => (int)$draft->id,'expected_version_revision' => $rev(),'id' => (int)$module->id,'revision' => (int)$module->revision,'title' => 'Copied module'];
 $moduleCopy = $authoring->duplicateItem($actor, 'module', $moduleInput);
 $oldCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lessons WHERE module_id=' . (int)$module->id)->loadResult();
@@ -169,7 +170,7 @@ copyDenied(fn()=>$restricted->duplicate($input), 'Source edit deny is respected 
 $update = (object)['id' => (int)$sourceAsset->id,'rules' => $originalRules];
 $db->updateObject('#__assets', $update, 'id');
 \Joomla\CMS\Access\Access::clearStatics();
-$counts = static fn():array=>array_map(static fn(string $table):int=>(int)$db->setQuery('SELECT COUNT(*) FROM #__' . $table)->loadResult(), ['jlms_courses','jlms_course_versions','jlms_modules','jlms_lessons','jlms_quizzes','assets','history','workflow_associations','fields_values']);
+$counts = static fn(): array=>array_map(static fn(string $table): int=>(int)$db->setQuery('SELECT COUNT(*) FROM #__' . $table)->loadResult(), ['jlms_courses','jlms_course_versions','jlms_modules','jlms_lessons','jlms_quizzes','assets','history','workflow_associations','fields_values']);
 $before = $counts();
 copyDenied(fn()=>$model->duplicate(array_replace($input, ['revision' => (int)$source->revision + 1])), 'Stale source course rejected');
 copyExpect($counts() === $before, 'Failed copy leaves no draft, native asset, workflow, history or fields');

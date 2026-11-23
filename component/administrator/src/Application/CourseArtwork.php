@@ -58,8 +58,10 @@ final class CourseArtwork
                 continue;
             }
             $root = realpath(JPATH_ROOT . '/' . $directory);
-            if ($root && str_starts_with($root, $base . DIRECTORY_SEPARATOR)
-                && str_starts_with($file, $root . DIRECTORY_SEPARATOR)) {
+            if (
+                $root && str_starts_with($root, $base . DIRECTORY_SEPARATOR)
+                && str_starts_with($file, $root . DIRECTORY_SEPARATOR)
+            ) {
                 $allowed = true;
                 break;
             }
@@ -71,8 +73,10 @@ final class CourseArtwork
         $image = @getimagesize($file);
         $mime = ['png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
             'gif' => 'image/gif', 'webp' => 'image/webp', 'avif' => 'image/avif'][strtolower(pathinfo($path, PATHINFO_EXTENSION))];
-        if (!$image || ($image['mime'] ?? '') !== $mime || $image[0] < 1 || $image[1] < 1
-            || $image[0] > 20000 || $image[1] > 20000 || $image[0] * $image[1] > 40000000) {
+        if (
+            !$image || ($image['mime'] ?? '') !== $mime || $image[0] < 1 || $image[1] < 1
+            || $image[0] > 20000 || $image[1] > 20000 || $image[0] * $image[1] > 40000000
+        ) {
             throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_INVALID');
         }
     }

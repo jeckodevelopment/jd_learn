@@ -149,19 +149,27 @@ final class PathwayService
                     : (($enrollment->started_at !== null || $enrollment->last_activity_at !== null || $done > 0) ? 'in_progress' : 'not_started');
 
                 $now = gmdate('Y-m-d H:i:s');
-                if (($enrollment->starts_at !== null && $enrollment->starts_at > $now)
-                    || ($enrollment->edition_starts_at !== null && $enrollment->edition_starts_at > $now)) {
+                if (
+                    ($enrollment->starts_at !== null && $enrollment->starts_at > $now)
+                    || ($enrollment->edition_starts_at !== null && $enrollment->edition_starts_at > $now)
+                ) {
                     $access = 'not_open';
-                } elseif (($enrollment->ends_at !== null && $enrollment->ends_at <= $now)
-                    || ($enrollment->edition_ends_at !== null && $enrollment->edition_ends_at <= $now)) {
+                } elseif (
+                    ($enrollment->ends_at !== null && $enrollment->ends_at <= $now)
+                    || ($enrollment->edition_ends_at !== null && $enrollment->edition_ends_at <= $now)
+                ) {
                     $access = 'expired';
-                } elseif (!in_array((string) $enrollment->status, ['active', 'completed'], true)
-                    || $access !== 'available') {
+                } elseif (
+                    !in_array((string) $enrollment->status, ['active', 'completed'], true)
+                    || $access !== 'available'
+                ) {
                     $access = in_array((string) $enrollment->status, ['suspended', 'expired', 'cancelled'], true)
                         ? (string) $enrollment->status
                         : 'unavailable';
-                } elseif ($enrollment->version_status !== 'published' || $enrollment->edition_status !== 'open'
-                    || $rules === null) {
+                } elseif (
+                    $enrollment->version_status !== 'published' || $enrollment->edition_status !== 'open'
+                    || $rules === null
+                ) {
                     $access = 'unavailable';
                 } elseif ($rules['mode'] === 'consultation') {
                     $progressApplicable = false;

@@ -1,7 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Field;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\Database\DatabaseInterface;

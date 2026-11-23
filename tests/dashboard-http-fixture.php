@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 $root = realpath($argv[1] ?? '');
-if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1')throw new \RuntimeException('Disposable Joomla site required');
+if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
+    throw new \RuntimeException('Disposable Joomla site required');
+}
 $db = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $state = dirname($root) . '/dashboard-http-plugin.json';
@@ -22,7 +26,9 @@ if ($mode === 'enable') {
     $q = $db->prepare('SELECT params FROM joomla_menu WHERE id=?');
     $q->execute([$menuId]);
     $old = $q->fetchColumn();
-    if ($old === false)throw new \RuntimeException('FE-06 fixture menu missing');
+    if ($old === false) {
+        throw new \RuntimeException('FE-06 fixture menu missing');
+    }
     file_put_contents(dirname($root) . '/dashboard-navigation-original.json', json_encode(['id' => $menuId,'params' => $old], JSON_THROW_ON_ERROR));
     $params = json_decode((string)$old, true) ?: [];
     $params['show_personal_navigation'] = 1;
@@ -42,7 +48,9 @@ if ($mode === 'enable') {
 } elseif (in_array($mode, ['revoke','grant','block','unblock'], true)) {
     $q = $db->prepare("SELECT username FROM joomla_users WHERE id=?");
     $q->execute([$f['owner']]);
-    if ($q->fetchColumn() !== 'cidashboard')throw new \RuntimeException('Unexpected fixture user');
+    if ($q->fetchColumn() !== 'cidashboard') {
+        throw new \RuntimeException('Unexpected fixture user');
+    }
     if ($mode === 'revoke') {
         $q = $db->prepare('DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?');
         $q->execute([$f['owner'],$f['group']]);

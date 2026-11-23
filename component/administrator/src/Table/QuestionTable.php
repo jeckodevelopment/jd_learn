@@ -11,12 +11,18 @@ use Joomla\Database\ParameterType;
 final class QuestionTable extends Table
 {
     protected $_supportNullValue = true;
-    public function __construct(DatabaseInterface $db) { parent::__construct('#__jlms_questions', 'id', $db);
+    public function __construct(DatabaseInterface $db)
+    {
+        parent::__construct('#__jlms_questions', 'id', $db);
         $this->setColumnAlias('published', 'state');
     }
-    protected function _getAssetName() { return 'com_jlms.question.' . (int) $this->id;
+    protected function _getAssetName()
+    {
+        return 'com_jlms.question.' . (int) $this->id;
     }
-    protected function _getAssetTitle() { return 'JD Learn question #' . (int) $this->id;
+    protected function _getAssetTitle()
+    {
+        return 'JD Learn question #' . (int) $this->id;
     }
     protected function _getAssetParentId(?Table $table = null, $id = null)
     {

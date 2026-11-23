@@ -37,7 +37,7 @@ $mailIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstall
       <td><?= $this->escape($details['type']) ?></td>
       <td><?= $this->escape($details['description']) ?></td>
      </tr>
-     <?php endforeach; ?>
+        <?php endforeach; ?>
     </tbody>
    </table>
   </div>

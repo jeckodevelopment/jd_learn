@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/SchedulerHealth.php';

@@ -92,8 +92,10 @@ final class CategoryReassignmentService
             $destination = $this->category((int) $destinationId);
             $isSourceDescendant = (int) $destination->lft > (int) $source->lft
                 && (int) $destination->rgt < (int) $source->rgt;
-            if ($destination->extension !== $reference['extension'] || $destination->extension !== $source->extension
-                || $isSourceDescendant) {
+            if (
+                $destination->extension !== $reference['extension'] || $destination->extension !== $source->extension
+                || $isSourceDescendant
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_INVALID_TARGET');
             }
             $this->assertManage($actor, $destination, 'core.edit');
@@ -178,9 +180,11 @@ final class CategoryReassignmentService
         if (in_array($action, ['core.edit', 'core.delete'], true) && (int) $category->created_user_id === (int) $actor->id) {
             $allowed = $allowed || $actor->authorise($action . '.own', $asset);
         }
-        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+        if (
+            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
             || (!empty($category->checked_out) && (int) $category->checked_out !== (int) $actor->id)
-            || !$allowed) {
+            || !$allowed
+        ) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
     }

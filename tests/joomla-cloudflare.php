@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -73,25 +73,28 @@ use Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Jlms\Component\Jlms\Administrator\Application\VideoProgressService;
 $checks = 0;
-function streamExpect(bool $value,string $message): void {global $checks;
-    if (!$value)throw new \RuntimeException($message);
+function streamExpect(bool $value, string $message): void
+{
+    global $checks;
+    if (!$value) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function streamDenied(callable $work,string $key): void {
+function streamDenied(callable $work, string $key): void
+{
     try {
         $work();
-
     } catch (\RuntimeException $e) {
         streamExpect($e->getMessage() === $key, $key . ': ' . $e->getMessage());
         return;
-
     }throw new \RuntimeException('Expected ' . $key);
 }
 [$config,$secrets,$transport,$remote] = cloudflareFixture();
 $provider = new Provider($config, $secrets, $transport);
 $registry = new \Jlms\Contracts\Video\VideoProviderRegistry();
 $registry->register($provider->getDescriptor(), static fn()=>$provider);
-$authoring = new CurriculumService($db, static fn(string $body):string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), static fn()=>$registry);
+$authoring = new CurriculumService($db, static fn(string $body): string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), static fn()=>$registry);
 $component->setCurriculumService($authoring);
 $learning = $component->getLearningService();
 $publication = $component->getPublicationService();
@@ -102,10 +105,12 @@ $group = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learni
 $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning access'")->loadResult();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Stream fixture','alias' => 'stream-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Stream fixture']))throw new \RuntimeException($model->getError());
+if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Stream fixture','alias' => 'stream-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Stream fixture'])) {
+    throw new \RuntimeException($model->getError());
+}
 $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
-$scope = static fn():array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
+$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Stream chapter']);
 $lesson = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Protected Stream lesson','kind' => 'video','required' => '1',
  'body' => '','provider_key' => 'cloudflarestream','source_reference' => str_repeat('b', 32),'duration_seconds' => '10','duration_confirmed' => '1']);
@@ -116,7 +121,7 @@ streamDenied($publish, 'COM_JLMS_VIDEO_REMOTE_UNPROTECTED');
 streamExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft', 'unsafe remote video leaves draft untouched');
 $remote->protected = true;
 // Verify that provider HTTP work does not hold course/enrollment row locks: another connection can lock them.
-$remote->callback = static function(string $method)use($course):void{
+$remote->callback = static function (string $method) use ($course): void {
     $pdo = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $pdo->exec('SET innodb_lock_wait_timeout=1');
     $pdo->beginTransaction();
@@ -128,8 +133,8 @@ $publish();
 streamExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'published', 'verified provider permits publication');
 $enrollment = $learning->start($student, 'en-GB', $course, bin2hex(random_bytes(16)));
 $now = (int)floor(microtime(true) * 1000);
-$service = new VideoProgressService($db, $learning, $authoring, static function()use(&$now):int{return $now;
-
+$service = new VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
+    return $now;
 });
 $count = count($remote->calls);
 streamDenied(fn()=>$service->playback($other, 'en-GB', $enrollment, $lesson, true), 'COM_JLMS_RESOURCE_NOT_FOUND');
@@ -139,7 +144,7 @@ streamExpect($grant['provider'] === 'cloudflarestream' && isset($grant['options'
 $session = $grant['session_id'];
 $revision = $grant['source_revision'];
 streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_VIDEO_CONFLICT');
-$event = static fn(int $id,string $type,int $p,int $t):array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $t,'rate_milli' => 1000,'playing' => true];
+$event = static fn(int $id, string $type, int $p, int $t): array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $t,'rate_milli' => 1000,'playing' => true];
 $batch = json_encode([$event(1, 'play', 0, 0),$event(2, 'position', 4000, 4000)], JSON_THROW_ON_ERROR);
 $now += 4000;
 $count = count($remote->calls);
@@ -154,15 +159,19 @@ $renewed = $service->renew($student, 'en-GB', $enrollment, $lesson, $session, $r
 streamExpect($renewed['expires_at'] > $grant['expires_at'] && $renewed['source_revision'] === $revision, 'renewal keeps session/source and extends temporary access');
 streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_VIDEO_CONFLICT');
 $now += 41000;
-$remote->callback = static function(string $method)use($student,$group):void{
-    if ($method === 'POST')\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
+$remote->callback = static function (string $method) use ($student, $group): void {
+    if ($method === 'POST') {
+        \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
+    }
 };
 streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_LEARNING_DENIED');
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);
 $remote->callback = null;
 // Access revoked while the remote API was running must not deliver an initial token either.
-$remote->callback = static function(string $method)use($student,$group):void{
-    if ($method === 'POST')\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
+$remote->callback = static function (string $method) use ($student, $group): void {
+    if ($method === 'POST') {
+        \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
+    }
 };
 streamDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 'COM_JLMS_LEARNING_DENIED');
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);

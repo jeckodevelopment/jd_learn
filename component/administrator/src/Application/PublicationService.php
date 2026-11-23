@@ -46,9 +46,11 @@ final class PublicationService
 
     private function authorise(User $actor, object $course): void
     {
-        if (!$actor->id || $actor->block || (int) $actor->id !== (int) $this->app->getIdentity()->id
+        if (
+            !$actor->id || $actor->block || (int) $actor->id !== (int) $this->app->getIdentity()->id
             || !$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('core.edit.state', 'com_jlms.course.' . (int) $course->id)) {
+            || !$actor->authorise('core.edit.state', 'com_jlms.course.' . (int) $course->id)
+        ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
     }
@@ -216,7 +218,9 @@ final class PublicationService
         $orphan = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
             ->leftJoin('#__jlms_lessons AS l ON l.id=q.lesson_id AND l.course_version_id=q.course_version_id')
             ->where('q.course_version_id = :version')->where("(l.id IS NULL OR l.kind <> 'quiz')")->bind(':version', $versionId, ParameterType::INTEGER);
-        if ((int)$this->db->setQuery($orphan)->loadResult())throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+        if ((int)$this->db->setQuery($orphan)->loadResult()) {
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+        }
         $q = $this->db->createQuery()->select('id, logical_key, title, ordering, params_json')->from('#__jlms_modules')
             ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1001)->loadAssocList();
@@ -238,18 +242,26 @@ final class PublicationService
                 if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
-                if (($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5')
+                if (
+                    ($lesson->media_asset_id !== null && $lesson->provider_key !== 'html5')
                     || ((int) $lesson->preview !== 0 && ($lesson->kind !== 'text' || !$rules['public_previews']))
-                    || strlen((string) $lesson->body) > 1048576) {
+                    || strlen((string) $lesson->body) > 1048576
+                ) {
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
-                if (!\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)
-                    || !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validReleaseDays($lesson->release_after_days)) {
+                if (
+                    !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)
+                    || !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validReleaseDays($lesson->release_after_days)
+                ) {
                     throw new \DomainException('COM_JLMS_LESSON_SCHEDULE_INVALID');
                 }
-                if ((int) $lesson->required === 1 && !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::reachable(
-                    $lesson->publish_up, $lesson->publish_down, CourseSchedule::read($course),
-                )) {
+                if (
+                    (int) $lesson->required === 1 && !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::reachable(
+                        $lesson->publish_up,
+                        $lesson->publish_down,
+                        CourseSchedule::read($course),
+                    )
+                ) {
                     throw new \DomainException('COM_JLMS_LESSON_UNREACHABLE');
                 }
                 $lessonFields = $this->snapshotFields($actor, 'com_jlms.lesson', (int) $lesson->id);
@@ -261,13 +273,17 @@ final class PublicationService
                     }
                     $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze($actor, $course, $lesson);
                 } elseif ($lesson->kind === 'text') {
-                    if ($lesson->completion_rule !== 'manual' || $lesson->source_json !== null || $lesson->provider_key !== null
-                        || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === '') {
+                    if (
+                        $lesson->completion_rule !== 'manual' || $lesson->source_json !== null || $lesson->provider_key !== null
+                        || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === ''
+                    ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
                     }
                 } elseif ($lesson->kind === 'document') {
-                    if ($lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
-                        || $lesson->media_asset_id !== null || $lesson->duration_ms !== null) {
+                    if (
+                        $lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
+                        || $lesson->media_asset_id !== null || $lesson->duration_ms !== null
+                    ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                     $materialQuery = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments AS a')
@@ -280,8 +296,10 @@ final class PublicationService
                         throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
                     }
                 } elseif ($lesson->kind === 'audio') {
-                    if ($lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
-                        || $lesson->media_asset_id !== null || $lesson->duration_ms !== null) {
+                    if (
+                        $lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
+                        || $lesson->media_asset_id !== null || $lesson->duration_ms !== null
+                    ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                     $materialQuery = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments AS a')
@@ -295,19 +313,25 @@ final class PublicationService
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
-                    if (!is_array($params) || (array_key_exists('video_threshold_basis_points', $params)
-                        && (!is_int($params['video_threshold_basis_points']) || $params['video_threshold_basis_points'] < 1 || $params['video_threshold_basis_points'] > 10000))) {
+                    if (
+                        !is_array($params) || (array_key_exists('video_threshold_basis_points', $params)
+                        && (!is_int($params['video_threshold_basis_points']) || $params['video_threshold_basis_points'] < 1 || $params['video_threshold_basis_points'] > 10000))
+                    ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
-                    if (!is_string($lesson->provider_key) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key)
-                        || $lesson->completion_rule !== 'video_coverage') {
+                    if (
+                        !is_string($lesson->provider_key) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key)
+                        || $lesson->completion_rule !== 'video_coverage'
+                    ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                     if ($lesson->provider_key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
                     }
-                    if ($rules['mode'] !== 'consultation' && ((int) $lesson->duration_ms < 1000 || (int) $lesson->duration_ms > 28800000
-                        || ($params['video_duration_confirmed'] ?? false) !== true)) {
+                    if (
+                        $rules['mode'] !== 'consultation' && ((int) $lesson->duration_ms < 1000 || (int) $lesson->duration_ms > 28800000
+                        || ($params['video_duration_confirmed'] ?? false) !== true)
+                    ) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
                     }
                     if ($lesson->provider_key === 'html5') {
@@ -315,9 +339,11 @@ final class PublicationService
                     }
                     if ($lesson->provider_key === 'cloudflarestream') {
                         $proof = $remoteChecks[(int) $lesson->id] ?? null;
-                        if ($rules['mode'] !== 'consultation' && (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
+                        if (
+                            $rules['mode'] !== 'consultation' && (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
                             || $proof['source_revision'] !== (int) $lesson->source_revision
-                            || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, (int)$proof['duration_ms']))) {
+                            || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, (int)$proof['duration_ms']))
+                        ) {
                             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                         }
                     }
@@ -372,8 +398,10 @@ final class PublicationService
             throw new \DomainException('COM_JLMS_CONSULTATION_PREREQUISITES_UNSUPPORTED');
         }
         foreach ($edges as $edge) {
-            if (!isset($lessonIds[(int) $edge->lesson_id]) || !isset($lessonIds[(int) $edge->required_lesson_id])
-                || (int) $edge->lesson_id === (int) $edge->required_lesson_id) {
+            if (
+                !isset($lessonIds[(int) $edge->lesson_id]) || !isset($lessonIds[(int) $edge->required_lesson_id])
+                || (int) $edge->lesson_id === (int) $edge->required_lesson_id
+            ) {
                 throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
             }
             $prerequisiteMap[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
@@ -422,10 +450,12 @@ final class PublicationService
             $scan = json_decode($attachment['scan_json'] ?? '{}', true);
             $scanRequired = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false);
             $preview = (int) $attachment['preview'];
-            if (($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
+            if (
+                ($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
                 || $attachment['status'] !== 'ready' || !in_array($preview, [0, 1], true)
                 || ($preview === 1 && $attachment['lesson_id'] !== null)
-                || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored($attachment['publish_up'], $attachment['publish_down'])) {
+                || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored($attachment['publish_up'], $attachment['publish_down'])
+            ) {
                 throw new \DomainException('COM_JLMS_MATERIAL_NOT_READY');
             }
         }
@@ -489,8 +519,10 @@ final class PublicationService
             throw new \DomainException('COM_JLMS_PUBLICATION_PLUGIN_REQUIRED');
         }
         $version = $this->row('course_versions', $versionId);
-        if ((int) $version->course_id !== $courseId || (int) $version->revision !== $versionRevision
-            || (int) $course->revision !== $courseRevision) {
+        if (
+            (int) $version->course_id !== $courseId || (int) $version->revision !== $versionRevision
+            || (int) $course->revision !== $courseRevision
+        ) {
             throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         if ($version->status === 'draft' && $course->current_version_id !== null && $expectedImpact === null) {
@@ -530,8 +562,10 @@ final class PublicationService
             foreach ($remoteLessons as $lesson) {
                 $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
                 $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider('cloudflarestream');
-                $metadata = $provider->fetchMetadata(new \Jlms\Contracts\Video\VideoSource('cloudflarestream', $source['reference'], (int) $lesson->source_revision),
-                    new \Jlms\Contracts\Video\MetadataContext((int) $actor->id, $this->app->getLanguage()->getTag(), true));
+                $metadata = $provider->fetchMetadata(
+                    new \Jlms\Contracts\Video\VideoSource('cloudflarestream', $source['reference'], (int) $lesson->source_revision),
+                    new \Jlms\Contracts\Video\MetadataContext((int) $actor->id, $this->app->getLanguage()->getTag(), true)
+                );
                 $remoteChecks[(int) $lesson->id] = ['hash' => hash('sha256', $lesson->source_json),
                     'source_revision' => (int) $lesson->source_revision, 'duration_ms' => $metadata->durationMs];
             }
@@ -545,9 +579,11 @@ final class PublicationService
             if ((int) $version->course_id !== $courseId) {
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
-            if ((int) $course->revision !== $courseRevision || (int) $version->revision !== $versionRevision
+            if (
+                (int) $course->revision !== $courseRevision || (int) $version->revision !== $versionRevision
                 || ($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
-                || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) {
+                || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)
+            ) {
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $selected = null;
@@ -582,18 +618,24 @@ final class PublicationService
                     }
                 }
                 $this->validateAndFreeze($course, $version, $actor, $remoteChecks);
-            } elseif ($action === 'publish' && $version->status === 'published'
-                && (int) $course->current_version_id === $versionId && $state === 1) {
+            } elseif (
+                $action === 'publish' && $version->status === 'published'
+                && (int) $course->current_version_id === $versionId && $state === 1
+            ) {
                 // Republish the current immutable version without rebuilding its snapshot.
             } elseif ($action === 'unpublish' && $version->status === 'published' && (int) $course->current_version_id === $versionId && $state === 0) {
                 // The current teaching version stays immutable; workflow withdrawal
                 // only changes whether a new learner can find or start the course.
-            } elseif ($action === 'archive' && $version->status === 'published'
-                && (int) $course->current_version_id === $versionId && (int) $course->state === 1 && $state === 2) {
+            } elseif (
+                $action === 'archive' && $version->status === 'published'
+                && (int) $course->current_version_id === $versionId && (int) $course->state === 1 && $state === 2
+            ) {
                 // Preserve student history, but explicitly close both gates.
                 // Restoring later must never reopen them automatically.
-            } elseif ($action === 'restore' && $version->status === 'published'
-                && (int) $course->current_version_id === $versionId && (int) $course->state === 2 && $state === 1) {
+            } elseif (
+                $action === 'restore' && $version->status === 'published'
+                && (int) $course->current_version_id === $versionId && (int) $course->state === 2 && $state === 1
+            ) {
                 // Restore the same immutable version, leaving admissions and delivery closed.
             } else {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
@@ -605,8 +647,10 @@ final class PublicationService
                 if (!$sourceStage || !$workflow->createAssociation($courseId, $sourceStage)) {
                     throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
                 }
-            } elseif ((int) $association->stage_id !== $sourceStage
-                && !$workflow->updateAssociations([$courseId], $sourceStage)) {
+            } elseif (
+                (int) $association->stage_id !== $sourceStage
+                && !$workflow->updateAssociations([$courseId], $sourceStage)
+            ) {
                 throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
             }
             $update = (object) ['id' => $courseId,
@@ -621,8 +665,10 @@ final class PublicationService
             // Restoring the Joomla workflow stage never mutates those gates.
             $this->db->updateObject('#__jlms_courses', $update, 'id');
             $this->permittedChange = [$courseId, $state];
-            if (!$workflow->executeTransition([$courseId], $transitionId) || $this->stateChangeResult !== true
-                || (int) $this->row('courses', $courseId)->state !== $state) {
+            if (
+                !$workflow->executeTransition([$courseId], $transitionId) || $this->stateChangeResult !== true
+                || (int) $this->row('courses', $courseId)->state !== $state
+            ) {
                 throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
             }
             $this->db->transactionCommit();
@@ -638,7 +684,8 @@ final class PublicationService
         try {
             \Joomla\CMS\Plugin\PluginHelper::importPlugin('actionlog');
             $this->app->getDispatcher()->dispatch('onJlmsCourseTransition', new \Joomla\Event\Event(
-                'onJlmsCourseTransition', [
+                'onJlmsCourseTransition',
+                [
                     'actorId' => (int) $actor->id,
                     'courseId' => $courseId,
                     'versionId' => $versionId,
@@ -652,10 +699,10 @@ final class PublicationService
             try {
                 \Joomla\CMS\Log\Log::add(
                     'Course workflow actionlog follow-up failed; course id=' . $courseId,
-                    \Joomla\CMS\Log\Log::WARNING, 'com_jlms'
+                    \Joomla\CMS\Log\Log::WARNING,
+                    'com_jlms'
                 );
             } catch (\Throwable) {
-
             }
         }
         // Smart Search must observe the committed archive/restore state.
@@ -665,19 +712,21 @@ final class PublicationService
             try {
                 \Joomla\CMS\Plugin\PluginHelper::importPlugin('finder');
                 $savedCourse = $this->row('courses', $courseId);
-                $this->app->getDispatcher()->dispatch('onFinderAfterSave',
+                $this->app->getDispatcher()->dispatch(
+                    'onFinderAfterSave',
                     new \Joomla\CMS\Event\Finder\AfterSaveEvent('onFinderAfterSave', [
                         'context' => 'com_jlms.course', 'subject' => $savedCourse, 'isNew' => false,
-                    ]));
+                    ])
+                );
             } catch (\Throwable) {
                 // Search infrastructure cannot reverse a committed transition.
                 try {
                     \Joomla\CMS\Log\Log::add(
                         'Archive/restore Finder refresh failed; course id=' . $courseId,
-                        \Joomla\CMS\Log\Log::WARNING, 'com_jlms'
+                        \Joomla\CMS\Log\Log::WARNING,
+                        'com_jlms'
                     );
                 } catch (\Throwable) {
-
                 }
             }
         }

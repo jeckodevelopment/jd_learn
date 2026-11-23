@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -31,7 +33,7 @@ foreach ($p['target_lessons'] as $lesson) {
      <option value="0"><?= Text::_('COM_JLMS_MIGRATION_SKIP') ?></option>
         <?php foreach ($p['target_lessons'] as $dest) :
             ?><option value="<?= (int)$dest['id'] ?>"<?= $selected === (int)$dest['id'] ? ' selected' : '' ?>><?= $this->escape($dest['title']) ?><?= $dest['required'] ? ' · ' . Text::_('COM_JLMS_MIGRATION_REQUIRED') : '' ?></option><?php
-     endforeach; ?>
+        endforeach; ?>
     </select>
    <?php endforeach; ?>
   </fieldset>
@@ -42,12 +44,12 @@ foreach ($p['target_lessons'] as $lesson) {
   <?php if ($p['transfers']) :
         ?><ul><?php foreach ($p['transfers'] as $row) :
     ?><li><?= $this->escape($row['source_title']) ?> → <?= $this->escape($row['target_title']) ?> (<?= Text::_('COM_JLMS_MIGRATION_COMPLETED_ONLY') ?>)</li><?php
-endforeach; ?></ul><?php
+        endforeach; ?></ul><?php
   endif; ?>
   <?php if ($p['unmapped']) :
         ?><p><?= Text::_('COM_JLMS_MIGRATION_UNMAPPED') ?>: <?php foreach ($p['unmapped'] as $index => $row) :
     ?><?= $index ? ', ' : '' ?><?= $this->escape($row['title']) ?><?php
-endforeach; ?></p><?php
+        endforeach; ?></p><?php
   endif; ?>
   <p><?= Text::_('COM_JLMS_MIGRATION_NOT_TRANSFERRED') ?></p>
   <?php if ($p['blocked'] !== null) :
@@ -57,7 +59,7 @@ endforeach; ?></p><?php
       <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="enrollmentmigration.apply">
       <?php foreach ($p['mapping'] as $from => $to) :
             ?><input type="hidden" name="jform[mapping][<?= (int)$from ?>]" value="<?= (int)$to ?>"><?php
-    endforeach; ?>
+      endforeach; ?>
       <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MIGRATION_CONFIRM_BUTTON') ?></button>
    </form>
   <?php endif; ?>

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -68,20 +68,26 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function timeExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function timeExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function timeReject(callable $work,int $code,string $message):void{try {
+function timeReject(callable $work, int $code, string $message): void
+{
+    try {
         $work();
-
-} catch (\RuntimeException $error) {
-    timeExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $error) {
+        timeExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+        return;
+    }throw new \RuntimeException($message);
 }
-function timeKey():string{$s = bin2hex(random_bytes(16));
+function timeKey(): string
+{
+    $s = bin2hex(random_bytes(16));
     return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
 }
 $actor = $app->getIdentity();
@@ -92,8 +98,8 @@ $course = $f['course_id'];
 $lesson = $f['lesson_id'];
 $path = dirname($root) . '/quiz-time-fixture.json';
 $now = time();
-$runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function()use(&$now):int{return $now;
-
+$runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
+    return $now;
 }, $time);
 if (($argv[2] ?? '') === 'retained') {
     $t = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
@@ -114,7 +120,9 @@ timeExpect(hash('sha256', json_encode($oldSnapshot, JSON_THROW_ON_ERROR)) === $o
 $group = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learning entitlement'")->loadResult();
 $user = new \Joomla\CMS\User\User();
 $data = ['name' => 'CI extra time learner','username' => 'ciquiztimelearner','email' => 'ciquiztimelearner@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
-if (!$user->bind($data) || !$user->save())throw new \RuntimeException($user->getError());
+if (!$user->bind($data) || !$user->save()) {
+    throw new \RuntimeException($user->getError());
+}
 $user = new \Joomla\CMS\User\User((int)$user->id);
 $enrollment = $learning->start($user, 'en-GB', $course, bin2hex(random_bytes(16)));
 $quiz = (int)$db->setQuery('SELECT id FROM #__jlms_quizzes WHERE lesson_id=' . $lesson)->loadResult();
@@ -140,13 +148,20 @@ timeExpect(!str_contains(json_encode($pre, JSON_THROW_ON_ERROR), 'PRIVATE_TIME_R
 $shortWindow = (object)['id' => $enrollment,'ends_at' => gmdate('Y-m-d H:i:s', $now + 120)];
 $db->updateObject('#__jlms_enrollments', $shortWindow, 'id');
 $windowState = $runtime->state($user, 'en-GB', $enrollment, $lesson);
-timeExpect(!$windowState['can_start'] && $windowState['start_window_insufficient']
+timeExpect(
+    !$windowState['can_start'] && $windowState['start_window_insufficient']
     && $windowState['next_time_seconds'] === 180 && $windowState['remaining_window_seconds'] === 120,
-    'STA-02 shows effective individualized timer before blocked start');
-timeReject(fn()=>$runtime->start($user, 'en-GB', $enrollment, $lesson, timeKey()), 403,
-    'STA-02 does not truncate individual allowance without explicit opt-in');
-timeExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id=' . $enrollment)->loadResult() === 0,
-    'STA-02 denied personalized attempt is not consumed');
+    'STA-02 shows effective individualized timer before blocked start'
+);
+timeReject(
+    fn()=>$runtime->start($user, 'en-GB', $enrollment, $lesson, timeKey()),
+    403,
+    'STA-02 does not truncate individual allowance without explicit opt-in'
+);
+timeExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id=' . $enrollment)->loadResult() === 0,
+    'STA-02 denied personalized attempt is not consumed'
+);
 $openWindow = (object)['id' => $enrollment,'ends_at' => null];
 $db->updateObject('#__jlms_enrollments', $openWindow, 'id', true);
 $a = $runtime->start($user, 'en-GB', $enrollment, $lesson, timeKey());
@@ -175,8 +190,8 @@ $legacyOwner = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__u
 $legacy = $runtime->state($legacyOwner, 'en-GB', $f['enrollment_id'], $lesson);
 timeExpect($legacy['attempt']['state'] !== 'open' && $legacy['extra_time_seconds'] === 0, 'ordinary historical attempts continue to read correctly');
 // A missing audit must roll back the allowance revision.
-$broken = new \Jlms\Component\Jlms\Administrator\Application\QuizTimeService($db, $learning, static function():void{throw new \RuntimeException('COM_JLMS_QUIZ_TIME_AUDIT_FAILED', 503);
-
+$broken = new \Jlms\Component\Jlms\Administrator\Application\QuizTimeService($db, $learning, static function (): void {
+    throw new \RuntimeException('COM_JLMS_QUIZ_TIME_AUDIT_FAILED', 503);
 });
 timeReject(fn()=>$broken->save($actor, $course, $lesson, $enrollment, 3, 4, 'Simulated audit outage', timeKey()), 503, 'audit failure is not a successful administrative change');
 timeExpect((int)$time->editor($actor, $course, $lesson, $enrollment)['current']->revision_no === 3, 'audit failure rolls back data');
@@ -184,17 +199,23 @@ $log = $db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jl
 $message = json_decode($log, true, 16, JSON_THROW_ON_ERROR);
 timeExpect($message['before_seconds'] === 0 && $message['after_seconds'] === 120 && $message['reason_reference'] === $id && !str_contains($log, 'PRIVATE_TIME_REASON_REFERENCE'), 'native Action Log records minimal before/after and reason reference');
 $g = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
-if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI assessment time manager']))throw new \RuntimeException($g->getError());
+if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI assessment time manager'])) {
+    throw new \RuntimeException($g->getError());
+}
 $managerGroup = (int)$g->getState('group.id');
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('com_jlms');
 $permissions = json_decode($asset->rules, true);
-foreach (['core.manage','jlms.enrollments.manage','jlms.assessment.correct']as$action)$permissions[$action][(string)$managerGroup] = true;
+foreach (['core.manage','jlms.enrollments.manage','jlms.assessment.correct'] as $action) {
+    $permissions[$action][(string)$managerGroup] = true;
+}
 $asset->rules = json_encode($permissions, JSON_THROW_ON_ERROR);
 $asset->store();
 $manager = new \Joomla\CMS\User\User();
 $data = array_replace($data, ['name' => 'CI Time Manager','username' => 'ciquiztimemanager','email' => 'ciquiztimemanager@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$managerGroup]]);
-if (!$manager->bind($data) || !$manager->save())throw new \RuntimeException($manager->getError());
+if (!$manager->bind($data) || !$manager->save()) {
+    throw new \RuntimeException($manager->getError());
+}
 $manager = new \Joomla\CMS\User\User((int)$manager->id);
 timeExpect($time->editor($manager, $course, $lesson, $enrollment)['enrollment']->id == $enrollment, 'dedicated native permissions allow management without author role');
 $courseAsset = (int)$db->setQuery('SELECT asset_id FROM #__jlms_courses WHERE id=' . $course)->loadResult();

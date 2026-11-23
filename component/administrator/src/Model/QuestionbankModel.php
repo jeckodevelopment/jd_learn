@@ -1,9 +1,12 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
+
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
+
 final class QuestionbankModel extends ListModel
 {
     public function getFilterForm($data = [], $loadData = true)

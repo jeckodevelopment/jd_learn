@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -32,7 +34,7 @@ use Joomla\CMS\Router\Route;
             <?= \Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
       <button class="btn <?= $decision === 'approved' ? 'btn-success' : 'btn-outline-danger' ?>" type="submit"><?= Text::_($decision === 'approved' ? 'COM_JLMS_ENROLLMENT_APPROVAL_ACCEPT' : 'COM_JLMS_ENROLLMENT_APPROVAL_REJECT') ?></button>
      </form>
-     <?php endforeach; ?>
+        <?php endforeach; ?>
     </td>
    </tr>
           <?php endforeach; ?></tbody>

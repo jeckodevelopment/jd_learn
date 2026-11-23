@@ -11,7 +11,8 @@ use Joomla\Database\ParameterType;
 /** Owner history only. No lesson bodies, media, questions, answers or write operations. */
 final class DashboardService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning, private readonly CatalogService $catalog) {
+    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning, private readonly CatalogService $catalog)
+    {
     }
 
     public function query(User $identity, string $progress = 'all')

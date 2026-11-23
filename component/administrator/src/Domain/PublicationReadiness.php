@@ -51,8 +51,10 @@ final class PublicationReadiness
                 $initialRequired++;
             }
 
-            if (!LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)
-                || !LessonAvailability::validReleaseDays($lesson->release_after_days ?? null)) {
+            if (
+                !LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)
+                || !LessonAvailability::validReleaseDays($lesson->release_after_days ?? null)
+            ) {
                 $blockers[] = 'COM_JLMS_LESSON_SCHEDULE_INVALID';
             } elseif (($lesson->publish_up ?? null) !== null || ($lesson->publish_down ?? null) !== null) {
                 $warnings[] = 'COM_JLMS_READINESS_LESSON_SCHEDULED';
@@ -84,8 +86,10 @@ final class PublicationReadiness
                 // media item supplies selectable caption tracks. Provider SDKs
                 // cannot reliably enumerate them during editorial readiness.
                 // Surface the independent check without blocking publication.
-                if ($lesson->kind === 'video'
-                    && in_array((string) ($lesson->provider_key ?? ''), ['youtube', 'vimeo', 'cloudflarestream'], true)) {
+                if (
+                    $lesson->kind === 'video'
+                    && in_array((string) ($lesson->provider_key ?? ''), ['youtube', 'vimeo', 'cloudflarestream'], true)
+                ) {
                     $warnings[] = 'COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED';
                 }
             }
@@ -93,8 +97,10 @@ final class PublicationReadiness
             if (($lesson->kind ?? '') === 'document') {
                 $linked = false;
                 foreach ($attachments as $attachment) {
-                    if ((int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
-                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0) {
+                    if (
+                        (int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
+                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0
+                    ) {
                         $linked = true;
                         break;
                     }
@@ -105,9 +111,11 @@ final class PublicationReadiness
             } elseif (($lesson->kind ?? '') === 'audio') {
                 $linked = false;
                 foreach ($attachments as $attachment) {
-                    if ((int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
+                    if (
+                        (int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
                         && in_array(($attachment->mime_type ?? ''), ['audio/mpeg', 'audio/ogg'], true)
-                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0) {
+                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0
+                    ) {
                         $linked = true;
                         break;
                     }
@@ -147,10 +155,12 @@ final class PublicationReadiness
             $scan = json_decode((string) ($attachment->scan_json ?? '{}'), true);
             $preview = (int) ($attachment->preview ?? 0);
             $lessonId = $attachment->lesson_id ?? null;
-            if (($scanRequired && (!is_array($scan) || ($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
+            if (
+                ($scanRequired && (!is_array($scan) || ($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
                 || ($attachment->status ?? '') !== 'ready' || !in_array($preview, [0, 1], true)
                 || ($preview === 1 && $lessonId !== null)
-                || !MaterialAvailability::validStored($attachment->publish_up ?? null, $attachment->publish_down ?? null)) {
+                || !MaterialAvailability::validStored($attachment->publish_up ?? null, $attachment->publish_down ?? null)
+            ) {
                 $blockers[] = 'COM_JLMS_MATERIAL_NOT_READY';
             }
             if (($attachment->publish_up ?? null) !== null || ($attachment->publish_down ?? null) !== null) {

@@ -48,19 +48,19 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScrip
     <td class="text-end text-nowrap">
             <?php if ($row->can_duplicate) :
                 ?><form method="post" action="<?= Route::_('index.php?option=com_jlms') ?>" class="d-inline"><input type="hidden" name="task" value="questionbank.duplicate"><input type="hidden" name="id" value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-secondary" type="submit"><?= Text::_('COM_JLMS_QUESTION_DUPLICATE') ?></button></form><?php
-     endif; ?>
+            endif; ?>
             <?php if ($inUse) :
                 ?><span class="badge bg-warning text-dark" title="<?= $this->escape(Text::_('COM_JLMS_QUESTION_IN_USE')) ?>"><?= Text::_('COM_JLMS_QUESTION_IN_USE_BRIEF') ?></span><?php
-     endif; ?>
+            endif; ?>
             <?php if ($row->can_change_state) :
                 ?><form method="post" action="<?= Route::_('index.php?option=com_jlms') ?>" class="d-inline"><input type="hidden" name="task" value="<?= (int)$row->state === -2 ? 'questionbank.restore' : 'questionbank.trash' ?>"><input type="hidden" name="id" value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-secondary" type="submit"><?= Text::_((int)$row->state === -2 ? 'JTOOLBAR_RESTORE' : 'JTOOLBAR_TRASH') ?></button></form><?php
-     endif; ?>
+            endif; ?>
             <?php if ($row->can_delete && (int)$row->state === -2) :
                 ?><form method="post" action="<?= Route::_('index.php?option=com_jlms') ?>" class="d-inline"><input type="hidden" name="task" value="questionbank.delete"><input type="hidden" name="id" value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-danger" type="submit" <?= $inUse ? 'disabled title="' . $this->escape(Text::_('COM_JLMS_QUESTION_IN_USE')) . '"' : '' ?> <?= $inUse ? '' : 'data-confirm="' . $this->escape(Text::_('COM_JLMS_QUESTION_DELETE_CONFIRM')) . '" onclick="return window.confirm(this.dataset.confirm)"' ?>><?= Text::_('JTOOLBAR_DELETE') ?></button></form><?php
-     endif; ?>
+            endif; ?>
     </td>
    </tr>
-  <?php endforeach; ?>
+     <?php endforeach; ?>
   </tbody>
  </table>
  <?php endif; ?>

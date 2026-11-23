@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 require __DIR__ . '/bootstrap.php';
 
 use Jlms\Component\Jlms\Administrator\Domain\Coverage;
@@ -43,12 +42,16 @@ $links = \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::sec
     . '<a href="https://example.invalid/private#clientSecret=TEST_CREDENTIAL">Fragment</a>'
     . '<a href="https://user:password@example.invalid/private">Userinfo</a></p>'
 );
-expect(str_contains($links, 'href="https://example.invalid/public"')
+expect(
+    str_contains($links, 'href="https://example.invalid/public"')
     && substr_count($links, 'href=') === 1
     && substr_count($links, 'rel="noreferrer noopener"') === 4,
-    'LES-02 preserves safe lesson links, strips credential destinations and forbids opener');
-expect(!str_contains($links, 'TEST_CREDENTIAL') && !str_contains($links, 'user:password@'),
-    'LES-02 credentials are not emitted as HTML attributes');
+    'LES-02 preserves safe lesson links, strips credential destinations and forbids opener'
+);
+expect(
+    !str_contains($links, 'TEST_CREDENTIAL') && !str_contains($links, 'user:password@'),
+    'LES-02 credentials are not emitted as HTML attributes'
+);
 
 $storagePathCheck = new \ReflectionMethod(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class, 'isAbsolutePath');
 expect($storagePathCheck->invoke(null, '/srv/jlms-private') === true, 'LES-03 accepts Unix private storage root');
@@ -58,36 +61,56 @@ expect($storagePathCheck->invoke(null, 'C:jlms-private') === false, 'LES-03 reje
 expect($storagePathCheck->invoke(null, '../public') === false, 'LES-03 rejects relative storage root');
 
 $transcript = '<p>Audio <strong>transcript</strong></p>';
-expect(LessonTranscript::sanitizeInput($transcript, static fn(string $html): string => strip_tags($html, '<p><strong>')) === $transcript,
-    'lesson transcript uses the configured HTML sanitizer');
-expect(LessonTranscript::decode('audio', LessonTranscript::encode($transcript, 'audio')) === $transcript,
-    'audio transcript round-trips through versioned lesson parameters');
+expect(
+    LessonTranscript::sanitizeInput($transcript, static fn(string $html): string => strip_tags($html, '<p><strong>')) === $transcript,
+    'lesson transcript uses the configured HTML sanitizer'
+);
+expect(
+    LessonTranscript::decode('audio', LessonTranscript::encode($transcript, 'audio')) === $transcript,
+    'audio transcript round-trips through versioned lesson parameters'
+);
 $videoTranscript = '<p>Video <em>transcript</em></p>';
-expect(LessonTranscript::decode('video', LessonTranscript::encode($videoTranscript, 'video')) === $videoTranscript,
-    'video transcript round-trips through versioned lesson parameters');
-expect(LessonTranscript::decode('audio', LessonTranscript::encode($videoTranscript, 'video')) === '',
-    'video transcript is not exposed for audio lessons');
-expect(LessonTranscript::decode('text', LessonTranscript::encode($transcript, 'audio')) === '',
-    'transcript is never exposed for a non-media lesson');
-rejects(static fn() => LessonTranscript::sanitizeInput(str_repeat('x', LessonTranscript::MAX_BYTES + 1), static fn(string $html): string => $html),
-    'lesson transcript payload is bounded');
+expect(
+    LessonTranscript::decode('video', LessonTranscript::encode($videoTranscript, 'video')) === $videoTranscript,
+    'video transcript round-trips through versioned lesson parameters'
+);
+expect(
+    LessonTranscript::decode('audio', LessonTranscript::encode($videoTranscript, 'video')) === '',
+    'video transcript is not exposed for audio lessons'
+);
+expect(
+    LessonTranscript::decode('text', LessonTranscript::encode($transcript, 'audio')) === '',
+    'transcript is never exposed for a non-media lesson'
+);
+rejects(
+    static fn() => LessonTranscript::sanitizeInput(str_repeat('x', LessonTranscript::MAX_BYTES + 1), static fn(string $html): string => $html),
+    'lesson transcript payload is bounded'
+);
 $mailCatalog = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateVariableCatalog::class;
 $escaped = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.enrollment.manager_request');
-expect(in_array('USER_FULLNAME', $escaped, true) && in_array('COURSE_TITLE', $escaped, true)
+expect(
+    in_array('USER_FULLNAME', $escaped, true) && in_array('COURSE_TITLE', $escaped, true)
     && in_array('COURSE_MANAGEMENT_URL', $escaped, true),
-    'raw display text and unescaped links require Joomla escaping inside HTML');
-expect(!in_array('USER_FULLNAME_HTML', $escaped, true) && !in_array('COURSE_TITLE_HTML', $escaped, true),
-    'pre-escaped HTML token values must not be encoded twice');
+    'raw display text and unescaped links require Joomla escaping inside HTML'
+);
+expect(
+    !in_array('USER_FULLNAME_HTML', $escaped, true) && !in_array('COURSE_TITLE_HTML', $escaped, true),
+    'pre-escaped HTML token values must not be encoded twice'
+);
 $communicationUnsafe = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.course.message');
-expect(in_array('MESSAGE_BODY_TEXT', $communicationUnsafe, true) && !in_array('MESSAGE_BODY_HTML', $communicationUnsafe, true)
+expect(
+    in_array('MESSAGE_BODY_TEXT', $communicationUnsafe, true) && !in_array('MESSAGE_BODY_HTML', $communicationUnsafe, true)
     && !in_array('SITE_NAME_HTML', $communicationUnsafe, true),
-    'plain message strings escape in HTML but sanitized fragments and escaped fields remain intact');
+    'plain message strings escape in HTML but sanitized fragments and escaped fields remain intact'
+);
 $announcementUnsafe = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.course.published');
-expect(in_array('COURSE_TITLE', $announcementUnsafe, true)
+expect(
+    in_array('COURSE_TITLE', $announcementUnsafe, true)
     && !in_array('COURSE_IMAGE_HTML', $announcementUnsafe, true)
     && !in_array('COURSE_LESSONS_HTML', $announcementUnsafe, true)
     && !in_array('UNSUBSCRIBE_URL_HTML', $announcementUnsafe, true),
-    'course announcement only escapes untrusted raw text, not prepared HTML or escaped links');
+    'course announcement only escapes untrusted raw text, not prepared HTML or escaped links'
+);
 $mailPrefsClass = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::class;
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'disabled'], '{"unrelated_setting":"retain-me"}');
 expect(!$mailPrefsClass::enabled('enrollment', true, $mailParams), 'course can disable a globally enabled enrollment email');
@@ -201,23 +224,39 @@ expect(in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], tr
 $consultationRules = ['mode' => 'consultation', 'completion_policy' => 'none', 'sequence_mode' => 'free'];
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
-    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'text']], [], false, $consultationRules,
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'text']],
+    [],
+    false,
+    $consultationRules,
 );
 expect(!in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true), 'consultation courses may contain only optional lessons');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
-    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']], [], false, $consultationRules,
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']],
+    [],
+    false,
+    $consultationRules,
 );
 expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'consultation videos do not require tracked duration metadata');
 expect(in_array('COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED', $readiness['warnings'], true), 'consultation videos warn when duration is not confirmed');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
-    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']], [], false, $consultationRules,
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
+    [],
+    false,
+    $consultationRules,
 );
 expect(in_array('COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS', $readiness['blockers'], true), 'consultation courses reject required lessons');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
-    [(object) ['id' => 3]], [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'quiz']], [], false, $consultationRules,
+    [(object) ['id' => 3]],
+    [(object) ['module_id' => 3, 'required' => 0, 'kind' => 'quiz']],
+    [],
+    false,
+    $consultationRules,
 );
 expect(in_array('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED', $readiness['blockers'], true), 'consultation courses reject quiz lessons');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
@@ -259,18 +298,24 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => 60000,
         'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>&nbsp; </p>"}']],
 );
-expect(in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
-    'empty/HTML-only video transcript is a non-blocking editorial accessibility warning');
-expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['blockers'], true),
-    'missing optional transcript must not block video publication');
+expect(
+    in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'empty/HTML-only video transcript is a non-blocking editorial accessibility warning'
+);
+expect(
+    !in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['blockers'], true),
+    'missing optional transcript must not block video publication'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => 60000,
         'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>Spoken dialogue</p>"}']],
 );
-expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
-    'video editorial transcript removes warning without inferring captions');
+expect(
+    !in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'video editorial transcript removes warning without inferring captions'
+);
 
 // AUT-03: provider caption availability and editorial transcript are independent.
 foreach (['youtube', 'vimeo', 'cloudflarestream'] as $remoteKey) {
@@ -281,12 +326,18 @@ foreach (['youtube', 'vimeo', 'cloudflarestream'] as $remoteKey) {
             'duration_ms' => 60000,
             'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>Available transcript</p>"}']]
     );
-    expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $ready['warnings'], true),
-        'remote caption tracks are explicitly unverified for ' . $remoteKey);
-    expect(!in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $ready['blockers'], true),
-        'unverified provider caption tracks are advisory, not a publication blocker');
-    expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $ready['warnings'], true),
-        'local transcript is independently verified for ' . $remoteKey);
+    expect(
+        in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $ready['warnings'], true),
+        'remote caption tracks are explicitly unverified for ' . $remoteKey
+    );
+    expect(
+        !in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $ready['blockers'], true),
+        'unverified provider caption tracks are advisory, not a publication blocker'
+    );
+    expect(
+        !in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $ready['warnings'], true),
+        'local transcript is independently verified for ' . $remoteKey
+    );
 }
 $localReady = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
@@ -294,8 +345,10 @@ $localReady = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::in
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'provider_key' => 'html5',
         'duration_ms' => 60000, 'params_json' => '{"video_duration_confirmed":true}']]
 );
-expect(!in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $localReady['warnings'], true),
-    'local MP4 does not receive a remote-provider caption warning');
+expect(
+    !in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $localReady['warnings'], true),
+    'local MP4 does not receive a remote-provider caption warning'
+);
 
 // AUT-03: the editor must report the same local provider tracking gate as
 // authoritative publication, without confusing captions with tracking.
@@ -306,25 +359,45 @@ $trackedCourse = $readinessCourse('<p>Course description</p>', 'Summary', 'image
 $trackedModules = [(object) ['id' => 3]];
 $capabilityCheck = static fn(array $checks, array $rules = []): array =>
     \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
-        $trackedCourse, $trackedModules, $trackedLesson, [], false, $rules, [317 => $checks]
+        $trackedCourse,
+        $trackedModules,
+        $trackedLesson,
+        [],
+        false,
+        $rules,
+        [317 => $checks]
     );
 $unconfigured = $capabilityCheck(['configured' => false, 'trackable' => false]);
-expect(in_array('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED', $unconfigured['blockers'], true),
-    'draft preflight flags an unconfigured video provider');
+expect(
+    in_array('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED', $unconfigured['blockers'], true),
+    'draft preflight flags an unconfigured video provider'
+);
 $untrackable = $capabilityCheck(['configured' => true, 'trackable' => false]);
-expect(in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $untrackable['blockers'], true),
-    'learning preflight blocks providers without position/duration/seek');
-expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $untrackable['warnings'], true),
-    'provider captions remain independent from tracking capability');
+expect(
+    in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $untrackable['blockers'], true),
+    'learning preflight blocks providers without position/duration/seek'
+);
+expect(
+    in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $untrackable['warnings'], true),
+    'provider captions remain independent from tracking capability'
+);
 $trackable = $capabilityCheck(['configured' => true, 'trackable' => true]);
-expect(!in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $trackable['blockers'], true),
-    'capable provider has no tracking gate in preflight');
-$consultationVideo = $capabilityCheck(['configured' => true, 'trackable' => false],
-    ['mode' => 'consultation', 'completion_policy' => 'none']);
-expect(!in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $consultationVideo['blockers'], true),
-    'consultation does not require tracked-video capabilities');
-expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $consultationVideo['warnings'], true),
-    'consultation still discloses remote caption uncertainty');
+expect(
+    !in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $trackable['blockers'], true),
+    'capable provider has no tracking gate in preflight'
+);
+$consultationVideo = $capabilityCheck(
+    ['configured' => true, 'trackable' => false],
+    ['mode' => 'consultation', 'completion_policy' => 'none']
+);
+expect(
+    !in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $consultationVideo['blockers'], true),
+    'consultation does not require tracked-video capabilities'
+);
+expect(
+    in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $consultationVideo['warnings'], true),
+    'consultation still discloses remote caption uncertainty'
+);
 
 // AUT-03: require the same independent, provider-aware warning and capability
 // policy for all built-in remote adapters in both teaching modes. The local
@@ -343,16 +416,25 @@ foreach (['youtube', 'vimeo', 'cloudflarestream', 'html5'] as $providerKey) {
                 'kind' => 'video', 'provider_key' => $providerKey,
                 'duration_ms' => 60000,
                 'params_json' => '{"video_duration_confirmed":true,"video_transcript":"<p>Transcript</p>"}']],
-            [], false, $rules, [$lessonId => ['configured' => true, 'trackable' => false]]
+            [],
+            false,
+            $rules,
+            [$lessonId => ['configured' => true, 'trackable' => false]]
         );
-        expect(in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $check['warnings'], true)
+        expect(
+            in_array('COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED', $check['warnings'], true)
             === ($providerKey !== 'html5'),
-            'caption availability warning applies only to remote provider ' . $providerKey . '/' . $mode);
-        expect(in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $check['blockers'], true)
+            'caption availability warning applies only to remote provider ' . $providerKey . '/' . $mode
+        );
+        expect(
+            in_array('COM_JLMS_PUBLICATION_UNSUPPORTED', $check['blockers'], true)
             === ($mode === 'learning'),
-            'nontrackable provider blocks learning but not consultation: ' . $providerKey . '/' . $mode);
-        expect(!in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $check['warnings'], true),
-            'transcript is independently recognized for ' . $providerKey . '/' . $mode);
+            'nontrackable provider blocks learning but not consultation: ' . $providerKey . '/' . $mode
+        );
+        expect(
+            !in_array('COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING', $check['warnings'], true),
+            'transcript is independently recognized for ' . $providerKey . '/' . $mode
+        );
     }
 }
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
@@ -360,16 +442,20 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'audio', 'params_json' => '{}']],
 );
-expect(in_array('COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
-    'optional audio transcript absence generates one editor warning');
+expect(
+    in_array('COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'optional audio transcript absence generates one editor warning'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'audio',
         'params_json' => '{"audio_transcript":"<p>Audio lesson text</p>"}']],
 );
-expect(!in_array('COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
-    'audio editorial transcript removes warning');
+expect(
+    !in_array('COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING', $readiness['warnings'], true),
+    'audio editorial transcript removes warning'
+);
 
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
@@ -458,7 +544,8 @@ foreach (['0', '-1', '1e2', '01', '9223372036854775808', '18446744073709551615']
 expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9'))->reference === 'dQw4w9WgXcQ', 'YouTube recognised URL canonicalised');
 
 // LES-02: even discarded URL query arguments must never carry credentials.
-foreach ([
+foreach (
+    [
     ['youtube', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&access_token=ci-secret'],
     ['youtube', 'https://youtu.be/dQw4w9WgXcQ?api-key=ci-secret'],
     ['vimeo', 'https://player.vimeo.com/video/12345?h=abc123&client_secret=ci-secret'],
@@ -467,7 +554,8 @@ foreach ([
     ['youtube', 'https://youtu.be/dQw4w9WgXcQ#access_token=ci-secret'],
     ['vimeo', 'https://player.vimeo.com/video/12345#clientSecret=ci-secret'],
     ['cloudflarestream', 'https://videodelivery.net/0123456789abcdef0123456789abcdef#apiKey=ci-secret'],
-] as [$provider, $source]) {
+    ] as [$provider, $source]
+) {
     rejects(fn () => SourceNormalizer::normalise($provider, new SourceInput($source)), 'Credential-bearing video URL rejected: ' . $provider);
 }
 expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9&feature=share'))->reference === 'dQw4w9WgXcQ', 'Non-secret YouTube URL options remain supported');
@@ -497,22 +585,32 @@ $localStates = array_column($readOnlyProviders, 'stateKey', 'key');
 expect($localStates['youtube'] === 'COM_JLMS_READY', 'local enabled YouTube setup');
 expect($localStates['vimeo'] === 'COM_JLMS_NOT_CONFIGURED', 'local disabled Vimeo playback');
 expect($localStates['html5'] === 'COM_JLMS_READY', 'local HTML5 bounded setup');
-expect($localStates['cloudflarestream'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
-    'Cloudflare config is not remote availability');
-expect($localStates['externalvideo'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
-    'arbitrary external plugins are not executed');
-expect($localStates['badplugin'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
-    'untrusted malformed plugin config never executes code');
+expect(
+    $localStates['cloudflarestream'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
+    'Cloudflare config is not remote availability'
+);
+expect(
+    $localStates['externalvideo'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
+    'arbitrary external plugins are not executed'
+);
+expect(
+    $localStates['badplugin'] === 'COM_JLMS_PROVIDER_UNVERIFIED',
+    'untrusted malformed plugin config never executes code'
+);
 $localProjection = json_encode($readOnlyProviders, JSON_THROW_ON_ERROR);
-expect(!str_contains($localProjection, 'NO_LEAK_SENTINEL')
+expect(
+    !str_contains($localProjection, 'NO_LEAK_SENTINEL')
     && !str_contains($localProjection, 'JLMS_SECRET_NEVER_PRINT_VALUE')
     && !str_contains($localProjection, 'script'),
-    'SCR-16 provider config, secret references and untrusted markup must remain private');
+    'SCR-16 provider config, secret references and untrusted markup must remain private'
+);
 $localNoStorage = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::inspectLocal([
     'html5' => (object) ['enabled' => 1, 'params' => '{"playback_enabled":1}'],
 ], ['video_storage_root' => '', 'video_delivery_mode' => 'disabled']);
-expect((array_column($localNoStorage, 'stateKey', 'key')['html5'] ?? '') === 'COM_JLMS_NOT_CONFIGURED',
-    'local HTML5 readiness requires private storage and supported mode');
+expect(
+    (array_column($localNoStorage, 'stateKey', 'key')['html5'] ?? '') === 'COM_JLMS_NOT_CONFIGURED',
+    'local HTML5 readiness requires private storage and supported mode'
+);
 $registry = new VideoProviderRegistry();
 $providerStatuses = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::summarize([
     'youtube' => (object) ['enabled' => 1, 'name' => 'YouTube'],
@@ -531,25 +629,31 @@ $unsafeProviders = \Jlms\Component\Jlms\Administrator\Application\DashboardProvi
 ]);
 $unsafeKeys = array_column($unsafeProviders, 'labelKey', 'key');
 expect(!array_key_exists('token?raw-secret', $unsafeKeys), 'unsafe video provider identifiers must be ignored');
-expect(($unsafeKeys['customvideo'] ?? null) === 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL',
-    'untrusted video provider labels are masked');
+expect(
+    ($unsafeKeys['customvideo'] ?? null) === 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL',
+    'untrusted video provider labels are masked'
+);
 $localizedProviders = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::summarize([
     'customvideo' => (object) ['enabled' => 1, 'name' => 'PLG_JLMSVIDEO_CUSTOM_TITLE'],
 ], []);
-expect((array_column($localizedProviders, 'labelKey', 'key')['customvideo'] ?? null) === 'PLG_JLMSVIDEO_CUSTOM_TITLE',
-    'localized plugin labels stay available');
+expect(
+    (array_column($localizedProviders, 'labelKey', 'key')['customvideo'] ?? null) === 'PLG_JLMSVIDEO_CUSTOM_TITLE',
+    'localized plugin labels stay available'
+);
 $providerStates = array_column($providerStatuses, 'stateKey', 'key');
 expect($providerStates['youtube'] === 'COM_JLMS_READY', 'dashboard reports configured provider as ready');
 expect($providerStates['vimeo'] === 'COM_JLMS_PROVIDER_DISABLED', 'dashboard reports installed disabled provider');
 expect($providerStates['cloudflarestream'] === 'COM_JLMS_NOT_CONFIGURED', 'dashboard reports provider setup status');
 expect($providerStates['html5'] === 'COM_JLMS_PROVIDER_NOT_INSTALLED', 'dashboard reports missing bundled provider');
-foreach ([
+foreach (
+    [
     'COM_JLMS_PROVIDER_NOT_INSTALLED' => 'NOT_INSTALLED',
     'COM_JLMS_PROVIDER_DISABLED' => 'DISABLED',
     'COM_JLMS_PROVIDER_UNAVAILABLE' => 'UNAVAILABLE',
     'COM_JLMS_NOT_CONFIGURED' => 'NOT_CONFIGURED',
     'COM_JLMS_READY' => 'READY',
-] as $state => $suffix) {
+    ] as $state => $suffix
+) {
     expect(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey($state)
         === 'COM_JLMS_PROVIDER_GUIDANCE_' . $suffix, 'video provider actionable guidance ' . $suffix);
 }
@@ -561,7 +665,9 @@ $created = 0;
 $registry->register($descriptor, static function () use (&$created) {
     $created++;
     return new class () extends AbstractFoundationProvider {
-        protected function key(): string { return 'example';
+        protected function key(): string
+        {
+            return 'example';
         }
     };
 });
@@ -609,17 +715,25 @@ $stream = new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider(
 );
 $streamSource = new \Jlms\Contracts\Video\VideoSource('cloudflarestream', str_repeat('b', 32), 1);
 $streamCaps = $stream->getCapabilities($streamSource);
-expect($stream->getDescriptor()->configured && $streamCaps->position && $streamCaps->duration && $streamCaps->seek
+expect(
+    $stream->getDescriptor()->configured && $streamCaps->position && $streamCaps->duration && $streamCaps->seek
     && !$streamCaps->speed && $streamCaps->captions && !$streamCaps->transcript && $streamCaps->expiringPlayback && !$streamCaps->download,
-    'Cloudflare Stream reports its configured API and playback capabilities');
+    'Cloudflare Stream reports its configured API and playback capabilities'
+);
 $wrongProvider = $enabled->getCapabilities(new \Jlms\Contracts\Video\VideoSource('vimeo', '123456789', 1));
-expect(!$wrongProvider->position && !$wrongProvider->duration && !$wrongProvider->seek && !$wrongProvider->speed
+expect(
+    !$wrongProvider->position && !$wrongProvider->duration && !$wrongProvider->seek && !$wrongProvider->speed
     && !$wrongProvider->captions && !$wrongProvider->expiringPlayback && !$wrongProvider->download,
-    'provider does not claim capabilities for another provider source');
-expect(!(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getCapabilities($source)->position,
-    'disabled embed reports no active capabilities');
-expect(!(new \Jlms\Plugin\Jlmsvideo\Html5\Provider\Provider())->getCapabilities(new \Jlms\Contracts\Video\VideoSource('html5', 'media.mp4', 1))->position,
-    'disabled HTML5 reports no active capabilities');
+    'provider does not claim capabilities for another provider source'
+);
+expect(
+    !(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getCapabilities($source)->position,
+    'disabled embed reports no active capabilities'
+);
+expect(
+    !(new \Jlms\Plugin\Jlmsvideo\Html5\Provider\Provider())->getCapabilities(new \Jlms\Contracts\Video\VideoSource('html5', 'media.mp4', 1))->position,
+    'disabled HTML5 reports no active capabilities'
+);
 $supportsTrackedLearning = static fn (\Jlms\Contracts\Video\VideoCapabilities $capabilities): bool =>
     $capabilities->position && $capabilities->duration && $capabilities->seek;
 $optional = new \Jlms\Contracts\Video\VideoCapabilities(true, true, true, false, false, false, false, false);

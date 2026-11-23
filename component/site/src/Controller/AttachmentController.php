@@ -123,8 +123,13 @@ final class AttachmentController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
-            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->audioDownload($this->app->getIdentity(),
-                $this->app->getLanguage()->getTag(), $this->input->getInt('enrollment_id', 0), $this->input->getInt('lesson_id', 0), $this->input->getInt('id', 0));
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->audioDownload(
+                $this->app->getIdentity(),
+                $this->app->getLanguage()->getTag(),
+                $this->input->getInt('enrollment_id', 0),
+                $this->input->getInt('lesson_id', 0),
+                $this->input->getInt('id', 0)
+            );
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_RESOURCE_NOT_FOUND',
@@ -144,8 +149,12 @@ final class AttachmentController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
-            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->download($this->app->getIdentity(),
-                $this->app->getLanguage()->getTag(), $this->input->getInt('enrollment_id', 0), $this->input->getInt('id', 0));
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->download(
+                $this->app->getIdentity(),
+                $this->app->getLanguage()->getTag(),
+                $this->input->getInt('enrollment_id', 0),
+                $this->input->getInt('id', 0)
+            );
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW',
@@ -166,8 +175,12 @@ final class AttachmentController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
-            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->inlinePreview($this->app->getIdentity(),
-                $this->app->getLanguage()->getTag(), $this->input->getInt('enrollment_id', 0), $this->input->getInt('id', 0));
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->inlinePreview(
+                $this->app->getIdentity(),
+                $this->app->getLanguage()->getTag(),
+                $this->input->getInt('enrollment_id', 0),
+                $this->input->getInt('id', 0)
+            );
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW',

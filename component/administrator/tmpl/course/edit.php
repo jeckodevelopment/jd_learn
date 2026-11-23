@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -58,16 +59,16 @@ $id = (int) $this->item->id;
    <ul id="jlms-course-programme-summary">
             <?php foreach ($this->programme['modules'] as $module) :
                 ?><li><?= $this->escape($module->title) ?></li><?php
-   endforeach; ?>
+            endforeach; ?>
    </ul>
-  <?php else :
-        ?><p><?= Text::_('COM_JLMS_COURSE_PROGRAMME_EMPTY') ?></p><?php
-  endif; ?>
+     <?php else :
+            ?><p><?= Text::_('COM_JLMS_COURSE_PROGRAMME_EMPTY') ?></p><?php
+     endif; ?>
      <?php if (!$this->readOnly) : ?>
    <joomla-toolbar-button task="course.programme" form-validation>
     <button type="button" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_SAVE_PROGRAMME') ?></button>
    </joomla-toolbar-button>
-  <?php endif; ?>
+     <?php endif; ?>
  <?php endif; ?>
  <section id="jlms-course-teaching-rules" class="mt-4" aria-labelledby="jlms-course-teaching-rules-heading">
   <h2 id="jlms-course-teaching-rules-heading" class="h4"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></h2>
@@ -101,7 +102,7 @@ $id = (int) $this->item->id;
  <section id="jlms-course-custom-fields">
         <?php foreach ($this->form->getFieldsets('com_fields') as $fieldset) : ?>
   <fieldset><legend><?= $this->escape(Text::_($fieldset->label)) ?></legend><?= $this->form->renderFieldset($fieldset->name) ?></fieldset>
- <?php endforeach; ?>
+        <?php endforeach; ?>
  </section>
         <?= HTMLHelper::_('uitab.endTab') ?>
  <?php endif; ?>

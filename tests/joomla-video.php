@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -97,19 +97,25 @@ $cloudflareFields = [];
 foreach ($cloudflareManifest->config->fields->fieldset->field as $field) {
     $cloudflareFields[(string) $field['name']] = $field;
 }
-if (isset($cloudflareFields['signing_key_ref']) || isset($cloudflareFields['signing_key_id'])
-    || isset($cloudflareFields['signing_mode'])) {
+if (
+    isset($cloudflareFields['signing_key_ref']) || isset($cloudflareFields['signing_key_id'])
+    || isset($cloudflareFields['signing_mode'])
+) {
     throw new \RuntimeException('Cloudflare Stream must expose only the implemented API signing configuration.');
 }
 $checks = 0;
-function videoExpect(bool $value,string $message): void { global $checks;
-    if (!$value) throw new \RuntimeException($message);
+function videoExpect(bool $value, string $message): void
+{
+    global $checks;
+    if (!$value) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function videoDenied(callable $work,int $code,string $message): void {
+function videoDenied(callable $work, int $code, string $message): void
+{
     try {
         $work();
-
     } catch (\RuntimeException $error) {
         videoExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
         return;
@@ -162,12 +168,16 @@ $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learni
 $group = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learning entitlement'")->loadResult();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Video fixture','alias' => 'video-fixture','catid' => $catid,
- 'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Video fixture'])) throw new \RuntimeException($model->getError());
+if (
+    !$model->save(['id' => 0,'revision' => 1,'title' => 'Video fixture','alias' => 'video-fixture','catid' => $catid,
+    'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Video fixture'])
+) {
+    throw new \RuntimeException($model->getError());
+}
 $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
-$scope = static function()use($db,$course,$version):array{return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
-
+$scope = static function () use ($db, $course, $version): array {
+    return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 };
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Video chapter']);
 $lesson = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Video lesson','kind' => 'video',
@@ -186,8 +196,8 @@ try {
 $publication->transition($actor, $course, $version, $cr, $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
 $enrollment = $learning->start($student, 'en-GB', $course, bin2hex(random_bytes(16)));
 $now = (int)floor(microtime(true) * 1000);
-$service = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function()use(&$now):int{return $now;
-
+$service = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
+    return $now;
 });
 videoFixtureUpdate('jlms_lessons', (object)['id' => $lesson,'publish_up' => gmdate('Y-m-d H:i:s', time() + 3600),'publish_down' => gmdate('Y-m-d H:i:s', time() + 7200)]);
 videoDenied(fn()=>$learning->videoContext($student, 'en-GB', $enrollment, $lesson), 403, 'scheduled video source is protected before release');
@@ -220,10 +230,10 @@ videoExpect($expiredCount === 0, 'authorised playback purges expired player sess
 $c = $service->playback($student, 'en-GB', $enrollment, $lesson, true);
 videoExpect($b['options']['reference'] === 'dQw4w9WgXcQ' && !isset($b['playback_token']), 'safe descriptor');
 videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state' => 1,'publish_down' => null], true);
-$event = static fn(int $id,string $type,int $p,int $t,bool $playing=true):array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $t,'rate_milli' => 1000,'playing' => $playing];
+$event = static fn(int $id, string $type, int $p, int $t, bool $playing = true): array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $t,'rate_milli' => 1000,'playing' => $playing];
 $batch = json_encode([$event(1, 'play', 0, 0),$event(2, 'position', 5000, 5000)], JSON_THROW_ON_ERROR);
 $now += 5000;
-$save = static fn(array $grant,int $seq,string $events,int $duration=10000)=>$service->save($student, 'en-GB', $enrollment, $lesson, $grant['session_id'], $grant['source_revision'], $seq, $duration, $events);
+$save = static fn(array $grant, int $seq, string $events, int $duration = 10000)=>$service->save($student, 'en-GB', $enrollment, $lesson, $grant['session_id'], $grant['source_revision'], $seq, $duration, $events);
 $r = $save($b, 1, $batch);
 videoExpect($r['covered_ms'] === 5000 && !$r['lesson_completed'], 'first valid interval');
 videoExpect($save($b, 1, $batch)['replay'], 'identical batch replay');
@@ -241,8 +251,10 @@ foreach ([0, 2, -2] as $inactiveCourseState) {
     videoDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'LCM-01 inactive course denies direct new enrollment');
     $afterLifecycleProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id=' . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
     $afterLifecycleSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
-    videoExpect($afterLifecycleProgress === $beforeLifecycleProgress && $afterLifecycleSession === $beforeLifecycleSession,
-        'LCM-01 inactive state preserves progress and session metadata without writes');
+    videoExpect(
+        $afterLifecycleProgress === $beforeLifecycleProgress && $afterLifecycleSession === $beforeLifecycleSession,
+        'LCM-01 inactive state preserves progress and session metadata without writes'
+    );
 }
 videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state' => 1,'admissions_open' => 1,'delivery_enabled' => 1]);
 videoExpect($save($b, 1, $batch)['replay'], 'LCM-01 restored fixture retains valid session replay');
@@ -263,8 +275,10 @@ try {
         videoDenied(fn()=>$save($b, 2, $batch), 403, 'revoked enrollment rejects new telemetry in active session: ' . $revokedStatus);
         $afterProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id=' . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
         $afterPlayerSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
-        videoExpect($afterProgress === $priorProgress && $afterPlayerSession === $priorPlayerSession,
-            'revoked enrollment preserves progress and session without writing: ' . $revokedStatus);
+        videoExpect(
+            $afterProgress === $priorProgress && $afterPlayerSession === $priorPlayerSession,
+            'revoked enrollment preserves progress and session without writing: ' . $revokedStatus
+        );
     }
 } finally {
     $restore = (object)['id' => $enrollment,'status' => $originalEnrollmentStatus];
@@ -298,12 +312,18 @@ videoExpect($r['resume_conflict'] && $r['resume_ms'] === 5000, 'repeated stale w
 videoExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === 1, 'completion counted once');
 $persistedResume = (int)$db->setQuery('SELECT resume_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult();
 $completedReplay = $service->playback($student, 'en-GB', $enrollment, $lesson, true);
-videoExpect($completedReplay['lesson_completed'] === true && $completedReplay['resume_ms'] === 0,
-    'a completed lesson opens from the beginning rather than seeking to its previous end');
-videoExpect((int)$db->setQuery('SELECT resume_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult() === $persistedResume,
-    'reopening does not erase stored resume, coverage, or historical completion');
-videoExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === 1,
-    'reopening a completed video never counts completion twice');
+videoExpect(
+    $completedReplay['lesson_completed'] === true && $completedReplay['resume_ms'] === 0,
+    'a completed lesson opens from the beginning rather than seeking to its previous end'
+);
+videoExpect(
+    (int)$db->setQuery('SELECT resume_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult() === $persistedResume,
+    'reopening does not erase stored resume, coverage, or historical completion'
+);
+videoExpect(
+    (int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === 1,
+    'reopening a completed video never counts completion twice'
+);
 $service->close($student, 'en-GB', $enrollment, $lesson, $completedReplay['session_id']);
 videoExpect($save($c, 1, $otherBatch)['replay'], 'completion replay');
 $service->close($student, 'en-GB', $enrollment, $lesson, $b['session_id']);

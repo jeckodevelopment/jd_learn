@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -11,9 +11,9 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 $languagePlugin = $fixtureDb->query("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetchColumn();
 $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='system' AND element='languagefilter'");
-register_shutdown_function(static function()use($fixtureDb,$languagePlugin):void{$q = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+register_shutdown_function(static function () use ($fixtureDb, $languagePlugin): void {
+    $q = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
     $q->execute([$languagePlugin]);
-
 });
 
 // Simulate the web request context required by AdministratorApplication in a CLI smoke test.
@@ -63,25 +63,29 @@ $factory = $component->getMVCFactory();
 
 $operator = $app->getIdentity();
 $checks = 0;
-function dashExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function dashExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function dashDenied(callable $call,int $code,string $message):void{try {
+function dashDenied(callable $call, int $code, string $message): void
+{
+    try {
         $call();
-
-} catch (\RuntimeException $e) {
-    dashExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $e) {
+        dashExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
+        return;
+    }throw new \RuntimeException($message);
 }
 $service = $component->getDashboardService();
 $learning = $component->getLearningService();
 $path = dirname($root) . '/dashboard-fixture.json';
 $f = json_decode(file_get_contents(dirname($root) . '/learning-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
-$read = static function(\Joomla\CMS\User\User $user,string $filter='all')use($db,$service):array{return $service->cards($user, 'en-GB', $db->setQuery($service->query($user, $filter))->loadObjectList());
-
+$read = static function (\Joomla\CMS\User\User $user, string $filter = 'all') use ($db, $service): array {
+    return $service->cards($user, 'en-GB', $db->setQuery($service->query($user, $filter))->loadObjectList());
 };
 if (($argv[2] ?? '') === 'retained') {
     $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
@@ -92,22 +96,28 @@ if (($argv[2] ?? '') === 'retained') {
     dashExpect($card['learning_state'] === 'completed' && $card['access'] === 'expired' && $card['percent'] === 100, 'completion and expired access retained independently');
     dashExpect($learning->resumeTarget($user, 'en-GB', $saved['active'])['lesson_id'] === $saved['lesson'], 'resume history retained');
     $issued = $component->getCertificateService()->listForStudent($user);
-    dashExpect(count($issued) === 1 && $issued[0]['enrollment_id'] === $saved['completed'],
-        'issued certificate identity and ownership survive package upgrade');
+    dashExpect(
+        count($issued) === 1 && $issued[0]['enrollment_id'] === $saved['completed'],
+        'issued certificate identity and ownership survive package upgrade'
+    );
     $certificateFile = $component->getCertificateService()->download($user, $saved['completed']);
     try {
-        dashExpect($certificateFile['mime'] === 'application/pdf' && $certificateFile['size'] > 100,
-        'protected PDF remains available after package upgrade');
+        dashExpect(
+            $certificateFile['mime'] === 'application/pdf' && $certificateFile['size'] > 100,
+            'protected PDF remains available after package upgrade'
+        );
     } finally {
         fclose($certificateFile['handle']);
     }
     echo json_encode(['dashboard_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
-$newUser = static function(string $name)use($f):\Joomla\CMS\User\User{
+$newUser = static function (string $name) use ($f): \Joomla\CMS\User\User {
     $u = new \Joomla\CMS\User\User();
     $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' => 'Ci-only-Dashboard-Password-2026','password2' => 'Ci-only-Dashboard-Password-2026','groups' => [2,$f['group_id']],'block' => 0,'activation' => ''];
-    if (!$u->bind($d) || !$u->save())throw new \RuntimeException('Dashboard fixture user failed');
+    if (!$u->bind($d) || !$u->save()) {
+        throw new \RuntimeException('Dashboard fixture user failed');
+    }
     return new \Joomla\CMS\User\User((int)$u->id);
 };
 $owner = $newUser('cidashboard');
@@ -117,7 +127,7 @@ $active = $learning->start($owner, 'en-GB', $f['course_id'], bin2hex(random_byte
 $otherEnrollment = $learning->start($other, 'en-GB', $f['course_id'], bin2hex(random_bytes(16)));
 $base = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE id=' . $active)->loadObject();
 $editionBase = $db->setQuery('SELECT * FROM #__jlms_editions WHERE id=' . (int)$base->edition_id)->loadObject();
-$seed = static function(string $code,array $fields=[])use($db,$base,$editionBase):int{
+$seed = static function (string $code, array $fields = []) use ($db, $base, $editionBase): int {
     // Disposable history fixture only; not a manual-enrollment product API.
     $edition = clone$editionBase;
     unset($edition->id);
@@ -126,7 +136,9 @@ $seed = static function(string $code,array $fields=[])use($db,$base,$editionBase
     $row = clone$base;
     unset($row->id);
     $row->edition_id = (int)$edition->id;
-    foreach ($fields as$key => $value)$row->$key = $value;
+    foreach ($fields as $key => $value) {
+        $row->$key = $value;
+    }
     $db->insertObject('#__jlms_enrollments', $row, 'id');
     return(int)$row->id;
 };
@@ -135,10 +147,12 @@ $completed = $seed('completed', ['completed_total' => 3,'completed_at' => $now,'
 $suspended = $seed('suspended', ['status' => 'suspended']);
 $cancelled = $seed('cancelled', ['status' => 'cancelled']);
 $future = $seed('future', ['starts_at' => '2099-01-01 00:00:00']);
-for ($i = 0;$i < 20;$i++)$seed('page-' . $i);
-$update = static function(string $table,int $id,array $fields)use($db):void{$r = (object)(['id' => $id] + $fields);
+for ($i = 0; $i < 20; $i++) {
+    $seed('page-' . $i);
+}
+$update = static function (string $table, int $id, array $fields) use ($db): void {
+    $r = (object)(['id' => $id] + $fields);
     $db->updateObject('#__' . $table, $r, 'id', true);
-
 };
 $snapshot = static fn()=>$db->setQuery('SELECT revision,started_at,completed_total,last_activity_at,last_lesson_id FROM #__jlms_enrollments WHERE id=' . $active)->loadAssoc();
 $before = $snapshot();
@@ -205,15 +219,19 @@ try {
     foreach ([0,2,-2] as $inactiveState) {
         $update('jlms_courses', $f['course_id'], ['state' => $inactiveState]);
         $c = array_column($read($owner), null, 'id');
-        dashExpect(count($c) === 25 && $c[$active]['access'] === 'unavailable' && $c[$active]['title'] !== '' && $c[$completed]['completed'] && $c[$completed]['percent'] === 100,
-        'inactive course keeps owner title, completions and historical counters');
+        dashExpect(
+            count($c) === 25 && $c[$active]['access'] === 'unavailable' && $c[$active]['title'] !== '' && $c[$completed]['completed'] && $c[$completed]['percent'] === 100,
+            'inactive course keeps owner title, completions and historical counters'
+        );
         dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $active), 404, 'inactive course blocks direct resume');
         $update('jlms_course_versions', $versionId, ['rules_json' => json_encode($consultationRules, JSON_THROW_ON_ERROR)]);
         $consultationCards = array_column($read($owner), null, 'id');
-        dashExpect($consultationCards[$active]['access'] === 'unavailable' && $consultationCards[$active]['percent'] === null
-           && !$consultationCards[$active]['progress_applicable']
-           && $consultationCards[$completed]['percent'] === null,
-           'inactive consultation retains no progress percentage even for historical completion');
+        dashExpect(
+            $consultationCards[$active]['access'] === 'unavailable' && $consultationCards[$active]['percent'] === null
+            && !$consultationCards[$active]['progress_applicable']
+            && $consultationCards[$completed]['percent'] === null,
+            'inactive consultation retains no progress percentage even for historical completion'
+        );
         $update('jlms_course_versions', $versionId, ['rules_json' => $historicalRules]);
     }
 } finally {
@@ -253,8 +271,10 @@ dashDenied(fn()=>$certificates->adminDownload($other, (int)$certificate->id), 40
 dashDenied(fn()=>$certificates->adminDownload(new \Joomla\CMS\User\User(), (int)$certificate->id), 403, 'guest cannot use administrator download');
 $adminPdf = $certificates->adminDownload($operator, (int)$certificate->id);
 try {
-    dashExpect($adminPdf['mime'] === 'application/pdf' && $adminPdf['size'] > 100,
-    'authorized certificate manager can retrieve protected document');
+    dashExpect(
+        $adminPdf['mime'] === 'application/pdf' && $adminPdf['size'] > 100,
+        'authorized certificate manager can retrieve protected document'
+    );
 } finally {
     fclose($adminPdf['handle']);
 }
@@ -262,41 +282,60 @@ try {
  $preBlockOwner = $owner;
  $update('users', (int)$owner->id, ['block' => 1]);
 try {
-    dashDenied(fn()=>$certificates->download($preBlockOwner, $completed), 403,
-        'blocked Joomla account cannot use old direct certificate download URL');
-    dashDenied(fn()=>$certificates->listForStudent($preBlockOwner), 403,
-        'blocked Joomla account cannot list previously issued certificates');
+    dashDenied(
+        fn()=>$certificates->download($preBlockOwner, $completed),
+        403,
+        'blocked Joomla account cannot use old direct certificate download URL'
+    );
+    dashDenied(
+        fn()=>$certificates->listForStudent($preBlockOwner),
+        403,
+        'blocked Joomla account cannot list previously issued certificates'
+    );
 } finally {
     $update('users', (int)$owner->id, ['block' => 0]);
 }
- dashExpect(count($certificates->listForStudent($preBlockOwner)) === 1,
-     'reactivated Joomla account can list the same immutable certificate');
+ dashExpect(
+     count($certificates->listForStudent($preBlockOwner)) === 1,
+     'reactivated Joomla account can list the same immutable certificate'
+ );
 
  foreach ([0,2,-2] as $inactiveState) {
      $update('jlms_courses', $f['course_id'], ['state' => $inactiveState]);
      try {
          $issued = $certificates->listForStudent($owner);
-         dashExpect(count($issued) === 1 && $issued[0]['enrollment_id'] === $completed
-            && $issued[0]['title'] === 'Frozen course title' && $issued[0]['serial'] === $serial,
-            'inactive course retains independently owned certificate listing');
+         dashExpect(
+             count($issued) === 1 && $issued[0]['enrollment_id'] === $completed
+             && $issued[0]['title'] === 'Frozen course title' && $issued[0]['serial'] === $serial,
+             'inactive course retains independently owned certificate listing'
+         );
          $file = $certificates->download($owner, $completed);
          try {
-             dashExpect($file['mime'] === 'application/pdf' && $file['size'] > 100
-             && str_starts_with((string)fread($file['handle'], 8), '%PDF-'),
-             'inactive course retains authenticated private PDF delivery');
+             dashExpect(
+                 $file['mime'] === 'application/pdf' && $file['size'] > 100
+                 && str_starts_with((string)fread($file['handle'], 8), '%PDF-'),
+                 'inactive course retains authenticated private PDF delivery'
+             );
          } finally {
              fclose($file['handle']);
          }
-         dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $active), 404,
-            'certificate availability does not re-enable lessons');
-         dashExpect($db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json FROM #__jlms_certificate_documents WHERE id=' . (int)$document->id)->loadAssoc() === $certDbSnapshot,
-            'archiving never changes certificate identity, serial, issue date or snapshot');
+         dashDenied(
+             fn()=>$learning->resumeTarget($owner, 'en-GB', $active),
+             404,
+             'certificate availability does not re-enable lessons'
+         );
+         dashExpect(
+             $db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json FROM #__jlms_certificate_documents WHERE id=' . (int)$document->id)->loadAssoc() === $certDbSnapshot,
+             'archiving never changes certificate identity, serial, issue date or snapshot'
+         );
      } finally {
          $update('jlms_courses', $f['course_id'], ['state' => 1]);
      }
  }
- dashExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id=' . $completed)->loadResult() === 1,
-    'lifecycle changes do not reissue certificates');
+ dashExpect(
+     (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id=' . $completed)->loadResult() === 1,
+     'lifecycle changes do not reissue certificates'
+ );
  $serialized = json_encode($read($owner), JSON_THROW_ON_ERROR);
  dashExpect(!str_contains($serialized, 'LEARNING_PRIVATE_BODY') && !str_contains($serialized, 'rules_json') && !str_contains($serialized, 'subject_key') && !str_contains($serialized, 'user_id'), 'projection contains no private teaching, identity keys or internal rules');
  $app->loadIdentity($owner);
@@ -321,12 +360,14 @@ try {
  }
  $app->loadIdentity($operator);
  $menus = [];
- foreach (['en-GB','it-IT']as$tag) {
+ foreach (['en-GB','it-IT'] as $tag) {
      $alias = 'dashboard-menu-' . substr($tag, 0, 2);
      $table = new \Joomla\CMS\Table\Menu($db);
      $table->setLocation(1, 'last-child');
      $table->bind(['title' => $alias,'alias' => $alias,'menutype' => 'mainmenu','type' => 'component','link' => 'index.php?option=com_jlms&view=dashboard','component_id' => (int)$db->setQuery("SELECT extension_id FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult(),'published' => 1,'access' => 2,'language' => $tag,'home' => 0,'params' => '{}','browserNav' => 0]);
-     if (!$table->check() || !$table->store())throw new \RuntimeException('Native dashboard menu failed');
+     if (!$table->check() || !$table->store()) {
+         throw new \RuntimeException('Native dashboard menu failed');
+     }
      $menus[$tag] = (int)$table->id;
  }
  require __DIR__ . '/dashboard-catalog-latest-regression.php';

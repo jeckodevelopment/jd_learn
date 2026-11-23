@@ -9,25 +9,28 @@ if (!is_dir($root)) {
     mkdir($root, 0700, true);
 }
 $checks = 0;
-function materialExpect(bool $ok, string $message): void { global $checks;
+function materialExpect(bool $ok, string $message): void
+{
+    global $checks;
     if (!$ok) {
         throw new \RuntimeException($message);
-
     } $checks++;
 }
-function materialReject(callable $call, string $message): void {
+function materialReject(callable $call, string $message): void
+{
     try {
         $call();
-
     } catch (\RuntimeException $error) {
         materialExpect(true, $message);
         return;
     }
     throw new \RuntimeException($message);
 }
-foreach (['../evil.pdf', 'bad.php.pdf', 'bad.html', "bad\0.pdf", 'bad\\name.pdf', '.hidden.txt',
+foreach (
+    ['../evil.pdf', 'bad.php.pdf', 'bad.html', "bad\0.pdf", 'bad\\name.pdf', '.hidden.txt',
     "appunti\u{202E}fdp.exe", "materiale\u{202A}.txt", "test\u{2066}notes\u{2069}.txt",
-    "note\u{200F}.txt", "report\u{061C}.pdf"] as $bad) {
+    "note\u{200F}.txt", "report\u{061C}.pdf"] as $bad
+) {
     materialReject(fn () => MaterialFilePolicy::name($bad), 'Unsafe name rejected');
 }
 materialExpect(MaterialFilePolicy::name('Lezione àèìòù – résumé.pdf') === 'Lezione àèìòù – résumé.pdf', 'Legitimate Unicode filename accepted');
@@ -39,12 +42,12 @@ file_put_contents($root . '/pdf', "%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\n%%E
 materialExpect(MaterialFilePolicy::inspect($root . '/pdf', 'manuale.pdf')['mime_type'] === 'application/pdf', 'PDF signature accepted');
 file_put_contents($root . '/html', '<html><script>alert(1)</script></html>');
 materialReject(fn () => MaterialFilePolicy::inspect($root . '/html', 'disguised.txt'), 'Active MIME rejected');
-function materialZip(string $path, array $files): void {
+function materialZip(string $path, array $files): void
+{
     $zip = new \ZipArchive();
     $zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
     foreach ($files as $name => $content) {
         $zip->addFromString($name, $content);
-
     }$zip->close();
 }
 materialZip($root . '/safe.zip', ['notes.txt' => 'Course notes']);

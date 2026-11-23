@@ -11,12 +11,14 @@ final class MaterialFilePolicy
 
     public static function name(string $name): string
     {
-        if ($name === '' || strlen($name) > 180 || preg_match('//u', $name) !== 1
+        if (
+            $name === '' || strlen($name) > 180 || preg_match('//u', $name) !== 1
             || preg_match('/[\\x00-\\x1f\\x7f\\/\\\\]/', $name)
             // Unicode bidi overrides and isolates can disguise a downloaded file extension.
             || preg_match('/[\\x{061C}\\x{200E}-\\x{200F}\\x{202A}-\\x{202E}\\x{2066}-\\x{2069}]/u', $name)
             || $name[0] === '.' || trim($name) !== $name
-            || preg_match('/(?:^|\.)(?:php\d*|phtml|phar|exe|com|bat|cmd|sh|ps1|js|html?|svg)(?:\.|$)/i', $name)) {
+            || preg_match('/(?:^|\.)(?:php\d*|phtml|phar|exe|com|bat|cmd|sh|ps1|js|html?|svg)(?:\.|$)/i', $name)
+        ) {
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }
         return $name;
@@ -46,8 +48,10 @@ final class MaterialFilePolicy
         }
         $head = file_get_contents($path, false, null, 0, min(1024, $size));
         if (in_array($ext, ['mp3', 'ogg'], true)) {
-            if (($ext === 'ogg' && !str_starts_with($head, 'OggS'))
-                || ($ext === 'mp3' && !str_starts_with($head, 'ID3') && (strlen($head) < 2 || ord($head[0]) !== 0xFF || (ord($head[1]) & 0xE0) !== 0xE0))) {
+            if (
+                ($ext === 'ogg' && !str_starts_with($head, 'OggS'))
+                || ($ext === 'mp3' && !str_starts_with($head, 'ID3') && (strlen($head) < 2 || ord($head[0]) !== 0xFF || (ord($head[1]) & 0xE0) !== 0xE0))
+            ) {
                 throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
             }
             $mime = $ext === 'ogg' ? 'audio/ogg' : 'audio/mpeg';
@@ -63,8 +67,10 @@ final class MaterialFilePolicy
             }
         } elseif (in_array($ext, ['jpg', 'jpeg', 'png', 'webp'], true)) {
             $image = @getimagesize($path);
-            if (!$image || ($image['mime'] ?? '') !== $mime || $image[0] > 20000 || $image[1] > 20000
-                || $image[0] * $image[1] > 40000000) {
+            if (
+                !$image || ($image['mime'] ?? '') !== $mime || $image[0] > 20000 || $image[1] > 20000
+                || $image[0] * $image[1] > 40000000
+            ) {
                 throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
             }
         } else {
@@ -87,9 +93,11 @@ final class MaterialFilePolicy
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }
         $end = unpack('vdisk/vdirectory_disk/ventries_disk/ventries/Vdirectory_size/Voffset/vcomment', substr($tail, $at + 4, 18));
-        if ($end['disk'] || $end['directory_disk'] || $end['entries'] !== $end['entries_disk']
+        if (
+            $end['disk'] || $end['directory_disk'] || $end['entries'] !== $end['entries_disk']
             || $end['entries'] > 2000 || $end['directory_size'] > 2097152
-            || $end['offset'] + $end['directory_size'] > $size || strlen($tail) - $at !== 22 + $end['comment']) {
+            || $end['offset'] + $end['directory_size'] > $size || strlen($tail) - $at !== 22 + $end['comment']
+        ) {
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }
         $zip = new \ZipArchive();
@@ -101,8 +109,10 @@ final class MaterialFilePolicy
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $entry = $zip->statIndex($i);
                 $name = $entry['name'];
-                if (strlen($name) > 255 || preg_match('/[\\x00-\\x1f\\\\]/', $name) || str_starts_with($name, '/')
-                    || preg_match('~(?:^|/)\.\.(?:/|$)|^[A-Za-z]:~', $name) || ($entry['encryption_method'] ?? 0) !== 0) {
+                if (
+                    strlen($name) > 255 || preg_match('/[\\x00-\\x1f\\\\]/', $name) || str_starts_with($name, '/')
+                    || preg_match('~(?:^|/)\.\.(?:/|$)|^[A-Za-z]:~', $name) || ($entry['encryption_method'] ?? 0) !== 0
+                ) {
                     throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
                 }
                 $expanded += $entry['size'];
@@ -125,9 +135,11 @@ final class MaterialFilePolicy
                     throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
                 }
                 $types = $zip->getFromName('[Content_Types].xml', 65536);
-                if ($types === false || stripos($types, '<!DOCTYPE') !== false || stripos($types, '<!ENTITY') !== false
+                if (
+                    $types === false || stripos($types, '<!DOCTYPE') !== false || stripos($types, '<!ENTITY') !== false
                     || stripos($types, 'macroEnabled') !== false || stripos($types, 'vbaProject') !== false
-                    || simplexml_load_string($types, 'SimpleXMLElement', LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING) === false) {
+                    || simplexml_load_string($types, 'SimpleXMLElement', LIBXML_NONET | LIBXML_NOERROR | LIBXML_NOWARNING) === false
+                ) {
                     throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
                 }
             } elseif (in_array($ext, ['odt', 'ods', 'odp'], true)) {

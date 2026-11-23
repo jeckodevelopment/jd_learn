@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 /** Typed author calendar: explicit IANA zone on input, UTC instants in storage. */
@@ -59,7 +60,7 @@ final class CourseSchedule
         }
         return self::sql(reset($candidates)->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s'));
     }
-    public static function display(?string $value,string $zone,bool $offset=false): string
+    public static function display(?string $value, string $zone, bool $offset = false): string
     {
         if ($value === null || $value === '') {
             return '';
@@ -85,7 +86,7 @@ final class CourseSchedule
         }
         return array_intersect_key($data, array_flip(array_merge(['_schema','timezone'], self::DATES)));
     }
-    public static function read(object $course,string $defaultZone='UTC'): array
+    public static function read(object $course, string $defaultZone = 'UTC'): array
     {
         $params = json_decode(($course->params_json ?? '') ?: '{}', true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($params)) {
@@ -99,7 +100,7 @@ final class CourseSchedule
         $data['publish_down'] = $course->publish_down ?? null;
         return self::validate($data);
     }
-    public static function editor(object $course,string $defaultZone): array
+    public static function editor(object $course, string $defaultZone): array
     {
         $data = self::read($course, $defaultZone);
         $result = ['calendar_timezone' => $data['timezone']];
@@ -108,7 +109,7 @@ final class CourseSchedule
         }
         return $result;
     }
-    public static function merge(array $input,object $course,string $params,string $defaultZone): array
+    public static function merge(array $input, object $course, string $params, string $defaultZone): array
     {
         if (!array_intersect(self::FIELDS, array_keys($input))) {
             return [];
@@ -143,7 +144,7 @@ final class CourseSchedule
         }
         return null;
     }
-    public static function within(?string $start,?string $end,?\DateTimeImmutable $now=null): bool
+    public static function within(?string $start, ?string $end, ?\DateTimeImmutable $now = null): bool
     {
         $now ??= new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $start = self::sql($start);

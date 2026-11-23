@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Jlms\Component\Jlms\Administrator\Application;
@@ -17,8 +18,10 @@ final class PathwayArtwork
             $path = CourseArtwork::path((string) ($data['cover_image'] ?? ''));
             $alt = (string) ($data['cover_alt'] ?? '');
             $decorative = ($data['cover_decorative'] ?? false) === true;
-            if (mb_strlen($alt) > 500 || preg_match('/[\\x00-\\x1f\\x7f]/', $alt)
-                || ($path !== '' && !$decorative && $alt === '')) {
+            if (
+                mb_strlen($alt) > 500 || preg_match('/[\\x00-\\x1f\\x7f]/', $alt)
+                || ($path !== '' && !$decorative && $alt === '')
+            ) {
                 return ['image' => '', 'alt' => ''];
             }
             return ['image' => $path, 'alt' => $decorative ? '' : $alt];

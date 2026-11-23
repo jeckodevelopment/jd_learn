@@ -19,8 +19,10 @@ final class HtmlView extends BaseHtmlView
     {
         $actor = new User((int) Factory::getApplication()->getIdentity()->id);
         $actor->clearAccessRights();
-        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')) {
+        if (
+            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')
+        ) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
         $this->item = $this->get('Item');

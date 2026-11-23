@@ -67,7 +67,9 @@ final class CourseMessageTemplate
         // Script/style contents are not part of the readable email alternative.
         $html = preg_replace('~<(script|style)\\b[^>]*>.*?</\\1\\s*>~is', '', $html) ?? $html;
         $safe = (string) InputFilter::getInstance(
-            [], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS,
+            [],
+            [],
+            InputFilter::ONLY_BLOCK_DEFINED_TAGS,
             InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES
         )->clean($html, 'html');
         $withLines = preg_replace('~<br\s*/?>|</(?:p|div|li|h[1-6])>~i', "\n", $safe) ?? $safe;
@@ -98,7 +100,8 @@ final class CourseMessageTemplate
         $subject = trim($fields['subject']);
         $body = trim($fields['body']);
         $htmlbody = trim($fields['htmlbody']);
-        if ($subject === '' || mb_strlen($subject) > 300
+        if (
+            $subject === '' || mb_strlen($subject) > 300
             || preg_match('/[\x00-\x1f\x7f]/', $subject)
             || $body === '' || mb_strlen($body) > 16000
             || mb_strlen($htmlbody) > 32000
@@ -116,7 +119,11 @@ final class CourseMessageTemplate
             }
         }
         $missing = MailTemplatePlaceholderValidator::unresolved(
-            self::TEMPLATE_ID, $data, $subject, $body, $htmlbody
+            self::TEMPLATE_ID,
+            $data,
+            $subject,
+            $body,
+            $htmlbody
         );
         if ($missing !== []) {
             throw new CourseMessageVariableException($missing);

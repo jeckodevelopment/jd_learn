@@ -34,12 +34,14 @@ namespace {
         'limitstart' => '900',
         'secret' => 'LEAK-ME',
     ], true, 18);
-    if ($pages->params['catid'] !== 18
+    if (
+        $pages->params['catid'] !== 18
         || count($pages->params['filter']) !== 10
         || $pages->params['filter']['search'] !== 'opera & voice'
         || $pages->params['filter']['order'] !== 'published'
         || array_key_exists('secret', $pages->params['filter'])
-        || array_key_exists('limitstart', $pages->params['filter'])) {
+        || array_key_exists('limitstart', $pages->params['filter'])
+    ) {
         throw new RuntimeException('SCR-01 filters or catalogue scope lost or arbitrary query leaked');
     }
 

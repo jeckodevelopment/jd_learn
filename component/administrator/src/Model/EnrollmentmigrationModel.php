@@ -1,11 +1,14 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+
 final class EnrollmentmigrationModel extends FormModel
 {
     public function getForm($data = [], $loadData = true)
@@ -40,11 +43,13 @@ final class EnrollmentmigrationModel extends FormModel
             if ($error instanceof \InvalidArgumentException) {
                 throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 400);
             }
-            if (in_array($error->getCode(), [400,401,403,404,409,422], true)
+            if (
+                in_array($error->getCode(), [400,401,403,404,409,422], true)
                 && in_array($error->getMessage(), ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED','COM_JLMS_RESOURCE_NOT_FOUND',
                     'COM_JLMS_MIGRATION_VERSION_INVALID','COM_JLMS_MIGRATION_TARGET_NOT_CURRENT','COM_JLMS_MIGRATION_SOURCE_INVALID','COM_JLMS_MIGRATION_LIMIT',
                     'COM_JLMS_MIGRATION_MAPPING_INVALID','COM_JLMS_MIGRATION_MAPPING_CONFLICT','COM_JLMS_MIGRATION_TARGET_EXISTS','COM_JLMS_MIGRATION_OPEN_ATTEMPT',
-                    'COM_JLMS_MIGRATION_EDITION_UNAVAILABLE','COM_JLMS_MIGRATION_EDITION_FULL','COM_JLMS_COURSE_DELIVERY_SUSPENDED'], true)) {
+                    'COM_JLMS_MIGRATION_EDITION_UNAVAILABLE','COM_JLMS_MIGRATION_EDITION_FULL','COM_JLMS_COURSE_DELIVERY_SUSPENDED'], true)
+            ) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);

@@ -1,11 +1,14 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Controller;
+
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+
 final class EnrollmentstateController extends BaseController
 {
     public function execute($task)
@@ -44,8 +47,17 @@ final class EnrollmentstateController extends BaseController
             }
             $course = CurriculumService::id($raw['course_id']);
             $enrollment = CurriculumService::id($raw['enrollment_id']);
-            $this->app->bootComponent('com_jlms')->getEnrollmentStateService()->apply($this->app->getIdentity(), $course, $enrollment,
-                CurriculumService::id($raw['enrollment_revision']), $raw['target_status'], $raw['reason'], $raw['mutation_id'], $raw['impact_hash'], true);
+            $this->app->bootComponent('com_jlms')->getEnrollmentStateService()->apply(
+                $this->app->getIdentity(),
+                $course,
+                $enrollment,
+                CurriculumService::id($raw['enrollment_revision']),
+                $raw['target_status'],
+                $raw['reason'],
+                $raw['mutation_id'],
+                $raw['impact_hash'],
+                true
+            );
             $this->setMessage(Text::_('COM_JLMS_ENROLLMENT_STATE_SAVED'));
             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollmentstate&id=' . $course . '&enrollment_id=' . $enrollment, false));
         } catch (\Throwable $error) {

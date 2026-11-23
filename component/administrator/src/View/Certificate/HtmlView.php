@@ -19,10 +19,14 @@ final class HtmlView extends BaseHtmlView
         $app->setHeader('Cache-Control', 'private, no-store', true);
         try {
             $this->item = $app->bootComponent('com_jlms')->getCertificateService()->adminDetail(
-                $app->getIdentity(), $app->getInput()->getInt('id', 0));
+                $app->getIdentity(),
+                $app->getInput()->getInt('id', 0)
+            );
         } catch (\Throwable $error) {
-            if (in_array($error->getMessage(), ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT',
-                'COM_JLMS_CERTIFICATE_UNAVAILABLE', 'COM_JLMS_CERTIFICATE_AUDIT_FAILED'], true)) {
+            if (
+                in_array($error->getMessage(), ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT',
+                'COM_JLMS_CERTIFICATE_UNAVAILABLE', 'COM_JLMS_CERTIFICATE_AUDIT_FAILED'], true)
+            ) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
             }
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);

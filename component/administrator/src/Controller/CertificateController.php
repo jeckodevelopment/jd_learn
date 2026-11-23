@@ -40,11 +40,15 @@ final class CertificateController extends BaseController
             }
             $reason = $this->input->post->getString('reason', '');
             $this->app->bootComponent('com_jlms')->getCertificateService()->adminRecoverHistorical(
-                $this->app->getIdentity(), $enrollmentId, $reason
+                $this->app->getIdentity(),
+                $enrollmentId,
+                $reason
             );
             $this->setMessage(Text::_('COM_JLMS_CERTIFICATE_HISTORICAL_RECOVERED'));
             $this->setRedirect(\Joomla\CMS\Router\Route::link(
-                'administrator', 'index.php?option=com_jlms&view=certificates', false
+                'administrator',
+                'index.php?option=com_jlms&view=certificates',
+                false
             ));
         } catch (\Throwable $error) {
             $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_RESOURCE_NOT_FOUND',
@@ -77,11 +81,15 @@ final class CertificateController extends BaseController
             }
             $reason = $this->input->post->getString('reason', '');
             $this->app->bootComponent('com_jlms')->getCertificateService()->adminRecoverMissing(
-                $this->app->getIdentity(), $enrollmentId, $reason
+                $this->app->getIdentity(),
+                $enrollmentId,
+                $reason
             );
             $this->setMessage(Text::_('COM_JLMS_CERTIFICATE_MISSING_RECOVERED'));
             $this->setRedirect(\Joomla\CMS\Router\Route::link(
-                'administrator', 'index.php?option=com_jlms&view=certificates', false
+                'administrator',
+                'index.php?option=com_jlms&view=certificates',
+                false
             ));
         } catch (\Throwable $error) {
             $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_RESOURCE_NOT_FOUND',
@@ -115,11 +123,16 @@ final class CertificateController extends BaseController
             }
             $reason = $this->input->post->getString('reason', '');
             $this->app->bootComponent('com_jlms')->getCertificateService()->adminRegenerate(
-                $this->app->getIdentity(), $id, $revision, $reason
+                $this->app->getIdentity(),
+                $id,
+                $revision,
+                $reason
             );
             $this->setMessage(Text::_('COM_JLMS_CERTIFICATE_REGENERATED'));
             $this->setRedirect(\Joomla\CMS\Router\Route::link(
-                'administrator', 'index.php?option=com_jlms&view=certificate&id=' . $id, false
+                'administrator',
+                'index.php?option=com_jlms&view=certificate&id=' . $id,
+                false
             ));
         } catch (\Throwable $error) {
             $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_RESOURCE_NOT_FOUND',

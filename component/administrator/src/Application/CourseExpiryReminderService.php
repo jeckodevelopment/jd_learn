@@ -11,7 +11,8 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
 /** Queues one optional operational reminder for active learners before an enrolment deadline. */
 final class CourseExpiryReminderService
 {
-    public function __construct(private readonly DatabaseInterface $db) {
+    public function __construct(private readonly DatabaseInterface $db)
+    {
     }
 
     /** @return array{queued:int,failed:int,processed:int} */
@@ -48,16 +49,23 @@ final class CourseExpiryReminderService
             $userParams = json_decode((string) $row->user_params, true);
             $language = is_array($userParams) && is_string($userParams['language'] ?? null) ? $userParams['language'] : '';
             try {
-                $queue->enqueue((int) $row->course_id, hash('sha256', 'course.expiring:' . (int) $row->enrollment_id . ':' . $end),
-                    'com_jlms.course.expiring', (string) ($language ?: $row->course_language),
-                    (string) $row->learner_email, $name, [
+                $queue->enqueue(
+                    (int) $row->course_id,
+                    hash('sha256', 'course.expiring:' . (int) $row->enrollment_id . ':' . $end),
+                    'com_jlms.course.expiring',
+                    (string) ($language ?: $row->course_language),
+                    (string) $row->learner_email,
+                    $name,
+                    [
                         'ENROLLMENT_ID' => (string) (int) $row->enrollment_id,
                         'USER_FULLNAME' => $name,
                         'COURSE_TITLE' => (string) $row->course_title,
                         'COURSE_ENDS_AT' => gmdate('Y-m-d H:i', strtotime($end . ' UTC')) . ' UTC',
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard',
                         'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-                    ], (int) $row->learner_user_id);
+                    ],
+                    (int) $row->learner_user_id
+                );
                 $queued++;
             } catch (\Throwable) {
                 $failed++;

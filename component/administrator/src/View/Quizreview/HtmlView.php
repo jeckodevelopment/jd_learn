@@ -1,14 +1,17 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\View\Quizreview;
+
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+
 final class HtmlView extends BaseHtmlView
 {
     public array $item;
     public $form;
-    public function display($tpl=null)
+    public function display($tpl = null)
     {
         \Joomla\CMS\Factory::getApplication()->setHeader('Cache-Control', 'private, no-store', true);
         $this->item = $this->get('Item');

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -63,23 +63,26 @@ if (!$userId) {
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($userId));
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
-\Joomla\CMS\Log\Log::addLogger(['logger' => 'callback','callback' => static function ($entry): void { fwrite(STDERR, 'Model diagnostic: ' . $entry->message . PHP_EOL);
-
+\Joomla\CMS\Log\Log::addLogger(['logger' => 'callback','callback' => static function ($entry): void {
+    fwrite(STDERR, 'Model diagnostic: ' . $entry->message . PHP_EOL);
 }], \Joomla\CMS\Log\Log::ALL, ['com_jlms']);
 
 $checks = 0;
-function assocExpect(bool $condition, string $message): void {
+function assocExpect(bool $condition, string $message): void
+{
     global $checks;
     if (!$condition) {
         throw new \RuntimeException($message);
     }
     $checks++;
 }
-function assocData(int $id): array {
+function assocData(int $id): array
+{
     global $db;
     return (array) $db->setQuery('SELECT id,title,alias,catid,language,catalog_access,content_access,enrollment_mode,summary,revision FROM #__jlms_courses WHERE id=' . $id)->loadObject();
 }
-function assocSave(array $data): bool {
+function assocSave(array $data): bool
+{
     global $factory;
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
     $saved = $model->save($data);
@@ -88,7 +91,8 @@ function assocSave(array $data): bool {
     }
     return $saved;
 }
-function assocRows(): string {
+function assocRows(): string
+{
     global $db;
     return json_encode($db->setQuery("SELECT * FROM #__associations WHERE context='com_jlms.item' ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR);
 }
@@ -132,8 +136,10 @@ if (!$language->store()) {
 $catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $create = static function (string $name, string $tag) use ($catid, $factory): int {
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-    if (!$model->save(['id' => 0, 'title' => $name, 'alias' => $name, 'catid' => $catid, 'language' => $tag,
-        'catalog_access' => 1, 'content_access' => 2, 'enrollment_mode' => 'auto', 'presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Translation fixture', 'revision' => 1])) {
+    if (
+        !$model->save(['id' => 0, 'title' => $name, 'alias' => $name, 'catid' => $catid, 'language' => $tag,
+        'catalog_access' => 1, 'content_access' => 2, 'enrollment_mode' => 'auto', 'presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Translation fixture', 'revision' => 1])
+    ) {
         throw new \RuntimeException('Association draft fixture: ' . $model->getError());
     }
     return (int) $model->getState('course.id');
@@ -211,8 +217,11 @@ $raceIt = $create('association-race-it', 'it-IT');
 $workers = [];
 foreach ([$raceEn1,$raceEn2] as $source) {
     $pipes = [];
-    $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',json_encode(['source' => $source,'target' => $raceIt], JSON_THROW_ON_ERROR)],
-        [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+    $process = proc_open(
+        [PHP_BINARY,__FILE__,$root,'worker',json_encode(['source' => $source,'target' => $raceIt], JSON_THROW_ON_ERROR)],
+        [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']],
+        $pipes
+    );
     if (!is_resource($process)) {
         throw new \RuntimeException('Association worker failed to start');
     }
@@ -255,7 +264,7 @@ foreach ([$en,$it,$all] as $course) {
     $revision = (int) assocData($course)['revision'];
     $authoring = $component->getCurriculumService();
     $version = $authoring->createDraft($actor, $course, $revision);
-    $scope = static function () use ($db,$version,$course): array {
+    $scope = static function () use ($db, $version, $course): array {
         return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
     };
     $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Translated chapter']);
@@ -304,9 +313,11 @@ $livePointers = json_encode($db->setQuery("SELECT id,current_version_id FROM #__
 $versionCount = (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult();
 assocExpect(assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]), 'authorized editor can detach a published translation group');
 assocExpect(!(int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult(), 'detaching a published group removes only its native association rows');
-assocExpect(json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR) === $livePointers
+assocExpect(
+    json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR) === $livePointers
     && (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult() === $versionCount,
-    'published translation graph edits preserve the live teaching pointers and versions');
+    'published translation graph edits preserve the live teaching pointers and versions'
+);
 assocExpect(assocSave(assocData($en) + ['associations' => ['it-IT' => $it]]), 'authorized editor can relink published translations');
 assocExpect((int) $helper->getAssociations('course', $en)['it-IT']->id === $it, 'native association API resolves the restored published translation');
 assocExpect((int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult() === 2, 'native association graph remains valid after published relink');

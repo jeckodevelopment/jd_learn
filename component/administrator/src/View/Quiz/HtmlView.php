@@ -1,9 +1,12 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\View\Quiz;
+
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+
 final class HtmlView extends BaseHtmlView
 {
     public array $item;
@@ -21,7 +24,7 @@ final class HtmlView extends BaseHtmlView
             && $actor->authorise('jlms.enrollments.manage', $asset)
             && $actor->authorise('jlms.assessment.correct', $asset);
         $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />');
-        foreach ($this->item['modules']as$module) {
+        foreach ($this->item['modules'] as $module) {
             $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))->addAttribute('value', (string)$module->id);
         }
         if (empty($this->item['data']['lesson_id'])) {

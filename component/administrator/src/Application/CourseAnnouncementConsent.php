@@ -43,16 +43,20 @@ final class CourseAnnouncementConsent
      */
     public static function verifiedRecipient(DatabaseInterface $db, int $userId, string $email, string $origin): array
     {
-        if ($userId < 1 || !in_array($origin, ['dashboard', 'enrollment', 'registration'], true)
-            || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (
+            $userId < 1 || !in_array($origin, ['dashboard', 'enrollment', 'registration'], true)
+            || !filter_var($email, FILTER_VALIDATE_EMAIL)
+        ) {
             throw new \InvalidArgumentException('COM_JLMS_MAIL_CONSENT_INVALID');
         }
         $query = $db->createQuery()->select(['email', 'name', 'block'])->from('#__users')
             ->where('id = :user')->bind(':user', $userId, ParameterType::INTEGER);
         $record = $db->setQuery($query)->loadObject();
-        if (!$record || !filter_var((string) $record->email, FILTER_VALIDATE_EMAIL)
+        if (
+            !$record || !filter_var((string) $record->email, FILTER_VALIDATE_EMAIL)
             || strcasecmp((string) $record->email, $email) !== 0
-            || ($origin !== 'registration' && (int) $record->block !== 0)) {
+            || ($origin !== 'registration' && (int) $record->block !== 0)
+        ) {
             throw new \InvalidArgumentException('COM_JLMS_MAIL_CONSENT_INVALID');
         }
         return ['email' => (string) $record->email, 'name' => (string) $record->name];

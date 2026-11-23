@@ -1,7 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Application;
+
 use Joomla\CMS\User\User;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
@@ -10,8 +12,13 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 /** Single-user administrative admission to the current default edition. No group grants or implicit reset. */
 final class ManualEnrollmentService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
-        private readonly CatalogService $catalog, private readonly EnrollmentRosterService $roster, private readonly \Closure $audit) {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly LearningService $learning,
+        private readonly CatalogService $catalog,
+        private readonly EnrollmentRosterService $roster,
+        private readonly \Closure $audit
+    ) {
     }
 
     /** Administrative assignment does not grant viewing rights. Editorial availability is still mandatory. */
@@ -112,8 +119,13 @@ final class ManualEnrollmentService
             throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
         }
         $editionId = (int) $edition->id;
-        $this->learning->assertEnrollmentScheduleReachable($courseId, $versionId, $editionId,
-            $edition->starts_at, $edition->ends_at);
+        $this->learning->assertEnrollmentScheduleReachable(
+            $courseId,
+            $versionId,
+            $editionId,
+            $edition->starts_at,
+            $edition->ends_at
+        );
         $q = $this->db->createQuery()->select('id, status')->from('#__jlms_enrollments')->where('user_id = :user')->where('edition_id = :edition')
             ->bind(':user', $userId, ParameterType::INTEGER)->bind(':edition', $editionId, ParameterType::INTEGER);
         $existing = $this->db->setQuery($q)->loadObject();
@@ -220,11 +232,16 @@ final class ManualEnrollmentService
             // A preassignment does not grant course access, so it must not look like a confirmed admission.
             if (!$preassignment || $p['has_current_access']) {
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
-                    $course, hash('sha256', 'enrollment.confirmed:' . $id), 'com_jlms.enrollment.confirmed',
-                    (string) ($learner->getParam('language', '') ?: $language), (string) $learner->email, trim((string) $learner->name),
+                    $course,
+                    hash('sha256', 'enrollment.confirmed:' . $id),
+                    'com_jlms.enrollment.confirmed',
+                    (string) ($learner->getParam('language', '') ?: $language),
+                    (string) $learner->email,
+                    trim((string) $learner->name),
                     ['USER_FULLNAME' => trim((string) $learner->name), 'COURSE_TITLE' => (string) $courseRecord->title, 'ENROLLMENT_DATE' => $now,
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id,
-                        'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')], (int) $learner->id
+                        'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')],
+                    (int) $learner->id
                 );
             }
             $this->db->transactionCommit();

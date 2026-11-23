@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /** AUT-04/LES-01: a copy must fail before truncating the 1001st native value. */
+
 require_once dirname(__DIR__) . '/component/administrator/src/Application/CourseVersionCopy.php';
 
 $method = new ReflectionMethod(

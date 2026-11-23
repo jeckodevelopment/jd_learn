@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 $root = realpath($argv[1] ?? '');
-if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1')throw new \RuntimeException('Disposable Joomla site required');
+if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
+    throw new \RuntimeException('Disposable Joomla site required');
+}
 $db = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 $f = json_decode(file_get_contents(dirname($root) . '/enrollment-state-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $mode = $argv[2] ?? '';
@@ -22,7 +26,9 @@ if ($mode === 'snapshot') {
 } elseif (in_array($mode, ['revoke','grant','block','unblock'], true)) {
     $q = $db->prepare('SELECT username FROM joomla_users WHERE id=?');
     $q->execute([$f['manager']]);
-    if ($q->fetchColumn() !== 'cirosterreader')throw new \RuntimeException('Unexpected fixture user');
+    if ($q->fetchColumn() !== 'cirosterreader') {
+        throw new \RuntimeException('Unexpected fixture user');
+    }
     if (in_array($mode, ['block','unblock'], true)) {
         $q = $db->prepare('UPDATE joomla_users SET block=? WHERE id=?');
         $q->execute([$mode === 'block' ? 1 : 0,$f['manager']]);

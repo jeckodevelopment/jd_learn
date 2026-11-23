@@ -63,8 +63,12 @@ final class VideofileController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
-    public function upload(): void { $this->perform(false);
+    public function upload(): void
+    {
+        $this->perform(false);
     }
-    public function scan(): void { $this->perform(true);
+    public function scan(): void
+    {
+        $this->perform(true);
     }
 }

@@ -73,11 +73,17 @@ final class QuestionbankController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
-    public function save(): void { $this->perform('save');
+    public function save(): void
+    {
+        $this->perform('save');
     }
-    public function checkout(): void { $this->perform('checkout');
+    public function checkout(): void
+    {
+        $this->perform('checkout');
     }
-    public function checkin(): void { $this->perform('checkin');
+    public function checkin(): void
+    {
+        $this->perform('checkin');
     }
 
     private function mutate(string $action): void
@@ -117,12 +123,20 @@ final class QuestionbankController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
-    public function duplicate(): void { $this->mutate('duplicate');
+    public function duplicate(): void
+    {
+        $this->mutate('duplicate');
     }
-    public function delete(): void { $this->mutate('delete');
+    public function delete(): void
+    {
+        $this->mutate('delete');
     }
-    public function trash(): void { $this->mutate('trash');
+    public function trash(): void
+    {
+        $this->mutate('trash');
     }
-    public function restore(): void { $this->mutate('restore');
+    public function restore(): void
+    {
+        $this->mutate('restore');
     }
 }

@@ -10,7 +10,8 @@ use Joomla\Database\ParameterType;
 /** Internal read model. PublicationService authorises and serialises its use. */
 final class PublicationImpact
 {
-    public function __construct(private readonly DatabaseInterface $db) {
+    public function __construct(private readonly DatabaseInterface $db)
+    {
     }
 
     private function rows(string $sql, int $version, int $limit): array
@@ -36,7 +37,6 @@ final class PublicationImpact
             }
             foreach ($value as &$child) {
                 $child = self::canonical($child);
-
             } unset($child);
         }
         return $value;
@@ -110,7 +110,6 @@ final class PublicationImpact
         }
         foreach ($result as &$items) {
             ksort($items);
-
         } unset($items);
         return $result;
     }
@@ -155,10 +154,12 @@ final class PublicationImpact
         foreach ($this->db->setQuery($q)->loadObjectList() as $row) {
             $versions[(int) $row->id] = $row;
         }
-        if (count($versions) !== 2
+        if (
+            count($versions) !== 2
             || (int) $versions[$sourceVersionId]->course_id !== (int) $versions[$targetVersionId]->course_id
             || $versions[$sourceVersionId]->status !== 'published'
-            || $versions[$targetVersionId]->status !== 'published') {
+            || $versions[$targetVersionId]->status !== 'published'
+        ) {
             return false;
         }
         $oldRules = self::canonical(json_decode((string) $versions[$sourceVersionId]->rules_json, true, 32, JSON_THROW_ON_ERROR));

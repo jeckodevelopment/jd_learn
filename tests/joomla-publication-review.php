@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 /** Review workflow integration test; run only on the disposable CI Joomla site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new RuntimeException('Disposable Joomla site required.');
@@ -36,7 +37,9 @@ Factory::$application = $app;
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $actorId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cioperator'")->loadResult();
-if (!$actorId)throw new RuntimeException('CI administrator missing.');
+if (!$actorId) {
+    throw new RuntimeException('CI administrator missing.');
+}
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($actorId));
 $app->getSession()->set('user', $app->getIdentity());
 $actor = $app->getIdentity();
@@ -50,12 +53,14 @@ $reviewTransitionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_tr
 $archiveCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult();
 $archiveTransitionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_ARCHIVE_COURSE','COM_JLMS_RESTORE_COURSE') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult();
 WorkflowInstaller::install($app, $db);
-if ($reviewStageCount !== 1 || $reviewTransitionCount !== 5
+if (
+    $reviewStageCount !== 1 || $reviewTransitionCount !== 5
     || $archiveCount !== 1 || $archiveTransitionCount !== 2
     || $reviewStageCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_stages WHERE title='COM_JLMS_IN_REVIEW' AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
     || $reviewTransitionCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
     || $archiveCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
-    || $archiveTransitionCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_ARCHIVE_COURSE','COM_JLMS_RESTORE_COURSE') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()) {
+    || $archiveTransitionCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_ARCHIVE_COURSE','COM_JLMS_RESTORE_COURSE') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
+) {
     throw new RuntimeException('Review workflow install/upgrade must be idempotent.');
 }
 $cat = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
@@ -63,33 +68,41 @@ $model = $component->getMVCFactory()->createModel('Course', 'Administrator', ['i
 $alias = 'review-' . bin2hex(random_bytes(6));
 $data = ['id' => 0,'title' => 'Review workflow test','alias' => $alias,'catid' => $cat,'language' => '*','catalog_access' => 1,'content_access' => 2,
     'enrollment_mode' => 'auto','summary' => 'Review test summary','presentation_description' => '<p>Review test course description.</p>','revision' => 1];
-if (!$model->save($data))throw new RuntimeException('Review fixture failed: ' . $model->getError());
+if (!$model->save($data)) {
+    throw new RuntimeException('Review fixture failed: ' . $model->getError());
+}
 $course = (int)$model->getState('course.id');
-$rev = static fn(string $table,int $id):int=>(int)$db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . (int)$id)->loadResult();
+$rev = static fn(string $table, int $id): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . (int)$id)->loadResult();
 $version = $authoring->createDraft($actor, $course, $rev('courses', $course));
-$scope = static fn(int $version):array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev('course_versions', $version)];
+$scope = static fn(int $version): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev('course_versions', $version)];
 $module = $authoring->saveModule($actor, $scope($version) + ['id' => 0,'title' => 'Review module']);
 $authoring->saveLesson($actor, $scope($version) + ['id' => 0,'module_id' => $module,'title' => 'Review lesson','kind' => 'text','required' => '1','body' => '<p>Review lesson body.</p>']);
 $checks = 0;
-$expect = static function(bool $ok,string $message)use(&$checks):void{if (!$ok)throw new RuntimeException($message);
+$expect = static function (bool $ok, string $message) use (&$checks): void {
+    if (!$ok) {
+        throw new RuntimeException($message);
+    }
     $checks++;
-
 };
 $activeVersion = $version;
-$choice = static function(string $action,int $state)use($publication,$actor,$course,&$activeVersion):object {
+$choice = static function (string $action, int $state) use ($publication, $actor, $course, &$activeVersion): object {
     foreach ($publication->transitions($actor, $course, $activeVersion) as $transition) {
         $options = new Registry($transition->options);
-        if ($options->get('jlms_action') === $action && (int)$options->get('publishing') === $state)return $transition;
+        if ($options->get('jlms_action') === $action && (int)$options->get('publishing') === $state) {
+            return $transition;
+        }
     }
     throw new RuntimeException('Missing workflow choice ' . $action . '/' . $state);
 };
-$transition = static function(object $choice,int $version,?string $impact=null)use($publication,$actor,$course,$rev):void {
+$transition = static function (object $choice, int $version, ?string $impact = null) use ($publication, $actor, $course, $rev): void {
     $publication->transition($actor, $course, $version, $rev('courses', $course), $rev('course_versions', $version), (int)$choice->id, $impact);
 };
-$stage = static function()use($db,$workflow,$course):string {$association = $workflow->getAssociation($course);
-    if (!$association)return '';
+$stage = static function () use ($db, $workflow, $course): string {
+    $association = $workflow->getAssociation($course);
+    if (!$association) {
+        return '';
+    }
     return (string)$db->setQuery('SELECT title FROM #__workflow_stages WHERE id=' . (int)$association->stage_id)->loadResult();
-
 };
 $review = $choice('review', 0);
 $transition($review, $version);
@@ -114,11 +127,13 @@ $archiveChoices = $publication->transitions($actor, $course, $version);
 $archive = null;
 foreach ($archiveChoices as $candidate) {
     $options = new Registry($candidate->options);
-    if ($options->get('jlms_action') === 'archive')$archive = $candidate;
+    if ($options->get('jlms_action') === 'archive') {
+        $archive = $candidate;
+    }
 }
 $expect($archive !== null, 'published course offers an explicit archive transition');
 $finderLifecycle = [];
-$finderLifecycleWitness = static function ($event) use (&$finderLifecycle,$db,$course): void {
+$finderLifecycleWitness = static function ($event) use (&$finderLifecycle, $db, $course): void {
     if ($event->getContext() !== 'com_jlms.course' || (int)$event->getItem()->id !== (int)$course) {
         return;
     }
@@ -148,7 +163,9 @@ $restoreChoices = $publication->transitions($actor, $course, $version);
 $restore = null;
 foreach ($restoreChoices as $candidate) {
     $options = new Registry($candidate->options);
-    if ($options->get('jlms_action') === 'restore')$restore = $candidate;
+    if ($options->get('jlms_action') === 'restore') {
+        $restore = $candidate;
+    }
 }
 $expect($restore !== null, 'archived course offers an explicit restore transition');
 $transition($restore, $version);
@@ -189,8 +206,10 @@ try {
     $expect($e->getMessage() === 'COM_JLMS_VERSION_IN_REVIEW', 'update draft remains locked while under review');
 }
 $transition($choice('return', 1), $draft);
-$expect($stage() === 'JPUBLISHED' && (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $current,
-    'returning an update preserves the live version and published course state');
+$expect(
+    $stage() === 'JPUBLISHED' && (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $current,
+    'returning an update preserves the live version and published course state'
+);
 $finalModule = $authoring->saveModule($actor, $scope($draft) + ['id' => 0,'title' => 'Final update module']);
 $authoring->saveLesson($actor, $scope($draft) + ['id' => 0,'module_id' => $finalModule,'title' => 'Final update lesson','kind' => 'text','required' => '1','body' => '<p>Final update content.</p>']);
 $transition($choice('review', 1), $draft);
@@ -204,13 +223,19 @@ try {
     $expect($e->getMessage() === 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED', 'stale or missing impact confirmation blocks approval');
 }
 $transition($approval, $draft, $impact['fingerprint']);
-$expect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $draft
+$expect(
+    (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $draft
     && $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $current)->loadResult() === 'published'
     && $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult() === 'published',
-    'approved update activates new version and preserves the assigned version history');
+    'approved update activates new version and preserves the assigned version history'
+);
 $changeDetector = new \Jlms\Component\Jlms\Administrator\Application\PublicationImpact($db);
-$expect(!$changeDetector->significantVersionChange($current, $current),
-    'same published teaching version never generates a material-update notice');
-$expect($changeDetector->significantVersionChange($current, $draft),
-    'changed lessons in a published successor version count as a significant teaching update');
+$expect(
+    !$changeDetector->significantVersionChange($current, $current),
+    'same published teaching version never generates a material-update notice'
+);
+$expect(
+    $changeDetector->significantVersionChange($current, $draft),
+    'changed lessons in a published successor version count as a significant teaching update'
+);
 echo json_encode(['publication_review_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

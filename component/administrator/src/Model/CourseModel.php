@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Model;
 
 use Joomla\CMS\MVC\Model\AdminModel;
@@ -12,7 +11,8 @@ use Joomla\Database\ParameterType;
 
 final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\VersionableModelInterface
 {
-    use \Joomla\CMS\Versioning\VersionableModelTrait { saveHistory as private persistHistory;
+    use \Joomla\CMS\Versioning\VersionableModelTrait {
+        saveHistory as private persistHistory;
     }
 
     public $typeAlias = 'com_jlms.course';
@@ -92,10 +92,12 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $xml = new \SimpleXMLElement('<form><fields name="associations"><fieldset name="item_associations" label="COM_JLMS_ASSOCIATIONS" /></fields></form>');
             foreach (\Joomla\CMS\Language\LanguageHelper::getContentLanguages(false, false) as $language) {
                 $field = $xml->fields->fieldset->addChild('field');
-                foreach (['name' => $language->lang_code, 'type' => 'Courseassociation',
+                foreach (
+                    ['name' => $language->lang_code, 'type' => 'Courseassociation',
                     'addfieldprefix' => 'Jlms\Component\Jlms\Administrator\Field',
                     'language' => $language->lang_code, 'label' => $language->title, 'translate_label' => 'false',
-                    'filter' => 'integer', 'default' => '0'] as $name => $value) {
+                    'filter' => 'integer', 'default' => '0'] as $name => $value
+                ) {
                     $field->addAttribute($name, $value);
                 }
             }
@@ -167,13 +169,17 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $query->setQuery((string) $query . ' FOR UPDATE');
             $item = $db->setQuery($query)->loadObject();
             $asset = 'com_jlms.course.' . $target;
-            if (!$item || $actor->guest || $actor->block
+            if (
+                !$item || $actor->guest || $actor->block
                 || !($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset)))
-                || ($item->checked_out && (int) $item->checked_out !== (int) $actor->id)) {
+                || ($item->checked_out && (int) $item->checked_out !== (int) $actor->id)
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
-            if (!(((int) $item->state === 0 && $item->current_version_id === null)
-                || ((int) $item->state === 1 && $item->current_version_id !== null))) {
+            if (
+                !(((int) $item->state === 0 && $item->current_version_id === null)
+                || ((int) $item->state === 1 && $item->current_version_id !== null))
+            ) {
                 throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
             }
             $tag = array_search($target, $targets, true);
@@ -189,9 +195,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         }
         // A nonempty zero field instructs native AdminModel to clear the old group too.
         $data['associations'] = $targets ?: [$language => 0];
-        if (($targets || $members) && (!$record
+        if (
+            ($targets || $members) && (!$record
             || (string) ($data['title'] ?? $record->title) !== (string) $record->title
-            || (int) ($data['catid'] ?? $record->catid) !== (int) $record->catid)) {
+            || (int) ($data['catid'] ?? $record->catid) !== (int) $record->catid)
+        ) {
             throw new \DomainException('COM_JLMS_ASSOCIATION_SAVE_SEPARATELY');
         }
         // Even an all-zero request on an existing course must retain its native asset.
@@ -208,8 +216,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $revision = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['revision'] ?? null);
         $versionRevision = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['expected_version_revision'] ?? null);
         $source = $this->getItem($id);
-        if (!$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
-            || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate($db, $actor, (int) $source->catid)) {
+        if (
+            !$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
+            || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate($db, $actor, (int) $source->catid)
+        ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $title = $input['title'] ?? null;
@@ -262,8 +272,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
         $q->setQuery((string) $q . ' FOR UPDATE');
         $source = $db->setQuery($q)->loadObject();
-        if (!$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
-            || ($source->checked_out && (int) $source->checked_out !== (int) $actor->id)) {
+        if (
+            !$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
+            || ($source->checked_out && (int) $source->checked_out !== (int) $actor->id)
+        ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         if ((int) $source->revision !== $this->copyPlan['revision']) {
@@ -338,8 +350,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                     throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                 }
                 // Teaching records remain immutable; this model edits live editorial metadata.
-                if ((int) $record->catid !== (int) ($data['catid'] ?? $record->catid)
-                    && !$user->authorise('core.create', 'com_jlms.course.category.' . (int) $data['catid'])) {
+                if (
+                    (int) $record->catid !== (int) ($data['catid'] ?? $record->catid)
+                    && !$user->authorise('core.create', 'com_jlms.course.category.' . (int) $data['catid'])
+                ) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
             } elseif (!$user->authorise('core.create', 'com_jlms.course.category.' . (int) ($data['catid'] ?? 0))) {
@@ -348,8 +362,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             if (array_key_exists('summary', $data)) {
                 $summary = $data['summary'];
                 $previous = $record->summary ?? null;
-                if (is_string($summary) && is_string($previous)
-                    && str_replace(["\r\n", "\r"], "\n", $summary) === str_replace(["\r\n", "\r"], "\n", $previous)) {
+                if (
+                    is_string($summary) && is_string($previous)
+                    && str_replace(["\r\n", "\r"], "\n", $summary) === str_replace(["\r\n", "\r"], "\n", $previous)
+                ) {
                     // Preserve the original bytes when the browser only changed line endings.
                     unset($data['summary']);
                 } elseif (!is_string($summary) || \Joomla\String\StringHelper::strlen($summary) > 500) {
@@ -372,7 +388,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 unset($data['teacher_ids']);
             }
             $presentation = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::merge(
-                $data, $record->params_json ?? '{}', static fn (string $html): string => \Joomla\CMS\Component\ComponentHelper::filterText($html),
+                $data,
+                $record->params_json ?? '{}',
+                static fn (string $html): string => \Joomla\CMS\Component\ComponentHelper::filterText($html),
             );
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) {
                 unset($data['presentation_' . $field]);
@@ -381,7 +399,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $data['params_json'] = $presentation;
             }
             $mailPreferences = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::merge(
-                $data, $data['params_json'] ?? $record->params_json ?? '{}',
+                $data,
+                $data['params_json'] ?? $record->params_json ?? '{}',
             );
             foreach (\Jlms\Component\Jlms\Administrator\Application\MailPreferences::EVENTS as $event) {
                 unset($data['mail_' . $event]);
@@ -390,7 +409,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $data['params_json'] = $mailPreferences;
             }
             $certificatePreferences = \Jlms\Component\Jlms\Administrator\Application\CertificatePreferences::merge(
-                $data, $data['params_json'] ?? $record->params_json ?? '{}',
+                $data,
+                $data['params_json'] ?? $record->params_json ?? '{}',
             );
             unset($data['certificate_enabled']);
             if ($certificatePreferences !== null) {
@@ -407,8 +427,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             // Editorial position is course-level, independent of the teaching snapshot.
             if (array_key_exists('catalog_position', $data)) {
                 $position = $data['catalog_position'];
-                if ((!is_int($position) && (!is_string($position) || !preg_match('/^[0-9]{1,4}$/D', $position)))
-                    || (int) $position < 0 || (int) $position > 9999) {
+                if (
+                    (!is_int($position) && (!is_string($position) || !preg_match('/^[0-9]{1,4}$/D', $position)))
+                    || (int) $position < 0 || (int) $position > 9999
+                ) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
                 $params = json_decode((string) ($data['params_json'] ?? $record->params_json ?? '{}'), true, 32, JSON_THROW_ON_ERROR);
@@ -460,8 +482,12 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 if (!$stage || !$workflow->createAssociation($newId, $stage)) {
                     throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
                 }
-                $selected = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db, $user, (string) $target->language,
-                    \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $copySource->course->id));
+                $selected = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment(
+                    $db,
+                    $user,
+                    (string) $target->language,
+                    \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $copySource->course->id)
+                );
                 foreach ($selected as $ordering => $teacher) {
                     $relation = (object) ['course_id' => $newId, 'teacher_id' => $teacher, 'ordering' => $ordering];
                     $db->insertObject('#__jlms_course_teachers', $relation);
@@ -477,8 +503,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 }
                 foreach ($values as $fieldId => $fieldValues) {
                     $field = $fieldModel->getItem($fieldId);
-                    if (!$field || !$user->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
-                        || !in_array((int) $field->access, $user->getAuthorisedViewLevels(), true)) {
+                    if (
+                        !$field || !$user->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
+                        || !in_array((int) $field->access, $user->getAuthorisedViewLevels(), true)
+                    ) {
                         throw new \DomainException('JERROR_ALERTNOAUTHOR');
                     }
                     if (!$fieldModel->setFieldValue($fieldId, $newId, $fieldValues)) {
@@ -510,7 +538,6 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 try {
                     \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
                 } catch (\Throwable) {
-
                 }
             }
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
@@ -565,9 +592,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
      */
     public function changeStates(array $ids, int $target): bool
     {
-        if (!in_array($target, [-2, 0], true) || $ids === [] || count($ids) > 100
+        if (
+            !in_array($target, [-2, 0], true) || $ids === [] || count($ids) > 100
             || count(array_unique($ids)) !== count($ids)
-            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1))) {
+            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1))
+        ) {
             $this->setError(Text::_('COM_JLMS_INVALID_COURSE'));
             return false;
         }
@@ -586,9 +615,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $record = $db->setQuery($query)->loadObject()
                     ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
                 $asset = 'com_jlms.course.' . $id;
-                if (!$actor->authorise('core.edit', $asset)
+                if (
+                    !$actor->authorise('core.edit', $asset)
                     || !$actor->authorise('core.edit.state', $asset)
-                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)
+                ) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 // No arbitrary unpublish: only trash from active/draft/archive,
@@ -649,7 +680,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $course = $this->getDatabase()->setQuery($courseQuery)->loadObject();
                 if ($course) {
                     $dispatcher->dispatch('onFinderAfterSave', new \Joomla\CMS\Event\Finder\AfterSaveEvent(
-                        'onFinderAfterSave', [
+                        'onFinderAfterSave',
+                        [
                             'context' => 'com_jlms.course', 'subject' => $course, 'isNew' => false,
                         ]
                     ));
@@ -661,10 +693,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             try {
                 \Joomla\CMS\Log\Log::add(
                     'Course lifecycle Finder refresh failed; course count=' . count($ids),
-                    \Joomla\CMS\Log\Log::WARNING, 'com_jlms'
+                    \Joomla\CMS\Log\Log::WARNING,
+                    'com_jlms'
                 );
             } catch (\Throwable) {
-
             }
         }
     }
@@ -751,12 +783,14 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
 
             // All known direct course references, including non-FK outbox and
             // campaign records, must be absent. Never delete related rows.
-            foreach ([
+            foreach (
+                [
                 '#__jlms_course_versions', '#__jlms_editions',
                 '#__jlms_enrollments', '#__jlms_course_teachers',
                 '#__jlms_pathway_courses', '#__jlms_course_operations',
                 '#__jlms_mail_queue', '#__jlms_course_announcement_campaigns',
-            ] as $tableName) {
+                ] as $tableName
+            ) {
                 $related = $db->createQuery()->select('COUNT(*)')
                     ->from($db->quoteName($tableName))
                     ->where('course_id = :id')->bind(':id', $id, ParameterType::INTEGER);

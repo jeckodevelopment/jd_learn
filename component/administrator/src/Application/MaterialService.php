@@ -12,9 +12,11 @@ use Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability;
 
 final class MaterialService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
-        private readonly ProtectedMaterialStorage $storage)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly LearningService $learning,
+        private readonly ProtectedMaterialStorage $storage
+    ) {
     }
 
     private function row(string $table, int $id, bool $lock = false): object
@@ -220,11 +222,13 @@ final class MaterialService
         $this->author($identity, $courseId, $versionId);
         $lesson = $this->row('lessons', $lessonId);
         $link = $this->row('attachments', $attachmentId);
-        if ((int) $lesson->course_version_id !== $versionId
+        if (
+            (int) $lesson->course_version_id !== $versionId
             || (int) $link->course_version_id !== $versionId
             || ($link->lesson_id !== null && (int) $link->lesson_id !== $lessonId)
             || ($link->lesson_id !== null && !in_array($lesson->kind, ['document', 'audio'], true))
-            || (int) $link->state !== 1 || (int) $link->preview !== 0) {
+            || (int) $link->state !== 1 || (int) $link->preview !== 0
+        ) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $now = gmdate('Y-m-d H:i:s');
@@ -242,9 +246,20 @@ final class MaterialService
     }
 
     /** Uploaded binary is validated/scanned before the short authoring transaction. */
-    public function upload(User $identity, int $courseId, int $versionId, int $lessonId, int $expected, string $title,
-        string $description, array $upload, int $replaceId = 0, mixed $publishUp = null, mixed $publishDown = null, mixed $preview = 0): int
-    {
+    public function upload(
+        User $identity,
+        int $courseId,
+        int $versionId,
+        int $lessonId,
+        int $expected,
+        string $title,
+        string $description,
+        array $upload,
+        int $replaceId = 0,
+        mixed $publishUp = null,
+        mixed $publishDown = null,
+        mixed $preview = 0
+    ): int {
         [, $course, $version] = $this->author($identity, $courseId, $versionId);
         $this->draft($version, $expected);
         $availability = MaterialAvailability::normalize($publishUp, $publishDown, CourseSchedule::read($course)['timezone']);
@@ -258,9 +273,11 @@ final class MaterialService
         if (in_array($upload['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
-        if (trim($title) === '' || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', $title) !== 1 || strlen($description) > 4096
+        if (
+            trim($title) === '' || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', $title) !== 1 || strlen($description) > 4096
             || ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || !is_string($upload['tmp_name'] ?? null)
-            || !is_string($upload['name'] ?? null) || !is_uploaded_file($upload['tmp_name'])) {
+            || !is_string($upload['name'] ?? null) || !is_uploaded_file($upload['tmp_name'])
+        ) {
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
         }
         if ($lessonId && (int) $this->row('lessons', $lessonId)->course_version_id !== $versionId) {
@@ -396,9 +413,11 @@ final class MaterialService
                 $state = (string) ($input['state'] ?? '1');
                 $order = (string) ($input['ordering'] ?? '0');
                 $preview = (string) ($input['preview'] ?? '0');
-                if (!is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1
+                if (
+                    !is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1
                     || !is_string($description) || strlen($description) > 4096 || !in_array($state, ['0', '1'], true)
-                    || !in_array($preview, ['0', '1'], true) || !ctype_digit($order) || strlen($order) > 5) {
+                    || !in_array($preview, ['0', '1'], true) || !ctype_digit($order) || strlen($order) > 5
+                ) {
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
                 if ($preview === '1' && $link->lesson_id !== null) {
@@ -459,8 +478,10 @@ final class MaterialService
         $actor = $this->learning->freshActor($actor);
         $link = $this->row('attachments', $id);
         $context = $this->learning->audioLessonContext($actor, $language, $enrollmentId, $lessonId);
-        if ((int) $link->course_version_id !== $context['version_id'] || (int) $link->lesson_id !== $lessonId
-            || (int) $link->state !== 1 || (int) $link->preview !== 0) {
+        if (
+            (int) $link->course_version_id !== $context['version_id'] || (int) $link->lesson_id !== $lessonId
+            || (int) $link->state !== 1 || (int) $link->preview !== 0
+        ) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $now = gmdate('Y-m-d H:i:s');

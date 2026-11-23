@@ -21,8 +21,10 @@ final class PathwaysModel extends ListModel
     {
         $actor = new User((int) $this->getCurrentUser()->id);
         $actor->clearAccessRights();
-        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')) {
+        if (
+            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')
+        ) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
 

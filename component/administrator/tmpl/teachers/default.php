@@ -42,7 +42,7 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
       <td class="d-none d-lg-table-cell"><?= $item->modified_at ? HTMLHelper::_('date', $item->modified_at, Text::_('DATE_FORMAT_LC4')) : '' ?></td>
       <td class="d-none d-lg-table-cell"><?= (int) $item->id ?></td>
      </tr>
-    <?php endforeach; ?>
+       <?php endforeach; ?>
     </tbody>
    </table>
    <?php endif; ?>

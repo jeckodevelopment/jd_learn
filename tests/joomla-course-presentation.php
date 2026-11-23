@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -69,7 +69,8 @@ $catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_
 use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 $checks = 0;
-function presentationExpect(bool $ok, string $message): void {
+function presentationExpect(bool $ok, string $message): void
+{
     global $checks;
     if (!$ok) {
         throw new RuntimeException($message);
@@ -119,17 +120,21 @@ presentationExpect($details['estimated_minutes'] === 45 && $details['difficulty'
 presentationExpect($details['audience'] === "Learners\nNewcomers" && $item->presentation_objectives === $input['presentation_objectives'], 'Plain fields round-trip without HTML execution');
 presentationExpect(str_contains($details['description'], '<strong>presentation</strong>'), 'Safe HTML formatting retained');
 presentationExpect(!preg_match('/<script|<iframe|<img|javascript:|onclick=/i', $details['description']), 'Active markup, tracking images and unsafe attributes removed even for super user');
-presentationExpect(str_contains($details['description'], 'href="https://example.invalid/resource"')
+presentationExpect(
+    str_contains($details['description'], 'href="https://example.invalid/resource"')
     && str_contains($details['description'], 'rel="noreferrer noopener"')
     && !str_contains($details['description'], 'rel="opener"'),
-    'LES-02 editorial links discard untrusted rel and suppress outgoing referrers');
-presentationExpect(str_contains($details['description'], 'Protected link')
+    'LES-02 editorial links discard untrusted rel and suppress outgoing referrers'
+);
+presentationExpect(
+    str_contains($details['description'], 'Protected link')
     && str_contains($details['description'], 'Userinfo link')
     && str_contains($details['description'], 'Fragment link')
     && !str_contains($details['description'], 'TEST_CREDENTIAL')
     && !str_contains($details['description'], 'user:pass@')
     && substr_count($details['description'], 'href=') === 1,
-    'LES-02 strips unsafe credential-bearing href but keeps the editorial link text');
+    'LES-02 strips unsafe credential-bearing href but keeps the editorial link text'
+);
 presentationExpect($details['image'] === $coverPath && $details['image_decorative'] === false, 'Native media adapter suffix normalised to public relative path');
 presentationExpect($details['image_alt'] === $input['presentation_image_alt'] && $details['seo_title'] === $input['presentation_seo_title'], 'Alternative text and SEO values persist');
 $decorative = CoursePresentation::merge(['presentation_image_decorative' => '1'], $item->params_json, static fn (string $html): string => $html);

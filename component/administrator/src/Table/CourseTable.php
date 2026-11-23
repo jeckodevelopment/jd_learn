@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Table;
 
 use Joomla\CMS\Application\ApplicationHelper;
@@ -19,7 +18,9 @@ final class CourseTable extends Table implements TaggableTableInterface
 
     public $typeAlias = 'com_jlms.course';
 
-    public function getTypeAlias(): string { return $this->typeAlias;
+    public function getTypeAlias(): string
+    {
+        return $this->typeAlias;
     }
 
     protected $_supportNullValue = true;
@@ -27,7 +28,9 @@ final class CourseTable extends Table implements TaggableTableInterface
     private int $preparedAsset = 0;
 
     /** Internal copy path: reserve the native nested asset before the authoring transaction. */
-    public function usePreparedAsset(int $assetId): void { $this->preparedAsset = $assetId;
+    public function usePreparedAsset(int $assetId): void
+    {
+        $this->preparedAsset = $assetId;
     }
 
 

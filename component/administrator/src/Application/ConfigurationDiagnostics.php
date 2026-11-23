@@ -73,9 +73,11 @@ final class ConfigurationDiagnostics
             $document = $documentRoot !== '' ? realpath($documentRoot) : false;
             if ($path === false || !is_dir($path) || !is_writable($path) || is_link($configured)) {
                 $state = 'unavailable';
-            } elseif (($site && ($path === $site || str_starts_with($path, $site . DIRECTORY_SEPARATOR)))
+            } elseif (
+                ($site && ($path === $site || str_starts_with($path, $site . DIRECTORY_SEPARATOR)))
                 || ($public && ($path === $public || str_starts_with($path, $public . DIRECTORY_SEPARATOR)))
-                || ($document && ($path === $document || str_starts_with($path, $document . DIRECTORY_SEPARATOR)))) {
+                || ($document && ($path === $document || str_starts_with($path, $document . DIRECTORY_SEPARATOR)))
+            ) {
                 $state = 'public';
             } else {
                 $state = 'private';
@@ -165,21 +167,36 @@ final class ConfigurationDiagnostics
                 'guidanceKey' => $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_GUIDANCE_MISSING',
             ];
         } else {
-            $add('COM_JLMS_CONFIG_SCAN_LABEL', false,
-                'COM_JLMS_CONFIG_SCAN_UNVERIFIED', 'COM_JLMS_CONFIG_SCAN_DISABLED',
-                'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED', 'COM_JLMS_CONFIG_SCAN_GUIDANCE_DISABLED');
+            $add(
+                'COM_JLMS_CONFIG_SCAN_LABEL',
+                false,
+                'COM_JLMS_CONFIG_SCAN_UNVERIFIED',
+                'COM_JLMS_CONFIG_SCAN_DISABLED',
+                'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED',
+                'COM_JLMS_CONFIG_SCAN_GUIDANCE_DISABLED'
+            );
         }
         $videoMode = (string) ($params['video_delivery_mode'] ?? 'disabled');
         // Enabled delivery does not imply that private storage and ffprobe exist.
-        $add('COM_JLMS_CONFIG_VIDEO_LOCAL_LABEL', $videoMode === 'php_bounded',
-            'COM_JLMS_CONFIG_VIDEO_LOCAL_ACTIVE', 'COM_JLMS_CONFIG_VIDEO_LOCAL_DISABLED',
-            'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_DISABLED');
+        $add(
+            'COM_JLMS_CONFIG_VIDEO_LOCAL_LABEL',
+            $videoMode === 'php_bounded',
+            'COM_JLMS_CONFIG_VIDEO_LOCAL_ACTIVE',
+            'COM_JLMS_CONFIG_VIDEO_LOCAL_DISABLED',
+            'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_ACTIVE',
+            'COM_JLMS_CONFIG_VIDEO_LOCAL_GUIDANCE_DISABLED'
+        );
         if ($videoMode === 'php_bounded') {
             $checks[array_key_last($checks)]['severity'] = 'warning';
         }
-        $add('COM_JLMS_CONFIG_CERTIFICATES_LABEL', (string) ($params['certificate_enabled'] ?? '0') === '1',
-            'COM_JLMS_CONFIG_CERTIFICATES_ACTIVE', 'COM_JLMS_CONFIG_CERTIFICATES_DISABLED',
-            'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_DISABLED');
+        $add(
+            'COM_JLMS_CONFIG_CERTIFICATES_LABEL',
+            (string) ($params['certificate_enabled'] ?? '0') === '1',
+            'COM_JLMS_CONFIG_CERTIFICATES_ACTIVE',
+            'COM_JLMS_CONFIG_CERTIFICATES_DISABLED',
+            'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_ACTIVE',
+            'COM_JLMS_CONFIG_CERTIFICATES_GUIDANCE_DISABLED'
+        );
         // The global flags are inherited by per-course settings. Diagnostic status
         // explains the configured default without evaluating any course/user scope.
         $mailLabels = [
@@ -209,17 +226,27 @@ final class ConfigurationDiagnostics
                 ++$enabled;
             }
         }
-        $add('COM_JLMS_CONFIG_MAIL_FLAGS_LABEL', $enabled > 0,
-            'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
-            'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED');
+        $add(
+            'COM_JLMS_CONFIG_MAIL_FLAGS_LABEL',
+            $enabled > 0,
+            'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE',
+            'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
+            'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE',
+            'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED'
+        );
         // Every event has its own localized, actionable status; the summary
         // alone must not hide an individually disabled notification.
         foreach ($mailFlags as $key) {
             $default = in_array($key, $defaultOff, true) ? '0' : '1';
             $isEnabled = (string) ($params[$key] ?? $default) === '1';
-            $add($mailLabels[$key], $isEnabled,
-                'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
-                'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE', 'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED');
+            $add(
+                $mailLabels[$key],
+                $isEnabled,
+                'COM_JLMS_CONFIG_MAIL_FLAGS_ACTIVE',
+                'COM_JLMS_CONFIG_MAIL_FLAGS_DISABLED',
+                'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_ACTIVE',
+                'COM_JLMS_CONFIG_MAIL_FLAGS_GUIDANCE_DISABLED'
+            );
         }
         // Catalogue presentation settings are inherited by menu items; this
         // check never implies that a menu override or remote connection was tested.
@@ -227,14 +254,21 @@ final class ConfigurationDiagnostics
         $order = (string) ($params['catalog_default_order'] ?? 'editorial');
         $valid = in_array($page, ['6', '9', '12', '24'], true)
             && in_array($order, ['editorial', 'recent', 'title', 'duration', 'published'], true);
-        foreach (['catalog_show_filters', 'catalog_show_order', 'catalog_show_category',
-            'catalog_show_cover', 'catalog_show_summary'] as $flag) {
+        foreach (
+            ['catalog_show_filters', 'catalog_show_order', 'catalog_show_category',
+            'catalog_show_cover', 'catalog_show_summary'] as $flag
+        ) {
             // These five flags are also global defaults consumed by CatalogOptions.
             $valid = $valid && in_array((string) ($params[$flag] ?? '1'), ['0', '1'], true);
         }
-        $add('COM_JLMS_CONFIG_CATALOG_LABEL', $valid,
-            'COM_JLMS_CONFIG_CATALOG_READY', 'COM_JLMS_CONFIG_CATALOG_INVALID',
-            'COM_JLMS_CONFIG_CATALOG_GUIDANCE_READY', 'COM_JLMS_CONFIG_CATALOG_GUIDANCE_INVALID');
+        $add(
+            'COM_JLMS_CONFIG_CATALOG_LABEL',
+            $valid,
+            'COM_JLMS_CONFIG_CATALOG_READY',
+            'COM_JLMS_CONFIG_CATALOG_INVALID',
+            'COM_JLMS_CONFIG_CATALOG_GUIDANCE_READY',
+            'COM_JLMS_CONFIG_CATALOG_GUIDANCE_INVALID'
+        );
         return $checks;
     }
 
@@ -246,8 +280,12 @@ final class ConfigurationDiagnostics
      * @return list<array{kind:string,labelKey:string,severity:string,stateKey:string,guidanceKey:string}>
      */
     public static function localVideoPrerequisites(
-        string $mode, string $root, string $probe,
-        string $siteRoot, string $publicRoot, string $documentRoot = ''
+        string $mode,
+        string $root,
+        string $probe,
+        string $siteRoot,
+        string $publicRoot,
+        string $documentRoot = ''
     ): array {
         if ($mode !== 'php_bounded') {
             return [];
@@ -320,8 +358,10 @@ final class ConfigurationDiagnostics
                 continue;
             }
             foreach ($overrides as $event => $value) {
-                if (!is_string($event) || !in_array($event, MailPreferences::EVENTS, true)
-                    || !in_array($value, ['enabled', 'disabled', 'inherit'], true)) {
+                if (
+                    !is_string($event) || !in_array($event, MailPreferences::EVENTS, true)
+                    || !in_array($value, ['enabled', 'disabled', 'inherit'], true)
+                ) {
                     ++$courseInvalid;
                 } elseif ($value !== 'inherit') {
                     ++$courseOverrides;
@@ -336,8 +376,10 @@ final class ConfigurationDiagnostics
             'catalog_page_size', 'catalog_default_order',
         ];
         foreach ($menuEntries as $menu) {
-            if (!is_array($menu) || !is_string($menu['link'] ?? null)
-                || !preg_match('~\\Aindex\\.php\\?option=com_jlms&view=(?:courses|category)(?:&|\\z)~D', $menu['link'])) {
+            if (
+                !is_array($menu) || !is_string($menu['link'] ?? null)
+                || !preg_match('~\\Aindex\\.php\\?option=com_jlms&view=(?:courses|category)(?:&|\\z)~D', $menu['link'])
+            ) {
                 continue;
             }
             // Joomla may persist an empty menu params value for inherited defaults.

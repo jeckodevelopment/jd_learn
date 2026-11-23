@@ -13,9 +13,12 @@ final class QuestionBankService
 {
     private array $optionCache = [];
 
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
-        private readonly \Closure $filter, private readonly \Closure $tableFactory)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly LearningService $learning,
+        private readonly \Closure $filter,
+        private readonly \Closure $tableFactory
+    ) {
     }
 
     private function transaction(\Closure $work): mixed
@@ -43,8 +46,10 @@ final class QuestionBankService
     private function access(User $actor, string $asset, bool $edit = false, ?object $row = null): void
     {
         $own = $row && (int) $row->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset);
-        if (!$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.quiz.manage', $asset)
-            || ($edit && !$actor->authorise('core.edit', $asset) && !$own)) {
+        if (
+            !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.quiz.manage', $asset)
+            || ($edit && !$actor->authorise('core.edit', $asset) && !$own)
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
     }
@@ -170,8 +175,10 @@ final class QuestionBankService
             $actor = $this->learning->freshActor($identity);
             $row = $this->row($id, true);
             $this->access($actor, 'com_jlms.question.' . $id, !$release, $row);
-            if ($row->checked_out && (int) $row->checked_out !== (int) $actor->id
-                && (!$release || !$actor->authorise('core.manage', 'com_checkin'))) {
+            if (
+                $row->checked_out && (int) $row->checked_out !== (int) $actor->id
+                && (!$release || !$actor->authorise('core.manage', 'com_checkin'))
+            ) {
                 throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
             }
             $table = ($this->tableFactory)();
@@ -310,9 +317,9 @@ final class QuestionBankService
     }
 
     /** Conservative native trash: preserve all revision and attempt references. Restore as unpublished. */
-    public function trash(User $identity,int $id,bool $restore=false):void
+    public function trash(User $identity, int $id, bool $restore = false): void
     {
-        $this->transaction(function()use($identity,$id,$restore):void{
+        $this->transaction(function () use ($identity, $id, $restore): void {
             $actor = $this->learning->freshActor($identity);
             $row = $this->row($id, true);
             $asset = 'com_jlms.question.' . $id;
@@ -345,7 +352,7 @@ final class QuestionBankService
 
     public function delete(User $identity, int $id): void
     {
-        $this->transaction(function () use ($identity,$id): void {
+        $this->transaction(function () use ($identity, $id): void {
             $actor = $this->learning->freshActor($identity);
             $question = $this->row($id, true);
             $asset = 'com_jlms.question.' . $id;
@@ -407,5 +414,4 @@ final class QuestionBankService
         return array_map(static fn ($row): array => ['id' => (int) $row->id,
             'label' => $row->category_title . ' — ' . \Joomla\String\StringHelper::substr(strip_tags($row->prompt), 0, 100) . ' (v' . (int) $row->version_no . ')'], array_values($rows));
     }
-
 }

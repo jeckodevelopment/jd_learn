@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\View\Courses;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;

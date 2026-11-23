@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Contracts\Video;
 
 /** Registration/validation foundation. Playback stays closed until delivery and current-access checks are integrated. */

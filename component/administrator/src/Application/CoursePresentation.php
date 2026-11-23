@@ -16,7 +16,10 @@ final class CoursePresentation
     {
         $cleaned = InputFilter::getInstance(
             ['p', 'br', 'ul', 'ol', 'li', 'strong', 'em', 'b', 'i', 'h2', 'h3', 'h4', 'blockquote', 'a', 'span'],
-            ['href', 'title', 'lang', 'dir'], 0, 0, 1,
+            ['href', 'title', 'lang', 'dir'],
+            0,
+            0,
+            1,
         )->clean($html, 'html');
         return EditorialLinkSafety::secure($cleaned);
     }
@@ -48,17 +51,21 @@ final class CoursePresentation
                 }
                 continue;
             }
-            if (!is_string($value) || preg_match('//u', $value) !== 1
-                || strlen($value) > ($field === 'description' ? 1048576 : 65535)) {
+            if (
+                !is_string($value) || preg_match('//u', $value) !== 1
+                || strlen($value) > ($field === 'description' ? 1048576 : 65535)
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
             }
             if ($field === 'difficulty' && !in_array($value, ['', 'beginner', 'intermediate', 'advanced'], true)) {
                 throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
             }
-            if (in_array($field, ['image_alt', 'seo_title', 'seo_description'], true)
+            if (
+                in_array($field, ['image_alt', 'seo_title', 'seo_description'], true)
                 && (mb_strlen($value, 'UTF-8') > ($field === 'seo_title' ? 255 : 500)
                     || preg_match('/[\x00-\x1f\x7f]/', $value)
-                    || ($field !== 'image_alt' && preg_match('/[<>]/', $value)))) {
+                    || ($field !== 'image_alt' && preg_match('/[<>]/', $value)))
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
             }
             $result[$field] = $field === 'description' ? self::html($value) : trim($value);

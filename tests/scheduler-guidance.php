@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require __DIR__ . '/../component/administrator/src/Infrastructure/SchedulerHealth.php';
@@ -72,18 +73,22 @@ if (SchedulerHealth::assess($task, true, false, $clock)['state'] !== 'disabled')
 echo "Scheduler duplicate precedence across plugin/task states: OK\n";
 
 $task->state = 1;
-foreach (['2026-02-30 13:00:00', '2026-11-31 13:00:00',
+foreach (
+    ['2026-02-30 13:00:00', '2026-11-31 13:00:00',
     '2026-11-20 25:00:00', '2026-11-20 13:99:00', 'tomorrow',
-    '2026-11-20T13:00:00Z', '2026-11-20 13:00:00+01:00'] as $brokenDate) {
+    '2026-11-20T13:00:00Z', '2026-11-20 13:00:00+01:00'] as $brokenDate
+) {
     $task->next_execution = $brokenDate;
     if (SchedulerHealth::assess($task, true, false, $clock)['state'] !== 'unknown') {
         throw new RuntimeException('Invalid scheduler date accepted: ' . $brokenDate);
     }
 }
-foreach (['2026-11-20 11:50:00' => 'operational',
+foreach (
+    ['2026-11-20 11:50:00' => 'operational',
           '2026-11-20 11:49:59' => 'overdue',
           '2026-11-20 12:00:00' => 'operational',
-          '2026-11-20 13:00:00' => 'operational'] as $date => $expectedState) {
+          '2026-11-20 13:00:00' => 'operational'] as $date => $expectedState
+) {
     $task->next_execution = $date;
     if (SchedulerHealth::assess($task, true, false, $clock)['state'] !== $expectedState) {
         throw new RuntimeException('Unexpected scheduler grace boundary: ' . $date);

@@ -37,7 +37,7 @@ foreach ($item['outline'] as $entry) {
         <?= Text::_('COM_JLMS_TEACHERS') ?>:
         <?php foreach ($item['teachers'] as $index => $teacher) :
             ?><?= $index ? ', ' : '' ?><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?= $this->escape($teacher['title']) ?></a><?php
- endforeach; ?>
+        endforeach; ?>
  </p>
  <?php endif; ?></div><a id="jlms-classroom-dashboard" href="<?= Route::_('index.php?option=com_jlms&view=dashboard') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a></header>
  <?php if ($item['progress_applicable']) : ?>
@@ -46,7 +46,7 @@ foreach ($item['outline'] as $entry) {
   <progress id="jlms-progress-meter" max="100" value="<?= (int) $item['percent'] ?>"><?= (int) $item['percent'] ?>%</progress>
         <?php if ($item['completed_at']) :
             ?><p id="jlms-course-completed" role="status"><?= Text::_('COM_JLMS_LEARNING_COMPLETED') ?></p><?php
-  endif; ?>
+        endif; ?>
  </section>
  <?php else :
         ?><p id="jlms-consultation-mode" role="status"><?= Text::_('COM_JLMS_CONSULTATION_MODE_NOTICE') ?></p><?php
@@ -58,10 +58,10 @@ foreach ($item['outline'] as $entry) {
         <?php if ((int) $entry->module_id !== $currentModule) : ?>
             <?php if ($currentModule) :
                 ?></ol></details><?php
-   endif;
+            endif;
             $currentModule = (int) $entry->module_id; ?>
    <details id="jlms-classroom-module-<?= $currentModule ?>" class="jlms-classroom-module"<?= $selectedModule === $currentModule ? ' open' : '' ?>><summary class="jlms-classroom-module__summary"><span class="jlms-classroom-module__title"><?= $this->escape($entry->module_title) ?></span></summary><ol>
-  <?php endif; ?>
+        <?php endif; ?>
   <li id="jlms-classroom-lesson-<?= (int) $entry->id ?>" class="jlms-classroom-lesson">
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $entry->id) ?>"<?= (int) $selected->id === (int) $entry->id ? ' aria-current="page"' : '' ?>><?= $this->escape($entry->title) ?></a>
    <span><?php if ($entry->schedule_state === 'upcoming') :
@@ -87,11 +87,11 @@ foreach ($item['outline'] as $entry) {
   <div id="jlms-lesson-schedule-notice" class="alert alert-info" role="status">
         <?php if ($selected->schedule_state === 'upcoming') :
             ?><p><?= Text::sprintf('COM_JLMS_LESSON_UPCOMING', $this->escape($selected->schedule_available_at)) ?></p><?php
-   elseif ($selected->schedule_state === 'awaiting_start') :
-        ?><p><?= Text::sprintf('COM_JLMS_LESSON_AWAITING_START', (int) $selected->schedule_after_days) ?></p><?php
-   else :
-        ?><p><?= Text::_('COM_JLMS_LESSON_CLOSED') ?></p><?php
-   endif; ?>
+        elseif ($selected->schedule_state === 'awaiting_start') :
+            ?><p><?= Text::sprintf('COM_JLMS_LESSON_AWAITING_START', (int) $selected->schedule_after_days) ?></p><?php
+        else :
+            ?><p><?= Text::_('COM_JLMS_LESSON_CLOSED') ?></p><?php
+        endif; ?>
   </div>
   <?php elseif (!empty($selected->prerequisite_blocked)) : ?>
   <div id="jlms-lesson-prerequisite-notice" class="alert alert-info" role="status">
@@ -107,9 +107,9 @@ foreach ($item['outline'] as $entry) {
                     continue;
                 } ?>
     <dt><?= $this->escape($field['label']) ?></dt><dd><?= $this->escape(implode(', ', $field['values'])) ?></dd>
-   <?php endforeach; ?>
+            <?php endforeach; ?>
   </dl>
-  <?php endif; ?>
+      <?php endif; ?>
       <?php if ($selected->kind === 'video') : ?>
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
@@ -120,18 +120,18 @@ foreach ($item['outline'] as $entry) {
      <p class="jlms-youtube-finish__message"><?= Text::_('COM_JLMS_VIDEO_COMPLETED') ?></p>
                 <?php if ($nextVideoLessonAvailable) : ?>
       <a class="btn btn-primary jlms-youtube-finish__next" href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $nextLesson->id) ?>"><?= Text::_('COM_JLMS_NEXT_LESSON') ?>: <?= $this->escape($nextLesson->title) ?></a>
-     <?php endif; ?>
+                <?php endif; ?>
     </div>
-   <?php endif; ?>
+            <?php endif; ?>
             <?php if (!empty($selected->video_transcript)) :
                 ?><details id="jlms-video-transcript"><summary><?= Text::_('COM_JLMS_LESSON_TRANSCRIPT') ?></summary><div class="jlms-lesson-transcript__content"><?= $selected->video_transcript ?></div></details><?php
-   endif; ?>
+            endif; ?>
    <div id="jlms-video-speed-control" hidden>
     <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
     <select id="jlms-video-speed" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">
             <?php foreach ([0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] as $speed) : ?>
       <option value="<?= $speed ?>"<?= $speed === 1 ? ' selected' : '' ?>><?= $speed ?>×</option>
-     <?php endforeach; ?>
+            <?php endforeach; ?>
     </select>
    </div>
    <div id="jlms-video-language-control" hidden>
@@ -139,38 +139,38 @@ foreach ($item['outline'] as $entry) {
     <select id="jlms-video-language" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE')) ?>"></select>
    </div>
   </section>
-  <?php elseif ($selected->kind === 'audio' && !empty($selected->audio_attachment)) : ?>
+      <?php elseif ($selected->kind === 'audio' && !empty($selected->audio_attachment)) : ?>
   <section id="jlms-audio-region" aria-labelledby="jlms-lesson-title">
    <audio id="jlms-audio-player" controls preload="metadata" data-resume-ms="<?= (int) ($selected->resume_ms ?? 0) ?>" aria-label="<?= $this->escape($selected->title) ?>">
     <source src="<?= Route::_('index.php?option=com_jlms&task=attachment.audio&format=raw&id=' . (int) $selected->audio_attachment['id'] . '&lesson_id=' . (int) $selected->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>" type="<?= $this->escape($selected->audio_attachment['mime']) ?>">
    </audio>
    <p id="jlms-audio-progress-status" role="status" aria-live="polite"></p>
-      <?php if (!empty($selected->audio_transcript)) :
-            ?><details id="jlms-audio-transcript"><summary><?= Text::_('COM_JLMS_AUDIO_TRANSCRIPT') ?></summary><div class="jlms-audio-transcript__content"><?= $selected->audio_transcript ?></div></details><?php
-   endif; ?>
-      <?php if ($item['progress_applicable']) :
-            ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+          <?php if (!empty($selected->audio_transcript)) :
+                ?><details id="jlms-audio-transcript"><summary><?= Text::_('COM_JLMS_AUDIO_TRANSCRIPT') ?></summary><div class="jlms-audio-transcript__content"><?= $selected->audio_transcript ?></div></details><?php
+          endif; ?>
+          <?php if ($item['progress_applicable']) :
+                ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
     <input type="hidden" name="task" value="lesson.complete">
     <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">
     <input type="hidden" name="jform[lesson_id]" value="<?= (int) $selected->id ?>">
     <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
-            <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
+                <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
    </form>
-   <?php endif; ?>
+          <?php endif; ?>
   </section>
-  <?php elseif ($selected->kind === 'quiz') : ?>
+      <?php elseif ($selected->kind === 'quiz') : ?>
   <a id="jlms-lesson-quiz" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$item['enrollment_id'] . '&lesson_id=' . (int)$selected->id) ?>"><?= Text::_('COM_JLMS_QUIZ_OPEN') ?></a>
-  <?php else : ?>
-      <?php if ($item['progress_applicable']) :
-            ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+      <?php else : ?>
+          <?php if ($item['progress_applicable']) :
+                ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
    <input type="hidden" name="task" value="lesson.complete">
    <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">
    <input type="hidden" name="jform[lesson_id]" value="<?= (int) $selected->id ?>">
    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
-            <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
+                <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
   </form>
-  <?php endif; ?>
-  <?php endif; ?>
+          <?php endif; ?>
+      <?php endif; ?>
  <div id="jlms-material-groups">
       <?php foreach (['course' => 'jlms-classroom-course-materials', 'lesson' => 'jlms-lesson-resources'] as $scope => $region) :
             $files = $this->materials[$scope]; ?>
@@ -182,23 +182,23 @@ foreach ($item['outline'] as $entry) {
                 <?php if (in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) : ?>
                     <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>
     <a class="jlms-material__preview" target="_blank" rel="noopener" href="<?= Route::_($inlineUrl) ?>"><?= Text::_('COM_JLMS_VIEW_INLINE') ?></a>
-   <?php endif; ?>
+                <?php endif; ?>
    <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.download&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
   </article>
- <?php endforeach; ?>
+            <?php endforeach; ?>
             <?php if (!$files['items']) :
                 ?><p><?= Text::_('COM_JLMS_NO_MATERIALS') ?></p><?php
- endif; ?>
+            endif; ?>
             <?php $materialsBase = 'index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->id . '&' . $scope . '_material_page='; ?>
  <nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
             <?php if ($files['page'] > 0) :
                 ?><a href="<?= Route::_($materialsBase . ($files['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php
- endif; ?>
+            endif; ?>
             <?php if (($files['page'] + 1) * 20 < $files['total']) :
                 ?><a href="<?= Route::_($materialsBase . ($files['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php
- endif; ?>
+            endif; ?>
  </nav></section>
- <?php endforeach; ?></div>
+      <?php endforeach; ?></div>
   <?php endif; ?>
   <nav id="jlms-lesson-navigation" class="jlms-lesson-navigation" aria-label="<?= $this->escape(Text::_('COM_JLMS_LESSON_NAVIGATION')) ?>">
    <?php foreach (['previous' => $previousLesson, 'next' => $nextLesson] as $direction => $adjacent) : ?>
@@ -212,14 +212,14 @@ foreach ($item['outline'] as $entry) {
         <span class="jlms-lesson-navigation__label"><?= $this->escape($label) ?></span>
         <span class="jlms-lesson-navigation__title"><?= $this->escape($adjacent->title) ?></span>
        </a>
-      <?php else : ?>
+            <?php else : ?>
        <span class="jlms-lesson-navigation__unavailable">
         <span class="jlms-lesson-navigation__label"><?= $this->escape($label) ?></span>
         <span class="jlms-lesson-navigation__title"><?= $this->escape($adjacent->title) ?></span>
         <span class="jlms-lesson-navigation__reason"><?= Text::_(!empty($adjacent->prerequisite_blocked) ? 'COM_JLMS_PREREQUISITES_INCOMPLETE' : ($adjacent->schedule_state === 'closed' ? 'COM_JLMS_LESSON_CLOSED' : 'COM_JLMS_LESSON_NOT_YET_AVAILABLE')) ?></span>
        </span>
-      <?php endif; ?>
-     <?php endif; ?>
+            <?php endif; ?>
+        <?php endif; ?>
     </div>
    <?php endforeach; ?>
   </nav>

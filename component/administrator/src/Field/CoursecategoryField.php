@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Field;
 
 use Joomla\CMS\Factory;
@@ -25,6 +26,6 @@ final class CoursecategoryField extends \Joomla\CMS\Form\Field\CategoryField
                 $current = (int)$course->catid;
             }
         }
-        return array_values(array_filter(parent::getOptions(), static fn($option):bool => (int)$option->value === $current || $actor->authorise('core.create', 'com_jlms.course.category.' . (int)$option->value)));
+        return array_values(array_filter(parent::getOptions(), static fn($option): bool => (int)$option->value === $current || $actor->authorise('core.create', 'com_jlms.course.category.' . (int)$option->value)));
     }
 }

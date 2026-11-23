@@ -41,8 +41,10 @@ final class MailQueueAuditService
         // The outbox is global to all courses. Component management alone can be
         // delegated for a single course and must not expose global audit data
         // or permit reconciliation of another course's mail.
-        if (!$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.audit.view', 'com_jlms')) {
+        if (
+            !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.audit.view', 'com_jlms')
+        ) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
 
@@ -95,8 +97,10 @@ final class MailQueueAuditService
             // recipient addresses or substituted values from template_data.
             $row->diagnostic_missing_template = false;
             $row->diagnostic_tokens = [];
-            if ($row->diagnostic_key === 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE'
-                && in_array((string) $row->state, ['retry', 'failed'], true)) {
+            if (
+                $row->diagnostic_key === 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE'
+                && in_array((string) $row->state, ['retry', 'failed'], true)
+            ) {
                 try {
                     $mailTemplate = MailTemplate::getTemplate((string) $row->template_id, (string) $row->language)
                         ?? MailTemplate::getTemplate((string) $row->template_id, '*');
@@ -106,8 +110,11 @@ final class MailQueueAuditService
                         $context = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
                         if (is_array($context)) {
                             $unresolved = MailTemplatePlaceholderValidator::unresolved(
-                                (string) $row->template_id, $context,
-                                (string) $mailTemplate->subject, (string) $mailTemplate->body, (string) $mailTemplate->htmlbody
+                                (string) $row->template_id,
+                                $context,
+                                (string) $mailTemplate->subject,
+                                (string) $mailTemplate->body,
+                                (string) $mailTemplate->htmlbody
                             );
                             // Names are uppercase ASCII tokens, never values or exception messages.
                             $row->diagnostic_tokens = array_slice($unresolved, 0, 12);
@@ -131,8 +138,10 @@ final class MailQueueAuditService
         // The outbox is global to all courses. Component management alone can be
         // delegated for a single course and must not expose global audit data
         // or permit reconciliation of another course's mail.
-        if (!$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.audit.view', 'com_jlms')) {
+        if (
+            !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.audit.view', 'com_jlms')
+        ) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
         $note = trim($note);
@@ -216,12 +225,17 @@ final class MailQueueAuditService
             $template = MailTemplate::getTemplate((string) $row->template_id, (string) $row->language)
                 ?? MailTemplate::getTemplate((string) $row->template_id, '*');
             $values = json_decode((string) $row->template_data, true, 32, JSON_THROW_ON_ERROR);
-            if ($template === null || !is_array($values)
+            if (
+                $template === null || !is_array($values)
                 || !filter_var((string) $row->recipient_email, FILTER_VALIDATE_EMAIL)
                 || MailTemplatePlaceholderValidator::unresolved(
-                    (string) $row->template_id, $values,
-                    (string) $template->subject, (string) $template->body, (string) $template->htmlbody
-                ) !== []) {
+                    (string) $row->template_id,
+                    $values,
+                    (string) $template->subject,
+                    (string) $template->body,
+                    (string) $template->htmlbody
+                ) !== []
+            ) {
                 throw new \RuntimeException('COM_JLMS_MAIL_QUEUE_TEMPLATE_STILL_INVALID', 409);
             }
         } catch (\Throwable) {

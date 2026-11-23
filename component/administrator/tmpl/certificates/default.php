@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
@@ -48,7 +49,7 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
         <td><?= $this->escape($item['issued_at']) ?></td>
         <td><?= (int) $item['id'] ?></td>
        </tr>
-      <?php endforeach; ?>
+       <?php endforeach; ?>
      </tbody>
     </table>
    <?php endif; ?>
@@ -81,7 +82,7 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
             <label><input type="checkbox" form="<?= $recoveryFormId ?>" name="confirmation" value="1" required>
                 <?= Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_CONFIRM' : 'COM_JLMS_CERTIFICATE_HISTORICAL_CONFIRM') ?></label>
             <button type="submit" class="btn btn-sm btn-outline-primary" form="<?= $recoveryFormId ?>"><?= Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_ACTION' : 'COM_JLMS_CERTIFICATE_HISTORICAL_ACTION') ?></button>
-           <?php endif; ?>
+            <?php endif; ?>
           </td>
          </tr>
         <?php endforeach; ?>
@@ -104,5 +105,5 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
    <input type="hidden" name="enrollment_id" value="<?= (int) $missing['enrollment_id'] ?>">
         <?= HTMLHelper::_('form.token') ?>
   </form>
- <?php endif; ?>
+    <?php endif; ?>
 <?php endforeach; ?>

@@ -35,10 +35,22 @@ final class CoursepreviewModel extends BaseModel
             throw new \RuntimeException(Text::_('COM_JLMS_VIDEO_UNAVAILABLE'), 503);
         }
         $descriptor = $provider->createPlaybackDescriptor(new \Jlms\Contracts\Video\VideoSource(
-            (string) $lesson->provider_key, (string) $source['reference'], (int) $lesson->source_revision, $source['options'] ?? [],
+            (string) $lesson->provider_key,
+            (string) $source['reference'],
+            (int) $lesson->source_revision,
+            $source['options'] ?? [],
         ), new \Jlms\Contracts\Video\PlaybackContext(
-            (int) $actor->id, 0, (int) $lesson->id, $app->getLanguage()->getTag(), 0, '',
-            new \DateTimeImmutable('now', new \DateTimeZone('UTC')), null, true, $courseId, $versionId,
+            (int) $actor->id,
+            0,
+            (int) $lesson->id,
+            $app->getLanguage()->getTag(),
+            0,
+            '',
+            new \DateTimeImmutable('now', new \DateTimeZone('UTC')),
+            null,
+            true,
+            $courseId,
+            $versionId,
         ));
         return ['provider' => $descriptor->provider, 'options' => $descriptor->playerOptions,
             'source_revision' => $descriptor->sourceRevision];
@@ -61,7 +73,10 @@ final class CoursepreviewModel extends BaseModel
         try {
             $outline = $service->outline($actor, $courseId, $versionId);
             $accessPreview = $app->bootComponent('com_jlms')->getCatalogService()->accessPreview(
-                $actor, $courseId, $app->getLanguage()->getTag(), $requestedLevels,
+                $actor,
+                $courseId,
+                $app->getLanguage()->getTag(),
+                $requestedLevels,
             );
             $lesson = null;
             if ($lessonId) {

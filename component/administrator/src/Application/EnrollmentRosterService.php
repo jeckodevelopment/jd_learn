@@ -11,7 +11,8 @@ use Joomla\Database\ParameterType;
 /** Course-scoped administrative history. No write operation or access grant. */
 final class EnrollmentRosterService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning) {
+    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning)
+    {
     }
 
     public function course(User $identity, int $courseId): object
@@ -84,8 +85,10 @@ final class EnrollmentRosterService
         if (strlen($search) > 400 || $searchLength === false || $searchLength > 100 || preg_match('/[\\x00-\\x1f\\x7f]/', $search)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
-        if (!is_string($status) || !in_array($status, ['', 'requested', 'active', 'completed', 'suspended', 'migrated', 'expired', 'cancelled', 'rejected'], true)
-            || !is_string($progress) || !in_array($progress, ['', 'not_started', 'in_progress', 'completed'], true)) {
+        if (
+            !is_string($status) || !in_array($status, ['', 'requested', 'active', 'completed', 'suspended', 'migrated', 'expired', 'cancelled', 'rejected'], true)
+            || !is_string($progress) || !in_array($progress, ['', 'not_started', 'in_progress', 'completed'], true)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         if ($version) {

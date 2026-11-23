@@ -92,7 +92,10 @@ class EnrollmentController extends BaseController
             }
             $courseId = CurriculumService::id($data['course_id'] ?? null);
             $this->app->bootComponent('com_jlms')->getLearningService()->requestApproval(
-                $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $courseId, $key
+                $this->app->getIdentity(),
+                $this->app->getLanguage()->getTag(),
+                $courseId,
+                $key
             );
             $this->app->enqueueMessage(Text::_('COM_JLMS_ENROLLMENT_REQUEST_RECEIVED'), 'message');
             $this->setRedirect(Route::_('index.php?option=com_jlms&view=course&id=' . $courseId, false));

@@ -31,12 +31,12 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
         <?= $this->escape(Text::_($schedulerStateLabels[$this->mailScheduler['state']] ?? 'COM_JLMS_MAIL_SCHEDULER_STATE_MISSING')) ?>
         <?php if ($this->mailScheduler['interval'] !== null) : ?>
    · <?= Text::sprintf('COM_JLMS_MAIL_SCHEDULER_INTERVAL', $this->mailScheduler['interval']) ?>
-  <?php endif; ?>
+        <?php endif; ?>
   · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_LAST') ?>:
         <?= $this->escape((string) ($this->mailScheduler['last_execution'] ?: Text::_('JNEVER'))) ?>
         <?php if ($this->mailScheduler['duplicates']) :
             ?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php
-  endif; ?>
+        endif; ?>
   <a href="<?= Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE') ?></a>
  </div>
  <?php endif; ?>
@@ -94,15 +94,15 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
      <td><?= Text::_($stateKeys[(string) $row->state] ?? 'COM_JLMS_MAIL_QUEUE_STATE_PENDING') ?>
             <?php if ((int) $row->is_stale_sending === 1) :
                 ?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php
-      endif; ?>
+            endif; ?>
             <?php if ($row->diagnostic_key !== null && in_array((string) $row->state, ['retry', 'failed'], true)) : ?>
        <div class="small text-muted"><?= $this->escape(Text::_($row->diagnostic_key)) ?></div>
                 <?php if ($row->diagnostic_missing_template) : ?>
         <div class="small text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_TEMPLATE_NOT_FOUND') ?></div>
-       <?php elseif ($row->diagnostic_tokens !== []) : ?>
+                <?php elseif ($row->diagnostic_tokens !== []) : ?>
         <div class="small text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_UNRESOLVED_TOKENS') ?>: <?= $this->escape(implode(', ', $row->diagnostic_tokens)) ?></div>
-       <?php endif; ?>
-      <?php endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
      </td>
      <td><?= (int) $row->attempts ?></td>
      <td><?= $this->escape((string) $row->created_at) ?></td>
@@ -131,12 +131,14 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
           <button class="btn btn-warning" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY') ?></button>
                     <?= Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
          </form>
-         <?php endif; ?>
+                <?php endif; ?>
         </div>
        </details>
-      <?php elseif ((string) $row->state === 'failed' && (int) $row->attempts < 5
-         && $row->diagnostic_key === 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE'
-         && in_array((string) $row->template_id, ['com_jlms.enrollment.confirmed', 'com_jlms.course.completed'], true)) : ?>
+            <?php elseif (
+            (string) $row->state === 'failed' && (int) $row->attempts < 5
+            && $row->diagnostic_key === 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE'
+            && in_array((string) $row->template_id, ['com_jlms.enrollment.confirmed', 'com_jlms.course.completed'], true)
+) : ?>
        <details>
         <summary><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY_TEMPLATE_ONLY') ?></summary>
         <div class="card card-body mt-2">
@@ -152,16 +154,16 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
          </form>
         </div>
        </details>
-      <?php elseif ($row->reconciliation_action) : ?>
+            <?php elseif ($row->reconciliation_action) : ?>
        <div><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILED') ?>: <?= Text::_($actionKeys[(string) $row->reconciliation_action] ?? 'COM_JLMS_MAIL_QUEUE_ACTION_SENT') ?></div>
        <small><?= $this->escape((string) $row->reconciliation_at) ?></small>
        <div><?= $this->escape((string) $row->reconciliation_note) ?></div>
-      <?php else :
-            ?>—<?php
-      endif; ?>
+            <?php else :
+                ?>—<?php
+            endif; ?>
      </td>
     </tr>
-   <?php endforeach; ?>
+     <?php endforeach; ?>
    </tbody>
   </table>
  </div>
@@ -214,7 +216,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
        <td><?= $this->escape($consent['confirmed_at'] ?? '—') ?></td>
        <td><?= $this->escape($consent['revoked_at'] ?? '—') ?></td>
       </tr>
-     <?php endforeach; ?>
+        <?php endforeach; ?>
      </tbody>
     </table>
    </div>

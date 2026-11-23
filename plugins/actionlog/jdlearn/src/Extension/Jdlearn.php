@@ -43,9 +43,11 @@ final class Jdlearn extends CMSPlugin implements SubscriberInterface
         $versionId = (int) $event->getArgument('versionId', 0);
         $transitionId = (int) $event->getArgument('transitionId', 0);
         $action = (string) $event->getArgument('action', '');
-        if ($actorId < 1 || $courseId < 1 || $versionId < 1 || $transitionId < 1
+        if (
+            $actorId < 1 || $courseId < 1 || $versionId < 1 || $transitionId < 1
             || $actorId !== (int) $app->getIdentity()->id
-            || !in_array($action, ['review', 'return', 'publish', 'unpublish', 'archive', 'restore'], true)) {
+            || !in_array($action, ['review', 'return', 'publish', 'unpublish', 'archive', 'restore'], true)
+        ) {
             return;
         }
 

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Controller;
 
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -67,6 +66,5 @@ final class DisplayController extends BaseController
             $menu->setActive((int) $item->id);
             break;
         }
-
     }
 }

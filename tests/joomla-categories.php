@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -65,8 +65,12 @@ $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 
 $checks = 0;
-function catExpect(bool $ok,string $message):void { global $checks;
-    if (!$ok)throw new \RuntimeException($message);
+function catExpect(bool $ok, string $message): void
+{
+    global $checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
 
@@ -83,14 +87,13 @@ foreach (['display', 'save', 'delete', 'purge', 'getModel', '__construct', 'reas
     }
     catExpect($denied, 'category reassignment exposed unauthorized controller task: ' . $badTask);
 }
-function catHidden(int $id,string $language='en-GB'):bool {
+function catHidden(int $id, string $language = 'en-GB'): bool
+{
     global $catalog,$guest;
     try {
         $catalog->category($guest, $language, $id);
-
     } catch (\RuntimeException $e) {
         return $e->getCode() === 404;
-
     }return false;
 }
 $catalog = $component->getCatalogService();
@@ -107,12 +110,14 @@ if (($argv[2] ?? '') === 'retained') {
     exit;
 }
 $app->getInput()->set('extension', 'com_jlms.course');
-$saveCategory = static function(array $data)use($app):int{
+$saveCategory = static function (array $data) use ($app): int {
     $model = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
     $model->setState('category.extension', $data['extension'] ?? 'com_jlms.course');
     $model->setState('category.component', 'com_jlms');
     $model->setState('category.section', 'course');
-    if (!$model->save($data + ['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','published' => 1,'language' => '*','access' => 1,'description' => '']))throw new \RuntimeException('Native category save failed: ' . $model->getError());
+    if (!$model->save($data + ['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','published' => 1,'language' => '*','access' => 1,'description' => ''])) {
+        throw new \RuntimeException('Native category save failed: ' . $model->getError());
+    }
     return (int)$model->getState('category.id');
 };
 $en = $saveCategory(['title' => 'Taxonomy English','alias' => 'taxonomy-en','language' => 'en-GB','description' => '<p>Category presentation</p><script>UNSAFE_CATEGORY_SCRIPT</script>']);
@@ -135,9 +140,9 @@ $model->setState('list.start', 0);
 $ids = array_map(static fn($c)=>(int)$c->id, $model->getItems());
 catExpect($ids === [$child] && (int)$model->getTotal() === 1, 'hidden children do not affect list or count');
 catExpect(count($catalog->categoryPath($guest, 'en-GB', $child)) === 2, 'visible native ancestor path');
-$update = static function(int $id,array $fields)use($db):void{$record = (object)(['id' => $id] + $fields);
+$update = static function (int $id, array $fields) use ($db): void {
+    $record = (object)(['id' => $id] + $fields);
     $db->updateObject('#__categories', $record, 'id', true);
-
 };
 foreach ([['access',2],['published',0],['language','it-IT']] as [$field,$value]) {
     $update($en, [$field => $value]);
@@ -152,15 +157,21 @@ $app->loadIdentity($actor);
 $move = new \Joomla\CMS\Table\Category($db);
 $move->load($child);
 $move->setLocation($hidden, 'last-child');
-if (!$move->store())throw new \RuntimeException('Native move failed');
+if (!$move->store()) {
+    throw new \RuntimeException('Native move failed');
+}
 catExpect(catHidden($child), 'native category move changes current inherited visibility');
 $move->load($child);
 $move->setLocation($en, 'last-child');
-if (!$move->store())throw new \RuntimeException('Native move restore failed');
+if (!$move->store()) {
+    throw new \RuntimeException('Native move restore failed');
+}
 catExpect(!catHidden($child), 'native move restore reflected');
-$createCourse = static function(int $catid,string $tag,string $alias)use($factory,$component,$actor,$db):int{
+$createCourse = static function (int $catid, string $tag, string $alias) use ($factory, $component, $actor, $db): int {
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-    if (!$model->save(['id' => 0,'title' => $alias,'alias' => $alias,'catid' => $catid,'language' => $tag,'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Category course summary','revision' => 1]))throw new \RuntimeException($model->getError());
+    if (!$model->save(['id' => 0,'title' => $alias,'alias' => $alias,'catid' => $catid,'language' => $tag,'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Category course summary','revision' => 1])) {
+        throw new \RuntimeException($model->getError());
+    }
     $course = (int)$model->getState('course.id');
     $authoring = $component->getCurriculumService();
     $version = $authoring->createDraft($actor, $course, 1);
@@ -212,7 +223,9 @@ $native->setState('category.component', 'com_jlms');
 $native->setState('category.section', 'course');
 catExpect((bool)$native->getForm()->getField('it-IT', 'associations'), 'native category language form available');
 // More than one page of visible children, with no hidden-child count disclosure.
-for ($i = 0;$i < 21;$i++)$saveCategory(['title' => 'Taxonomy page child ' . $i,'alias' => 'taxonomy-page-' . $i,'parent_id' => $en,'language' => 'en-GB']);
+for ($i = 0; $i < 21; $i++) {
+    $saveCategory(['title' => 'Taxonomy page child ' . $i,'alias' => 'taxonomy-page-' . $i,'parent_id' => $en,'language' => 'en-GB']);
+}
 $app->loadIdentity($guest);
 $listed = $factory->createModel('Categories', 'Site', ['ignore_request' => true]);
 $listed->setState('filter.parent_id', $en);
@@ -230,7 +243,9 @@ foreach (['en-GB' => $en,'it-IT' => $it] as $tag => $categoryId) {
         $table->setLocation(1, 'last-child');
         $table->bind(['title' => $alias,'alias' => $alias,'menutype' => 'mainmenu','type' => 'component','link' => 'index.php?option=com_jlms&view=' . $view . ($view === 'category' ? '&id=' . $categoryId : ''),
             'component_id' => $componentId,'published' => 1,'access' => 1,'language' => $tag,'home' => 0,'params' => '{}','browserNav' => 0]);
-        if (!$table->check() || !$table->store())throw new \RuntimeException('Native category menu failed: ' . $table->getError());
+        if (!$table->check() || !$table->store()) {
+            throw new \RuntimeException('Native category menu failed: ' . $table->getError());
+        }
         $menus[$alias] = (int)$table->id;
     }
 }
@@ -264,15 +279,16 @@ try {
         $blockedReassign = $error->getCode() === 403;
     }
     catExpect($blockedReassign, 'blocked current account cannot reassign categories with stale session identity');
-    catExpect((int)$db->setQuery('SELECT catid FROM #__jlms_courses WHERE id=' . (int)$course)->loadResult() === $moveSource,
-        'denied reassignment leaves the course category unchanged');
+    catExpect(
+        (int)$db->setQuery('SELECT catid FROM #__jlms_courses WHERE id=' . (int)$course)->loadResult() === $moveSource,
+        'denied reassignment leaves the course category unchanged'
+    );
 } finally {
     $db->setQuery('UPDATE #__users SET block=0 WHERE id=' . (int)$actor->id)->execute();
 }
 $descendantRejected = false;
 try {
     $reassignment->reassign($actor, $moveSource, ['courses' => $moveChild]);
-
 } catch (\InvalidArgumentException) {
     $descendantRejected = true;
 }

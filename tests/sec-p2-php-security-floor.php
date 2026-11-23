@@ -27,7 +27,8 @@ function jdLearnPhpSecurityFloor(string $version): bool
 }
 
 if (basename(__FILE__) === basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? ''))) {
-    foreach ([
+    foreach (
+        [
         '8.3.36' => false,
         '8.3.37' => true,
         '8.4.27' => false,
@@ -35,7 +36,8 @@ if (basename(__FILE__) === basename((string) ($_SERVER['SCRIPT_FILENAME'] ?? '')
         '8.5.12' => false,
         '8.5.13' => true,
         '8.2.36' => false,
-    ] as $version => $expected) {
+        ] as $version => $expected
+    ) {
         if (jdLearnPhpSecurityFloor($version) !== $expected) {
             throw new RuntimeException('SEC-P2 PHP patch floor regression.');
         }

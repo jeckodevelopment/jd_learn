@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\View\Dashboard;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -44,13 +43,17 @@ final class HtmlView extends BaseHtmlView
                 $addShortcut('COM_JLMS_DASHBOARD_GROUP_DIDACTICS', 'COM_JLMS_PATHWAYS', 'icon-map-signs', 'index.php?option=com_jlms&view=pathways');
             }
         }
-        if ($actor->authorise('core.manage', 'com_categories')
-            && $actor->authorise('core.manage', 'com_jlms.course')) {
+        if (
+            $actor->authorise('core.manage', 'com_categories')
+            && $actor->authorise('core.manage', 'com_jlms.course')
+        ) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_DIDACTICS', 'COM_JLMS_COURSE_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.course');
         }
-        if ($actor->authorise('jlms.pathways.manage', 'com_jlms')
+        if (
+            $actor->authorise('jlms.pathways.manage', 'com_jlms')
             && $actor->authorise('core.manage', 'com_categories')
-            && $actor->authorise('core.manage', 'com_jlms.pathway')) {
+            && $actor->authorise('core.manage', 'com_jlms.pathway')
+        ) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_DIDACTICS', 'COM_JLMS_PATHWAY_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.pathway');
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
@@ -67,14 +70,20 @@ final class HtmlView extends BaseHtmlView
         }
         if ($actor->authorise('core.manage', 'com_mails') && $actor->authorise('core.edit', 'com_mails')) {
             // Use com_mails' native extension filter; it remains editable in Joomla.
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_TEMPLATES', 'fas fa-envelope',
-                'index.php?option=com_mails&view=templates&filter[extension]=com_jlms&filter[search]=&filter[language]=&limitstart=0');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION',
+                'COM_JLMS_MAIL_TEMPLATES',
+                'fas fa-envelope',
+                'index.php?option=com_mails&view=templates&filter[extension]=com_jlms&filter[search]=&filter[language]=&limitstart=0'
+            );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_DASHBOARD_MAIL_VARIABLES', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables');
         }
-        if ($actor->authorise('core.manage', 'com_fields')
-            && $actor->authorise('core.manage', 'com_jlms')) {
+        if (
+            $actor->authorise('core.manage', 'com_fields')
+            && $actor->authorise('core.manage', 'com_jlms')
+        ) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_CUSTOM_FIELDS', 'icon-list', 'index.php?option=com_fields&view=fields&context=com_jlms.course');
         }
         if ($actor->authorise('core.manage', 'com_plugins')) {
@@ -118,7 +127,9 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $storageRoot = (string) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_storage_root', '');
             $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::storage(
-                $storageRoot, JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
+                $storageRoot,
+                JPATH_ROOT,
+                defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
                 is_string($_SERVER['DOCUMENT_ROOT'] ?? null) ? $_SERVER['DOCUMENT_ROOT'] : ''
             );
             // Report only fixed diagnostic keys and severity, never raw config values.
@@ -138,17 +149,21 @@ final class HtmlView extends BaseHtmlView
             foreach ($settingNames as $name) {
                 $settings[$name] = $componentParams->get($name);
             }
-            array_push($this->configurationDiagnostics,
-                ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::operationalSettings($settings));
-            array_push($this->configurationDiagnostics,
+            array_push(
+                $this->configurationDiagnostics,
+                ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::operationalSettings($settings)
+            );
+            array_push(
+                $this->configurationDiagnostics,
                 ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::localVideoPrerequisites(
                     (string) $componentParams->get('video_delivery_mode', 'disabled'),
                     (string) $componentParams->get('video_storage_root', ''),
                     (string) $componentParams->get('video_ffprobe_path', ''),
-                    JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
+                    JPATH_ROOT,
+                    defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
                     is_string($_SERVER['DOCUMENT_ROOT'] ?? null) ? $_SERVER['DOCUMENT_ROOT'] : ''
-                ));
-
+                )
+            );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
             // Query only keys needed to establish canonical default-template readiness.
@@ -163,7 +178,8 @@ final class HtmlView extends BaseHtmlView
                 $db->setQuery($mailTemplateQuery)->loadObjectList()
             );
             $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::mailTemplates(
-                $requiredTemplates, $installedTemplates
+                $requiredTemplates,
+                $installedTemplates
             );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
@@ -192,11 +208,15 @@ final class HtmlView extends BaseHtmlView
             );
             $coursesComplete = count($courseOptions) <= 500;
             $menusComplete = count($menuOptions) <= 500;
-            array_push($this->configurationDiagnostics,
+            array_push(
+                $this->configurationDiagnostics,
                 ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::inheritance(
-                    array_slice($courseOptions, 0, 500), array_slice($menuOptions, 0, 500),
-                    $coursesComplete, $menusComplete
-                ));
+                    array_slice($courseOptions, 0, 500),
+                    array_slice($menuOptions, 0, 500),
+                    $coursesComplete,
+                    $menusComplete
+                )
+            );
         }
         // Visibility is based on current ACL rather than the presence of a dashboard shortcut.
         // No diagnostic here triggers sending, deleting, regenerating or mutating data.

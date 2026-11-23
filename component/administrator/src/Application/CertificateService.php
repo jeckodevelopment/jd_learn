@@ -15,7 +15,8 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage;
 /** Own-certificate listing and protected, on-demand PDF generation/delivery. */
 final class CertificateService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly ProtectedMaterialStorage $storage) {
+    public function __construct(private readonly DatabaseInterface $db, private readonly ProtectedMaterialStorage $storage)
+    {
     }
 
     /** @return list<array{enrollment_id:int,title:string,serial:string,issued_at:string,status:string}> */
@@ -161,7 +162,10 @@ final class CertificateService
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
             $issued = (new CertificateIssuer($this->db))->issueForCompletedEnrollment(
-                $enrollmentId, (int) $row->course_version_id, (string) $row->completed_at, true
+                $enrollmentId,
+                (int) $row->course_version_id,
+                (string) $row->completed_at,
+                true
             );
             if (!$issued) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
@@ -175,10 +179,15 @@ final class CertificateService
             if (!$result || (int) $result->current_document_id < 1) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
             }
-            $this->recordCertificateAudit((int) $result->id, (int) $result->current_document_id,
-                (int) $identity->id, 'historical_recovery',
+            $this->recordCertificateAudit(
+                (int) $result->id,
+                (int) $result->current_document_id,
+                (int) $identity->id,
+                'historical_recovery',
                 ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $row->course_version_id,
-                    'reason' => $reason, 'historical_rules_preserved' => true]);
+                'reason' => $reason,
+                'historical_rules_preserved' => true]
+            );
             $this->db->transactionCommit();
         } catch (\Throwable $error) {
             $this->db->transactionRollback();
@@ -228,7 +237,10 @@ final class CertificateService
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
             $issued = (new CertificateIssuer($this->db))->issueForCompletedEnrollment(
-                $enrollmentId, (int) $row->course_version_id, (string) $row->completed_at, false
+                $enrollmentId,
+                (int) $row->course_version_id,
+                (string) $row->completed_at,
+                false
             );
             if (!$issued) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
@@ -242,10 +254,15 @@ final class CertificateService
             if (!$result || (int) $result->current_document_id < 1) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
             }
-            $this->recordCertificateAudit((int) $result->id, (int) $result->current_document_id,
-                (int) $identity->id, 'missing_issuance_recovery',
+            $this->recordCertificateAudit(
+                (int) $result->id,
+                (int) $result->current_document_id,
+                (int) $identity->id,
+                'missing_issuance_recovery',
                 ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $row->course_version_id,
-                    'reason' => $reason, 'published_rules_respected' => true]);
+                'reason' => $reason,
+                'published_rules_respected' => true]
+            );
             $this->db->transactionCommit();
         } catch (\Throwable $error) {
             $this->db->transactionRollback();
@@ -377,10 +394,13 @@ final class CertificateService
     /** Log only operational phase and exception type, never names, paths or PDF data. */
     private function logRenderFailure(string $phase, \Throwable $error): void
     {
-        Log::add('Certificate PDF generation failure phase=' . $phase
+        Log::add(
+            'Certificate PDF generation failure phase=' . $phase
             . '; error_type=' . get_debug_type($error)
             . '; error_code=' . (int) $error->getCode(),
-            Log::ERROR, 'com_jlms');
+            Log::ERROR,
+            'com_jlms'
+        );
     }
 
     private function logoFile(string $value): ?string
@@ -574,17 +594,21 @@ final class CertificateService
                 ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
                 ->where('c.id = :certificate')->bind(':certificate', $certificateId, ParameterType::INTEGER);
             $current = $this->db->setQuery((string) $lock . ' FOR UPDATE')->loadObject();
-            if (!$current || (int) $current->id !== (int) $record->document_id
+            if (
+                !$current || (int) $current->id !== (int) $record->document_id
                 || (int) $current->revision !== $expectedRevision
                 || $current->revoked_at !== null || $current->status !== 'ready'
-                || (int) $current->pdf_asset_id < 1) {
+                || (int) $current->pdf_asset_id < 1
+            ) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_REVISION_CONFLICT', 409);
             }
             // A concurrent edit/revocation must never change certified inputs
             // between render and the atomic asset replacement.
-            if ((string) $current->serial !== (string) $record->serial
+            if (
+                (string) $current->serial !== (string) $record->serial
                 || (string) $current->identity_snapshot_json !== (string) $record->identity_snapshot_json
-                || (string) $current->template_snapshot_json !== (string) $record->template_snapshot_json) {
+                || (string) $current->template_snapshot_json !== (string) $record->template_snapshot_json
+            ) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_REVISION_CONFLICT', 409);
             }
 
@@ -602,10 +626,15 @@ final class CertificateService
                 'revision' => $expectedRevision + 1];
             $this->db->updateObject('#__jlms_certificate_documents', $document, 'id');
             // Same transaction: audit failure rolls back the new PDF pointer.
-            $this->recordCertificateAudit($certificateId, (int) $current->id, (int) $identity->id,
-                'admin_regenerate', ['reason' => $reason, 'previous_asset_id' => $oldAssetId,
+            $this->recordCertificateAudit(
+                $certificateId,
+                (int) $current->id,
+                (int) $identity->id,
+                'admin_regenerate',
+                ['reason' => $reason, 'previous_asset_id' => $oldAssetId,
                     'new_asset_id' => $newAssetId, 'revision' => $expectedRevision + 1,
-                    'sha256' => (string) $staged['sha256']]);
+                'sha256' => (string) $staged['sha256']]
+            );
             $this->db->transactionCommit();
             $started = false;
             $committed = true;
@@ -631,9 +660,11 @@ final class CertificateService
         }
         $actor = new User($userId);
         $actor->clearAccessRights();
-        if (!$actor->id || $actor->block
+        if (
+            !$actor->id || $actor->block
             || !$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.certificates.manage', 'com_jlms')) {
+            || !$actor->authorise('jlms.certificates.manage', 'com_jlms')
+        ) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
     }
@@ -657,5 +688,4 @@ final class CertificateService
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_AUDIT_FAILED', 503, $error);
         }
     }
-
 }

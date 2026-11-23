@@ -95,14 +95,18 @@ final class EnrollmentApprovalService
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
             if ($decision === 'approved') {
-                if ($course->enrollment_mode !== 'approval' || (int) $course->state !== 1
+                if (
+                    $course->enrollment_mode !== 'approval' || (int) $course->state !== 1
                     || (int) $course->admissions_open !== 1 || (int) $course->current_version_id !== (int) $edition->course_version_id
-                    || $edition->status !== 'open') {
+                    || $edition->status !== 'open'
+                ) {
                     throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
                 }
                 $now = gmdate('Y-m-d H:i:s');
-                if (($edition->starts_at !== null && $edition->starts_at > $now)
-                    || ($edition->ends_at !== null && $edition->ends_at <= $now)) {
+                if (
+                    ($edition->starts_at !== null && $edition->starts_at > $now)
+                    || ($edition->ends_at !== null && $edition->ends_at <= $now)
+                ) {
                     throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
                 }
                 $lang = (string) $course->language === '*' ? (string) (\Joomla\CMS\Factory::getApplication()->getLanguage()->getTag()) : (string) $course->language;
@@ -176,9 +180,14 @@ final class EnrollmentApprovalService
                 $data['DASHBOARD_URL'] = \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard';
             }
             (new MailQueue($this->db))->enqueue(
-                $courseId, hash('sha256', 'enrollment.decision:' . $requestId), $template,
+                $courseId,
+                hash('sha256', 'enrollment.decision:' . $requestId),
+                $template,
                 (string) ($learner->getParam('language', '') ?: $course->language),
-                (string) $learner->email, trim((string) $learner->name), $data, (int) $learner->id
+                (string) $learner->email,
+                trim((string) $learner->name),
+                $data,
+                (int) $learner->id
             );
             $this->db->transactionCommit();
             return $enrollmentId;

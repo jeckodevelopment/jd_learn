@@ -19,7 +19,9 @@ final class ProtectedVideoStorage
         });
     }
 
-    public function config(): Registry { return ($this->configuration)();
+    public function config(): Registry
+    {
+        return ($this->configuration)();
     }
     public function root(): string
     {
@@ -65,7 +67,6 @@ final class ProtectedVideoStorage
         if (!$input || !$output) {
             if (is_resource($input)) {
                 fclose($input);
-
             } if (is_resource($output)) {
                 fclose($output);
             }

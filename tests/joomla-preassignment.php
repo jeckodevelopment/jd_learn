@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -12,9 +12,9 @@ if (($argv[2] ?? '') !== 'worker') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $oldLanguageFilter = $fixtureDb->query("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetchColumn();
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='system' AND element='languagefilter'");
-    register_shutdown_function(static function () use ($fixtureDb,$oldLanguageFilter): void { $q = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+    register_shutdown_function(static function () use ($fixtureDb, $oldLanguageFilter): void {
+        $q = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
         $q->execute([$oldLanguageFilter]);
-
     });
 }
 
@@ -67,23 +67,31 @@ $actor = $app->getIdentity();
 $service = $component->getManualEnrollmentService();
 $learning = $component->getLearningService();
 $checks = 0;
-function preExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function preExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function preDenied(callable $fn,int $code,string $message):void{try {
+function preDenied(callable $fn, int $code, string $message): void
+{
+    try {
         $fn();
-
-} catch (\RuntimeException $e) {
-    preExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $e) {
+        preExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
+        return;
+    }throw new \RuntimeException($message);
 }
-function preKey():string{$k = bin2hex(random_bytes(16));
+function preKey(): string
+{
+    $k = bin2hex(random_bytes(16));
     return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3) . '-' . substr($k, 20);
 }
-function preCommand(array $i):array{$p = $i['impact'];
+function preCommand(array $i): array
+{
+    $p = $i['impact'];
     return [$p['course_id'],$p['user_id'],$p['language'],'PRIVATE_PREASSIGN_REASON',preKey(),$p['hash'],true,true];
 }
 $path = dirname($root) . '/preassignment-fixture.json';
@@ -99,9 +107,9 @@ $f = json_decode(file_get_contents(dirname($root) . '/manual-enrollment-fixture.
 $course = (int)$f['course'];
 $manager = new \Joomla\CMS\User\User((int)$f['manager']);
 $group = (int)$f['group'];
-$update = static function(string $table,int $id,array $fields)use($db):void{$o = (object)(['id' => $id] + $fields);
+$update = static function (string $table, int $id, array $fields) use ($db): void {
+    $o = (object)(['id' => $id] + $fields);
     $db->updateObject('#__' . $table, $o, 'id', true);
-
 };
 if (($argv[2] ?? '') === 'retained') {
     $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
@@ -115,10 +123,12 @@ if (($argv[2] ?? '') === 'retained') {
     exit;
 }
 $users = [];
-foreach (['audit','race','stale','http','blocked']as$name) {
+foreach (['audit','race','stale','http','blocked'] as $name) {
     $u = new \Joomla\CMS\User\User();
     $data = ['name' => 'CI Preassign ' . $name,'username' => 'cipreassign' . $name,'email' => 'cipreassign' . $name . '@example.invalid','password' => 'Ci-only-Preassign-Password-2026','password2' => 'Ci-only-Preassign-Password-2026','groups' => [2],'block' => 0,'activation' => ''];
-    if (!$u->bind($data) || !$u->save())throw new \RuntimeException($u->getError());
+    if (!$u->bind($data) || !$u->save()) {
+        throw new \RuntimeException($u->getError());
+    }
     $users[$name] = new \Joomla\CMS\User\User((int)$u->id);
 }
 $owner = new \Joomla\CMS\User\User((int)$f['denied_user']);
@@ -164,14 +174,12 @@ preExpect($log['preassignment_requested'] === true && $log['access_at_assignment
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$manager->id, (int)$f['manager_group']);
 try {
     preDenied(fn()=>$service->apply($manager, ...$command), 403, 'operator revocation denies explicit replay');
-
 } finally {
     \Joomla\CMS\User\UserHelper::addUserToGroup((int)$manager->id, (int)$f['manager_group']);
 }
 $update('users', $id, ['block' => 1]);
 try {
     preDenied(fn()=>$service->apply($manager, ...$command), 403, 'blocked learner denies even opt-in replay');
-
 } finally {
     $update('users', $id, ['block' => 0]);
 }
@@ -198,13 +206,14 @@ try {
 $update('jlms_courses', $course, ['state' => 0]);
 try {
     preDenied(fn()=>$service->editor($manager, $course, (int)$users['audit']->id, 'en-GB', true), 404, 'unpublished course is not assignable');
-
 } finally {
     $update('jlms_courses', $course, ['state' => 1]);
 }
 $app->getInput()->set('extension', 'com_jlms.course');
 $cat = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
-if (!$cat->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'CI Preassignment private category','alias' => 'ci-preassignment-private','published' => 1,'access' => $privateLevel,'language' => '*']))throw new \RuntimeException($cat->getError());
+if (!$cat->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'CI Preassignment private category','alias' => 'ci-preassignment-private','published' => 1,'access' => $privateLevel,'language' => '*'])) {
+    throw new \RuntimeException($cat->getError());
+}
 $catid = (int)$cat->getState('category.id');
 $update('jlms_courses', $course, ['catid' => $catid]);
 try {
@@ -217,11 +226,11 @@ try {
 }
 // Published content-language access may be missing; unpublished content languages remain unavailable.
 $lang = $db->setQuery("SELECT lang_id,access,published FROM #__languages WHERE lang_code='en-GB'")->loadObject();
-$setLang = static function(int $access,int $published)use($db,$lang):void{$q = $db->createQuery()->update('#__languages')->set('access = :access')->set('published = :published')->where('lang_id = :id');
+$setLang = static function (int $access, int $published) use ($db, $lang): void {
+    $q = $db->createQuery()->update('#__languages')->set('access = :access')->set('published = :published')->where('lang_id = :id');
     $id = (int)$lang->lang_id;
     $q->bind(':access', $access, \Joomla\Database\ParameterType::INTEGER)->bind(':published', $published, \Joomla\Database\ParameterType::INTEGER)->bind(':id', $id, \Joomla\Database\ParameterType::INTEGER);
     $db->setQuery($q)->execute();
-
 };
 try {
     $setLang($privateLevel, 1);
@@ -235,12 +244,11 @@ $edition = (int)$f['edition'];
 $update('jlms_editions', $edition, ['ends_at' => '2000-01-01 00:00:00']);
 try {
     preDenied(fn()=>$service->editor($manager, $course, (int)$users['audit']->id, 'en-GB', true), 403, 'closed window not bypassed');
-
 } finally {
     $update('jlms_editions', $edition, ['ends_at' => null]);
 }
-$broken = new \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService($db, $learning, $component->getCatalogService(), $component->getEnrollmentRosterService(), static function():void{throw new \RuntimeException('COM_JLMS_MANUAL_AUDIT_FAILED', 503);
-
+$broken = new \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService($db, $learning, $component->getCatalogService(), $component->getEnrollmentRosterService(), static function (): void {
+    throw new \RuntimeException('COM_JLMS_MANUAL_AUDIT_FAILED', 503);
 });
 $beforeAudit = $counts((int)$users['audit']->id);
 $bad = preCommand($service->editor($manager, $course, (int)$users['audit']->id, 'en-GB', true));
@@ -250,38 +258,42 @@ $stale = preCommand($service->editor($manager, $course, (int)$users['stale']->id
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$users['stale']->id, $group);
 try {
     preDenied(fn()=>$service->apply($manager, ...$stale), 409, 'eligibility change invalidates explicit preview');
-
 } finally {
     \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$users['stale']->id, $group);
 }
 $race = preCommand($service->editor($actor, $course, (int)$users['race']->id, 'en-GB', true));
 file_put_contents(dirname($root) . '/preassignment-race.json', json_encode($race, JSON_THROW_ON_ERROR));
 $workers = [];
-for ($x = 0;$x < 2;$x++) {
+for ($x = 0; $x < 2; $x++) {
     $pipes = [];
     $proc = proc_open([PHP_BINARY,__FILE__,$root,'worker'], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-    if (!is_resource($proc))throw new \RuntimeException('Worker failed');
+    if (!is_resource($proc)) {
+        throw new \RuntimeException('Worker failed');
+    }
     $workers[] = [$proc,$pipes];
 }
-foreach ($workers as[$proc,$pipes]) {
+foreach ($workers as [$proc,$pipes]) {
     stream_set_timeout($pipes[1], 30);
-    if (trim((string)fgets($pipes[1])) !== 'ready')throw new \RuntimeException('Worker bootstrap failed');
+    if (trim((string)fgets($pipes[1])) !== 'ready') {
+        throw new \RuntimeException('Worker bootstrap failed');
+    }
 }
 $db->transactionStart();
 $db->setQuery('SELECT id FROM #__jlms_editions WHERE id=' . $edition . ' FOR UPDATE')->loadResult();
-foreach ($workers as[$proc,$pipes]) {
+foreach ($workers as [$proc,$pipes]) {
     fwrite($pipes[0], "go\n");
     fclose($pipes[0]);
-
 }usleep(200000);
 $db->transactionCommit();
 $results = [];
-foreach ($workers as[$proc,$pipes]) {
+foreach ($workers as [$proc,$pipes]) {
     $out = trim(stream_get_contents($pipes[1]));
     $err = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    if (proc_close($proc) !== 0)throw new \RuntimeException($err . $out);
+    if (proc_close($proc) !== 0) {
+        throw new \RuntimeException($err . $out);
+    }
     $results[] = $out;
 }
 preExpect($results[0] === $results[1] && str_starts_with($results[0], 'ok:') && $counts((int)$users['race']->id) === [1,1,1], 'parallel explicit retries preserve uniqueness');
@@ -291,7 +303,6 @@ try {
     $full = $service->editor($manager, $course, (int)$users['audit']->id, 'en-GB', true);
     preExpect($full['impact']['blocked'] === 'COM_JLMS_EDITION_FULL', 'preassignments consume capacity');
     preDenied(fn()=>$service->apply($manager, ...preCommand($full)), 409, 'full capacity cannot be bypassed by opt-in');
-
 } finally {
     $update('jlms_editions', $edition, ['capacity' => null]);
 }

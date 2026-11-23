@@ -31,7 +31,7 @@ $courseId = (int) $this->preview['course_id'];
   </details>
      <?php if (!empty($this->preview['already_notified'])) : ?>
    <div class="alert alert-success" role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED') ?></div>
-  <?php elseif ((int) $this->preview['eligible_count'] > 0) : ?>
+     <?php elseif ((int) $this->preview['eligible_count'] > 0) : ?>
    <p><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_QUEUE_HELP') ?></p>
    <form action="<?= Route::_('index.php?option=com_jlms&task=courseannouncement.notify') ?>" method="post" class="card card-body">
     <input type="hidden" name="id" value="<?= $courseId ?>">
@@ -40,10 +40,10 @@ $courseId = (int) $this->preview['course_id'];
      <label class="form-check-label" for="jlms-announcement-confirm"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_CONFIRM') ?></label>
     </div>
     <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_CONFIRM_BUTTON') ?></button>
-      <?= HTMLHelper::_('form.token') ?>
+         <?= HTMLHelper::_('form.token') ?>
    </form>
-  <?php else : ?>
+     <?php else : ?>
    <div class="alert alert-secondary" role="note"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_NO_RECIPIENTS') ?></div>
-  <?php endif; ?>
+     <?php endif; ?>
  <?php endif; ?>
 </div>

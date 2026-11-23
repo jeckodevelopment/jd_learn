@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth;

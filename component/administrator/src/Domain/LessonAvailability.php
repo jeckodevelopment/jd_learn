@@ -89,10 +89,14 @@ final class LessonAvailability
             return false;
         }
 
-        $lower = array_values(array_filter([$publishUp, $courseWindow['publish_up'] ?? null, $courseWindow['starts_at'] ?? null],
-            static fn ($value): bool => $value !== null && $value !== ''));
-        $upper = array_values(array_filter([$publishDown, $courseWindow['publish_down'] ?? null, $courseWindow['ends_at'] ?? null],
-            static fn ($value): bool => $value !== null && $value !== ''));
+        $lower = array_values(array_filter(
+            [$publishUp, $courseWindow['publish_up'] ?? null, $courseWindow['starts_at'] ?? null],
+            static fn ($value): bool => $value !== null && $value !== ''
+        ));
+        $upper = array_values(array_filter(
+            [$publishDown, $courseWindow['publish_down'] ?? null, $courseWindow['ends_at'] ?? null],
+            static fn ($value): bool => $value !== null && $value !== ''
+        ));
         if (!$lower || !$upper) {
             return true;
         }

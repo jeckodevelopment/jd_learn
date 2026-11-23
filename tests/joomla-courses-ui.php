@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -72,8 +72,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 
 $checks = 0;
-function listExpect(bool $ok,string $message):void { global $checks;
-    if (!$ok)throw new RuntimeException($message);
+function listExpect(bool $ok, string $message): void
+{
+    global $checks;
+    if (!$ok) {
+        throw new RuntimeException($message);
+    }
     $checks++;
 }
 $fixturePath = dirname($root) . '/courses-ui-fixture.json';
@@ -106,7 +110,9 @@ foreach (['Zebra','Alpha','Bravo'] as $name) {
     listExpect($model->save(['id' => 0,'revision' => 1,'title' => 'List UI ' . $name,'alias' => 'list-ui-' . strtolower($name),'catid' => $categories[$name === 'Alpha' ? 'child' : 'parent'],'language' => $name === 'Alpha' ? 'en-GB' : '*','catalog_access' => 1,'content_access' => $name === 'Bravo' ? 1 : 2,'enrollment_mode' => 'auto','summary' => 'List fixture','presentation_description' => '<p>List UI public presentation</p>']), 'List course fixture');
     $id = (int)$model->getState('course.id');
     $ids[$name] = $id;
-    if (in_array($name, ['Alpha','Bravo'], true))listExpect($model->save(['id' => $id,'revision' => 1,'teacher_ids' => [$teacherId]]), 'Teacher assigned to selected list fixture course');
+    if (in_array($name, ['Alpha','Bravo'], true)) {
+        listExpect($model->save(['id' => $id,'revision' => 1,'teacher_ids' => [$teacherId]]), 'Teacher assigned to selected list fixture course');
+    }
     $draft = $authoring->createDraft($actor, $id, (int)$model->getItem($id)->revision);
     $versions[$name] = $draft;
     $module = $authoring->saveModule($actor, ['course_id' => $id,'version_id' => $draft,'expected_version_revision' => 1,'title' => 'List UI module']);
@@ -140,17 +146,21 @@ $finderIds = static function () use ($finder, $finderQueryMethod, $db): array {
     $query = $finderQueryMethod->invoke($finder);
     return array_map('intval', $db->setQuery($query)->loadColumn());
 };
-listExpect(!in_array($ids['Alpha'], $finderIds(), true),
-    'Finder must not index public-catalog courses with protected lesson access');
+listExpect(
+    !in_array($ids['Alpha'], $finderIds(), true),
+    'Finder must not index public-catalog courses with protected lesson access'
+);
 $accessChange = (object)['id' => $ids['Alpha'], 'content_access' => 1];
 $db->updateObject('#__jlms_courses', $accessChange, 'id');
-listExpect(in_array($ids['Alpha'], $finderIds(), true),
-    'Finder must index the same course when both catalog and content access are public');
+listExpect(
+    in_array($ids['Alpha'], $finderIds(), true),
+    'Finder must index the same course when both catalog and content access are public'
+);
 
  // LCM-05: the installed Finder adapter must apply publication and SEO
  // eligibility on persisted Joomla rows, not just consume a dispatched event.
 $finderSubject = (int)$ids['Alpha'];
-$finderVisible = static fn():bool => in_array($finderSubject, $finderIds(), true);
+$finderVisible = static fn(): bool => in_array($finderSubject, $finderIds(), true);
 $finderState = (object)['id' => $finderSubject,'state' => 2];
 $db->updateObject('#__jlms_courses', $finderState, 'id');
 listExpect(!$finderVisible(), 'Finder index query excludes an archived public course');
@@ -182,8 +192,10 @@ $db->updateObject('#__categories', $finderCategory, 'id');
 
 $accessChange = (object)['id' => $ids['Alpha'], 'content_access' => 2];
 $db->updateObject('#__jlms_courses', $accessChange, 'id');
-listExpect(!in_array($ids['Alpha'], $finderIds(), true),
-    'Finder must exclude a previously public course as soon as content access is restricted');
+listExpect(
+    !in_array($ids['Alpha'], $finderIds(), true),
+    'Finder must exclude a previously public course as soon as content access is restricted'
+);
 $db->updateObject('#__jlms_courses', $finderCourseOriginal, 'id', true);
 $db->updateObject('#__jlms_course_versions', $finderVersionOriginal, 'id');
 
@@ -198,7 +210,7 @@ $list->setState('list.start', 0);
 $list->setState('filter.search', 'List UI');
 $list->setState('list.ordering', 'a.title');
 $list->setState('list.direction', 'ASC');
-$get = static fn():array=>array_map(static fn($row):int=>(int)$row->id, $list->getItems());
+$get = static fn(): array=>array_map(static fn($row): int=>(int)$row->id, $list->getItems());
 listExpect($get() === [$ids['Alpha'],$ids['Bravo'],$ids['Zebra']] && (int)$list->getTotal() === 3, 'Native list sorting, search and total agree');
 $list->setState('filter.published', '1');
 listExpect($get() === [$ids['Alpha']] && (int)$list->getTotal() === 1, 'Published filter shares the total query');
@@ -253,7 +265,7 @@ try {
     $archivedList->setState('list.start', 0);
     $archivedList->setState('filter.search', 'List UI');
     $archivedList->setState('filter.published', '2');
-    $archiveIds = array_map(static fn($row):int=>(int)$row->id, $archivedList->getItems());
+    $archiveIds = array_map(static fn($row): int=>(int)$row->id, $archivedList->getItems());
     listExpect($archiveIds === [$ids['Bravo']] && (int)$archivedList->getTotal() === 1, 'Archived state filter returns exactly archived records');
 } finally {
     $db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id=' . (int)$ids['Bravo'])->execute();
@@ -288,12 +300,12 @@ $trashedList->setState('list.limit', 100);
 $trashedList->setState('list.start', 0);
 $trashedList->setState('filter.search', 'List UI');
 $trashedList->setState('filter.published', '-2');
-listExpect(array_map(static fn($r):int=>(int)$r->id, $trashedList->getItems()) === [$ids['Alpha']], 'Trashed course appears in the dedicated state filter');
+listExpect(array_map(static fn($r): int=>(int)$r->id, $trashedList->getItems()) === [$ids['Alpha']], 'Trashed course appears in the dedicated state filter');
 $ordinaryList = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
 $ordinaryList->setState('list.limit', 100);
 $ordinaryList->setState('list.start', 0);
 $ordinaryList->setState('filter.search', 'List UI');
-listExpect(!in_array($ids['Alpha'], array_map(static fn($r):int=>(int)$r->id, $ordinaryList->getItems()), true), 'Ordinary list excludes trashed course');
+listExpect(!in_array($ids['Alpha'], array_map(static fn($r): int=>(int)$r->id, $ordinaryList->getItems()), true), 'Ordinary list excludes trashed course');
 listExpect($courseModel->changeStates([$ids['Alpha']], 0), 'Restore from trash uses a separate action');
 listExpect((int)$db->setQuery('SELECT state FROM #__jlms_courses WHERE id=' . (int)$ids['Alpha'])->loadResult() === 0, 'Restored course is unpublished, never republished');
 listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$ids['Alpha'])->loadAssoc() == ['admissions_open' => 0,'delivery_enabled' => 0], 'Restore never opens gates closed by trash');

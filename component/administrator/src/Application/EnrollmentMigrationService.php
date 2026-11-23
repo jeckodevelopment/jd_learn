@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\User\User;
@@ -11,8 +12,12 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 /** Explicit, single-enrollment migration between immutable published course versions. */
 final class EnrollmentMigrationService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
-        private readonly EnrollmentRosterService $roster, private readonly \Closure $audit) {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly LearningService $learning,
+        private readonly EnrollmentRosterService $roster,
+        private readonly \Closure $audit
+    ) {
     }
 
     private function access(User $identity, int $course): User
@@ -109,7 +114,7 @@ final class EnrollmentMigrationService
             throw new \RuntimeException('COM_JLMS_MIGRATION_LIMIT', 409);
         }
         if ($mapping === [] && $useSavedMappings) {
-            $completedSet = array_fill_keys(array_map(static fn(object $row):int=>(int)$row->lesson_id, $completed), true);
+            $completedSet = array_fill_keys(array_map(static fn(object $row): int=>(int)$row->lesson_id, $completed), true);
             $q = $this->db->createQuery()->select('e.source_lesson_id,e.target_lesson_id')->from('#__jlms_version_equivalences AS e')
                 ->innerJoin('#__jlms_lessons AS s ON s.id=e.source_lesson_id')->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')
                 ->where('s.course_version_id=:source')->where('t.course_version_id=:target')
@@ -134,8 +139,10 @@ final class EnrollmentMigrationService
         $normal = [];
         $usedTargets = [];
         foreach ($mapping as $from => $to) {
-            if ((!is_int($from) && (!is_string($from) || !preg_match('/\A[1-9][0-9]{0,18}\z/D', $from)))
-                || (!is_int($to) && (!is_string($to) || !preg_match('/\A(?:0|[1-9][0-9]{0,18})\z/D', $to)))) {
+            if (
+                (!is_int($from) && (!is_string($from) || !preg_match('/\A[1-9][0-9]{0,18}\z/D', $from)))
+                || (!is_int($to) && (!is_string($to) || !preg_match('/\A(?:0|[1-9][0-9]{0,18})\z/D', $to)))
+            ) {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $from = (int)$from;
@@ -203,12 +210,22 @@ final class EnrollmentMigrationService
     }
 
     /** @return int target enrollment id */
-    public function apply(User $identity,int $course,int $enrollment,int $expectedRevision,array $mapping,
-        string $reason,string $mutationId,string $impactHash,bool $confirmed): int
-    {
+    public function apply(
+        User $identity,
+        int $course,
+        int $enrollment,
+        int $expectedRevision,
+        array $mapping,
+        string $reason,
+        string $mutationId,
+        string $impactHash,
+        bool $confirmed
+    ): int {
         $actor = $this->access($identity, $course);
-        if (!$confirmed || $expectedRevision < 1 || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $mutationId)
-            || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)) {
+        if (
+            !$confirmed || $expectedRevision < 1 || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $mutationId)
+            || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $reason = trim($reason);
@@ -220,8 +237,10 @@ final class EnrollmentMigrationService
         }
         $validatedMapping = [];
         foreach ($mapping as $from => $to) {
-            if ((!is_int($from) && (!is_string($from) || !preg_match('/\\A[1-9][0-9]{0,18}\\z/D', $from)))
-                || (!is_int($to) && (!is_string($to) || !preg_match('/\\A[1-9][0-9]{0,18}\\z/D', $to)))) {
+            if (
+                (!is_int($from) && (!is_string($from) || !preg_match('/\\A[1-9][0-9]{0,18}\\z/D', $from)))
+                || (!is_int($to) && (!is_string($to) || !preg_match('/\\A[1-9][0-9]{0,18}\\z/D', $to)))
+            ) {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $validatedMapping[(int) $from] = (int) $to;
@@ -280,7 +299,7 @@ final class EnrollmentMigrationService
             $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')->where('course_version_id=:version')->where('required=1')
                 ->bind(':version', $plan['target_version_id'], ParameterType::INTEGER);
             $required = (int)$this->db->setQuery($q)->loadResult();
-            $completedRequired = count(array_filter($plan['transfers'], static fn(array $row):bool=>$row['required']));
+            $completedRequired = count(array_filter($plan['transfers'], static fn(array $row): bool=>$row['required']));
             $targetStatus = $source->status === 'suspended' ? 'suspended' : ($required > 0 && $completedRequired >= $required ? 'completed' : 'active');
             $target = (object)['user_id' => (int)$source->user_id,'subject_key' => $source->subject_key,'course_id' => $course,
                 'course_version_id' => $plan['target_version_id'],'edition_id' => $editionId,'status' => $targetStatus,'origin' => 'migration',

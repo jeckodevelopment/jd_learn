@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -80,32 +80,36 @@ $checks = 0;
 $writeFixture = static function (string $table, object $record, string $key = 'id', bool $nulls = false) use ($db): void {
     $db->updateObject($table, $record, $key, $nulls);
 };
-function pubExpect(bool $ok, string $message): void {
+function pubExpect(bool $ok, string $message): void
+{
     global $checks;
     if (!$ok) {
         throw new \RuntimeException($message);
     }
     $checks++;
 }
-function pubDenied(callable $call, string $message): void {
+function pubDenied(callable $call, string $message): void
+{
     try {
         $call();
-
     } catch (\DomainException | \InvalidArgumentException $expected) {
         pubExpect(true, $message);
         return;
     }
     throw new \RuntimeException($message);
 }
-function pubRevision(string $table, int $id): int {
+function pubRevision(string $table, int $id): int
+{
     global $db;
     return (int) $db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadResult();
 }
-function pubScope(): array {
+function pubScope(): array
+{
     global $course,$version;
     return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => pubRevision('course_versions', $version)];
 }
-function pubTransition(?int $expectedCourse = null): void {
+function pubTransition(?int $expectedCourse = null): void
+{
     global $publication,$actor,$course,$version;
     $choices = $publication->transitions($actor, $course);
     if (!$choices) {
@@ -115,10 +119,9 @@ function pubTransition(?int $expectedCourse = null): void {
 }
 $guest = new \Joomla\CMS\User\User();
 pubExpect($catalog->publicTags($guest, 'en-GB', $catid) === [], 'public tag choices exclude courses that are still drafts');
-$hidden = static function () use ($catalog,$guest,$course): bool {
+$hidden = static function () use ($catalog, $guest, $course): bool {
     try {
         $catalog->course($guest, 'en-GB', $course);
-
     } catch (\RuntimeException $error) {
         return $error->getCode() === 404;
     }
@@ -130,15 +133,19 @@ pubExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__workflow_associations WHE
 $module = $authoring->saveModule($actor, pubScope() + ['id' => 0,'title' => 'Published chapter']);
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system', 'fields');
 $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
-if (!$fieldModel->save(['id' => 0,'context' => 'com_jlms.lesson','title' => 'Lesson reference','label' => 'Lesson reference','name' => 'lesson-reference','type' => 'text',
-    'state' => 1,'access' => 2,'language' => '*','group_id' => 0,'default_value' => '','description' => '','params' => ['showlabel' => 1],'fieldparams' => ['filter' => 'string']])) {
+if (
+    !$fieldModel->save(['id' => 0,'context' => 'com_jlms.lesson','title' => 'Lesson reference','label' => 'Lesson reference','name' => 'lesson-reference','type' => 'text',
+    'state' => 1,'access' => 2,'language' => '*','group_id' => 0,'default_value' => '','description' => '','params' => ['showlabel' => 1],'fieldparams' => ['filter' => 'string']])
+) {
     throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
 }
 $lessonField = (int)$fieldModel->getState('field.id');
 foreach (['course' => 'Course context fixture', 'teacher' => 'Teacher context fixture'] as $section => $title) {
-    if (!$fieldModel->save(['id' => 0,'context' => 'com_jlms.' . $section,'title' => $title,'label' => $title,
+    if (
+        !$fieldModel->save(['id' => 0,'context' => 'com_jlms.' . $section,'title' => $title,'label' => $title,
         'name' => $section . '-context-fixture','type' => 'text','state' => 1,'access' => 1,'language' => '*','group_id' => 0,
-        'default_value' => '','description' => '','params' => [],'fieldparams' => ['filter' => 'string']])) {
+        'default_value' => '','description' => '','params' => [],'fieldparams' => ['filter' => 'string']])
+    ) {
         throw new \RuntimeException('Native context fixture failed: ' . $fieldModel->getError());
     }
 }
@@ -147,19 +154,25 @@ $lesson = $authoring->saveLesson($actor, pubScope() + ['id' => 0,'module_id' => 
     'body' => '<p>SECRET_LESSON_BODY</p>','public_preview' => '1','com_fields' => ['lesson-reference' => 'LESSON_FIELD_SNAPSHOT']]);
 pubDenied(fn()=>pubTransition(), 'public preview requires explicit course setting');
 $authoring->saveTeachingRules($actor, pubScope() + ['mode' => 'learning','sequence_mode' => 'free','video_threshold' => '90','public_previews' => '1']);
-pubExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id=' . $lessonField . ' AND item_id=' . $db->quote((string)$lesson))->loadResult() === 'LESSON_FIELD_SNAPSHOT',
-    'native custom field value saved with draft lesson');
+pubExpect(
+    (string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id=' . $lessonField . ' AND item_id=' . $db->quote((string)$lesson))->loadResult() === 'LESSON_FIELD_SNAPSHOT',
+    'native custom field value saved with draft lesson'
+);
 $courseFieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
-if (!$courseFieldModel->save(['id' => 0,'context' => 'com_jlms.course','title' => 'Course reference','label' => 'Course reference','name' => 'course-reference','type' => 'text',
-    'state' => 1,'access' => 2,'language' => '*','group_id' => 0,'default_value' => '','description' => '','params' => ['showlabel' => 1],'fieldparams' => ['filter' => 'string']])) {
+if (
+    !$courseFieldModel->save(['id' => 0,'context' => 'com_jlms.course','title' => 'Course reference','label' => 'Course reference','name' => 'course-reference','type' => 'text',
+    'state' => 1,'access' => 2,'language' => '*','group_id' => 0,'default_value' => '','description' => '','params' => ['showlabel' => 1],'fieldparams' => ['filter' => 'string']])
+) {
     throw new \RuntimeException('Native course field fixture failed: ' . $courseFieldModel->getError());
 }
 $courseField = (int)$courseFieldModel->getState('field.id');
 if (!$courseFieldModel->setFieldValue($courseField, $course, 'COURSE_FIELD_SNAPSHOT')) {
     throw new \RuntimeException('Native course field value fixture failed.');
 }
-pubExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id=' . $courseField . ' AND item_id=' . $db->quote((string)$course))->loadResult() === 'COURSE_FIELD_SNAPSHOT',
-    'native custom field value saved for the course');
+pubExpect(
+    (string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id=' . $courseField . ' AND item_id=' . $db->quote((string)$course))->loadResult() === 'COURSE_FIELD_SNAPSHOT',
+    'native custom field value saved for the course'
+);
 pubDenied(fn()=>pubTransition(1), 'stale publication revision rejected');
 $choices = $publication->transitions($actor, $course);
 pubDenied(fn()=>$publication->transition($guest, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$choices[0]->id), 'guest publication denied');
@@ -193,10 +206,10 @@ try {
 pubExpect($dripWithoutEntryRejected, 'publication rejects a programme with no required day-zero entry lesson');
 $writeFixture('#__jlms_lessons', (object)['id' => $lesson,'release_after_days' => null], 'id', true);
 // Native plugin veto must roll back frozen version, pointer and edition as one unit.
-$veto = static function ($event): void { if ($event->getArgument('extension') === 'com_jlms.course') {
+$veto = static function ($event): void {
+    if ($event->getArgument('extension') === 'com_jlms.course') {
         $event->setStopTransition();
-
-}
+    }
 };
 $app->getDispatcher()->addListener('onWorkflowBeforeTransition', $veto);
 pubDenied(fn()=>pubTransition(), 'workflow veto aborts publication');
@@ -204,10 +217,10 @@ $app->getDispatcher()->removeListener('onWorkflowBeforeTransition', $veto);
 pubExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft'
     && !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id=' . $course)->loadResult(), 'veto rolls back teaching snapshot and default edition');
 // The core Workflow helper does not propagate a false model result; the service must.
-$afterVeto = static function ($event): void { if ($event->getContext() === 'com_jlms.course') {
+$afterVeto = static function ($event): void {
+    if ($event->getContext() === 'com_jlms.course') {
         $event->addResult(false);
-
-}
+    }
 };
 $app->getDispatcher()->addListener('onContentChangeState', $afterVeto);
 pubDenied(fn()=>pubTransition(), 'failed native state callback rolls back publication');
@@ -216,21 +229,29 @@ pubExpect($hidden(), 'failed state callback leaves public course hidden');
 $beforeLog = (int) $db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course)->loadResult();
 pubTransition();
 $publishedLog = $db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course . " ORDER BY id DESC LIMIT 1")->loadResult();
-pubExpect((int) $db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course)->loadResult() === $beforeLog + 1
+pubExpect(
+    (int) $db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course)->loadResult() === $beforeLog + 1
     && is_string($publishedLog) && str_contains($publishedLog, '"action":"publish"'),
-    'CORE-17: exactly one native Joomla actionlog event for committed publication; no entry for vetoed transactions');
+    'CORE-17: exactly one native Joomla actionlog event for committed publication; no entry for vetoed transactions'
+);
 $frozen = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id=' . $version)->loadObject();
 pubExpect($frozen->status === 'published' && strlen($frozen->structure_hash) === 64 && $frozen->published_at !== null, 'publication freezes hash and timestamp');
 $courseSnapshot = json_decode((string)$frozen->fields_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
-pubExpect(($courseSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
-    'publication freezes native course custom fields into the assigned teaching version');
+pubExpect(
+    ($courseSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
+    'publication freezes native course custom fields into the assigned teaching version'
+);
 $lessonSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_lessons WHERE id=' . $lesson)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
 pubExpect(($lessonSnapshot['fields']['lesson-reference']['values'][0] ?? '') === 'LESSON_FIELD_SNAPSHOT', 'publication freezes lesson custom field value');
-pubExpect((bool)$courseFieldModel->setFieldValue($courseField, $course, 'COURSE_FIELD_CURRENT_VALUE'),
-    'course editorial field can change after publishing');
+pubExpect(
+    (bool)$courseFieldModel->setFieldValue($courseField, $course, 'COURSE_FIELD_CURRENT_VALUE'),
+    'course editorial field can change after publishing'
+);
 $unchangedCourseSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $version)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
-pubExpect(($unchangedCourseSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
-    'later editorial field changes do not rewrite the frozen course snapshot');
+pubExpect(
+    ($unchangedCourseSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
+    'later editorial field changes do not rewrite the frozen course snapshot'
+);
 pubExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id=' . $course)->loadResult() === 1, 'one default edition created');
 $assoc = (new \Joomla\CMS\Workflow\Workflow('com_jlms.course', $app, $db))->getAssociation($course);
 pubExpect((bool)$assoc, 'native workflow association exists');
@@ -246,7 +267,6 @@ pubExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE co
 $missingPreviewRejected = false;
 try {
     $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson + 99999);
-
 } catch (\RuntimeException $error) {
     $missingPreviewRejected = $error->getCode() === 404;
 }
@@ -263,17 +283,23 @@ try {
 }
 pubExpect($invalidScheduleRejected, 'malformed public preview lesson schedule fails closed with 404');
 $outlineAfterMalformed = $catalog->outline($guest, 'en-GB', $course);
-pubExpect(!str_contains(json_encode($outlineAfterMalformed), 'SECRET_LESSON_BODY')
+pubExpect(
+    !str_contains(json_encode($outlineAfterMalformed), 'SECRET_LESSON_BODY')
     && !in_array($lesson, array_map('intval', array_merge(...array_map(static fn (array $rows): array => array_map(static fn (object $row): int => (int) $row->id, $rows), array_values($outlineAfterMalformed['lessons'] ?: [[]])))), true),
-    'public outline cannot reveal protected lesson bodies on malformed schedule');
+    'public outline cannot reveal protected lesson bodies on malformed schedule'
+);
 $writeFixture('#__jlms_lessons', (object)['id' => $lesson, 'release_after_days' => null], 'id', true);
-pubExpect(str_contains((string) $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson)->body, 'SECRET_LESSON_BODY'),
-    'valid restored schedule permits only the explicitly selected text preview');
+pubExpect(
+    str_contains((string) $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson)->body, 'SECRET_LESSON_BODY'),
+    'valid restored schedule permits only the explicitly selected text preview'
+);
 
 $learnerEnrollment = $component->getLearningService()->start($actor, 'en-GB', $course, str_repeat('r', 40));
 $classroom = $component->getLearningService()->classroom($actor, 'en-GB', $learnerEnrollment, $lesson);
-pubExpect(($classroom['lesson']->custom_fields[0]['values'][0] ?? '') === 'LESSON_FIELD_SNAPSHOT',
-    'assigned classroom renders frozen lesson custom field value');
+pubExpect(
+    ($classroom['lesson']->custom_fields[0]['values'][0] ?? '') === 'LESSON_FIELD_SNAPSHOT',
+    'assigned classroom renders frozen lesson custom field value'
+);
 pubExpect(!str_contains(json_encode($catalog->outline($guest, 'en-GB', $course)), 'SECRET_LESSON_BODY'), 'public outline contains no protected body');
 pubDenied(fn()=>$authoring->saveModule($actor, pubScope() + ['id' => 0,'title' => 'Change history']), 'published authoring is immutable');
 $ids = [$course];
@@ -321,18 +347,30 @@ foreach ($publication->transitions($actor, $course, $nextVersion) as $candidate)
 pubExpect((bool)$publishChoice, 'new teaching version has a publish transition');
 $nextImpact = $publication->updateImpact($actor, $course, $nextVersion, (int)$publishChoice->id);
 pubExpect(is_array($nextImpact) && isset($nextImpact['fingerprint']), 'new version publication impact can be reviewed');
-$publication->transition($actor, $course, $nextVersion, pubRevision('courses', $course), pubRevision('course_versions', $nextVersion),
-    (int)$publishChoice->id, (string)$nextImpact['fingerprint']);
+$publication->transition(
+    $actor,
+    $course,
+    $nextVersion,
+    pubRevision('courses', $course),
+    pubRevision('course_versions', $nextVersion),
+    (int)$publishChoice->id,
+    (string)$nextImpact['fingerprint']
+);
 $nextSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $nextVersion)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
 $oldSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $version)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
-pubExpect(($nextSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_CURRENT_VALUE'
+pubExpect(
+    ($nextSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_CURRENT_VALUE'
     && ($oldSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
-    'new teaching version captures current course fields while preserving the prior snapshot');
-pubExpect((int)$db->setQuery('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id=' . (int)$learnerEnrollment)->loadResult() === $version,
-    'existing learner remains assigned to the original teaching version after update publication');
+    'new teaching version captures current course fields while preserving the prior snapshot'
+);
+pubExpect(
+    (int)$db->setQuery('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id=' . (int)$learnerEnrollment)->loadResult() === $version,
+    'existing learner remains assigned to the original teaching version after update publication'
+);
 // CAT-01: bound literal search patterns must preserve visible '%' and '_'
 // characters, with matching SQL semantics on both MySQL and MariaDB.
-foreach ([
+foreach (
+    [
     ['Course 100% ready', '100%', 1],
     ['Course 100% ready', '100_', 0],
     ['unit_7', 'unit_7', 1],
@@ -346,13 +384,16 @@ foreach ([
     ['A normal course', 'UNION SELECT * FROM users', 0],
     ['aXb', '%_! OR 1=1', 0],
     ['%_! OR 1=1', '%_! OR 1=1', 1],
-] as [$title, $needle, $expected]) {
+    ] as [$title, $needle, $expected]
+) {
     $pattern = \Jlms\Component\Jlms\Site\Helper\CatalogSearch::pattern($needle);
     // The title is a trusted test fixture; visitor text must never be interpolated into SQL.
     $query = $db->createQuery()
         ->select($db->quote($title) . " LIKE :catalogProbe ESCAPE '!'")
         ->bind(':catalogProbe', $pattern);
-    pubExpect((int) $db->setQuery($query)->loadResult() === $expected,
-        'SECDEV-03/CAT-01: bound search is literal on the actual database');
+    pubExpect(
+        (int) $db->setQuery($query)->loadResult() === $expected,
+        'SECDEV-03/CAT-01: bound search is literal on the actual database'
+    );
 }
 echo json_encode(['publication_checks' => $checks,'status' => 'passed','course_id' => $course], JSON_THROW_ON_ERROR) . PHP_EOL;

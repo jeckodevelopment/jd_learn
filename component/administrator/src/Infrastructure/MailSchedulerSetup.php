@@ -55,7 +55,8 @@ final class MailSchedulerSetup
         }
         $component = Factory::getApplication()->bootComponent('com_scheduler');
         $model = $component->getMVCFactory()->createModel('Task', 'Administrator', ['ignore_request' => true]);
-        if (!$model->save([
+        if (
+            !$model->save([
             'title' => 'JD Learn: invia email in coda',
             'type' => self::TASK_TYPE,
             'state' => 0,
@@ -66,7 +67,8 @@ final class MailSchedulerSetup
                 'exec-day' => gmdate('d'),
             ],
             'params' => ['limit' => 100],
-        ])) {
+            ])
+        ) {
             throw new \RuntimeException('JD Learn mail task creation failed: ' . $model->getError());
         }
     }
