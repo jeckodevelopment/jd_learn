@@ -204,7 +204,7 @@ assert 'class="card mt-4 mb-3"' in communication_template
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
 assert 'filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)' in communication
-assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id'=>$mutationId" in communication and 'owner_user_id = :owner' in communication
+assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id' => $mutationId" in communication and 'owner_user_id = :owner' in communication
 assert '->authorised' not in communication.lower() and 'getEnrollmentRosterService' not in communication
 assert "'com_jlms.course.message' => 'communication'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "'com_jlms.course.message'" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
@@ -630,7 +630,7 @@ for bad in (
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
 assert 'filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)' in communication
-assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id'=>$mutationId" in communication and 'owner_user_id = :owner' in communication
+assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id' => $mutationId" in communication and 'owner_user_id = :owner' in communication
 assert '->authorised' not in communication.lower() and 'getEnrollmentRosterService' not in communication
 assert "'com_jlms.course.message' => 'communication'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "'com_jlms.course.message'" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
