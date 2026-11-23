@@ -153,7 +153,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  </section>
  <?php endif; ?>
 <?php $lesson = $this->selectedItem && isset($this->selectedItem->kind) ? $this->selectedItem : null; ?>
-   <?php if ($lesson && $lesson->provider_key === 'html5' && \Joomla\CMS\Factory::getApplication()->getIdentity()->authorise('jlms.materials.manage', 'com_jlms.course.' . (int) $course->id)) : ?>
+   <?php if ($lesson && $lesson->provider_key === 'html5' && $this->canUploadLocalVideo) : ?>
     <section id="jlms-video-file-<?= (int) $lesson->id ?>" class="jlms-video-file">
      <p><?= Text::_('COM_JLMS_VIDEO_FILE_NOTICE') ?> <?= $lesson->media_asset_id ? Text::_('COM_JLMS_VIDEO_FILE_ATTACHED') : Text::_('COM_JLMS_VIDEO_FILE_MISSING') ?></p>
      <?php if ($this->editable) : ?>
