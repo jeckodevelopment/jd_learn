@@ -66,8 +66,8 @@ def main() -> int:
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     if args.self_test:
-        assert wrap_line("// " + "word " * 30)[0].startswith("// ")
-        assert len(wrap_line("// " + "word " * 30)) > 1
+        assert wrap_line("// " + ("word " * 30).strip())[0].startswith("// ")
+        assert len(wrap_line("// " + ("word " * 30).strip())) > 1
         assert wrap_line("echo '" + "x" * 140 + "';") == ["echo '" + "x" * 140 + "';"]
         assert wrap_line("// https://example.org/" + "x" * 130) == ["// https://example.org/" + "x" * 130]
         print("SECDEV-02 comment wrapper negative fixtures OK")
