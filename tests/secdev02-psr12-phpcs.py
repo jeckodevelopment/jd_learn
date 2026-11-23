@@ -152,6 +152,12 @@ def main() -> int:
     print("SECDEV-02 PHPCS largest source debts:")
     for filename, count in by_file.most_common(20):
         print(f"  {filename}: {count}")
+    by_new_rule = Counter()
+    for (_path, rule), count in introduced.items():
+        by_new_rule[rule] += count
+    print("SECDEV-02 introduced findings grouped by rule:")
+    for rule, count in by_new_rule.most_common():
+        print(f"  introduced {rule}: {count}")
     for (filename, source), count in sorted(introduced.items())[:40]:
         print(f"New PSR-12 finding: {filename}: {source} x{count}", file=sys.stderr)
     if now:
