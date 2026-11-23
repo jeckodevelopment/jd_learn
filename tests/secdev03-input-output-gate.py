@@ -23,10 +23,10 @@ def source(path: str) -> str:
 # Conservatively reject new CSV emitters; even matching a quoted source
 # string requires review rather than silently treating a possible sink as safe.
 csv_sink = re.compile(
-    r"\\bfputcsv\\s*\\(|\\bSplFileObject\\s*\\(|"
-    r"header\\s*\\(\\s*['\\\"][^\\n]*(?:text|application)/csv|"
-    r"\\b(?:League\\\\Csv\\\\Writer|CsvWriter)\\b|"
-    r"(?:format|type)\\s*=\\s*['\\\"]?csv", re.I
+    r"\bfputcsv\s*\(|\bSplFileObject\s*\(|"
+    r"header\s*\(\s*['\"][^\n]*(?:text|application)/csv|"
+    r"\b(?:League\\Csv\\Writer|CsvWriter)\b|"
+    r"(?:format|type)\s*=\s*['\"]?csv", re.I
 )
 
 
