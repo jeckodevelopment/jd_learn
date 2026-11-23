@@ -11,42 +11,7 @@
 
 declare(strict_types=1);
 
-$secdev02NativeImports = static function (string $source): array {
-    // Only anchored, complete top-level Joomla import declarations qualify.
-    // A source-level review and the installed runtime exercise this inventory.
-    preg_match_all(
-        '/^use[ \t]+(Joomla\\\\(?:CMS|Component|Database|DI|Registry|Session)\\\\[A-Za-z_][A-Za-z0-9_\\\\]*)[ \t]*;/m',
-        $source,
-        $matches
-    );
-
-    return array_values(array_unique($matches[1]));
-};
-
-$secdev02MissingApis = static function (
-    array $names,
-    array $methods,
-    callable $hasClass,
-    callable $hasMethod
-): array {
-    $errors = [];
-
-    foreach ($names as $name) {
-        if (!$hasClass($name)) {
-            $errors[] = 'missing Joomla class/interface: ' . $name;
-        }
-    }
-
-    foreach ($methods as $target) {
-        [$class, $method] = $target;
-
-        if (!$hasClass($class) || !$hasMethod($class, $method)) {
-            $errors[] = 'missing Joomla method: ' . $class . '::' . $method;
-        }
-    }
-
-    return $errors;
-};
+require_once __DIR__ . '/fixtures/secdev02-native-api-functions.php';
 
 if (in_array('--self-test', $argv, true)) {
     $testSource = <<<'PHP'
@@ -58,7 +23,7 @@ echo 'use Joomla\CMS\FakeClass;';
 PHP;
     $expectedImports = ['Joomla\CMS\Factory', 'Joomla\Database\DatabaseInterface'];
 
-    if ($secdev02NativeImports($testSource) !== $expectedImports) {
+    if (secdev02NativeImports($testSource) !== $expectedImports) {
         throw new RuntimeException('Native import parser produced incorrect results');
     }
 
@@ -66,11 +31,11 @@ PHP;
     $method = static fn (string $class, string $name): bool =>
         $class === 'Joomla\CMS\Factory' && $name === 'getContainer';
 
-    if ($secdev02MissingApis(['Joomla\CMS\Factory'], [['Joomla\CMS\Factory', 'getContainer']], $resolver, $method)) {
+    if (secdev02MissingApis(['Joomla\CMS\Factory'], [['Joomla\CMS\Factory', 'getContainer']], $resolver, $method)) {
         throw new RuntimeException('Valid Joomla symbols were rejected');
     }
 
-    $missing = $secdev02MissingApis(
+    $missing = secdev02MissingApis(
         ['Joomla\CMS\RemovedClass'],
         [['Joomla\CMS\Factory', 'removedMethod']],
         $resolver,
@@ -132,7 +97,7 @@ foreach ($files as $file) {
         throw new RuntimeException('Native contract source file missing: ' . $file);
     }
 
-    $imports = array_merge($imports, $secdev02NativeImports($source));
+    $imports = array_merge($imports, secdev02NativeImports($source));
 }
 
 $imports = array_values(array_unique($imports));
@@ -152,7 +117,7 @@ $apiMethods = [
 $exists = static fn (string $name): bool =>
     class_exists($name) || interface_exists($name) || trait_exists($name) || enum_exists($name);
 
-$errors = $secdev02MissingApis(
+$errors = secdev02MissingApis(
     $imports,
     $apiMethods,
     $exists,
