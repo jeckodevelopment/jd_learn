@@ -46,8 +46,7 @@ def validate_evidence(reference):
         def normalize(text):
             return token_spacing.sub(r"\1", text)
         normalized_anchor = normalize(anchor)
-        if not any(normalized_anchor in normalize(line)
-                   for line in candidate.read_text(encoding="utf-8").splitlines()):
+        if normalized_anchor not in normalize(candidate.read_text(encoding="utf-8")):
             raise ValueError(f"Evidence anchor not found: {reference}")
     return path
 
