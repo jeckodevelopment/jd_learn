@@ -91,10 +91,23 @@ $categoryId = (int)$categoryModel->getState('category.id');
 $courseId = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='publication-test'")->loadResult();
 if (!$courseId) { throw new RuntimeException('Published catalog course fixture missing.'); }
 $pathModel = $component->getMVCFactory()->createModel('Pathway','Administrator',['ignore_request'=>true]);
-$payload = ['id'=>0,'revision'=>1,'title'=>'CI learning pathway','alias'=>'ci-learning-pathway','description'=>'<p>Pathway summary</p>',
-    'catid'=>$categoryId,'access'=>1,'language'=>'*','state'=>1,'courses'=>[['course_id'=>$courseId,'ordering'=>10]]];
+// SECDEV-03: hostile editorial HTML and protected table columns must not escape
+// the native pathway editor's HTML filtering and explicit write allowlist.
+$payload = ['id'=>0,'revision'=>1,'title'=>'CI learning pathway','alias'=>'ci-learning-pathway',
+    'description'=>'<p>Pathway summary</p><script>alert(1)</script><iframe src="https://example.invalid"></iframe><a href="javascript:alert(2)" onclick="alert(3)">read</a>',
+    'catid'=>$categoryId,'access'=>1,'language'=>'*','state'=>1,
+    'courses'=>[['course_id'=>$courseId,'ordering'=>10]],
+    'params_json'=>'{"injected":true}','created_by'=>999999,'checked_out'=>999999];
 $check((bool)$pathModel->save($payload),'native pathway model saves pathway and course order: '.$pathModel->getError());
 $pathwayId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='ci-learning-pathway'")->loadResult();
+$securityRow = $db->setQuery('SELECT description,params_json,created_by,checked_out FROM #__jlms_pathways WHERE id='.(int)$pathwayId)->loadObject();
+$check($securityRow && str_contains((string)$securityRow->description, '<p>Pathway summary</p>')
+    && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', (string)$securityRow->description),
+    'SECDEV-03: pathway description filters executable markup and URL handlers');
+$check(!str_contains((string)$securityRow->params_json, 'injected')
+    && (int)$securityRow->created_by===(int)$app->getIdentity()->id
+    && (int)$securityRow->checked_out!==999999,
+    'SECDEV-03: pathway ignores raw params, author identity and checkout fields');
 $stored = $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$pathwayId)->loadObject();
 $check($pathwayId>0 && (int)$stored->course_id===$courseId && (int)$stored->ordering===0,'native authoring normalizes and persists ordering');
 $operator = $app->getIdentity();
