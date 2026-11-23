@@ -22,10 +22,18 @@ function compat6Disabled(array $rows): bool
 }
 
 if (in_array('--self-test', $argv, true)) {
-    assert(compat6Disabled([['enabled' => 0, 'element' => 'compat6', 'folder' => 'behaviour']]));
-    assert(!compat6Disabled([['enabled' => 1, 'element' => 'compat6', 'folder' => 'behaviour']]));
-    assert(!compat6Disabled([]));
-    assert(!compat6Disabled([['enabled' => 0, 'element' => 'compat', 'folder' => 'behaviour']]));
+    $fixtures = [
+        [true, [['enabled' => 0, 'element' => 'compat6', 'folder' => 'behaviour']]],
+        [false, [['enabled' => 1, 'element' => 'compat6', 'folder' => 'behaviour']]],
+        [false, []],
+        [false, [['enabled' => 0, 'element' => 'compat', 'folder' => 'behaviour']]],
+    ];
+    foreach ($fixtures as [$expected, $rows]) {
+        if (compat6Disabled($rows) !== $expected) {
+            fwrite(STDERR, "SECDEV-02 compat6 negative fixture failed\n");
+            exit(1);
+        }
+    }
     echo "SECDEV-02 Joomla compat6 disabled negative fixtures: OK\n";
     exit(0);
 }
