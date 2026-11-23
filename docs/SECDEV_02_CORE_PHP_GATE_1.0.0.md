@@ -26,3 +26,11 @@ La specifica richiede (01) CORE-01–23, PSR-12, namespace e contratti; (02) run
 - `python3 tests/secdev02-core-php.py --self-test` e `python3 tests/secdev02-core-php.py` terminano con codice 0.
 - Alterare il requisito PHP, togliere un mapping PSR-4, introdurre un percorso core vietato o rimuovere una fase CI produce codice diverso da zero.
 - Le normali installazioni Joomla, il pacchetto JD Learn, il comportamento frontend/backend, i dati e i cookie restano invariati.
+
+## Controllo API legacy Joomla 6
+
+`tests/secdev02-joomla-api-gate.py` cerca nel PHP distribuito riferimenti selezionati a vecchie classi globali `JFactory`, `JText`, `JInput`, `JDatabase`, `JPlugin`, `JTable`, `JModelLegacy`, `JControllerLegacy`, `JViewLegacy`, e al namespace `Joomla\\CMS\\Input\\Input`. La CI blocca una loro reintroduzione e verifica fixture negative.
+
+Fonti primarie: [Joomla 6, requisiti tecnici](https://manual.joomla.org/docs/next/get-started/technical-requirements/), [compatibilità Joomla 5.4 → 6.0](https://manual.joomla.org/migrations/54-60/removed-backward-incompatibility/), [policy API](https://manual.joomla.org/docs/next/development-strategy/backward-compatibility-policy/).
+
+**Limite:** l'elenco di alias è intenzionalmente limitato, il controllo è testuale e non usa AST/stub di tutte le classi/metodi Joomla. Non prova quindi la compatibilità dell'intera API, né l'assenza di dipendenze dal plugin di retrocompatibilità Joomla 6. Per accettare SECDEV-02/02–03 serve anche una revisione delle chiamate rispetto alla patch target e una verifica di runtime con il compatibility plugin disabilitato, registrata separatamente. Nessuna variazione di stato della matrice è giustificata dal solo scanner.
