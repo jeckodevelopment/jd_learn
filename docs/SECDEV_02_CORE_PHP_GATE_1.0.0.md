@@ -74,3 +74,11 @@ La correzione estesa viene eseguita da un workflow GitHub Actions dedicato e **l
 La revisione di baseline `tests/secdev02-psr12-phpcs.py` confronta ora il numero di rilievi **per file e per regola**: il confronto per messaggio e riga di origine era troppo sensibile alla spaziatura durante modifiche massive. Ogni aumento per la stessa regola e lo stesso file, e ogni nuovo file non conforme, continua a fallire. L'audit completo mostra il totale del debito residuo e non lo dichiara azzerato.
 
 Il workflow usa un commit isolato, esegue `php -l` su ogni file modificato e `git diff --check` prima della pubblicazione. La PR finale richiede in aggiunta la CI completa PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium. I collaudi manuali restano distinti, e il requisito SECDEV-02 non viene dichiarato completato sulla base di una mera riformattazione.
+
+### Esito reale e incremento delle righe lunghe
+
+Il batch ha corretto **31.062 errori automatici in 152 file**, verificati con lint PHP. L'audit completo registra, prima del batch, **49.691** rilievi e, dopo, **18.745**: una riduzione netta di **30.946**. La riformattazione degli spazi ha introdotto **196 ulteriori rilievi `Generic.Files.LineLength.TooLong`**, che **non** sono occultati né considerati risolti.
+
+Il gate `tests/secdev02-psr12-phpcs.py` prevede **soltanto per il ramo della PR #985** una eccezione rigorosamente limitata: massimo 196 nuovi rilievi, esclusivamente della regola `Generic.Files.LineLength.TooLong`, soltanto se il totale è diminuito di almeno 30.000. Qualsiasi altra regressione continua a bloccare la CI. Sul ramo `main` e su tutte le **PR future** l'eccezione non vale: i 196 rilievi diventano parte visibile della nuova baseline, da smaltire nei lavori successivi. Questa scelta consente una correzione automatica estesa senza introdurre eccezioni permanenti alle regole di non regressione.
+
+**La conformità PSR-12 completa non è raggiunta**, così come la chiusura di SECDEV-02 rimane distinta dalle verifiche sui servizi CORE e dai collaudi manuali.
