@@ -14,9 +14,12 @@ use Jlms\Contracts\Video\PlaybackDescriptor;
 
 final class Provider extends AbstractFoundationProvider
 {
-    public function __construct(private readonly bool $enabled = false) {}
-    protected function key(): string { return 'html5'; }
-    public function getDescriptor(): ProviderDescriptor { return new ProviderDescriptor('html5', 'PLG_JLMSVIDEO_HTML5', 1, $this->enabled); }
+    public function __construct(private readonly bool $enabled = false) {
+    }
+    protected function key(): string { return 'html5';
+    }
+    public function getDescriptor(): ProviderDescriptor { return new ProviderDescriptor('html5', 'PLG_JLMSVIDEO_HTML5', 1, $this->enabled);
+    }
     public function getCapabilities(VideoSource $source): VideoCapabilities
     {
         $active = $this->enabled && $source->providerKey === 'html5';

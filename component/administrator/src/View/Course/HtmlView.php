@@ -32,7 +32,9 @@ final class HtmlView extends BaseHtmlView
         if (!$allowed) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
-        if ($id > 0) { $this->programme = Factory::getApplication()->bootComponent('com_jlms')->getCurriculumService()->outline($actor, $id); }
+        if ($id > 0) {
+$this->programme = Factory::getApplication()->bootComponent('com_jlms')->getCurriculumService()->outline($actor, $id);
+        }
         $this->form = $this->get('Form');
         if (!$this->form) {
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
@@ -62,7 +64,9 @@ final class HtmlView extends BaseHtmlView
                 }
             }
             $this->form->setFieldAttribute('version_note', 'disabled', 'true');
-            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { $this->form->setFieldAttribute($field, 'disabled', 'true'); }
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) {
+$this->form->setFieldAttribute($field, 'disabled', 'true');
+            }
             $this->form->setFieldAttribute('teacher_ids', 'disabled', 'true');
             $this->form->setFieldAttribute('certificate_enabled', 'disabled', 'true');
             foreach (['title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary'] as $field) {
@@ -97,7 +101,9 @@ final class HtmlView extends BaseHtmlView
                 ->icon('icon-envelope')
                 ->url(\Joomla\CMS\Router\Route::_('index.php?option=com_jlms&view=courseannouncement&id=' . $id));
         }
-        if ($id > 0) { ToolbarHelper::versions('com_jlms.course', $id); }
+        if ($id > 0) {
+ToolbarHelper::versions('com_jlms.course', $id);
+        }
         ToolbarHelper::cancel('course.cancel');
         ToolbarHelper::help('course', true);
         parent::display($tpl);

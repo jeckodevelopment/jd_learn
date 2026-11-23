@@ -11,7 +11,8 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
 /** Queues one optional operational reminder for active learners before an enrolment deadline. */
 final class CourseExpiryReminderService
 {
-    public function __construct(private readonly DatabaseInterface $db) {}
+    public function __construct(private readonly DatabaseInterface $db) {
+    }
 
     /** @return array{queued:int,failed:int,processed:int} */
     public function enqueueDue(int $limit = 5000): array

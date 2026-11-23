@@ -14,12 +14,12 @@ $impact = $this->purgeImpact;
  <caption><?= Text::_('COM_JLMS_PURGE_DEPENDENCIES') ?></caption>
  <thead><tr><th scope="col"><?= Text::_('COM_JLMS_PURGE_REFERENCE') ?></th><th scope="col"><?= Text::_('COM_JLMS_PURGE_COUNT') ?></th></tr></thead>
  <tbody>
- <?php foreach ($impact['references'] as $table => $count): ?>
+ <?php foreach ($impact['references'] as $table => $count) : ?>
   <tr><th scope="row"><?= $this->escape($table) ?></th><td><?= (int) $count ?></td></tr>
  <?php endforeach; ?>
   <tr><th scope="row"><?= Text::_('COM_JLMS_PURGE_EDITORIAL_HISTORY') ?></th><td><?= (int) $impact['editorial_history'] ?></td></tr>
  </tbody></table>
- <?php if ($impact['eligible']): ?>
+ <?php if ($impact['eligible']) : ?>
  <p class="alert alert-warning"><?= Text::_('COM_JLMS_PURGE_ELIGIBLE') ?></p>
  <form action="<?= Route::_('index.php?option=com_jlms&task=course.purge') ?>" method="post">
   <input type="hidden" name="cid[]" value="<?= (int) $impact['id'] ?>">
@@ -28,7 +28,7 @@ $impact = $this->purgeImpact;
   <?= HTMLHelper::_('form.token') ?>
   <button class="btn btn-danger" type="submit"><?= Text::_('COM_JLMS_PURGE_CONFIRM_ACTION') ?></button>
  </form>
- <?php else: ?>
+ <?php else : ?>
  <p class="alert alert-danger"><?= Text::_('COM_JLMS_PURGE_BLOCKED') ?></p>
  <?php endif; ?>
  <p><a href="<?= Route::_('index.php?option=com_jlms&view=courses&filter[published]=-2') ?>"><?= Text::_('COM_JLMS_BACK_TO_COURSES') ?></a></p>

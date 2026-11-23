@@ -20,7 +20,9 @@ final class MaterialService
     private function row(string $table, int $id, bool $lock = false): object
     {
         $q = $this->db->createQuery()->select('*')->from('#__jlms_' . $table)->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
-        if ($lock) { $q->setQuery((string) $q . ' FOR UPDATE'); }
+        if ($lock) {
+$q->setQuery((string) $q . ' FOR UPDATE');
+        }
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
     }
 
@@ -49,14 +51,24 @@ final class MaterialService
     private function transaction(\Closure $work): mixed
     {
         $this->db->transactionStart();
-        try { $result = $work(); $this->db->transactionCommit(); return $result; }
-        catch (\Throwable $error) { $this->db->transactionRollback(); throw $error; }
+        try {
+$result = $work();
+$this->db->transactionCommit();
+return $result;
+        } catch (\Throwable $error) {
+$this->db->transactionRollback();
+throw $error;
+        }
     }
 
     private function draft(object $version, int $expected): void
     {
-        if ($version->status !== 'draft') { throw new \RuntimeException('COM_JLMS_VERSION_IMMUTABLE', 409); }
-        if ((int) $version->revision !== $expected) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409); }
+        if ($version->status !== 'draft') {
+throw new \RuntimeException('COM_JLMS_VERSION_IMMUTABLE', 409);
+        }
+        if ((int) $version->revision !== $expected) {
+throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
+        }
     }
 
     private function touch(object $version, User $actor): void
@@ -236,9 +248,13 @@ final class MaterialService
         [, $course, $version] = $this->author($identity, $courseId, $versionId);
         $this->draft($version, $expected);
         $availability = MaterialAvailability::normalize($publishUp, $publishDown, CourseSchedule::read($course)['timezone']);
-        if (!in_array((string) $preview, ['0', '1'], true)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        if (!in_array((string) $preview, ['0', '1'], true)) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
         $preview = (int) $preview;
-        if ($preview === 1 && $lessonId > 0) { throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422); }
+        if ($preview === 1 && $lessonId > 0) {
+throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422);
+        }
         if (in_array($upload['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
@@ -274,13 +290,16 @@ final class MaterialService
                 $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')->where('course_version_id = :version')
                     ->bind(':version', $versionId, ParameterType::INTEGER);
                 $count = (int) $this->db->setQuery($q)->loadResult();
-                if ($count >= 1000) { throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409); }
+                if ($count >= 1000) {
+throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409);
+                }
                 $attachment = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
                     'asset_id' => (int) $asset->id, 'title' => trim($title), 'description' => $description, 'ordering' => $count,
                     'state' => 1, 'preview' => $preview, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
                     'revision' => 1, 'created_by' => (int) $actor->id,
                     'modified_by' => (int) $actor->id, 'created_at' => $now, 'modified_at' => $now];
-                $this->db->insertObject('#__jlms_attachments', $attachment, 'id'); $id = (int) $attachment->id;
+                $this->db->insertObject('#__jlms_attachments', $attachment, 'id');
+$id = (int) $attachment->id;
             }
             $this->touch($version, $actor);
             return $id;
@@ -305,14 +324,18 @@ final class MaterialService
                 ->where('course_version_id = :version')->where('asset_id = :asset')
                 ->where('lesson_id ' . ($lessonId ? '= :lesson' : 'IS NULL'))
                 ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':asset', $sourceAssetId, ParameterType::INTEGER);
-            if ($lessonId) { $duplicate->bind(':lesson', $lessonId, ParameterType::INTEGER); }
+            if ($lessonId) {
+$duplicate->bind(':lesson', $lessonId, ParameterType::INTEGER);
+            }
             if ((int) $this->db->setQuery($duplicate)->loadResult() > 0) {
                 throw new \RuntimeException('COM_JLMS_MATERIAL_ALREADY_LINKED', 409);
             }
             $countQuery = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')->where('course_version_id = :version')
                 ->bind(':version', $versionId, ParameterType::INTEGER);
             $count = (int) $this->db->setQuery($countQuery)->loadResult();
-            if ($count >= 1000) { throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409); }
+            if ($count >= 1000) {
+throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409);
+            }
             $now = gmdate('Y-m-d H:i:s');
             $link = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
                 'asset_id' => (int) $source->asset_id, 'title' => $source->title, 'description' => $source->description,
@@ -333,7 +356,9 @@ final class MaterialService
         if ($operation === 'scan') {
             $this->author($identity, $courseId, $versionId);
             $link = $this->row('attachments', $id);
-            if ((int) $link->course_version_id !== $versionId) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+            if ((int) $link->course_version_id !== $versionId) {
+throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            }
             $asset = $this->row('assets', (int) $link->asset_id);
             $scan = $this->storage->scan($asset);
             $scannedId = (int) $asset->id;
@@ -341,15 +366,23 @@ final class MaterialService
         $this->transaction(function () use ($identity, $courseId, $versionId, $id, $expected, $operation, $input, $scan, $scannedId): void {
             [$actor, $course, $version] = $this->author($identity, $courseId, $versionId, true);
             if ($operation === 'scan' && in_array($version->status, ['published', 'retired'], true)) {
-                if ((int) $version->revision !== $expected) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409); }
-            } else { $this->draft($version, $expected); }
+                if ((int) $version->revision !== $expected) {
+throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
+                }
+            } else {
+$this->draft($version, $expected);
+            }
             $link = $this->row('attachments', $id, true);
-            if ((int) $link->course_version_id !== $versionId) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+            if ((int) $link->course_version_id !== $versionId) {
+throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            }
             if ($operation === 'delete') {
                 $q = $this->db->createQuery()->delete('#__jlms_attachments')->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($q)->execute();
             } elseif ($operation === 'scan') {
-                if ((int) $link->asset_id !== $scannedId) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409); }
+                if ((int) $link->asset_id !== $scannedId) {
+throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
+                }
                 $asset = (object) (['id' => (int) $link->asset_id] + $scan + ['modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')]);
                 $this->db->updateObject('#__jlms_assets', $asset, 'id');
             } elseif ($operation === 'save') {
@@ -365,8 +398,12 @@ final class MaterialService
                 $preview = (string) ($input['preview'] ?? '0');
                 if (!is_string($title) || preg_match('/\A[^\x00-\x1f]{1,255}\z/u', trim($title)) !== 1
                     || !is_string($description) || strlen($description) > 4096 || !in_array($state, ['0', '1'], true)
-                    || !in_array($preview, ['0', '1'], true) || !ctype_digit($order) || strlen($order) > 5) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-                if ($preview === '1' && $link->lesson_id !== null) { throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422); }
+                    || !in_array($preview, ['0', '1'], true) || !ctype_digit($order) || strlen($order) > 5) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                }
+                if ($preview === '1' && $link->lesson_id !== null) {
+throw new \RuntimeException('COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED', 422);
+                }
                 $availability = array_key_exists('publish_up', $input) || array_key_exists('publish_down', $input)
                     ? MaterialAvailability::normalize($input['publish_up'] ?? $link->publish_up, $input['publish_down'] ?? $link->publish_down, CourseSchedule::read($course)['timezone'])
                     : ['publish_up' => $link->publish_up, 'publish_down' => $link->publish_down];
@@ -374,8 +411,12 @@ final class MaterialService
                     'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
                     'ordering' => (int) $order, 'revision' => (int) $link->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');
-            } else { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-            if ($version->status === 'draft') { $this->touch($version, $actor); }
+            } else {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            }
+            if ($version->status === 'draft') {
+$this->touch($version, $actor);
+            }
         });
     }
 
@@ -415,16 +456,22 @@ final class MaterialService
 
     public function audioDownload(User $actor, string $language, int $enrollmentId, int $lessonId, int $id): array
     {
-        $actor = $this->learning->freshActor($actor); $link = $this->row('attachments', $id);
+        $actor = $this->learning->freshActor($actor);
+$link = $this->row('attachments', $id);
         $context = $this->learning->audioLessonContext($actor, $language, $enrollmentId, $lessonId);
         if ((int) $link->course_version_id !== $context['version_id'] || (int) $link->lesson_id !== $lessonId
-            || (int) $link->state !== 1 || (int) $link->preview !== 0) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+            || (int) $link->state !== 1 || (int) $link->preview !== 0) {
+throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
         $now = gmdate('Y-m-d H:i:s');
         if (($link->publish_up !== null && $link->publish_up > $now) || ($link->publish_down !== null && $link->publish_down <= $now)) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $file = $this->open((int) $link->asset_id);
-        if (!in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) { fclose($file['handle']); throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        if (!in_array($file['mime'], ['audio/mpeg', 'audio/ogg'], true)) {
+fclose($file['handle']);
+throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
         $file['inline'] = true;
         return $file;
     }
@@ -433,7 +480,9 @@ final class MaterialService
     {
         $this->author($actor, $courseId, $versionId);
         $link = $this->row('attachments', $id);
-        if ((int) $link->course_version_id !== $versionId) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        if ((int) $link->course_version_id !== $versionId) {
+throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
         return $this->open((int) $link->asset_id);
     }
 
@@ -458,7 +507,10 @@ final class MaterialService
         try {
             $assets = $this->db->setQuery($q)->loadObjectList();
             foreach ($assets as $asset) {
-                if (!$this->storage->remove($asset)) { $failed++; continue; }
+                if (!$this->storage->remove($asset)) {
+$failed++;
+continue;
+                }
                 $delete = $this->db->createQuery()->delete('#__jlms_assets')->where('id = :id')
                     ->bind(':id', $asset->id, ParameterType::INTEGER);
                 $this->db->setQuery($delete)->execute();
@@ -478,7 +530,9 @@ final class MaterialService
             throw new \RuntimeException('COM_JLMS_DELIVERY_DISABLED', 503);
         }
         $asset = $this->row('assets', $assetId);
-        if ($asset->status !== 'ready') { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+        if ($asset->status !== 'ready') {
+throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        }
         if ((bool) $this->storage->config()->get('material_scan_required', false)) {
             $scan = json_decode($asset->scan_json ?? '{}', true);
             if (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean') {

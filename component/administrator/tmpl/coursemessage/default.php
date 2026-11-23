@@ -33,8 +33,11 @@ $mutation = $preview['mutation_id'] ?? '';
    </div>
   </div>
   <fieldset class="mt-3 mb-3"><legend><?= Text::_('COM_JLMS_COMMUNICATION_RECIPIENTS') ?></legend>
-  <?php if (!$this->item['recipients']) : ?><p><?= Text::_('COM_JLMS_COMMUNICATION_NO_RECIPIENTS') ?></p><?php endif; ?>
-  <?php foreach ($this->item['recipients'] as $person) : $id = (int)$person->enrollment_id; ?>
+  <?php if (!$this->item['recipients']) :
+?><p><?= Text::_('COM_JLMS_COMMUNICATION_NO_RECIPIENTS') ?></p><?php
+  endif; ?>
+  <?php foreach ($this->item['recipients'] as $person) :
+$id = (int)$person->enrollment_id; ?>
    <label class="form-check"><input type="checkbox" name="jform[enrollment_ids][]" value="<?= $id ?>" <?= in_array($id, $selected, true) ? 'checked' : '' ?>> <?= $this->escape($person->name) ?> (<?= $this->escape($person->username) ?>) · #<?= $id ?></label>
   <?php endforeach; ?>
   </fieldset>
@@ -54,13 +57,19 @@ $mutation = $preview['mutation_id'] ?? '';
    <p><?= Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT', $preview['count']) ?></p>
    <form class="mb-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.test') ?>">
     <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><input type="hidden" name="jform[mutation_id]" value="<?= $this->escape($mutation) ?>"><?= HTMLHelper::_('form.token') ?>
-    <?php foreach (['subject','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
+    <?php foreach (['subject','htmlbody'] as $field) :
+?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php
+    endforeach; ?>
     <button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_COMMUNICATION_SEND_TEST') ?></button>
    </form>
    <form class="mt-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.queue') ?>">
     <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>">
-    <?php foreach ($preview['enrollment_ids'] as $id) : ?><input type="hidden" name="jform[enrollment_ids][]" value="<?= (int)$id ?>"><?php endforeach; ?>
-    <?php foreach (['subject','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>
+    <?php foreach ($preview['enrollment_ids'] as $id) :
+?><input type="hidden" name="jform[enrollment_ids][]" value="<?= (int)$id ?>"><?php
+    endforeach; ?>
+    <?php foreach (['subject','htmlbody'] as $field) :
+?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php
+    endforeach; ?>
     <input type="hidden" name="jform[impact_hash]" value="<?= $this->escape($preview['hash']) ?>"><input type="hidden" name="jform[mutation_id]" value="<?= $this->escape($mutation) ?>">
     <div class="form-check mb-3"><input class="form-check-input" id="jlms-communication-confirm" type="checkbox" name="jform[confirmation]" value="1" required><label class="form-check-label" for="jlms-communication-confirm"><?= Text::_('COM_JLMS_COMMUNICATION_CONFIRM') ?></label></div>
     <?= HTMLHelper::_('form.token') ?>

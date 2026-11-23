@@ -19,12 +19,15 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
  */
 final class EnrollmentManagerNotice
 {
-    public function __construct(private readonly DatabaseInterface $db) {}
+    public function __construct(private readonly DatabaseInterface $db) {
+    }
 
     /** The roster service is the authorization source for every proposed recipient. */
     public static function authorized(DatabaseInterface $db, int $courseId, int $userId): bool
     {
-        if ($courseId < 1 || $userId < 1) { return false; }
+        if ($courseId < 1 || $userId < 1) {
+return false;
+        }
         try {
             $learning = new LearningService($db, new CatalogService($db));
             (new EnrollmentRosterService($db, $learning))->course(new User($userId), $courseId);
@@ -67,13 +70,17 @@ final class EnrollmentManagerNotice
             ->innerJoin('#__users AS u ON u.id = t.user_id')
             ->where('ct.course_id = :course')->where('u.block = 0')
             ->bind(':course', $courseId, ParameterType::INTEGER);
-        foreach ($this->db->setQuery($q, 0, 2001)->loadColumn() as $id) { $ids[(int) $id] = true; }
+        foreach ($this->db->setQuery($q, 0, 2001)->loadColumn() as $id) {
+$ids[(int) $id] = true;
+        }
         if (count($ids) > 2000) {
             throw new \RuntimeException('Too many potential approval managers; use narrower Joomla ACL groups.');
         }
         $authorized = [];
         foreach (array_keys($ids) as $userId) {
-            if (self::authorized($this->db, $courseId, $userId)) { $authorized[] = $userId; }
+            if (self::authorized($this->db, $courseId, $userId)) {
+$authorized[] = $userId;
+            }
         }
         return $authorized;
     }
@@ -99,8 +106,10 @@ final class EnrollmentManagerNotice
                 : $override . " = 'enabled'")
             ->order('r.id');
         $rows = $this->db->setQuery($query, 0, $limit)->loadObjectList();
-        $managers = []; $queue = new MailQueue($this->db);
-        $queued = 0; $failed = 0;
+        $managers = [];
+$queue = new MailQueue($this->db);
+        $queued = 0;
+$failed = 0;
         foreach ($rows as $request) {
             $courseId = (int) $request->course_id;
             try {
@@ -111,17 +120,23 @@ final class EnrollmentManagerNotice
                     $managers[$courseId] = $this->managers($courseId);
                 }
                 foreach ($managers[$courseId] as $userId) {
-                    if ($userId === (int) $request->applicant_id) { continue; }
+                    if ($userId === (int) $request->applicant_id) {
+continue;
+                    }
                     // Address and user language are loaded fresh; do not expose applicant PII.
                     $q = $this->db->createQuery()->select('name,email,params,block')
                         ->from('#__users')->where('id = :user')->bind(':user', $userId, ParameterType::INTEGER);
                     $recipient = $this->db->setQuery($q)->loadObject();
                     if (!$recipient || (int) $recipient->block !== 0
-                        || !filter_var((string) $recipient->email, FILTER_VALIDATE_EMAIL)) { continue; }
+                        || !filter_var((string) $recipient->email, FILTER_VALIDATE_EMAIL)) {
+continue;
+                    }
                     $params = json_decode((string) ($recipient->params ?: '{}'), true);
                     $language = is_array($params) ? (string) ($params['language'] ?? '') : '';
                     $language = $language ?: (string) $request->course_language;
-                    if (!preg_match('/^[a-z]{2}-[A-Z]{2}$/D', $language)) { $language = 'en-GB'; }
+                    if (!preg_match('/^[a-z]{2}-[A-Z]{2}$/D', $language)) {
+$language = 'en-GB';
+                    }
                     $name = trim((string) $recipient->name);
                     $courseTitle = (string) $request->course_title;
                     $siteName = (string) Factory::getApplication()->get('sitename');

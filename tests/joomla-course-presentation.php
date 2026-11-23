@@ -71,7 +71,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 $checks = 0;
 function presentationExpect(bool $ok, string $message): void {
     global $checks;
-    if (!$ok) { throw new RuntimeException($message); }
+    if (!$ok) {
+throw new RuntimeException($message);
+    }
     $checks++;
 }
 $fixture = dirname($root) . '/course-presentation-fixture.json';
@@ -177,7 +179,8 @@ file_put_contents($outside, $coverBytes);
 $link = $root . '/images/jlms-ci-symlink.png';
 symlink($outside, $link);
 presentationExpect(!$model->save(array_replace($update, ['revision' => 3, 'presentation_image' => 'images/jlms-ci-symlink.png'])), 'Symlink escaping the public media root rejected');
-unlink($link); unlink($outside);
+unlink($link);
+unlink($outside);
 $fake = $root . '/images/jlms-ci-fake.png';
 file_put_contents($fake, '<html>not an image</html>');
 presentationExpect(!$model->save(array_replace($update, ['revision' => 3, 'presentation_image' => 'images/jlms-ci-fake.png'])), 'Extension alone cannot qualify an image');
@@ -192,8 +195,12 @@ $item = $model->getItem($course);
 presentationExpect($model->save(array_replace($update, ['revision' => (int) $item->revision, 'presentation_objectives' => 'Latest objectives before publication'])), 'Presentation remains editable while programme is a draft');
 $item = $model->getItem($course);
 unlink($root . '/' . $coverPath);
-try { CoursePresentation::snapshot($item); throw new RuntimeException('Missing cover accepted at publication'); }
-catch (InvalidArgumentException) { $checks++; }
+try {
+CoursePresentation::snapshot($item);
+throw new RuntimeException('Missing cover accepted at publication');
+} catch (InvalidArgumentException) {
+$checks++;
+}
 file_put_contents($root . '/' . $coverPath, $coverBytes);
 // New publication requires a meaningful description, including on drafts created by older clients.
 $originalParams = $item->params_json;
@@ -201,8 +208,11 @@ $beforeVersionCheck = $db->setQuery('SELECT status,revision,presentation_json,st
 $beforeDescriptionCheck = $db->setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id=' . $course)->loadAssoc();
 foreach ([null, '', "<p>&nbsp; \t<br></p>", '<p>&#8203;</p>'] as $description) {
     $params = json_decode($originalParams, true, 32, JSON_THROW_ON_ERROR);
-    if ($description === null) { unset($params['presentation']); }
-    else { $params['presentation']['description'] = $description; }
+    if ($description === null) {
+unset($params['presentation']);
+    } else {
+$params['presentation']['description'] = $description;
+    }
     $missingDescription = (object) ['id' => $course, 'params_json' => json_encode($params, JSON_THROW_ON_ERROR)];
     $db->updateObject('#__jlms_courses', $missingDescription, 'id');
     try {

@@ -40,7 +40,9 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
          <option value="<?= (int) $target->id ?>"><?= $this->escape($target->title) ?></option>
         <?php endforeach; ?>
        </select>
-      <?php else : ?>—<?php endif; ?>
+      <?php else :
+?>—<?php
+      endif; ?>
      </td></tr>
     <?php endforeach; ?>
     </tbody>

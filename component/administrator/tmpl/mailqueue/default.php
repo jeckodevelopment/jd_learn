@@ -34,7 +34,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
   <?php endif; ?>
   · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_LAST') ?>:
   <?= $this->escape((string) ($this->mailScheduler['last_execution'] ?: Text::_('JNEVER'))) ?>
-  <?php if ($this->mailScheduler['duplicates']) : ?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php endif; ?>
+  <?php if ($this->mailScheduler['duplicates']) :
+?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php
+  endif; ?>
   <a href="<?= Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE') ?></a>
  </div>
  <?php endif; ?>
@@ -83,10 +85,16 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
     <tr id="jlms-mail-queue-<?= (int) $row->id ?>">
      <td><?= (int) $row->id ?></td>
      <td><code><?= $this->escape($row->template_id) ?></code></td>
-     <td><?php if ($row->course_id) : ?><?= $this->escape((string) ($row->course_title ?: '#' . $row->course_id)) ?><?php else : ?>—<?php endif; ?></td>
+     <td><?php if ($row->course_id) :
+?><?= $this->escape((string) ($row->course_title ?: '#' . $row->course_id)) ?><?php
+         else :
+?>—<?php
+         endif; ?></td>
      <td><?= $row->recipient_masked !== '' ? '<code>' . $this->escape($row->recipient_masked) . '</code>' : '—' ?></td>
      <td><?= Text::_($stateKeys[(string) $row->state] ?? 'COM_JLMS_MAIL_QUEUE_STATE_PENDING') ?>
-      <?php if ((int) $row->is_stale_sending === 1) : ?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php endif; ?>
+      <?php if ((int) $row->is_stale_sending === 1) :
+?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php
+      endif; ?>
       <?php if ($row->diagnostic_key !== null && in_array((string) $row->state, ['retry', 'failed'], true)) : ?>
        <div class="small text-muted"><?= $this->escape(Text::_($row->diagnostic_key)) ?></div>
        <?php if ($row->diagnostic_missing_template) : ?>
@@ -148,7 +156,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
        <div><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILED') ?>: <?= Text::_($actionKeys[(string) $row->reconciliation_action] ?? 'COM_JLMS_MAIL_QUEUE_ACTION_SENT') ?></div>
        <small><?= $this->escape((string) $row->reconciliation_at) ?></small>
        <div><?= $this->escape((string) $row->reconciliation_note) ?></div>
-      <?php else : ?>—<?php endif; ?>
+      <?php else :
+?>—<?php
+      endif; ?>
      </td>
     </tr>
    <?php endforeach; ?>
@@ -158,8 +168,12 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
  <?php endif; ?>
  <nav aria-label="<?= $this->escape(Text::_('COM_JLMS_MAIL_QUEUE_PAGINATION')) ?>">
   <ul class="pagination">
-   <?php if ($start > 0) : ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . max(0, $start - $limit) . $filterQuery) ?>"><?= Text::_('JPREV') ?></a></li><?php endif; ?>
-   <?php if ($start + $limit < (int) $data['total']) : ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . ($start + $limit) . $filterQuery) ?>"><?= Text::_('JNEXT') ?></a></li><?php endif; ?>
+   <?php if ($start > 0) :
+?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . max(0, $start - $limit) . $filterQuery) ?>"><?= Text::_('JPREV') ?></a></li><?php
+   endif; ?>
+   <?php if ($start + $limit < (int) $data['total']) :
+?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . ($start + $limit) . $filterQuery) ?>"><?= Text::_('JNEXT') ?></a></li><?php
+   endif; ?>
   </ul>
  </nav>
  <details id="jlms-consent-audit" class="mt-4">
@@ -214,8 +228,12 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
   ?>
   <nav aria-label="<?= $this->escape(Text::_('COM_JLMS_PRIVACY_CONSENTS_TITLE')) ?>">
    <ul class="pagination">
-    <?php if ($consentStart > 0) : ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . max(0, $consentStart - $consentLimit)) ?>"><?= Text::_('JPREV') ?></a></li><?php endif; ?>
-    <?php if ($consentStart + $consentLimit < (int) $this->consentData['total']) : ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . ($consentStart + $consentLimit)) ?>"><?= Text::_('JNEXT') ?></a></li><?php endif; ?>
+    <?php if ($consentStart > 0) :
+?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . max(0, $consentStart - $consentLimit)) ?>"><?= Text::_('JPREV') ?></a></li><?php
+    endif; ?>
+    <?php if ($consentStart + $consentLimit < (int) $this->consentData['total']) :
+?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . ($consentStart + $consentLimit)) ?>"><?= Text::_('JNEXT') ?></a></li><?php
+    endif; ?>
    </ul>
   </nav>
  </details>

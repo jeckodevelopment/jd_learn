@@ -75,7 +75,9 @@ $this->difficulty = $this->getModel()->getDifficulty();
         }
         $this->teachers = $this->showFilters ? $this->getModel()->getTeachers() : [];
         $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
-        if ($this->get('Errors')) { throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500); }
+        if ($this->get('Errors')) {
+throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
+        }
         $app = Factory::getApplication();
         if ($this->showSubcategories) {
         $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);

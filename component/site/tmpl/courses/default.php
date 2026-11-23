@@ -19,7 +19,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
  <?php if ($this->showFilters) : ?>
  <form id="jlms-catalog-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . $this->categoryId : '')) ?>">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="courses">
-  <?php if ($this->categoryId) : ?><input type="hidden" name="catid" value="<?= $this->categoryId ?>"><?php endif; ?>
+  <?php if ($this->categoryId) :
+?><input type="hidden" name="catid" value="<?= $this->categoryId ?>"><?php
+  endif; ?>
   <?php if ($this->showCategory) : ?>
   <label for="jlms-catalog-category"><?= Text::_('COM_JLMS_CATALOG_CATEGORY') ?></label>
   <select id="jlms-catalog-category" name="filter[category_id]">
@@ -36,7 +38,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
   <select id="jlms-catalog-order" name="filter[order]"><option value="editorial"<?= $this->order === 'editorial' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_EDITORIAL') ?></option><option value="recent"<?= $this->order === 'recent' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_RECENT') ?></option><option value="title"<?= $this->order === 'title' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_TITLE') ?></option><option value="duration"<?= $this->order === 'duration' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_DURATION') ?></option><option value="published"<?= $this->order === 'published' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_PUBLISHED') ?></option></select>
   <?php endif; ?>
   <label for="jlms-catalog-tag"><?= Text::_('COM_JLMS_CATALOG_TAG') ?></label>
-  <select id="jlms-catalog-tag" name="filter[tag_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) : ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php endforeach; ?></select>
+  <select id="jlms-catalog-tag" name="filter[tag_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
+?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php
+                                                                        endforeach; ?></select>
 <label for="jlms-catalog-difficulty"><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY') ?></label>
   <select id="jlms-catalog-difficulty" name="filter[difficulty]"><option value=""><?= Text::_('COM_JLMS_CATALOG_ANY_DIFFICULTY') ?></option><option value="beginner"<?= $this->difficulty === 'beginner' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY_BEGINNER') ?></option><option value="intermediate"<?= $this->difficulty === 'intermediate' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY_INTERMEDIATE') ?></option><option value="advanced"<?= $this->difficulty === 'advanced' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY_ADVANCED') ?></option></select>
   <label for="jlms-catalog-duration"><?= Text::_('COM_JLMS_CATALOG_DURATION') ?></label>
@@ -46,13 +50,19 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
   <label for="jlms-catalog-layout"><?= Text::_('COM_JLMS_CATALOG_LAYOUT') ?></label>
   <select id="jlms-catalog-layout" name="filter[layout]"><option value="grid"<?= $this->layout === 'grid' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_LAYOUT_GRID') ?></option><option value="list"<?= $this->layout === 'list' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_LAYOUT_LIST') ?></option></select>
   <label for="jlms-catalog-teacher"><?= Text::_('COM_JLMS_CATALOG_TEACHER') ?></label>
-  <select id="jlms-catalog-teacher" name="filter[teacher_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) : ?><option value="<?= (int) $teacher->id ?>"<?= $this->teacherId === (int) $teacher->id ? ' selected' : '' ?>><?= $this->escape($teacher->title) ?></option><?php endforeach; ?></select>
+  <select id="jlms-catalog-teacher" name="filter[teacher_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
+?><option value="<?= (int) $teacher->id ?>"<?= $this->teacherId === (int) $teacher->id ? ' selected' : '' ?>><?= $this->escape($teacher->title) ?></option><?php
+                                                                                endforeach; ?></select>
   <label for="jlms-catalog-pathway"><?= Text::_('COM_JLMS_CATALOG_PATHWAY') ?></label>
-  <select id="jlms-catalog-pathway" name="filter[pathway_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) : ?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected' : '' ?>><?= $this->escape($pathway->title) ?></option><?php endforeach; ?></select>
+  <select id="jlms-catalog-pathway" name="filter[pathway_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
+?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected' : '' ?>><?= $this->escape($pathway->title) ?></option><?php
+                                                                                endforeach; ?></select>
   <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
  </form>
  <?php endif; ?>
- <?php if ($this->categoryId) : ?><p id="jlms-category-filter"><?= Text::_('COM_JLMS_CATEGORY_FILTER_ACTIVE') ?> <a href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php endif; ?>
+ <?php if ($this->categoryId) :
+?><p id="jlms-category-filter"><?= Text::_('COM_JLMS_CATEGORY_FILTER_ACTIVE') ?> <a href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php
+ endif; ?>
  <div id="jlms-course-grid" class="jlms-course-grid<?= $this->layout === 'list' ? ' jlms-course-grid--list' : '' ?>" data-layout="<?= $this->escape($this->layout) ?>">
  <?php foreach ($this->items as $item) :
   $presentation = [];
@@ -75,7 +85,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
     <div class="jlms-course-card__cover">
      <?php if ($cover !== '') : ?>
       <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover)))) ?>" alt="<?= $this->escape((string) ($presentation['image_alt'] ?? '')) ?>" loading="lazy" decoding="async">
-     <?php else : ?><span class="jlms-course-card__cover-placeholder" aria-hidden="true"></span><?php endif; ?>
+     <?php else :
+?><span class="jlms-course-card__cover-placeholder" aria-hidden="true"></span><?php
+     endif; ?>
     </div>
    <?php endif; ?>
    <div class="jlms-course-card__content">
@@ -109,7 +121,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
          'not_open' => 'COM_JLMS_DASHBOARD_ACCESS_NOT_OPEN',
      ][$enrollment['access']] ?? 'COM_JLMS_DASHBOARD_ACCESS_UNAVAILABLE';
     ?>
-     <p class="jlms-course-card__learning-state"><?= Text::_($learningLabel) ?><?php if ($enrollment['access'] !== 'available') : ?> · <?= Text::_($accessLabel) ?><?php endif; ?></p>
+     <p class="jlms-course-card__learning-state"><?= Text::_($learningLabel) ?><?php if ($enrollment['access'] !== 'available') :
+?> · <?= Text::_($accessLabel) ?><?php
+                                                 endif; ?></p>
     <?php endif; ?>
     <?php if ($enrollment === null && !empty($this->cardPendingApprovals[(int) $item->id])) : ?>
      <p class="jlms-course-card__pending" role="status"><?= Text::_('COM_JLMS_COURSE_APPROVAL_PENDING') ?></p>
@@ -119,9 +133,15 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
     <?php endif; ?>
     <?php if ($duration > 0 || $difficultyKey !== '') : ?>
      <p class="jlms-course-card__meta">
-      <?php if ($duration > 0) : ?><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', $duration) ?><?php endif; ?>
-      <?php if ($duration > 0 && $difficultyKey !== '') : ?> · <?php endif; ?>
-      <?php if ($difficultyKey !== '') : ?><?= Text::_($difficultyKey) ?><?php endif; ?>
+      <?php if ($duration > 0) :
+?><?= Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', $duration) ?><?php
+      endif; ?>
+      <?php if ($duration > 0 && $difficultyKey !== '') :
+?> · <?php
+      endif; ?>
+      <?php if ($difficultyKey !== '') :
+?><?= Text::_($difficultyKey) ?><?php
+      endif; ?>
      </p>
     <?php endif; ?>
     <?php if ($enrollment !== null && $enrollment['access'] === 'available' && (int) $item->delivery_enabled === 1) : ?>

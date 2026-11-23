@@ -21,20 +21,27 @@ final class ManualenrollmentModel extends FormModel
     public function getItem(): array
     {
         try {
-            $app = Factory::getApplication(); $input = $app->getInput();
+            $app = Factory::getApplication();
+$input = $app->getInput();
             $id = CurriculumService::id($input->get('id', 0, 'raw'));
             $course = $app->bootComponent('com_jlms')->getEnrollmentRosterService()->course($app->getIdentity(), $id);
             $filter = $input->get('filter', [], 'array');
             $user = CurriculumService::id($filter['user_id'] ?? 0, true);
             $language = $filter['language'] ?? (string) ComponentHelper::getParams('com_languages')->get('site', 'en-GB');
             $preassignment = $filter['preassignment'] ?? '0';
-            if (!is_string($language) || !in_array($preassignment, ['0','1',0,1], true)) { throw new \InvalidArgumentException(); }
+            if (!is_string($language) || !in_array($preassignment, ['0','1',0,1], true)) {
+throw new \InvalidArgumentException();
+            }
             $preassignment = (string) $preassignment === '1';
             $preview = $user ? $app->bootComponent('com_jlms')->getManualEnrollmentService()->editor($app->getIdentity(), $id, $user, $language, $preassignment) : null;
             return ['course' => $course, 'selection' => ['user_id' => $user, 'language' => $language, 'preassignment' => (int) $preassignment], 'preview' => $preview];
         } catch (\Throwable $error) {
-            if ($error instanceof \InvalidArgumentException) { throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 400); }
-            if (in_array($error->getCode(), [400,401,403,404,409], true) && in_array($error->getMessage(), ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED','COM_JLMS_LEARNING_WINDOW','COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_MANUAL_MODE_PENDING','JERROR_LAYOUT_PAGE_NOT_FOUND'], true)) { throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode()); }
+            if ($error instanceof \InvalidArgumentException) {
+throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 400);
+            }
+            if (in_array($error->getCode(), [400,401,403,404,409], true) && in_array($error->getMessage(), ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED','COM_JLMS_LEARNING_WINDOW','COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_MANUAL_MODE_PENDING','JERROR_LAYOUT_PAGE_NOT_FOUND'], true)) {
+throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
+            }
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

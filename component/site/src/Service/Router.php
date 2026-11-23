@@ -61,20 +61,30 @@ final class Router extends RouterView
         $this->attachRule(new NomenuRules($this));
     }
 
-    public function getTeachereditSegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
-    public function getTeachereditId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
+    public function getTeachereditSegment($id, $query): array { return [(int) $id => (string) (int) $id];
+    }
+    public function getTeachereditId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0;
+    }
 
-    public function getTeacherSegment($id, $query): array { return [(int) $id => (string) (int) $id]; }
-    public function getTeacherId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0; }
+    public function getTeacherSegment($id, $query): array { return [(int) $id => (string) (int) $id];
+    }
+    public function getTeacherId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0;
+    }
 
-    public function getCategorySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__categories', (int) $id, true)]; }
-    public function getCategoryId($segment, $query): int { return $this->segmentId($segment); }
+    public function getCategorySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__categories', (int) $id, true)];
+    }
+    public function getCategoryId($segment, $query): int { return $this->segmentId($segment);
+    }
 
-    public function getPathwaySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__jlms_pathways', (int) $id)]; }
-    public function getPathwayId($segment, $query): int { return $this->segmentId($segment); }
+    public function getPathwaySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__jlms_pathways', (int) $id)];
+    }
+    public function getPathwayId($segment, $query): int { return $this->segmentId($segment);
+    }
 
-    public function getQuizSegment($id, $query): array { return [(int)$id => (string)(int)$id]; }
-    public function getQuizId($segment, $query): int { return ctype_digit((string)$segment) ? (int)$segment : 0; }
+    public function getQuizSegment($id, $query): array { return [(int)$id => (string)(int)$id];
+    }
+    public function getQuizId($segment, $query): int { return ctype_digit((string)$segment) ? (int)$segment : 0;
+    }
 
     public function getClassroomSegment($id, $query): array
     {
@@ -98,7 +108,9 @@ final class Router extends RouterView
 
     private function itemSegment(string $table, int $id, bool $courseCategory = false): string
     {
-        if ($id < 1) { return (string) $id; }
+        if ($id < 1) {
+return (string) $id;
+        }
         $cacheKey = $table . ':' . $id;
         if (!array_key_exists($cacheKey, self::$aliasCache)) {
             $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -117,7 +129,9 @@ final class Router extends RouterView
 
     private function segmentId($segment): int
     {
-        if (preg_match('/^(\d+)(?:(?::|-).*)?$/uD', (string) $segment, $matches) !== 1) { return 0; }
+        if (preg_match('/^(\d+)(?:(?::|-).*)?$/uD', (string) $segment, $matches) !== 1) {
+return 0;
+        }
         return (int) $matches[1];
     }
 }

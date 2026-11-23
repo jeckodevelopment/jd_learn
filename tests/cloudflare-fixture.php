@@ -14,7 +14,9 @@ function cloudflareFixture(): array
     $secret = static fn (string $reference): string => 'ci-disposable-not-a-real-secret';
     $transport = static function (string $method, string $url, array $headers, ?string $body) use ($state): array {
         $state->calls[] = ['method' => $method, 'url' => $url, 'body' => $body];
-        if ($state->callback) { ($state->callback)($method); }
+        if ($state->callback) {
+($state->callback)($method);
+        }
         $uid = str_repeat('b', 32);
         $result = ['uid' => $uid, 'requireSignedURLs' => $state->protected, 'readyToStream' => $state->ready,
             'status' => ['state' => 'ready'], 'duration' => 10, 'allowedOrigins' => $state->origins,
@@ -24,7 +26,9 @@ function cloudflareFixture(): array
             $header = ['alg' => $state->tokenMode === 'none' ? 'none' : 'RS256', 'kid' => 'fixture'];
             $claims = ['sub' => $state->tokenMode === 'foreign' ? str_repeat('c', 32) : $uid,
                 'exp' => $request['exp'] + ($state->tokenMode === 'long' ? 100 : 0)];
-            if ($state->tokenMode === 'download') { $claims['downloadable'] = true; }
+            if ($state->tokenMode === 'download') {
+$claims['downloadable'] = true;
+            }
             $encode = static fn (array $data): string => rtrim(strtr(base64_encode(json_encode($data, JSON_THROW_ON_ERROR)), '+/', '-_'), '=');
             $result = ['token' => $encode($header) . '.' . $encode($claims) . '.c2lnbmF0dXJl'];
         }

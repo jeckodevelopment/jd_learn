@@ -27,8 +27,11 @@ final class EnrollmentsModel extends ListModel
 
     public function getCourse(): object
     {
-        try { return $this->service()->course(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course')); }
-        catch (\Throwable $error) { $this->fail($error); }
+        try {
+return $this->service()->course(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course'));
+        } catch (\Throwable $error) {
+$this->fail($error);
+        }
     }
 
     protected function getListQuery()
@@ -47,9 +50,13 @@ final class EnrollmentsModel extends ListModel
             // Validate before ListModel catches query failures and returns false.
             $this->getListQuery();
             $items = parent::getItems();
-            if (!is_array($items)) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500); }
+            if (!is_array($items)) {
+throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+            }
             return $items;
-        } catch (\Throwable $error) { $this->fail($error); }
+        } catch (\Throwable $error) {
+$this->fail($error);
+        }
     }
 
     public function getTotal()
@@ -57,9 +64,13 @@ final class EnrollmentsModel extends ListModel
         try {
             $this->getListQuery();
             $total = parent::getTotal();
-            if ($total === false) { throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500); }
+            if ($total === false) {
+throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+            }
             return $total;
-        } catch (\Throwable $error) { $this->fail($error); }
+        } catch (\Throwable $error) {
+$this->fail($error);
+        }
     }
 
     private function fail(\Throwable $error): never

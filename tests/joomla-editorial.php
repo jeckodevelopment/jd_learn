@@ -74,7 +74,9 @@ use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
 function editorialExpect(bool $condition, string $message): void {
     global $checks;
-    if (!$condition) { throw new RuntimeException($message); }
+    if (!$condition) {
+throw new RuntimeException($message);
+    }
     $checks++;
 }
 $authoring = $component->getCurriculumService();
@@ -105,7 +107,9 @@ $transitions = $publication->transitions($actor, $course, $draft);
 editorialExpect(count($transitions) > 0, 'Working copy has a native publication transition');
 $review = null;
 foreach ($transitions as $transition) {
-    if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'review') { $review = $transition; }
+    if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'review') {
+$review = $transition;
+    }
 }
 editorialExpect($review !== null, 'Working copy can enter native review');
 $publication->transition($actor, $course, $draft, (int)$current->revision, $revision(), (int)$review->id);
@@ -114,7 +118,9 @@ $current = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->l
 $transitions = $publication->transitions($actor, $course, $draft);
 $approval = null;
 foreach ($transitions as $transition) {
-    if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'publish') { $approval = $transition; }
+    if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'publish') {
+$approval = $transition;
+    }
 }
 editorialExpect($approval !== null, 'Reviewer has an explicit approval transition');
 $impact = $publication->updateImpact($actor, $course, $draft, (int)$approval->id);
@@ -151,7 +157,10 @@ editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision
 $targetHistory = null;
 foreach ($db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course . "' ORDER BY version_id DESC")->loadObjectList() as $candidate) {
     $snapshot = json_decode($candidate->version_data, true, 64, JSON_THROW_ON_ERROR);
-    if (($snapshot['com_fields']['history-reference'] ?? null) === 'HISTORY_FIELD_ORIGINAL') { $targetHistory = $candidate; break; }
+    if (($snapshot['com_fields']['history-reference'] ?? null) === 'HISTORY_FIELD_ORIGINAL') {
+$targetHistory = $candidate;
+break;
+    }
 }
 editorialExpect($targetHistory !== null, 'Native course history captures the field value with its editorial revision');
 $item = $model->getItem($course);
@@ -172,7 +181,9 @@ editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision
 foreach (['html5-fixture','materials-fixture'] as $alias) {
     $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('alias=:alias')->bind(':alias', $alias);
     $source = $db->setQuery($q)->loadObject();
-    if (!$source || !$source->current_version_id) { continue; }
+    if (!$source || !$source->current_version_id) {
+continue;
+    }
     $new = $authoring->createDraft($actor, (int)$source->id, (int)$source->revision);
     $oldAttachments = $db->setQuery('SELECT asset_id,title FROM #__jlms_attachments WHERE course_version_id=' . (int)$source->current_version_id . ' ORDER BY ordering,id')->loadAssocList();
     $newAttachments = $db->setQuery('SELECT asset_id,title FROM #__jlms_attachments WHERE course_version_id=' . $new . ' ORDER BY ordering,id')->loadAssocList();
@@ -197,20 +208,30 @@ $q = $db->createQuery()->select('value')->from('#__fields_values')->where('field
 editorialExpect($db->setQuery($q)->loadResult() === 'contact@example.invalid', 'Native system fields plugin saves the teacher field value');
 $editorFixture = json_decode(file_get_contents(dirname($root) . '/editor-access-fixture.json'), true, 32, JSON_THROW_ON_ERROR);
 $linked = new \Joomla\CMS\User\User((int)$editorFixture['user']);
-$asset = new \Joomla\CMS\Table\Asset($db);$asset->loadByName('com_jlms.teacher.' . $teacherId);
-$rules = json_decode($asset->rules, true);$rules['core.edit.own'][(string)$editorFixture['group']] = true;
-$asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);$asset->store();
-$asset->loadByName('com_jlms.field.' . $fieldId);$rules = json_decode($asset->rules, true);$rules['core.edit.value'][(string)$editorFixture['group']] = true;
-$asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);$asset->store();
+$asset = new \Joomla\CMS\Table\Asset($db);
+$asset->loadByName('com_jlms.teacher.' . $teacherId);
+$rules = json_decode($asset->rules, true);
+$rules['core.edit.own'][(string)$editorFixture['group']] = true;
+$asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
+$asset->store();
+$asset->loadByName('com_jlms.field.' . $fieldId);
+$rules = json_decode($asset->rules, true);
+$rules['core.edit.value'][(string)$editorFixture['group']] = true;
+$asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
+$asset->store();
 $item = $teacher->getItem($teacherId);
 editorialExpect($teacher->save(['id' => $teacherId,'revision' => (int)$item->revision,'user_id' => (int)$linked->id]), 'Secretariat links a native account to its profile');
-$teacher->setCurrentUser($linked);$app->loadIdentity($linked);$app->getSession()->set('user', $linked);
+$teacher->setCurrentUser($linked);
+$app->loadIdentity($linked);
+$app->getSession()->set('user', $linked);
 $item = $teacher->getItem($teacherId);
 editorialExpect($teacher->save(['id' => $teacherId,'revision' => (int)$item->revision,'bio' => 'Teacher self-edited presentation','state' => 0,'user_id' => (int)$actor->id,
     'com_fields' => ['teaching-contact' => 'own@example.invalid']]), 'Linked teacher edits their presentation and permitted custom fields');
 $item = $teacher->getItem($teacherId);
 editorialExpect((int)$item->state === 1 && (int)$item->user_id === (int)$linked->id, 'Self editing cannot change publication or account ownership');
-$app->loadIdentity($actor);$app->getSession()->set('user', $actor);$teacher->setCurrentUser($actor);
+$app->loadIdentity($actor);
+$app->getSession()->set('user', $actor);
+$teacher->setCurrentUser($actor);
 $item = $model->getItem($course);
 editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision,'teacher_ids' => [$teacherId]]), 'A published course can be assigned to the teacher');
 file_put_contents(dirname($root) . '/editorial-fixture.json', json_encode(['course' => $course,'version' => $draft,'teacher' => $teacherId,'field' => $fieldId], JSON_THROW_ON_ERROR));

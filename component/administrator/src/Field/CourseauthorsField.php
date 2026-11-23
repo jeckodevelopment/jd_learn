@@ -16,7 +16,9 @@ final class CourseauthorsField extends \Joomla\CMS\Form\Field\ListField
         $actor = CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         $ids = CourseEditorAccess::editableIds($db, $actor);
         $options = parent::getOptions();
-        if (!$ids) { return $options; }
+        if (!$ids) {
+return $options;
+        }
         $q = $db->createQuery()->select('DISTINCT u.id AS value,u.name AS text')->from('#__users AS u')
             ->innerJoin('#__jlms_courses AS c ON c.created_by=u.id')->whereIn('c.id', $ids)->order('u.name,u.id');
         return array_merge($options, $db->setQuery($q)->loadObjectList());

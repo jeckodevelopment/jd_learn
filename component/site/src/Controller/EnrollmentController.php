@@ -87,7 +87,9 @@ class EnrollmentController extends BaseController
         try {
             $data = $this->input->post->get('jform', [], 'array');
             $key = $data['idempotency_key'] ?? null;
-            if (!is_string($key)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            if (!is_string($key)) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            }
             $courseId = CurriculumService::id($data['course_id'] ?? null);
             $this->app->bootComponent('com_jlms')->getLearningService()->requestApproval(
                 $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $courseId, $key
@@ -117,7 +119,9 @@ class EnrollmentController extends BaseController
     {
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
-        if (strtoupper($this->input->getMethod()) !== 'GET') { throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405); }
+        if (strtoupper($this->input->getMethod()) !== 'GET') {
+throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+        }
         try {
             $id = CurriculumService::id($this->input->get('id', 0, 'raw'));
             $target = $this->app->bootComponent('com_jlms')->getLearningService()->resumeTarget($this->app->getIdentity(), $this->app->getLanguage()->getTag(), $id);

@@ -4,7 +4,8 @@ declare(strict_types=1);
 namespace Joomla\CMS {
     final class Factory {
         public static object $application;
-        public static function getApplication(): object { return self::$application; }
+        public static function getApplication(): object { return self::$application;
+        }
     }
 }
 namespace {
@@ -12,19 +13,26 @@ namespace {
 
     final class BreadcrumbMenu {
         public ?object $active = null;
-        public function getActive(): ?object { return $this->active; }
+        public function getActive(): ?object { return $this->active;
+        }
     }
     final class BreadcrumbTrail {
         public array $items = [];
-        public function getPathway(): array { return $this->items; }
-        public function addItem(string $title): void { $this->items[] = (object) ['name' => $title]; }
+        public function getPathway(): array { return $this->items;
+        }
+        public function addItem(string $title): void { $this->items[] = (object) ['name' => $title];
+        }
     }
     final class BreadcrumbApplication {
         public BreadcrumbMenu $menu;
         public BreadcrumbTrail $trail;
-        public function __construct() { $this->menu = new BreadcrumbMenu(); $this->trail = new BreadcrumbTrail(); }
-        public function getMenu(): BreadcrumbMenu { return $this->menu; }
-        public function getPathway(): BreadcrumbTrail { return $this->trail; }
+        public function __construct() { $this->menu = new BreadcrumbMenu();
+$this->trail = new BreadcrumbTrail();
+        }
+        public function getMenu(): BreadcrumbMenu { return $this->menu;
+        }
+        public function getPathway(): BreadcrumbTrail { return $this->trail;
+        }
     }
 
     use Jlms\Component\Jlms\Site\Helper\PublicBreadcrumbHelper;
@@ -34,7 +42,9 @@ namespace {
     // A direct Joomla menu item already supplies the last breadcrumb.
     $app->menu->active = (object) ['query' => ['option' => 'com_jlms', 'view' => 'course', 'id' => 42]];
     PublicBreadcrumbHelper::addDetail('course', 42, 'A course');
-    if (count($app->trail->items) !== 0) { throw new \RuntimeException('Duplicate direct-menu breadcrumb'); }
+    if (count($app->trail->items) !== 0) {
+throw new \RuntimeException('Duplicate direct-menu breadcrumb');
+    }
 
     // Navigating from a course listing adds only the detail item.
     $app->menu->active = (object) ['query' => ['option' => 'com_jlms', 'view' => 'courses']];

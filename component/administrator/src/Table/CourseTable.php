@@ -19,14 +19,16 @@ final class CourseTable extends Table implements TaggableTableInterface
 
     public $typeAlias = 'com_jlms.course';
 
-    public function getTypeAlias(): string { return $this->typeAlias; }
+    public function getTypeAlias(): string { return $this->typeAlias;
+    }
 
     protected $_supportNullValue = true;
     protected bool $stableAssetRequired = false;
     private int $preparedAsset = 0;
 
     /** Internal copy path: reserve the native nested asset before the authoring transaction. */
-    public function usePreparedAsset(int $assetId): void { $this->preparedAsset = $assetId; }
+    public function usePreparedAsset(int $assetId): void { $this->preparedAsset = $assetId;
+    }
 
 
     public function requireStableAsset(bool $required): void
@@ -111,8 +113,12 @@ final class CourseTable extends Table implements TaggableTableInterface
         $prepared = !$this->id && $this->preparedAsset > 0 && $asset->load($this->preparedAsset)
             && str_starts_with((string) $asset->name, 'com_jlms.copy.')
             && (int) $asset->parent_id === (int) $this->_getAssetParentId();
-        if ($this->preparedAsset && !$prepared) { throw new \DomainException('COM_JLMS_SAVE_FAILED'); }
-        if ($prepared) { $this->asset_id = $this->preparedAsset; }
+        if ($this->preparedAsset && !$prepared) {
+throw new \DomainException('COM_JLMS_SAVE_FAILED');
+        }
+        if ($prepared) {
+$this->asset_id = $this->preparedAsset;
+        }
         if ($this->stableAssetRequired && !$stable) {
             throw new \DomainException('COM_JLMS_ASSOCIATION_SAVE_SEPARATELY');
         }

@@ -74,11 +74,19 @@ $version = $service->createDraft($actor, $course, 1);
 $checks = 0;
 function curriculumExpect(bool $ok, string $message): void {
     global $checks;
-    if (!$ok) { throw new \RuntimeException($message); }
+    if (!$ok) {
+throw new \RuntimeException($message);
+    }
     $checks++;
 }
 function curriculumDenied(callable $call, string $message): void {
-    try { $call(); } catch (\DomainException | \InvalidArgumentException $expected) { curriculumExpect(true, $message); return; }
+    try {
+$call();
+
+    } catch (\DomainException | \InvalidArgumentException $expected) {
+curriculumExpect(true, $message);
+return;
+    }
     throw new \RuntimeException($message);
 }
 function versionRevision(): int {
@@ -117,7 +125,9 @@ $videoPreviewRejected = false;
 try {
     $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Video preview','kind' => 'video',
         'required' => '0','body' => '','public_preview' => '1','provider_key' => 'youtube','source_reference' => 'https://youtu.be/dQw4w9WgXcQ']);
-} catch (\DomainException $error) { $videoPreviewRejected = $error->getMessage() === 'COM_JLMS_INVALID_INPUT'; }
+} catch (\DomainException $error) {
+$videoPreviewRejected = $error->getMessage() === 'COM_JLMS_INVALID_INPUT';
+}
 curriculumExpect($videoPreviewRejected, 'public preview is limited to text lessons');
 $before = versionRevision();
 curriculumDenied(fn () => $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Invalid video','kind' => 'video',
@@ -137,8 +147,11 @@ $service->saveModule($actor, scopeInput() + ['id' => $second,'revision' => recor
 $secondRevision = recordRevision('modules', $second);
 curriculumDenied(fn () => $service->saveModule($actor, scopeInput() + ['id' => $second,'revision' => $secondRevision - 1,'title' => 'Old module revision']), 'stale item revision rejected');
 // Cross-parent IDs must fail even for an actor who can manage both courses.
-$data['alias'] = 'curriculum-foreign';$data['title'] = 'Foreign course';
-if (!$model->save($data)) { throw new \RuntimeException('Foreign fixture failed'); }
+$data['alias'] = 'curriculum-foreign';
+$data['title'] = 'Foreign course';
+if (!$model->save($data)) {
+throw new \RuntimeException('Foreign fixture failed');
+}
 $foreignCourse = (int)$model->getState('course.id');
 $foreignVersion = $service->createDraft($actor, $foreignCourse, 1);
 $foreignModule = $service->saveModule($actor, ['course_id' => $foreignCourse,'version_id' => $foreignVersion,

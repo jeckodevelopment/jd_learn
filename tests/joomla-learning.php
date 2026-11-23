@@ -73,66 +73,99 @@ if (($argv[2] ?? '') === 'retained') {
         || $learning->classroom(new \Joomla\CMS\User\User($owner), 'en-GB', (int)$saved->id)['percent'] !== 100) {
         throw new \RuntimeException('Package update lost learning history');
     }
-    echo json_encode(['learning_upgrade' => 'passed','required_completed' => 3], JSON_THROW_ON_ERROR) . PHP_EOL;exit(0);
+    echo json_encode(['learning_upgrade' => 'passed','required_completed' => 3], JSON_THROW_ON_ERROR) . PHP_EOL;
+exit(0);
 }
 if (($argv[2] ?? '') === 'worker') {
-    echo "ready\n";fflush(STDOUT);fgets(STDIN);
+    echo "ready\n";
+fflush(STDOUT);
+fgets(STDIN);
     $learning->complete(new \Joomla\CMS\User\User((int)$argv[3]), 'en-GB', (int)$argv[4], (int)$argv[5], $argv[6]);
-    echo "worker passed\n";exit(0);
+    echo "worker passed\n";
+exit(0);
 }
 if (in_array($argv[2] ?? '', ['revoke','grant'], true)) {
     $id = (int)$argv[3];
     $name = $db->setQuery('SELECT username FROM #__users WHERE id=' . $id)->loadResult();
-    if ($name !== 'cilearnerhttp') { throw new \RuntimeException('Not an HTTP test account'); }
+    if ($name !== 'cilearnerhttp') {
+throw new \RuntimeException('Not an HTTP test account');
+    }
     $groupId = (int)$argv[4];
-    if ($db->setQuery('SELECT title FROM #__usergroups WHERE id=' . $groupId)->loadResult() !== 'CI learning entitlement') {throw new \RuntimeException('Not a fixture group');}
+    if ($db->setQuery('SELECT title FROM #__usergroups WHERE id=' . $groupId)->loadResult() !== 'CI learning entitlement') {
+throw new \RuntimeException('Not a fixture group');
+    }
     ($argv[2] === 'revoke') ? \Joomla\CMS\User\UserHelper::removeUserFromGroup($id, $groupId) : \Joomla\CMS\User\UserHelper::addUserToGroup($id, $groupId);
-    echo "fixture access changed\n";exit(0);
+    echo "fixture access changed\n";
+exit(0);
 }
 $checks = 0;
 function learningExpect(bool $ok,string $message): void {
     global $checks;
-    if (!$ok) {throw new \RuntimeException($message);}
+    if (!$ok) {
+throw new \RuntimeException($message);
+    }
     $checks++;
 }
 function learningDenied(callable $call,int $code,string $message): void {
-    try {$call();} catch (\RuntimeException $error) {learningExpect($error->getCode() === $code, $message . '; received ' . $error->getMessage() . ' / ' . $error->getCode());return;}
+    try {
+$call();
+
+    } catch (\RuntimeException $error) {
+learningExpect($error->getCode() === $code, $message . '; received ' . $error->getMessage() . ' / ' . $error->getCode());
+return;
+    }
     throw new \RuntimeException($message);
 }
 function fixtureUpdate(string $table,object $record,bool $nulls=false): void {
-    global $db;$db->updateObject('#__' . $table, $record, 'id', $nulls);
+    global $db;
+$db->updateObject('#__' . $table, $record, 'id', $nulls);
 }
 function fixtureStudent(string $username): \Joomla\CMS\User\User {
     global $learningGroup;
     $user = new \Joomla\CMS\User\User();
     $data = ['name' => 'CI Learner','username' => $username,'email' => $username . '@example.invalid',
         'password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$learningGroup],'block' => 0,'activation' => ''];
-    if (!$user->bind($data) || !$user->save()) {throw new \RuntimeException('Learner fixture failed: ' . $user->getError());}
+    if (!$user->bind($data) || !$user->save()) {
+throw new \RuntimeException('Learner fixture failed: ' . $user->getError());
+    }
     return new \Joomla\CMS\User\User((int)$user->id);
 }
 $groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
-if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI learning entitlement'])) {throw new \RuntimeException('Core group fixture failed: ' . $groupModel->getError());}
+if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI learning entitlement'])) {
+throw new \RuntimeException('Core group fixture failed: ' . $groupModel->getError());
+}
 $learningGroup = (int)$groupModel->getState('group.id');
 $level = (object)['title' => 'CI learning access','ordering' => 0,'rules' => json_encode([$learningGroup], JSON_THROW_ON_ERROR)];
-$db->insertObject('#__viewlevels', $level, 'id');$learningLevel = (int)$level->id;
-$student = fixtureStudent('cilearner');$other = fixtureStudent('cilearnerother');$httpStudent = fixtureStudent('cilearnerhttp');
-$actor = $app->getIdentity();$authoring = $component->getCurriculumService();$publication = $component->getPublicationService();
+$db->insertObject('#__viewlevels', $level, 'id');
+$learningLevel = (int)$level->id;
+$student = fixtureStudent('cilearner');
+$other = fixtureStudent('cilearnerother');
+$httpStudent = fixtureStudent('cilearnerhttp');
+$actor = $app->getIdentity();
+$authoring = $component->getCurriculumService();
+$publication = $component->getPublicationService();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Learning fixture','alias' => 'learning-fixture','catid' => $catid,
-    'language' => '*','catalog_access' => 1,'content_access' => $learningLevel,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Text learning fixture'])) {throw new \RuntimeException($model->getError());}
-$course = (int)$model->getState('course.id');$version = $authoring->createDraft($actor, $course, 1);
-$scope = static function()use($db,$course,$version):array{return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];};
+    'language' => '*','catalog_access' => 1,'content_access' => $learningLevel,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Text learning fixture'])) {
+throw new \RuntimeException($model->getError());
+}
+$course = (int)$model->getState('course.id');
+$version = $authoring->createDraft($actor, $course, 1);
+$scope = static function()use($db,$course,$version):array{return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
+
+};
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Learning chapter']);
 $lessons = [];
-for($i = 1;$i <= 4;$i++) {
+for ($i = 1;$i <= 4;$i++) {
  $schedule = $i === 2 ? ['publish_up' => gmdate('Y-m-d H:i:s', time() + 3600),'publish_down' => gmdate('Y-m-d H:i:s', time() + 7200)] : [];
  $lessons[] = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Learning lesson ' . $i,'kind' => 'text',
   'required' => $i === 4 ? '0' : '1','body' => '<p>LEARNING_PRIVATE_BODY_' . $i . '</p><img src="x" onerror="alert(1)"><script>alert(2)</script>'] + $schedule);
 }
 $cr = (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult();
 $publication->transition($actor, $course, $version, $cr, $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
-$key = bin2hex(random_bytes(16));$enrollment = $learning->start($student, 'en-GB', $course, $key);
+$key = bin2hex(random_bytes(16));
+$enrollment = $learning->start($student, 'en-GB', $course, $key);
 learningExpect($learning->start($student, 'en-GB', $course, $key) === $enrollment, 'same start key reuses enrollment');
 learningExpect($learning->start($student, 'en-GB', $course, bin2hex(random_bytes(16))) === $enrollment, 'natural enrollment uniqueness across keys');
 fixtureUpdate('jlms_courses', (object)['id' => $course,'admissions_open' => 0]);
@@ -193,27 +226,42 @@ learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $foreig
 function learningWorkers(array $lessonIds): void {
  global $student,$enrollment,$root;
  $workers = [];
- foreach($lessonIds as $lessonId) {
-  $pipes = [];$process = proc_open([PHP_BINARY,__FILE__,$root,'worker',(string)$student->id,(string)$enrollment,(string)$lessonId,bin2hex(random_bytes(16))], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-  if (!is_resource($process)) {throw new \RuntimeException('Worker could not start');}
-  if (trim((string)fgets($pipes[1])) !== 'ready') {throw new \RuntimeException('Worker barrier failed');}
+ foreach ($lessonIds as $lessonId) {
+  $pipes = [];
+$process = proc_open([PHP_BINARY,__FILE__,$root,'worker',(string)$student->id,(string)$enrollment,(string)$lessonId,bin2hex(random_bytes(16))], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+  if (!is_resource($process)) {
+throw new \RuntimeException('Worker could not start');
+  }
+  if (trim((string)fgets($pipes[1])) !== 'ready') {
+throw new \RuntimeException('Worker barrier failed');
+  }
   $workers[] = [$process,$pipes];
  }
- foreach($workers as [$process,$pipes]) {fwrite($pipes[0], "go\n");fclose($pipes[0]);}
- foreach($workers as [$process,$pipes]) {
-  $out = stream_get_contents($pipes[1]);$err = stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);
-  if (proc_close($process) !== 0) {throw new \RuntimeException('Concurrent completion failed: ' . $out . ' ' . $err);}
+ foreach ($workers as [$process,$pipes]) {
+fwrite($pipes[0], "go\n");
+fclose($pipes[0]);
+ }
+ foreach ($workers as [$process,$pipes]) {
+  $out = stream_get_contents($pipes[1]);
+$err = stream_get_contents($pipes[2]);
+fclose($pipes[1]);
+fclose($pipes[2]);
+  if (proc_close($process) !== 0) {
+throw new \RuntimeException('Concurrent completion failed: ' . $out . ' ' . $err);
+  }
  }
 }
 learningWorkers([$lessons[0],$lessons[0]]);
 learningExpect($learning->classroom($student, 'en-GB', $enrollment)['percent'] === 33, 'concurrent duplicate completion counts once and rounds down');
-$completeKey = bin2hex(random_bytes(16));$learning->complete($student, 'en-GB', $enrollment, $lessons[0], $completeKey);
+$completeKey = bin2hex(random_bytes(16));
+$learning->complete($student, 'en-GB', $enrollment, $lessons[0], $completeKey);
 $learning->complete($student, 'en-GB', $enrollment, $lessons[0], $completeKey);
 learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lessons[1], $completeKey), 409, 'same key with different payload rejected');
 $learning->complete($student, 'en-GB', $enrollment, $lessons[3], bin2hex(random_bytes(16)));
 learningExpect($learning->classroom($student, 'en-GB', $enrollment)['percent'] === 33, 'optional lesson gives no required credit');
 // Revoke a core group while keeping the same User object with its old cached access levels.
-$student->getAuthorisedViewLevels();\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $learningGroup);
+$student->getAuthorisedViewLevels();
+\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $learningGroup);
 learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment), 403, 'current group revocation overrides cached identity');
 learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lessons[0], $completeKey), 403, 'idempotent replay still checks current entitlement');
 learningDenied(fn()=>$learning->start($student, 'en-GB', $course, $key), 403, 'start replay cannot restore revoked access');
@@ -251,7 +299,8 @@ fixtureUpdate('jlms_courses', (object)['id' => $course,'publish_down' => null], 
 learningWorkers([$lessons[1],$lessons[2]]);
 $done = $learning->classroom($student, 'en-GB', $enrollment);
 learningExpect($done['percent'] === 100 && $done['completed_at'] !== null, 'concurrent distinct requirements complete course once');
-$stamp = $done['completed_at'];$learning->complete($student, 'en-GB', $enrollment, $lessons[1], bin2hex(random_bytes(16)));
+$stamp = $done['completed_at'];
+$learning->complete($student, 'en-GB', $enrollment, $lessons[1], bin2hex(random_bytes(16)));
 learningExpect($learning->classroom($student, 'en-GB', $enrollment)['completed_at'] === $stamp, 'completion date is immutable on replay');
 learningExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === 3, 'required counter is exact');
 learningExpect(array_map('intval', $db->setQuery('SELECT group_id FROM #__user_usergroup_map WHERE user_id=' . (int)$student->id . ' ORDER BY group_id')->loadColumn()) === [2,$learningGroup], 'LMS has assigned no additional groups');

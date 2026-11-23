@@ -128,7 +128,9 @@ final class PathwayService
             $access = in_array((int) $course->content_access, $levels, true) ? 'available' : 'restricted';
             // LCM-05: catalog visibility does not imply classroom availability.
             // Keep restricted content hidden; expose a suspended course only as unavailable.
-            if ($access === 'available' && (int) $course->delivery_enabled !== 1) { $access = 'unavailable'; }
+            if ($access === 'available' && (int) $course->delivery_enabled !== 1) {
+$access = 'unavailable';
+            }
             $deliverySuspended = $access === 'unavailable' && (int) $course->delivery_enabled !== 1;
             $percent = 0;
             $progressApplicable = true;
@@ -137,8 +139,11 @@ final class PathwayService
             if ($enrollment) {
                 $done = (int) $enrollment->completed_total;
                 $required = (int) $enrollment->required_total;
-                try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $enrollment->rules_json); }
-                catch (\DomainException) { $rules = null; }
+                try {
+$rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $enrollment->rules_json);
+                } catch (\DomainException) {
+$rules = null;
+                }
                 $state = $enrollment->completed_at !== null
                     ? 'completed'
                     : (($enrollment->started_at !== null || $enrollment->last_activity_at !== null || $done > 0) ? 'in_progress' : 'not_started');

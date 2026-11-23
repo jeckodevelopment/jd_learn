@@ -17,7 +17,9 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         }
         $this->form = $this->get('Form');
         if (!$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
-            foreach (['user_id', 'state', 'access', 'language'] as $field) { $this->form->setFieldAttribute($field, 'disabled', 'true'); }
+            foreach (['user_id', 'state', 'access', 'language'] as $field) {
+$this->form->setFieldAttribute($field, 'disabled', 'true');
+            }
         }
         \Joomla\CMS\Factory::getApplication()->setHeader('Cache-Control', 'private, no-store', true);
         \Joomla\CMS\Factory::getApplication()->setHeader('X-Robots-Tag', 'noindex, nofollow', true);

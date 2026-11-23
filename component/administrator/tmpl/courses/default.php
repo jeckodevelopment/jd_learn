@@ -37,9 +37,13 @@ $direction = $this->escape($this->state->get('list.direction', 'DESC'));
     ?>
      <tr class="row<?= $i % 2 ?> jlms-admin-course" data-course-id="<?= (int) $item->id ?>">
       <td class="text-center"><?= HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb', $item->title) ?></td>
-      <td><a class="badge <?= (int) $item->state === 1 ? 'bg-success' : 'bg-secondary' ?> text-decoration-none" href="<?= $programme ?>#jlms-publication-status" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_COURSES_PUBLICATION_FOR', $item->title)) ?>"><?= Text::_(match ((int) $item->state) { 1 => 'JPUBLISHED', 2 => 'JARCHIVED', -2 => 'JTRASHED', default => 'JUNPUBLISHED' }) ?></a></td>
+      <td><a class="badge <?= (int) $item->state === 1 ? 'bg-success' : 'bg-secondary' ?> text-decoration-none" href="<?= $programme ?>#jlms-publication-status" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_COURSES_PUBLICATION_FOR', $item->title)) ?>"><?= Text::_(match ((int) $item->state) {
+1 => 'JPUBLISHED', 2 => 'JARCHIVED', -2 => 'JTRASHED', default => 'JUNPUBLISHED'
+                          }) ?></a></td>
       <th scope="row" class="has-context">
-       <?php if ($item->checked_out) : ?><?= HTMLHelper::_('jgrid.checkedout', $i, $item->editor ?? Text::_('JNONE'), $item->checked_out_time, 'courses.', false) ?><?php endif; ?>
+       <?php if ($item->checked_out) :
+?><?= HTMLHelper::_('jgrid.checkedout', $i, $item->editor ?? Text::_('JNONE'), $item->checked_out_time, 'courses.', false) ?><?php
+       endif; ?>
        <a class="jlms-admin-course-title" href="<?= Route::_('index.php?option=com_jlms&task=course.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
        <div class="small text-body-secondary"><?= Text::_('JFIELD_ALIAS_LABEL') ?>: <?= $this->escape($item->alias) ?></div>
        <div class="small mt-1 jlms-admin-course-actions">

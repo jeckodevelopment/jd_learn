@@ -63,12 +63,16 @@ if (!$userId) {
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($userId));
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
-\Joomla\CMS\Log\Log::addLogger(['logger' => 'callback','callback' => static function ($entry): void { fwrite(STDERR, 'Model diagnostic: ' . $entry->message . PHP_EOL); }], \Joomla\CMS\Log\Log::ALL, ['com_jlms']);
+\Joomla\CMS\Log\Log::addLogger(['logger' => 'callback','callback' => static function ($entry): void { fwrite(STDERR, 'Model diagnostic: ' . $entry->message . PHP_EOL);
+
+}], \Joomla\CMS\Log\Log::ALL, ['com_jlms']);
 
 $checks = 0;
 function assocExpect(bool $condition, string $message): void {
     global $checks;
-    if (!$condition) { throw new \RuntimeException($message); }
+    if (!$condition) {
+throw new \RuntimeException($message);
+    }
     $checks++;
 }
 function assocData(int $id): array {
@@ -79,7 +83,9 @@ function assocSave(array $data): bool {
     global $factory;
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
     $saved = $model->save($data);
-    if (!$saved) { fwrite(STDERR, 'Association save rejected: ' . json_encode($model->getErrors(), JSON_THROW_ON_ERROR) . PHP_EOL); }
+    if (!$saved) {
+fwrite(STDERR, 'Association save rejected: ' . json_encode($model->getErrors(), JSON_THROW_ON_ERROR) . PHP_EOL);
+    }
     return $saved;
 }
 function assocRows(): string {
@@ -90,8 +96,11 @@ if (($argv[2] ?? '') === 'worker') {
     $command = json_decode($argv[3], true, 16, JSON_THROW_ON_ERROR);
     // A native CMS model may start its session lazily; do it before barrier output.
     $app->getSession()->start();
-    echo "ready\n"; flush();
-    if (trim((string) fgets(STDIN)) !== 'go') { throw new \RuntimeException('Association worker barrier missing'); }
+    echo "ready\n";
+flush();
+    if (trim((string) fgets(STDIN)) !== 'go') {
+throw new \RuntimeException('Association worker barrier missing');
+    }
     echo json_encode(['saved' => assocSave(assocData($command['source']) + ['associations' => ['it-IT' => $command['target']]])], JSON_THROW_ON_ERROR);
     exit;
 }
@@ -111,10 +120,15 @@ if (($argv[2] ?? '') === 'retained') {
 $language = new \Joomla\CMS\Table\Language($db);
 if (!$language->load(['lang_code' => 'it-IT'])) {
     $language->bind(['lang_code' => 'it-IT', 'title' => 'Italiano', 'title_native' => 'Italiano', 'sef' => 'it', 'image' => 'it_it', 'description' => '', 'published' => 1, 'access' => 1, 'ordering' => 2]);
-    if (!$language->check() || !$language->store()) { throw new \RuntimeException('Content language fixture failed'); }
+    if (!$language->check() || !$language->store()) {
+throw new \RuntimeException('Content language fixture failed');
+    }
 }
-$language->published = 1; $language->access = 1;
-if (!$language->store()) { throw new \RuntimeException('Content language publication failed'); }
+$language->published = 1;
+$language->access = 1;
+if (!$language->store()) {
+throw new \RuntimeException('Content language publication failed');
+}
 $catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $create = static function (string $name, string $tag) use ($catid, $factory): int {
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
@@ -140,33 +154,42 @@ assocExpect((bool) $form->getField('it-IT', 'associations'), 'native language-sp
 assocExpect(str_contains($form->getInput('it-IT', 'associations'), 'association-it'), 'native field renders editable language-filtered course title');
 
 $baseline = assocRows();
-$titleChange = assocData($en); $titleChange['title'] = 'Changed with graph';
+$titleChange = assocData($en);
+$titleChange['title'] = 'Changed with graph';
 assocExpect(!assocSave($titleChange + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline && assocData($en)['title'] !== 'Changed with graph', 'metadata and translation changes must not enter native implicit asset commit');
 foreach ([['it-IT' => $otherEn], ['en-GB' => $otherEn], ['not-a-language' => $it], ['it-IT' => -1], ['it-IT' => '1 OR 1=1'], ['it-IT' => 999999999], ['it-IT' => $en]] as $invalid) {
     assocExpect(!assocSave(assocData($en) + ['associations' => $invalid]) && assocRows() === $baseline, 'invalid target/language rejected atomically');
 }
 assocExpect(!assocSave(assocData($all) + ['associations' => ['it-IT' => $it]]) && assocRows() === $baseline, 'all-languages course cannot join a translation group');
-$changed = assocData($en); $changed['language'] = 'it-IT';
+$changed = assocData($en);
+$changed['language'] = 'it-IT';
 assocExpect(!assocSave($changed) && assocRows() === $baseline, 'associated source language cannot change behind native graph');
 assocExpect(assocSave(assocData($otherEn) + ['associations' => ['it-IT' => $otherIt]]), 'second independent group created');
 $baseline = assocRows();
 assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline, 'member cannot be stolen from another group');
 $update = static function (int $id, array $fields) use ($db): void {
-    $record = (object) (['id' => $id] + $fields); $db->updateObject('#__jlms_courses', $record, 'id', true);
+    $record = (object) (['id' => $id] + $fields);
+$db->updateObject('#__jlms_courses', $record, 'id', true);
 };
 $update($it, ['checked_out' => 999999]);
 assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'removing another editor checkout denied');
 $update($it, ['checked_out' => null]);
 // A former super-user object must not retain permissions after a current account block.
-$blocked = (object) ['id' => (int)$actor->id, 'block' => 1]; $db->updateObject('#__users', $blocked, 'id');
+$blocked = (object) ['id' => (int)$actor->id, 'block' => 1];
+$db->updateObject('#__users', $blocked, 'id');
 try {
     assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'fresh blocked actor denied before graph mutation');
-} finally { $blocked->block = 0; $db->updateObject('#__users', $blocked, 'id'); }
+} finally {
+$blocked->block = 0;
+$db->updateObject('#__users', $blocked, 'id');
+}
 // Deny the target asset even when the actor can edit the source course.
 $restricted = new \Joomla\CMS\User\User();
 $userData = ['name' => 'Association editor', 'username' => 'association-editor', 'email' => 'association-editor@example.invalid',
     'password' => 'Ci-only-Association-Password-2026','password2' => 'Ci-only-Association-Password-2026','groups' => [2,6],'block' => 0,'activation' => ''];
-if (!$restricted->bind($userData) || !$restricted->save()) { throw new \RuntimeException('Editor fixture failed'); }
+if (!$restricted->bind($userData) || !$restricted->save()) {
+throw new \RuntimeException('Editor fixture failed');
+}
 $assetId = (int) $db->setQuery('SELECT asset_id FROM #__jlms_courses WHERE id=' . $it)->loadResult();
 $oldRules = $db->setQuery('SELECT rules FROM #__assets WHERE id=' . $assetId)->loadResult();
 $asset = (object) ['id' => $assetId, 'rules' => '{"core.edit":{"6":false},"core.edit.own":{"6":false}}'];
@@ -174,7 +197,11 @@ $db->updateObject('#__assets', $asset, 'id');
 $app->loadIdentity(new \Joomla\CMS\User\User((int)$restricted->id));
 try {
     assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'removing a linked target requires target ACL too');
-} finally { $asset->rules = $oldRules; $db->updateObject('#__assets', $asset, 'id'); $app->loadIdentity($actor); }
+} finally {
+$asset->rules = $oldRules;
+$db->updateObject('#__assets', $asset, 'id');
+$app->loadIdentity($actor);
+}
 assocExpect(assocSave(assocData($otherEn) + ['associations' => ['it-IT' => 0]]), 'native zero selection clears whole old group');
 assocExpect(!$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($otherEn,$otherIt)")->loadResult(), 'no dangling old group after clear');
 // Two independent native model requests compete for the same unassociated target.
@@ -186,23 +213,36 @@ foreach ([$raceEn1,$raceEn2] as $source) {
     $pipes = [];
     $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',json_encode(['source' => $source,'target' => $raceIt], JSON_THROW_ON_ERROR)],
         [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-    if (!is_resource($process)) { throw new \RuntimeException('Association worker failed to start'); }
+    if (!is_resource($process)) {
+throw new \RuntimeException('Association worker failed to start');
+    }
     $workers[] = [$process,$pipes];
 }
 foreach ($workers as [$process,$pipes]) {
     stream_set_timeout($pipes[1], 30);
     $ready = trim((string) fgets($pipes[1]));
-    if ($ready !== 'ready') { throw new \RuntimeException('Association worker bootstrap: ' . $ready . ' ' . stream_get_contents($pipes[2])); }
+    if ($ready !== 'ready') {
+throw new \RuntimeException('Association worker bootstrap: ' . $ready . ' ' . stream_get_contents($pipes[2]));
+    }
 }
 $db->transactionStart();
 $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult();
-foreach ($workers as [$process,$pipes]) { fwrite($pipes[0], "go\n"); fclose($pipes[0]); }
-usleep(150000); $db->transactionCommit();
-$outcomes = []; $workerDetails = [];
 foreach ($workers as [$process,$pipes]) {
-    $out = stream_get_contents($pipes[1]); $err = stream_get_contents($pipes[2]);
-    fclose($pipes[1]); fclose($pipes[2]);
-    if (proc_close($process) !== 0) { throw new \RuntimeException('Association worker failed: ' . $err . $out); }
+fwrite($pipes[0], "go\n");
+fclose($pipes[0]);
+}
+usleep(150000);
+$db->transactionCommit();
+$outcomes = [];
+$workerDetails = [];
+foreach ($workers as [$process,$pipes]) {
+    $out = stream_get_contents($pipes[1]);
+$err = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+fclose($pipes[2]);
+    if (proc_close($process) !== 0) {
+throw new \RuntimeException('Association worker failed: ' . $err . $out);
+    }
     $workerDetails[] = ['out' => $out,'err' => $err];
     $outcomes[] = json_decode($out, true, 16, JSON_THROW_ON_ERROR)['saved'];
 }
@@ -236,11 +276,14 @@ $publishedTargetInput = $selectorForm->getInput('it-IT', 'associations');
 assocExpect(str_contains($publishedTargetInput, 'value="' . $it . '"'), 'published course is offered as an editable translation target');
 $app->loadIdentity(new \Joomla\CMS\User\User());
 // Joomla treats language access=0 as unrestricted; access=2 must still hide it from guests.
-$language->access = 2; $language->store();
+$language->access = 2;
+$language->store();
 assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'restricted content language omitted for guest');
-$language->access = 0; $language->store();
+$language->access = 0;
+$language->store();
 assocExpect(isset($helper->getAssociationsForItem($en, 'course')['it-IT']), 'native unrestricted language access honored');
-$language->access = 1; $language->store();
+$language->access = 1;
+$language->store();
 assocExpect($helper->getAssociationsForItem($en, 'classroom') === [] && $helper->getAssociationsForItem($en, 'quiz') === [], 'no attempt/enrollment or learning progress translation');
 $update($it, ['catalog_access' => 2]);
 assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'target visibility rechecked without stale association cache');
@@ -249,9 +292,11 @@ assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'unpublished 
 $update($it, ['state' => 1,'publish_up' => '2099-01-01 00:00:00']);
 assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'future target omitted');
 $update($it, ['publish_up' => null]);
-$category = (object) ['id' => $catid,'published' => 0]; $db->updateObject('#__categories', $category, 'id');
+$category = (object) ['id' => $catid,'published' => 0];
+$db->updateObject('#__categories', $category, 'id');
 assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'hidden source category cannot expose association');
-$category->published = 1; $db->updateObject('#__categories', $category, 'id');
+$category->published = 1;
+$db->updateObject('#__categories', $category, 'id');
 assocExpect(isset($helper->getAssociationsForItem($en, 'course')['it-IT']), 'restored category visibility reflected immediately');
 $app->loadIdentity($actor);
 $baseline = assocRows();

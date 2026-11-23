@@ -60,14 +60,18 @@ final class Jlms extends Adapter implements SubscriberInterface
     public function onFinderChangeState(FinderEvent\AfterChangeStateEvent $event): void
     {
         if ($event->getContext() === 'com_jlms.course') {
-            foreach ($event->getPks() as $id) { $this->refreshCourse((int) $id); }
+            foreach ($event->getPks() as $id) {
+$this->refreshCourse((int) $id);
+            }
         } elseif ($event->getContext() === 'com_categories.category') {
             $ids = array_map('intval', $event->getPks());
             if ($ids) {
                 $db = $this->getDatabase();
                 $q = $db->createQuery()->select('COUNT(*)')->from($db->quoteName('#__categories'))
                     ->where('id IN (' . implode(',', $ids) . ')')->where('extension = ' . $db->quote('com_jlms.course'));
-                if ((int) $db->setQuery($q)->loadResult() > 0) { $this->reindexAllCourses(); }
+                if ((int) $db->setQuery($q)->loadResult() > 0) {
+$this->reindexAllCourses();
+                }
             }
         } elseif ($event->getContext() === 'com_plugins.plugin' && (int) $event->getValue() === 0) {
             $this->pluginDisable($event->getPks());
@@ -77,7 +81,9 @@ final class Jlms extends Adapter implements SubscriberInterface
     /** Keep stored Finder links aligned when a course becomes noindex or inaccessible. */
     private function refreshCourse(int $id): void
     {
-        if ($id < 1) { return; }
+        if ($id < 1) {
+return;
+        }
         $query = $this->getListQuery()->where('a.id = ' . $id);
         $visible = (bool) $this->getDatabase()->setQuery($query, 0, 1)->loadResult();
         if ($visible) {
@@ -92,23 +98,30 @@ final class Jlms extends Adapter implements SubscriberInterface
     private function reindexAllCourses(): void
     {
         $q = $this->getDatabase()->createQuery()->select('a.id')->from($this->getDatabase()->quoteName($this->table, 'a'));
-        foreach ($this->getDatabase()->setQuery($q)->loadColumn() as $id) { $this->refreshCourse((int) $id); }
+        foreach ($this->getDatabase()->setQuery($q)->loadColumn() as $id) {
+$this->refreshCourse((int) $id);
+        }
     }
 
     protected function index(Result $item): void
     {
-        if (!ComponentHelper::isEnabled($this->extension)) { return; }
+        if (!ComponentHelper::isEnabled($this->extension)) {
+return;
+        }
         $item->url = $this->getUrl($item->id, $this->extension, $this->layout);
         $item->route = $item->url;
         $item->access = 1;
         $item->state = (int) $item->state === 1 ? 1 : 0;
         $item->addTaxonomy('Type', $this->type_title);
         $item->addTaxonomy('Category', (string) $item->category_title);
-        if ($item->language !== '*') { $item->addTaxonomy('Language', (string) $item->language); }
+        if ($item->language !== '*') {
+$item->addTaxonomy('Language', (string) $item->language);
+        }
         $this->indexer->index($item);
     }
 
-    protected function setup(): bool { return true; }
+    protected function setup(): bool { return true;
+    }
 
     protected function getListQuery($query = null): QueryInterface
     {

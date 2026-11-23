@@ -51,10 +51,14 @@ final class TeacherController extends FormController
             . ($target === 0 ? '&filter[published]=-2' : ''), false));
     }
 
-    public function trash(): void { $this->transition(-2); }
-    public function restore(): void { $this->transition(0); }
-    public function publish(): void { $this->transition(1); }
-    public function unpublish(): void { $this->transition(0); }
+    public function trash(): void { $this->transition(-2);
+    }
+    public function restore(): void { $this->transition(0);
+    }
+    public function publish(): void { $this->transition(1);
+    }
+    public function unpublish(): void { $this->transition(0);
+    }
 
     /** Exactly one teacher, explicitly confirmed in the trash view. */
     public function purge(): void
@@ -81,7 +85,8 @@ final class TeacherController extends FormController
 
     protected function allowAdd($data = [])
     {
-        $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id); $actor->clearAccessRights();
+        $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id);
+$actor->clearAccessRights();
         return $actor->id && !$actor->block && $actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor->authorise('core.create', 'com_jlms');
     }
 
@@ -89,7 +94,8 @@ final class TeacherController extends FormController
     {
         $id = (int) ($data[$key] ?? 0);
         $item = $this->getModel()->getItem($id);
-        $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id); $actor->clearAccessRights();
+        $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id);
+$actor->clearAccessRights();
         return $actor->authorise('core.manage', 'com_jlms') && $id > 0 && $item
             && \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $item);
     }

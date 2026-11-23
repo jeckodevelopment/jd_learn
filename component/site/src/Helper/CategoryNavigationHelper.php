@@ -23,7 +23,9 @@ final class CategoryNavigationHelper
         }
         foreach ($path as $category) {
             if ($matched) {
-                if ((int) $category->id === $menuCategory) { $matched = false; }
+                if ((int) $category->id === $menuCategory) {
+$matched = false;
+                }
                 continue;
             }
             $app->getPathway()->addItem($category->title, (int) $category->id === $id ? '' : 'index.php?option=com_jlms&view=category&id=' . (int) $category->id);

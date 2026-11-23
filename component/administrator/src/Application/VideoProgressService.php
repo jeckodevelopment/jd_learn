@@ -23,8 +23,14 @@ final class VideoProgressService
     private function transaction(\Closure $work): mixed
     {
         $this->db->transactionStart();
-        try { $result = $work(); $this->db->transactionCommit(); return $result; }
-        catch (\Throwable $error) { $this->db->transactionRollback(); throw $error; }
+        try {
+$result = $work();
+$this->db->transactionCommit();
+return $result;
+        } catch (\Throwable $error) {
+$this->db->transactionRollback();
+throw $error;
+        }
     }
 
     private static function date(int $ms): string
@@ -36,12 +42,21 @@ final class VideoProgressService
     {
         $context = $this->learning->videoContext($identity, $language, $enrollmentId, $lessonId, $lock);
         $policy = ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
-        if ($context[3]->provider_key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403); }
-        try { $provider = $this->curriculum->videoProvider($context[3]->provider_key); }
-        catch (\DomainException $error) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }
-        if (!$provider->getDescriptor()->configured) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }
+        if ($context[3]->provider_key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403);
+        }
+        try {
+$provider = $this->curriculum->videoProvider($context[3]->provider_key);
+        } catch (\DomainException $error) {
+throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
+        }
+        if (!$provider->getDescriptor()->configured) {
+throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
+        }
         if ($context[3]->provider_key === 'html5') {
-            if (!$this->localVideos) { throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503); }
+            if (!$this->localVideos) {
+throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
+            }
             $this->localVideos->assertReady($context[3]);
         }
         return [...$context, $provider];
@@ -113,7 +128,9 @@ final class VideoProgressService
     private static function playbackState(array $state, \Jlms\Contracts\Video\PlaybackDescriptor $descriptor, int $now): array
     {
         if ($descriptor->expiresAt !== null) {
-            if ($descriptor->expiresAt->getTimestamp() * 1000 <= $now + 5000) { throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503); }
+            if ($descriptor->expiresAt->getTimestamp() * 1000 <= $now + 5000) {
+throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
+            }
             $state['playback_expiry'] = $descriptor->expiresAt->getTimestamp() * 1000;
             $state['playback_renew_at'] = $now + (int) $descriptor->playerOptions['renew_after_seconds'] * 1000;
             $state['playback_generation'] = ($state['playback_generation'] ?? 0) + 1;
@@ -123,27 +140,36 @@ final class VideoProgressService
 
     public function playback(User $identity, string $language, int $enrollmentId, int $lessonId, bool $consent): array
     {
-        if (!$consent) { throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403); }
+        if (!$consent) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403);
+        }
         $preflight = $this->context($identity, $language, $enrollmentId, $lessonId, false);
         $fingerprint = self::fingerprint($preflight[3]);
         $descriptor = $this->descriptor([...$preflight, $language]);
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $preflight[1]->rules_json);
         if ($rules['mode'] === 'consultation') {
             $current = $this->context($identity, $language, $enrollmentId, $lessonId, false);
-            if (!hash_equals($fingerprint, self::fingerprint($current[3]))) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
+            if (!hash_equals($fingerprint, self::fingerprint($current[3]))) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+            }
             return ['tracking' => false, 'session_id' => null, 'source_revision' => (int) $current[3]->source_revision,
                 'next_sequence' => null, 'resume_ms' => 0, 'duration_ms' => null, 'provider' => $descriptor->provider,
                 'options' => $descriptor->playerOptions, 'expires_at' => $descriptor->expiresAt?->getTimestamp()];
         }
         return $this->transaction(function () use ($identity, $language, $enrollmentId, $lessonId, $fingerprint, $descriptor): array {
             [$actor, , $enrollment, $lesson, $provider] = $this->context($identity, $language, $enrollmentId, $lessonId);
-            if (!hash_equals($fingerprint, self::fingerprint($lesson))) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
-            $now = ($this->clock)(); $date = self::date($now);
+            if (!hash_equals($fingerprint, self::fingerprint($lesson))) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+            }
+            $now = ($this->clock)();
+$date = self::date($now);
             $this->purgeExpiredSessions($now);
             $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_progress_sessions')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')->where('expires_at > :now')
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':now', $date);
-            if ((int) $this->db->setQuery($q)->loadResult() >= 32) { throw new \RuntimeException('COM_JLMS_VIDEO_SESSION_LIMIT', 429); }
+            if ((int) $this->db->setQuery($q)->loadResult() >= 32) {
+throw new \RuntimeException('COM_JLMS_VIDEO_SESSION_LIMIT', 429);
+            }
             $progress = $this->progress($enrollmentId, $lesson);
             if (!$progress) {
                 $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $lesson->course_version_id,
@@ -176,7 +202,9 @@ final class VideoProgressService
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $q = $this->db->createQuery()->select('*')->from('#__jlms_progress_sessions')->where('id = :id')->bind(':id', $id);
-        if ($lock) { $q->setQuery((string) $q . ' FOR UPDATE'); }
+        if ($lock) {
+$q->setQuery((string) $q . ' FOR UPDATE');
+        }
         $row = $this->db->setQuery($q)->loadObject();
         if (!$row || (int) $row->enrollment_id !== $enrollmentId || (int) $row->lesson_id !== $lessonId) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
@@ -199,22 +227,35 @@ final class VideoProgressService
     public function save(User $identity, string $language, int $enrollmentId, int $lessonId, string $sessionId,
         int $sourceRevision, int $sequence, int $reportedDuration, string $eventsJson): array
     {
-        if (strlen($eventsJson) > 65536) { throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 413); }
-        if ($sequence < 1) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
-        try { $events = json_decode($eventsJson, true, 16, JSON_THROW_ON_ERROR); }
-        catch (\JsonException $error) { throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 400); }
-        if (!is_array($events)) { throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 400); }
+        if (strlen($eventsJson) > 65536) {
+throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 413);
+        }
+        if ($sequence < 1) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
+        try {
+$events = json_decode($eventsJson, true, 16, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $error) {
+throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 400);
+        }
+        if (!is_array($events)) {
+throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 400);
+        }
         return $this->transaction(function () use ($identity, $language, $enrollmentId, $lessonId, $sessionId,
             $sourceRevision, $sequence, $reportedDuration, $events): array {
             [$actor, $version, $enrollment, $lesson] = $this->context($identity, $language, $enrollmentId, $lessonId);
             $now = ($this->clock)();
-            if ((int) $lesson->source_revision !== $sourceRevision) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
+            if ((int) $lesson->source_revision !== $sourceRevision) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+            }
             if (!\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, $reportedDuration)) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_DURATION_MISMATCH', 422);
             }
             $progress = $this->progress($enrollmentId, $lesson);
             $session = $this->session($sessionId, $enrollmentId, $lessonId, $sourceRevision, $now);
-            if (!$progress) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
+            if (!$progress) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+            }
             $hash = hash('sha256', json_encode([$sourceRevision, $reportedDuration, $events], JSON_THROW_ON_ERROR));
             $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
             // Even a byte-identical replay must not acknowledge an expired provider
@@ -223,16 +264,22 @@ final class VideoProgressService
                 throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
             }
             if ($sequence === (int) $session->sequence_no) {
-                if (!hash_equals((string) $session->last_batch_hash, $hash)) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
+                if (!hash_equals((string) $session->last_batch_hash, $hash)) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+                }
                 $resumeConflict = (int) $progress->revision !== (int) $state['progress_revision'];
                 return self::result($progress, $enrollment, $sequence + 1, true, $resumeConflict);
             }
-            if ($sequence !== (int) $session->sequence_no + 1) { throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409); }
+            if ($sequence !== (int) $session->sequence_no + 1) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+            }
             try {
                 $telemetry = VideoTelemetry::consume($state, $events, $reportedDuration, $now);
                 $coverage = Coverage::merge(json_decode($progress->coverage_json, true, 32, JSON_THROW_ON_ERROR),
                     $telemetry['intervals'], min(\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::MAX, (int)$lesson->duration_ms + \Jlms\Component\Jlms\Administrator\Domain\VideoDuration::tolerance((int)$lesson->duration_ms)));
-            } catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 422); }
+            } catch (\InvalidArgumentException $error) {
+throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 422);
+            }
             $covered = Coverage::coveredMs($coverage);
             $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
             $lessonParams = json_decode((string)$lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
@@ -240,7 +287,9 @@ final class VideoProgressService
             $threshold = $rules['video_threshold_basis_points'];
             if (array_key_exists('video_threshold_basis_points', $lessonParams)) {
                 $override = $lessonParams['video_threshold_basis_points'];
-                if (!is_int($override) || $override < 1 || $override > 10000) { throw new \RuntimeException('COM_JLMS_PUBLICATION_UNSUPPORTED', 422); }
+                if (!is_int($override) || $override < 1 || $override > 10000) {
+throw new \RuntimeException('COM_JLMS_PUBLICATION_UNSUPPORTED', 422);
+                }
                 $threshold = $override;
             }
             $completed = !$consultation && Coverage::isComplete(min($covered, $reportedDuration), $reportedDuration, $threshold);
@@ -248,10 +297,13 @@ final class VideoProgressService
             $resumeConflict = (int) $progress->revision !== $state['progress_revision'];
             $progress->coverage_json = json_encode($coverage, JSON_THROW_ON_ERROR);
             $progress->covered_ms = $covered;
-            if (!$resumeConflict) { $progress->resume_ms = $telemetry['resume_ms']; }
+            if (!$resumeConflict) {
+$progress->resume_ms = $telemetry['resume_ms'];
+            }
             $progress->state = !$consultation && ($completed || $progress->state === 'completed') ? 'completed' : 'started';
             $progress->completed_at = $consultation ? null : ($progress->completed_at ?? ($completed ? self::date($now) : null));
-            $progress->last_activity_at = self::date($now); $progress->revision = (int) $progress->revision + 1;
+            $progress->last_activity_at = self::date($now);
+$progress->revision = (int) $progress->revision + 1;
             $q = $this->db->createQuery()->update('#__jlms_lesson_progress')->set('coverage_json = :coverage')
                 ->set('covered_ms = :covered')->set('resume_ms = :resume')->set('state = :state')->set($progress->completed_at === null ? 'completed_at = NULL' : 'completed_at = :completed')
                 ->set('last_activity_at = :activity')->set('revision = :revision')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
@@ -259,7 +311,9 @@ final class VideoProgressService
                 ->bind(':resume', $progress->resume_ms, ParameterType::INTEGER)->bind(':state', $progress->state)
                 ->bind(':activity', $progress->last_activity_at)->bind(':revision', $progress->revision, ParameterType::INTEGER)
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
-            if ($progress->completed_at !== null) { $q->bind(':completed', $progress->completed_at); }
+            if ($progress->completed_at !== null) {
+$q->bind(':completed', $progress->completed_at);
+            }
             $this->db->setQuery($q)->execute();
             $total = (int) $enrollment->completed_total + ($newCompletion ? (int) $lesson->required : 0);
             $newCourseCompletion = $enrollment->completed_at === null && $total >= (int) $enrollment->required_total && (int) $enrollment->required_total > 0;
@@ -304,7 +358,9 @@ final class VideoProgressService
     public function renew(User $identity, string $language, int $enrollmentId, int $lessonId, string $sessionId,
         int $sourceRevision, bool $consent): array
     {
-        if (!$consent) { throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403); }
+        if (!$consent) {
+throw new \RuntimeException('COM_JLMS_VIDEO_CONSENT_REQUIRED', 403);
+        }
         $preflight = $this->context($identity, $language, $enrollmentId, $lessonId, false);
         $session = $this->session($sessionId, $enrollmentId, $lessonId, $sourceRevision, ($this->clock)(), false);
         $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
@@ -312,7 +368,8 @@ final class VideoProgressService
             || !isset($state['playback_renew_at']) || $state['playback_renew_at'] > ($this->clock)()) {
             throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
         }
-        $fingerprint = self::fingerprint($preflight[3]); $generation = $state['playback_generation'];
+        $fingerprint = self::fingerprint($preflight[3]);
+$generation = $state['playback_generation'];
         $descriptor = $this->descriptor([...$preflight, $language]);
         return $this->transaction(function () use ($identity, $language, $enrollmentId, $lessonId, $sessionId,
             $sourceRevision, $fingerprint, $generation, $descriptor): array {

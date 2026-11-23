@@ -55,9 +55,13 @@ class CoursesModel extends ListModel
         $app = Factory::getApplication();
         $component = $app->bootComponent('com_jlms');
         $teacherId = (int) $this->getState('filter.teacher_id');
-        if ($teacherId && !isset($this->getTeachers()[$teacherId])) { $teacherId = -1; }
+        if ($teacherId && !isset($this->getTeachers()[$teacherId])) {
+$teacherId = -1;
+        }
         $pathwayId = (int) $this->getState('filter.pathway_id');
-        if ($pathwayId && !isset($this->getPathways()[$pathwayId])) { $pathwayId = -1; }
+        if ($pathwayId && !isset($this->getPathways()[$pathwayId])) {
+$pathwayId = -1;
+        }
         $query = $component->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag(),
             (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'), $teacherId, $pathwayId);
         // Only public presentation fields from the published course version.
@@ -154,7 +158,9 @@ class CoursesModel extends ListModel
     {
         $app = Factory::getApplication();
         $identity = $app->getIdentity();
-        if (!(int) $identity->id || $identity->guest || $identity->block || !$items) { return []; }
+        if (!(int) $identity->id || $identity->guest || $identity->block || !$items) {
+return [];
+        }
         $ids = array_map(static fn (object $item): int => (int) $item->id, $items);
         return $app->bootComponent('com_jlms')->getDashboardService()->catalogStates(
             $identity, $app->getLanguage()->getTag(), $ids
@@ -169,10 +175,14 @@ class CoursesModel extends ListModel
      */
     public function getCardPendingApprovals(array $items, array $enrollmentStates): array
     {
-        if (!$items) { return []; }
+        if (!$items) {
+return [];
+        }
         $app = Factory::getApplication();
         $identity = $app->getIdentity();
-        if (!(int) $identity->id || $identity->guest) { return []; }
+        if (!(int) $identity->id || $identity->guest) {
+return [];
+        }
         // Re-check the persisted Joomla account, rather than trusting an old
         // session after the account is blocked or removed.
         try {
@@ -191,8 +201,12 @@ class CoursesModel extends ListModel
             }
         }
         $courseIds = array_values(array_unique($courseIds));
-        if (!$courseIds) { return []; }
-        if (count($courseIds) > 50) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        if (!$courseIds) {
+return [];
+        }
+        if (count($courseIds) > 50) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
         $query = $this->getDatabase()->createQuery()
             ->select('DISTINCT edition.course_id')
             ->from('#__jlms_enrollment_requests AS request')
@@ -272,8 +286,10 @@ class CoursesModel extends ListModel
         return (string) $this->getState('filter.layout');
     }
 
-    public function getTeacherId(): int { return (int) $this->getState('filter.teacher_id'); }
-    public function getPathwayId(): int { return (int) $this->getState('filter.pathway_id'); }
+    public function getTeacherId(): int { return (int) $this->getState('filter.teacher_id');
+    }
+    public function getPathwayId(): int { return (int) $this->getState('filter.pathway_id');
+    }
 
     public function getTeachers(): array
     {
@@ -285,11 +301,14 @@ class CoursesModel extends ListModel
 
     public function getPathways(): array
     {
-        $app = Factory::getApplication(); $component = $app->bootComponent('com_jlms');
+        $app = Factory::getApplication();
+$component = $app->bootComponent('com_jlms');
         $ids = $component->getCatalogService()->publicPathwayIds(
             $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
         );
-        if (!$ids) { return []; }
+        if (!$ids) {
+return [];
+        }
         $query = $component->getPathwayService()->query($app->getIdentity(), $app->getLanguage()->getTag());
         $query->whereIn('p.id', $ids);
         return $this->getDatabase()->setQuery($query, 0, 500)->loadObjectList('id');

@@ -14,7 +14,9 @@ final class CertificateController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['download', 'regenerate', 'recoverhistorical', 'recovermissing'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!in_array(strtolower($task), ['download', 'regenerate', 'recoverhistorical', 'recovermissing'], true)) {
+throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
         return parent::execute($task);
     }
 
@@ -139,8 +141,11 @@ final class CertificateController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
-            try { $id = CurriculumService::id($this->input->get('id', null, 'RAW')); }
-            catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            try {
+$id = CurriculumService::id($this->input->get('id', null, 'RAW'));
+            } catch (\InvalidArgumentException $error) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            }
             $file = $this->app->bootComponent('com_jlms')->getCertificateService()->adminDownload($this->app->getIdentity(), $id);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {

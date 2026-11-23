@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 $root = realpath($argv[1] ?? '');
-if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') { throw new \RuntimeException('Disposable Joomla site required'); }
+if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
+throw new \RuntimeException('Disposable Joomla site required');
+}
 $pdo = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 $state = dirname($root) . '/association-http-plugin.json';
 if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
@@ -12,7 +14,9 @@ if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
         $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
         $q = $pdo->prepare("SELECT b.id FROM joomla_associations AS a JOIN joomla_associations AS b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=? AND b.id=? AND a.context='com_jlms.item'");
         $q->execute([$f['other_en'],$f['other_it']]);
-        if (!$q->fetchColumn()) { throw new \RuntimeException('Native HTTP translation save did not persist'); }
+        if (!$q->fetchColumn()) {
+throw new \RuntimeException('Native HTTP translation save did not persist');
+        }
         $f['rows'] = json_encode($pdo->query("SELECT * FROM joomla_associations WHERE context='com_jlms.item' ORDER BY id")->fetchAll(\PDO::FETCH_OBJ), JSON_THROW_ON_ERROR);
         file_put_contents($fixturePath, json_encode($f, JSON_THROW_ON_ERROR));
         exit;
@@ -75,11 +79,16 @@ foreach (['en-GB' => 'association-home-en','it-IT' => 'association-home-it'] as 
     $menu->setLocation(1, 'last-child');
     $menu->bind(['title' => $alias,'alias' => $alias,'menutype' => 'mainmenu','type' => 'component','link' => 'index.php?option=com_jlms&view=courses',
         'component_id' => $componentId,'published' => 1,'access' => 1,'language' => $tag,'home' => 1,'params' => '{}','browserNav' => 0]);
-    if (!$menu->check() || !$menu->store()) { throw new \RuntimeException('Native language menu fixture failed: ' . $menu->getError()); }
+    if (!$menu->check() || !$menu->store()) {
+throw new \RuntimeException('Native language menu fixture failed: ' . $menu->getError());
+    }
 }
 $module = new \Joomla\CMS\Table\Module($db);
 $module->bind(['title' => 'Association language switcher','module' => 'mod_languages','position' => 'sidebar-right','published' => 1,'access' => 1,'language' => '*',
     'client_id' => 0,'showtitle' => 1,'params' => '{"dropdown":0,"image":0,"full_name":1,"active":1}','content' => '','ordering' => 1]);
-if (!$module->check() || !$module->store()) { throw new \RuntimeException('Native language switcher fixture failed'); }
-$record = (object)['moduleid' => (int)$module->id,'menuid' => 0];$db->insertObject('#__modules_menu', $record);
+if (!$module->check() || !$module->store()) {
+throw new \RuntimeException('Native language switcher fixture failed');
+}
+$record = (object)['moduleid' => (int)$module->id,'menuid' => 0];
+$db->insertObject('#__modules_menu', $record);
 echo json_encode(['native_language_module' => (int)$module->id], JSON_THROW_ON_ERROR) . PHP_EOL;

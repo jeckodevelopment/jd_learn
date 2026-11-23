@@ -27,7 +27,9 @@ final class MailconsentController extends BaseController
             throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
         }
         $user = $this->app->getIdentity();
-        if (!$user || $user->guest) { throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401); }
+        if (!$user || $user->guest) {
+throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401);
+        }
         if ($this->input->post->getInt('consent') !== 1) {
             $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_CHECKBOX_REQUIRED'), 'warning');
             $this->setRedirect(Route::_('index.php?option=com_jlms&view=preferences', false));
@@ -81,7 +83,9 @@ final class MailconsentController extends BaseController
             throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
         }
         $user = $this->app->getIdentity();
-        if (!$user || $user->guest) { throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401); }
+        if (!$user || $user->guest) {
+throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401);
+        }
         $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->revoke((int) $user->id);
         $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_REVOKED'), 'message');
         $this->setRedirect(Route::_('index.php?option=com_jlms&view=preferences', false));

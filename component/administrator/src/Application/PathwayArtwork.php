@@ -11,7 +11,9 @@ final class PathwayArtwork
     {
         try {
             $data = json_decode($json ?: '{}', true, 16, JSON_THROW_ON_ERROR);
-            if (!is_array($data)) { return ['image' => '', 'alt' => '']; }
+            if (!is_array($data)) {
+return ['image' => '', 'alt' => ''];
+            }
             $path = CourseArtwork::path((string) ($data['cover_image'] ?? ''));
             $alt = (string) ($data['cover_alt'] ?? '');
             $decorative = ($data['cover_decorative'] ?? false) === true;

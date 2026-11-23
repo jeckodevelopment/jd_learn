@@ -22,8 +22,11 @@ final class VideoController extends BaseController
 
     private function integer(string $name): int
     {
-        try { return \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($this->input->post->get($name, null, 'RAW')); }
-        catch (\InvalidArgumentException $error) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        try {
+return \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($this->input->post->get($name, null, 'RAW'));
+        } catch (\InvalidArgumentException $error) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
     }
 
     private function respond(string $operation): void
@@ -32,14 +35,22 @@ final class VideoController extends BaseController
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         $request = bin2hex(random_bytes(8));
         try {
-            if (strtoupper($this->input->getMethod()) !== 'POST') { throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405); }
-            if ((int) $this->input->server->get('CONTENT_LENGTH', 0, 'UINT') > 75000) { throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 413); }
-            if (!$this->checkToken('post', false)) { throw new \RuntimeException('JINVALID_TOKEN', 403); }
+            if (strtoupper($this->input->getMethod()) !== 'POST') {
+throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+            }
+            if ((int) $this->input->server->get('CONTENT_LENGTH', 0, 'UINT') > 75000) {
+throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 413);
+            }
+            if (!$this->checkToken('post', false)) {
+throw new \RuntimeException('JINVALID_TOKEN', 403);
+            }
             $service = $this->app->bootComponent('com_jlms')->getVideoProgressService();
             $args = [$this->app->getIdentity(), $this->app->getLanguage()->getTag(),
                 $this->integer('enrollment_id'), $this->integer('lesson_id')];
             $events = $this->input->post->get('events_json', '', 'RAW');
-            if (!is_string($events)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            if (!is_string($events)) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            }
             $data = match ($operation) {
                 'playback' => $service->playback(...[...$args, $this->input->post->getString('consent', '') === '1']),
                 'renew' => $service->renew(...[...$args, $this->input->post->getString('session_id', ''),
@@ -55,7 +66,11 @@ final class VideoController extends BaseController
             $key = $error->getMessage();
             $safe = in_array($code, [400,401,403,404,405,409,413,422,429,503], true)
                 && (preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) || in_array($key, ['JINVALID_TOKEN', 'JERROR_LAYOUT_PAGE_NOT_FOUND'], true));
-            if (!$safe) { Log::add('Video operation failed; correlation=' . $request, Log::ERROR, 'com_jlms'); $key = 'COM_JLMS_SAVE_FAILED'; $code = 500; }
+            if (!$safe) {
+Log::add('Video operation failed; correlation=' . $request, Log::ERROR, 'com_jlms');
+$key = 'COM_JLMS_SAVE_FAILED';
+$code = 500;
+            }
             $this->app->setHeader('status', (string) $code, true);
             http_response_code($code);
             echo new JsonResponse(['code' => $key, 'request_id' => $request], Text::_($key), true, true);
@@ -69,8 +84,12 @@ final class VideoController extends BaseController
         return ['closed' => true];
     }
 
-    public function playback(): void { $this->respond('playback'); }
-    public function renew(): void { $this->respond('renew'); }
-    public function save(): void { $this->respond('save'); }
-    public function close(): void { $this->respond('close'); }
+    public function playback(): void { $this->respond('playback');
+    }
+    public function renew(): void { $this->respond('renew');
+    }
+    public function save(): void { $this->respond('save');
+    }
+    public function close(): void { $this->respond('close');
+    }
 }

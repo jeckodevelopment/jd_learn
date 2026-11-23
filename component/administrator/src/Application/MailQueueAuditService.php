@@ -59,8 +59,12 @@ final class MailQueueAuditService
         $limit = max(10, min(100, $limit));
         [$where, $bind] = $this->filters($state, $template);
         $count = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue AS q')->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
-        foreach ($where as $condition) { $count->where($condition); }
-        foreach ($bind as $name => [$value, $type]) { $count->bind($name, $value, $type); }
+        foreach ($where as $condition) {
+$count->where($condition);
+        }
+        foreach ($bind as $name => [$value, $type]) {
+$count->bind($name, $value, $type);
+        }
         $total = (int) $this->db->setQuery($count)->loadResult();
 
         $query = $this->db->createQuery()->select([
@@ -71,8 +75,12 @@ final class MailQueueAuditService
             'q.reconciliation_note',
             '(CASE WHEN q.state = ' . $this->db->quote('sending') . ' AND q.claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' . self::STALE_MINUTES . ' MINUTE) THEN 1 ELSE 0 END) AS is_stale_sending',
         ])->from('#__jlms_mail_queue AS q')->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
-        foreach ($where as $condition) { $query->where($condition); }
-        foreach ($bind as $name => [$value, $type]) { $query->bind($name, $value, $type); }
+        foreach ($where as $condition) {
+$query->where($condition);
+        }
+        foreach ($bind as $name => [$value, $type]) {
+$query->bind($name, $value, $type);
+        }
         $rows = $this->db->setQuery($query->order('q.created_at DESC, q.id DESC'), $start, $limit)->loadObjectList();
         foreach ($rows as $row) {
             $row->recipient_masked = self::maskEmail((string) $row->recipient_email);
@@ -200,7 +208,9 @@ final class MailQueueAuditService
             ->where("template_id IN ('com_jlms.enrollment.confirmed', 'com_jlms.course.completed')")
             ->bind(':id', $id, ParameterType::INTEGER)->bind(':marker', $errorMarker);
         $row = $this->db->setQuery($query)->loadObject();
-        if (!$row) { return false; }
+        if (!$row) {
+return false;
+        }
 
         try {
             $template = MailTemplate::getTemplate((string) $row->template_id, (string) $row->language)
@@ -259,7 +269,9 @@ final class MailQueueAuditService
 
     private static function maskEmail(string $email): string
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { return ''; }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+return '';
+        }
         [$local, $domain] = explode('@', $email, 2);
         return mb_substr($local, 0, 1) . str_repeat('*', min(8, max(3, mb_strlen($local) - 1))) . '@' . $domain;
     }

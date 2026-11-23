@@ -73,9 +73,20 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 $checks = 0;
-function copyExpect(bool $ok, string $message): void { global $checks; if (!$ok) { throw new RuntimeException($message); } $checks++; }
+function copyExpect(bool $ok, string $message): void { global $checks;
+if (!$ok) {
+throw new RuntimeException($message);
+
+} $checks++;
+}
 function copyDenied(callable $work, string $message): void {
-    try { $work(); } catch (Throwable $e) { copyExpect(true, $message); return; }
+    try {
+$work();
+
+    } catch (Throwable $e) {
+copyExpect(true, $message);
+return;
+    }
     throw new RuntimeException($message);
 }
 $course = (int) $db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();
@@ -137,34 +148,46 @@ copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', $bad), 'Published c
 
 // Fresh ACL and checkout are enforced on actual source records.
 $editorId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cieditor'")->loadResult();
-$locked = (object)['id' => $copy,'checked_out' => $editorId];$db->updateObject('#__jlms_courses', $locked, 'id');
+$locked = (object)['id' => $copy,'checked_out' => $editorId];
+$db->updateObject('#__jlms_courses', $locked, 'id');
 copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', array_replace($lessonInput, ['expected_version_revision' => $rev()])), 'Other user checkout blocks copying');
-$update = (object)['id' => $copy,'checked_out' => null];$db->updateObject('#__jlms_courses', $update, 'id', true);
-$sourceAsset = new \Joomla\CMS\Table\Asset($db);$sourceAsset->load((int)$source->asset_id);
-$originalRules = $sourceAsset->rules;$rules = json_decode($originalRules, true) ?: [];
+$update = (object)['id' => $copy,'checked_out' => null];
+$db->updateObject('#__jlms_courses', $update, 'id', true);
+$sourceAsset = new \Joomla\CMS\Table\Asset($db);
+$sourceAsset->load((int)$source->asset_id);
+$originalRules = $sourceAsset->rules;
+$rules = json_decode($originalRules, true) ?: [];
 $editorGroup = (int)$db->setQuery('SELECT group_id FROM #__user_usergroup_map WHERE user_id=' . $editorId . ' ORDER BY group_id DESC')->loadResult();
-$rules['core.edit'][(string)$editorGroup] = 0;$rules['core.edit.own'][(string)$editorGroup] = 0;
-$update = (object)['id' => (int)$sourceAsset->id,'rules' => json_encode($rules)];$db->updateObject('#__assets', $update, 'id');
+$rules['core.edit'][(string)$editorGroup] = 0;
+$rules['core.edit.own'][(string)$editorGroup] = 0;
+$update = (object)['id' => (int)$sourceAsset->id,'rules' => json_encode($rules)];
+$db->updateObject('#__assets', $update, 'id');
 \Joomla\CMS\Access\Access::clearStatics();
-$restricted = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);$restricted->setCurrentUser(new \Joomla\CMS\User\User($editorId));
+$restricted = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
+$restricted->setCurrentUser(new \Joomla\CMS\User\User($editorId));
 copyDenied(fn()=>$restricted->duplicate($input), 'Source edit deny is respected by the model');
-$update = (object)['id' => (int)$sourceAsset->id,'rules' => $originalRules];$db->updateObject('#__assets', $update, 'id');\Joomla\CMS\Access\Access::clearStatics();
+$update = (object)['id' => (int)$sourceAsset->id,'rules' => $originalRules];
+$db->updateObject('#__assets', $update, 'id');
+\Joomla\CMS\Access\Access::clearStatics();
 $counts = static fn():array=>array_map(static fn(string $table):int=>(int)$db->setQuery('SELECT COUNT(*) FROM #__' . $table)->loadResult(), ['jlms_courses','jlms_course_versions','jlms_modules','jlms_lessons','jlms_quizzes','assets','history','workflow_associations','fields_values']);
 $before = $counts();
 copyDenied(fn()=>$model->duplicate(array_replace($input, ['revision' => (int)$source->revision + 1])), 'Stale source course rejected');
 copyExpect($counts() === $before, 'Failed copy leaves no draft, native asset, workflow, history or fields');
 // Inject a late copy failure after the native course record has been created; all writes must roll back.
 $quiz = $db->setQuery('SELECT * FROM #__jlms_quizzes WHERE course_version_id=' . (int)$version->id . ' ORDER BY id')->loadObject();
-$badQuiz = (object)['id' => (int)$quiz->id,'selection_json' => '{'];$db->updateObject('#__jlms_quizzes', $badQuiz, 'id');
+$badQuiz = (object)['id' => (int)$quiz->id,'selection_json' => '{'];
+$db->updateObject('#__jlms_quizzes', $badQuiz, 'id');
 copyDenied(fn()=>$model->duplicate(array_replace($input, ['title' => 'Must roll back'])), 'Late copy failure is rejected');
-$update = (object)['id' => (int)$quiz->id,'selection_json' => $quiz->selection_json];$db->updateObject('#__jlms_quizzes', $update, 'id');
+$update = (object)['id' => (int)$quiz->id,'selection_json' => $quiz->selection_json];
+$db->updateObject('#__jlms_quizzes', $update, 'id');
 copyExpect($counts() === $before, 'Late failure rolls back the complete course and removes its reserved native asset');
 copyExpect($db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadObject() == $source, 'Source course unchanged');
 copyExpect($db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . (int)$version->id . ' ORDER BY id')->loadAssocList() === $sourceLessons, 'Source published lessons unchanged');
 copyExpect($identityRows() === $beforeLearning, 'All duplication and denial paths preserve learning records');
 
 foreach (['html5-fixture','materials-fixture'] as $alias) {
- $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('alias=:alias')->bind(':alias', $alias);$mediaSource = $db->setQuery($q)->loadObject();
+ $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('alias=:alias')->bind(':alias', $alias);
+$mediaSource = $db->setQuery($q)->loadObject();
  copyExpect($mediaSource && $mediaSource->current_version_id, 'Media fixture exists and is published');
  $mediaVersion = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id=' . (int)$mediaSource->current_version_id)->loadObject();
  $mediaModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);

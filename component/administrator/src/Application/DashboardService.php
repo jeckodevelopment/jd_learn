@@ -11,7 +11,8 @@ use Joomla\Database\ParameterType;
 /** Owner history only. No lesson bodies, media, questions, answers or write operations. */
 final class DashboardService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning, private readonly CatalogService $catalog) {}
+    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning, private readonly CatalogService $catalog) {
+    }
 
     public function query(User $identity, string $progress = 'all')
     {
@@ -23,9 +24,13 @@ final class DashboardService
             ->leftJoin('#__jlms_editions AS ed ON ed.id = e.edition_id AND ed.course_id = e.course_id AND ed.course_version_id = e.course_version_id')
             ->leftJoin('#__jlms_courses AS c ON c.id = e.course_id')
             ->where('e.user_id = :dashboardOwner')->bind(':dashboardOwner', $id, ParameterType::INTEGER);
-        if ($progress === 'completed') { $q->where('e.completed_at IS NOT NULL'); }
-        elseif ($progress === 'not_started') { $q->where('e.completed_at IS NULL AND e.started_at IS NULL AND e.last_activity_at IS NULL AND e.completed_total = 0'); }
-        elseif ($progress === 'in_progress') { $q->where('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0)'); }
+        if ($progress === 'completed') {
+$q->where('e.completed_at IS NOT NULL');
+        } elseif ($progress === 'not_started') {
+$q->where('e.completed_at IS NULL AND e.started_at IS NULL AND e.last_activity_at IS NULL AND e.completed_total = 0');
+        } elseif ($progress === 'in_progress') {
+$q->where('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0)');
+        }
         return $q->order('e.last_activity_at DESC, e.id DESC');
     }
 
@@ -82,9 +87,13 @@ final class DashboardService
     /** Read-only owner states for the currently visible catalogue page, never a global enrollment scan. */
     public function catalogStates(User $identity, string $uiLanguage, array $courseIds): array
     {
-        if (!$courseIds) { return []; }
+        if (!$courseIds) {
+return [];
+        }
         $courseIds = array_values(array_unique(array_filter(array_map('intval', $courseIds), static fn (int $id): bool => $id > 0)));
-        if (!$courseIds || count($courseIds) > 50) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        if (!$courseIds || count($courseIds) > 50) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
         // Select exactly the latest enrollment for each requested course before
         // limiting the result set. Otherwise 50 historical editions of one course
         // can hide a different course's enrollment and display a false "Enroll" CTA.
@@ -100,7 +109,9 @@ final class DashboardService
         $states = [];
         foreach ($cards as $index => $card) {
             $id = (int) $rows[$index]->course_id;
-            if (!isset($states[$id])) { $states[$id] = $card; }
+            if (!isset($states[$id])) {
+$states[$id] = $card;
+            }
         }
         return $states;
     }
@@ -108,14 +119,20 @@ final class DashboardService
     public function cards(User $identity, string $uiLanguage, array $rows): array
     {
         $actor = $this->learning->freshActor($identity);
-        if (count($rows) > 50) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+        if (count($rows) > 50) {
+throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
         $languages = LearningLanguages::available($actor, $uiLanguage);
         $groups = [];
         foreach ($rows as $row) {
-            if ((int) $row->user_id !== (int) $actor->id) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+            if ((int) $row->user_id !== (int) $actor->id) {
+throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            }
             $tag = $row->language === '*' ? $uiLanguage : (string) $row->language;
-            if (isset($languages[$tag])) { $groups[$tag][] = (int) $row->course_id; }
+            if (isset($languages[$tag])) {
+$groups[$tag][] = (int) $row->course_id;
+            }
         }
         $visible = [];
         // One bounded lookup per language, never one classroom/body query per enrollment.
@@ -132,19 +149,32 @@ final class DashboardService
             // Historical teaching mode belongs to the immutable enrolled version,
             // not the current catalog: keep consultation progress inapplicable
             // even when the course has been unpublished, archived or trashed.
-            try { $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $row->rules_json); }
-            catch (\DomainException) { $rules = null; }
-            if (!isset($languages[$tag])) { $reason = 'language'; }
-            elseif (!isset($visible[$tag][(int) $row->course_id])) { $reason = 'unavailable'; }
-            elseif (!in_array((int) $visible[$tag][(int) $row->course_id]->content_access, $levels, true)) { $reason = 'access'; }
-            elseif (!in_array($row->status, ['active', 'completed'], true)) { $reason = in_array($row->status, ['suspended', 'expired', 'cancelled'], true) ? $row->status : 'pending'; }
-            elseif ($row->version_status !== 'published' || $row->edition_status !== 'open') { $reason = 'unavailable'; }
-            else {
-                if ($rules === null) { $reason = 'unavailable'; }
-                elseif (($row->starts_at !== null && $row->starts_at > $now) || ($row->edition_starts_at !== null && $row->edition_starts_at > $now)) { $reason = 'not_open'; }
-                elseif (($row->ends_at !== null && $row->ends_at <= $now) || ($row->edition_ends_at !== null && $row->edition_ends_at <= $now)) { $reason = 'expired'; }
+            try {
+$rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $row->rules_json);
+            } catch (\DomainException) {
+$rules = null;
             }
-            $total = (int) $row->required_total; $done = (int) $row->completed_total;
+            if (!isset($languages[$tag])) {
+$reason = 'language';
+            } elseif (!isset($visible[$tag][(int) $row->course_id])) {
+$reason = 'unavailable';
+            } elseif (!in_array((int) $visible[$tag][(int) $row->course_id]->content_access, $levels, true)) {
+$reason = 'access';
+            } elseif (!in_array($row->status, ['active', 'completed'], true)) {
+$reason = in_array($row->status, ['suspended', 'expired', 'cancelled'], true) ? $row->status : 'pending';
+            } elseif ($row->version_status !== 'published' || $row->edition_status !== 'open') {
+$reason = 'unavailable';
+            } else {
+                if ($rules === null) {
+$reason = 'unavailable';
+                } elseif (($row->starts_at !== null && $row->starts_at > $now) || ($row->edition_starts_at !== null && $row->edition_starts_at > $now)) {
+$reason = 'not_open';
+                } elseif (($row->ends_at !== null && $row->ends_at <= $now) || ($row->edition_ends_at !== null && $row->edition_ends_at <= $now)) {
+$reason = 'expired';
+                }
+            }
+            $total = (int) $row->required_total;
+$done = (int) $row->completed_total;
             $consultation = isset($rules) && is_array($rules) && $rules['mode'] === 'consultation';
             $percent = !$consultation && $total > 0 && $done <= $total ? min($row->completed_at !== null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
             $cards[] = ['id' => (int) $row->id, 'title' => (string) ($row->title_snapshot ?? ''), 'learning_state' => $state,

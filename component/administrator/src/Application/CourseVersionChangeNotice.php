@@ -16,7 +16,8 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
  */
 final class CourseVersionChangeNotice
 {
-    public function __construct(private readonly DatabaseInterface $db) {}
+    public function __construct(private readonly DatabaseInterface $db) {
+    }
 
     /** @return array{queued:int,failed:int,processed:int} */
     public function enqueueDue(int $limit = 250): array
@@ -49,7 +50,8 @@ final class CourseVersionChangeNotice
         $rows = $this->db->setQuery($query, 0, $limit)->loadObjectList();
         $changes = new PublicationImpact($this->db);
         $cache = [];
-        $queued = 0; $failed = 0;
+        $queued = 0;
+$failed = 0;
         $queue = new MailQueue($this->db);
         foreach ($rows as $row) {
             try {
@@ -68,7 +70,9 @@ final class CourseVersionChangeNotice
                 $language = is_array($userParams) && is_string($userParams['language'] ?? null)
                     ? $userParams['language'] : '';
                 $language = $language ?: (string) $row->course_language;
-                if (!preg_match('/^[a-z]{2}-[A-Z]{2}$/D', $language)) { $language = 'en-GB'; }
+                if (!preg_match('/^[a-z]{2}-[A-Z]{2}$/D', $language)) {
+$language = 'en-GB';
+                }
                 $name = trim((string) $row->learner_name);
                 $site = (string) Factory::getApplication()->get('sitename');
                 $queue->enqueue((int) $row->course_id,

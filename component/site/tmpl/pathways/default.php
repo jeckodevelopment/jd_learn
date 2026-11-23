@@ -28,7 +28,9 @@ use Jlms\Component\Jlms\Administrator\Application\PathwayArtwork;
    </div>
   </article>
  <?php endforeach; ?>
- <?php if (!$this->items) : ?><p id="jlms-pathways-empty"><?= Text::_('COM_JLMS_PATHWAYS_EMPTY') ?></p><?php endif; ?>
+ <?php if (!$this->items) :
+?><p id="jlms-pathways-empty"><?= Text::_('COM_JLMS_PATHWAYS_EMPTY') ?></p><?php
+ endif; ?>
  </div>
  <nav id="jlms-pathways-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
 </section>

@@ -13,7 +13,8 @@ return new class implements ServiceProviderInterface {
     {
         $container->set(PluginInterface::class, static function():Jlms {
             $plugin = new Jlms((array)PluginHelper::getPlugin('task', 'jlms'));
-            $plugin->setApplication(Factory::getApplication());return $plugin;
+            $plugin->setApplication(Factory::getApplication());
+return $plugin;
         });
     }
 };

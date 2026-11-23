@@ -5,7 +5,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 ?>
 <section id="jlms-dashboard" class="jlms-dashboard jlms-my-courses-view">
- <?php $currentView = 'mycourses'; require __DIR__ . '/../dashboard/_personal_navigation.php'; ?>
+ <?php $currentView = 'mycourses';
+require __DIR__ . '/../dashboard/_personal_navigation.php'; ?>
  <header id="jlms-dashboard-header">
   <h1><?= Text::_('COM_JLMS_MY_COURSES') ?></h1>
   <p><?= Text::_('COM_JLMS_DASHBOARD_INTRO') ?></p>
@@ -17,5 +18,7 @@ use Joomla\CMS\Router\Route;
  </form>
  <?php require __DIR__ . '/../dashboard/_courses.php'; ?>
  <nav id="jlms-dashboard-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
- <?php if ($this->items) : ?><a id="jlms-dashboard-catalog" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a><?php endif; ?>
+ <?php if ($this->items) :
+?><a id="jlms-dashboard-catalog" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a><?php
+ endif; ?>
 </section>

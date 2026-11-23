@@ -19,11 +19,15 @@ final class CourseAnnouncementConsent
 
     public function state(int $userId): string
     {
-        if ($userId < 1) { return 'none'; }
+        if ($userId < 1) {
+return 'none';
+        }
         $query = $this->db->createQuery()->select(['state', 'token_expires_at'])->from('#__jlms_mail_consents')
             ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
         $record = $this->db->setQuery($query)->loadObject();
-        if (!$record) { return 'none'; }
+        if (!$record) {
+return 'none';
+        }
         if ($record->state === 'pending' && (!$record->token_expires_at || strtotime((string) $record->token_expires_at . ' UTC') < time())) {
             return 'none';
         }
@@ -60,7 +64,9 @@ final class CourseAnnouncementConsent
         $recipient = self::verifiedRecipient($this->db, $userId, $email, $origin);
         $email = $recipient['email'];
         $name = $recipient['name'];
-        if ($this->state($userId) === 'confirmed') { return; }
+        if ($this->state($userId) === 'confirmed') {
+return;
+        }
 
         $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
         $hash = hash('sha256', $token);
@@ -89,12 +95,16 @@ final class CourseAnnouncementConsent
         $mail->addRecipient($email, $name);
         $mail->addTemplateData(['USER_FULLNAME' => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'), 'CONFIRM_URL' => $url, 'SITE_NAME' => htmlspecialchars(\Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES, 'UTF-8')]);
         $mail->addUnsafeTags(['USER_FULLNAME', 'CONFIRM_URL', 'SITE_NAME']);
-        if (!$mail->send()) { throw new \RuntimeException('COM_JLMS_MAIL_CONSENT_DELIVERY_FAILED'); }
+        if (!$mail->send()) {
+throw new \RuntimeException('COM_JLMS_MAIL_CONSENT_DELIVERY_FAILED');
+        }
     }
 
     public function confirm(string $token): bool
     {
-        if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) { return false; }
+        if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) {
+return false;
+        }
         $tokenHash = hash('sha256', $token);
         $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'confirmed'")
             ->set('confirmed_at = UTC_TIMESTAMP(6)')->set('token_hash = NULL')->set('token_expires_at = NULL')
@@ -110,11 +120,15 @@ final class CourseAnnouncementConsent
      */
     public function createUnsubscribeUrl(int $userId): ?string
     {
-        if ($userId < 1) { return null; }
+        if ($userId < 1) {
+return null;
+        }
         $q = $this->db->createQuery()->select(['state', 'confirmed_at'])->from('#__jlms_mail_consents')
             ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
         $consent = $this->db->setQuery($q)->loadObject();
-        if (!$consent || $consent->state !== 'confirmed' || !$consent->confirmed_at) { return null; }
+        if (!$consent || $consent->state !== 'confirmed' || !$consent->confirmed_at) {
+return null;
+        }
 
         // Remove expired tokens for this user before adding another campaign link.
         $cleanup = $this->db->createQuery()->delete('#__jlms_mail_unsubscribe_tokens')
@@ -143,7 +157,9 @@ final class CourseAnnouncementConsent
     /** Revoke only the consent revision and one-use token that produced the link. */
     public function revokeByToken(string $token): bool
     {
-        if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) { return false; }
+        if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) {
+return false;
+        }
         $tokenHash = hash('sha256', $token);
         $this->db->transactionStart();
         try {
@@ -183,7 +199,9 @@ final class CourseAnnouncementConsent
 
     public function revoke(int $userId): void
     {
-        if ($userId < 1) { throw new \InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED'); }
+        if ($userId < 1) {
+throw new \InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED');
+        }
         $this->db->transactionStart();
         try {
             $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'revoked'")

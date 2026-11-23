@@ -76,16 +76,22 @@ foreach ([(int) $account->id + 1000000, 0] as $unknownId) {
     try {
         $consentClass::verifiedRecipient($db, $unknownId, (string) $account->email, 'registration');
         throw new \RuntimeException('Nonexistent Joomla account accepted for consent.');
-    } catch (\InvalidArgumentException) {}
+    } catch (\InvalidArgumentException) {
+
+    }
 }
 try {
     $consentClass::verifiedRecipient($db, (int) $account->id, 'stale-recipient@example.invalid', 'registration');
     throw new \RuntimeException('Stale session email accepted for consent.');
-} catch (\InvalidArgumentException) {}
+} catch (\InvalidArgumentException) {
+
+}
 try {
     $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, 'unsupported');
     throw new \RuntimeException('Unsupported consent origin accepted.');
-} catch (\InvalidArgumentException) {}
+} catch (\InvalidArgumentException) {
+
+}
 $oldBlock = (int) $account->block;
 try {
     $db->setQuery($db->createQuery()->update('#__users')->set('block = 1')
@@ -98,7 +104,9 @@ try {
         try {
             $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, $origin);
             throw new \RuntimeException('Blocked account accepted for consent origin: ' . $origin);
-        } catch (\InvalidArgumentException) {}
+        } catch (\InvalidArgumentException) {
+
+        }
     }
 } finally {
     $db->setQuery($db->createQuery()->update('#__users')->set('block = ' . $oldBlock)
@@ -166,9 +174,13 @@ $menuLinks = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->
 $expectedLinks = ['index.php?option=com_jlms&view=dashboard', 'index.php?option=com_jlms&view=courses', 'index.php?option=com_jlms&view=pathways', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_jlms&view=questionbank'];
 $menuTitles = $db->setQuery($db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
 $expectedMenuTitles = ['COM_JLMS_DASHBOARD_MENU', 'COM_JLMS_COURSES', 'COM_JLMS_PATHWAYS', 'COM_JLMS_TEACHERS', 'COM_JLMS_QUESTION_BANK'];
-if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMenuTitles) { throw new \RuntimeException('Native administrator menu must include Dashboard first with the localized label and without duplicates.'); }
+if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMenuTitles) {
+throw new \RuntimeException('Native administrator menu must include Dashboard first with the localized label and without duplicates.');
+}
 $reassignSystemLanguage = parse_ini_file(JPATH_ADMINISTRATOR . '/language/en-GB/com_jlms.sys.ini', false, INI_SCANNER_RAW);
-if (!is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CATEGORY_REASSIGN_TITLE'] ?? null) !== 'Category dependency cleanup') { throw new \RuntimeException('Category reassignment title must be installed in the administrator system language catalog.'); }
+if (!is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CATEGORY_REASSIGN_TITLE'] ?? null) !== 'Category dependency cleanup') {
+throw new \RuntimeException('Category reassignment title must be installed in the administrator system language catalog.');
+}
 // Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
 require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
@@ -381,9 +393,13 @@ if (!in_array('COURSE_TITLE', $finalTags, true) || in_array('NAME', $finalTags, 
     throw new \RuntimeException('Upgrade regression: tags, editor content or idempotency lost.');
 }
 $menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
-if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') { throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.'); }
+if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') {
+throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.');
+}
 $menuLinksAfterUpdate = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
-if ($menuLinksAfterUpdate !== $expectedLinks) { throw new \RuntimeException('Dashboard submenu order or links changed during component upgrade.'); }
+if ($menuLinksAfterUpdate !== $expectedLinks) {
+throw new \RuntimeException('Dashboard submenu order or links changed during component upgrade.');
+}
 $fieldContexts = array_keys(Factory::getApplication()->bootComponent('com_jlms')->getContexts());
 if ($fieldContexts !== ['com_jlms.teacher', 'com_jlms.course', 'com_jlms.lesson']) {
     throw new \RuntimeException('JD Learn custom-field contexts are unavailable to the native com_fields filter.');
@@ -744,38 +760,50 @@ try {
     $certificateService->adminUnissuedCompletions(new \Joomla\CMS\User\User());
     throw new \RuntimeException('Certificate non-issuance diagnosis must reject anonymous users.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
+throw $error;
+    }
 }
 
 $auditActorId = (int) $userId;
 $auditAction = 'admin_list';
 $auditCount = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_audit')
     ->where('actor_user_id = :actor')->where('action = :action')->bind(':actor', $auditActorId)->bind(':action', $auditAction))->loadResult();
-if ($auditCount < 1) { throw new \RuntimeException('Certificate administrator list access was not audited.'); }
+if ($auditCount < 1) {
+throw new \RuntimeException('Certificate administrator list access was not audited.');
+}
 try {
     $certificateService->adminList(new \Joomla\CMS\User\User(), []);
     throw new \RuntimeException('Certificate administration must reject unauthorised users.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
+throw $error;
+    }
 }
 // Explicit historical issuance remains restricted to certificate administrators.
 try {
     $certificateService->adminRecoverHistorical(new \Joomla\CMS\User\User(), 1, 'Approved historical repair');
     throw new \RuntimeException('Historical recovery accepted an anonymous caller.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
+throw $error;
+    }
 }
 try {
     $certificateService->adminRecoverHistorical($app->getIdentity(), 1, 'short');
     throw new \RuntimeException('Historical recovery accepted a missing justification.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') { throw $error; }
+    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') {
+throw $error;
+    }
 }
 try {
     $certificateService->adminRecoverHistorical($app->getIdentity(), 999999999, 'Approved historical repair');
     throw new \RuntimeException('Historical recovery accepted a nonexistent enrollment.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') { throw $error; }
+    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') {
+throw $error;
+    }
 }
 
 // Missing issuance recovery is a separate, explicit action: never a background backfill.
@@ -783,19 +811,25 @@ try {
     $certificateService->adminRecoverMissing(new \Joomla\CMS\User\User(), 1, 'Approved missing issuance recovery');
     throw new \RuntimeException('Missing issuance recovery accepted an anonymous caller.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
+throw $error;
+    }
 }
 try {
     $certificateService->adminRecoverMissing($app->getIdentity(), 1, 'short');
     throw new \RuntimeException('Missing issuance recovery accepted an invalid justification.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') { throw $error; }
+    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') {
+throw $error;
+    }
 }
 try {
     $certificateService->adminRecoverMissing($app->getIdentity(), 999999999, 'Approved missing issuance recovery');
     throw new \RuntimeException('Missing issuance recovery accepted an unknown enrollment.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') { throw $error; }
+    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') {
+throw $error;
+    }
 }
 
 // CERT-08: mutation boundary must reject an anonymous caller before even
@@ -804,19 +838,25 @@ try {
     $certificateService->adminRegenerate(new \Joomla\CMS\User\User(), 1, 1, 'Technical PDF repair');
     throw new \RuntimeException('Certificate regeneration must reject unauthorized users.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') { throw $error; }
+    if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
+throw $error;
+    }
 }
 try {
     $certificateService->adminRegenerate($app->getIdentity(), 0, 1, 'Technical PDF repair');
     throw new \RuntimeException('Certificate regeneration accepted invalid ID.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') { throw $error; }
+    if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') {
+throw $error;
+    }
 }
 try {
     $certificateService->adminRegenerate($app->getIdentity(), 999999999, 1, 'Technical PDF repair');
     throw new \RuntimeException('Certificate regeneration accepted an absent certificate.');
 } catch (\RuntimeException $error) {
-    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') { throw $error; }
+    if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') {
+throw $error;
+    }
 }
 
 $factory = $component->getMVCFactory();
@@ -872,7 +912,8 @@ $actual = (int) $db->setQuery('SELECT parent_id FROM #__assets WHERE id=' . (int
 if ($parent !== $actual) {
     throw new \RuntimeException('Course asset does not inherit native category ACL.');
 }
-$data['id'] = $id;$data['title'] = 'Updated course';
+$data['id'] = $id;
+$data['title'] = 'Updated course';
 if (!$model->save($data)) {
     throw new \RuntimeException('Draft update failed: ' . $model->getError());
 }
@@ -894,7 +935,8 @@ if (!$consentField || (string) $consentField->getAttribute('default') !== '0') {
 PluginHelper::importPlugin('jlmsvideo');
 $registry = new VideoProviderRegistry();
 $app->getDispatcher()->dispatch(RegisterVideoProvidersEvent::NAME, new RegisterVideoProvidersEvent($registry));
-$keys = array_map(static fn ($x): string => $x->key, $registry->descriptors());sort($keys);
+$keys = array_map(static fn ($x): string => $x->key, $registry->descriptors());
+sort($keys);
 if ($keys !== ['cloudflarestream','html5','vimeo','youtube']) {
     throw new \RuntimeException('Four video providers were not registered by Joomla.');
 }

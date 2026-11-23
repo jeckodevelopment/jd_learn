@@ -6,12 +6,17 @@ declare(strict_types=1);
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-$item = $this->item; $course = $item['course']; $version = $item['version']; $editable = $version->status === 'draft';
+$item = $this->item;
+$course = $item['course'];
+$version = $item['version'];
+$editable = $version->status === 'draft';
 $link = static fn (string $url): string => Route::link('administrator', $url);
 $base = 'index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id;
 $base .= '&material_scope=' . (int) $this->selectedScope;
 $hidden = static function (array $fields): void {
-    foreach ($fields as $name => $value) { echo '<input type="hidden" name="jform[' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ']" value="' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '">'; }
+    foreach ($fields as $name => $value) {
+echo '<input type="hidden" name="jform[' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ']" value="' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '">';
+    }
 };
 $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_version_revision' => $version->revision];
 ?>
@@ -23,14 +28,20 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
  <?php if ($editable) : ?>
  <p class="small text-muted"><?= Text::_('COM_JLMS_MATERIAL_SCHEDULE_ZONE') ?>: <?= $this->escape($this->scheduleTimezone) ?></p>
  <form id="jlms-material-upload" enctype="multipart/form-data" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
-  <?php if ($this->replacement) : ?><h2><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></h2><input type="hidden" name="jform[lesson_id]" value="<?= $this->replacementLesson ?>"><?php endif; ?>
+  <?php if ($this->replacement) :
+?><h2><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></h2><input type="hidden" name="jform[lesson_id]" value="<?= $this->replacementLesson ?>"><?php
+  endif; ?>
   <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="material.upload">
   <label><?= Text::_('COM_JLMS_CALENDAR_PUBLISH_UP') ?><input type="datetime-local" step="1" name="jform[publish_up]" value="<?= $this->escape($this->dateValues['publish_up']) ?>"></label>
   <label><?= Text::_('COM_JLMS_CALENDAR_PUBLISH_DOWN') ?><input type="datetime-local" step="1" name="jform[publish_down]" value="<?= $this->escape($this->dateValues['publish_down']) ?>"></label>
   <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_($this->replacement ? 'COM_JLMS_REPLACE_MATERIAL' : 'COM_JLMS_UPLOAD_MATERIAL') ?></button>
-  <?php if ($this->replacement) : ?><a href="<?= $link($base) ?>"><?= Text::_('JCANCEL') ?></a><?php endif; ?>
+  <?php if ($this->replacement) :
+?><a href="<?= $link($base) ?>"><?= Text::_('JCANCEL') ?></a><?php
+  endif; ?>
  </form>
- <?php else : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php endif; ?>
+ <?php else :
+?><p class="alert alert-warning"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php
+ endif; ?>
  <form id="jlms-material-scope-filter" method="get" action="<?= $link('index.php') ?>">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="materials">
   <input type="hidden" name="id" value="<?= (int) $course->id ?>"><input type="hidden" name="version_id" value="<?= (int) $version->id ?>">
@@ -38,7 +49,9 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <select id="jlms-material-scope" name="material_scope">
    <option value="0"<?= $this->selectedScope === 0 ? ' selected' : '' ?>><?= Text::_('COM_JLMS_MATERIAL_SCOPE_ALL') ?></option>
    <option value="-1"<?= $this->selectedScope === -1 ? ' selected' : '' ?>><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></option>
-   <?php foreach ($item['lessons'] as $lesson) : ?><option value="<?= (int) $lesson->id ?>"<?= $this->selectedScope === (int) $lesson->id ? ' selected' : '' ?>><?= $this->escape($lesson->title) ?></option><?php endforeach; ?>
+   <?php foreach ($item['lessons'] as $lesson) :
+?><option value="<?= (int) $lesson->id ?>"<?= $this->selectedScope === (int) $lesson->id ? ' selected' : '' ?>><?= $this->escape($lesson->title) ?></option><?php
+   endforeach; ?>
   </select><button class="btn btn-secondary" type="submit"><?= Text::_('JSEARCH_FILTER_SUBMIT') ?></button>
  </form>
  <p><?= (int) $item['files']['total'] ?> <?= Text::_('COM_JLMS_MATERIALS_COUNT') ?></p>
@@ -47,7 +60,9 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
  <section class="jlms-admin-material" data-attachment-id="<?= (int) $file->id ?>">
   <h2><?= $this->escape($file->title) ?></h2>
   <p><?= $this->escape($file->original_name) ?> · <?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B · <?= $this->escape($file->status) ?> · <?= Text::_((int) $file->preview === 1 ? 'COM_JLMS_MATERIAL_PUBLIC_PREVIEW' : 'COM_JLMS_MATERIAL_PRIVATE') ?> · ID <?= (int) $file->id ?> · <?= $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
-  <?php if ($file->status === 'ready') : ?><a href="<?= $link('index.php?option=com_jlms&task=material.download&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&id=' . (int) $file->id) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a><?php endif; ?>
+  <?php if ($file->status === 'ready') :
+?><a href="<?= $link('index.php?option=com_jlms&task=material.download&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&id=' . (int) $file->id) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a><?php
+  endif; ?>
   <?php if ($editable) : ?>
   <a class="btn btn-secondary" href="<?= $link($base . '&page=' . (int) $item['files']['page'] . '&replace_id=' . (int) $file->id) ?>#jlms-material-upload"><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></a>
   <form method="post" class="jlms-material-edit" action="<?= $link('index.php?option=com_jlms') ?>">
@@ -67,8 +82,12 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <form method="post" class="jlms-material-reuse" action="<?= $link('index.php?option=com_jlms') ?>">
    <?php $hidden($scope + ['id' => $file->id]); ?><input type="hidden" name="task" value="material.reuse">
    <label><?= Text::_('COM_JLMS_MATERIAL_REUSE_TARGET') ?><select name="jform[target_lesson_id]" required>
-    <?php if ($file->lesson_id) : ?><option value="0"><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></option><?php endif; ?>
-    <?php foreach ($reuseTargets as $lesson) : ?><option value="<?= (int) $lesson->id ?>"><?= $this->escape($lesson->title) ?></option><?php endforeach; ?>
+    <?php if ($file->lesson_id) :
+?><option value="0"><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></option><?php
+    endif; ?>
+    <?php foreach ($reuseTargets as $lesson) :
+?><option value="<?= (int) $lesson->id ?>"><?= $this->escape($lesson->title) ?></option><?php
+    endforeach; ?>
    </select></label>
    <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_MATERIAL_REUSE') ?></button>
   </form>
@@ -77,9 +96,15 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <form method="post" action="<?= $link('index.php?option=com_jlms') ?>"><?php $hidden($scope + ['id' => $file->id]); ?><input type="hidden" name="task" value="material.scan"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_RESCAN') ?></button></form>
  </section>
  <?php endforeach; ?></div>
- <?php if (!$item['files']['items']) : ?><p><?= Text::_('COM_JLMS_NO_MATERIALS_IN_SCOPE') ?></p><?php endif; ?>
+ <?php if (!$item['files']['items']) :
+?><p><?= Text::_('COM_JLMS_NO_MATERIALS_IN_SCOPE') ?></p><?php
+ endif; ?>
  <nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
- <?php if ($item['files']['page'] > 0) : ?><a href="<?= $link($base . '&page=' . ($item['files']['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php endif; ?>
- <?php if (($item['files']['page'] + 1) * 20 < $item['files']['total']) : ?><a href="<?= $link($base . '&page=' . ($item['files']['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php endif; ?>
+ <?php if ($item['files']['page'] > 0) :
+?><a href="<?= $link($base . '&page=' . ($item['files']['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php
+ endif; ?>
+ <?php if (($item['files']['page'] + 1) * 20 < $item['files']['total']) :
+?><a href="<?= $link($base . '&page=' . ($item['files']['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php
+ endif; ?>
  </nav>
 </section>

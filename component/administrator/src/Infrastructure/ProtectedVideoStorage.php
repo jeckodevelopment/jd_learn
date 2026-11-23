@@ -19,7 +19,8 @@ final class ProtectedVideoStorage
         });
     }
 
-    public function config(): Registry { return ($this->configuration)(); }
+    public function config(): Registry { return ($this->configuration)();
+    }
     public function root(): string
     {
         // Local MP4 blobs are stored as plaintext for bounded PHP streaming.
@@ -39,37 +40,60 @@ final class ProtectedVideoStorage
         $limits = [VideoFilePolicy::MAX_BYTES, max(1, min(250, (int) $this->config()->get('video_max_mib', 250))) * 1048576];
         foreach (['upload_max_filesize', 'post_max_size'] as $key) {
             $value = trim((string) ini_get($key));
-            $factor = match (strtolower(substr($value, -1))) { 'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1 };
+            $factor = match (strtolower(substr($value, -1))) {
+'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
+            };
             $bytes = (int) ((float) $value * $factor);
-            if ($bytes > 0) { $limits[] = $key === 'post_max_size' ? max(1, $bytes - 65536) : $bytes; }
+            if ($bytes > 0) {
+$limits[] = $key === 'post_max_size' ? max(1, $bytes - 65536) : $bytes;
+            }
         }
         return min($limits);
     }
 
     public function stage(string $source, string $name): array
     {
-        if (is_link($source) || !is_file($source)) { throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422); }
+        if (is_link($source) || !is_file($source)) {
+throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
+        }
         $root = $this->root();
         $meta = VideoFilePolicy::inspect($source, $name, $this->limit(), (string) $this->config()->get('video_ffprobe_path', ''));
-        $key = bin2hex(random_bytes(32)) . '.blob'; $path = $root . DIRECTORY_SEPARATOR . $key;
-        $input = @fopen($source, 'rb'); $output = @fopen($path, 'xb');
+        $key = bin2hex(random_bytes(32)) . '.blob';
+$path = $root . DIRECTORY_SEPARATOR . $key;
+        $input = @fopen($source, 'rb');
+$output = @fopen($path, 'xb');
         if (!$input || !$output) {
-            if (is_resource($input)) { fclose($input); } if (is_resource($output)) { fclose($output); }
+            if (is_resource($input)) {
+fclose($input);
+
+            } if (is_resource($output)) {
+fclose($output);
+            }
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         try {
             if (!chmod($path, 0640) || stream_copy_to_stream($input, $output, $meta['byte_size'] + 1) !== $meta['byte_size']) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
-        } catch (\Throwable $error) { fclose($input); fclose($output); unlink($path); throw $error; }
-        fclose($input); fclose($output);
-        if (!hash_equals($meta['sha256'], hash_file('sha256', $path))) { unlink($path); throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422); }
+        } catch (\Throwable $error) {
+fclose($input);
+fclose($output);
+unlink($path);
+throw $error;
+        }
+        fclose($input);
+fclose($output);
+        if (!hash_equals($meta['sha256'], hash_file('sha256', $path))) {
+unlink($path);
+throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
+        }
         return $meta + ['storage' => 'local_video', 'storage_key' => $key];
     }
 
     public function scan(object $asset): array
     {
-        $copy = clone $asset; $copy->storage = 'local';
+        $copy = clone $asset;
+$copy->storage = 'local';
         return $this->files->scan($copy);
     }
 
@@ -88,7 +112,8 @@ final class ProtectedVideoStorage
 
     public function delivery(object $asset): array
     {
-        $path = $this->inspect($asset); $mode = $this->config()->get('video_delivery_mode', 'disabled');
+        $path = $this->inspect($asset);
+$mode = $this->config()->get('video_delivery_mode', 'disabled');
         if ($mode === 'php_bounded' || $mode === 'x_accel') {
             // Upgrade existing sites from the former offload setting to the
             // standard PHP streamer; never emit web-server-specific headers.

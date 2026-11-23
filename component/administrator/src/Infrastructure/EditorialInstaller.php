@@ -16,7 +16,9 @@ final class EditorialInstaller
             $category->setLocation(1, 'last-child');
             $category->bind(['title' => 'JD Learn', 'alias' => 'jd-learn-teachers', 'extension' => 'com_jlms.teacher',
                 'published' => 1, 'access' => 1, 'language' => '*', 'params' => '{}', 'metadata' => '{}', 'description' => '']);
-            if (!$category->check() || !$category->store()) { throw new \RuntimeException('JD Learn teacher setup failed'); }
+            if (!$category->check() || !$category->store()) {
+throw new \RuntimeException('JD Learn teacher setup failed');
+            }
         }
         foreach (['course' => 'CourseTable', 'teacher' => 'TeacherTable'] as $type => $table) {
             $record = new ContentType($db);
@@ -52,7 +54,9 @@ final class EditorialInstaller
             } else {
                 continue;
             }
-            if (!$record->check() || !$record->store()) { throw new \RuntimeException('JD Learn content type setup failed'); }
+            if (!$record->check() || !$record->store()) {
+throw new \RuntimeException('JD Learn content type setup failed');
+            }
         }
     }
 }

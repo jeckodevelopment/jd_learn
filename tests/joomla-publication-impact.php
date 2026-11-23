@@ -62,18 +62,41 @@ $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 
 
-$service = $component->getPublicationService(); $authoring = $component->getCurriculumService(); $actor = $app->getIdentity();
+$service = $component->getPublicationService();
+$authoring = $component->getCurriculumService();
+$actor = $app->getIdentity();
 $checks = 0;
-function impactExpect(bool $ok,string $message): void { global $checks; if (!$ok) { throw new RuntimeException($message); } $checks++; }
-function impactDenied(callable $work,string $message): void { try { $work(); } catch (\DomainException $e) { impactExpect($e->getMessage() === $message, 'Expected ' . $message . ', got ' . $e->getMessage()); return; } throw new RuntimeException('Expected rejection: ' . $message); }
-function impactRow(string $table,int $id): object { global $db; return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject(); }
-function impactLearning(): array { global $db; return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()]; }
-$mode = $argv[2] ?? '';$fixture = dirname($root) . '/publication-impact-fixture.json';
+function impactExpect(bool $ok,string $message): void { global $checks;
+if (!$ok) {
+throw new RuntimeException($message);
+
+} $checks++;
+}
+function impactDenied(callable $work,string $message): void { try {
+$work();
+
+} catch (\DomainException $e) {
+impactExpect($e->getMessage() === $message, 'Expected ' . $message . ', got ' . $e->getMessage());
+return;
+
+} throw new RuntimeException('Expected rejection: ' . $message);
+}
+function impactRow(string $table,int $id): object { global $db;
+return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
+}
+function impactLearning(): array { global $db;
+return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
+}
+$mode = $argv[2] ?? '';
+$fixture = dirname($root) . '/publication-impact-fixture.json';
 if ($mode === 'state') {
  $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
- echo json_encode(['course' => (array)impactRow('courses', $f['course']),'version' => (array)impactRow('course_versions', $f['version']),'learning' => impactLearning()], JSON_THROW_ON_ERROR);return;
+ echo json_encode(['course' => (array)impactRow('courses', $f['course']),'version' => (array)impactRow('course_versions', $f['version']),'learning' => impactLearning()], JSON_THROW_ON_ERROR);
+return;
 }
-$source = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();$record = impactRow('courses', $source);$original = impactRow('course_versions', (int)$record->current_version_id);
+$source = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();
+$record = impactRow('courses', $source);
+$original = impactRow('course_versions', (int)$record->current_version_id);
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $course = $model->duplicate(['course_id' => $source,'version_id' => $original->id,'revision' => $record->revision,'expected_version_revision' => $original->revision,'title' => 'Publication impact fixture']);
 // Keep this independent fixture publicly accessible. The copied source deliberately uses
@@ -90,8 +113,8 @@ impactExpect((int)impactRow('enrollments', $enrollment)->course_version_id === $
 $before = impactLearning();
 $draft = $authoring->createDraft($actor, $course, (int)impactRow('courses', $course)->revision);
 $findTransition = static function(string $action)use($service,$actor,$course,$draft):object {
-    foreach($service->transitions($actor, $course, $draft) as $candidate) {
-        if((new \Joomla\Registry\Registry($candidate->options))->get('jlms_action') === $action)return $candidate;
+    foreach ($service->transitions($actor, $course, $draft) as $candidate) {
+        if ((new \Joomla\Registry\Registry($candidate->options))->get('jlms_action') === $action)return $candidate;
     }
     throw new RuntimeException('Missing editorial transition ' . $action);
 };
@@ -100,7 +123,9 @@ $service->transition($actor, $course, $draft, (int)impactRow('courses', $course)
 $transition = (int)$findTransition('publish')->id;
 $review = static fn(): array => $service->updateImpact($actor, $course, $draft, $transition);
 $initial = $review();
-foreach (['modules','lessons','quizzes','materials'] as $kind) { impactExpect($initial['changes'][$kind]['added'] === 0 && $initial['changes'][$kind]['changed'] === 0 && $initial['changes'][$kind]['removed'] === 0, 'Unchanged working copy has no false changes for ' . $kind); }
+foreach (['modules','lessons','quizzes','materials'] as $kind) {
+impactExpect($initial['changes'][$kind]['added'] === 0 && $initial['changes'][$kind]['changed'] === 0 && $initial['changes'][$kind]['removed'] === 0, 'Unchanged working copy has no false changes for ' . $kind);
+}
 impactExpect(!$initial['rules_changed'], 'Equivalent teaching rules remain unchanged');
 impactExpect((int)$initial['enrollments'][0]['total'] === 1, 'Review counts existing assignments without learner identities');
 impactDenied(fn()=>$service->transition($actor, $course, $draft, (int)impactRow('courses', $course)->revision, (int)impactRow('course_versions', $draft)->revision, $transition), 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
@@ -112,8 +137,10 @@ $lesson = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $m
 $existingModule = $authoring->outline($actor, $course, $draft)['modules'][0];
 $authoring->saveModule($actor, $scope() + ['id' => $existingModule->id,'revision' => $existingModule->revision,'title' => 'Renamed existing module']);
 $quiz = $db->setQuery('SELECT * FROM #__jlms_quizzes WHERE course_version_id=' . $draft . ' ORDER BY id')->loadObject();
-$quizChange = (object)['id' => (int)$quiz->id,'pass_basis_points' => 6500];$db->updateObject('#__jlms_quizzes', $quizChange, 'id');
-$versionChange = (object)['id' => $draft,'revision' => (int)impactRow('course_versions', $draft)->revision + 1];$db->updateObject('#__jlms_course_versions', $versionChange, 'id');
+$quizChange = (object)['id' => (int)$quiz->id,'pass_basis_points' => 6500];
+$db->updateObject('#__jlms_quizzes', $quizChange, 'id');
+$versionChange = (object)['id' => $draft,'revision' => (int)impactRow('course_versions', $draft)->revision + 1];
+$db->updateObject('#__jlms_course_versions', $versionChange, 'id');
 $submit = $findTransition('review');
 $service->transition($actor, $course, $draft, (int)impactRow('courses', $course)->revision, (int)impactRow('course_versions', $draft)->revision, (int)$submit->id);
 $transition = (int)$findTransition('publish')->id;
@@ -133,11 +160,13 @@ impactExpect($review()['fingerprint'] !== $updated['fingerprint'], 'Changed draf
 $guest = new \Joomla\CMS\User\User(0);
 impactDenied(fn()=>$service->updateImpact($guest, $course, $draft, $transition), 'JERROR_ALERTNOAUTHOR');
 impactDenied(fn()=>$service->updateImpact($actor, $course, (int)$original->id, $transition), 'COM_JLMS_RESOURCE_NOT_FOUND');
-$current = $review();$service->transition($actor, $course, $draft, (int)impactRow('courses', $course)->revision, (int)impactRow('course_versions', $draft)->revision, $transition, $current['fingerprint']);
+$current = $review();
+$service->transition($actor, $course, $draft, (int)impactRow('courses', $course)->revision, (int)impactRow('course_versions', $draft)->revision, $transition, $current['fingerprint']);
 impactExpect((int)impactRow('courses', $course)->current_version_id === $draft, 'Confirmed current review activates the update');
 impactExpect(impactLearning() === $before && (int)impactRow('enrollments', $enrollment)->course_version_id === $old, 'Existing assignments, attempts and progress remain byte-for-byte unchanged');
 $version = $authoring->createDraft($actor, $course, (int)impactRow('courses', $course)->revision);
-$outline = $authoring->outline($actor, $course, $version);$module = (int)$outline['modules'][0]->id;
+$outline = $authoring->outline($actor, $course, $version);
+$module = (int)$outline['modules'][0]->id;
 $lesson = $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $outline['version']->revision,'module_id' => $module,'id' => 0,'title' => 'HTTP impact <script>safe</script>','kind' => 'text','required' => '0','body' => '<p>HTTP review body</p>']);
 file_put_contents($fixture, json_encode(['course' => $course,'version' => $version,'module' => $module,'lesson' => $lesson,'source_version' => $draft], JSON_THROW_ON_ERROR));
 echo json_encode(['publication_impact_native_checks' => $checks,'status' => 'passed']) . PHP_EOL;

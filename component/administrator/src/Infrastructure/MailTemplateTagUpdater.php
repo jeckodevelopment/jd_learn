@@ -85,9 +85,13 @@ final class MailTemplateTagUpdater
                 foreach (['subject', 'body', 'htmlbody'] as $field) {
                     $old = (string) ($row->{$field} ?? '');
                     $new = self::migratePlaceholders($old);
-                    if ($new !== $old) { $updatedTemplate->{$field} = $new; }
+                    if ($new !== $old) {
+$updatedTemplate->{$field} = $new;
+                    }
                 }
-                if (count(get_object_vars($updatedTemplate)) === 2) { continue; }
+                if (count(get_object_vars($updatedTemplate)) === 2) {
+continue;
+                }
                 $db->updateObject('#__mail_templates', $updatedTemplate, ['template_id', 'language']);
                 ++$updated;
             }

@@ -63,7 +63,12 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function fieldsExpect(bool $ok,string $message): void { global $checks; if (!$ok) { throw new RuntimeException($message); } $checks++; }
+function fieldsExpect(bool $ok,string $message): void { global $checks;
+if (!$ok) {
+throw new RuntimeException($message);
+
+} $checks++;
+}
 $actor = $app->getIdentity();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 PluginHelper::importPlugin('system', 'fields');
@@ -81,7 +86,8 @@ fieldsExpect($value() === 'Updated native course value', 'Updated custom value p
 $record = $model->getItem($course);
 fieldsExpect($model->save(['id' => $course,'revision' => $record->revision,'summary' => 'Metadata-only correction']), 'Legacy metadata client without custom fields still saves');
 fieldsExpect($value() === 'Updated native course value', 'Omitted custom fields do not erase existing values');
-$before = $value();$record = $model->getItem($course);
+$before = $value();
+$record = $model->getItem($course);
 fieldsExpect(!$model->save(['id' => $course,'revision' => (int)$record->revision - 1,'com_fields' => ['course-editorial-reference' => 'Stale overwrite']]), 'Stale course revision rejected');
 fieldsExpect($value() === $before, 'Rejected stale edit cannot change field value');
 file_put_contents(dirname($root) . '/course-fields-fixture.json', json_encode(['course' => $course,'field' => $field], JSON_THROW_ON_ERROR));

@@ -86,7 +86,9 @@ $this->difficulty = $this->getModel()->getDifficulty();
         }
         } catch (\Throwable $error) {
             // Access denials and unknown routes must never become a public result.
-            if (in_array((int) $error->getCode(), [401, 403, 404], true)) { throw $error; }
+            if (in_array((int) $error->getCode(), [401, 403, 404], true)) {
+throw $error;
+            }
             // Fail closed: discard all partially loaded owner and course data.
             $this->loadFailed = true;
             $this->items = [];
