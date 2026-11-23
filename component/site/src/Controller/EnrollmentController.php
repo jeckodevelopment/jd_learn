@@ -139,7 +139,8 @@ class EnrollmentController extends BaseController
                 . $target['enrollment_id'] . '&lesson_id=' . $target['lesson_id'] . '&lang='
                     . rawurlencode($target['language']), false));
         } catch (\Throwable $error) {
-            $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];
+            $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW',
+                'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), in_array($error
                     ->getCode(), [400, 401, 403, 404], true) ? $error->getCode() : 400);

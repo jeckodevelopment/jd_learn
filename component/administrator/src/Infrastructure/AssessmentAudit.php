@@ -23,7 +23,10 @@ final class AssessmentAudit
                         =>'COM_JLMS_LOG_MANUAL_ENROLLMENT','enrollmentmigration'
                             =>'COM_JLMS_LOG_ENROLLMENT_MIGRATION','programmerestore'
                                 =>'COM_JLMS_LOG_PROGRAMME_RESTORE','courseoperations'
-                                    =>'COM_JLMS_LOG_COURSE_OPERATIONS','coursecommunication'=>'COM_JLMS_LOG_COURSE_COMMUNICATION','enrollmentapproval'=>'COM_JLMS_LOG_ENROLLMENT_APPROVAL',default=>throw new \InvalidArgumentException('Invalid assessment audit context')
+                                    =>'COM_JLMS_LOG_COURSE_OPERATIONS',
+                        'coursecommunication'=>'COM_JLMS_LOG_COURSE_COMMUNICATION',
+                        'enrollmentapproval'=>'COM_JLMS_LOG_ENROLLMENT_APPROVAL',
+                        default=>throw new \InvalidArgumentException('Invalid assessment audit context')
         };
         $context = 'com_jlms.' . $kind;
         Factory::getApplication()->bootComponent('com_actionlogs');
@@ -49,7 +52,11 @@ final class AssessmentAudit
                         =>'COM_JLMS_ENROLLMENT_STATE_AUDIT_FAILED','manualenrollment'
                             =>'COM_JLMS_MANUAL_AUDIT_FAILED','enrollmentmigration'
                                 =>'COM_JLMS_MIGRATION_AUDIT_FAILED','programmerestore'
-                                    =>'COM_JLMS_PROGRAMME_RESTORE_AUDIT_FAILED','courseoperations'=>'COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED','coursecommunication'=>'COM_JLMS_COMMUNICATION_AUDIT_FAILED','enrollmentapproval'=>'COM_JLMS_ENROLLMENT_APPROVAL_AUDIT_FAILED',default=>'COM_JLMS_QUIZ_REVIEW_AUDIT_FAILED'
+                                    =>'COM_JLMS_PROGRAMME_RESTORE_AUDIT_FAILED',
+                        'courseoperations'=>'COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED',
+                        'coursecommunication'=>'COM_JLMS_COMMUNICATION_AUDIT_FAILED',
+                        'enrollmentapproval'=>'COM_JLMS_ENROLLMENT_APPROVAL_AUDIT_FAILED',
+                        default=>'COM_JLMS_QUIZ_REVIEW_AUDIT_FAILED'
             }, 503);
         }
     }

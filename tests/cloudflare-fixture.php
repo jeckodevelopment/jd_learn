@@ -31,7 +31,8 @@ function cloudflareFixture(): array
             if ($state->tokenMode === 'download') {
                 $claims['downloadable'] = true;
             }
-            $encode = static fn (array $data): string => rtrim(strtr(base64_encode(json_encode($data, JSON_THROW_ON_ERROR)), '+/', '-_'), '=');
+            $encode = static fn (array $data): string
+                => rtrim(strtr(base64_encode(json_encode($data, JSON_THROW_ON_ERROR)), '+/', '-_'), '=');
             $result = ['token' => $encode($header) . '.' . $encode($claims) . '.c2lnbmF0dXJl'];
         }
         return ['status' => $state->status, 'body' => json_encode(['success' => true, 'result'

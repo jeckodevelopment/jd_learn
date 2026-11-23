@@ -300,7 +300,8 @@ final class MaterialService
         }
         $staged = $this->storage->stage($upload['tmp_name'], $upload['name']);
         $scan = $this->storage->scan((object) $staged);
-        // A failed concurrent save may leave an unreferenced private blob; never delete a referenced blob speculatively.
+        // A failed concurrent save may leave an unreferenced private blob; never delete a referenced blob
+        // speculatively.
         return $this->transaction(function () use ($identity, $courseId, $versionId, $lessonId, $expected, $title, $description, $staged, $scan, $replaceId, $availability, $preview): int {
             [$actor, , $version] = $this->author($identity, $courseId, $versionId, true);
             $this->draft($version, $expected);

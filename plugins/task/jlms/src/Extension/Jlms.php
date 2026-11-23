@@ -69,7 +69,9 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
                         . $updates['failed'] . '; processed=' . $updates['processed']
                             . '; approval managers: queued=' . $managers['queued'] . '; failed='
                                 . $managers['failed'] . '; processed=' . $managers['processed']
-                                    . '; communications: queued=' . $communication['queued'] . '; failed=' . $communication['failed'] . '; mail queue: sent=' . $result['sent'] . '; failed=' . $result['failed'] . '; processed=' . $result['processed']);
+                                    . '; communications: queued=' . $communication['queued'] . '; failed='
+                        . $communication['failed'] . '; mail queue: sent=' . $result['sent'] . '; failed='
+                        . $result['failed'] . '; processed=' . $result['processed']);
         return ($result['failed'] || $communication['failed'] || $expiry['failed'] || $lessons['failed']
             || $updates['failed'] || $managers['failed']) ? Status::KNOCKOUT : Status::OK;
     }

@@ -6,9 +6,13 @@ use Joomla\CMS\Router\Route;
 $item = $this->item;
 $course = $item['course'];
 $version = $item['version'];
-$back = Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int)$course->id . '&version_id=' . (int)$version->id);
-$labels = ['modules' => 'COM_JLMS_PUBLICATION_REVIEW_MODULES', 'lessons' => 'COM_JLMS_PUBLICATION_REVIEW_LESSONS', 'quizzes' => 'COM_JLMS_PUBLICATION_REVIEW_QUIZZES', 'materials' => 'COM_JLMS_MATERIALS'];
-$changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed' => 'COM_JLMS_PUBLICATION_REVIEW_CHANGED', 'removed' => 'COM_JLMS_PUBLICATION_REVIEW_REMOVED'];
+$back = Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int)$course->id
+    . '&version_id=' . (int)$version->id);
+$labels = ['modules' => 'COM_JLMS_PUBLICATION_REVIEW_MODULES', 'lessons'
+    => 'COM_JLMS_PUBLICATION_REVIEW_LESSONS', 'quizzes' => 'COM_JLMS_PUBLICATION_REVIEW_QUIZZES', 'materials'
+    => 'COM_JLMS_MATERIALS'];
+$changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed'
+    => 'COM_JLMS_PUBLICATION_REVIEW_CHANGED', 'removed' => 'COM_JLMS_PUBLICATION_REVIEW_REMOVED'];
 ?>
 <section id="jlms-publication-review">
  <h1><?= $this->escape($course->title) ?></h1>

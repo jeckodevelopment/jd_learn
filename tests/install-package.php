@@ -107,7 +107,8 @@ try {
     echo json_encode([
         'package_install' => 'passed',
         'menu_acl_plugin_state' => $expectDisabledPlugin ? 'preserved disabled across upgrade' : 'enabled on install',
-        'registration_consent_plugin_state' => $expectDisabledPlugin ? 'preserved disabled across upgrade' : 'enabled on install',
+        'registration_consent_plugin_state'
+            => $expectDisabledPlugin ? 'preserved disabled across upgrade' : 'enabled on install',
         'messages' => $app->getMessageQueue(),
     ], JSON_THROW_ON_ERROR) . PHP_EOL;
 } finally {

@@ -171,7 +171,8 @@ if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI scoped enrollment reade
     throw new \RuntimeException($g->getError());
 }
 $group = (int)$g->getState('group.id');
-// Keep backend entry separate from the course permission so revoking the latter exercises our model, not Joomla's login wall.
+// Keep backend entry separate from the course permission so revoking the latter exercises our model, not Joomla's login
+// wall.
 if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI roster backend entry'])) {
     throw new \RuntimeException($g->getError());
 }

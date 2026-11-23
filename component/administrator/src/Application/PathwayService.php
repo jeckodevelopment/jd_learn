@@ -150,7 +150,8 @@ final class PathwayService
                 $done = (int) $enrollment->completed_total;
                 $required = (int) $enrollment->required_total;
                 try {
-                    $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $enrollment->rules_json);
+                    $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $enrollment
+                    ->rules_json);
                 } catch (\DomainException) {
                     $rules = null;
                 }
