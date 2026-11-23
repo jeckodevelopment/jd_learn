@@ -42,7 +42,7 @@ final class TeacherProfiles
             $q->where("(t.language='*' OR t.language=:language)")->bind(':language', $language);
             $q->where("NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND ancestor.level>0 AND ancestor.language<>'*' AND ancestor.language<>:categoryLanguage)")->bind(':categoryLanguage', $language);
         }
-        if ($only !== null) { $q->where('t.id IN (' . implode(',',array_map('intval',$only)) . ')'); }
+        if ($only !== null) { $q->where('t.id IN (' . implode(',', array_map('intval', $only)) . ')'); }
         $rows = $db->setQuery($q, 0, 2001)->loadObjectList('id');
         if (count($rows) > 2000) { throw new \RuntimeException('COM_JLMS_TEACHER_SELECTION_LIMIT'); }
         return $rows;
@@ -100,7 +100,7 @@ final class TeacherProfiles
             $profiles[] = ['id' => $id, 'title' => (string) $row->title, 'bio' => (string) $row->bio, 'image' => (string) $row->image,
                 'image_alt' => (string) ($params['image_alt'] ?? ''), 'image_decorative' => (bool) ($params['image_decorative'] ?? false),
                 'website' => (string) ($params['website'] ?? ''), 'access' => (int) $row->access, 'language' => (string) $row->language,
-                'category_access' => array_map('intval',array_column($categories,'access')), 'category_language' => array_column($categories,'language')];
+                'category_access' => array_map('intval', array_column($categories, 'access')), 'category_language' => array_column($categories, 'language')];
         }
         $data = json_decode($presentation, true, 32, JSON_THROW_ON_ERROR);
         $data['teachers'] = $profiles;
@@ -114,7 +114,7 @@ final class TeacherProfiles
         if (!$snapshots) { return []; }
         if (!is_array($snapshots) || count($snapshots) > 50) { throw new \RuntimeException('COM_JLMS_TEACHER_INVALID'); }
         if ($actor->id) { $actor = new User((int) $actor->id); $actor->clearAccessRights(); if (!$actor->id || $actor->block) { return []; } }
-        $current = self::available($db, $actor, $language,array_map(static fn (array $profile): int => (int) $profile['id'],$snapshots));
+        $current = self::available($db, $actor, $language, array_map(static fn (array $profile): int => (int) $profile['id'], $snapshots));
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
         $result = [];
         foreach ($snapshots as $profile) {

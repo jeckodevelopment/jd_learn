@@ -62,7 +62,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <?php if (!$version) : ?>
  <p id="jlms-publication-notice" class="alert alert-info"><?= Text::_($this->publicationNotice) ?></p>
  <form method="post" id="jlms-version-form" action="<?= $link('index.php?option=com_jlms') ?>">
-  <?php $hidden(['course_id'=>$course->id,'revision'=>$course->revision]); ?><input type="hidden" name="task" value="curriculum.createVersion">
+  <?php $hidden(['course_id' => $course->id,'revision' => $course->revision]); ?><input type="hidden" name="task" value="curriculum.createVersion">
   <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_CREATE_DRAFT_VERSION') ?></button>
  </form>
  <?php else : ?>
@@ -177,7 +177,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  ?>
  <section class="jlms-focused-editor" id="jlms-item-action"><h2 class="h3"><?= Text::_($heading) ?>: <?= $this->escape($item->title) ?></h2>
  <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
-  <?php $hidden($scope + ['id'=>$item->id,'revision'=>$item->revision]); ?><input type="hidden" name="task" value="<?= $kind . '.' . $operation ?>">
+  <?php $hidden($scope + ['id' => $item->id,'revision' => $item->revision]); ?><input type="hidden" name="task" value="<?= $kind . '.' . $operation ?>">
   <?php if ($operation === 'duplicate') : ?><label for="jlms-copy-title"><?= Text::_('COM_JLMS_COPY_TITLE') ?></label><input id="jlms-copy-title" class="form-control" name="jform[title]" maxlength="255" required value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $item->title), 0, 255)) ?>"><?php endif; ?>
   <?php if ($kind === 'lesson' && in_array($operation, ['duplicate','move'], true)) : ?>
    <label for="jlms-target-module"><?= Text::_('COM_JLMS_COPY_DESTINATION_MODULE') ?></label><select id="jlms-target-module" name="jform[module_id]" class="form-select" required>
@@ -185,7 +185,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
    </select>
   <?php endif; ?>
   <?php if ($operation === 'reorder') : $direction = \Joomla\CMS\Factory::getApplication()->getInput()->getCmd('direction'); $direction = $direction === 'down' ? 'down' : 'up'; ?>
-   <?php $hidden(['direction'=>$direction]); ?><p><?= Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></p>
+   <?php $hidden(['direction' => $direction]); ?><p><?= Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></p>
   <?php endif; ?>
   <?php if ($operation === 'delete') : ?><p><?= Text::_($kind === 'module' ? 'COM_JLMS_DELETE_EMPTY_MODULE' : 'COM_JLMS_CONFIRM_DELETE_LESSON') ?></p><label><input type="checkbox" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_CONFIRM_DELETE') ?></label><?php endif; ?>
   <div class="jlms-programme-buttons"><?= HTMLHelper::_('form.token') ?><button class="btn <?= $operation === 'delete' ? 'btn-danger' : 'btn-primary' ?>" type="submit"><?= Text::_($heading) ?></button><a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a></div>
@@ -240,7 +240,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <p><?= Text::sprintf('COM_JLMS_PROGRAMME_RESTORE_NOTICE', (int)$version->version_no) ?></p>
   <p><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_KEEP_DRAFTS') ?></p>
   <form method="post" id="jlms-restore-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">
-   <?php $hidden($scope + ['revision'=>$course->revision]); ?><input type="hidden" name="task" value="curriculum.restoreVersion">
+   <?php $hidden($scope + ['revision' => $course->revision]); ?><input type="hidden" name="task" value="curriculum.restoreVersion">
    <label for="jlms-restore-confirm"><input type="checkbox" id="jlms-restore-confirm" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_RESTORE_CONFIRM') ?></label>
    <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary mt-2" type="submit"><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_ACTION') ?></button>
   </form>
@@ -276,7 +276,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
 </aside></div>
 <?php if ($this->editable) : ?>
  <form id="jlms-reorder-form" method="post" action="<?= $link('index.php?option=com_jlms') ?>" hidden>
-  <?php $hidden($scope + ['id'=>0,'direction'=>'up','kind'=>'module','module_id'=>0]); ?><input type="hidden" name="task" value="module.reorder"><?= HTMLHelper::_('form.token') ?>
+  <?php $hidden($scope + ['id' => 0,'direction' => 'up','kind' => 'module','module_id' => 0]); ?><input type="hidden" name="task" value="module.reorder"><?= HTMLHelper::_('form.token') ?>
  </form>
  <?php endif; ?>
  <?php endif; ?>

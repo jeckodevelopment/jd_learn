@@ -153,7 +153,7 @@ sender=(ROOT/'component/administrator/src/Application/CourseMessageMailer.php').
 # The same immutable template snapshot is canonicalized before job lookup and insertion.
 assert "'template' => $plan['template']" in compose
 assert "hash_equals((string) $previous->payload_json, $expectedPayload)" in compose
-assert "'payload_json'=>$expectedPayload" in compose
+assert re.search(r"'payload_json'\s*=>\s*\$expectedPayload", compose)
 assert "'__course_message_snapshot'" in compose and "'__course_message_snapshot'" in dispatch
 assert "CourseMessageTemplate::validate($snapshot, $data)" in dispatch
 assert "CourseMessageMailer::deliver(" in dispatch
@@ -204,12 +204,12 @@ assert 'class="card mt-4 mb-3"' in communication_template
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
 assert 'filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)' in communication
-assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id'=>$mutationId" in communication and 'owner_user_id = :owner' in communication
+assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id' => $mutationId" in communication and 'owner_user_id = :owner' in communication
 assert '->authorised' not in communication.lower() and 'getEnrollmentRosterService' not in communication
 assert "'com_jlms.course.message' => 'communication'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "'com_jlms.course.message'" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 assert 'getCourseCommunicationService()->process' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
-assert "checkToken('post',false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
+assert "checkToken('post', false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
 # Catch undefined component/plugin translation keys, including INI keys assembled in ACL metadata.
 keys=set()
 for p in ROOT.rglob('*.ini'):
@@ -630,12 +630,12 @@ for bad in (
 communication=(ROOT/'component/administrator/src/Application/CourseCommunicationService.php').read_text()
 assert "e.status='active'" in communication and 'u.block=0' in communication
 assert 'filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)' in communication
-assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id'=>$mutationId" in communication and 'owner_user_id = :owner' in communication
+assert 'JSON_UNQUOTE(JSON_EXTRACT(scope_json' in communication and "'mutation_id' => $mutationId" in communication and 'owner_user_id = :owner' in communication
 assert '->authorised' not in communication.lower() and 'getEnrollmentRosterService' not in communication
 assert "'com_jlms.course.message' => 'communication'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "'com_jlms.course.message'" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 assert 'getCourseCommunicationService()->process' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
-assert "checkToken('post',false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
+assert "checkToken('post', false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
 # Catch undefined component/plugin translation keys, including INI keys assembled in ACL metadata.
 keys=set()
 for p in ROOT.rglob('*.ini'):
@@ -1100,8 +1100,8 @@ lesson_notice = (ROOT/'component/administrator/src/Application/LessonReleaseNoti
 version_notice = (ROOT/'component/administrator/src/Application/CourseVersionChangeNotice.php').read_text()
 mail_queue = (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "select('current_version_id, delivery_enabled, state')" in migration_code
-assert "'blocked'=>(int)$courseRecord->state!==1?'COM_JLMS_LEARNING_DENIED'" in migration_code
-assert migration_code.count("if ($plan['blocked']!==null)") >= 2
+assert "'blocked' => (int)$courseRecord->state !== 1 ? 'COM_JLMS_LEARNING_DENIED'" in migration_code
+assert migration_code.count("if ($plan['blocked'] !== null)") >= 2
 assert "->where('c.state = 1')->where('c.delivery_enabled = 1')" in lesson_notice
 assert "->where('c.state = 1')->where('c.delivery_enabled = 1')" in version_notice
 assert mail_queue.count("->where('c.state = 1')->where('c.delivery_enabled = 1')") >= 2

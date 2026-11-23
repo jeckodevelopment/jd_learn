@@ -21,7 +21,7 @@ final class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         if ($this->getLayout() === 'purgepreview') {
             $id = Factory::getApplication()->getInput()->getInt('id', 0);
             $model = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()
@@ -46,7 +46,7 @@ final class HtmlView extends BaseHtmlView
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
         ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_COURSES'), 'graduation-cap');
-        if (\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),$actor)) {
+        if (\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor)) {
             ToolbarHelper::addNew('course.add');
         }
         if ($this->items) {
@@ -63,7 +63,7 @@ final class HtmlView extends BaseHtmlView
                 }
             }
         }
-        if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
+        if ($actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
         ToolbarHelper::help('courses', true);
         parent::display($tpl);
     }

@@ -221,10 +221,10 @@ $db->updateObject('#__jlms_courses', $restoredDescription, 'id');
 $choices = $publication->transitions($actor, $course);
 $publication->transition($actor, $course, $version, (int) $item->revision, $revision(), (int) $choices[0]->id);
 $outline = $catalog->outline($guest, 'en-GB', $course);
-$completion=$outline['completion'];
-presentationExpect($completion['mode']==='learning' && $completion['policy']==='all_required' && is_bool($completion['certificate_planned']),'public course includes published completion and certificate policy');
-presentationExpect(in_array($completion['sequence_mode'],['free','sequential'],true) && (int)$completion['video_threshold_basis_points']>=1,'public completion metadata includes validated sequence and video rules');
-presentationExpect(!isset($completion['private']) && !isset($completion['answer_key']),'public completion projection includes no private grading information');
+$completion = $outline['completion'];
+presentationExpect($completion['mode'] === 'learning' && $completion['policy'] === 'all_required' && is_bool($completion['certificate_planned']), 'public course includes published completion and certificate policy');
+presentationExpect(in_array($completion['sequence_mode'], ['free','sequential'], true) && (int)$completion['video_threshold_basis_points'] >= 1, 'public completion metadata includes validated sequence and video rules');
+presentationExpect(!isset($completion['private']) && !isset($completion['answer_key']), 'public completion projection includes no private grading information');
 
 presentationExpect($outline['presentation']['objectives'] === 'Latest objectives before publication', 'Publication freezes the latest presentation, not the initial draft copy');
 presentationExpect(!str_contains(json_encode($outline), 'PRESENTATION_PRIVATE_LESSON_BODY') && !str_contains(json_encode($outline), 'retain-me'), 'Public projection excludes private lesson content and unrelated params');

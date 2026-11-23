@@ -71,7 +71,7 @@ function builderDenied(callable $work, string $key): void {
     throw new RuntimeException('Expected rejection: ' . $key);
 }
 function builderRow(string $table, int $id): object { global $db; return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject(); }
-function builderCheckout(string $table, int $id, ?int $user): void { global $db; $row=(object)['id'=>$id,'checked_out'=>$user]; $db->updateObject('#__jlms_'.$table,$row,'id',true); }
+function builderCheckout(string $table, int $id, ?int $user): void { global $db; $row = (object)['id' => $id,'checked_out' => $user]; $db->updateObject('#__jlms_' . $table, $row, 'id', true); }
 function builderSnapshot(int $course, int $version): array {
     global $db;
     return [$db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadAssoc(),
@@ -87,75 +87,75 @@ if (in_array($mode, ['checkpoint','retained','state'], true)) {
     if ($mode === 'state') { echo json_encode($snapshot, JSON_THROW_ON_ERROR); return; }
     if ($mode === 'checkpoint') { $f['snapshot'] = $snapshot; file_put_contents($file, json_encode($f, JSON_THROW_ON_ERROR)); return; }
     builderExpect($f['snapshot'] === $snapshot, 'Builder ordering and moves retained after package upgrade');
-    echo json_encode(['curriculum_builder_retained_checks'=>$checks,'status'=>'passed']) . PHP_EOL; return;
+    echo json_encode(['curriculum_builder_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL; return;
 }
 $source = (int) $db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();
 $original = builderRow('courses', $source); $published = builderRow('course_versions', (int)$original->current_version_id);
 $sourceBefore = builderSnapshot($source, (int)$published->id);
 $learning = static fn(): array => [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
 $learningBefore = $learning();
-$model=$factory->createModel('Course','Administrator',['ignore_request'=>true]);
-$course=$model->duplicate(['course_id'=>$source,'version_id'=>$published->id,'revision'=>$original->revision,'expected_version_revision'=>$published->revision,'title'=>'Curriculum builder fixture']);
-$outline=$service->outline($actor,$course); $version=(int)$outline['version']->id;
-$scope = static fn(): array => ['course_id'=>$course,'version_id'=>$version,'expected_version_revision'=>builderRow('course_versions',$version)->revision];
-$m1=$service->saveModule($actor,$scope()+['id'=>0,'title'=>'Builder module one']);
-$m2=$service->saveModule($actor,$scope()+['id'=>0,'title'=>'Builder module two']);
-$l1=$service->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$m1,'title'=>'Builder lesson one','kind'=>'text','body'=>'<p>Preserve this body</p>','required'=>'1']);
-$l2=$service->saveLesson($actor,$scope()+['id'=>0,'module_id'=>$m1,'title'=>'Builder lesson two','kind'=>'text','body'=>'<p>Second body</p>','required'=>'0']);
+$model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
+$course = $model->duplicate(['course_id' => $source,'version_id' => $published->id,'revision' => $original->revision,'expected_version_revision' => $published->revision,'title' => 'Curriculum builder fixture']);
+$outline = $service->outline($actor, $course); $version = (int)$outline['version']->id;
+$scope = static fn(): array => ['course_id' => $course,'version_id' => $version,'expected_version_revision' => builderRow('course_versions', $version)->revision];
+$m1 = $service->saveModule($actor, $scope() + ['id' => 0,'title' => 'Builder module one']);
+$m2 = $service->saveModule($actor, $scope() + ['id' => 0,'title' => 'Builder module two']);
+$l1 = $service->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $m1,'title' => 'Builder lesson one','kind' => 'text','body' => '<p>Preserve this body</p>','required' => '1']);
+$l2 = $service->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $m1,'title' => 'Builder lesson two','kind' => 'text','body' => '<p>Second body</p>','required' => '0']);
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system', 'fields');
-$fieldModel=$app->bootComponent('com_fields')->getMVCFactory()->createModel('Field','Administrator',['ignore_request'=>true]);
-if (!$fieldModel->save(['id'=>0,'context'=>'com_jlms.lesson','title'=>'Lesson editorial fixture',
-    'label'=>'Lesson editorial fixture','name'=>'lesson-editorial-fixture','type'=>'text',
-    'state'=>1,'access'=>1,'language'=>'*','group_id'=>0,'default_value'=>'',
-    'description'=>'','params'=>[],'fieldparams'=>['filter'=>'string']])) {
+$fieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
+if (!$fieldModel->save(['id' => 0,'context' => 'com_jlms.lesson','title' => 'Lesson editorial fixture',
+    'label' => 'Lesson editorial fixture','name' => 'lesson-editorial-fixture','type' => 'text',
+    'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'default_value' => '',
+    'description' => '','params' => [],'fieldparams' => ['filter' => 'string']])) {
     throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
 }
-$lessonField=(int)$fieldModel->getState('field.id');
-if (!$fieldModel->setFieldValue($lessonField,$l1,'Persisted lesson custom value')) {
+$lessonField = (int)$fieldModel->getState('field.id');
+if (!$fieldModel->setFieldValue($lessonField, $l1, 'Persisted lesson custom value')) {
     throw new \RuntimeException('Native lesson field fixture value failed.');
 }
 
-$outline=$service->outline($actor,$course,$version); $ids=array_map(static fn($m): int => (int)$m->id,$outline['modules']);$order=array_reverse($ids);
-$stale=$scope()+['kind'=>'module','order'=>$order];$revision=$service->saveOrder($actor,$stale);
-builderExpect($revision===(int)$stale['expected_version_revision']+1,'One version bump for an atomic sibling permutation');
-builderExpect(array_map(static fn($m): int => (int)$m->id,$service->outline($actor,$course,$version)['modules'])===$order,'Persisted module order matches the submitted exact permutation');
-builderDenied(fn()=>$service->saveOrder($actor,$stale),'COM_JLMS_REVISION_CONFLICT');
-$stable=builderSnapshot($course,$version);
-builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order_json'=>'{invalid']),'COM_JLMS_INVALID_INPUT');
-builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order_json'=>'null']),'COM_JLMS_INVALID_INPUT');
-builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>[$m1,$m1]]),'COM_JLMS_INVALID_INPUT');
-builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>[$m1]]),'COM_JLMS_REVISION_CONFLICT');
-builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>array_merge($ids,[2147483647])]),'COM_JLMS_REVISION_CONFLICT');
-builderExpect(builderSnapshot($course,$version)===$stable,'Rejected permutations change neither records nor revisions');
-$lessonOrder=$scope()+['kind'=>'lesson','module_id'=>$m1,'order'=>[$l2,$l1]];
-$service->saveOrder($actor,$lessonOrder);
-builderExpect(array_map(static fn($l): int => (int)$l->id,array_values(array_filter($service->outline($actor,$course,$version)['lessons'],static fn($l): bool => (int)$l->module_id===$m1)))===[$l2,$l1],'Lesson order persists within its module');
-$old=builderRow('lessons',$l1);$move=$scope()+['id'=>$l1,'revision'=>$old->revision,'module_id'=>$m2];$service->moveLesson($actor,$move);$new=builderRow('lessons',$l1);
-builderExpect((int)$new->module_id===$m2 && (int)$new->revision===(int)$old->revision+1,'Move preserves identity and bumps lesson revision');
-foreach (['logical_key','course_version_id','body','kind','required','source_revision','source_json','media_asset_id'] as $key) { builderExpect($new->$key===$old->$key,'Move preserves '.$key); }
-builderDenied(fn()=>$service->moveLesson($actor,$move),'COM_JLMS_REVISION_CONFLICT');
-$foreignModule=(int)$sourceBefore[2][0]['id'];
-builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$foreignModule]),'COM_JLMS_RESOURCE_NOT_FOUND');
-$quiz=array_values(array_filter($service->outline($actor,$course,$version)['lessons'],static fn($l): bool => $l->kind==='quiz'))[0];
-$quizBefore=$db->setQuery('SELECT * FROM #__jlms_quizzes WHERE lesson_id='.(int)$quiz->id)->loadAssocList();
-$service->moveLesson($actor,$scope()+['id'=>$quiz->id,'revision'=>$quiz->revision,'module_id'=>$m2]);
-builderExpect($quizBefore===$db->setQuery('SELECT * FROM #__jlms_quizzes WHERE lesson_id='.(int)$quiz->id)->loadAssocList(),'Quiz move keeps definition and question revision references intact');
-$guest=new \Joomla\CMS\User\User(0);
-builderDenied(fn()=>$service->saveOrder($guest,$scope()+['kind'=>'module','order'=>$order]),'JERROR_ALERTNOAUTHOR');
-builderDenied(fn()=>$service->moveLesson($guest,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR');
-$other=(int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult();
-builderExpect($other>0,'Disposable learner exists for checkout guard');
-builderCheckout('courses',$course,$other);
-try { builderDenied(fn()=>$service->saveOrder($actor,$scope()+['kind'=>'module','order'=>$order]),'JERROR_ALERTNOAUTHOR'); }
-finally { builderCheckout('courses',$course,null); }
-builderCheckout('lessons',$l1,$other);
-try { builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR'); }
-finally { builderCheckout('lessons',$l1,null); }
-builderCheckout('course_versions',$version,$other);
-try { builderDenied(fn()=>$service->moveLesson($actor,$scope()+['id'=>$l1,'revision'=>$new->revision,'module_id'=>$m1]),'JERROR_ALERTNOAUTHOR'); }
-finally { builderCheckout('course_versions',$version,null); }
-builderDenied(fn()=>$service->saveOrder($actor,['course_id'=>$source,'version_id'=>$published->id,'expected_version_revision'=>$published->revision,'kind'=>'module','order'=>array_column($sourceBefore[2],'id')]),'COM_JLMS_VERSION_IMMUTABLE');
-builderExpect($sourceBefore===builderSnapshot($source,(int)$published->id),'Published source untouched by every draft operation');
-builderExpect($learningBefore===$learning(),'No enrollment, attempt or progress mutation');
-file_put_contents($file,json_encode(['course'=>$course,'version'=>$version,'m1'=>$m1,'m2'=>$m2,'l1'=>$l1,'l2'=>$l2,'source'=>$source,'source_version'=>(int)$published->id,'snapshot'=>builderSnapshot($course,$version)],JSON_THROW_ON_ERROR));
-echo json_encode(['curriculum_builder_native_checks'=>$checks,'status'=>'passed']) . PHP_EOL;
+$outline = $service->outline($actor, $course, $version); $ids = array_map(static fn($m): int => (int)$m->id, $outline['modules']);$order = array_reverse($ids);
+$stale = $scope() + ['kind' => 'module','order' => $order];$revision = $service->saveOrder($actor, $stale);
+builderExpect($revision === (int)$stale['expected_version_revision'] + 1, 'One version bump for an atomic sibling permutation');
+builderExpect(array_map(static fn($m): int => (int)$m->id, $service->outline($actor, $course, $version)['modules']) === $order, 'Persisted module order matches the submitted exact permutation');
+builderDenied(fn()=>$service->saveOrder($actor, $stale), 'COM_JLMS_REVISION_CONFLICT');
+$stable = builderSnapshot($course, $version);
+builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order_json' => '{invalid']), 'COM_JLMS_INVALID_INPUT');
+builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order_json' => 'null']), 'COM_JLMS_INVALID_INPUT');
+builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order' => [$m1,$m1]]), 'COM_JLMS_INVALID_INPUT');
+builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order' => [$m1]]), 'COM_JLMS_REVISION_CONFLICT');
+builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order' => array_merge($ids, [2147483647])]), 'COM_JLMS_REVISION_CONFLICT');
+builderExpect(builderSnapshot($course, $version) === $stable, 'Rejected permutations change neither records nor revisions');
+$lessonOrder = $scope() + ['kind' => 'lesson','module_id' => $m1,'order' => [$l2,$l1]];
+$service->saveOrder($actor, $lessonOrder);
+builderExpect(array_map(static fn($l): int => (int)$l->id, array_values(array_filter($service->outline($actor, $course, $version)['lessons'], static fn($l): bool => (int)$l->module_id === $m1))) === [$l2,$l1], 'Lesson order persists within its module');
+$old = builderRow('lessons', $l1);$move = $scope() + ['id' => $l1,'revision' => $old->revision,'module_id' => $m2];$service->moveLesson($actor, $move);$new = builderRow('lessons', $l1);
+builderExpect((int)$new->module_id === $m2 && (int)$new->revision === (int)$old->revision + 1, 'Move preserves identity and bumps lesson revision');
+foreach (['logical_key','course_version_id','body','kind','required','source_revision','source_json','media_asset_id'] as $key) { builderExpect($new->$key === $old->$key, 'Move preserves ' . $key); }
+builderDenied(fn()=>$service->moveLesson($actor, $move), 'COM_JLMS_REVISION_CONFLICT');
+$foreignModule = (int)$sourceBefore[2][0]['id'];
+builderDenied(fn()=>$service->moveLesson($actor, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $foreignModule]), 'COM_JLMS_RESOURCE_NOT_FOUND');
+$quiz = array_values(array_filter($service->outline($actor, $course, $version)['lessons'], static fn($l): bool => $l->kind === 'quiz'))[0];
+$quizBefore = $db->setQuery('SELECT * FROM #__jlms_quizzes WHERE lesson_id=' . (int)$quiz->id)->loadAssocList();
+$service->moveLesson($actor, $scope() + ['id' => $quiz->id,'revision' => $quiz->revision,'module_id' => $m2]);
+builderExpect($quizBefore === $db->setQuery('SELECT * FROM #__jlms_quizzes WHERE lesson_id=' . (int)$quiz->id)->loadAssocList(), 'Quiz move keeps definition and question revision references intact');
+$guest = new \Joomla\CMS\User\User(0);
+builderDenied(fn()=>$service->saveOrder($guest, $scope() + ['kind' => 'module','order' => $order]), 'JERROR_ALERTNOAUTHOR');
+builderDenied(fn()=>$service->moveLesson($guest, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $m1]), 'JERROR_ALERTNOAUTHOR');
+$other = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult();
+builderExpect($other > 0, 'Disposable learner exists for checkout guard');
+builderCheckout('courses', $course, $other);
+try { builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order' => $order]), 'JERROR_ALERTNOAUTHOR'); }
+finally { builderCheckout('courses', $course, null); }
+builderCheckout('lessons', $l1, $other);
+try { builderDenied(fn()=>$service->moveLesson($actor, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $m1]), 'JERROR_ALERTNOAUTHOR'); }
+finally { builderCheckout('lessons', $l1, null); }
+builderCheckout('course_versions', $version, $other);
+try { builderDenied(fn()=>$service->moveLesson($actor, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $m1]), 'JERROR_ALERTNOAUTHOR'); }
+finally { builderCheckout('course_versions', $version, null); }
+builderDenied(fn()=>$service->saveOrder($actor, ['course_id' => $source,'version_id' => $published->id,'expected_version_revision' => $published->revision,'kind' => 'module','order' => array_column($sourceBefore[2], 'id')]), 'COM_JLMS_VERSION_IMMUTABLE');
+builderExpect($sourceBefore === builderSnapshot($source, (int)$published->id), 'Published source untouched by every draft operation');
+builderExpect($learningBefore === $learning(), 'No enrollment, attempt or progress mutation');
+file_put_contents($file, json_encode(['course' => $course,'version' => $version,'m1' => $m1,'m2' => $m2,'l1' => $l1,'l2' => $l2,'source' => $source,'source_version' => (int)$published->id,'snapshot' => builderSnapshot($course, $version)], JSON_THROW_ON_ERROR));
+echo json_encode(['curriculum_builder_native_checks' => $checks,'status' => 'passed']) . PHP_EOL;

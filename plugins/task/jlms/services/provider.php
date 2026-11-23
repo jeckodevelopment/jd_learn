@@ -11,8 +11,8 @@ use Jlms\Plugin\Task\Jlms\Extension\Jlms;
 return new class implements ServiceProviderInterface {
     public function register(Container $container)
     {
-        $container->set(PluginInterface::class,static function():Jlms {
-            $plugin=new Jlms((array)PluginHelper::getPlugin('task','jlms'));
+        $container->set(PluginInterface::class, static function():Jlms {
+            $plugin = new Jlms((array)PluginHelper::getPlugin('task', 'jlms'));
             $plugin->setApplication(Factory::getApplication());return $plugin;
         });
     }

@@ -116,7 +116,7 @@ foreach ($item['outline'] as $entry) {
    </form><?php endif; ?>
   </section>
   <?php elseif ($selected->kind === 'quiz') : ?>
-  <a id="jlms-lesson-quiz" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=quiz&id='.(int)$item['enrollment_id'].'&lesson_id='.(int)$selected->id) ?>"><?= Text::_('COM_JLMS_QUIZ_OPEN') ?></a>
+  <a id="jlms-lesson-quiz" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$item['enrollment_id'] . '&lesson_id=' . (int)$selected->id) ?>"><?= Text::_('COM_JLMS_QUIZ_OPEN') ?></a>
   <?php else : ?>
   <?php if ($item['progress_applicable']) : ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
    <input type="hidden" name="task" value="lesson.complete">

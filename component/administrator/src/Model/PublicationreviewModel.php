@@ -21,7 +21,7 @@ final class PublicationreviewModel extends BaseDatabaseModel
         try {
             $impact = $app->bootComponent('com_jlms')->getPublicationService()->updateImpact($app->getIdentity(), $course, $version, (int)$plan['transition']);
             if (!$impact || !hash_equals($plan['fingerprint'], $impact['fingerprint'])) { throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_STALE'); }
-            return $impact + ['ticket'=>$plan['ticket']];
+            return $impact + ['ticket' => $plan['ticket']];
         } catch (\DomainException $error) {
             $code = match ($error->getMessage()) { 'JERROR_ALERTNOAUTHOR' => 403, 'COM_JLMS_RESOURCE_NOT_FOUND' => 404, default => 409 };
             throw new \RuntimeException(Text::_($error->getMessage()), $code);

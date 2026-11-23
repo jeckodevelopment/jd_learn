@@ -144,6 +144,6 @@ final class EnrollmentManagerNotice
                 ++$failed;
             }
         }
-        return ['queued'=>$queued, 'failed'=>$failed, 'processed'=>count($rows)];
+        return ['queued' => $queued, 'failed' => $failed, 'processed' => count($rows)];
     }
 }

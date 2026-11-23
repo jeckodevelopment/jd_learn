@@ -84,8 +84,8 @@ final class CourseCommunicationService
             throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
         }
         $hash = hash('sha256', json_encode([$courseId, $subject, $body, $ids, $snapshot], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
-        return ['course_id'=>$courseId,'subject'=>$subject,'body'=>$body,'template'=>$snapshot,
-            'rendered'=>$rendered,'enrollment_ids'=>$ids,'count'=>count($ids),'hash'=>$hash];
+        return ['course_id' => $courseId,'subject' => $subject,'body' => $body,'template' => $snapshot,
+            'rendered' => $rendered,'enrollment_ids' => $ids,'count' => count($ids),'hash' => $hash];
     }
 
     /** Persist a confirmed job. No email addresses or recipient names are stored in the job payload. */
@@ -130,11 +130,11 @@ final class CourseCommunicationService
             if (!$jobId) {
                 $now = gmdate('Y-m-d H:i:s');
                 $job = (object) [
-                    'kind'=>'course_communication','owner_user_id'=>(int) $actor->id,
-                    'scope_json'=>json_encode(['course_id'=>$courseId,'mutation_id'=>$mutationId], JSON_THROW_ON_ERROR),
-                    'payload_json'=>$expectedPayload,
-                    'status'=>'queued','cursor_json'=>json_encode(['offset'=>0], JSON_THROW_ON_ERROR),
-                    'progress_done'=>0,'progress_total'=>$plan['count'],'attempts'=>0,'available_at'=>$now,'created_at'=>$now,
+                    'kind' => 'course_communication','owner_user_id' => (int) $actor->id,
+                    'scope_json' => json_encode(['course_id' => $courseId,'mutation_id' => $mutationId], JSON_THROW_ON_ERROR),
+                    'payload_json' => $expectedPayload,
+                    'status' => 'queued','cursor_json' => json_encode(['offset' => 0], JSON_THROW_ON_ERROR),
+                    'progress_done' => 0,'progress_total' => $plan['count'],'attempts' => 0,'available_at' => $now,'created_at' => $now,
                 ];
                 $this->db->insertObject('#__jlms_jobs', $job, 'id');
                 $jobId = (int) $job->id;
@@ -142,7 +142,7 @@ final class CourseCommunicationService
             }
             if ($created) {
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record($actor,
-                    ['id'=>$jobId,'course_id'=>$courseId,'recipient_count'=>$plan['count'],'event'=>'queued','correlation_id'=>$mutationId], 'coursecommunication');
+                    ['id' => $jobId,'course_id' => $courseId,'recipient_count' => $plan['count'],'event' => 'queued','correlation_id' => $mutationId], 'coursecommunication');
             }
             $this->db->transactionCommit();
             return $jobId;
@@ -180,14 +180,14 @@ final class CourseCommunicationService
             ->where("kind='course_communication'")->where("status IN ('queued','running')")
             ->where('(lease_until IS NULL OR lease_until < UTC_TIMESTAMP(6))')->order('id')->setLimit(1);
         $job = $this->db->setQuery($jobs)->loadObject();
-        if (!$job) { return ['queued'=>0,'processed'=>0,'failed'=>0]; }
+        if (!$job) { return ['queued' => 0,'processed' => 0,'failed' => 0]; }
         $token = bin2hex(random_bytes(32));
         $claim = $this->db->createQuery()->update('#__jlms_jobs')->set("status='running'")
-            ->set('lease_token='.$this->db->quote($token))->set('lease_until=DATE_ADD(UTC_TIMESTAMP(6), INTERVAL 5 MINUTE)')
-            ->set('attempts=attempts+1')->where('id='.(int) $job->id)
+            ->set('lease_token=' . $this->db->quote($token))->set('lease_until=DATE_ADD(UTC_TIMESTAMP(6), INTERVAL 5 MINUTE)')
+            ->set('attempts=attempts+1')->where('id=' . (int) $job->id)
             ->where("status IN ('queued','running')")->where('(lease_until IS NULL OR lease_until < UTC_TIMESTAMP(6))');
         $this->db->setQuery($claim)->execute();
-        if ($this->db->getAffectedRows() !== 1) { return ['queued'=>0,'processed'=>0,'failed'=>0]; }
+        if ($this->db->getAffectedRows() !== 1) { return ['queued' => 0,'processed' => 0,'failed' => 0]; }
 
         try {
             $scope = json_decode((string) $job->scope_json, true, 16, JSON_THROW_ON_ERROR);
@@ -213,19 +213,19 @@ final class CourseCommunicationService
             }
             $next = $offset + count($slice);
             $done = min((int) $job->progress_total, $next);
-            $update = $this->db->createQuery()->update('#__jlms_jobs')->set('cursor_json='.$this->db->quote(json_encode(['offset'=>$next], JSON_THROW_ON_ERROR)))
-                ->set('progress_done='.$done)->set('lease_token=NULL')->set('lease_until=NULL')->where('id='.(int) $job->id)->where('lease_token='.$this->db->quote($token));
-            if ($next >= count($all)) { $update->set("status='succeeded'")->set('payload_json='.$this->db->quote('{}'))->set('finished_at=UTC_TIMESTAMP(6)'); }
+            $update = $this->db->createQuery()->update('#__jlms_jobs')->set('cursor_json=' . $this->db->quote(json_encode(['offset' => $next], JSON_THROW_ON_ERROR)))
+                ->set('progress_done=' . $done)->set('lease_token=NULL')->set('lease_until=NULL')->where('id=' . (int) $job->id)->where('lease_token=' . $this->db->quote($token));
+            if ($next >= count($all)) { $update->set("status='succeeded'")->set('payload_json=' . $this->db->quote('{}'))->set('finished_at=UTC_TIMESTAMP(6)'); }
             else { $update->set("status='queued'")->set('available_at=UTC_TIMESTAMP(6)'); }
             $this->db->setQuery($update)->execute();
-            return ['queued'=>count($slice),'processed'=>count($slice),'failed'=>0];
+            return ['queued' => count($slice),'processed' => count($slice),'failed' => 0];
         } catch (\Throwable $error) {
             $update = $this->db->createQuery()->update('#__jlms_jobs')->set("status='failed'")
                 ->set("error_code='course_communication_failed'")->set('lease_token=NULL')->set('lease_until=NULL')
-                ->set('payload_json='.$this->db->quote('{}'))->set('finished_at=UTC_TIMESTAMP(6)')
-                ->where('id='.(int) $job->id)->where('lease_token='.$this->db->quote($token));
+                ->set('payload_json=' . $this->db->quote('{}'))->set('finished_at=UTC_TIMESTAMP(6)')
+                ->where('id=' . (int) $job->id)->where('lease_token=' . $this->db->quote($token));
             $this->db->setQuery($update)->execute();
-            return ['queued'=>0,'processed'=>0,'failed'=>1];
+            return ['queued' => 0,'processed' => 0,'failed' => 1];
         }
     }
 
@@ -234,15 +234,15 @@ final class CourseCommunicationService
     {
         $site = (string) \Joomla\CMS\Factory::getApplication()->get('sitename');
         return [
-            'USER_FULLNAME'=>$recipientName,
-            'USER_FULLNAME_HTML'=>htmlspecialchars($recipientName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            'COURSE_TITLE'=>$courseTitle,
-            'COURSE_TITLE_HTML'=>htmlspecialchars($courseTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-            'MESSAGE_SUBJECT'=>$subject,
-            'MESSAGE_BODY_TEXT'=>$body,
-            'MESSAGE_BODY_HTML'=>nl2br(htmlspecialchars($body, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), false),
-            'SITE_NAME'=>$site,
-            'SITE_NAME_HTML'=>htmlspecialchars($site, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'USER_FULLNAME' => $recipientName,
+            'USER_FULLNAME_HTML' => htmlspecialchars($recipientName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'COURSE_TITLE' => $courseTitle,
+            'COURSE_TITLE_HTML' => htmlspecialchars($courseTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+            'MESSAGE_SUBJECT' => $subject,
+            'MESSAGE_BODY_TEXT' => $body,
+            'MESSAGE_BODY_HTML' => nl2br(htmlspecialchars($body, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), false),
+            'SITE_NAME' => $site,
+            'SITE_NAME_HTML' => htmlspecialchars($site, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
         ];
     }
 
@@ -250,8 +250,8 @@ final class CourseCommunicationService
     {
         if (!$ids) { return []; }
         $q = $this->db->createQuery()->select('e.id,u.email')->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id=e.user_id')
-            ->where('e.course_id=:course')->where("e.status='active'")->where('u.block=0')->bind(':course',$courseId,ParameterType::INTEGER)
-            ->where('e.id IN ('.implode(',',array_map('intval',$ids)).')')->order('e.id');
+            ->where('e.course_id=:course')->where("e.status='active'")->where('u.block=0')->bind(':course', $courseId, ParameterType::INTEGER)
+            ->where('e.id IN (' . implode(',', array_map('intval', $ids)) . ')')->order('e.id');
         $valid = [];
         foreach ($this->db->setQuery($q)->loadObjectList() as $row) {
             if (filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)) { $valid[] = (int) $row->id; }
@@ -264,7 +264,7 @@ final class CourseCommunicationService
         $q = $this->db->createQuery()->select('u.id,u.name,u.email,u.block,u.params AS user_params,c.title AS course_title')
             ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id=e.user_id')->innerJoin('#__jlms_courses AS c ON c.id=e.course_id')
             ->where('e.id=:enrollment')->where('e.course_id=:course')->where("e.status='active'")->where('u.block=0')
-            ->bind(':enrollment',$enrollmentId,ParameterType::INTEGER)->bind(':course',$courseId,ParameterType::INTEGER);
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':course', $courseId, ParameterType::INTEGER);
         $row = $this->db->setQuery($q)->loadObject();
         if (!$row) { return null; }
         if (!filter_var((string) $row->email, FILTER_VALIDATE_EMAIL)) { return null; }

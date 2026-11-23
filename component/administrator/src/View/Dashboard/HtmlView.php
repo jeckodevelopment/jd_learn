@@ -26,7 +26,7 @@ final class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        $actor=\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         ToolbarHelper::title('JD Learn', 'graduation-cap');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.admin-dashboard');
         // Each section is rendered only when the current actor can access a shortcut.
@@ -83,7 +83,7 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder', 'index.php?option=com_jlms&view=categoryreassignment');
         }
-        if ($actor->authorise('core.options','com_jlms') || $actor->authorise('core.admin','com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
+        if ($actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         // A non-manager must not inspect plugin readiness or invoke provider
         // registration hooks simply by opening the administrative dashboard.

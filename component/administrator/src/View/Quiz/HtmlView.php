@@ -10,7 +10,7 @@ final class HtmlView extends BaseHtmlView
     public bool $canManageQuizTime = false;
     public function display($tpl = null)
     {
-        $this->item=$this->get('Item');$this->form=$this->get('Form');
+        $this->item = $this->get('Item');$this->form = $this->get('Form');
         $data = $this->item['data'];
         $actor = \Joomla\CMS\Factory::getApplication()->getIdentity();
         $asset = 'com_jlms.course.' . (int) $data['course_id'];
@@ -18,17 +18,17 @@ final class HtmlView extends BaseHtmlView
             && (int) $data['lesson_id'] > 0
             && $actor->authorise('jlms.enrollments.manage', $asset)
             && $actor->authorise('jlms.assessment.correct', $asset);
-        $field=new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />');
-        foreach($this->item['modules']as$module){$field->addChild('option',htmlspecialchars($module->title,ENT_XML1))->addAttribute('value',(string)$module->id);}
+        $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />');
+        foreach($this->item['modules']as$module){$field->addChild('option', htmlspecialchars($module->title, ENT_XML1))->addAttribute('value', (string)$module->id);}
         if (empty($this->item['data']['lesson_id'])) {
-            $selected=\Joomla\CMS\Factory::getApplication()->getInput()->getInt('module_id');
+            $selected = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('module_id');
             if ($selected) {
-                if (!in_array($selected,array_map(static fn($m): int => (int)$m->id,$this->item['modules']),true)) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND',404); }
-                $this->item['data']['module_id']=$selected;
+                if (!in_array($selected, array_map(static fn($m): int => (int)$m->id, $this->item['modules']), true)) { throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404); }
+                $this->item['data']['module_id'] = $selected;
             }
         }
         $this->form->setField($field);$this->form->bind($this->item['data']);
-        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_EDITOR'),'list');ToolbarHelper::help('quiz', true);
+        \Joomla\CMS\Toolbar\ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_QUIZ_EDITOR'), 'list');ToolbarHelper::help('quiz', true);
         parent::display($tpl);
     }
 }

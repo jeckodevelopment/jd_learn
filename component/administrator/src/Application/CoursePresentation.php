@@ -111,8 +111,8 @@ final class CoursePresentation
             CourseArtwork::validateLocal($details['image']);
             $snapshot['details'] = $details;
         }
-        $calendar=CourseSchedule::snapshot($course);
-        if ($calendar!==null) { $snapshot['calendar']=$calendar; }
+        $calendar = CourseSchedule::snapshot($course);
+        if ($calendar !== null) { $snapshot['calendar'] = $calendar; }
         return json_encode($snapshot, JSON_THROW_ON_ERROR);
     }
 

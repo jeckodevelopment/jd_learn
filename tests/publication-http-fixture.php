@@ -27,7 +27,7 @@ if ($operation === 'material-add') {
     $q->execute([$attachmentId]); $assetId = (int) $q->fetchColumn();
     if (!$assetId) { throw new RuntimeException('Readiness fixture material not found'); }
     $db->beginTransaction();
-    try { $q=$db->prepare('DELETE FROM joomla_jlms_attachments WHERE id=?');$q->execute([$attachmentId]);$q=$db->prepare('DELETE FROM joomla_jlms_assets WHERE id=?');$q->execute([$assetId]);$db->commit(); }
+    try { $q = $db->prepare('DELETE FROM joomla_jlms_attachments WHERE id=?');$q->execute([$attachmentId]);$q = $db->prepare('DELETE FROM joomla_jlms_assets WHERE id=?');$q->execute([$assetId]);$db->commit(); }
     catch (Throwable $error) { $db->rollBack(); throw $error; }
     echo json_encode(['removed' => true], JSON_THROW_ON_ERROR) . "\n"; exit;
 } elseif ($operation === 'plugin') {

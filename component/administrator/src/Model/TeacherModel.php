@@ -53,9 +53,9 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             $allowed = ['id', 'revision', 'title', 'alias', 'catid', 'bio', 'image', 'image_alt', 'image_decorative', 'website', 'language', 'access', 'state', 'user_id', 'com_fields', 'version_note'];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id','revision','catid','access','state'] as $key) {
-                if (array_key_exists($key,$data) && ((!is_int($data[$key]) && !is_string($data[$key])) || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D',(string) $data[$key]))) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
+                if (array_key_exists($key, $data) && ((!is_int($data[$key]) && !is_string($data[$key])) || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
             }
-            if (isset($data['state']) && !in_array((string) $data['state'],['-2','0','1'],true)) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
+            if (isset($data['state']) && !in_array((string) $data['state'], ['-2','0','1'], true)) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
             $id = (int) ($data['id'] ?? 0); $record = null;
             if ($id) {
                 $q = $db->createQuery()->select('*')->from('#__jlms_teachers')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);

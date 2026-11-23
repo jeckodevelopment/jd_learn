@@ -37,7 +37,7 @@ final class PublicationImpact
     private function structure(int $version): array
     {
         $modules = $this->rows('SELECT id,logical_key,title,ordering,SHA2(params_json,256) AS settings FROM #__jlms_modules WHERE course_version_id=:version ORDER BY ordering,id', $version, 1000);
-        $moduleKeys = []; $result = ['modules'=>[], 'lessons'=>[], 'quizzes'=>[], 'materials'=>[]];
+        $moduleKeys = []; $result = ['modules' => [], 'lessons' => [], 'quizzes' => [], 'materials' => []];
         foreach ($modules as $row) {
             $moduleKeys[$row['id']] = $row['logical_key']; unset($row['id']);
             $result['modules'][$row['logical_key']] = $row;
@@ -60,7 +60,7 @@ final class PublicationImpact
             $rows = $this->db->setQuery($query, 0, 6401)->loadAssocList();
             if (count($rows) > 6400) { throw new \DomainException('COM_JLMS_OUTLINE_LIMIT'); }
             foreach ($rows as $question) { $id = $question['quiz_id']; unset($question['quiz_id']); $questionRows[$id][] = $question; }
-            foreach ($questionRows as $id=>$questions) {
+            foreach ($questionRows as $id => $questions) {
                 if (count($questions) > 200) { throw new \DomainException('COM_JLMS_OUTLINE_LIMIT'); }
                 $questionHashes[$id] = self::hash($questions);
             }
@@ -72,7 +72,7 @@ final class PublicationImpact
             $row['selection_json'] = self::canonical($selection);
             $row['questions_hash'] = $questionHashes[$row['id']] ?? self::hash([]);
             unset($row['id'], $row['lesson_id']);
-            $result['quizzes'][$key] = ['title'=>$result['lessons'][$key]['title']] + $row;
+            $result['quizzes'][$key] = ['title' => $result['lessons'][$key]['title']] + $row;
         }
         $attachments = $this->rows('SELECT a.lesson_id,a.asset_id,a.title,SHA2(COALESCE(a.description,\'\'),256) AS description_hash,a.ordering,a.state,a.preview,a.publish_up,a.publish_down,f.sha256,f.status FROM #__jlms_attachments AS a INNER JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id=:version ORDER BY a.ordering,a.id', $version, 1000);
         $occurrences = [];
@@ -87,13 +87,13 @@ final class PublicationImpact
 
     private static function changes(array $before, array $after): array
     {
-        $diff = ['added'=>0, 'changed'=>0, 'removed'=>0, 'details'=>[]];
-        foreach ($after as $key=>$item) {
+        $diff = ['added' => 0, 'changed' => 0, 'removed' => 0, 'details' => []];
+        foreach ($after as $key => $item) {
             $kind = !isset($before[$key]) ? 'added' : (self::hash($item) !== self::hash($before[$key]) ? 'changed' : '');
-            if ($kind !== '') { $diff[$kind]++; if (count($diff['details']) < 100) { $diff['details'][] = ['kind'=>$kind, 'title'=>$item['title']]; } }
+            if ($kind !== '') { $diff[$kind]++; if (count($diff['details']) < 100) { $diff['details'][] = ['kind' => $kind, 'title' => $item['title']]; } }
         }
-        foreach ($before as $key=>$item) {
-            if (!isset($after[$key])) { $diff['removed']++; if (count($diff['details']) < 100) { $diff['details'][] = ['kind'=>'removed', 'title'=>$item['title']]; } }
+        foreach ($before as $key => $item) {
+            if (!isset($after[$key])) { $diff['removed']++; if (count($diff['details']) < 100) { $diff['details'][] = ['kind' => 'removed', 'title' => $item['title']]; } }
         }
         return $diff;
     }
@@ -139,14 +139,14 @@ final class PublicationImpact
     public function build(object $course, object $source, object $draft, int $transition, int $actor): array
     {
         $before = $this->structure((int) $source->id); $after = $this->structure((int) $draft->id);
-        $diff = []; foreach ($before as $kind=>$items) { $diff[$kind] = self::changes($items, $after[$kind]); }
+        $diff = []; foreach ($before as $kind => $items) { $diff[$kind] = self::changes($items, $after[$kind]); }
         $rulesBefore = self::canonical(json_decode($source->rules_json, true, 32, JSON_THROW_ON_ERROR));
         $rulesAfter = self::canonical(json_decode($draft->rules_json, true, 32, JSON_THROW_ON_ERROR));
         $oldThreshold = $rulesBefore['video_threshold_basis_points'] ?? 9000;
         $newThreshold = $rulesAfter['video_threshold_basis_points'] ?? 9000;
         $thresholdChange = is_int($oldThreshold) && is_int($newThreshold) && $oldThreshold >= 1 && $oldThreshold <= 10000
             && $newThreshold >= 1 && $newThreshold <= 10000 && $oldThreshold !== $newThreshold
-            ? ['before'=>$oldThreshold, 'after'=>$newThreshold] : null;
+            ? ['before' => $oldThreshold, 'after' => $newThreshold] : null;
         $query = $this->db->createQuery()->select('v.version_no,COUNT(e.id) AS total')->from('#__jlms_enrollments AS e')
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
             ->where('e.course_id=:course')->group('v.id,v.version_no')->order('v.version_no');
@@ -155,7 +155,7 @@ final class PublicationImpact
         if (count($enrollments) > 100) { throw new \DomainException('COM_JLMS_OUTLINE_LIMIT'); }
         // Enrollment counts are informational at preview time; admissions do not invalidate a programme review.
         $fingerprint = self::hash([$id,(int)$course->revision,(int)$source->id,(int)$source->revision,(int)$draft->id,(int)$draft->revision,$transition,$actor,$before,$after,$rulesBefore,$rulesAfter,$draft->fields_snapshot_json]);
-        return ['course'=>$course, 'version'=>$draft, 'source'=>$source, 'transition_id'=>$transition,
-            'changes'=>$diff, 'video_threshold_change'=>$thresholdChange, 'rules_changed'=>$rulesBefore !== $rulesAfter, 'enrollments'=>$enrollments, 'fingerprint'=>$fingerprint];
+        return ['course' => $course, 'version' => $draft, 'source' => $source, 'transition_id' => $transition,
+            'changes' => $diff, 'video_threshold_change' => $thresholdChange, 'rules_changed' => $rulesBefore !== $rulesAfter, 'enrollments' => $enrollments, 'fingerprint' => $fingerprint];
     }
 }

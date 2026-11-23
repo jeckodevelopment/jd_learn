@@ -16,7 +16,7 @@ final class HtmlView extends BaseHtmlView
         $this->selectionForm->bind($this->item['selection']);
         if ($this->item['preview']) {
             $p = $this->item['preview']['impact']; $k = bin2hex(random_bytes(16));
-            $k = substr($k,0,8).'-'.substr($k,8,4).'-4'.substr($k,13,3).'-a'.substr($k,17,3).'-'.substr($k,20);
+            $k = substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3) . '-' . substr($k, 20);
             $this->form->bind(['course_id' => $p['course_id'], 'user_id' => $p['user_id'], 'language' => $p['language'], 'impact_hash' => $p['hash'], 'mutation_id' => $k, 'preassignment' => (int) $p['preassignment']]);
         }
         ToolbarHelper::title(Text::_('COM_JLMS_MANUAL_TITLE'), 'user-plus');

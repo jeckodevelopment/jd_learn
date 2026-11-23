@@ -29,7 +29,7 @@ final class CoursesModel extends ListModel
         }
         if ($input->get('list', null, 'array') !== null) {
             $list = array_intersect_key($input->get('list', [], 'array'), array_flip(['fullordering','ordering','direction','limit']));
-            foreach ($list as $key=>&$value) {
+            foreach ($list as $key => &$value) {
                 if (!is_scalar($value)) { $value = $key === 'limit' ? 20 : ($key === 'fullordering' ? 'a.id DESC' : ''); }
             }
             unset($value); $input->set('list', $list);

@@ -25,7 +25,7 @@ final class LessonController extends CurriculumController
             $plans = $this->app->getUserState('com_jlms.video.duration', []);
             $plans = array_filter(is_array($plans) ? $plans : [], static fn($p): bool=>is_array($p) && ($p['expires'] ?? 0) >= time());
             $plans = array_slice($plans, -7, null, true); $ticket = bin2hex(random_bytes(32));
-            $plans[$ticket] = ['fingerprint'=>$data['fingerprint'],'duration_ms'=>$data['duration_ms'],'origin'=>$data['origin'],'expires'=>time()+900];
+            $plans[$ticket] = ['fingerprint' => $data['fingerprint'],'duration_ms' => $data['duration_ms'],'origin' => $data['origin'],'expires' => time() + 900];
             $this->app->setUserState('com_jlms.video.duration', $plans);
             unset($data['fingerprint']); $data['ticket'] = $ticket;
             $data['adapter_url'] = is_string($data['provider'] ?? null)
@@ -44,9 +44,9 @@ final class LessonController extends CurriculumController
             $data = null;
         }
         $this->app->setHeader('status', (string)$code, true); http_response_code($code);
-        $this->app->setHeader('Content-Type','application/json; charset=utf-8',true);
-        $this->app->setHeader('Cache-Control','private, no-store',true);
-        echo new \Joomla\CMS\Response\JsonResponse($data,$message,$code!==200,true); $this->app->close();
+        $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        echo new \Joomla\CMS\Response\JsonResponse($data, $message, $code !== 200, true); $this->app->close();
     }
 
     public function move(): void { $this->perform('move', 'lesson'); }
