@@ -74,6 +74,7 @@ jobs:
           .runtime/secdev02-phpcs/vendor/bin/phpcs --version
           python3 tests/secdev02-psr12-phpcs.py --self-test
           python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          php tests/secdev02-compat6-disabled.php --self-test
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
@@ -228,12 +229,14 @@ jobs:
           echo '67a107c83b3084701a1a4acb151cd0452e5deaaf  /tmp/joomla.zip' | sha1sum --check --status
           unzip -q /tmp/joomla.zip -d .runtime/joomla
           php .runtime/joomla/installation/joomla.php install --site-name="JD Learn CI" --admin-user="CI Operator" --admin-username=cioperator --admin-password="Ci-only-Long-Password-2026" --admin-email=ci@example.invalid --db-type=mysqli --db-host=db --db-user=jlms_ci --db-pass=ci-disposable-password --db-name=jlms_test --db-prefix=joomla_ --db-encryption=0 --public-folder="" --no-interaction
+          php tests/secdev02-compat6-disabled.php .runtime/joomla
           python3 .runtime/previous-source/tools/build.py
           php .runtime/joomla/cli/joomla.php extension:install --path="$(pwd)/.runtime/previous-source/dist/pkg_jlms-0.40.1-dev.zip" --no-interaction
           php -r 'ob_start(); $script = $argv[1]; array_shift($argv); require $script;' .runtime/previous-source/tests/joomla-smoke.php .runtime/joomla
           php tests/legacy-time-fixture.php .runtime/joomla
           PACKAGE_VERSION="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
           php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-${PACKAGE_VERSION}.zip"
+          php tests/secdev02-compat6-disabled.php .runtime/joomla
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
