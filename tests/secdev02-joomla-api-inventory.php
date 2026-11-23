@@ -82,6 +82,10 @@ require $root . '/administrator/includes/framework.php';
 
 // Joomla component classes are registered through its native extension map.
 $container = \Joomla\CMS\Factory::getContainer();
+$container->alias('session.web', 'session.web.administrator')
+    ->alias('session', 'session.web.administrator')
+    ->alias(\Joomla\CMS\Session\Session::class, 'session.web.administrator')
+    ->alias(\Joomla\Session\SessionInterface::class, 'session.web.administrator');
 $app = $container->get(\Joomla\CMS\Application\AdministratorApplication::class);
 \Joomla\CMS\Factory::$application = $app;
 $app->createExtensionNamespaceMap();
