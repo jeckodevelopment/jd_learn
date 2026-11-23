@@ -1,0 +1,39 @@
+name: SECDEV-02 structural diagnostics one-shot
+on:
+  push:
+    branches: [style/secdev02-structural-128-remediation]
+    paths: [.github/workflows/secdev02-structural-diagnostics.yml]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+      - name: Install pinned PHPCS
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Show structural error files and rule categories
+        shell: bash
+        run: |
+          set +e
+          find component libraries plugins packages tests -type f -name '*.php' -print0 | xargs -0 .runtime/secdev02-phpcs/vendor/bin/phpcs --standard=PSR12 --report=json > /tmp/structural.json
+          python3 - <<'PY'
+          import json, collections
+          d=json.load(open('/tmp/structural.json'))
+          findings=collections.defaultdict(list)
+          for name,detail in d['files'].items():
+              for m in detail['messages']:
+                  if m['source']!='Generic.Files.LineLength.TooLong':
+                      findings[m['source']].append((name, m['line'], m['message']))
+          for kind,errors in sorted(findings.items(),key=lambda x:-len(x[1])):
+              print('RULE',kind,'COUNT',len(errors),flush=True)
+              for e in errors[:75]:
+                  print('  ',e[0],e[1],e[2][:145],flush=True)
+          PY
