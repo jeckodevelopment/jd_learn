@@ -17,6 +17,7 @@ if (in_array('--self-test', $argv, true)) {
 <?php
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text as NativeText;
+use Joomla\CMS\User\User as NativeUser;
 use Joomla\CMS\Event\Finder as FinderEvent;
 $container = Factory::getContainer();
 $value = NativeText::_('TEST');
@@ -35,7 +36,7 @@ PHP;
         || !in_array('Joomla\CMS\Event\Finder\AfterSaveEvent', $found['classes'], true)
         || in_array('Joomla\CMS\Event\Finder', $found['classes'], true)
         || count($found['static_methods']) !== 2
-        || $found['object_call_sites'] !== 2
+        || $found['object_call_sites'] !== 3
         || $found['direct_instance_methods'] !== [['Joomla\\CMS\\User\\User', 'get']]
     ) {
         throw new RuntimeException('Joomla static inventory fixture mismatch');
