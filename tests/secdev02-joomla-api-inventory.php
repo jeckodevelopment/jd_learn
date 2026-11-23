@@ -17,12 +17,15 @@ if (in_array('--self-test', $argv, true)) {
 <?php
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text as NativeText;
+use Joomla\CMS\User\User as NativeUser;
 use Joomla\CMS\Event\Finder as FinderEvent;
 $container = Factory::getContainer();
 $value = NativeText::_('TEST');
 $thing = new \Joomla\CMS\User\User();
 $event = new FinderEvent\AfterSaveEvent();
 $thing->get('id');
+(new \Joomla\CMS\User\User())->get('id');
+(new NativeUser())?->get('id');
 PHP;
 
     $found = secdev02JoomlaTokenInventory($source);
@@ -34,7 +37,8 @@ PHP;
         || !in_array('Joomla\CMS\Event\Finder\AfterSaveEvent', $found['classes'], true)
         || in_array('Joomla\CMS\Event\Finder', $found['classes'], true)
         || count($found['static_methods']) !== 2
-        || $found['object_call_sites'] !== 1
+        || $found['object_call_sites'] !== 3
+        || $found['direct_instance_methods'] !== [['Joomla\\CMS\\User\\User', 'get']]
     ) {
         throw new RuntimeException('Joomla static inventory fixture mismatch');
     }
@@ -49,7 +53,18 @@ PHP;
         static fn (string $className, string $method): bool => false
     );
 
-    if (count($failures) !== 2) {
+    $failures = array_merge($failures, secdev02JoomlaAuditFailures(
+        [
+            'classes' => [],
+            'static_methods' => [],
+            'direct_instance_methods' => [['Joomla\\CMS\\User\\User', 'missingMethod']],
+            'unsupported_imports' => [],
+        ],
+        static fn (string $className): bool => $className === 'Joomla\\CMS\\User\\User',
+        static fn (string $className, string $method): bool => false
+    ));
+
+    if (count($failures) !== 3) {
         throw new RuntimeException('Joomla removed API negative fixture failed');
     }
 
@@ -131,6 +146,7 @@ if (count($paths) < 250) {
 
 $symbols = [];
 $methods = [];
+$directInstanceMethods = [];
 $invalidImports = [];
 $objectCallSites = 0;
 $dynamicStaticSites = 0;
@@ -153,6 +169,10 @@ foreach ($paths as $path) {
         $methods[$className . '::' . $method] = [$className, $method];
     }
 
+    foreach ($inventory['direct_instance_methods'] as [$className, $method]) {
+        $directInstanceMethods[$className . '::' . $method] = [$className, $method];
+    }
+
     foreach ($inventory['unsupported_imports'] as $item) {
         $invalidImports[] = $path . ': ' . $item;
     }
@@ -163,9 +183,11 @@ foreach ($paths as $path) {
 
 ksort($symbols);
 ksort($methods);
+ksort($directInstanceMethods);
 $results = [
     'classes' => array_keys($symbols),
     'static_methods' => array_values($methods),
+    'direct_instance_methods' => array_values($directInstanceMethods),
     'unsupported_imports' => $invalidImports,
 ];
 
@@ -188,7 +210,8 @@ $report = [
     'php_files' => $covered,
     'unique_joomla_symbols' => count($symbols),
     'unique_static_method_calls' => count($methods),
-    'unresolved_object_method_sites' => $objectCallSites,
+    'verified_direct_instance_method_calls' => count($directInstanceMethods),
+    'object_method_sites_needing_flow_analysis' => $objectCallSites,
     'unresolved_dynamic_static_sites' => $dynamicStaticSites,
     'failures' => count($failures),
 ];
