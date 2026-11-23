@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Contracts\Video;
 
 final class VideoProviderRegistry implements VideoProviderRegistryInterface
@@ -28,15 +27,19 @@ final class VideoProviderRegistry implements VideoProviderRegistryInterface
         if (!isset($this->factories[$providerKey])) {
             throw new \DomainException('PROVIDER_UNAVAILABLE');
         }
+
         if (!isset($this->instances[$providerKey])) {
             $adapter = ($this->factories[$providerKey])();
-            if (!$adapter instanceof VideoProviderInterface
+            if (
+                !$adapter instanceof VideoProviderInterface
                 || $adapter->getDescriptor()->key !== $providerKey
-                || $adapter->getDescriptor()->contractMajor !== $this->descriptors[$providerKey]->contractMajor) {
+                || $adapter->getDescriptor()->contractMajor !== $this->descriptors[$providerKey]->contractMajor
+            ) {
                 throw new \DomainException('PROVIDER_CONTRACT_MISMATCH');
             }
             $this->instances[$providerKey] = $adapter;
         }
+
         return $this->instances[$providerKey];
     }
 
