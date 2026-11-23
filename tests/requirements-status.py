@@ -66,6 +66,17 @@ class Reconciliation(unittest.TestCase):
   self.assertEqual(row['Criteri completi superati'],'No')
   self.assertEqual(row['Accettazione Joomla'],'Non eseguita')
   self.check()
+ def test_secdev03_software_completed_without_joomla_acceptance(self):
+  row=next(r for r in self.rows if r['Requisito']=='SECDEV-03')
+  units=json.loads((ROOT/'docs/FUNCTIONAL_CRITERIA_1.0.0.json').read_text())['requirements']['SECDEV-03']
+  self.assertEqual(len(units),4)
+  self.assertTrue(all(unit['status']=='implemented' and unit['evidence'] for unit in units))
+  self.assertEqual(row['Stato implementazione'],'Completata')
+  self.assertTrue(row['Residui implementativi 1.0.0'].startswith('Nessuno'))
+  self.assertEqual(row['Accettazione Joomla'],'Non eseguita')
+  self.assertEqual(row['Criteri completi superati'],'No')
+  self.assertIn('tests/secdev03-implementation-coverage.py',row['Fonti test parziali'])
+  self.check()
  def test_mail11_template_is_partial_not_fully_implemented(self):
   row=next(r for r in self.rows if r['Requisito']=='MAIL-11')
   self.assertEqual(row['Stato implementazione'],'Completata')

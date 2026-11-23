@@ -9786,74 +9786,96 @@
       {
         "id": "criterion_01",
         "label": "Input, query e output",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "docs/LEARNING.md",
-          "component/administrator/src/Application/LearningService.php",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "tests/secdev03-implementation-coverage.py",
+          "tests/sec-p1-controller-gates.py",
+          "tests/sec-p1-cross-surface-gate.py",
+          "docs/SEC_P1_THREAT_MODEL_1.0.0.md",
+          "docs/SECDEV03_INPUT_OUTPUT_EVIDENCE_1.0.0.md"
         ],
         "review": {
-          "reason": "Il repository contiene codice e prove per flussi specifici collegati a input, query e output, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "reason": "Implementazione 1.0.0 delimitata al package: inventario dei controller, plugin e template distribuiti con gate runtime e test HTTP/DB; il threat model SEC-P1 copre le superfici software. Prove manuali su hosting, ruoli reali e override di terzi restano nei gate separati.",
           "references": [
-            "docs/LEARNING.md#L1-L25",
-            "component/administrator/src/Application/LearningService.php#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+            "tests/secdev03-implementation-coverage.py#L23-L23",
+            "tests/sec-p1-controller-gates.py#L62-L62",
+            "tests/sec-p1-cross-surface-gate.py#L12-L12",
+            "docs/SEC_P1_THREAT_MODEL_1.0.0.md#L23-L23",
+            "docs/SECDEV03_INPUT_OUTPUT_EVIDENCE_1.0.0.md#L18-L18"
           ]
         }
       },
       {
         "id": "criterion_02",
         "label": "Validazione server, campi allowlist, query con binding tramite servizi Joomla, output contestualmente codificato e HTML filtrato",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "docs/LEARNING.md",
-          "component/administrator/src/Application/LearningService.php",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "component/administrator/src/Model/PathwayModel.php",
+          "component/administrator/src/Model/TeacherModel.php",
+          "component/administrator/src/Application/CoursePresentation.php",
+          "tests/joomla-course-presentation.php",
+          "tests/joomla-pathways.php",
+          "tests/joomla-teachers.php",
+          "tests/secdev03-implementation-coverage.py"
         ],
         "review": {
-          "reason": "Il repository contiene codice e prove per flussi specifici collegati a validazione server, campi allowlist, query con binding tramite servizi joomla, output contestualmente codificato e html filtrato, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "reason": "Validazioni server-side, allowlist editor, parametri SQL tipizzati e filtro HTML dimostrati da modelli Joomla e test negativi database. Il gate software vincola l'inventario ed evita nuove superfici senza riesame; la verifica manuale della configurazione del sito non è richiesta per lo stato implemented.",
           "references": [
-            "docs/LEARNING.md#L1-L25",
-            "component/administrator/src/Application/LearningService.php#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+            "component/administrator/src/Model/PathwayModel.php#L234-L234",
+            "component/administrator/src/Model/TeacherModel.php#L99-L99",
+            "component/administrator/src/Application/CoursePresentation.php#L15-L15",
+            "tests/joomla-course-presentation.php#L114-L114",
+            "tests/joomla-pathways.php#L106-L106",
+            "tests/joomla-teachers.php#L113-L113",
+            "tests/secdev03-implementation-coverage.py#L23-L23"
           ]
         }
       },
       {
         "id": "criterion_03",
         "label": "Test contro SQL injection, XSS, mass assignment e formule CSV",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/LEARNING.md",
-          "component/administrator/src/Application/LearningService.php",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md",
-          "docs/QA_TESTBOOK.md"
+          "tests/catalog-literal-search.php",
+          "tests/joomla-publication.php",
+          "tests/joomla-pathways.php",
+          "tests/joomla-course-presentation.php",
+          "tests/joomla-teachers.php",
+          "tests/secdev03-input-output-gate.py",
+          "tests/secdev03-implementation-coverage.py"
         ],
         "review": {
-          "reason": "I test positivi e negativi esistenti coprono superfici selezionate, ma la suite completa contro SQL injection, XSS, mass assignment e formule CSV non è documentata come eseguita per tutte le superfici.",
+          "reason": "Suite software CI collegata per SQL injection, XSS e mass assignment su vari modelli/controller; il package 1.0.0 non genera esportazioni tabellari CSV: il gate impedisce di introdurre un sink CSV senza mitigazioni e test. Questo chiude il requisito software nell'ambito previsto, non una prova E2E su hosting reale.",
           "references": [
-            "docs/LEARNING.md#L1-L25",
-            "component/administrator/src/Application/LearningService.php#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "tests/catalog-literal-search.php#L18-L18",
+            "tests/joomla-publication.php#L309-L309",
+            "tests/joomla-pathways.php#L106-L106",
+            "tests/joomla-course-presentation.php#L114-L114",
+            "tests/joomla-teachers.php#L113-L113",
+            "tests/secdev03-input-output-gate.py#L108-L108",
+            "tests/secdev03-implementation-coverage.py#L23-L23"
           ]
         }
       },
       {
         "id": "criterion_04",
         "label": "Nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "docs/LEARNING.md",
-          "component/administrator/src/Application/LearningService.php",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "tests/sec-p1-systematic-source-gate.py",
+          "security/secdev07-semgrep.yml",
+          "tests/secdev07-sast.py",
+          "component/administrator/src/Model/PathwayModel.php",
+          "tests/secdev03-implementation-coverage.py"
         ],
         "review": {
-          "reason": "Il repository contiene codice e prove per flussi specifici collegati a nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "reason": "Inventario e gate sulle classi PHP distribuite vietano execution/deserialisation sink non approvati e input diretto a query/HTML; Semgrep eseguito in CI. Query con identificativi numerici ed eccezioni auditate nel threat model SEC-P1; i test E2E ambientali restano separati.",
           "references": [
-            "docs/LEARNING.md#L1-L25",
-            "component/administrator/src/Application/LearningService.php#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+            "tests/sec-p1-systematic-source-gate.py#L15-L15",
+            "security/secdev07-semgrep.yml#L2-L2",
+            "tests/secdev07-sast.py#L57-L57",
+            "component/administrator/src/Model/PathwayModel.php#L234-L234",
+            "tests/secdev03-implementation-coverage.py#L23-L23"
           ]
         }
       }
