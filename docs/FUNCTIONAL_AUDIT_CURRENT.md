@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **496**.
-- Mancanti con lacuna accertata: **15**.
-- Esaminati con esito non verificabile: **246**.
+- Implementati: **500**.
+- Mancanti con lacuna accertata: **14**.
+- Esaminati con esito non verificabile: **243**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -33,11 +33,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `HTTP-06/criterion_03` — Casi limite previsti in RELEASE_SCOPE_MATRIX.md tracciati come accettazione distinta. La tracciabilità delle acceptance cases è definita come requisito distinto, ma manca il registro completo dei casi limite eseguiti con esito e riferimenti a build per la candidata 1.0.0.
   - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25)
   - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
-- `SECDEV-03/criterion_03` — Test contro SQL injection, XSS, mass assignment e formule CSV. I test positivi e negativi esistenti coprono superfici selezionate, ma la suite completa contro SQL injection, XSS, mass assignment e formule CSV non è documentata come eseguita per tutte le superfici.
-  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
-  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
   - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
@@ -802,18 +797,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SECDEV-02/criterion_04` — Motivare ogni servizio core non pertinente senza duplicarlo automaticamente. Il repository contiene codice e prove per flussi specifici collegati a motivare ogni servizio core non pertinente senza duplicarlo automaticamente, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
   - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
   - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-- `SECDEV-03/criterion_01` — Input, query e output. Il repository contiene codice e prove per flussi specifici collegati a input, query e output, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
-  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
-  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-- `SECDEV-03/criterion_02` — Validazione server, campi allowlist, query con binding tramite servizi Joomla, output contestualmente codificato e HTML filtrato. Il repository contiene codice e prove per flussi specifici collegati a validazione server, campi allowlist, query con binding tramite servizi joomla, output contestualmente codificato e html filtrato, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
-  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
-  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-- `SECDEV-03/criterion_04` — Nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile. Il repository contiene codice e prove per flussi specifici collegati a nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
-  - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
-  - [component/administrator/src/Application/LearningService.php#L1-L25](../component/administrator/src/Application/LearningService.php#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
 - `SECDEV-04/criterion_01` — Identita, autorizzazioni e richieste. Il repository contiene codice e prove per flussi specifici collegati a identita, autorizzazioni e richieste, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
   - [docs/LEARNING.md#L1-L25](../docs/LEARNING.md#L1-L25)
@@ -1817,6 +1800,34 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/services/provider.php#ComponentDispatcherFactory](../component/administrator/services/provider.php)
   - [component/administrator/services/provider.php#setMVCFactory](../component/administrator/services/provider.php)
   - [component/jlms.xml#<extension](../component/jlms.xml)
+- `SECDEV-03/criterion_01` — Input, query e output. Implementazione 1.0.0 delimitata al package: inventario dei controller, plugin e template distribuiti con gate runtime e test HTTP/DB; il threat model SEC-P1 copre le superfici software. Prove manuali su hosting, ruoli reali e override di terzi restano nei gate separati.
+  - [tests/secdev03-implementation-coverage.py](../tests/secdev03-implementation-coverage.py)
+  - [tests/sec-p1-controller-gates.py](../tests/sec-p1-controller-gates.py)
+  - [tests/sec-p1-cross-surface-gate.py](../tests/sec-p1-cross-surface-gate.py)
+  - [docs/SEC_P1_THREAT_MODEL_1.0.0.md](../docs/SEC_P1_THREAT_MODEL_1.0.0.md)
+  - [docs/SECDEV03_INPUT_OUTPUT_EVIDENCE_1.0.0.md](../docs/SECDEV03_INPUT_OUTPUT_EVIDENCE_1.0.0.md)
+- `SECDEV-03/criterion_02` — Validazione server, campi allowlist, query con binding tramite servizi Joomla, output contestualmente codificato e HTML filtrato. Validazioni server-side, allowlist editor, parametri SQL tipizzati e filtro HTML dimostrati da modelli Joomla e test negativi database. Il gate software vincola l'inventario ed evita nuove superfici senza riesame; la verifica manuale della configurazione del sito non è richiesta per lo stato implemented.
+  - [component/administrator/src/Model/PathwayModel.php](../component/administrator/src/Model/PathwayModel.php)
+  - [component/administrator/src/Model/TeacherModel.php](../component/administrator/src/Model/TeacherModel.php)
+  - [component/administrator/src/Application/CoursePresentation.php](../component/administrator/src/Application/CoursePresentation.php)
+  - [tests/joomla-course-presentation.php](../tests/joomla-course-presentation.php)
+  - [tests/joomla-pathways.php](../tests/joomla-pathways.php)
+  - [tests/joomla-teachers.php](../tests/joomla-teachers.php)
+  - [tests/secdev03-implementation-coverage.py](../tests/secdev03-implementation-coverage.py)
+- `SECDEV-03/criterion_03` — Test contro SQL injection, XSS, mass assignment e formule CSV. Suite software CI collegata per SQL injection, XSS e mass assignment su vari modelli/controller; il package 1.0.0 non genera esportazioni tabellari CSV: il gate impedisce di introdurre un sink CSV senza mitigazioni e test. Questo chiude il requisito software nell'ambito previsto, non una prova E2E su hosting reale.
+  - [tests/catalog-literal-search.php](../tests/catalog-literal-search.php)
+  - [tests/joomla-publication.php](../tests/joomla-publication.php)
+  - [tests/joomla-pathways.php](../tests/joomla-pathways.php)
+  - [tests/joomla-course-presentation.php](../tests/joomla-course-presentation.php)
+  - [tests/joomla-teachers.php](../tests/joomla-teachers.php)
+  - [tests/secdev03-input-output-gate.py](../tests/secdev03-input-output-gate.py)
+  - [tests/secdev03-implementation-coverage.py](../tests/secdev03-implementation-coverage.py)
+- `SECDEV-03/criterion_04` — Nessuna concatenazione di input come query o esecuzione dinamica di codice non attendibile. Inventario e gate sulle classi PHP distribuite vietano execution/deserialisation sink non approvati e input diretto a query/HTML; Semgrep eseguito in CI. Query con identificativi numerici ed eccezioni auditate nel threat model SEC-P1; i test E2E ambientali restano separati.
+  - [tests/sec-p1-systematic-source-gate.py](../tests/sec-p1-systematic-source-gate.py)
+  - [security/secdev07-semgrep.yml](../security/secdev07-semgrep.yml)
+  - [tests/secdev07-sast.py](../tests/secdev07-sast.py)
+  - [component/administrator/src/Model/PathwayModel.php](../component/administrator/src/Model/PathwayModel.php)
+  - [tests/secdev03-implementation-coverage.py](../tests/secdev03-implementation-coverage.py)
 - `SECDEV-07/criterion_01` — Processo verificabile. Il processo di security assurance applicativa è ora verificabile: 10 controlli minaccia-sorgente-test-runner-limiti e 4 gap espliciti sono inventariati; il preflight CI ne controlla la completezza, la presenza dei test nei runner e il rifiuto di prove e rischi omessi tramite fixture negative. La PR #854 è stata integrata con CI 4/4 verde (run 44906074041) e gate CSV verde (run 44906074069). Sono distinti il criterio 02 (stile/SAST/SCA completi ancora mancanti), i criteri 04-05 non verificabili, l'accettazione manuale e i release blocker esterni.
   - [docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md#SECDEV-07](../docs/SECDEV_07_ASSURANCE_PROCESS_1.0.0.md)
   - [docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json#"controls"](../docs/SECDEV_07_SECURITY_ASSURANCE_1.0.0.json)
