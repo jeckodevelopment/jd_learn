@@ -60,3 +60,9 @@ Il controllo non determina autonomamente che tutte le API Joomla siano supportat
 Il controllo aumenta la prova che JD Learn **non richiede il plugin Joomla 6 di retrocompatibilità per i flussi coperti dalla CI**. Non prova che ogni possibile integrazione di terze parti, endpoint non esercitato o versione futura della patch sia compatibile. Non richiede alcuna modifica delle impostazioni del sito reale dell'utente.
 
 Riferimento: [Joomla — Compatibility Plugins per 5.4→6.0](https://manual.joomla.org/updates/54-60/compat-plugin/). Su nuove installazioni Joomla 6 il plugin è distribuito ma disabilitato per impostazione predefinita.
+
+## Prima riduzione mirata del debito PSR-12 (PR #984)
+
+La scansione PHPCS sul ramo base ha rilevato **49.694** messaggi storici. Le violazioni più frequenti sono `PSR12.Operators.OperatorSpacing.NoSpaceAfter` (11.356), `PSR12.Operators.OperatorSpacing.NoSpaceBefore` (11.335), `Generic.Functions.FunctionCallArgumentSpacing.NoSpaceAfterComma` (8.371), `Generic.Files.LineLength.TooLong` (5.384) e `Generic.Formatting.DisallowMultipleStatements.SameLine` (2.323). Il comando `tests/secdev02-psr12-phpcs.py` ora riporta in CI i primi 20 tipi di violazione e i primi 20 file più problematici, senza pubblicare linee di sorgente o dati riservati.
+
+La prima correzione riguarda esclusivamente la presentazione delle condizioni in `libraries/jlms/src/Video/VideoProviderRegistry.php` e la separazione delle firme di interfaccia in `libraries/jlms/src/Video/VideoProviderInterface.php`. Queste modifiche sono volutamente delimitate per evitare riformattazioni massive che alterino la logica dei servizi didattici. La CI PSR-12 registra il totale aggiornato e blocca le regressioni; i collaudi funzionali manuali restano separati. Il debito residuo non autorizza la chiusura del criterio SECDEV-02/01.
