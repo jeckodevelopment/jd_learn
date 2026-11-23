@@ -62,7 +62,8 @@ expect($storagePathCheck->invoke(null, '../public') === false, 'LES-03 rejects r
 
 $transcript = '<p>Audio <strong>transcript</strong></p>';
 expect(
-    LessonTranscript::sanitizeInput($transcript, static fn(string $html): string => strip_tags($html, '<p><strong>')) === $transcript,
+    LessonTranscript::sanitizeInput($transcript, static fn(string $html): string
+        => strip_tags($html, '<p><strong>')) === $transcript,
     'lesson transcript uses the configured HTML sanitizer'
 );
 expect(
@@ -99,7 +100,8 @@ expect(
 );
 $communicationUnsafe = $mailCatalog::tagsRequiringHtmlEscape('com_jlms.course.message');
 expect(
-    in_array('MESSAGE_BODY_TEXT', $communicationUnsafe, true) && !in_array('MESSAGE_BODY_HTML', $communicationUnsafe, true)
+    in_array('MESSAGE_BODY_TEXT', $communicationUnsafe, true)
+        && !in_array('MESSAGE_BODY_HTML', $communicationUnsafe, true)
     && !in_array('SITE_NAME_HTML', $communicationUnsafe, true),
     'plain message strings escape in HTML but sanitized fragments and escaped fields remain intact'
 );
@@ -124,11 +126,13 @@ expect(!$mailPrefsClass::enabled('suspension', true, $mailParams)
 $mailParams = $mailPrefsClass::merge(['mail_certificate' => 'disabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('certificate', true, $mailParams), 'course can suppress certificate availability email');
 $mailParams = $mailPrefsClass::merge(['mail_certificate' => 'inherit'], $mailParams);
-expect($mailPrefsClass::enabled('certificate', true, $mailParams) && !$mailPrefsClass::enabled('certificate', false, $mailParams), 'certificate email preference inherits the global setting');
+expect($mailPrefsClass::enabled('certificate', true, $mailParams)
+    && !$mailPrefsClass::enabled('certificate', false, $mailParams), 'certificate email preference inherits the global setting');
 $mailParams = $mailPrefsClass::merge(['mail_communication' => 'disabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('communication', true, $mailParams), 'course communication obeys an explicit course-level disable');
 $mailParams = $mailPrefsClass::merge(['mail_communication' => 'inherit'], $mailParams);
-expect($mailPrefsClass::enabled('communication', true, $mailParams) && !$mailPrefsClass::enabled('communication', false, $mailParams), 'course communication inherits the global switch');
+expect($mailPrefsClass::enabled('communication', true, $mailParams)
+    && !$mailPrefsClass::enabled('communication', false, $mailParams), 'course communication inherits the global switch');
 $mailParams = $mailPrefsClass::merge(['mail_expiry' => 'disabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('expiry', true, $mailParams), 'course can suppress an enabled course-expiry reminder');
 $mailParams = $mailPrefsClass::merge(['mail_expiry' => 'inherit'], $mailParams);
@@ -142,7 +146,8 @@ expect(!$mailPrefsClass::enabled('lesson_release', false, $mailParams), 'lesson 
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
     && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');
-rejects(static fn () => $mailPrefsClass::merge(['mail_completion' => 'yes'], '{}'), 'mail preference values are restricted to inherit, enabled or disabled');
+rejects(static fn () => $mailPrefsClass::merge(['mail_completion'
+    => 'yes'], '{}'), 'mail preference values are restricted to inherit, enabled or disabled');
 $lessonReleaseNow = new \DateTimeImmutable('2026-11-15 12:00:00', new \DateTimeZone('UTC'));
 $lessonStart = LessonAvailability::effectiveStart('2026-11-15 09:00:00', 2, '2026-11-14 08:00:00');
 expect($lessonStart?->format('Y-m-d H:i:s') === '2026-11-16 08:00:00', 'relative lesson release must supersede an earlier absolute window');
@@ -163,7 +168,8 @@ $mailParams = $mailPrefsClass::merge(['mail_manager_request' => 'inherit'], $mai
 expect(!$mailPrefsClass::enabled('manager_request', false, $mailParams), 'new request notices default to disabled');
 $readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
     'summary' => $summary,
-    'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image' => $image]], JSON_THROW_ON_ERROR),
+    'params_json' => json_encode(['presentation' => ['_schema' => 1, 'description' => $description, 'image'
+        => $image]], JSON_THROW_ON_ERROR),
 ];
 $certificatePrefs = \Jlms\Component\Jlms\Administrator\Application\CertificatePreferences::class;
 $certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'disabled'], '{"preserve_me":true}');
@@ -174,7 +180,8 @@ expect($certificatePrefs::enabled(false, $certificateParams)
     && json_decode($certificateParams, true)['preserve_me'] === true, 'course can enable certificates and unrelated params are retained');
 $certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'inherit'], $certificateParams);
 expect(!array_key_exists('certificate_enabled', json_decode($certificateParams, true)), 'inherit removes only the course certificate override');
-rejects(static fn () => $certificatePrefs::merge(['certificate_enabled' => 'yes'], '{}'), 'certificate preference is restricted to inherit, enabled or disabled');
+rejects(static fn () => $certificatePrefs::merge(['certificate_enabled'
+    => 'yes'], '{}'), 'certificate preference is restricted to inherit, enabled or disabled');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect($readinessCourse('  '), [], []);
 expect(in_array('COM_JLMS_COURSE_DESCRIPTION_REQUIRED', $readiness['blockers'], true)
     && in_array('COM_JLMS_READINESS_MODULES_REQUIRED', $readiness['blockers'], true)
@@ -198,15 +205,19 @@ $pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgres
     ['access' => 'available', 'percent' => 50],
     ['access' => 'available', 'percent' => null],
 ]);
-expect($pathwayProgress === ['percent' => 25, 'unavailable' => false, 'required' => 2], 'unenrolled course contributes zero to equally weighted pathway progress');
-$pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([['access' => 'available', 'percent' => null, 'progress_applicable' => false]]);
-expect($pathwayProgress === ['percent' => null, 'unavailable' => false, 'required' => 0], 'consultation-only pathway has no progress percentage');
+expect($pathwayProgress === ['percent' => 25, 'unavailable' => false, 'required'
+    => 2], 'unenrolled course contributes zero to equally weighted pathway progress');
+$pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([['access'
+    => 'available', 'percent' => null, 'progress_applicable' => false]]);
+expect($pathwayProgress === ['percent' => null, 'unavailable' => false, 'required'
+    => 0], 'consultation-only pathway has no progress percentage');
 $pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([
     ['access' => 'available', 'percent' => 80],
     ['access' => 'unavailable', 'percent' => 100],
     ['access' => 'restricted', 'percent' => 70],
 ]);
-expect($pathwayProgress === ['percent' => 26, 'unavailable' => true, 'required' => 3], 'unavailable courses count as zero without leaking their stored progress');
+expect($pathwayProgress === ['percent' => 26, 'unavailable' => true, 'required'
+    => 3], 'unavailable courses count as zero without leaking their stored progress');
 expect(\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([])
     === ['percent' => null, 'unavailable' => false, 'required' => 0], 'empty pathway has no completion percentage');
 $pathwayProgress = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::summarize([
@@ -282,13 +293,15 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['id' => 9, 'module_id' => 3, 'required' => 1, 'kind' => 'document']],
-    [(object) ['lesson_id' => 9, 'status' => 'ready', 'state' => 1, 'preview' => 0, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
+    [(object) ['lesson_id' => 9, 'status' => 'ready', 'state' => 1, 'preview' => 0, 'publish_up'
+        => null, 'publish_down' => null, 'scan_json' => '{}']],
 );
 expect(!in_array('COM_JLMS_DOCUMENT_MATERIAL_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts a ready lesson attachment');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
-    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json' => '{"video_duration_confirmed":true}']],
+    [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json'
+        => '{"video_duration_confirmed":true}']],
 );
 expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts confirmed video duration in the publication range');
 
@@ -461,14 +474,16 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
-    [(object) ['status' => 'quarantine', 'preview' => 0, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
+    [(object) ['status' => 'quarantine', 'preview' => 0, 'publish_up' => null, 'publish_down'
+        => null, 'scan_json' => '{}']],
 );
 expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist blocks a material that is still quarantined');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
-    [(object) ['status' => 'ready', 'preview' => 0, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{"engine":"clamd","result":"clean"}']],
+    [(object) ['status' => 'ready', 'preview' => 0, 'publish_up' => null, 'publish_down' => null, 'scan_json'
+        => '{"engine":"clamd","result":"clean"}']],
     true,
 );
 expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist accepts a ready material with required clean scan');
@@ -483,14 +498,17 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
-    [(object) ['lesson_id' => 12, 'status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
+    [(object) ['lesson_id' => 12, 'status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down'
+        => null, 'scan_json' => '{}']],
 );
 expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist rejects public preview on lesson attachments');
 $scheduled = MaterialAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T12:00:00', 'Europe/Rome');
-expect($scheduled === ['publish_up' => '2026-02-02 09:30:00', 'publish_down' => '2026-02-02 11:00:00'], 'material window is stored as UTC using the course time zone');
+expect($scheduled === ['publish_up' => '2026-02-02 09:30:00', 'publish_down'
+    => '2026-02-02 11:00:00'], 'material window is stored as UTC using the course time zone');
 expect(MaterialAvailability::editor($scheduled['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00', 'stored material window is shown in the course time zone');
 expect(MaterialAvailability::validStored($scheduled['publish_up'], $scheduled['publish_down']), 'stored material schedule is publishable');
-expect(MaterialAvailability::validStored($scheduled['publish_up'] . '.000000', $scheduled['publish_down'] . '.000000'), 'MySQL zero-microsecond DATETIME(6) values preserve valid material schedules');
+expect(MaterialAvailability::validStored($scheduled['publish_up'] . '.000000', $scheduled['publish_down']
+    . '.000000'), 'MySQL zero-microsecond DATETIME(6) values preserve valid material schedules');
 rejects(static fn () => MaterialAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'material end must be later than its start');
 $lessonWindow = LessonAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T12:00:00', 'Europe/Rome');
 expect($lessonWindow['publish_up'] === '2026-02-02 09:30:00' && $lessonWindow['publish_down'] === '2026-02-02 11:00:00', 'lesson availability is stored as UTC from the course time zone');
@@ -500,16 +518,20 @@ expect(LessonAvailability::state(null, '2025-01-01 00:00:00', null, null, new Da
 expect(LessonAvailability::state(null, null, 3, null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'awaiting_start', 'relative lesson is held until enrollment learning starts');
 expect(LessonAvailability::state(null, null, 3, '2026-01-01 00:00:00', new DateTimeImmutable('2026-01-03 23:59:59', new DateTimeZone('UTC'))) === 'upcoming', 'relative lesson waits for the configured number of full days');
 expect(LessonAvailability::state(null, null, 3, '2026-01-01 00:00:00', new DateTimeImmutable('2026-01-04 00:00:00', new DateTimeZone('UTC'))) === 'available', 'relative lesson opens at the exact release boundary');
-expect(LessonAvailability::normalizeReleaseDays('3650') === 3650 && LessonAvailability::normalizeReleaseDays('') === null, 'relative release is bounded and blank means no delay');
+expect(LessonAvailability::normalizeReleaseDays('3650') === 3650
+    && LessonAvailability::normalizeReleaseDays('') === null, 'relative release is bounded and blank means no delay');
 rejects(static fn () => LessonAvailability::normalizeReleaseDays('3651'), 'relative release beyond ten years is rejected');
-expect(LessonAvailability::reachable('2026-01-02 00:00:00', null, ['publish_down' => '2026-01-03 00:00:00']), 'required lesson can open within the course window');
-expect(!LessonAvailability::reachable('2026-01-04 00:00:00', null, ['publish_down' => '2026-01-03 00:00:00']), 'required lesson outside course window is unreachable');
+expect(LessonAvailability::reachable('2026-01-02 00:00:00', null, ['publish_down'
+    => '2026-01-03 00:00:00']), 'required lesson can open within the course window');
+expect(!LessonAvailability::reachable('2026-01-04 00:00:00', null, ['publish_down'
+    => '2026-01-03 00:00:00']), 'required lesson outside course window is unreachable');
 rejects(static fn () => LessonAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'lesson end must be later than its start');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
-    [(object) ['status' => 'ready', 'preview' => 0, 'publish_up' => $scheduled['publish_up'], 'publish_down' => $scheduled['publish_down'], 'scan_json' => '{}']],
+    [(object) ['status' => 'ready', 'preview' => 0, 'publish_up' => $scheduled['publish_up'], 'publish_down'
+        => $scheduled['publish_down'], 'scan_json' => '{}']],
 );
 expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true)
     && in_array('COM_JLMS_READINESS_MATERIAL_SCHEDULED', $readiness['warnings'], true), 'valid scheduled material warns without blocking publication');
@@ -541,7 +563,8 @@ expect(DecimalId::parse((string) PHP_INT_MAX) === PHP_INT_MAX, 'maximum safe PHP
 foreach (['0', '-1', '1e2', '01', '9223372036854775808', '18446744073709551615'] as $bad) {
     rejects(fn () => DecimalId::parse($bad), 'unsafe ID rejected: ' . $bad);
 }
-expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9'))->reference === 'dQw4w9WgXcQ', 'YouTube recognised URL canonicalised');
+expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9'))
+    ->reference === 'dQw4w9WgXcQ', 'YouTube recognised URL canonicalised');
 
 // LES-02: even discarded URL query arguments must never carry credentials.
 foreach (
@@ -558,11 +581,15 @@ foreach (
 ) {
     rejects(fn () => SourceNormalizer::normalise($provider, new SourceInput($source)), 'Credential-bearing video URL rejected: ' . $provider);
 }
-expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9&feature=share'))->reference === 'dQw4w9WgXcQ', 'Non-secret YouTube URL options remain supported');
-expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ#t=30'))->reference === 'dQw4w9WgXcQ', 'Harmless shared-link fragment remains valid');
+expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9&feature=share'))
+    ->reference === 'dQw4w9WgXcQ', 'Non-secret YouTube URL options remain supported');
+expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ#t=30'))
+    ->reference === 'dQw4w9WgXcQ', 'Harmless shared-link fragment remains valid');
 
-expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://vimeo.com/12345/abc123'))->options === ['privacy_hash' => 'abc123'], 'Vimeo private hash preserved');
-expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://player.vimeo.com/video/12345?h=abc123'))->options === ['privacy_hash' => 'abc123'], 'Vimeo player URL hash preserved');
+expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://vimeo.com/12345/abc123'))
+    ->options === ['privacy_hash' => 'abc123'], 'Vimeo private hash preserved');
+expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://player.vimeo.com/video/12345?h=abc123'))
+    ->options === ['privacy_hash' => 'abc123'], 'Vimeo player URL hash preserved');
 foreach (['https://youtube.com.evil.test/watch?v=dQw4w9WgXcQ', 'https://127.0.0.1/video', 'https://user:pass@youtube.com/watch?v=dQw4w9WgXcQ', 'https://youtube.com/playlist?list=123', 'https://youtube.com:443/watch?v=dQw4w9WgXcQ'] as $bad) {
     rejects(fn () => SourceNormalizer::normalise('youtube', new SourceInput($bad)), 'unsafe/unsupported YouTube URL rejected');
 }
@@ -674,13 +701,16 @@ $registry->register($descriptor, static function () use (&$created) {
 expect($created === 0, 'registration is lazy');
 expect($registry->get('example') === $registry->get('example') && $created === 1, 'one adapter per request');
 rejects(fn () => $registry->register($descriptor, fn () => null), 'duplicate provider rejected');
-rejects(fn () => $registry->register(new ProviderDescriptor('newprovider', 'NEW', 2, true), fn () => null), 'contract major mismatch rejected');
+rejects(fn () => $registry->register(new ProviderDescriptor('newprovider', 'NEW', 2, true), fn ()
+    => null), 'contract major mismatch rejected');
 rejects(fn () => $registry->get('missing'), 'missing provider never falls back to public source');
 
 $state = ['issued_ms' => 100000, 'spent_wall_ms' => 0, 'last_event_id' => 0, 'playing' => false];
 $event = static fn (int $id, string $type, int $position, int $time, bool $playing = true, int $rate = 1000): array =>
-    ['id' => $id, 'type' => $type, 'position_ms' => $position, 'client_ms' => $time, 'playing' => $playing, 'rate_milli' => $rate];
-$consume = static fn (array $events, int $now = 110000): array => \Jlms\Component\Jlms\Administrator\Domain\VideoTelemetry::consume($state, $events, 10000, $now);
+    ['id' => $id, 'type' => $type, 'position_ms' => $position, 'client_ms' => $time, 'playing'
+        => $playing, 'rate_milli' => $rate];
+$consume = static fn (array $events, int $now = 110000): array
+    => \Jlms\Component\Jlms\Administrator\Domain\VideoTelemetry::consume($state, $events, 10000, $now);
 expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 9000)])['intervals'] === [[0,9000]], 'continuous 90 percent coverage');
 expect($consume([$event(1, 'ended', 10000, 0, false)])['intervals'] === [], 'ended alone awards no coverage');
 expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 1000)])['intervals'] === [], 'seek jump does not count');
@@ -698,18 +728,24 @@ require_once __DIR__ . '/../plugins/jlmsvideo/cloudflarestream/src/Provider/Prov
 $enabled = new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true);
 $source = $enabled->normaliseSource(new SourceInput('https://youtu.be/dQw4w9WgXcQ'));
 $caps = $enabled->getCapabilities($source);
-expect($enabled->getDescriptor()->configured && $caps->position && $caps->duration && $caps->seek, 'enabled YouTube declares tracked-learning capabilities');
-expect($caps->speed && $caps->captions && !$caps->transcript && !$caps->expiringPlayback && !$caps->download, 'YouTube reports adapter-supported optional capabilities only');
+expect($enabled->getDescriptor()->configured && $caps->position && $caps->duration && $caps
+    ->seek, 'enabled YouTube declares tracked-learning capabilities');
+expect($caps->speed && $caps->captions && !$caps->transcript && !$caps->expiringPlayback && !$caps
+    ->download, 'YouTube reports adapter-supported optional capabilities only');
 $vimeo = new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true);
 $vimeoSource = $vimeo->normaliseSource(new SourceInput('https://vimeo.com/123456789'));
 $vimeoCaps = $vimeo->getCapabilities($vimeoSource);
-expect($vimeoCaps->position && $vimeoCaps->duration && $vimeoCaps->seek && $vimeoCaps->speed && $vimeoCaps->captions, 'Vimeo reports core, conditional speed and caption support');
+expect($vimeoCaps->position && $vimeoCaps->duration && $vimeoCaps->seek && $vimeoCaps->speed && $vimeoCaps
+    ->captions, 'Vimeo reports core, conditional speed and caption support');
 $html5 = new \Jlms\Plugin\Jlmsvideo\Html5\Provider\Provider(true);
 $html5Caps = $html5->getCapabilities(new \Jlms\Contracts\Video\VideoSource('html5', 'media.mp4', 1));
-expect($html5Caps->position && $html5Caps->duration && $html5Caps->seek && $html5Caps->speed && $html5Caps->captions, 'HTML5 reports native playback, speed and caption support');
+expect($html5Caps->position && $html5Caps->duration && $html5Caps->seek && $html5Caps->speed && $html5Caps
+    ->captions, 'HTML5 reports native playback, speed and caption support');
 $stream = new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider(
-    ['playback_enabled' => 1, 'account_id' => str_repeat('a', 32), 'playback_domain' => 'customer-example.cloudflarestream.com',
-        'site_host' => 'learn.example.com', 'api_token_ref' => 'stream-token', 'token_ttl_seconds' => 900, 'renew_before_seconds' => 120],
+    ['playback_enabled' => 1, 'account_id' => str_repeat('a', 32), 'playback_domain'
+        => 'customer-example.cloudflarestream.com',
+        'site_host' => 'learn.example.com', 'api_token_ref' => 'stream-token', 'token_ttl_seconds'
+            => 900, 'renew_before_seconds' => 120],
     static fn(string $reference): string => 'secret',
     static fn(): array => []
 );
@@ -717,7 +753,8 @@ $streamSource = new \Jlms\Contracts\Video\VideoSource('cloudflarestream', str_re
 $streamCaps = $stream->getCapabilities($streamSource);
 expect(
     $stream->getDescriptor()->configured && $streamCaps->position && $streamCaps->duration && $streamCaps->seek
-    && !$streamCaps->speed && $streamCaps->captions && !$streamCaps->transcript && $streamCaps->expiringPlayback && !$streamCaps->download,
+    && !$streamCaps->speed && $streamCaps->captions && !$streamCaps->transcript && $streamCaps
+        ->expiringPlayback && !$streamCaps->download,
     'Cloudflare Stream reports its configured API and playback capabilities'
 );
 $wrongProvider = $enabled->getCapabilities(new \Jlms\Contracts\Video\VideoSource('vimeo', '123456789', 1));
@@ -741,6 +778,8 @@ expect($supportsTrackedLearning($optional), 'speed, captions and transcripts rem
 expect(!$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, false, true, true, true, true, false, false)), 'provider without duration cannot support tracked learning');
 expect(!$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, true, false, true, true, true, false, false)), 'provider without seek cannot support tracked learning');
 $playback = $enabled->createPlaybackDescriptor($source, new \Jlms\Contracts\Video\PlaybackContext(1, 2, 3, 'it-IT', 0, 'grant', new \DateTimeImmutable()));
-expect($playback->playerOptions['reference'] === 'dQw4w9WgXcQ' && $playback->playerOptions['autoplay'] === false, 'canonical whitelisted playback options');
-expect(!(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getDescriptor()->configured, 'embed disabled by default');
+expect($playback->playerOptions['reference'] === 'dQw4w9WgXcQ' && $playback
+    ->playerOptions['autoplay'] === false, 'canonical whitelisted playback options');
+expect(!(new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider())->getDescriptor()
+    ->configured, 'embed disabled by default');
 echo json_encode(['unit_assertions' => $passed, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

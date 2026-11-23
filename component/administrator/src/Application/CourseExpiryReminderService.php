@@ -47,7 +47,8 @@ final class CourseExpiryReminderService
             $end = (string) ($row->enrollment_ends_at ?: $row->edition_ends_at);
             $name = trim((string) $row->learner_name);
             $userParams = json_decode((string) $row->user_params, true);
-            $language = is_array($userParams) && is_string($userParams['language'] ?? null) ? $userParams['language'] : '';
+            $language = is_array($userParams) && is_string($userParams['language']
+                ?? null) ? $userParams['language'] : '';
             try {
                 $queue->enqueue(
                     (int) $row->course_id,

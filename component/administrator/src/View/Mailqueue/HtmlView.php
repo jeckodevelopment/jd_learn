@@ -23,9 +23,11 @@ final class HtmlView extends BaseHtmlView
         $input = Factory::getApplication()->getInput();
         $filters = $input->get('filter', [], 'array');
         $start = max(0, $input->getInt('limitstart', 0));
-        $this->data = (new MailQueueAuditService(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)))
+        $this->data = (new MailQueueAuditService(Factory::getContainer()
+            ->get(\Joomla\Database\DatabaseInterface::class)))
             ->page(Factory::getApplication()->getIdentity(), $filters, $start, 50);
-        $this->consentData = (new ConsentAuditService(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)))
+        $this->consentData = (new ConsentAuditService(Factory::getContainer()
+            ->get(\Joomla\Database\DatabaseInterface::class)))
             ->page(
                 Factory::getApplication()->getIdentity(),
                 max(0, $input->getInt('consent_user_id', 0)),

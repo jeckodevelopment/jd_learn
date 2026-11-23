@@ -41,13 +41,15 @@ final class ConsentAuditService
             $query->where('user_id = :userId')->bind(':userId', $userId, ParameterType::INTEGER);
         }
         $total = (int) $this->db->setQuery($count)->loadResult();
-        $records = $this->db->setQuery($query->order('requested_at DESC, user_id DESC'), $start, $limit)->loadObjectList();
+        $records = $this->db->setQuery($query->order('requested_at DESC, user_id DESC'), $start, $limit)
+            ->loadObjectList();
 
         $rows = [];
         foreach ($records as $record) {
             $rows[] = [
                 'user_id' => (int) $record->user_id,
-                'state' => in_array($record->state, ['pending', 'confirmed', 'revoked'], true) ? $record->state : 'unknown',
+                'state' => in_array($record->state, ['pending', 'confirmed', 'revoked'], true) ? $record
+                    ->state : 'unknown',
                 'origin' => in_array($record->origin, ['dashboard', 'registration', 'enrollment'], true) ? $record->origin : 'unknown',
                 'policy_version' => (string) $record->policy_version,
                 'requested_at' => (string) $record->requested_at,

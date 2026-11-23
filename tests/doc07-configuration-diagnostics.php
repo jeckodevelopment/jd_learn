@@ -70,7 +70,8 @@ if (
 if ($result[9]['guidanceKey'] !== 'COM_JLMS_SCHEDULER_GUIDANCE_DUPLICATES') {
     throw new RuntimeException('Duplicate scheduler task did not override healthy status');
 }
-$untrusted = ConfigurationDiagnostics::summarize([], [['labelKey' => '<script>secret</script>', 'stateKey' => 'unexpected']]);
+$untrusted = ConfigurationDiagnostics::summarize([], [['labelKey' => '<script>secret</script>', 'stateKey'
+    => 'unexpected']]);
 if (
     $untrusted[0]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL'
     || $untrusted[0]['stateKey'] !== 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN'
@@ -280,7 +281,8 @@ try {
     }
     rmdir($videoFixtures);
 }
-$inheritDefault = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, true);
+$inheritDefault = ConfigurationDiagnostics::inheritance(['{}'], [['link'
+    => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, true);
 $inheritBlankMenu = ConfigurationDiagnostics::inheritance(['{}'], [
     ['link' => 'index.php?option=com_jlms&view=courses', 'params' => ''],
     ['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '   '],
@@ -310,8 +312,10 @@ $inheritInvalidOverflow = ConfigurationDiagnostics::inheritance(
     false,
     false
 );
-$courseOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], false, true);
-$menuOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, false);
+$courseOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link'
+    => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], false, true);
+$menuOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link'
+    => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, false);
 if (
     $inheritBlankMenu[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
     || $inheritWrongShape[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INVALID'

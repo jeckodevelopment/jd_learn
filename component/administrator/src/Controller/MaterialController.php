@@ -82,7 +82,8 @@ final class MaterialController extends BaseController
                     $data
                 );
             }
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=materials&id=' . $courseId . '&version_id=' . $versionId, false));
+            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=materials&id='
+                . $courseId . '&version_id=' . $versionId, false));
         } catch (\Throwable $error) {
             $this->failure($error);
         }
@@ -96,7 +97,8 @@ final class MaterialController extends BaseController
             'COM_JLMS_PREVIEW_LESSON_SCOPE_REQUIRED',
             'COM_JLMS_RANGE_INVALID', 'COM_JLMS_METHOD_NOT_ALLOWED', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST'];
         if (in_array($error->getMessage(), $known, true)) {
-            $code = in_array($error->getCode(), [400, 401, 403, 404, 409, 413, 416, 422, 503], true) ? $error->getCode() : 400;
+            $code = in_array($error->getCode(), [400, 401, 403, 404, 409, 413, 416, 422, 503], true) ? $error
+                ->getCode() : 400;
             throw new \RuntimeException(Text::_($error->getMessage()), $code);
         }
         Log::add('Material mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
@@ -157,7 +159,8 @@ final class MaterialController extends BaseController
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             }
-            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->previewDownload($this->app->getIdentity(), ...$ids);
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->previewDownload($this->app
+                ->getIdentity(), ...$ids);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $this->failure($error);

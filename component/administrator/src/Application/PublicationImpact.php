@@ -64,7 +64,8 @@ final class PublicationImpact
         $quizzes = $this->rows('SELECT id,lesson_id,pass_basis_points,max_attempts,time_limit_seconds,feedback_policy,selection_json FROM #__jlms_quizzes WHERE course_version_id=:version ORDER BY id', $version, 5000);
         $questionHashes = [];
         foreach (array_chunk(array_column($quizzes, 'id'), 32) as $batch) {
-            $query = $this->db->createQuery()->select('quiz_id,question_revision_id,ordering,points')->from('#__jlms_quiz_questions')->order('quiz_id,ordering,question_revision_id');
+            $query = $this->db->createQuery()->select('quiz_id,question_revision_id,ordering,points')
+                ->from('#__jlms_quiz_questions')->order('quiz_id,ordering,question_revision_id');
             $values = array_map('intval', $batch);
             $names = [];
             foreach (array_keys($values) as $index) {
@@ -102,7 +103,8 @@ final class PublicationImpact
         $attachments = $this->rows('SELECT a.lesson_id,a.asset_id,a.title,SHA2(COALESCE(a.description,\'\'),256) AS description_hash,a.ordering,a.state,a.preview,a.publish_up,a.publish_down,f.sha256,f.status FROM #__jlms_attachments AS a INNER JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id=:version ORDER BY a.ordering,a.id', $version, 1000);
         $occurrences = [];
         foreach ($attachments as $row) {
-            $scope = $row['lesson_id'] === null ? 'course' : ($lessonKeys[$row['lesson_id']] ?? throw new \DomainException('COM_JLMS_INVALID_INPUT'));
+            $scope = $row['lesson_id'] === null ? 'course' : ($lessonKeys[$row['lesson_id']]
+                ?? throw new \DomainException('COM_JLMS_INVALID_INPUT'));
             $base = $scope . ':' . $row['asset_id'];
             $occurrences[$base] = ($occurrences[$base] ?? 0) + 1;
             unset($row['lesson_id']);
@@ -162,8 +164,10 @@ final class PublicationImpact
         ) {
             return false;
         }
-        $oldRules = self::canonical(json_decode((string) $versions[$sourceVersionId]->rules_json, true, 32, JSON_THROW_ON_ERROR));
-        $newRules = self::canonical(json_decode((string) $versions[$targetVersionId]->rules_json, true, 32, JSON_THROW_ON_ERROR));
+        $oldRules = self::canonical(json_decode((string) $versions[$sourceVersionId]
+            ->rules_json, true, 32, JSON_THROW_ON_ERROR));
+        $newRules = self::canonical(json_decode((string) $versions[$targetVersionId]
+            ->rules_json, true, 32, JSON_THROW_ON_ERROR));
         if ($oldRules !== $newRules) {
             return true;
         }
@@ -195,7 +199,8 @@ final class PublicationImpact
         $rulesAfter = self::canonical(json_decode($draft->rules_json, true, 32, JSON_THROW_ON_ERROR));
         $oldThreshold = $rulesBefore['video_threshold_basis_points'] ?? 9000;
         $newThreshold = $rulesAfter['video_threshold_basis_points'] ?? 9000;
-        $thresholdChange = is_int($oldThreshold) && is_int($newThreshold) && $oldThreshold >= 1 && $oldThreshold <= 10000
+        $thresholdChange = is_int($oldThreshold) && is_int($newThreshold) && $oldThreshold >= 1
+            && $oldThreshold <= 10000
             && $newThreshold >= 1 && $newThreshold <= 10000 && $oldThreshold !== $newThreshold
             ? ['before' => $oldThreshold, 'after' => $newThreshold] : null;
         $query = $this->db->createQuery()->select('v.version_no,COUNT(e.id) AS total')->from('#__jlms_enrollments AS e')
@@ -208,8 +213,10 @@ final class PublicationImpact
             throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
         // Enrollment counts are informational at preview time; admissions do not invalidate a programme review.
-        $fingerprint = self::hash([$id,(int)$course->revision,(int)$source->id,(int)$source->revision,(int)$draft->id,(int)$draft->revision,$transition,$actor,$before,$after,$rulesBefore,$rulesAfter,$draft->fields_snapshot_json]);
+        $fingerprint = self::hash([$id,(int)$course->revision,(int)$source->id,(int)$source
+            ->revision,(int)$draft->id,(int)$draft->revision,$transition,$actor,$before,$after,$rulesBefore,$rulesAfter,$draft->fields_snapshot_json]);
         return ['course' => $course, 'version' => $draft, 'source' => $source, 'transition_id' => $transition,
-            'changes' => $diff, 'video_threshold_change' => $thresholdChange, 'rules_changed' => $rulesBefore !== $rulesAfter, 'enrollments' => $enrollments, 'fingerprint' => $fingerprint];
+            'changes' => $diff, 'video_threshold_change' => $thresholdChange, 'rules_changed'
+                => $rulesBefore !== $rulesAfter, 'enrollments' => $enrollments, 'fingerprint' => $fingerprint];
     }
 }

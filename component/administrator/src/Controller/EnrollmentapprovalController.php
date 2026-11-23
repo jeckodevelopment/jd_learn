@@ -54,7 +54,8 @@ final class EnrollmentapprovalController extends BaseController
                 $raw['reason'],
             );
             $this->setMessage(Text::_('COM_JLMS_ENROLLMENT_APPROVAL_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollments&id=' . $courseId, false));
+            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollments&id='
+                . $courseId, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = (int) $error->getCode();

@@ -42,9 +42,11 @@ final class Provider extends AbstractFoundationProvider
         $this->normaliseSource(new SourceInput($source->reference));
         $url = $context->preview
             ? \Joomla\CMS\Router\Route::link('site', 'index.php?option=com_jlms&task=media.stream&format=raw&preview=1&course_id=' . $context->courseId
-                . '&version_id=' . $context->versionId . '&lesson_id=' . $context->lessonId . '&source_revision=' . $source->revision, false)
+                . '&version_id=' . $context->versionId . '&lesson_id=' . $context->lessonId
+                    . '&source_revision=' . $source->revision, false)
             : \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=media.stream&format=raw&enrollment_id=' . $context->enrollmentId
                 . '&lesson_id=' . $context->lessonId . '&source_revision=' . $source->revision, false);
-        return new PlaybackDescriptor('html5', $source->revision, $this->getFrontendAdapterAsset(), ['url' => $url, 'autoplay' => false, 'preload' => 'metadata'], $this->getCapabilities($source));
+        return new PlaybackDescriptor('html5', $source->revision, $this->getFrontendAdapterAsset(), ['url'
+            => $url, 'autoplay' => false, 'preload' => 'metadata'], $this->getCapabilities($source));
     }
 }

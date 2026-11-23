@@ -64,7 +64,8 @@ final class Jdlearnconsent extends CMSPlugin implements SubscriberInterface
                 ->getCourseAnnouncementConsent()
                 ->request($userId, $email, $name, 'registration');
         } catch (\Throwable $error) {
-            Log::add('Registration consent confirmation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Registration consent confirmation failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             $this->getApplication()->enqueueMessage(Text::_('PLG_USER_JDLEARNCONSENT_REQUEST_FAILED'), 'warning');
         }
     }

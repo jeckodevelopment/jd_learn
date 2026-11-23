@@ -36,7 +36,8 @@ final class MailconsentController extends BaseController
             return;
         }
         try {
-            $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->request((int) $user->id, (string) $user->email, (string) $user->name, 'dashboard');
+            $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->request((int) $user
+                ->id, (string) $user->email, (string) $user->name, 'dashboard');
             $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_CONFIRMATION_SENT'), 'message');
         } catch (\Throwable $error) {
             Log::add('Course consent request failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');

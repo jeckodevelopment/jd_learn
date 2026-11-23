@@ -27,18 +27,22 @@ final class LessonController extends CurriculumController
                 throw new \DomainException('JINVALID_TOKEN');
             }
             $input = $this->input->post->get('jform', [], 'array');
-            $data = $this->app->bootComponent('com_jlms')->getCurriculumService()->authoringMetadata($this->app->getIdentity(), $input);
+            $data = $this->app->bootComponent('com_jlms')->getCurriculumService()->authoringMetadata($this->app
+                ->getIdentity(), $input);
             $plans = $this->app->getUserState('com_jlms.video.duration', []);
-            $plans = array_filter(is_array($plans) ? $plans : [], static fn($p): bool=>is_array($p) && ($p['expires'] ?? 0) >= time());
+            $plans = array_filter(is_array($plans) ? $plans : [], static fn($p): bool=>is_array($p)
+                && ($p['expires'] ?? 0) >= time());
             $plans = array_slice($plans, -7, null, true);
             $ticket = bin2hex(random_bytes(32));
-            $plans[$ticket] = ['fingerprint' => $data['fingerprint'],'duration_ms' => $data['duration_ms'],'origin' => $data['origin'],'expires' => time() + 900];
+            $plans[$ticket] = ['fingerprint' => $data['fingerprint'],'duration_ms'
+                => $data['duration_ms'],'origin' => $data['origin'],'expires' => time() + 900];
             $this->app->setUserState('com_jlms.video.duration', $plans);
             unset($data['fingerprint']);
             $data['ticket'] = $ticket;
             $data['adapter_url'] = is_string($data['provider'] ?? null)
                 && preg_match('/\\A[a-z][a-z0-9_]{1,63}\\z/D', $data['provider'])
-                ? \Joomla\CMS\Uri\Uri::root(true) . '/media/plg_jlmsvideo_' . $data['provider'] . '/js/player.js' : null;
+                ? \Joomla\CMS\Uri\Uri::root(true) . '/media/plg_jlmsvideo_' . $data['provider']
+                    . '/js/player.js' : null;
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = match ($key) {

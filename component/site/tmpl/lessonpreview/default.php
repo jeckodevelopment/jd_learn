@@ -24,5 +24,6 @@ $materials = $this->item['materials']['items'] ?? [];
       endforeach; ?></ul>
  </section>
  <?php endif; ?>
- <p><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id) ?>"><?= Text::_('COM_JLMS_BACK_TO_COURSE') ?></a></p>
+ <p><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course
+     ->id) ?>"><?= Text::_('COM_JLMS_BACK_TO_COURSE') ?></a></p>
 </article>

@@ -38,7 +38,8 @@ final class CategoryreassignmentController extends BaseController
             $component = $this->app->bootComponent('com_jlms');
             $component->getCategoryReassignmentService()->reassign($this->app->getIdentity(), $id, $destinations);
             $this->setMessage(Text::_('COM_JLMS_CATEGORY_REASSIGN_SUCCESS'));
-            $this->setRedirect(Route::_('index.php?option=com_jlms&view=categoryreassignment&category_id=' . $id, false));
+            $this->setRedirect(Route::_('index.php?option=com_jlms&view=categoryreassignment&category_id='
+                . $id, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = (int) $error->getCode();

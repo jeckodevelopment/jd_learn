@@ -27,7 +27,8 @@ final class Cloudflarestream extends CMSPlugin implements SubscriberInterface
         $timeout = max(1, min(10, (int) ($config['remote_timeout'] ?? 5)));
         $transport = static function (string $method, string $url, array $headers, ?string $body) use ($timeout): array {
             $http = (new \Joomla\Http\HttpFactory())->getHttp(['follow_location' => false, 'timeout' => $timeout]);
-            $response = $method === 'GET' ? $http->get($url, $headers, $timeout) : $http->post($url, $body, $headers, $timeout);
+            $response = $method === 'GET' ? $http->get($url, $headers, $timeout) : $http
+                ->post($url, $body, $headers, $timeout);
             return ['status' => (int) $response->getStatusCode(), 'body' => (string) $response->getBody()];
         };
         $provider = new Provider($config, $resolve, $transport);

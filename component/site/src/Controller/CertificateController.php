@@ -33,7 +33,8 @@ final class CertificateController extends BaseController
             } catch (\InvalidArgumentException $error) {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
-            $file = $this->app->bootComponent('com_jlms')->getCertificateService()->download($this->app->getIdentity(), $enrollmentId);
+            $file = $this->app->bootComponent('com_jlms')->getCertificateService()->download($this->app
+                ->getIdentity(), $enrollmentId);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_INVALID_INPUT',

@@ -32,7 +32,8 @@ final class CourseannouncementController extends BaseController
 
         $courseId = $this->input->post->getInt('id', 0);
         $confirmed = $this->input->post->getBool('confirm', false);
-        $route = Route::link('administrator', 'index.php?option=com_jlms&view=courseannouncement&id=' . $courseId, false);
+        $route = Route::link('administrator', 'index.php?option=com_jlms&view=courseannouncement&id='
+            . $courseId, false);
         if (!$confirmed) {
             $this->app->enqueueMessage(Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_CONFIRM_REQUIRED'), 'warning');
             $this->setRedirect($route);
@@ -44,7 +45,8 @@ final class CourseannouncementController extends BaseController
             $queued = $service->notify($this->app->getIdentity(), $courseId);
             $this->app->enqueueMessage(Text::sprintf('COM_JLMS_COURSE_ANNOUNCEMENT_QUEUED', $queued), 'message');
         } catch (\Throwable $error) {
-            $message = str_starts_with($error->getMessage(), 'COM_JLMS_') || str_starts_with($error->getMessage(), 'JERROR_')
+            $message = str_starts_with($error->getMessage(), 'COM_JLMS_') || str_starts_with($error
+                ->getMessage(), 'JERROR_')
                 ? Text::_($error->getMessage()) : Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_QUEUE_FAILED');
             $this->app->enqueueMessage($message, 'warning');
         }

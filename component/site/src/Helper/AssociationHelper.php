@@ -46,16 +46,19 @@ final class AssociationHelper
         $context = $categoryView ? 'com_categories.item' : 'com_jlms.item';
         $table = $categoryView ? '#__categories' : '#__jlms_courses';
         $query = $db->createQuery()->select('c.id, c.language')->from('#__associations AS a')
-            ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.' . $db->quoteName('key') . ' AND b.context = a.context')
+            ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.' . $db->quoteName('key')
+                . ' AND b.context = a.context')
             ->innerJoin($table . ' AS c ON c.id = b.id')
             ->where('a.context = :context')->where('a.id = :id')->where('c.id <> :source')
-            ->bind(':context', $context)->bind(':id', $id, ParameterType::INTEGER)->bind(':source', $id, ParameterType::INTEGER);
+            ->bind(':context', $context)->bind(':id', $id, ParameterType::INTEGER)
+                ->bind(':source', $id, ParameterType::INTEGER);
         if ($categoryView) {
             $extension = 'com_jlms.course';
             $query->where('c.extension = :associationExtension')->bind(':associationExtension', $extension);
         }
         $items = $db->setQuery($query)->loadObjectList();
-        $languageQuery = $db->createQuery()->select('lang_code, sef')->from('#__languages')->where('published = 1')->whereIn('access', array_values(array_unique(array_merge([0], $levels))));
+        $languageQuery = $db->createQuery()->select('lang_code, sef')->from('#__languages')
+            ->where('published = 1')->whereIn('access', array_values(array_unique(array_merge([0], $levels))));
         $languages = $db->setQuery($languageQuery)->loadObjectList('lang_code');
         if (!isset($languages[$source->language])) {
             return [];
@@ -79,7 +82,8 @@ final class AssociationHelper
                 continue;
             }
             // Never carry a source Itemid, enrollment, lesson or attempt into another language.
-            $links[$tag] = 'index.php?option=com_jlms&view=' . $view . ($view === 'categories' ? '&parent_id=' : '&id=') . (int) $item->id . '&lang=' . rawurlencode($tag);
+            $links[$tag] = 'index.php?option=com_jlms&view=' . $view
+                . ($view === 'categories' ? '&parent_id=' : '&id=') . (int) $item->id . '&lang=' . rawurlencode($tag);
         }
         return $links;
     }

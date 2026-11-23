@@ -79,13 +79,15 @@ final class PathwayService
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
 
-        $courseIds = array_values(array_unique(array_map(static fn (object $row): int => (int) $row->course_id, $relations)));
+        $courseIds = array_values(array_unique(array_map(static fn (object $row): int => (int) $row
+            ->course_id, $relations)));
         $visibleCourses = [];
         $enrollments = [];
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
 
         if ($courseIds !== []) {
-            $catalogQuery = $this->catalog->query($actor, (string) $pathway->language === '*' ? $uiLanguage : (string) $pathway->language)
+            $catalogQuery = $this->catalog->query($actor, (string) $pathway
+                ->language === '*' ? $uiLanguage : (string) $pathway->language)
                 ->whereIn('c.id', $courseIds);
             $visibleCourses = $this->db->setQuery($catalogQuery, 0, 100)->loadObjectList('id');
 
@@ -93,8 +95,10 @@ final class PathwayService
             $enrollmentQuery = $this->db->createQuery()
                 ->select('e.id, e.course_id, e.status, e.required_total, e.completed_total, e.completed_at, e.started_at, e.last_activity_at, e.starts_at, e.ends_at, v.status AS version_status, v.rules_json, ed.status AS edition_status, ed.starts_at AS edition_starts_at, ed.ends_at AS edition_ends_at')
                 ->from($this->db->quoteName('#__jlms_enrollments', 'e'))
-                ->leftJoin($this->db->quoteName('#__jlms_course_versions', 'v') . ' ON v.id = e.course_version_id AND v.course_id = e.course_id')
-                ->leftJoin($this->db->quoteName('#__jlms_editions', 'ed') . ' ON ed.id = e.edition_id AND ed.course_id = e.course_id AND ed.course_version_id = e.course_version_id')
+                ->leftJoin($this->db->quoteName('#__jlms_course_versions', 'v')
+                    . ' ON v.id = e.course_version_id AND v.course_id = e.course_id')
+                ->leftJoin($this->db->quoteName('#__jlms_editions', 'ed')
+                    . ' ON ed.id = e.edition_id AND ed.course_id = e.course_id AND ed.course_version_id = e.course_version_id')
                 ->where('e.user_id = :pathwayOwner')
                 ->whereIn('e.course_id', $courseIds)
                 ->order('e.last_activity_at DESC, e.id DESC')
@@ -146,7 +150,8 @@ final class PathwayService
                 }
                 $state = $enrollment->completed_at !== null
                     ? 'completed'
-                    : (($enrollment->started_at !== null || $enrollment->last_activity_at !== null || $done > 0) ? 'in_progress' : 'not_started');
+                    : (($enrollment->started_at !== null || $enrollment->last_activity_at !== null
+                        || $done > 0) ? 'in_progress' : 'not_started');
 
                 $now = gmdate('Y-m-d H:i:s');
                 if (

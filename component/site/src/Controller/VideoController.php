@@ -23,7 +23,8 @@ final class VideoController extends BaseController
     private function integer(string $name): int
     {
         try {
-            return \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($this->input->post->get($name, null, 'RAW'));
+            return \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($this->input->post
+                ->get($name, null, 'RAW'));
         } catch (\InvalidArgumentException $error) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }

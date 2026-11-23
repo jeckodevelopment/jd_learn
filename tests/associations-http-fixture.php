@@ -62,7 +62,8 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)
+    ->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -77,15 +78,19 @@ $componentId = (int)$db->setQuery("SELECT extension_id FROM #__extensions WHERE 
 foreach (['en-GB' => 'association-home-en','it-IT' => 'association-home-it'] as $tag => $alias) {
     $menu = new \Joomla\CMS\Table\Menu($db);
     $menu->setLocation(1, 'last-child');
-    $menu->bind(['title' => $alias,'alias' => $alias,'menutype' => 'mainmenu','type' => 'component','link' => 'index.php?option=com_jlms&view=courses',
-        'component_id' => $componentId,'published' => 1,'access' => 1,'language' => $tag,'home' => 1,'params' => '{}','browserNav' => 0]);
+    $menu->bind(['title' => $alias,'alias' => $alias,'menutype' => 'mainmenu','type' => 'component','link'
+        => 'index.php?option=com_jlms&view=courses',
+        'component_id' => $componentId,'published' => 1,'access' => 1,'language' => $tag,'home' => 1,'params'
+            => '{}','browserNav' => 0]);
     if (!$menu->check() || !$menu->store()) {
         throw new \RuntimeException('Native language menu fixture failed: ' . $menu->getError());
     }
 }
 $module = new \Joomla\CMS\Table\Module($db);
-$module->bind(['title' => 'Association language switcher','module' => 'mod_languages','position' => 'sidebar-right','published' => 1,'access' => 1,'language' => '*',
-    'client_id' => 0,'showtitle' => 1,'params' => '{"dropdown":0,"image":0,"full_name":1,"active":1}','content' => '','ordering' => 1]);
+$module->bind(['title' => 'Association language switcher','module' => 'mod_languages','position'
+    => 'sidebar-right','published' => 1,'access' => 1,'language' => '*',
+    'client_id' => 0,'showtitle' => 1,'params' => '{"dropdown":0,"image":0,"full_name":1,"active":1}','content'
+        => '','ordering' => 1]);
 if (!$module->check() || !$module->store()) {
     throw new \RuntimeException('Native language switcher fixture failed');
 }

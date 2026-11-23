@@ -43,10 +43,13 @@ $direction = $this->escape($this->state->get('list.direction', 'DESC'));
                           }) ?></a></td>
       <th scope="row" class="has-context">
             <?php if ($item->checked_out) :
-                ?><?= HTMLHelper::_('jgrid.checkedout', $i, $item->editor ?? Text::_('JNONE'), $item->checked_out_time, 'courses.', false) ?><?php
+                ?><?= HTMLHelper::_('jgrid.checkedout', $i, $item->editor ?? Text::_('JNONE'), $item
+                    ->checked_out_time, 'courses.', false) ?><?php
             endif; ?>
-       <a class="jlms-admin-course-title" href="<?= Route::_('index.php?option=com_jlms&task=course.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
-       <div class="small text-body-secondary"><?= Text::_('JFIELD_ALIAS_LABEL') ?>: <?= $this->escape($item->alias) ?></div>
+       <a class="jlms-admin-course-title" href="<?= Route::_('index.php?option=com_jlms&task=course.edit&id='
+           . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
+       <div class="small text-body-secondary"><?= Text::_('JFIELD_ALIAS_LABEL') ?>: <?= $this->escape($item
+           ->alias) ?></div>
        <div class="small mt-1 jlms-admin-course-actions">
         <a href="<?= $programme ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
             <?php if (($this->courseActions[(int) $item->id]['enrollments'] ?? false)) : ?>
@@ -60,8 +63,10 @@ $direction = $this->escape($this->state->get('list.direction', 'DESC'));
       <td class="d-none d-md-table-cell"><?= $this->escape($item->category_title ?? '') ?></td>
       <td class="d-none d-lg-table-cell"><?= $this->escape($item->access_title ?? '') ?></td>
       <td class="d-none d-lg-table-cell"><?= $this->escape($item->author_name ?? Text::_('JNONE')) ?></td>
-      <td class="d-none d-md-table-cell"><?= $item->language === '*' ? Text::_('JALL') : $this->escape($item->language_title ?? $item->language) ?></td>
-      <td class="d-none d-lg-table-cell"><?= $item->modified_at ? HTMLHelper::_('date', $item->modified_at, Text::_('DATE_FORMAT_LC4')) : '' ?></td>
+      <td class="d-none d-md-table-cell"><?= $item->language === '*' ? Text::_('JALL') : $this->escape($item
+          ->language_title ?? $item->language) ?></td>
+      <td class="d-none d-lg-table-cell"><?= $item->modified_at ? HTMLHelper::_('date', $item
+          ->modified_at, Text::_('DATE_FORMAT_LC4')) : '' ?></td>
       <td class="d-none d-lg-table-cell"><?= (int) $item->id ?></td>
      </tr>
        <?php endforeach; ?>

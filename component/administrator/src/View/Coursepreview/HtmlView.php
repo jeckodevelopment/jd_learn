@@ -25,7 +25,9 @@ final class HtmlView extends BaseHtmlView
             $this->getDocument()->addScriptOptions('com_jlms.video', [
                 'preview' => true, 'course' => (int) $this->preview['course']->id,
                 'version' => (int) $this->preview['version']->id, 'lesson' => (int) $lesson->id,
-                'provider' => $lesson->provider_key, 'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
+                'provider' => $lesson->provider_key, 'policy'
+                    => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+                        ->get('video_external_policy', 'blocked'),
                 'token' => \Joomla\CMS\Session\Session::getFormToken(),
                 'previewUrl' => \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=coursepreview.playback&format=json', false),
                 'labels' => ['ready' => Text::_('COM_JLMS_COURSE_PREVIEW_VIDEO_READY'),

@@ -56,7 +56,8 @@ final class CertificateController extends BaseController
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
             }
-            Log::add('Certificate historical recovery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Certificate historical recovery failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
@@ -97,7 +98,8 @@ final class CertificateController extends BaseController
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
             }
-            Log::add('Certificate missing issuance recovery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Certificate missing issuance recovery failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
@@ -142,7 +144,8 @@ final class CertificateController extends BaseController
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
             }
-            Log::add('Certificate administrator regeneration failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Certificate administrator regeneration failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
@@ -159,7 +162,8 @@ final class CertificateController extends BaseController
             } catch (\InvalidArgumentException $error) {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
-            $file = $this->app->bootComponent('com_jlms')->getCertificateService()->adminDownload($this->app->getIdentity(), $id);
+            $file = $this->app->bootComponent('com_jlms')->getCertificateService()->adminDownload($this->app
+                ->getIdentity(), $id);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_RESOURCE_NOT_FOUND',
@@ -168,7 +172,8 @@ final class CertificateController extends BaseController
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());
             }
-            Log::add('Certificate administrator download failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Certificate administrator download failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

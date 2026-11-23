@@ -73,12 +73,14 @@ final class LessonReleaseNotice
                 continue;
             }
             try {
-                $effective = LessonAvailability::effectiveStart($row->publish_up, $row->release_after_days, $row->started_at);
+                $effective = LessonAvailability::effectiveStart($row->publish_up, $row->release_after_days, $row
+                    ->started_at);
                 if (
                     $effective === null || $effective > $now || $effective <= $window ||
                     $effective <= new \DateTimeImmutable((string) $row->enrolled_at, new \DateTimeZone('UTC')) ||
                     $effective <= new \DateTimeImmutable((string) $row->published_at, new \DateTimeZone('UTC')) ||
-                    LessonAvailability::state($row->publish_up, $row->publish_down, $row->release_after_days, $row->started_at, $now) !== 'available' ||
+                    LessonAvailability::state($row->publish_up, $row->publish_down, $row
+                        ->release_after_days, $row->started_at, $now) !== 'available' ||
                     !filter_var((string) $row->learner_email, FILTER_VALIDATE_EMAIL)
                 ) {
                     continue;
@@ -104,11 +106,14 @@ final class LessonReleaseNotice
                         'COURSE_TITLE' => (string) $row->course_title,
                         'LESSON_TITLE' => (string) $row->lesson_title,
                         'USER_FULLNAME_HTML' => htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                        'LESSON_TITLE_HTML' => htmlspecialchars((string) $row->lesson_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                        'COURSE_TITLE_HTML' => htmlspecialchars((string) $row->course_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                        'LESSON_TITLE_HTML' => htmlspecialchars((string) $row
+                            ->lesson_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                        'COURSE_TITLE_HTML' => htmlspecialchars((string) $row
+                            ->course_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                         'DASHBOARD_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard',
                         'SITE_NAME' => (string) Factory::getApplication()->get('sitename'),
-                        'SITE_NAME_HTML' => htmlspecialchars((string) Factory::getApplication()->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                        'SITE_NAME_HTML' => htmlspecialchars((string) Factory::getApplication()
+                            ->get('sitename'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                     ],
                     (int) $row->user_id
                 );

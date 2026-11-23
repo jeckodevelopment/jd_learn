@@ -49,7 +49,9 @@ final class VideofileController extends BaseController
                 $service->upload($this->app->getIdentity(), $course, $version, $lesson, $revision, $files['upload'] ?? []);
             }
             $this->setMessage(Text::_('COM_JLMS_VIDEO_FILE_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . $course . '&version_id=' . $version . '&edit_lesson=' . $lesson . '#jlms-video-file-' . $lesson, false));
+            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id='
+                . $course . '&version_id=' . $version . '&edit_lesson=' . $lesson . '#jlms-video-file-'
+                    . $lesson, false));
         } catch (\Throwable $error) {
             $code = (int) $error->getCode();
             $key = $error->getMessage();

@@ -122,10 +122,12 @@ final class HtmlView extends BaseHtmlView
         }
         // A local-only diagnostic view: no external probes and no credentials in output.
         $this->configurationDiagnostics = $actor->authorise('core.manage', 'com_jlms')
-            ? \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::summarize($this->schedulerHealth, $this->providers)
+            ? \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::summarize($this
+                ->schedulerHealth, $this->providers)
             : [];
         if ($actor->authorise('core.manage', 'com_jlms')) {
-            $storageRoot = (string) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_storage_root', '');
+            $storageRoot = (string) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+                ->get('material_storage_root', '');
             $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::storage(
                 $storageRoot,
                 JPATH_ROOT,
@@ -174,7 +176,8 @@ final class HtmlView extends BaseHtmlView
                 ->from($db->quoteName('#__mail_templates'))
                 ->whereIn($db->quoteName('template_id'), $requiredTemplates, \Joomla\Database\ParameterType::STRING);
             $installedTemplates = array_map(
-                static fn (object $row): array => ['template_id' => (string) $row->template_id, 'language' => (string) $row->language],
+                static fn (object $row): array => ['template_id' => (string) $row->template_id, 'language'
+                    => (string) $row->language],
                 $db->setQuery($mailTemplateQuery)->loadObjectList()
             );
             $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::mailTemplates(
@@ -198,9 +201,11 @@ final class HtmlView extends BaseHtmlView
                 // Only catalogue/category entries are consumed by inheritance().
                 // Other component menus must not exhaust the bounded diagnostic scan.
                 ->where('(' . $db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses')
-                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=courses&%')
+                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db
+                        ->quote('index.php?option=com_jlms&view=courses&%')
                     . ' OR ' . $db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=category')
-                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=com_jlms&view=category&%') . ')')
+                    . ' OR ' . $db->quoteName('link') . ' LIKE ' . $db
+                        ->quote('index.php?option=com_jlms&view=category&%') . ')')
                 ->order($db->quoteName('id') . ' ASC');
             $menuOptions = array_map(
                 static fn (object $item): array => ['link' => (string) $item->link, 'params' => (string) $item->params],

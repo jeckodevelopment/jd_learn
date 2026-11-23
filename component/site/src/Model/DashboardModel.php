@@ -16,20 +16,23 @@ class DashboardModel extends ListModel
         parent::populateState($ordering, $direction);
         $filter = Factory::getApplication()->getInput()->get('filter', [], 'array');
         $progress = $filter['progress'] ?? 'all';
-        $this->setState('filter.progress', is_string($progress) && in_array($progress, ['all', 'not_started', 'in_progress', 'completed'], true) ? $progress : 'all');
+        $this->setState('filter.progress', is_string($progress)
+            && in_array($progress, ['all', 'not_started', 'in_progress', 'completed'], true) ? $progress : 'all');
         $this->setState('list.limit', max(1, min(50, (int) $this->state->get('list.limit', 20))));
     }
 
     protected function getStoreId($id = '')
     {
-        return parent::getStoreId($id . ':' . (int) Factory::getApplication()->getIdentity()->id . ':' . $this->getState('filter.progress', 'all'));
+        return parent::getStoreId($id . ':' . (int) Factory::getApplication()->getIdentity()->id . ':' . $this
+            ->getState('filter.progress', 'all'));
     }
 
     protected function getListQuery()
     {
         $app = Factory::getApplication();
         try {
-            return $app->bootComponent('com_jlms')->getDashboardService()->query($app->getIdentity(), (string) $this->getState('filter.progress', 'all'));
+            return $app->bootComponent('com_jlms')->getDashboardService()->query($app
+                ->getIdentity(), (string) $this->getState('filter.progress', 'all'));
         } catch (\Throwable $error) {
             $this->fail($error);
         }
@@ -76,7 +79,8 @@ class DashboardModel extends ListModel
 
     public function getProgressForm(): Form
     {
-        $form = Form::getInstance('com_jlms.dashboard.filters', JPATH_SITE . '/components/com_jlms/forms/dashboard.xml', ['control' => 'filter']);
+        $form = Form::getInstance('com_jlms.dashboard.filters', JPATH_SITE
+            . '/components/com_jlms/forms/dashboard.xml', ['control' => 'filter']);
         $form->bind(['progress' => $this->getState('filter.progress', 'all')]);
         return $form;
     }

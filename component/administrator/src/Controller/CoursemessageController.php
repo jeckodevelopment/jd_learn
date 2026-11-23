@@ -64,7 +64,8 @@ final class CoursemessageController extends BaseController
     }
     private function redirectTo(int $course): void
     {
-        $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=coursemessage&id=' . $course, false));
+        $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=coursemessage&id='
+            . $course, false));
     }
     public function preview(): void
     {
@@ -73,7 +74,8 @@ final class CoursemessageController extends BaseController
             $service = $this->app->bootComponent('com_jlms')->getCourseCommunicationService();
             $plan = $service->preview($this->app->getIdentity(), $course, $raw['subject'], $raw['body'], $ids, $raw['template'] ?? []);
             $key = 'com_jlms.coursemessage.' . (int)$this->app->getIdentity()->id . '.' . $course;
-            $this->app->getSession()->set($key, ['subject' => $plan['subject'],'body' => $plan['body'],'template' => $plan['template'],'enrollment_ids' => $plan['enrollment_ids'],
+            $this->app->getSession()->set($key, ['subject' => $plan['subject'],'body'
+                => $plan['body'],'template' => $plan['template'],'enrollment_ids' => $plan['enrollment_ids'],
                 // An explicit new preview begins a new idempotency window. Reloads do not.
                 'mutation_id' => \Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::create()]);
             $this->setMessage(Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT', $plan['count']));
@@ -89,7 +91,8 @@ final class CoursemessageController extends BaseController
             if (!is_string($raw['mutation_id'] ?? null)) {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
-            $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->test($this->app->getIdentity(), $course, $raw['subject'], $raw['body'], $raw['mutation_id'], $raw['template'] ?? []);
+            $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->test($this->app
+                ->getIdentity(), $course, $raw['subject'], $raw['body'], $raw['mutation_id'], $raw['template'] ?? []);
             $this->setMessage(Text::_('COM_JLMS_COMMUNICATION_TEST_QUEUED'));
             $this->redirectTo($course);
         } catch (\Throwable $error) {
@@ -108,7 +111,8 @@ final class CoursemessageController extends BaseController
             if ($raw['confirmation'] !== '1') {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
-            $job = $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->queue($this->app->getIdentity(), $course, $raw['subject'], $raw['body'], $ids, $raw['impact_hash'], $raw['mutation_id'], $raw['template'] ?? []);
+            $job = $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->queue($this->app
+                ->getIdentity(), $course, $raw['subject'], $raw['body'], $ids, $raw['impact_hash'], $raw['mutation_id'], $raw['template'] ?? []);
             $key = 'com_jlms.coursemessage.' . (int)$this->app->getIdentity()->id . '.' . $course;
             $this->app->getSession()->clear($key);
             $this->setMessage(Text::sprintf('COM_JLMS_COMMUNICATION_JOB_QUEUED', $job));
@@ -131,7 +135,8 @@ final class CoursemessageController extends BaseController
         if (in_array($code, [400,401,403,404,409,413,422], true) && str_starts_with($key, 'COM_JLMS_')) {
             throw new \RuntimeException(Text::_($key), $code);
         }
-        \Joomla\CMS\Log\Log::add('Course communication failed; correlation=' . bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+        \Joomla\CMS\Log\Log::add('Course communication failed; correlation='
+            . bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
         throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
     }
 }

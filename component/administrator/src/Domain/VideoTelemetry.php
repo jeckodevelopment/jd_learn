@@ -17,12 +17,14 @@ final class VideoTelemetry
         $spent = $state['spent_wall_ms'] ?? 0;
         foreach ($events as $event) {
             if (
-                !is_array($event) || count($event) !== 6 || !is_int($event['id'] ?? null) || !is_string($event['type'] ?? null)
+                !is_array($event) || count($event) !== 6 || !is_int($event['id'] ?? null)
+                    || !is_string($event['type'] ?? null)
                 || !is_int($event['position_ms'] ?? null) || !is_int($event['client_ms'] ?? null)
                 || !is_int($event['rate_milli'] ?? null) || !is_bool($event['playing'] ?? null)
                 || !in_array($event['type'], ['play', 'position', 'pause', 'seeking', 'seeked', 'ended',
                     'buffering', 'ratechange'], true)
-                || $event['id'] <= ($state['last_event_id'] ?? 0) || $event['position_ms'] < 0 || $event['position_ms'] > $duration
+                || $event['id'] <= ($state['last_event_id'] ?? 0) || $event['position_ms'] < 0
+                    || $event['position_ms'] > $duration
                 || $event['client_ms'] < ($state['client_ms'] ?? 0) || $event['client_ms'] > 86400000
                 || !in_array($event['rate_milli'], [250, 500, 750, 1000, 1250, 1500, 1750, 2000], true)
             ) {
@@ -37,7 +39,8 @@ final class VideoTelemetry
                 $expected = $elapsed * $state['rate_milli'] / 1000;
                 $cost = $distance > 0 ? (int) ceil($distance * 1000 / $state['rate_milli']) : 0;
                 if (
-                    $elapsed > 0 && $elapsed <= 30000 && $distance > 0 && abs($distance - $expected) <= max(250, $expected * 0.02)
+                    $elapsed > 0 && $elapsed <= 30000 && $distance > 0
+                        && abs($distance - $expected) <= max(250, $expected * 0.02)
                     && $spent + $cost <= max(0, $nowMs - $issued) + 2000
                 ) {
                     $intervals[] = [$state['position_ms'], $event['position_ms']];

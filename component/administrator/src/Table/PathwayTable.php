@@ -27,7 +27,8 @@ final class PathwayTable extends Table
     public function check(): bool
     {
         $this->title = trim((string) $this->title);
-        $this->alias = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe((string) ($this->alias ?: $this->title));
+        $this->alias = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe((string) ($this->alias ?: $this
+            ->title));
         $this->description = (string) ($this->description ?? '');
         $this->language = (string) ($this->language ?? '*');
         $this->params_json = (string) ($this->params_json ?: '{}');

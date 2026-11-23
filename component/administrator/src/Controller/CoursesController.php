@@ -36,7 +36,8 @@ final class CoursesController extends \Joomla\CMS\MVC\Controller\BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 422);
         }
         $actor = CourseEditorAccess::fresh($this->app->getIdentity());
-        $model = $this->app->bootComponent('com_jlms')->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
+        $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
+            ->createModel('Course', 'Administrator', ['ignore_request' => true]);
         $item = $model->getItem($id);
         if (!$item || !CourseEditorAccess::canEdit($actor, $item)) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);

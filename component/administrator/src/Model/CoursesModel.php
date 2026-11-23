@@ -79,7 +79,8 @@ final class CoursesModel extends ListModel
             ->select('cat.title AS category_title,cat.lft AS category_lft,access_level.title AS access_title,author.name AS author_name,editor.name AS editor,lang.title AS language_title')
             ->from('#__jlms_courses AS a')->leftJoin('#__categories AS cat ON cat.id=a.catid')
             ->leftJoin('#__viewlevels AS access_level ON access_level.id=a.content_access')
-            ->leftJoin('#__users AS author ON author.id=a.created_by')->leftJoin('#__users AS editor ON editor.id=a.checked_out')
+            ->leftJoin('#__users AS author ON author.id=a.created_by')
+                ->leftJoin('#__users AS editor ON editor.id=a.checked_out')
             ->leftJoin('#__languages AS lang ON lang.lang_code=a.language');
         if ($ids) {
             $q->whereIn('a.id', $ids);
@@ -112,7 +113,8 @@ final class CoursesModel extends ListModel
                     $q->where('a.id=:search_id')->bind(':search_id', $id, ParameterType::INTEGER);
                 } else {
                     $search = '%' . $db->escape($value, true) . '%';
-                    $q->where('(a.title LIKE :title_search OR a.alias LIKE :alias_search)')->bind(':title_search', $search)->bind(':alias_search', $search);
+                    $q->where('(a.title LIKE :title_search OR a.alias LIKE :alias_search)')
+                        ->bind(':title_search', $search)->bind(':alias_search', $search);
                 }
             } elseif ($name === 'published') {
                 if (!in_array($value, ['-2','0','1','2'], true)) {
@@ -144,7 +146,8 @@ final class CoursesModel extends ListModel
                 if ($name === 'category_id') {
                     $category = (int) $value;
                     $q->innerJoin('#__categories AS selected_category ON selected_category.id=:category')
-                        ->where('cat.lft>=selected_category.lft AND cat.rgt<=selected_category.rgt')->bind(':category', $category, ParameterType::INTEGER);
+                        ->where('cat.lft>=selected_category.lft AND cat.rgt<=selected_category.rgt')
+                            ->bind(':category', $category, ParameterType::INTEGER);
                 } elseif ($name === 'author_id') {
                     $author = (int) $value;
                     $q->where('a.created_by=:author')->bind(':author', $author, ParameterType::INTEGER);

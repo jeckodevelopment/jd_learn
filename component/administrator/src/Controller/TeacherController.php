@@ -104,7 +104,8 @@ final class TeacherController extends FormController
     {
         $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id);
         $actor->clearAccessRights();
-        return $actor->id && !$actor->block && $actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor->authorise('core.create', 'com_jlms');
+        return $actor->id && !$actor->block && $actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor
+            ->authorise('core.create', 'com_jlms');
     }
 
     protected function allowEdit($data = [], $key = 'id')

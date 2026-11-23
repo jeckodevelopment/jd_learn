@@ -55,7 +55,8 @@ final class TeacherAssignmentNotice
             $name = trim((string) $recipient->name);
             $queue->enqueue(
                 $courseId,
-                hash('sha256', 'teacher.assigned:' . $courseId . ':' . (int) $course->revision . ':' . (int) $recipient->id),
+                hash('sha256', 'teacher.assigned:' . $courseId . ':' . (int) $course->revision . ':'
+                    . (int) $recipient->id),
                 'com_jlms.teacher.assigned',
                 $language,
                 (string) $recipient->email,

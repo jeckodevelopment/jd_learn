@@ -27,7 +27,8 @@ final class TeachingRules
             || !is_bool($rules['certificate_enabled'] ?? null)
             || ($mode === 'consultation' && $rules['certificate_enabled'] !== false)
             || ($mode === 'learning' && $completionPolicy !== 'all_required')
-            || ($mode === 'consultation' && ($completionPolicy !== 'none' || ($rules['sequence_mode'] ?? '') !== 'free'))
+            || ($mode === 'consultation' && ($completionPolicy !== 'none' || ($rules['sequence_mode']
+                ?? '') !== 'free'))
             || !is_int($threshold) || $threshold < 1 || $threshold > 10000
             || !is_bool($publicPreviews)
         ) {

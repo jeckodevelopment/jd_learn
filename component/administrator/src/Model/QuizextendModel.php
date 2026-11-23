@@ -17,6 +17,8 @@ final class QuizextendModel extends FormModel
     {
         $app = Factory::getApplication();
         $i = $app->getInput();
-        return $app->bootComponent('com_jlms')->getQuizDeadlineService()->editor($app->getIdentity(), $i->getInt('id', 0), $i->getInt('lesson_id', 0), $i->getInt('enrollment_id', 0), $i->getInt('attempt_id', 0), $i->getInt('minutes', 5));
+        return $app->bootComponent('com_jlms')->getQuizDeadlineService()->editor($app->getIdentity(), $i
+            ->getInt('id', 0), $i->getInt('lesson_id', 0), $i->getInt('enrollment_id', 0), $i
+                ->getInt('attempt_id', 0), $i->getInt('minutes', 5));
     }
 }

@@ -51,17 +51,20 @@ class EnrollmentController extends BaseController
                     // Do not resend a pending confirmation when the enrollment request is replayed.
                     if ($consentService->state((int) $user->id) === 'none') {
                         try {
-                            $consentService->request((int) $user->id, (string) $user->email, (string) $user->name, 'enrollment');
+                            $consentService->request((int) $user->id, (string) $user->email, (string) $user
+                                ->name, 'enrollment');
                             $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_CONFIRMATION_SENT'), 'message');
                         } catch (\Throwable) {
                             // Consent email failure must not roll back a successful enrollment.
-                            Log::add('Enrollment consent email failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+                            Log::add('Enrollment consent email failed; correlation='
+                                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
                             $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_REQUEST_FAILED'), 'warning');
                         }
                     }
                 }
             }
-            $this->setRedirect(Route::_('index.php?option=com_jlms&view=classroom&id=' . $id . '&lesson_id=' . $lessonId, false));
+            $this->setRedirect(Route::_('index.php?option=com_jlms&view=classroom&id=' . $id . '&lesson_id='
+                . $lessonId, false));
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW',
                 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'COM_JLMS_IDEMPOTENCY_CONFLICT',
@@ -127,12 +130,16 @@ class EnrollmentController extends BaseController
         }
         try {
             $id = CurriculumService::id($this->input->get('id', 0, 'raw'));
-            $target = $this->app->bootComponent('com_jlms')->getLearningService()->resumeTarget($this->app->getIdentity(), $this->app->getLanguage()->getTag(), $id);
-            $this->setRedirect(Route::_('index.php?option=com_jlms&view=classroom&id=' . $target['enrollment_id'] . '&lesson_id=' . $target['lesson_id'] . '&lang=' . rawurlencode($target['language']), false));
+            $target = $this->app->bootComponent('com_jlms')->getLearningService()->resumeTarget($this->app
+                ->getIdentity(), $this->app->getLanguage()->getTag(), $id);
+            $this->setRedirect(Route::_('index.php?option=com_jlms&view=classroom&id='
+                . $target['enrollment_id'] . '&lesson_id=' . $target['lesson_id'] . '&lang='
+                    . rawurlencode($target['language']), false));
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];
             if (in_array($error->getMessage(), $known, true)) {
-                throw new \RuntimeException(Text::_($error->getMessage()), in_array($error->getCode(), [400, 401, 403, 404], true) ? $error->getCode() : 400);
+                throw new \RuntimeException(Text::_($error->getMessage()), in_array($error
+                    ->getCode(), [400, 401, 403, 404], true) ? $error->getCode() : 400);
             }
             Log::add('Resume target failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);

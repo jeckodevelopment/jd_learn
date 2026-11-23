@@ -42,7 +42,8 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
      <tbody>
        <?php foreach ($this->items as $i => $item) : ?>
        <tr class="row<?= $i % 2 ?>">
-        <th scope="row"><a href="<?= Route::_('index.php?option=com_jlms&view=certificate&id=' . (int) $item['id']) ?>"><?= $this->escape($item['student_name']) ?></a></th>
+        <th scope="row"><a href="<?= Route::_('index.php?option=com_jlms&view=certificate&id='
+            . (int) $item['id']) ?>"><?= $this->escape($item['student_name']) ?></a></th>
         <td><?= $this->escape($item['course_title']) ?></td>
         <td><?= $this->escape($item['serial']) ?></td>
         <td><?= Text::_($item['status'] === 'revoked' ? 'COM_JLMS_CERTIFICATE_STATE_REVOKED' : ($item['status'] === 'ready' ? 'COM_JLMS_CERTIFICATE_STATE_READY' : 'COM_JLMS_CERTIFICATE_STATE_PENDING')) ?></td>
@@ -73,7 +74,8 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
           <th scope="row"><?= $this->escape($missing['student_name']) ?></th>
           <td><?= $this->escape($missing['course_title']) ?></td>
           <td><?= $this->escape($missing['completed_at']) ?></td>
-          <td><?= Text::_($unissuedReasonLabels[$missing['reason']] ?? 'COM_JLMS_CERTIFICATE_DIAG_INVALID_CONFIGURATION') ?></td>
+          <td><?= Text::_($unissuedReasonLabels[$missing['reason']]
+              ?? 'COM_JLMS_CERTIFICATE_DIAG_INVALID_CONFIGURATION') ?></td>
           <td>
             <?php if (in_array($missing['reason'], ['version_disabled', 'eligible_missing'], true)) : ?>
                 <?php $recoveryFormId = 'jlms-recover-' . (int) $missing['enrollment_id']; ?>

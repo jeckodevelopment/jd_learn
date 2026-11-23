@@ -107,9 +107,11 @@ final class CourseController extends FormController
         if (in_array(strtolower($this->getTask()), ['programme', 'programmerules'], true)) {
             $id = (int) $model->getState('course.id');
             try {
-                $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app->getIdentity());
+                $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app
+                    ->getIdentity());
                 $item = $model->getItem($id);
-                $version = $this->app->bootComponent('com_jlms')->getCurriculumService()->createDraft($actor, $id, (int) $item->revision);
+                $version = $this->app->bootComponent('com_jlms')->getCurriculumService()
+                    ->createDraft($actor, $id, (int) $item->revision);
                 $url = 'index.php?option=com_jlms&view=curriculum&id=' . $id . '&version_id=' . $version;
                 if (strtolower($this->getTask()) === 'programmerules') {
                     $url .= '&edit_rules=1#jlms-teaching-rules';

@@ -37,9 +37,11 @@ final class TeacherModel extends ListModel
     {
         $profile = $this->getProfile();
         $app = Factory::getApplication();
-        $query = $app->bootComponent('com_jlms')->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag());
+        $query = $app->bootComponent('com_jlms')->getCatalogService()->query($app->getIdentity(), $app
+            ->getLanguage()->getTag());
         $id = (int) $profile->id;
         return $query->innerJoin('#__jlms_course_teachers AS teaching ON teaching.course_id=c.id')
-            ->where('teaching.teacher_id=:teacher')->bind(':teacher', $id, ParameterType::INTEGER)->order('c.title,c.id');
+            ->where('teaching.teacher_id=:teacher')->bind(':teacher', $id, ParameterType::INTEGER)
+                ->order('c.title,c.id');
     }
 }

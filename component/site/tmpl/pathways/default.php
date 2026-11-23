@@ -23,7 +23,8 @@ use Jlms\Component\Jlms\Administrator\Application\PathwayArtwork;
         <?php endif; ?>
    <div class="jlms-pathway-card__content">
     <p class="jlms-pathway-card__category"><?= $this->escape($item->category_title) ?></p>
-    <h2 class="jlms-pathway-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=pathway&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
+    <h2 class="jlms-pathway-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=pathway&id='
+        . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
         <?php if (trim(strip_tags((string) $item->description)) !== '') : ?>
      <p class="jlms-pathway-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr(trim(strip_tags((string) $item->description)), 0, 300)) ?></p>
         <?php endif; ?>
@@ -34,5 +35,6 @@ use Jlms\Component\Jlms\Administrator\Application\PathwayArtwork;
         ?><p id="jlms-pathways-empty"><?= Text::_('COM_JLMS_PATHWAYS_EMPTY') ?></p><?php
  endif; ?>
  </div>
- <nav id="jlms-pathways-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
+ <nav id="jlms-pathways-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination
+     ->getPagesLinks() ?></nav>
 </section>

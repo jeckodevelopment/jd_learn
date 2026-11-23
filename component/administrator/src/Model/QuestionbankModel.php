@@ -50,7 +50,8 @@ final class QuestionbankModel extends ListModel
         $this->setState('list.direction', strtoupper($direction));
         $this->setState('list.limit', $limit);
         $this->setState('list.start', $start);
-        $result = $app->bootComponent('com_jlms')->getQuestionBankService()->adminListing($app->getIdentity(), $filters, $start, $limit, $ordering, $direction);
+        $result = $app->bootComponent('com_jlms')->getQuestionBankService()->adminListing($app
+            ->getIdentity(), $filters, $start, $limit, $ordering, $direction);
         $result['pagination'] = new \Joomla\CMS\Pagination\Pagination($result['total'], $start, $limit);
         return $result;
     }

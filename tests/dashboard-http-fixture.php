@@ -29,7 +29,8 @@ if ($mode === 'enable') {
     if ($old === false) {
         throw new \RuntimeException('FE-06 fixture menu missing');
     }
-    file_put_contents(dirname($root) . '/dashboard-navigation-original.json', json_encode(['id' => $menuId,'params' => $old], JSON_THROW_ON_ERROR));
+    file_put_contents(dirname($root) . '/dashboard-navigation-original.json', json_encode(['id'
+        => $menuId,'params' => $old], JSON_THROW_ON_ERROR));
     $params = json_decode((string)$old, true) ?: [];
     $params['show_personal_navigation'] = 1;
     $q = $db->prepare('UPDATE joomla_menu SET params=? WHERE id=?');

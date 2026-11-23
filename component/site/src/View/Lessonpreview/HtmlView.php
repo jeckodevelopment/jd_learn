@@ -15,7 +15,8 @@ final class HtmlView extends BaseHtmlView
     public function display($tpl = null): void
     {
         $this->item = $this->get('Item');
-        $this->getDocument()->setTitle(Text::sprintf('COM_JLMS_PUBLIC_LESSON_PREVIEW_TITLE', $this->item['lesson']->title));
+        $this->getDocument()->setTitle(Text::sprintf('COM_JLMS_PUBLIC_LESSON_PREVIEW_TITLE', $this
+            ->item['lesson']->title));
         $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         Factory::getApplication()->setHeader('Cache-Control', 'private, no-store', true);

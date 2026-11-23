@@ -158,7 +158,8 @@ final class EnrollmentManagerNotice
                             'USER_FULLNAME_HTML' => htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                             'COURSE_TITLE' => $courseTitle,
                             'COURSE_TITLE_HTML' => htmlspecialchars($courseTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                            'COURSE_MANAGEMENT_URL' => Uri::root() . 'administrator/index.php?option=com_jlms&view=enrollments&id=' . $courseId,
+                            'COURSE_MANAGEMENT_URL' => Uri::root()
+                                . 'administrator/index.php?option=com_jlms&view=enrollments&id=' . $courseId,
                             'SITE_NAME' => $siteName,
                             'SITE_NAME_HTML' => htmlspecialchars($siteName, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                         ],

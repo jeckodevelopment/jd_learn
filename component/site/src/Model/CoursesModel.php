@@ -38,16 +38,20 @@ class CoursesModel extends ListModel
         $tagId = $filter['tag_id'] ?? 0;
         $this->setState('filter.tag_id', max(0, is_scalar($tagId) ? (int) $tagId : 0));
         $difficulty = $filter['difficulty'] ?? '';
-        $this->setState('filter.difficulty', is_string($difficulty) && in_array($difficulty, ['beginner', 'intermediate', 'advanced'], true) ? $difficulty : '');
+        $this->setState('filter.difficulty', is_string($difficulty)
+            && in_array($difficulty, ['beginner', 'intermediate', 'advanced'], true) ? $difficulty : '');
         $duration = $filter['duration'] ?? '';
-        $this->setState('filter.duration', is_string($duration) && in_array($duration, ['under-30', '30-60', '61-120', 'over-120'], true) ? $duration : '');
+        $this->setState('filter.duration', is_string($duration)
+            && in_array($duration, ['under-30', '30-60', '61-120', 'over-120'], true) ? $duration : '');
         $available = $filter['available'] ?? '';
         // A promotional listing remains visible unless the visitor opts in.
         $this->setState('filter.available', $available === '1' ? '1' : '');
         $layout = $filter['layout'] ?? 'grid';
         $this->setState('filter.layout', is_string($layout) && in_array($layout, ['grid', 'list'], true) ? $layout : 'grid');
-        $this->setState('filter.teacher_id', max(0, is_scalar($filter['teacher_id'] ?? 0) ? (int) ($filter['teacher_id'] ?? 0) : 0));
-        $this->setState('filter.pathway_id', max(0, is_scalar($filter['pathway_id'] ?? 0) ? (int) ($filter['pathway_id'] ?? 0) : 0));
+        $this->setState('filter.teacher_id', max(0, is_scalar($filter['teacher_id']
+            ?? 0) ? (int) ($filter['teacher_id'] ?? 0) : 0));
+        $this->setState('filter.pathway_id', max(0, is_scalar($filter['pathway_id']
+            ?? 0) ? (int) ($filter['pathway_id'] ?? 0) : 0));
     }
 
     protected function getListQuery()

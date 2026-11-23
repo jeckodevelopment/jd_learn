@@ -25,7 +25,8 @@ final class CategoriesModel extends ListModel
             return null;
         }
         $app = Factory::getApplication();
-        return $app->bootComponent('com_jlms')->getCatalogService()->category($app->getIdentity(), $app->getLanguage()->getTag(), $id);
+        return $app->bootComponent('com_jlms')->getCatalogService()->category($app->getIdentity(), $app
+            ->getLanguage()->getTag(), $id);
     }
 
     protected function getListQuery()
@@ -33,12 +34,15 @@ final class CategoriesModel extends ListModel
         $app = Factory::getApplication();
         $parent = $this->getParent();
         $id = $parent ? (int) $parent->id : 1;
-        return $app->bootComponent('com_jlms')->getCatalogService()->categoryQuery($app->getIdentity(), $app->getLanguage()->getTag())
-            ->where('cat.parent_id = :parentId')->bind(':parentId', $id, ParameterType::INTEGER)->order('cat.lft, cat.id');
+        return $app->bootComponent('com_jlms')->getCatalogService()->categoryQuery($app->getIdentity(), $app
+            ->getLanguage()->getTag())
+            ->where('cat.parent_id = :parentId')->bind(':parentId', $id, ParameterType::INTEGER)
+                ->order('cat.lft, cat.id');
     }
 
     public function getPagination()
     {
-        return new Pagination($this->getTotal(), $this->getStart(), (int) $this->getState('list.limit', 20), (string) $this->getState('pagination.prefix', ''));
+        return new Pagination($this->getTotal(), $this->getStart(), (int) $this
+            ->getState('list.limit', 20), (string) $this->getState('pagination.prefix', ''));
     }
 }

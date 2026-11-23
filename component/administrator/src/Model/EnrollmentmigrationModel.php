@@ -13,7 +13,8 @@ final class EnrollmentmigrationModel extends FormModel
 {
     public function getForm($data = [], $loadData = true)
     {
-        return $this->loadForm('com_jlms.enrollmentmigration', 'enrollmentmigration', ['control' => 'jform','load_data' => false]);
+        return $this->loadForm('com_jlms.enrollmentmigration', 'enrollmentmigration', ['control'
+            => 'jform','load_data' => false]);
     }
     public function getItem(): array
     {
@@ -37,7 +38,8 @@ final class EnrollmentmigrationModel extends FormModel
                 }
                 $mapping[$from] = $to;
             }
-            $impact = $app->bootComponent('com_jlms')->getEnrollmentMigrationService()->preview($app->getIdentity(), $course, $enrollment, $mapping, !$hasMapping);
+            $impact = $app->bootComponent('com_jlms')->getEnrollmentMigrationService()->preview($app
+                ->getIdentity(), $course, $enrollment, $mapping, !$hasMapping);
             return ['course_id' => $course,'impact' => $impact];
         } catch (\Throwable $error) {
             if ($error instanceof \InvalidArgumentException) {

@@ -100,7 +100,8 @@ final class QuestionbankController extends BaseController
             if ($action === 'duplicate') {
                 $copy = $service->duplicate($this->app->getIdentity(), $id);
                 $this->setMessage(Text::_('COM_JLMS_QUESTION_DUPLICATED'));
-                $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=question&id=' . $copy, false));
+                $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=question&id='
+                    . $copy, false));
             } elseif ($action === 'trash' || $action === 'restore') {
                 $service->trash($this->app->getIdentity(), $id, $action === 'restore');
                 $this->setMessage(Text::_($action === 'restore' ? 'JLIB_APPLICATION_SUCCESS_ITEM_RESTORED' : 'JLIB_APPLICATION_SUCCESS_ITEM_TRASHED'));

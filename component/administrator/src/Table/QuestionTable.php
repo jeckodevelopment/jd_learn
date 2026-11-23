@@ -28,7 +28,8 @@ final class QuestionTable extends Table
     {
         $db = $this->getDatabase();
         $category = (int) $this->catid;
-        $q = $db->createQuery()->select('asset_id')->from('#__categories')->where('id = :category')->bind(':category', $category, ParameterType::INTEGER);
+        $q = $db->createQuery()->select('asset_id')->from('#__categories')->where('id = :category')
+            ->bind(':category', $category, ParameterType::INTEGER);
         return (int) $db->setQuery($q)->loadResult() ?: parent::_getAssetParentId($table, $id);
     }
 }

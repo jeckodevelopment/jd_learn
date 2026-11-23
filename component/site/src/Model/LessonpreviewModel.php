@@ -24,7 +24,8 @@ final class LessonpreviewModel extends ItemModel
         $service = $app->bootComponent('com_jlms')->getCatalogService();
         $course = $service->course($actor, $app->getLanguage()->getTag(), $courseId);
         $lesson = $service->publicLessonPreview($actor, $app->getLanguage()->getTag(), $courseId, $lessonId);
-        $materials = $app->bootComponent('com_jlms')->getMaterialService()->publicLessonPreviewList($courseId, (int) $course->current_version_id, $lessonId);
+        $materials = $app->bootComponent('com_jlms')->getMaterialService()
+            ->publicLessonPreviewList($courseId, (int) $course->current_version_id, $lessonId);
         return ['course' => $course, 'lesson' => $lesson, 'materials' => $materials];
     }
 }

@@ -38,13 +38,17 @@ try {
 } finally {
     date_default_timezone_set($oldZone);
 }
-$course = (object)['publish_up' => '2030-01-15 09:00:00.123456','publish_down' => null,'params_json' => '{"other":"retain","calendar":{"_schema":1,"timezone":"Europe/Rome","starts_at":"2030-01-15 09:00:00","ends_at":null}}'];
-$merged = Schedule::merge(['calendar_timezone' => 'Europe/Rome','calendar_publish_up' => '2030-01-15 10:00:00'], $course, $course->params_json, 'UTC');
+$course = (object)['publish_up' => '2030-01-15 09:00:00.123456','publish_down' => null,'params_json'
+    => '{"other":"retain","calendar":{"_schema":1,"timezone":"Europe/Rome","starts_at":"2030-01-15 09:00:00","ends_at":null}}'];
+$merged = Schedule::merge(['calendar_timezone' => 'Europe/Rome','calendar_publish_up'
+    => '2030-01-15 10:00:00'], $course, $course->params_json, 'UTC');
 calendarCheck($merged['publish_up'] === $course->publish_up && json_decode($merged['params_json'], true)['other'] === 'retain', 'Unchanged precision and unrelated params retained');
 $merged = Schedule::merge(['calendar_timezone' => 'UTC'], $course, $course->params_json, 'UTC');
 calendarCheck($merged['publish_up'] === $course->publish_up && json_decode($merged['params_json'], true)['calendar']['starts_at'] === '2030-01-15 09:00:00', 'API timezone-only update retains UTC instants');
-calendarReject(fn()=>Schedule::merge(['calendar_ends_at' => '2029-01-01 00:00:00'], $course, $course->params_json, 'UTC'), 'Reversed interval rejected');
-calendarReject(fn()=>Schedule::merge(['calendar_timezone' => ['UTC']], $course, $course->params_json, 'UTC'), 'Array zone rejected');
+calendarReject(fn()=>Schedule::merge(['calendar_ends_at' => '2029-01-01 00:00:00'], $course, $course
+    ->params_json, 'UTC'), 'Reversed interval rejected');
+calendarReject(fn()=>Schedule::merge(['calendar_timezone' => ['UTC']], $course, $course
+    ->params_json, 'UTC'), 'Array zone rejected');
 calendarCheck(Schedule::merge([], $course, $course->params_json, 'UTC') === [], 'Old clients leave calendar untouched');
 $start = '2030-01-01 00:00:00.000000';
 $end = '2030-01-01 00:00:00.000001';
