@@ -109,6 +109,8 @@ try {
 teacherExpect(TeacherProfiles::canEdit($actor,$teacher),
     'teacher profile edit authorization restores after account unblocked');
 teacherExpect((int)$teacher->revision===1&&(int)$teacher->created_by===(int)$actor->id&&!str_contains($teacher->params_json,'injected'),'Revision ownership and allowlisted params persisted');
+teacherExpect(($teacher->website ?? null)==='https://example.invalid/teacher',
+    'SECDEV-03: harmless public teacher website remains available');
 $asset=new \Joomla\CMS\Table\Asset($db);$asset->loadByName('com_jlms.teacher.'.$public);
 $parent=(int)$db->setQuery('SELECT asset_id FROM #__categories WHERE id='.$teacherCategory)->loadResult();
 teacherExpect((int)$asset->parent_id===$parent,'Teacher asset inherits native teacher category');
@@ -156,7 +158,11 @@ foreach ([[999999],[$public,$public],['1 OR 1=1'],[['bad']]] as $bad) {
  teacherExpect(TeacherProfiles::selected($db,$course)===[$public,$private]&&(int)$courseModel->getItem($course)->revision===3,'Denied assignment preserves course and relations');
 }
 $edit=array_replace($teacherBase,['id'=>$public]);
-foreach ([['website'=>'javascript:alert(1)'],['website'=>'https://user:pass@example.invalid/'],['state'=>'-1'],['image_alt'=>['array']],['access'=>['array']],['user_id'=>99999999],['bio'=>str_repeat('a',65536)]] as $bad) {
+foreach ([['website'=>'javascript:alert(1)'],['website'=>'https://user:pass@example.invalid/'],
+    ['website'=>'https://example.invalid/?accessToken=TEST_CREDENTIAL'],
+    ['website'=>'https://example.invalid/path#clientSecret=TEST_CREDENTIAL'],
+    ['website'=>'https://example.invalid/?api_key=TEST_CREDENTIAL'],
+    ['website'=>['https://example.invalid/']],['state'=>'-1'],['image_alt'=>['array']],['access'=>['array']],['user_id'=>99999999],['bio'=>str_repeat('a',65536)]] as $bad) {
  teacherExpect(!$teacherModel->save(array_replace($edit,$bad)),'Invalid teacher profile rejected');
  teacherExpect((int)$teacherModel->getItem($public)->revision===1,'Invalid profile retains revision');
 }
