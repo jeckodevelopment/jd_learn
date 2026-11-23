@@ -81,12 +81,7 @@ final class LearningService
         $window = CourseSchedule::read($course);
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $base = $startedAt ? new \DateTimeImmutable($startedAt, new \DateTimeZone('UTC')) : $now;
-        foreach ([
-            $window['publish_up'],
-            $window['starts_at'],
-            $edition->starts_at,
-            $enrollmentStartsAt,
-        ] as $candidate) {
+        foreach ([$window['publish_up'], $window['starts_at'], $edition->starts_at, $enrollmentStartsAt] as $candidate) {
             if ($candidate) {
                 $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
                 if ($date > $base) {
@@ -112,13 +107,7 @@ final class LearningService
                 }
             }
             $close = null;
-            foreach ([
-                $lesson->publish_down,
-                $window['publish_down'],
-                $window['ends_at'],
-                $edition->ends_at,
-                $enrollmentEndsAt,
-            ] as $candidate) {
+            foreach ([$lesson->publish_down, $window['publish_down'], $window['ends_at'], $edition->ends_at, $enrollmentEndsAt] as $candidate) {
                 if ($candidate) {
                     $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
                     if (!$close || $date < $close) {
@@ -751,12 +740,7 @@ final class LearningService
                 $last = $this->lesson((int) $version->id, $lessonId);
                 $this->assertLessonAvailable($last, $enrollment);
             } catch (\RuntimeException $error) {
-                if (!in_array($error->getMessage(), [
-                    'COM_JLMS_RESOURCE_NOT_FOUND',
-                    'COM_JLMS_LEARNING_DENIED',
-                    'COM_JLMS_LESSON_NOT_YET_AVAILABLE',
-                    'COM_JLMS_LESSON_CLOSED',
-                ], true)) {
+                if (!in_array($error->getMessage(), ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LESSON_NOT_YET_AVAILABLE', 'COM_JLMS_LESSON_CLOSED'], true)) {
                     throw $error;
                 }
                 $lessonId = 0;
