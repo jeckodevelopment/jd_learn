@@ -117,6 +117,19 @@ def main() -> int:
         return 2
     print(f"SECDEV-02 PHPCS PSR-12: historical={sum(before.values())}; "
           f"current={sum(now.values())}; introduced={sum(introduced.values())}")
+    # Prioritize remediation by the real PHPCS findings rather than by file size
+    # or hand-picked classes. Only aggregate counts are printed: no source text.
+    rules = Counter()
+    by_file = Counter()
+    for (filename, rule, _message, _code), count in now.items():
+        rules[rule] += count
+        by_file[filename] += count
+    print("SECDEV-02 PHPCS most frequent rule violations:")
+    for rule, count in rules.most_common(20):
+        print(f"  {rule}: {count}")
+    print("SECDEV-02 PHPCS largest source debts:")
+    for filename, count in by_file.most_common(20):
+        print(f"  {filename}: {count}")
     for (filename, source, _message, _code), count in sorted(introduced.items())[:40]:
         print(f"New PSR-12 finding: {filename}: {source} x{count}", file=sys.stderr)
     if now:
