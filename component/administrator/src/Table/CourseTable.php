@@ -142,7 +142,8 @@ final class CourseTable extends Table implements TaggableTableInterface
         $tracking = $this->_trackAssets;
         if ($stable || $prepared) {
             $this->_trackAssets = false;
-            $title = (object) ['id' => (int) $asset->id, 'title' => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)];
+            $title = (object) ['id' => (int) $asset->id,
+                'title' => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)];
             $this->getDatabase()->updateObject('#__assets', $title, 'id');
         }
         try {

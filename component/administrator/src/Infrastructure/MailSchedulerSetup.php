@@ -15,7 +15,8 @@ final class MailSchedulerSetup
     public static function status(DatabaseInterface $db): array
     {
         $query = $db->getQuery(true)
-            ->select($db->quoteName(['id', 'state', 'execution_rules', 'last_execution', 'last_exit_code', 'times_executed', 'times_failed']))
+            ->select($db->quoteName(['id', 'state', 'execution_rules', 'last_execution',
+                'last_exit_code', 'times_executed', 'times_failed']))
             ->from($db->quoteName('#__scheduler_tasks'))
             ->where($db->quoteName('type') . ' = ' . $db->quote(self::TASK_TYPE))
             ->order($db->quoteName('id') . ' ASC');

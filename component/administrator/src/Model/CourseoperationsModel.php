@@ -12,7 +12,8 @@ final class CourseoperationsModel extends FormModel
 {
     public function getForm($data = [], $loadData = true)
     {
-        return $this->loadForm('com_jlms.courseoperations', 'courseoperations', ['control' => 'jform','load_data' => false]);
+        return $this->loadForm('com_jlms.courseoperations', 'courseoperations', ['control' => 'jform',
+            'load_data' => false]);
     }
     public function getItem(): array
     {

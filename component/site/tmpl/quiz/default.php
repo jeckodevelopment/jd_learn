@@ -17,7 +17,8 @@ $open = $attempt && $attempt['state'] === 'open';
   <p><?= Text::_('COM_JLMS_QUIZ_SAVE_NOTICE') ?></p>
  </section>
  <p id="jlms-quiz-availability"><?= Text::_('COM_JLMS_QUIZ_NEXT') ?>: <?= $this->escape(gmdate('Y-m-d H:i:s', $i['next_attempt_at'])) ?> UTC · <?= Text::_('COM_JLMS_QUIZ_FEEDBACK') ?>: <?= Text::_(match ($i['feedback_policy']) {
-        'never'=>'COM_JLMS_QUIZ_FEEDBACK_NEVER','after_submit'=>'COM_JLMS_QUIZ_FEEDBACK_PRACTICE',default=>'COM_JLMS_QUIZ_FEEDBACK_DEFAULT'
+        'never'=>'COM_JLMS_QUIZ_FEEDBACK_NEVER','after_submit'=>'COM_JLMS_QUIZ_FEEDBACK_PRACTICE',
+            default=>'COM_JLMS_QUIZ_FEEDBACK_DEFAULT'
                                 }) ?></p>
  <p id="jlms-quiz-time-allowance"><?= Text::_('COM_JLMS_QUIZ_TIME_EXTRA') ?>: <?= (int)$i['extra_time_seconds'] ?> s · <?= Text::_('COM_JLMS_QUIZ_TIME_NEXT') ?>: <?= (int)$i['next_time_seconds'] ?> s</p>
  <p id="jlms-quiz-extension" role="status" aria-live="polite"><?= Text::_('COM_JLMS_QUIZ_EXTEND_NOTICE') ?>: <?= (int)$i['extension_seconds'] ?></p>

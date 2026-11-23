@@ -102,7 +102,9 @@ final class VideoFilePolicy
         if ($videos !== 1 || $audios > 1) {
             throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
-        return ['original_name' => $name, 'mime_type' => 'video/mp4', 'byte_size' => $size, 'sha256' => hash_file('sha256', $path),
-            'duration_ms' => (int) round((float) $duration * 1000), 'video_codec' => 'h264', 'audio_codec' => $audios ? 'aac' : null];
+        return ['original_name' => $name, 'mime_type' => 'video/mp4', 'byte_size' => $size,
+            'sha256' => hash_file('sha256', $path),
+            'duration_ms' => (int) round((float) $duration * 1000), 'video_codec' => 'h264',
+                'audio_codec' => $audios ? 'aac' : null];
     }
 }

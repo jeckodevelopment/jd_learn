@@ -25,6 +25,7 @@ final class QuestionModel extends FormModel
         if (!$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.quiz.manage', 'com_jlms')) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
-        return ['id' => 0,'revision' => 1,'language' => '*','state' => 0,'kind' => 'single','default_points' => 1,'options' => [['label' => '','correct' => '0'],['label' => '','correct' => '0']]];
+        return ['id' => 0,'revision' => 1,'language' => '*','state' => 0,'kind' => 'single',
+            'default_points' => 1,'options' => [['label' => '','correct' => '0'],['label' => '','correct' => '0']]];
     }
 }

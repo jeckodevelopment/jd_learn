@@ -84,7 +84,8 @@ final class CoursepreviewModel extends BaseModel
                 // The administrator may have authored HTML with permissive filters.
                 // Keep text formatting without executing markup in the administrator origin.
                 $filter = new InputFilter(
-                    ['p', 'br', 'h2', 'h3', 'h4', 'strong', 'em', 'b', 'i', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
+                    ['p', 'br', 'h2', 'h3', 'h4', 'strong', 'em', 'b', 'i', 'ul', 'ol', 'li',
+                        'blockquote', 'pre', 'code', 'table', 'thead', 'tbody', 'tr', 'th', 'td'],
                     [],
                 );
                 $lesson = (object) [

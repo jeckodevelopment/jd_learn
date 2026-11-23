@@ -24,7 +24,8 @@ final class HtmlView extends BaseHtmlView
             );
         } catch (\Throwable $error) {
             if (
-                in_array($error->getMessage(), ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT',
+                in_array($error->getMessage(), ['JERROR_ALERTNOAUTHOR', 'COM_JLMS_RESOURCE_NOT_FOUND',
+                    'COM_JLMS_INVALID_INPUT',
                 'COM_JLMS_CERTIFICATE_UNAVAILABLE', 'COM_JLMS_CERTIFICATE_AUDIT_FAILED'], true)
             ) {
                 throw new \RuntimeException(Text::_($error->getMessage()), (int) $error->getCode());

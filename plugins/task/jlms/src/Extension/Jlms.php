@@ -18,13 +18,17 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
 
     protected $autoloadLanguage = true;
     protected const TASKS_MAP = [
-        'jlms.quiz.expire' => ['langConstPrefix' => 'PLG_TASK_JLMS_EXPIRE','form' => 'expire','method' => 'expireQuizzes'],
-        'jlms.materials.cleanup' => ['langConstPrefix' => 'PLG_TASK_JLMS_CLEANUP','form' => 'expire','method' => 'cleanupMaterials'],
-        'jlms.mail.dispatch' => ['langConstPrefix' => 'PLG_TASK_JLMS_MAIL','form' => 'expire','method' => 'dispatchMail'],
+        'jlms.quiz.expire' => ['langConstPrefix' => 'PLG_TASK_JLMS_EXPIRE','form' => 'expire',
+            'method' => 'expireQuizzes'],
+        'jlms.materials.cleanup' => ['langConstPrefix' => 'PLG_TASK_JLMS_CLEANUP','form' => 'expire',
+            'method' => 'cleanupMaterials'],
+        'jlms.mail.dispatch' => ['langConstPrefix' => 'PLG_TASK_JLMS_MAIL','form' => 'expire',
+            'method' => 'dispatchMail'],
     ];
     public static function getSubscribedEvents(): array
     {
-        return ['onTaskOptionsList' => 'advertiseRoutines','onExecuteTask' => 'standardRoutineHandler','onContentPrepareForm' => 'enhanceTaskItemForm'];
+        return ['onTaskOptionsList' => 'advertiseRoutines','onExecuteTask' => 'standardRoutineHandler',
+            'onContentPrepareForm' => 'enhanceTaskItemForm'];
     }
     protected function expireQuizzes(ExecuteTaskEvent $event): int
     {

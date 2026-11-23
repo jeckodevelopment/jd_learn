@@ -10,7 +10,8 @@ use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 /** Promotional data only. Never receives lesson bodies, provider configuration or learner data. */
 final class CoursePresentation
 {
-    public const FIELDS = ['description', 'objectives', 'audience', 'prerequisite_text', 'difficulty', 'estimated_minutes', 'image', 'image_alt', 'image_decorative', 'seo_title', 'seo_description'];
+    public const FIELDS = ['description', 'objectives', 'audience', 'prerequisite_text', 'difficulty',
+        'estimated_minutes', 'image', 'image_alt', 'image_decorative', 'seo_title', 'seo_description'];
 
     public static function html(string $html): string
     {

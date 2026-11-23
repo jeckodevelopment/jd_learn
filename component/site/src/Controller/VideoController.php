@@ -65,7 +65,8 @@ final class VideoController extends BaseController
             $code = (int) $error->getCode();
             $key = $error->getMessage();
             $safe = in_array($code, [400,401,403,404,405,409,413,422,429,503], true)
-                && (preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) || in_array($key, ['JINVALID_TOKEN', 'JERROR_LAYOUT_PAGE_NOT_FOUND'], true));
+                && (preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) || in_array($key, ['JINVALID_TOKEN',
+                    'JERROR_LAYOUT_PAGE_NOT_FOUND'], true));
             if (!$safe) {
                 Log::add('Video operation failed; correlation=' . $request, Log::ERROR, 'com_jlms');
                 $key = 'COM_JLMS_SAVE_FAILED';

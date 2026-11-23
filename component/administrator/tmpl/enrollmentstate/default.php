@@ -8,7 +8,8 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 $statusLabel = fn ($status): string => match ($status) {
     'active' => Text::_('COM_JLMS_ROSTER_ACTIVE'), 'suspended' => Text::_('COM_JLMS_ROSTER_SUSPENDED'),
-    'completed' => Text::_('COM_JLMS_ROSTER_LEGACY_COMPLETED'), 'cancelled' => Text::_('COM_JLMS_ROSTER_CANCELLED'), default => $this->escape($status),
+    'completed' => Text::_('COM_JLMS_ROSTER_LEGACY_COMPLETED'),
+        'cancelled' => Text::_('COM_JLMS_ROSTER_CANCELLED'), default => $this->escape($status),
 };
 HTMLHelper::_('behavior.formvalidator');
 $i = $this->item;

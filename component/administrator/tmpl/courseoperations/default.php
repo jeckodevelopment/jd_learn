@@ -5,7 +5,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 $i = $this->item;
 $p = $i['impact'];
-$labels = ['admissions_close' => 'COM_JLMS_COURSE_ADMISSIONS_CLOSE','admissions_open' => 'COM_JLMS_COURSE_ADMISSIONS_OPEN','delivery_suspend' => 'COM_JLMS_COURSE_DELIVERY_SUSPEND','delivery_resume' => 'COM_JLMS_COURSE_DELIVERY_RESUME'];
+$labels = ['admissions_close' => 'COM_JLMS_COURSE_ADMISSIONS_CLOSE',
+    'admissions_open' => 'COM_JLMS_COURSE_ADMISSIONS_OPEN',
+        'delivery_suspend' => 'COM_JLMS_COURSE_DELIVERY_SUSPEND',
+            'delivery_resume' => 'COM_JLMS_COURSE_DELIVERY_RESUME'];
 HTMLHelper::_('behavior.formvalidator');
 ?>
 <section id="jlms-course-operations"><h1><?= Text::_('COM_JLMS_COURSE_OPERATIONS_TITLE') ?></h1>

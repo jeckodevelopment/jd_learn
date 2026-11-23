@@ -81,7 +81,8 @@ final class CourseAnnouncementConsent
                 ->bind(':user', $userId, ParameterType::INTEGER);
             $this->db->setQuery($remove)->execute();
             $query = $this->db->createQuery()->insert('#__jlms_mail_consents')
-                ->columns(['user_id', 'state', 'origin', 'policy_version', 'requested_at', 'confirmed_at', 'revoked_at', 'token_hash', 'token_expires_at'])
+                ->columns(['user_id', 'state', 'origin', 'policy_version', 'requested_at',
+                    'confirmed_at', 'revoked_at', 'token_hash', 'token_expires_at'])
                 ->values(implode(',', [
                     ':user', $this->db->quote('pending'), ':origin', $this->db->quote(self::POLICY_VERSION),
                     $this->db->quote($now), 'NULL', 'NULL', ':hash', 'DATE_ADD(UTC_TIMESTAMP(), INTERVAL 24 HOUR)',
@@ -97,7 +98,8 @@ final class CourseAnnouncementConsent
         $url = \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=mailconsent.confirm&token=' . rawurlencode($token), false, 0, true);
         $mail = new MailTemplate('com_jlms.course.consent', '*');
         $mail->addRecipient($email, $name);
-        $mail->addTemplateData(['USER_FULLNAME' => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'), 'CONFIRM_URL' => $url, 'SITE_NAME' => htmlspecialchars(\Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES, 'UTF-8')]);
+        $mail->addTemplateData(['USER_FULLNAME' => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
+            'CONFIRM_URL' => $url, 'SITE_NAME' => htmlspecialchars(\Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES, 'UTF-8')]);
         $mail->addUnsafeTags(['USER_FULLNAME', 'CONFIRM_URL', 'SITE_NAME']);
         if (!$mail->send()) {
             throw new \RuntimeException('COM_JLMS_MAIL_CONSENT_DELIVERY_FAILED');
