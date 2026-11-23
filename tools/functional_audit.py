@@ -72,7 +72,7 @@ def validate_evidence(reference):
         # adjacent same-quote literals (with the exact original bytes).
         # Recover the displayed value only for PHP evidence lookup; never
         # relax references to paths, line ranges or unrelated files.
-        joined_literals = re.sub(r"""(['"])\\s*\\.\\s*\\1""", "", current)
+        joined_literals = re.sub(r"""(['"])\s*\.\s*\1""", "", current)
         if anchor not in joined_literals and normalized_anchor not in normalize(joined_literals):
             raise ValueError(f"Evidence anchor not found: {reference}")
     return path
