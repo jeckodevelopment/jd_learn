@@ -23,7 +23,8 @@ REMOVED_NAMESPACE = re.compile(r"(?<![A-Za-z0-9_])(?:Joomla\\CMS\\Input\\Input)(
 # This is a conservative, non-exhaustive source scan, not an AST/type audit.
 REMOVED_JOOMLA6 = re.compile(
     r"(?<![A-Za-z0-9_])(?:"
-    r"Joomla\\CMS\\Filesystem\\|Joomla\\CMS\\Adapter\\|"
+    r"Joomla\\CMS\\Filesystem\\[A-Za-z_]\w*|"
+    r"Joomla\\CMS\\Adapter\\[A-Za-z_]\w*|"
     r"Joomla\\CMS\\Application\\(?:BaseApplication|CliApplication)|"
     r"JPATH_PLATFORM|JCOMPAT_UNICODE_PROPERTIES|FinderIndexerHelper"
     r")(?![A-Za-z0-9_])"
