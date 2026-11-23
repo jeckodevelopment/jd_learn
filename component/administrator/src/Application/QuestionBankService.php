@@ -195,7 +195,8 @@ final class QuestionBankService
         if (!$actor->authorise('core.manage', 'com_jlms')) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
-        $q = $this->db->createQuery()->select('q.id, q.catid, q.language, q.state, q.revision, r.id AS revision_id, r.kind, r.prompt, c.title AS category_title')
+        $q = $this->db->createQuery()->select(('q.id, q.catid, q.language, q.state, q.revision, r.id AS '
+            . 'revision_id, r.kind, r.prompt, c.title AS category_title'))
             ->from('#__jlms_questions AS q')->innerJoin('#__jlms_question_revisions AS r ON r.id = q.current_revision_id')
             ->innerJoin('#__categories AS c ON c.id = q.catid')->order('q.id DESC');
         if ($before > 0) {
@@ -242,8 +243,14 @@ final class QuestionBankService
         $start = max(0, $start);
         $limit = max(1, min(100, $limit));
         $db = $this->db;
-        $base = $db->createQuery()->select('q.id,q.catid,q.language,q.state,q.revision,q.modified_at,r.id AS revision_id,r.kind,r.prompt,c.title AS category_title')
-            ->select('(EXISTS (SELECT 1 FROM #__jlms_question_revisions AS ur INNER JOIN #__jlms_quiz_questions AS uq ON uq.question_revision_id=ur.id WHERE ur.question_id=q.id) OR EXISTS (SELECT 1 FROM #__jlms_question_revisions AS ur2 INNER JOIN #__jlms_attempt_questions AS ua ON ua.question_revision_id=ur2.id WHERE ur2.question_id=q.id)) AS in_use')
+        $base = $db->createQuery()->select(('q.id,q.catid,q.language,q.state,q.revision,q.modified_at,r.id AS '
+            . 'revision_id,r.kind,r.prompt,c.title AS category_title'))
+            ->select(('(EXISTS (SELECT 1 FROM #__jlms_question_revisions AS ur INNER JOIN '
+                . '#__jlms_quiz_questions AS uq ON uq.question_revision_id=ur.id '
+                . 'WHERE ur.question_id=q.id) OR EXISTS (SELECT 1 FROM '
+                . '#__jlms_question_revisions AS ur2 INNER JOIN '
+                . '#__jlms_attempt_questions AS ua ON ua.question_revision_id=ur2.id '
+                . 'WHERE ur2.question_id=q.id)) AS in_use'))
             ->from('#__jlms_questions AS q')->innerJoin('#__jlms_question_revisions AS r ON r.id=q.current_revision_id')
             ->innerJoin('#__categories AS c ON c.id=q.catid AND c.extension=' . $db->quote('com_jlms.question'));
         if ($rawCategory !== '' && !$category) {

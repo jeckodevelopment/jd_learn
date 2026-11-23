@@ -166,7 +166,8 @@ final class CurriculumService
     /** @return list<object> */
     private function publicationAttachments(int $versionId): array
     {
-        $query = $this->db->createQuery()->select('f.status, f.scan_json, a.id, a.lesson_id, a.state, a.preview, a.publish_up, a.publish_down')
+        $query = $this->db->createQuery()->select(('f.status, f.scan_json, a.id, a.lesson_id, a.state, a.preview, '
+            . 'a.publish_up, a.publish_down'))
             ->from($this->db->quoteName('#__jlms_attachments', 'a'))
             ->innerJoin($this->db->quoteName('#__jlms_assets', 'f') . ' ON f.id = a.asset_id')
             ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)

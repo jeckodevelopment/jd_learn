@@ -19,18 +19,26 @@ final class DashboardService
     {
         $actor = $this->learning->freshActor($identity);
         $id = (int) $actor->id;
-        $q = $this->db->createQuery()->select('e.id, e.user_id, e.course_id, e.course_version_id, e.status, e.required_total, e.completed_total, e.started_at, e.completed_at, e.last_activity_at, e.starts_at, e.ends_at, v.title_snapshot, v.status AS version_status, v.rules_json, ed.status AS edition_status, ed.starts_at AS edition_starts_at, ed.ends_at AS edition_ends_at, c.language')
+        $q = $this->db->createQuery()->select(('e.id, e.user_id, e.course_id, e.course_version_id, e.status, '
+            . 'e.required_total, e.completed_total, e.started_at, e.completed_at, '
+            . 'e.last_activity_at, e.starts_at, e.ends_at, v.title_snapshot, '
+            . 'v.status AS version_status, v.rules_json, ed.status AS '
+            . 'edition_status, ed.starts_at AS edition_starts_at, ed.ends_at AS '
+            . 'edition_ends_at, c.language'))
             ->from('#__jlms_enrollments AS e')
             ->leftJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id AND v.course_id = e.course_id')
-            ->leftJoin('#__jlms_editions AS ed ON ed.id = e.edition_id AND ed.course_id = e.course_id AND ed.course_version_id = e.course_version_id')
+            ->leftJoin(('#__jlms_editions AS ed ON ed.id = e.edition_id AND ed.course_id = '
+                . 'e.course_id AND ed.course_version_id = e.course_version_id'))
             ->leftJoin('#__jlms_courses AS c ON c.id = e.course_id')
             ->where('e.user_id = :dashboardOwner')->bind(':dashboardOwner', $id, ParameterType::INTEGER);
         if ($progress === 'completed') {
             $q->where('e.completed_at IS NOT NULL');
         } elseif ($progress === 'not_started') {
-            $q->where('e.completed_at IS NULL AND e.started_at IS NULL AND e.last_activity_at IS NULL AND e.completed_total = 0');
+            $q->where(('e.completed_at IS NULL AND e.started_at IS NULL AND '
+                . 'e.last_activity_at IS NULL AND e.completed_total = 0'));
         } elseif ($progress === 'in_progress') {
-            $q->where('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0)');
+            $q->where(('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR '
+                . 'e.last_activity_at IS NOT NULL OR e.completed_total > 0)'));
         }
         return $q->order('e.last_activity_at DESC, e.id DESC');
     }
@@ -49,7 +57,9 @@ final class DashboardService
         $counts->clear('select')->clear('order')->select([
             "COUNT(*) AS history_total",
             "SUM(CASE WHEN e.completed_at IS NOT NULL THEN 1 ELSE 0 END) AS completed_total",
-            "SUM(CASE WHEN e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0) THEN 1 ELSE 0 END) AS active_total",
+            ("SUM(CASE WHEN e.completed_at IS NULL AND (e.started_at IS NOT NULL "
+                . "OR e.last_activity_at IS NOT NULL OR e.completed_total > 0) THEN 1 "
+                . "ELSE 0 END) AS active_total"),
         ]);
         $summary = $this->db->setQuery($counts)->loadObject();
         $total = (int) ($summary->history_total ?? 0);
@@ -101,7 +111,8 @@ final class DashboardService
         // The correlated lookup is scoped to the same user as the outer owner query.
         $query = $this->query($identity)
             ->whereIn('e.course_id', $courseIds)
-            ->where('e.id = (SELECT MAX(latest.id) FROM #__jlms_enrollments AS latest WHERE latest.user_id = e.user_id AND latest.course_id = e.course_id)')
+            ->where(('e.id = (SELECT MAX(latest.id) FROM #__jlms_enrollments AS latest '
+                . 'WHERE latest.user_id = e.user_id AND latest.course_id = e.course_id)'))
             ->clear('order')->order('e.id DESC');
         // At most one enrollment per requested course (50); preserve current
         // authorization and presentation checks for each resulting card.

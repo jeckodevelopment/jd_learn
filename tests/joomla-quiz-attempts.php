@@ -13,10 +13,17 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // rewriting extension settings concurrently can deadlock before the test barrier.
 if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='task' AND element='jlms'))");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR "
+    . "(folder='task' AND element='jlms'))"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE "
+    . "type='plugin' AND folder='user' AND element='joomla'"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE "
+    . "type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') "
+    . "WHERE type='component' AND element='com_jlms'"));
     unset($fixtureDb);
 }
 
@@ -245,7 +252,8 @@ attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $a
 $qid = $a['questions'][0]['id'];
 attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), json_encode([$qid => [['bad']]], JSON_THROW_ON_ERROR), false), 422, 'nested option value rejected without warning');
 $beforeRevokeAttempt = $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc();
-$beforeRevokeAnswers = $db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList();
+$beforeRevokeAnswers = $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
+. '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=') . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList();
 $student->getAuthorisedViewLevels();
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
 try {
@@ -257,7 +265,8 @@ try {
         'revoked quiz operations preserve score revision and attempt state'
     );
     attemptExpect(
-        $db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList() === $beforeRevokeAnswers,
+        $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS '
+        . 'q ON q.id=aa.attempt_question_id WHERE q.attempt_id=') . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList() === $beforeRevokeAnswers,
         'previously saved answers survive access revocation'
     );
 } finally {

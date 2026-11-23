@@ -48,22 +48,39 @@ $publication = $component->getPublicationService();
 $authoring = $component->getCurriculumService();
 WorkflowInstaller::install($app, $db);
 $workflow = new Workflow('com_jlms.course', $app, $db);
-$reviewStageCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_stages WHERE title='COM_JLMS_IN_REVIEW' AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult();
-$reviewTransitionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult();
-$archiveCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult();
-$archiveTransitionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_ARCHIVE_COURSE','COM_JLMS_RESTORE_COURSE') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult();
+$reviewStageCount = (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_stages WHERE "
+    . "title='COM_JLMS_IN_REVIEW' AND workflow_id=(SELECT id FROM "
+    . "#__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult();
+$reviewTransitionCount = (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN "
+    . "('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult();
+$archiveCount = (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' "
+    . "AND workflow_id=(SELECT id FROM #__workflows WHERE "
+    . "extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult();
+$archiveTransitionCount = (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN "
+    . "('COM_JLMS_ARCHIVE_COURSE','COM_JLMS_RESTORE_COURSE') AND "
+    . "workflow_id=(SELECT id FROM #__workflows WHERE "
+    . "extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult();
 WorkflowInstaller::install($app, $db);
 if (
     $reviewStageCount !== 1 || $reviewTransitionCount !== 5
     || $archiveCount !== 1 || $archiveTransitionCount !== 2
-    || $reviewStageCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_stages WHERE title='COM_JLMS_IN_REVIEW' AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
-    || $reviewTransitionCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
-    || $archiveCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
-    || $archiveTransitionCount !== (int)$db->setQuery("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN ('COM_JLMS_ARCHIVE_COURSE','COM_JLMS_RESTORE_COURSE') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")->loadResult()
+    || $reviewStageCount !== (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_stages WHERE "
+        . "title='COM_JLMS_IN_REVIEW' AND workflow_id=(SELECT id FROM "
+        . "#__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult()
+    || $reviewTransitionCount !== (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN "
+        . "('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult()
+    || $archiveCount !== (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' "
+        . "AND workflow_id=(SELECT id FROM #__workflows WHERE "
+        . "extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult()
+    || $archiveTransitionCount !== (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_transitions WHERE title "
+        . "IN ('COM_JLMS_ARCHIVE_COURSE','COM_JLMS_RESTORE_COURSE') AND "
+        . "workflow_id=(SELECT id FROM #__workflows WHERE "
+        . "extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult()
 ) {
     throw new RuntimeException('Review workflow install/upgrade must be idempotent.');
 }
-$cat = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$cat = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $model = $component->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $alias = 'review-' . bin2hex(random_bytes(6));
 $data = ['id' => 0,'title' => 'Review workflow test','alias' => $alias,'catid' => $cat,'language'
@@ -152,7 +169,8 @@ $finderLifecycleWitness = static function ($event) use (&$finderLifecycle, $db, 
 };
 $app->getDispatcher()->addListener('onFinderAfterSave', $finderLifecycleWitness);
 $transition($archive, $version);
-$row = $db->setQuery('SELECT state,current_version_id,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id=' . $course)->loadObject();
+$row = $db->setQuery(('SELECT state,current_version_id,admissions_open,delivery_enabled '
+    . 'FROM #__jlms_courses WHERE id=') . $course)->loadObject();
 $expect((int)$row->admissions_open === 0 && (int)$row->delivery_enabled === 0, 'archive closes both admissions and lesson delivery in one transition');
 $expect((int)$row->state === 2 && (int)$row->current_version_id === $version
     && $stage() === 'JARCHIVED', 'archive hides discovery without changing the live version');
@@ -169,7 +187,8 @@ try {
     $component->getCatalogService()->enrolledCourse($guest, 'en-GB', $course);
     throw new RuntimeException('Archived course remained accessible for enrolled classroom');
 } catch (RuntimeException $e) {
-    $expect($e->getCode() === 404, 'archived course denies classroom lookup while retaining its immutable published version');
+    $expect($e->getCode() === 404, ('archived course denies classroom lookup while retaining its '
+        . 'immutable published version'));
 }
 $restoreChoices = $publication->transitions($actor, $course, $version);
 $restore = null;
@@ -181,7 +200,8 @@ foreach ($restoreChoices as $candidate) {
 }
 $expect($restore !== null, 'archived course offers an explicit restore transition');
 $transition($restore, $version);
-$row = $db->setQuery('SELECT state,current_version_id,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id=' . $course)->loadObject();
+$row = $db->setQuery(('SELECT state,current_version_id,admissions_open,delivery_enabled '
+    . 'FROM #__jlms_courses WHERE id=') . $course)->loadObject();
 $expect((int)$row->admissions_open === 0 && (int)$row->delivery_enabled === 0, 'restore never automatically reopens admissions or delivery');
 // LearningService::enrolledCourse denies suspended delivery with HTTP 403;
 // the dedicated learning fixture exercises that user-facing contract.
@@ -191,12 +211,14 @@ $expect($finderLifecycle !== [] && (int)end($finderLifecycle)['state'] === 1
     && (int)end($finderLifecycle)['event_state'] === 1 && (int)end($finderLifecycle)['admissions_open'] === 0
         && (int)end($finderLifecycle)['delivery_enabled'] === 0, 'restore publishes committed Finder refresh while both gates remain closed');
 $app->getDispatcher()->removeListener('onFinderAfterSave', $finderLifecycleWitness);
-$beforeAccess = $db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id=' . $course)->loadAssoc();
+$beforeAccess = $db->setQuery(('SELECT state,current_version_id,catalog_access,content_access FROM '
+    . '#__jlms_courses WHERE id=') . $course)->loadAssoc();
 $publicAccess = $component->getCatalogService()->accessPreview($actor, $course, 'en-GB', [1]);
 $registeredAccess = $component->getCatalogService()->accessPreview($actor, $course, 'en-GB', [1,2]);
 $expect($publicAccess['catalog_visible'] && !$publicAccess['content_allowed'], 'level preview separates public catalogue access from restricted course content');
 $expect($registeredAccess['catalog_visible'] && $registeredAccess['content_allowed'], 'combined Joomla view levels satisfy both configured access gates');
-$expect($beforeAccess === $db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id=' . $course)->loadAssoc(), 'access preview does not alter course state, version, or access settings');
+$expect($beforeAccess === $db->setQuery(('SELECT state,current_version_id,catalog_access,content_access FROM '
+    . '#__jlms_courses WHERE id=') . $course)->loadAssoc(), 'access preview does not alter course state, version, or access settings');
 try {
     $component->getCatalogService()->accessPreview($guest, $course, 'en-GB', [1]);
     throw new RuntimeException('Unauthorized user received access preview');

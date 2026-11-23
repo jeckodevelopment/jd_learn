@@ -15,7 +15,8 @@ if (($argv[2] ?? '') !== 'retained') {
         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     if (($argv[3] ?? '') === 'disabled-upgrade') {
-        $fixtureDb->exec("UPDATE joomla_extensions SET enabled=0 WHERE type='plugin' AND folder='user' AND element='jdlearnconsent'");
+        $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=0 WHERE type='plugin' AND "
+            . "folder='user' AND element='jdlearnconsent'"));
     }
     unset($fixtureDb);
 }
@@ -69,7 +70,8 @@ if (!$packagePath || !str_ends_with($packagePath, '.zip')) {
     throw new \RuntimeException('Package ZIP required.');
 }
 if ($expectDisabledPlugin) {
-    $db->setQuery("UPDATE #__extensions SET enabled=0 WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->execute();
+    $db->setQuery(("UPDATE #__extensions SET enabled=0 WHERE type='plugin' AND "
+        . "folder='system' AND element='jlmsmenu'"))->execute();
 }
 $package = \Joomla\CMS\Installer\InstallerHelper::unpack($packagePath, true);
 $installer = new \Joomla\CMS\Installer\Installer();
@@ -80,18 +82,21 @@ try {
         throw new \RuntimeException('Native package installation failed: ' . json_encode($app
             ->getMessageQueue(), JSON_THROW_ON_ERROR));
     }
-    $privacyPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='privacy' AND element='jdlearn'")->loadResult();
+    $privacyPlugin = $db->setQuery(("SELECT enabled FROM #__extensions WHERE type='plugin' AND "
+        . "folder='privacy' AND element='jdlearn'"))->loadResult();
     if ($privacyPlugin === null || (int) $privacyPlugin !== 1) {
         throw new \RuntimeException('The package installer did not enable the JD Learn privacy plugin.');
     }
-    $consentPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='user' AND element='jdlearnconsent'")->loadResult();
+    $consentPlugin = $db->setQuery(("SELECT enabled FROM #__extensions WHERE type='plugin' AND "
+        . "folder='user' AND element='jdlearnconsent'"))->loadResult();
     $expectedConsentState = $expectDisabledPlugin ? 0 : 1;
     if ($consentPlugin === null || (int) $consentPlugin !== $expectedConsentState) {
         throw new \RuntimeException($expectDisabledPlugin
             ? 'A JD Learn package upgrade must preserve the registration consent plugin state.'
             : 'The package installer did not enable the registration consent plugin.');
     }
-    $menuPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->loadResult();
+    $menuPlugin = $db->setQuery(("SELECT enabled FROM #__extensions WHERE type='plugin' AND "
+        . "folder='system' AND element='jlmsmenu'"))->loadResult();
     $expectedPluginState = $expectDisabledPlugin ? 0 : 1;
     if ($menuPlugin === null || (int) $menuPlugin !== $expectedPluginState) {
         throw new \RuntimeException($expectDisabledPlugin

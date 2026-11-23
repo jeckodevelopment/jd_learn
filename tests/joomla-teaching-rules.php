@@ -96,7 +96,8 @@ function ruleLearning(?int $course = null): array
     global $db;
     if ($course !== null) {
         return [$db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')
-            ->loadAssocList(),$db->setQuery('SELECT a.* FROM #__jlms_attempts a JOIN #__jlms_enrollments e ON e.id=a.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY a.id')->loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
+            ->loadAssocList(),$db->setQuery(('SELECT a.* FROM #__jlms_attempts a JOIN #__jlms_enrollments e ON '
+                . 'e.id=a.enrollment_id WHERE e.course_id=') . $course . ' ORDER BY a.id')->loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
     }return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db
         ->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db
             ->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
@@ -347,10 +348,13 @@ $certificateService->adminRecoverHistorical($actor, $oldEnrollment, 'Administrat
 $recovered = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='
     . (int)$oldEnrollment)->loadResult();
 ruleExpect($recovered === 1, 'Completed historical enrollment receives exactly one certificate');
-$recoveryAudit = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE action='historical_recovery' AND certificate_id IN (SELECT id FROM #__jlms_certificates WHERE enrollment_id=" . (int)$oldEnrollment . ')')->loadResult();
+$recoveryAudit = (int)$db->setQuery(("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE "
+    . "action='historical_recovery' AND certificate_id IN (SELECT id FROM "
+    . "#__jlms_certificates WHERE enrollment_id=") . (int)$oldEnrollment . ')')->loadResult();
 ruleExpect($recoveryAudit === 1, 'Historical recovery records a durable audit entry');
 
-$historicalDocument = $db->setQuery('SELECT d.id, d.status FROM #__jlms_certificate_documents AS d JOIN #__jlms_certificates AS c ON c.current_document_id=d.id WHERE c.enrollment_id=' . (int)$oldEnrollment)->loadObject();
+$historicalDocument = $db->setQuery(('SELECT d.id, d.status FROM #__jlms_certificate_documents AS d JOIN '
+    . '#__jlms_certificates AS c ON c.current_document_id=d.id WHERE c.enrollment_id=') . (int)$oldEnrollment)->loadObject();
 ruleExpect($historicalDocument->status === 'pending_render', 'Recovered historical certificate is queued for on-demand PDF rendering');
 $certificateDownload = $certificateService->download($actor, $oldEnrollment);
 try {
@@ -446,14 +450,16 @@ try {
         'Eligible completion has no existing certificate before recovery'
     );
     $certificateService->adminRecoverMissing($actor, $newEnrollment, 'Administrative recovery of missed eligible issuance');
-    $eligibleCertificate = $db->setQuery('SELECT c.id, c.current_document_id, c.issued_at FROM #__jlms_certificates AS c WHERE c.enrollment_id=' . (int)$newEnrollment)->loadObject();
+    $eligibleCertificate = $db->setQuery(('SELECT c.id, c.current_document_id, c.issued_at FROM '
+        . '#__jlms_certificates AS c WHERE c.enrollment_id=') . (int)$newEnrollment)->loadObject();
     ruleExpect(
         $eligibleCertificate && (int)$eligibleCertificate->current_document_id > 0
         && (string)$eligibleCertificate->issued_at === (string)ruleRow('enrollments', $newEnrollment)->completed_at,
         'Eligible recovery preserves completion timestamp and issues exactly one certificate'
     );
     ruleExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE action='missing_issuance_recovery' AND certificate_id=" . (int)$eligibleCertificate->id)->loadResult() === 1,
+        (int)$db->setQuery(("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE "
+            . "action='missing_issuance_recovery' AND certificate_id=") . (int)$eligibleCertificate->id)->loadResult() === 1,
         'Eligible recovery creates one durable audit entry'
     );
     try {
@@ -484,7 +490,8 @@ $progressBeforeConsultationPlayback = (int)$db->setQuery('SELECT COUNT(*) FROM #
 $sessionsBeforeConsultationPlayback = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id=' . (int)$consultationVideo)->loadResult();
 $consultationGrant = $video->playback($actor, 'en-GB', $consultationEnrollment, $consultationVideo, true);
 ruleExpect($consultationGrant['tracking'] === false && $consultationGrant['session_id'] === null
-    && $consultationGrant['duration_ms'] === null, 'Consultation video receives a playback descriptor without telemetry requirements');
+    && $consultationGrant['duration_ms'] === null, ('Consultation video receives a playback descriptor without '
+        . 'telemetry requirements'));
 ruleExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE lesson_id='
     . (int)$consultationVideo)->loadResult() === $progressBeforeConsultationPlayback
     && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id='

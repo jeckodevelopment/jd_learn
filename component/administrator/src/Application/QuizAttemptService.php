@@ -84,7 +84,10 @@ final class QuizAttemptService
     }
     private function history(int $enrollment, int $quiz): array
     {
-        $q = $this->db->createQuery()->select("SUM(counted_for_limit) AS used, MAX(attempt_no) AS last_no, MAX(CASE WHEN status IN ('submitted','expired') THEN submitted_at END) AS last_closed, MAX(CASE WHEN status IN ('submitted','expired') THEN passed ELSE 0 END) AS any_passed")
+        $q = $this->db->createQuery()->select(("SUM(counted_for_limit) AS used, MAX(attempt_no) AS last_no, "
+            . "MAX(CASE WHEN status IN ('submitted','expired') THEN submitted_at "
+            . "END) AS last_closed, MAX(CASE WHEN status IN "
+            . "('submitted','expired') THEN passed ELSE 0 END) AS any_passed"))
             ->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER);
         $q->setQuery((string)$q . ' FOR UPDATE');
@@ -107,7 +110,8 @@ final class QuizAttemptService
         if ($result !== null) {
             $now = self::date(($this->clock)());
             $expires = self::date(($this->clock)() + 604800);
-            $q = $this->db->createQuery();$q->setQuery("INSERT INTO #__jlms_idempotency (scope_hash,request_hash,state,result_type,result_id,http_status,created_at,expires_at) VALUES (:scope,:hash,'completed','quiz_attempt',:result,200,:now,:expires) ON DUPLICATE KEY UPDATE scope_hash=scope_hash")
+            $q = $this->db->createQuery();$q->setQuery(("INSERT INTO #__jlms_idempotency "
+                . "(scope_hash,request_hash,state,result_type,result_id,http_status,created_at,expires_at) VALUES (:scope,:hash,'completed','quiz_attempt',:result,200,:now,:expires) ON DUPLICATE KEY UPDATE scope_hash=scope_hash"))
                 ->bind(':scope', $scope)->bind(':hash', $hash)->bind(':result', $result, ParameterType::INTEGER)->bind(':now', $now)->bind(':expires', $expires);
             $this->db->setQuery($q)->execute();
             return $this->startLedger($actor, $key, $enrollment, $lesson);
@@ -231,7 +235,8 @@ final class QuizAttemptService
     /** Autosaves read only option identifiers, never multi-megabyte prompts or private grading documents. */
     private function answerQuestions(int $attempt): array
     {
-        $q = $this->db->createQuery()->select("id, JSON_UNQUOTE(JSON_EXTRACT(public_snapshot_json, '$.kind')) AS kind, JSON_EXTRACT(public_snapshot_json, '$.options[*].id') AS option_ids")
+        $q = $this->db->createQuery()->select(("id, JSON_UNQUOTE(JSON_EXTRACT(public_snapshot_json, '$.kind')) AS "
+            . "kind, JSON_EXTRACT(public_snapshot_json, '$.options[*].id') AS option_ids"))
             ->from('#__jlms_attempt_questions')->where('attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER)->order('display_order');
         $rows = $this->db->setQuery($q, 0, 201)->loadObjectList();
         if (!$rows || count($rows) > 200) {
@@ -326,7 +331,10 @@ final class QuizAttemptService
                 foreach ($patch as $id => $answer) {
                     $encoded = QuestionDefinition::canonical($answer);
                     $date = self::date($now);
-                    $q = $this->db->createQuery();$q->setQuery('INSERT INTO #__jlms_attempt_answers (attempt_question_id,answer_json,saved_at) VALUES (:id,:answer,:now) ON DUPLICATE KEY UPDATE answer_json=VALUES(answer_json),saved_at=VALUES(saved_at)')
+                    $q = $this->db->createQuery();$q->setQuery(('INSERT INTO #__jlms_attempt_answers '
+                        . '(attempt_question_id,answer_json,saved_at) VALUES '
+                        . '(:id,:answer,:now) ON DUPLICATE KEY UPDATE '
+                        . 'answer_json=VALUES(answer_json),saved_at=VALUES(saved_at)'))
                         ->bind(':id', $id, ParameterType::INTEGER)->bind(':answer', $encoded)->bind(':now', $date);
                     $this->db->setQuery($q)->execute();
                 }

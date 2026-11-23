@@ -34,7 +34,8 @@ final class LessonReleaseNotice
             "GREATEST(COALESCE(l.publish_up, '1000-01-01 00:00:00'), " .
             "DATE_ADD(e.started_at, INTERVAL l.release_after_days DAY)) ELSE l.publish_up END";
         $query = $this->db->createQuery()->select(
-            'e.id AS enrollment_id, e.user_id, e.course_id, e.course_version_id, e.started_at, e.created_at AS enrolled_at, ' .
+            ('e.id AS enrollment_id, e.user_id, e.course_id, '
+                . 'e.course_version_id, e.started_at, e.created_at AS enrolled_at, ') .
             'l.id AS lesson_id, l.title AS lesson_title, l.publish_up, l.publish_down, l.release_after_days, ' .
             'v.published_at, c.title AS course_title, c.language AS course_language, c.params_json AS course_params, ' .
             'u.name AS learner_name, u.email AS learner_email, u.params AS learner_params'
@@ -44,7 +45,8 @@ final class LessonReleaseNotice
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
             ->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id AND ed.course_version_id = e.course_version_id')
             ->innerJoin('#__users AS u ON u.id = e.user_id')
-            ->leftJoin('#__jlms_mail_queue AS notice ON notice.event_key = SHA2(CONCAT(\'lesson.available:\', e.id, \':\', l.id), 256)')
+            ->leftJoin(('#__jlms_mail_queue AS notice ON notice.event_key = '
+                . 'SHA2(CONCAT(\'lesson.available:\', e.id, \':\', l.id), 256)'))
             ->where('notice.id IS NULL')->where("v.status = 'published'")
             ->where("ed.status = 'open'")->where("e.status = 'active'")
             ->where('e.completed_at IS NULL')->where('u.block = 0')

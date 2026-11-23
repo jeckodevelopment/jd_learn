@@ -95,7 +95,8 @@ final class QuizSnapshotService
             }
             $category = (int)$row->catid;
             $q = $this->db->createQuery()->select('COUNT(*)')->from('#__categories AS c')->where('c.id = :category')->where('c.extension = ' . $this->db->quote('com_jlms.question'))
-                ->where('NOT EXISTS (SELECT 1 FROM #__categories AS p WHERE p.extension=c.extension AND p.lft<=c.lft AND p.rgt>=c.rgt AND p.published<>1)')
+                ->where(('NOT EXISTS (SELECT 1 FROM #__categories AS p WHERE '
+                    . 'p.extension=c.extension AND p.lft<=c.lft AND p.rgt>=c.rgt AND p.published<>1)'))
                 ->bind(':category', $category, ParameterType::INTEGER);
             if ((int)$row->question_state !== 1 || !in_array($row->language, ['*',$course->language], true) || !(int)$this->db->setQuery($q)->loadResult()) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);

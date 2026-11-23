@@ -217,7 +217,8 @@ final class LearningService
         $now = gmdate('Y-m-d H:i:s');
         $q = $this->db->createQuery();
         $q->setQuery('INSERT INTO ' . $this->db->quoteName('#__jlms_subjects')
-            . ' (subject_key, user_id, created_at) VALUES (:subject, :user, :now) ON DUPLICATE KEY UPDATE user_id = user_id')
+            . (' (subject_key, user_id, created_at) VALUES (:subject, :user, :now) '
+                . 'ON DUPLICATE KEY UPDATE user_id = user_id'))
             ->bind(':subject', $key)->bind(':user', $id, ParameterType::INTEGER)->bind(':now', $now);
         $this->db->setQuery($q)->execute();
         $q = $this->db->createQuery()->select('subject_key')->from('#__jlms_subjects')
@@ -455,8 +456,10 @@ final class LearningService
     private function prerequisiteBlocker(int $enrollmentId, int $lessonId, int $versionId, bool $sequential): ?object
     {
         $q = $this->db->createQuery()->select('required.id, required.title')->from('#__jlms_prerequisites AS r')
-            ->innerJoin('#__jlms_lessons AS required ON required.id = r.required_lesson_id AND required.course_version_id = r.course_version_id')
-            ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id AND p.enrollment_id = :enrollment')
+            ->innerJoin(('#__jlms_lessons AS required ON required.id = r.required_lesson_id '
+                . 'AND required.course_version_id = r.course_version_id'))
+            ->leftJoin(('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id '
+                . 'AND p.enrollment_id = :enrollment'))
             ->where('r.lesson_id = :lesson')->where("(p.state IS NULL OR p.state <> 'completed')")
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
         $explicit = $this->db->setQuery($q, 0, 1)->loadObject();
@@ -467,12 +470,21 @@ final class LearningService
             return null;
         }
         $sequence = $this->db->createQuery()->select('required.id, required.title')
-            ->from('#__jlms_lessons AS target')->innerJoin('#__jlms_modules AS targetModule ON targetModule.id = target.module_id AND targetModule.course_version_id = target.course_version_id')
-            ->innerJoin('#__jlms_lessons AS required ON required.course_version_id = target.course_version_id AND required.required = 1')
-            ->innerJoin('#__jlms_modules AS requiredModule ON requiredModule.id = required.module_id AND requiredModule.course_version_id = required.course_version_id')
-            ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = required.id AND p.enrollment_id = :sequenceEnrollment')
+            ->from('#__jlms_lessons AS target')->innerJoin(('#__jlms_modules AS targetModule ON targetModule.id = '
+                . 'target.module_id AND targetModule.course_version_id = target.course_version_id'))
+            ->innerJoin(('#__jlms_lessons AS required ON required.course_version_id = '
+                . 'target.course_version_id AND required.required = 1'))
+            ->innerJoin(('#__jlms_modules AS requiredModule ON requiredModule.id = '
+                . 'required.module_id AND requiredModule.course_version_id = '
+                . 'required.course_version_id'))
+            ->leftJoin(('#__jlms_lesson_progress AS p ON p.lesson_id = required.id AND '
+                . 'p.enrollment_id = :sequenceEnrollment'))
             ->where('target.id = :sequenceTarget')->where('target.course_version_id = :sequenceVersion')
-            ->where("(requiredModule.ordering < targetModule.ordering OR (requiredModule.ordering = targetModule.ordering AND (requiredModule.id < targetModule.id OR (requiredModule.id = targetModule.id AND (required.ordering < target.ordering OR (required.ordering = target.ordering AND required.id < target.id))))))")
+            ->where(("(requiredModule.ordering < targetModule.ordering OR "
+                . "(requiredModule.ordering = targetModule.ordering AND "
+                . "(requiredModule.id < targetModule.id OR (requiredModule.id = "
+                . "targetModule.id AND (required.ordering < target.ordering OR "
+                . "(required.ordering = target.ordering AND required.id < target.id))))))"))
             ->where("(p.state IS NULL OR p.state <> 'completed')")
             ->bind(':sequenceEnrollment', $enrollmentId, ParameterType::INTEGER)
             ->bind(':sequenceTarget', $lessonId, ParameterType::INTEGER)->bind(':sequenceVersion', $versionId, ParameterType::INTEGER)
@@ -558,8 +570,10 @@ final class LearningService
         $actor = $this->freshActor($identity);
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
         $versionId = (int) $version->id;
-        $q = $this->db->createQuery()->select('m.id AS module_id, m.title AS module_title, l.id, l.title, l.required, l.publish_up, l.publish_down, l.release_after_days, p.state')
-            ->from('#__jlms_modules AS m')->innerJoin('#__jlms_lessons AS l ON l.module_id = m.id AND l.course_version_id = m.course_version_id')
+        $q = $this->db->createQuery()->select(('m.id AS module_id, m.title AS module_title, l.id, l.title, '
+            . 'l.required, l.publish_up, l.publish_down, l.release_after_days, p.state'))
+            ->from('#__jlms_modules AS m')->innerJoin(('#__jlms_lessons AS l ON l.module_id = m.id AND '
+                . 'l.course_version_id = m.course_version_id'))
             ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = l.id AND p.enrollment_id = :enrollment')
             ->where('m.course_version_id = :version')->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
             ->bind(':version', $versionId, ParameterType::INTEGER)->order('m.ordering, m.id, l.ordering, l.id');
@@ -569,8 +583,10 @@ final class LearningService
         }
         $blockers = [];
         $blockerQuery = $this->db->createQuery()->select('r.lesson_id, required.id AS required_id, required.title AS required_title')
-            ->from('#__jlms_prerequisites AS r')->innerJoin('#__jlms_lessons AS required ON required.id = r.required_lesson_id AND required.course_version_id = r.course_version_id')
-            ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id AND p.enrollment_id = :blockerEnrollment')
+            ->from('#__jlms_prerequisites AS r')->innerJoin(('#__jlms_lessons AS required ON required.id = '
+                . 'r.required_lesson_id AND required.course_version_id = r.course_version_id'))
+            ->leftJoin(('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id '
+                . 'AND p.enrollment_id = :blockerEnrollment'))
             ->where('r.course_version_id = :blockerVersion')->where("(p.state IS NULL OR p.state <> 'completed')")
             ->bind(':blockerEnrollment', $enrollmentId, ParameterType::INTEGER)->bind(':blockerVersion', $versionId, ParameterType::INTEGER)
             ->order('r.lesson_id, required.ordering, required.id');
@@ -637,7 +653,8 @@ final class LearningService
             $audioQuery = $this->db->createQuery()->select('a.id, a.title, f.mime_type')->from('#__jlms_attachments AS a')
                 ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')
                 ->where('a.state = 1')->where('a.preview = 0')->where("f.status = 'ready'")->where("f.mime_type IN ('audio/mpeg', 'audio/ogg')")
-                ->where('(a.publish_up IS NULL OR a.publish_up <= :audioUp) AND (a.publish_down IS NULL OR a.publish_down > :audioDown)')
+                ->where(('(a.publish_up IS NULL OR a.publish_up <= :audioUp) AND '
+                    . '(a.publish_down IS NULL OR a.publish_down > :audioDown)'))
                 ->bind(':audioUp', $availableAt)->bind(':audioDown', $availableAt)->order('a.ordering, a.id')
                 ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
             $audio = $this->db->setQuery($audioQuery, 0, 2)->loadObjectList();
@@ -719,7 +736,8 @@ final class LearningService
             if (!$lessonId) {
                 // When all required lessons are complete, Resume can still reopen the first lesson for review.
                 $q = $this->db->createQuery()->select('l.id')->from('#__jlms_lessons AS l')
-                    ->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
+                    ->innerJoin(('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id '
+                        . '= l.course_version_id'))
                     ->where('l.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)
                     ->order('m.ordering, m.id, l.ordering, l.id');
                 $lessonId = (int) $this->db->setQuery($q, 0, 1)->loadResult();

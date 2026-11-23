@@ -12,7 +12,9 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='privacy' AND element='jdlearn') OR (folder='user' AND element='jdlearnconsent'))");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND "
+        . "(folder='jlmsvideo' OR (folder='privacy' AND element='jdlearn') OR "
+        . "(folder='user' AND element='jdlearnconsent'))"));
     unset($fixtureDb);
 }
 
@@ -174,17 +176,20 @@ if ($rendered !== '<p><strong>Allowed</strong></p><p>' . $htmlTitle . '</p>') {
 }
 
 // Native extension installer must create the submenu once and preserve it on upgrade.
-$menuParent = (int) $db->setQuery("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND link='index.php?option=com_jlms&view=dashboard' AND parent_id=1")->loadResult();
+$menuParent = (int) $db->setQuery(("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND "
+    . "link='index.php?option=com_jlms&view=dashboard' AND parent_id=1"))->loadResult();
 $menuLinks = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
 $expectedLinks = ['index.php?option=com_jlms&view=dashboard', 'index.php?option=com_jlms&view=courses', 'index.php?option=com_jlms&view=pathways', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_jlms&view=questionbank'];
 $menuTitles = $db->setQuery($db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
 $expectedMenuTitles = ['COM_JLMS_DASHBOARD_MENU', 'COM_JLMS_COURSES', 'COM_JLMS_PATHWAYS', 'COM_JLMS_TEACHERS', 'COM_JLMS_QUESTION_BANK'];
 if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMenuTitles) {
-    throw new \RuntimeException('Native administrator menu must include Dashboard first with the localized label and without duplicates.');
+    throw new \RuntimeException(('Native administrator menu must include Dashboard first with the '
+        . 'localized label and without duplicates.'));
 }
 $reassignSystemLanguage = parse_ini_file(JPATH_ADMINISTRATOR . '/language/en-GB/com_jlms.sys.ini', false, INI_SCANNER_RAW);
 if (!is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CATEGORY_REASSIGN_TITLE'] ?? null) !== 'Category dependency cleanup') {
-    throw new \RuntimeException('Category reassignment title must be installed in the administrator system language catalog.');
+    throw new \RuntimeException(('Category reassignment title must be installed in the administrator '
+        . 'system language catalog.'));
 }
 // Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
@@ -286,7 +291,8 @@ if (!str_contains($untrusted['htmlbody'], '<p>')) {
 // without requiring a second free-message field or self-referential slots.
 $singleComposer = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
 $singleComposer['subject'] = 'Aggiornamento {COURSE_TITLE}';
-$singleComposer['htmlbody'] = '<p>Ciao {USER_FULLNAME_HTML}, novità sul corso {COURSE_TITLE_HTML}.</p><p>{SITE_NAME_HTML}</p>';
+$singleComposer['htmlbody'] = ('<p>Ciao {USER_FULLNAME_HTML}, novità sul corso '
+    . '{COURSE_TITLE_HTML}.</p><p>{SITE_NAME_HTML}</p>');
 $singleComposer['body'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($singleComposer['htmlbody']);
 $checkedSingle = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($singleComposer, $sampleVars);
 if (
@@ -325,7 +331,8 @@ try {
         || preg_match('/\{[A-Z][A-Z0-9_]*\}/', $renderedSubject . $renderedBody . $renderedHtml)
         || $messageTemplate::load('*')['htmlbody'] !== $legacyMessage->htmlbody
     ) {
-        throw new \RuntimeException('The upgraded Joomla model must render canonically without changing its saved content.');
+        throw new \RuntimeException(('The upgraded Joomla model must render canonically without changing '
+            . 'its saved content.'));
     }
     $expectedTags = array_diff(array_keys($sampleVars), ['MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML']);
     if (array_diff($expectedTags, $messageTemplate::tags()) || array_diff($messageTemplate::tags(), $expectedTags)) {
@@ -520,7 +527,8 @@ $privacyCheckData = $privacyCheck->getArgument('result', []);
 if (count($privacyCheckData) !== 1 || !$privacyCheckData[0]->canRemove) {
     throw new \RuntimeException('JD Learn privacy plugin blocked removal for a user without JD Learn data.');
 }
-$db->setQuery("INSERT INTO #__jlms_jobs (kind, owner_user_id, scope_json, payload_json, status, available_at, created_at) VALUES ('privacy-fixture', " . $privacyUserId . ", '{}', '{}', 'complete', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))")->execute();
+$db->setQuery(("INSERT INTO #__jlms_jobs (kind, owner_user_id, scope_json, "
+    . "payload_json, status, available_at, created_at) VALUES ('privacy-fixture', ") . $privacyUserId . ", '{}', '{}', 'complete', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))")->execute();
 $privacyBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyBlocked);
 $privacyBlockedData = $privacyBlocked->getArgument('result', []);
@@ -715,7 +723,8 @@ $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($ot
 $component = $app->bootComponent('com_jlms');
 $mailConsent = $component->getCourseAnnouncementConsent();
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();
-$db->setQuery('INSERT INTO #__jlms_mail_consents (user_id,state,origin,policy_version,requested_at,confirmed_at) VALUES ('
+$db->setQuery(('INSERT INTO #__jlms_mail_consents '
+    . '(user_id,state,origin,policy_version,requested_at,confirmed_at) VALUES (')
     . (int) $userId . ",'confirmed','dashboard','ci-test',UTC_TIMESTAMP(),UTC_TIMESTAMP())")->execute();
 $confirmedAt = (string) $db->setQuery('SELECT confirmed_at FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->loadResult();
 $linkOne = $mailConsent->createUnsubscribeUrl((int) $userId);
@@ -896,7 +905,8 @@ try {
 $factory = $component->getMVCFactory();
 if (($argv[2] ?? '') === 'retained') {
     $record = $db->setQuery("SELECT title, revision FROM #__jlms_courses WHERE alias='test-course'")->loadObject();
-    $enabled = (int) $db->setQuery("SELECT COUNT(*) FROM #__extensions WHERE type='plugin' AND folder='jlmsvideo' AND enabled=1")->loadResult();
+    $enabled = (int) $db->setQuery(("SELECT COUNT(*) FROM #__extensions WHERE type='plugin' AND "
+        . "folder='jlmsvideo' AND enabled=1"))->loadResult();
     if (!$record || $record->title !== 'Updated course' || (int) $record->revision !== 2 || $enabled !== 4) {
         throw new \RuntimeException('Package update lost draft data or plugin state.');
     }
@@ -937,7 +947,8 @@ if (
     ($pendingScan['processed'] ?? -1) !== 0 || $pendingScan['failed'] !== 0
     || \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice::authorized($db, $id, 0)
 ) {
-    throw new \RuntimeException('Pending manager alerts must not send without a real pending request and authorized manager.');
+    throw new \RuntimeException(('Pending manager alerts must not send without a real pending '
+        . 'request and authorized manager.'));
 }
 $record = $model->getItem($id);
 if ($id < 1 || (int) $record->state !== 0 || $record->current_version_id !== null || (int) $record->revision !== 1) {

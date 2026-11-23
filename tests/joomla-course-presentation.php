@@ -65,7 +65,8 @@ $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $catalog = $component->getCatalogService();
 $actor = $app->getIdentity();
-$catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int) $db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 $checks = 0;
@@ -95,11 +96,14 @@ if (($argv[2] ?? '') === 'retained') {
 $legacyUpgrade = json_decode(file_get_contents(dirname($root)
     . '/legacy-time-fixture.json'), true, 32, JSON_THROW_ON_ERROR);
 $legacyVersion = (int) $legacyUpgrade['version_id'];
-$preserved = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $legacyVersion)->loadAssoc();
-presentationExpect($preserved === $legacyUpgrade['presentation_before_upgrade'], 'Actual upgrade from 0.21 preserves stored presentation bytes, hash and timestamp');
+$preserved = $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+    . '#__jlms_course_versions WHERE id=') . $legacyVersion)->loadAssoc();
+presentationExpect($preserved === $legacyUpgrade['presentation_before_upgrade'], ('Actual upgrade from 0.21 '
+    . 'preserves stored presentation bytes, hash and timestamp'));
 $legacyDetails = $catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int) $legacyUpgrade['course_id'])['presentation'];
 presentationExpect($legacyDetails['description'] === '<p>Pre-upgrade 0.21 presentation</p>'
-    && $legacyDetails['image'] === '', 'Existing published presentation renders with optional image absent after upgrade');
+    && $legacyDetails['image'] === '', ('Existing published presentation renders with optional image absent '
+        . 'after upgrade'));
 $base = ['id' => 0, 'title' => 'Presentation fixture', 'alias' => 'presentation-fixture', 'catid' => $catid,
     'language' => '*', 'catalog_access' => 1, 'content_access' => 2, 'enrollment_mode' => 'auto', 'summary'
         => 'Public summary', 'revision' => 1];
@@ -276,16 +280,19 @@ presentationExpect(!isset($completion['private']) && !isset($completion['answer_
 presentationExpect($outline['presentation']['objectives'] === 'Latest objectives before publication', 'Publication freezes the latest presentation, not the initial draft copy');
 presentationExpect(!str_contains(json_encode($outline), 'PRESENTATION_PRIVATE_LESSON_BODY')
     && !str_contains(json_encode($outline), 'retain-me'), 'Public projection excludes private lesson content and unrelated params');
-$baseline = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+$baseline = $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc();
 presentationExpect($model->save(array_replace($update, ['revision' => (int) $model->getItem($course)
     ->revision, 'presentation_objectives' => 'Published editorial correction'])), 'Published editorial metadata can be updated through the normal editor');
 presentationExpect($catalog->outline($guest, 'en-GB', $course)['presentation']['objectives'] === 'Published editorial correction', 'Current public course shows the editorial correction');
-presentationExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $baseline, 'Editorial correction leaves frozen history unchanged');
+presentationExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() === $baseline, 'Editorial correction leaves frozen history unchanged');
 foreach ([0, 1] as $expectedState) {
     $choices = $publication->transitions($actor, $course);
     $publication->transition($actor, $course, $version, (int) $model->getItem($course)
         ->revision, $revision(), (int) $choices[0]->id);
-    presentationExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $baseline, 'Withdrawal/republication retains presentation and hash');
+    presentationExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+        . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() === $baseline, 'Withdrawal/republication retains presentation and hash');
 }
 $oldPresentation = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy","details":{"_schema":1,"description":"<p>Existing 0.21 presentation</p>"}}');
 presentationExpect($oldPresentation['image'] === '' && !$oldPresentation['image_decorative']

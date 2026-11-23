@@ -14,7 +14,8 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'"));
     unset($fixtureDb);
 }
 
@@ -68,7 +69,8 @@ $factory = $component->getMVCFactory();
 $learning = $component->getLearningService();
 if (($argv[2] ?? '') === 'retained') {
     $owner = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult();
-    $saved = $db->setQuery('SELECT id, required_total, completed_total, completed_at FROM #__jlms_enrollments WHERE user_id=' . $owner)->loadObject();
+    $saved = $db->setQuery(('SELECT id, required_total, completed_total, completed_at FROM '
+        . '#__jlms_enrollments WHERE user_id=') . $owner)->loadObject();
     if (
         !$saved || (int)$saved->required_total !== 3 || (int)$saved->completed_total !== 3 || !$saved->completed_at
         || $learning->classroom(new \Joomla\CMS\User\User($owner), 'en-GB', (int)$saved->id)['percent'] !== 100
@@ -149,7 +151,8 @@ $httpStudent = fixtureStudent('cilearnerhttp');
 $actor = $app->getIdentity();
 $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
-$catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 if (
     !$model->save(['id' => 0,'revision' => 1,'title' => 'Learning fixture','alias' => 'learning-fixture','catid' => $catid,

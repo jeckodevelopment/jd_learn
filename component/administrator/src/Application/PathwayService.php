@@ -29,7 +29,8 @@ final class PathwayService
         $all = '*';
         $extension = 'com_jlms.pathway';
         $query = $this->db->createQuery()
-            ->select('p.id, p.title, p.alias, p.description, p.params_json, p.language, p.access, p.catid, cat.title AS category_title')
+            ->select(('p.id, p.title, p.alias, p.description, p.params_json, p.language, '
+                . 'p.access, p.catid, cat.title AS category_title'))
             ->from($this->db->quoteName('#__jlms_pathways', 'p'))
             ->innerJoin($this->db->quoteName('#__categories', 'cat') . ' ON cat.id = p.catid')
             ->where('p.state = 1')
@@ -93,12 +94,17 @@ final class PathwayService
 
             $pathwayOwnerId = (int) $actor->id;
             $enrollmentQuery = $this->db->createQuery()
-                ->select('e.id, e.course_id, e.status, e.required_total, e.completed_total, e.completed_at, e.started_at, e.last_activity_at, e.starts_at, e.ends_at, v.status AS version_status, v.rules_json, ed.status AS edition_status, ed.starts_at AS edition_starts_at, ed.ends_at AS edition_ends_at')
+                ->select(('e.id, e.course_id, e.status, e.required_total, e.completed_total, '
+                    . 'e.completed_at, e.started_at, e.last_activity_at, e.starts_at, '
+                    . 'e.ends_at, v.status AS version_status, v.rules_json, ed.status AS '
+                    . 'edition_status, ed.starts_at AS edition_starts_at, ed.ends_at AS '
+                    . 'edition_ends_at'))
                 ->from($this->db->quoteName('#__jlms_enrollments', 'e'))
                 ->leftJoin($this->db->quoteName('#__jlms_course_versions', 'v')
                     . ' ON v.id = e.course_version_id AND v.course_id = e.course_id')
                 ->leftJoin($this->db->quoteName('#__jlms_editions', 'ed')
-                    . ' ON ed.id = e.edition_id AND ed.course_id = e.course_id AND ed.course_version_id = e.course_version_id')
+                    . (' ON ed.id = e.edition_id AND ed.course_id = e.course_id AND '
+                        . 'ed.course_version_id = e.course_version_id'))
                 ->where('e.user_id = :pathwayOwner')
                 ->whereIn('e.course_id', $courseIds)
                 ->order('e.last_activity_at DESC, e.id DESC')

@@ -126,7 +126,8 @@ function restoreTree(int $id): array
     foreach (['modules','lessons','quizzes','attachments'] as $table) {
         $out[$table] = $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE course_version_id=' . $id . ' ORDER BY id')->loadAssocList();
     }
-    $out['questions'] = $db->setQuery('SELECT qq.* FROM #__jlms_quiz_questions AS qq JOIN #__jlms_quizzes AS q ON q.id=qq.quiz_id WHERE q.course_version_id=' . $id . ' ORDER BY qq.quiz_id,qq.ordering')->loadAssocList();
+    $out['questions'] = $db->setQuery(('SELECT qq.* FROM #__jlms_quiz_questions AS qq JOIN #__jlms_quizzes '
+        . 'AS q ON q.id=qq.quiz_id WHERE q.course_version_id=') . $id . ' ORDER BY qq.quiz_id,qq.ordering')->loadAssocList();
     return $out;
 }
 $fixture = dirname($root) . '/programme-restore-fixture.json';
@@ -155,7 +156,8 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
     $course = $f['course'];
     $ids = $db->setQuery('SELECT id FROM #__jlms_course_versions WHERE course_id=' . $course . ' ORDER BY version_no')->loadColumn();
     $state = ['course' => (array)restoreRow('courses', $course),'versions' => array_map(static fn($id)=>restoreTree((int)$id), $ids),'learning' => restoreLearning(),
-    'audit' => $db->setQuery("SELECT * FROM #__action_logs WHERE extension='com_jlms.programmerestore' AND item_id=" . $course . ' ORDER BY id')->loadAssocList()];
+    'audit' => $db->setQuery(("SELECT * FROM #__action_logs WHERE "
+        . "extension='com_jlms.programmerestore' AND item_id=") . $course . ' ORDER BY id')->loadAssocList()];
     if ($mode === 'checkpoint') {
         file_put_contents($fixture . '.snapshot', json_encode($state, JSON_THROW_ON_ERROR));
         return;
@@ -188,7 +190,8 @@ $publish = static function (int $target) use ($publication, $actor, $course): vo
     $impact = $publication->updateImpact($actor, $course, $target, $transition);
     $publication->transition($actor, $course, $target, (int)restoreRow('courses', $course)->revision, (int)restoreRow('course_versions', $target)->revision, $transition, $impact['fingerprint'] ?? null);
 };
-$attachment = $db->setQuery("SELECT a.* FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE f.status='ready' AND a.state=1 ORDER BY a.id", 0, 1)->loadAssoc();
+$attachment = $db->setQuery(("SELECT a.* FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f "
+    . "ON f.id=a.asset_id WHERE f.status='ready' AND a.state=1 ORDER BY a.id"), 0, 1)->loadAssoc();
 restoreExpect(is_array($attachment), 'Disposable fixture provides a ready material');
 unset($attachment['id']);
 $attachment['course_version_id'] = $version;
@@ -291,7 +294,8 @@ restoreExpect(
 restoreExpect($authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision) === $target, 'Edit programme deterministically reuses newest draft');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, $input), 'COM_JLMS_REVISION_CONFLICT');
 restoreExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id=' . $course)->loadResult() === 4, 'Stale replay creates no second recovery');
-$audit = $db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.programmerestore' AND item_id=" . $course . ' ORDER BY id DESC')->loadResult();
+$audit = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
+    . "extension='com_jlms.programmerestore' AND item_id=") . $course . ' ORDER BY id DESC')->loadResult();
 $audit = json_decode($audit, true, 32, JSON_THROW_ON_ERROR);
 restoreExpect((int)$audit['source_version_id'] === $historical && (int)$audit['target_version_id'] === $target, 'Native audit records historical source and new draft');
 $vimeoEnabled = false;

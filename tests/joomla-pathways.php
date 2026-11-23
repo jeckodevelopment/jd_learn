@@ -52,7 +52,8 @@ $check = static function (bool $ok, string $message): void {
 $lifecycleSnapshotFile = dirname($root) . '/pathway-lifecycle-snapshot.json';
 $readLifecycleSnapshot = static function (int $pathId, int $courseId) use ($db): array {
     return [
-        'pathway' => $db->setQuery('SELECT id,title,description,state,access,language,catid FROM #__jlms_pathways WHERE id=' . (int)$pathId)->loadAssoc(),
+        'pathway' => $db->setQuery(('SELECT id,title,description,state,access,language,catid FROM '
+            . '#__jlms_pathways WHERE id=') . (int)$pathId)->loadAssoc(),
         'course_links' => $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$pathId . ' ORDER BY ordering')->loadAssocList(),
     ];
 };
@@ -114,14 +115,17 @@ $pathModel = $component->getMVCFactory()->createModel('Pathway', 'Administrator'
 // SECDEV-03: hostile editorial HTML and protected table columns must not escape
 // the native pathway editor's HTML filtering and explicit write allowlist.
 $payload = ['id' => 0,'revision' => 1,'title' => 'CI learning pathway','alias' => 'ci-learning-pathway',
-    'description' => '<p>Pathway summary</p><script>alert(1)</script><iframe src="https://example.invalid"></iframe><a href="javascript:alert(2)" onclick="alert(3)">read</a>',
+    'description' => ('<p>Pathway summary</p><script>alert(1)</script><iframe '
+        . 'src="https://example.invalid"></iframe><a '
+        . 'href="javascript:alert(2)" onclick="alert(3)">read</a>'),
     'catid' => $categoryId,'access' => 1,'language' => '*','state' => 1,
     'courses' => [['course_id' => $courseId,'ordering' => 10]],
     'params_json' => '{"injected":true}','created_by' => 999999,'checked_out' => 999999];
 $check((bool)$pathModel->save($payload), 'native pathway model saves pathway and course order: ' . $pathModel
     ->getError());
 $pathwayId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='ci-learning-pathway'")->loadResult();
-$securityRow = $db->setQuery('SELECT description,params_json,created_by,checked_out FROM #__jlms_pathways WHERE id=' . (int)$pathwayId)->loadObject();
+$securityRow = $db->setQuery(('SELECT description,params_json,created_by,checked_out FROM '
+    . '#__jlms_pathways WHERE id=') . (int)$pathwayId)->loadObject();
 $check(
     $securityRow && str_contains((string)$securityRow->description, '<p>Pathway summary</p>')
     && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', (string)$securityRow->description),
@@ -366,7 +370,9 @@ $enrollmentsBeforeArchive = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enr
 $courseStatesBefore = $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ','
     . $hiddenCourseId . ') ORDER BY id')->loadAssocList();
 $unsafePathway = array_replace($pathwayBase, [
-    'description' => '<p>Safe <strong>pathway</strong> <script>alert(1)</script><iframe src="https://example.invalid"></iframe><a href="javascript:alert(2)" onclick="alert(3)">read</a></p>',
+    'description' => ('<p>Safe <strong>pathway</strong> <script>alert(1)</script><iframe '
+        . 'src="https://example.invalid"></iframe><a '
+        . 'href="javascript:alert(2)" onclick="alert(3)">read</a></p>'),
     'revision' => 2, 'state' => 2,
 ]);
 $check(

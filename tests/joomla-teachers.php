@@ -65,7 +65,8 @@ $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $catalog = $component->getCatalogService();
 $actor = $app->getIdentity();
-$catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int) $db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 
@@ -85,7 +86,8 @@ teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplat
 $fixture = dirname($root) . '/teachers-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
-    teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen teacher projection survives upgrade');
+    teacherExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+        . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen teacher projection survives upgrade');
     $outline = $catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int)$f['course']);
     teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] === 'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection is unchanged');
     teacherExpect(TeacherProfiles::selected($db, (int)$f['course']) === $f['ids'], 'Assigned teacher relations survive upgrade');
@@ -101,7 +103,10 @@ $teacherCategory = (int)$categoryModel->getState('category.id');
 $teacherModel = $factory->createModel('Teacher', 'Administrator', ['ignore_request' => true]);
 $teacherBase = ['id' => 0,'revision' => 1,'title' => 'Original public teacher','alias'
     => 'original-public-teacher','catid' => $teacherCategory,'bio'
-        => '<p>Public <strong>biography</strong> <script>alert(1)</script><iframe src="https://example.invalid"></iframe><a href="javascript:alert(2)" onclick="alert(3)">read</a></p>','image' => '','image_alt' => '','image_decorative' => '0','website' => 'https://example.invalid/teacher','language' => '*','access' => 1,'state' => 1,'user_id' => (int)$actor->id];
+        => ('<p>Public <strong>biography</strong> '
+            . '<script>alert(1)</script><iframe '
+            . 'src="https://example.invalid"></iframe><a '
+            . 'href="javascript:alert(2)" onclick="alert(3)">read</a></p>'),'image' => '','image_alt' => '','image_decorative' => '0','website' => 'https://example.invalid/teacher','language' => '*','access' => 1,'state' => 1,'user_id' => (int)$actor->id];
 $groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')
     ->loadAssocList();
 teacherExpect($teacherModel->save($teacherBase + ['params_json' => '{"injected":true}','created_by'
@@ -162,8 +167,10 @@ $teacherNoticeCount = static function () use ($db, $course): int {
     return (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE course_id=" . $course
         . " AND template_id='com_jlms.teacher.assigned'")->loadResult();
 };
-teacherExpect($teacherNoticeCount() === 1, 'A newly assigned linked Joomla account receives exactly one teacher notice; unlinked profile receives none');
-$teacherNotice = $db->setQuery("SELECT recipient_user_id,recipient_email,template_data FROM #__jlms_mail_queue WHERE course_id="
+teacherExpect($teacherNoticeCount() === 1, ('A newly assigned linked Joomla account receives exactly one '
+    . 'teacher notice; unlinked profile receives none'));
+$teacherNotice = $db->setQuery(("SELECT recipient_user_id,recipient_email,template_data FROM "
+    . "#__jlms_mail_queue WHERE course_id=")
     . $course . " AND template_id='com_jlms.teacher.assigned'")->loadObject();
 $teacherMailData = json_decode((string) $teacherNotice->template_data, true);
 teacherExpect(
@@ -172,7 +179,8 @@ teacherExpect(
     && ($teacherMailData['TEACHER_NAME'] ?? '') === 'Original public teacher'
     && ($teacherMailData['COURSE_DESCRIPTION'] ?? '') === 'Course presentation for the publication fixture.'
     && !str_contains((string) $teacherNotice->template_data, 'PRIVATE_TEACHER_BIO'),
-    'Teacher notification supplies scoped course/profile context to the linked Joomla identity without disclosing unrelated details'
+    ('Teacher notification supplies scoped course/profile context to the '
+        . 'linked Joomla identity without disclosing unrelated details')
 );
 
 $directory = $factory->createModel('Teachers', 'Administrator', ['ignore_request' => true]);
@@ -182,7 +190,8 @@ if (!is_array($teacherRows)) {
     throw new RuntimeException('Teacher directory listing failed: ' . (string) $directory->getError());
 }
 $publicRow = array_values(array_filter($teacherRows, static fn($row): bool=>(int)$row->id === $public));
-teacherExpect(count($publicRow) === 1 && (int)$publicRow[0]->course_count === 1, 'Teacher list reports the number of assigned courses in the current editable course scope');
+teacherExpect(count($publicRow) === 1 && (int)$publicRow[0]->course_count === 1, ('Teacher list reports the number '
+    . 'of assigned courses in the current editable course scope'));
 $courseList = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
 $courseList->setCurrentUser($actor);
 $courseList->setState('list.limit', 100);
@@ -237,7 +246,8 @@ $withdrawn->state = 1;
 $db->updateObject('#__jlms_teachers', $withdrawn, 'id');
 $publication->transition($actor, $course, $version, (int)$courseModel->getItem($course)
     ->revision, $rev(), (int)$publication->transitions($actor, $course)[0]->id);
-$snapshot = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+$snapshot = $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc();
 $guest = new \Joomla\CMS\User\User();
 $outline = $catalog->outline($guest, 'en-GB', $course);
 teacherExpect(count($outline['teachers']) === 1 && $outline['teachers'][0]['id'] === $public, 'Guest only sees authorised public teacher');
@@ -265,7 +275,8 @@ teacherExpect($teacherModel->save($edit), 'Teacher public availability restored'
 $privateEdit = array_replace($teacherBase, ['id' => $private,'title' => 'PRIVATE_TEACHER_NAME','alias'
     => 'private-teacher','access' => 1,'bio' => 'PRIVATE_TEACHER_BIO','user_id' => '']);
 teacherExpect($teacherModel->save($privateEdit), 'Restricted profile can become public for future versions');
-teacherExpect(count($catalog->outline($guest, 'en-GB', $course)['teachers']) === 2, 'An explicit change to public profile visibility affects the current public listing');
+teacherExpect(count($catalog->outline($guest, 'en-GB', $course)['teachers']) === 2, ('An explicit change to public '
+    . 'profile visibility affects the current public listing'));
 $learner = new \Joomla\CMS\User\User();
 $learnerData = ['name' => 'CI teacher viewer','username' => 'citeacherviewer','email'
     => 'citeacherviewer@example.invalid','password' => 'Ci-only-Teacher-Viewer-2026','password2'
@@ -310,12 +321,15 @@ teacherExpect($catalog->outline($guest, 'en-GB', $course)['teachers'] === [], 'N
 $update->published = 1;
 $db->updateObject('#__categories', $update, 'id');
 teacherExpect($courseModel->save(array_replace($courseData, ['revision' => (int)$courseModel->getItem($course)
-    ->revision,'teacher_ids' => [$public,$private]])), 'Teachers can be updated on a published course while preserving the teaching snapshot');
-teacherExpect($snapshot === $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc(), 'All profile changes preserve course snapshot hash and timestamp');
+    ->revision,'teacher_ids' => [$public,$private]])), ('Teachers can be updated on a published course while '
+        . 'preserving the teaching snapshot'));
+teacherExpect($snapshot === $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc(), 'All profile changes preserve course snapshot hash and timestamp');
 // LCM-04: reversible teacher trash preserves Joomla users, course links and frozen snapshots.
 $beforeCourseTeachers = TeacherProfiles::selected($db, $course);
 $beforeUsers = $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc();
-$beforeSnapshot = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+$beforeSnapshot = $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc();
 teacherExpect(
     $teacherModel->changeStates([$public, $private], -2),
     'bulk teacher trash succeeds without modifying associations'
@@ -370,7 +384,8 @@ teacherExpect(
 // LCM-04: permanent removal is a deliberate, single-record action with a
 // conservative dependency gate. Native users and course history are immutable.
 $linkedBefore = $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc();
-$versionBefore = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+$versionBefore = $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
+    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc();
 teacherExpect(
     !$teacherModel->purgeUnreferenced($public),
     'published teacher profile cannot be deleted permanently'

@@ -12,7 +12,9 @@ if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
     if ($argv[2] === 'verify') {
         $fixturePath = dirname($root) . '/associations-fixture.json';
         $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
-        $q = $pdo->prepare("SELECT b.id FROM joomla_associations AS a JOIN joomla_associations AS b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=? AND b.id=? AND a.context='com_jlms.item'");
+        $q = $pdo->prepare(("SELECT b.id FROM joomla_associations AS a JOIN joomla_associations "
+            . "AS b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=? AND "
+            . "b.id=? AND a.context='com_jlms.item'"));
         $q->execute([$f['other_en'],$f['other_it']]);
         if (!$q->fetchColumn()) {
             throw new \RuntimeException('Native HTTP translation save did not persist');
@@ -22,12 +24,15 @@ if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
         exit;
     }
     $saved = json_decode(file_get_contents($state), true, 16, JSON_THROW_ON_ERROR);
-    $query = $pdo->prepare("UPDATE joomla_extensions SET enabled=?,params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+    $query = $pdo->prepare(("UPDATE joomla_extensions SET enabled=?,params=? WHERE "
+        . "type='plugin' AND folder='system' AND element='languagefilter'"));
     $query->execute([$saved['enabled'],$saved['params']]);
     exit;
 }
-file_put_contents($state, json_encode($pdo->query("SELECT enabled,params FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
-$pdo->exec("UPDATE joomla_extensions SET enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1,'$.detect_browser',0,'$.remove_default_prefix',0) WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+file_put_contents($state, json_encode($pdo->query(("SELECT enabled,params FROM joomla_extensions WHERE "
+    . "type='plugin' AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
+$pdo->exec(("UPDATE joomla_extensions SET "
+    . "enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1,'$.detect_browser',0,'$.remove_default_prefix',0) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
 // Simulate the web request context required by AdministratorApplication in a CLI smoke test.
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['SERVER_NAME'] = 'localhost';
@@ -74,7 +79,8 @@ $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($u
 $component = $app->bootComponent('com_jlms');
 $factory = $component->getMVCFactory();
 
-$componentId = (int)$db->setQuery("SELECT extension_id FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult();
+$componentId = (int)$db->setQuery(("SELECT extension_id FROM #__extensions WHERE type='component' AND "
+    . "element='com_jlms'"))->loadResult();
 foreach (['en-GB' => 'association-home-en','it-IT' => 'association-home-it'] as $tag => $alias) {
     $menu = new \Joomla\CMS\Table\Menu($db);
     $menu->setLocation(1, 'last-child');

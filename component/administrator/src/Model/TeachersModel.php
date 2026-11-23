@@ -71,7 +71,9 @@ final class TeachersModel extends ListModel
             $courseCounts->where('1=0');
         }
         $courseCounts->group('teacher_id');
-        $query = $db->createQuery()->select('a.id, a.title, a.state, a.revision, a.created_by, a.modified_at, a.language, author.name AS author_name, lang.title AS language_title, COALESCE(teacher_courses.course_count, 0) AS course_count')
+        $query = $db->createQuery()->select(('a.id, a.title, a.state, a.revision, a.created_by, a.modified_at, '
+            . 'a.language, author.name AS author_name, lang.title AS '
+            . 'language_title, COALESCE(teacher_courses.course_count, 0) AS course_count'))
             ->from($db->quoteName('#__jlms_teachers', 'a'))
             ->leftJoin($db->quoteName('#__users', 'author') . ' ON author.id = a.created_by')
             ->leftJoin($db->quoteName('#__languages', 'lang') . ' ON lang.lang_code = a.language')

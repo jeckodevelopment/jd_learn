@@ -67,7 +67,8 @@ final class EnrollmentMigrationService
         if ($enrollment < 1 || count($mapping) > 100) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
-        $q = $this->db->createQuery()->select('e.*, u.name AS learner_name, v.title_snapshot AS source_title, v.version_no AS source_version_no')
+        $q = $this->db->createQuery()->select(('e.*, u.name AS learner_name, v.title_snapshot AS source_title, '
+            . 'v.version_no AS source_version_no'))
             ->from('#__jlms_enrollments AS e')->leftJoin('#__users AS u ON u.id=e.user_id')
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
             ->where('e.id=:enrollment')->where('e.course_id=:course')
@@ -105,7 +106,8 @@ final class EnrollmentMigrationService
             throw new \RuntimeException('COM_JLMS_MIGRATION_LIMIT', 409);
         }
         $q = $this->db->createQuery()->select('p.lesson_id,p.state,p.completed_at,l.title,l.kind')
-            ->from('#__jlms_lesson_progress AS p')->innerJoin('#__jlms_lessons AS l ON l.id=p.lesson_id AND l.course_version_id=p.course_version_id')
+            ->from('#__jlms_lesson_progress AS p')->innerJoin(('#__jlms_lessons AS l ON l.id=p.lesson_id AND '
+                . 'l.course_version_id=p.course_version_id'))
             ->where('p.enrollment_id=:enrollment')->where('p.course_version_id=:version')->where("p.state='completed'")
             ->where("l.kind <> 'quiz'")->order('p.lesson_id')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':version', $source->course_version_id, ParameterType::INTEGER);

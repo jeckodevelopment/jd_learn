@@ -11,10 +11,13 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Only the parent configures the fixture; workers must not mutate shared plugin settings.
 if (($argv[2] ?? '') !== 'worker') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $plugin = $fixtureDb->query("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetch(\PDO::FETCH_ASSOC);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1, params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+    $plugin = $fixtureDb->query(("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' "
+        . "AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC);
+    $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1, "
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
     register_shutdown_function(static function () use ($fixtureDb, $plugin): void {
-        $statement = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=?, params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+        $statement = $fixtureDb->prepare(("UPDATE joomla_extensions SET enabled=?, params=? WHERE "
+            . "type='plugin' AND folder='system' AND element='languagefilter'"));
         $statement->execute([$plugin['enabled'], $plugin['params']]);
     });
 }
@@ -234,7 +237,8 @@ $listed->setState('list.limit', 20);
 catExpect(count($listed->getItems()) === 2 && (int)$listed->getTotal() === 22, 'bounded second page counts visible children only');
 $description = static fn($id)=>(string)$db->setQuery('SELECT description FROM #__categories WHERE id=' . (int)$id)->loadResult();
 $app->loadIdentity($actor);
-$componentId = (int)$db->setQuery("SELECT extension_id FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadResult();
+$componentId = (int)$db->setQuery(("SELECT extension_id FROM #__extensions WHERE type='component' AND "
+    . "element='com_jlms'"))->loadResult();
 $menus = [];
 foreach (['en-GB' => $en,'it-IT' => $it] as $tag => $categoryId) {
     foreach (['categories','category'] as $view) {

@@ -10,10 +10,13 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 }
 if (($argv[2] ?? '') !== 'worker') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $oldLanguageFilter = $fixtureDb->query("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetchColumn();
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+    $oldLanguageFilter = $fixtureDb->query(("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND "
+        . "folder='system' AND element='languagefilter'"))->fetchColumn();
+    $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND "
+        . "folder='system' AND element='languagefilter'"));
     register_shutdown_function(static function () use ($fixtureDb, $oldLanguageFilter): void {
-        $q = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+        $q = $fixtureDb->prepare(("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND "
+            . "folder='system' AND element='languagefilter'"));
         $q->execute([$oldLanguageFilter]);
     });
 }
@@ -117,7 +120,8 @@ if (($argv[2] ?? '') === 'retained') {
     preExpect($service->apply($manager, ...$saved['command']) === $saved['enrollment'], 'preassignment receipt replay retained');
     preDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $saved['enrollment']), 403, 'retained assignment still grants no viewing right');
     preExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . (int)$saved['enrollment'])->loadResult() === 1, 'earned progress retained after later entitlement revocation');
-    $log = json_decode($db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.manualenrollment' AND item_id=" . (int)$saved['receipt'])->loadResult(), true, 16, JSON_THROW_ON_ERROR);
+    $log = json_decode($db->setQuery(("SELECT message FROM #__action_logs WHERE "
+        . "extension='com_jlms.manualenrollment' AND item_id=") . (int)$saved['receipt'])->loadResult(), true, 16, JSON_THROW_ON_ERROR);
     preExpect($log['preassignment_requested'] === true && $log['access_at_assignment'] === false, 'native admission flags retained');
     echo json_encode(['preassignment_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
@@ -148,7 +152,8 @@ preDenied(fn()=>$service->editor($owner, $course, $id, 'en-GB', true), 403, 'lea
 preDenied(fn()=>$service->editor($manager, (int)$f['other_course'], $id, 'en-GB', true), 403, 'preassignment retains course scope');
 $eid = $service->apply($manager, ...$command);
 preExpect($service->apply($manager, ...$command) === $eid && $counts($id) === [1,1,1], 'explicit retry yields one assignment and receipt');
-$e = $db->setQuery('SELECT status,origin,completed_total,completed_at FROM #__jlms_enrollments WHERE id=' . $eid)->loadObject();
+$e = $db->setQuery(('SELECT status,origin,completed_total,completed_at FROM '
+    . '#__jlms_enrollments WHERE id=') . $eid)->loadObject();
 preExpect($e->status === 'active' && $e->origin === 'manual' && (int)$e->completed_total === 0 && $e->completed_at === null, 'preassignment records no invented progress or alternate entitlement state');
 preDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $eid), 403, 'preassigned learner cannot resume without level');
 preDenied(fn()=>$learning->complete($owner, 'en-GB', $eid, (int)$f['lesson'], bin2hex(random_bytes(16))), 403, 'preassignment does not authorize completion');
@@ -169,7 +174,8 @@ try {
 preDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $eid), 403, 'later external revocation blocks access again');
 preExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $eid)->loadResult() === 1, 'external revocation preserves earned completion');
 $receipt = (int)$db->setQuery('SELECT id FROM #__jlms_manual_enrollments WHERE enrollment_id=' . $eid)->loadResult();
-$log = json_decode($db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.manualenrollment' AND item_id=" . $receipt)->loadResult(), true, 16, JSON_THROW_ON_ERROR);
+$log = json_decode($db->setQuery(("SELECT message FROM #__action_logs WHERE "
+    . "extension='com_jlms.manualenrollment' AND item_id=") . $receipt)->loadResult(), true, 16, JSON_THROW_ON_ERROR);
 preExpect($log['preassignment_requested'] === true && $log['access_at_assignment'] === false && !str_contains(json_encode($log), 'PRIVATE_PREASSIGN_REASON'), 'audit records opt-in/eligibility snapshot without internal reason');
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$manager->id, (int)$f['manager_group']);
 try {
@@ -193,13 +199,15 @@ $oldPayload = ['actor' => (int)$f['manager'],'course' => $course,'user' => (int)
 preExpect(hash('sha256', \Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition::canonical($oldPayload)) === $old->request_hash, 'default receipt retains legacy request hash');
 preExpect($service->apply($manager, $course, (int)$f['learner'], 'en-GB', $old->reason, $old->mutation_id, $old->impact_hash, true) === (int)$f['enrollment'], 'default replay remains compatible');
 // Native access-level restrictions do not become publication exceptions.
-$original = $db->setQuery('SELECT catid,catalog_access,content_access,state FROM #__jlms_courses WHERE id=' . $course)->loadObject();
+$original = $db->setQuery(('SELECT catid,catalog_access,content_access,state FROM '
+    . '#__jlms_courses WHERE id=') . $course)->loadObject();
 $privateLevel = (int)$original->content_access;
 $update('jlms_courses', $course, ['catalog_access' => $privateLevel]);
 try {
     preDenied(fn()=>$service->editor($manager, $course, (int)$users['audit']->id, 'en-GB'), 404, 'default still respects private catalog');
     $private = $service->editor($manager, $course, (int)$users['audit']->id, 'en-GB', true);
-    preExpect(!$private['impact']['has_current_access'], 'explicit preassignment permits private catalog metadata only for authorized manager');
+    preExpect(!$private['impact']['has_current_access'], ('explicit preassignment permits private catalog metadata '
+        . 'only for authorized manager'));
 } finally {
     $update('jlms_courses', $course, ['catalog_access' => (int)$original->catalog_access]);
 }

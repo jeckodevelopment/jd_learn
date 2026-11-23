@@ -94,12 +94,15 @@ final class MaterialService
         if (!$admin) {
             $now = gmdate('Y-m-d H:i:s');
             $q->where("a.state = 1 AND a.preview = 0 AND f.status = 'ready'")
-                ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
+                ->where(('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND '
+                    . '(a.publish_down IS NULL OR a.publish_down > :nowDown)'))
                 ->bind(':nowUp', $now)->bind(':nowDown', $now);
         }
         $count = clone $q;
         $total = (int) $this->db->setQuery($count->select('COUNT(*)'))->loadResult();
-        $q->select('a.id, a.title, a.description, a.lesson_id, a.ordering, a.state, a.preview, a.publish_up, a.publish_down, a.revision, f.original_name, f.mime_type, f.byte_size, f.status')
+        $q->select(('a.id, a.title, a.description, a.lesson_id, a.ordering, a.state, '
+            . 'a.preview, a.publish_up, a.publish_down, a.revision, '
+            . 'f.original_name, f.mime_type, f.byte_size, f.status'))
             ->order('a.ordering, a.id');
         return ['items' => $this->db->setQuery($q, $page * 20, 20)->loadObjectList(), 'total' => $total, 'page' => $page, 'limit' => 20];
     }
@@ -129,15 +132,18 @@ final class MaterialService
         $published = 'published';
         $query = $this->db->createQuery()->from('#__jlms_attachments AS a')
             ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
-            ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
+            ->innerJoin(('#__jlms_course_versions AS v ON v.id = a.course_version_id AND '
+                . 'v.course_id = :course AND v.status = :published'))
             ->innerJoin('#__jlms_courses AS c ON c.id = v.course_id AND c.current_version_id = v.id AND c.state = 1')
             ->where('a.course_version_id = :version')->where('a.lesson_id IS NULL')->where('a.preview = 1 AND a.state = 1')
             ->where("f.status = 'ready'")
-            ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
+            ->where(('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND '
+                . '(a.publish_down IS NULL OR a.publish_down > :nowDown)'))
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
             ->bind(':published', $published)->bind(':nowUp', $now)->bind(':nowDown', $now);
         $total = (int) $this->db->setQuery((clone $query)->select('COUNT(*)'))->loadResult();
-        $items = $this->db->setQuery((clone $query)->select('a.id, a.title, a.description, a.ordering, a.publish_up, a.publish_down, f.original_name, f.mime_type, f.byte_size')
+        $items = $this->db->setQuery((clone $query)->select(('a.id, a.title, a.description, a.ordering, '
+            . 'a.publish_up, a.publish_down, f.original_name, f.mime_type, f.byte_size'))
             ->order('a.ordering, a.id'), $page * 20, 20)->loadObjectList();
         return ['items' => $items, 'total' => $total, 'page' => $page, 'limit' => 20];
     }
@@ -149,11 +155,13 @@ final class MaterialService
         $now = gmdate('Y-m-d H:i:s');
         $query = $this->db->createQuery()->select('a.*, f.status AS asset_status, f.original_name, f.mime_type, f.byte_size')
             ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
-            ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
+            ->innerJoin(('#__jlms_course_versions AS v ON v.id = a.course_version_id AND '
+                . 'v.course_id = :course AND v.status = :published'))
             ->innerJoin('#__jlms_courses AS c ON c.id = v.course_id AND c.current_version_id = v.id AND c.state = 1')
             ->where('a.id = :id')->where('a.course_version_id = :version')->where('a.lesson_id IS NULL')
             ->where('a.preview = 1 AND a.state = 1')->where("f.status = 'ready'")
-            ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
+            ->where(('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND '
+                . '(a.publish_down IS NULL OR a.publish_down > :nowDown)'))
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
             ->bind(':id', $attachmentId, ParameterType::INTEGER)->bind(':published', $published)
             ->bind(':nowUp', $now)->bind(':nowDown', $now);
@@ -169,14 +177,17 @@ final class MaterialService
         $now = gmdate('Y-m-d H:i:s');
         $q = $this->db->createQuery()->from('#__jlms_attachments AS a')
             ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
-            ->innerJoin("#__jlms_lessons AS l ON l.id = a.lesson_id AND l.course_version_id = a.course_version_id AND l.kind = 'text' AND l.preview = 1")
+            ->innerJoin(("#__jlms_lessons AS l ON l.id = a.lesson_id AND l.course_version_id "
+                . "= a.course_version_id AND l.kind = 'text' AND l.preview = 1"))
             ->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')->where('a.preview = 1 AND a.state = 1')
             ->where("f.status = 'ready'")
-            ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
+            ->where(('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND '
+                . '(a.publish_down IS NULL OR a.publish_down > :nowDown)'))
             ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER)
             ->bind(':nowUp', $now)->bind(':nowDown', $now);
         $total = (int) $this->db->setQuery((clone $q)->select('COUNT(*)'))->loadResult();
-        $items = $this->db->setQuery((clone $q)->select('a.id, a.title, a.description, a.ordering, f.original_name, f.mime_type, f.byte_size')->order('a.ordering, a.id'), 0, 20)->loadObjectList();
+        $items = $this->db->setQuery((clone $q)->select(('a.id, a.title, a.description, a.ordering, '
+            . 'f.original_name, f.mime_type, f.byte_size'))->order('a.ordering, a.id'), 0, 20)->loadObjectList();
         return ['items' => $items, 'total' => $total, 'page' => 0, 'limit' => 20];
     }
 
@@ -187,12 +198,16 @@ final class MaterialService
         $now = gmdate('Y-m-d H:i:s');
         $q = $this->db->createQuery()->select('a.*')->from('#__jlms_attachments AS a')
             ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
-            ->innerJoin("#__jlms_lessons AS l ON l.id = a.lesson_id AND l.course_version_id = a.course_version_id AND l.kind = 'text' AND l.preview = 1")
-            ->innerJoin('#__jlms_course_versions AS v ON v.id = a.course_version_id AND v.course_id = :course AND v.status = :published')
+            ->innerJoin(("#__jlms_lessons AS l ON l.id = a.lesson_id AND l.course_version_id "
+                . "= a.course_version_id AND l.kind = 'text' AND l.preview = 1"))
+            ->innerJoin(('#__jlms_course_versions AS v ON v.id = a.course_version_id AND '
+                . 'v.course_id = :course AND v.status = :published'))
             ->innerJoin('#__jlms_courses AS c ON c.id = v.course_id AND c.current_version_id = v.id AND c.state = 1')
-            ->where('a.id = :id AND a.course_version_id = :version AND a.lesson_id = :lesson AND a.preview = 1 AND a.state = 1')
+            ->where(('a.id = :id AND a.course_version_id = :version AND a.lesson_id = '
+                . ':lesson AND a.preview = 1 AND a.state = 1'))
             ->where("f.status = 'ready'")
-            ->where('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND (a.publish_down IS NULL OR a.publish_down > :nowDown)')
+            ->where(('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND '
+                . '(a.publish_down IS NULL OR a.publish_down > :nowDown)'))
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)
             ->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':id', $attachmentId, ParameterType::INTEGER)
             ->bind(':published', $published)->bind(':nowUp', $now)->bind(':nowDown', $now);

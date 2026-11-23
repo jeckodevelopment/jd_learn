@@ -17,10 +17,15 @@ if ($mode === 'snapshot') {
     $q = $db->prepare('SELECT COUNT(*) FROM joomla_jlms_subjects WHERE user_id=?');
     $q->execute([$f['http_user']]);
     $subjects = (int)$q->fetchColumn();
-    $q = $db->prepare('SELECT COUNT(*) FROM joomla_jlms_manual_enrollments AS m INNER JOIN joomla_jlms_enrollments AS e ON e.id=m.enrollment_id WHERE e.course_id=? AND e.user_id=?');
+    $q = $db->prepare(('SELECT COUNT(*) FROM joomla_jlms_manual_enrollments AS m INNER '
+        . 'JOIN joomla_jlms_enrollments AS e ON e.id=m.enrollment_id WHERE '
+        . 'e.course_id=? AND e.user_id=?'));
     $q->execute([$f['course'],$f['http_user']]);
     $receipts = (int)$q->fetchColumn();
-    $q = $db->prepare("SELECT COUNT(*) FROM joomla_action_logs AS a INNER JOIN joomla_jlms_manual_enrollments AS m ON m.id=a.item_id INNER JOIN joomla_jlms_enrollments AS e ON e.id=m.enrollment_id WHERE a.extension='com_jlms.manualenrollment' AND e.course_id=? AND e.user_id=?");
+    $q = $db->prepare(("SELECT COUNT(*) FROM joomla_action_logs AS a INNER JOIN "
+        . "joomla_jlms_manual_enrollments AS m ON m.id=a.item_id INNER JOIN "
+        . "joomla_jlms_enrollments AS e ON e.id=m.enrollment_id WHERE "
+        . "a.extension='com_jlms.manualenrollment' AND e.course_id=? AND e.user_id=?"));
     $q->execute([$f['course'],$f['http_user']]);
     $audit = (int)$q->fetchColumn();
     echo json_encode(['enrollments' => $rows,'subjects' => $subjects,'receipts' => $receipts,'audit' => $audit,'groups' => $db->query('SELECT user_id,group_id FROM joomla_user_usergroup_map ORDER BY user_id,group_id')->fetchAll(\PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR);

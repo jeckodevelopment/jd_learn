@@ -137,7 +137,8 @@ if (($argv[2] ?? '') === 'retained') {
     $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     stateExpect($count() === $saved['history_count'], 'state history retained');
     stateExpect($stable($enrollment) === $saved['stable'], 'same enrollment and learning evidence retained');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.enrollmentstate' AND item_id=" . (int)$saved['first_event'])->loadResult() === 1, 'native state audit retained');
+    stateExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
+        . "extension='com_jlms.enrollmentstate' AND item_id=") . (int)$saved['first_event'])->loadResult() === 1, 'native state audit retained');
     echo json_encode(['enrollment_state_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
@@ -314,7 +315,8 @@ foreach ([false,true] as $different) {
 }
 stateExpect($before === $stable($enrollment), 'all state changes preserve learning history and assignment');
 stateExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'state changes never assign native groups');
-$log = $db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.enrollmentstate' AND item_id=" . $event)->loadResult();
+$log = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
+    . "extension='com_jlms.enrollmentstate' AND item_id=") . $event)->loadResult();
 $message = json_decode($log, true, 16, JSON_THROW_ON_ERROR);
 stateExpect($message['previous_status'] === 'active' && $message['target_status'] === 'suspended' && $message['reason_reference'] === $event && !str_contains($log, 'PRIVATE_STATE_REASON'), 'native audit uses minimal before/after and reason reference');
 // A fresh learner/quiz isolates runtime suspension checks from historical fixtures.
@@ -331,8 +333,11 @@ $attempt = $runtime->start($user, 'en-GB', $qe, $qf['lesson_id'], stateKey());
 $aid = $attempt['attempt']['id'];
 $answers = json_encode([$attempt['questions'][0]['id'] => ['first']], JSON_THROW_ON_ERROR);
 $runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 1, stateKey(), $answers, false);
-$quizBefore = $db->setQuery('SELECT status,revision,rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . $aid)->loadAssoc();
-$savedAnswers = $db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . $aid)->loadAssocList();
+$quizBefore = $db->setQuery(('SELECT status,revision,rules_snapshot_json,deadline_at FROM '
+    . '#__jlms_attempts WHERE id=') . $aid)->loadAssoc();
+$savedAnswers = $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
+    . '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id '
+    . 'WHERE q.attempt_id=') . $aid)->loadAssocList();
 // LCM-01: stale authenticated quiz POSTs, including an existing attempt,
 // cannot bypass course lifecycle even if admission/delivery flags are stale.
 $quizCourseBefore = $db->setQuery('SELECT state, admissions_open, delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$qf['course_id'])->loadAssoc();
@@ -343,8 +348,11 @@ try {
         stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, false), 404, 'LCM-01 inactive course denies quiz save');
         stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, true), 404, 'LCM-01 inactive course denies quiz submit');
         stateExpect(
-            $quizBefore === $db->setQuery('SELECT status,revision,rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . $aid)->loadAssoc()
-            && $savedAnswers === $db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . $aid)->loadAssocList(),
+            $quizBefore === $db->setQuery(('SELECT status,revision,rules_snapshot_json,deadline_at FROM '
+                . '#__jlms_attempts WHERE id=') . $aid)->loadAssoc()
+            && $savedAnswers === $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
+                . '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id '
+                . 'WHERE q.attempt_id=') . $aid)->loadAssocList(),
             'LCM-01 lifecycle denial leaves quiz attempt and answers immutable'
         );
     }
@@ -358,8 +366,11 @@ $service->apply($actor, ...stateCommand($qi));
 stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, false), 403, 'suspension denies quiz save');
 stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, true), 403, 'suspension denies quiz submit');
 $service->apply($actor, ...stateCommand($service->editor($actor, $qf['course_id'], $qe, 'active')));
-stateExpect($quizBefore === $db->setQuery('SELECT status,revision,rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . $aid)->loadAssoc(), 'reactivation never resets quiz status revision snapshot or deadline');
-stateExpect($savedAnswers === $db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . $aid)->loadAssocList(), 'saved quiz responses retained');
+stateExpect($quizBefore === $db->setQuery(('SELECT status,revision,rules_snapshot_json,deadline_at FROM '
+    . '#__jlms_attempts WHERE id=') . $aid)->loadAssoc(), 'reactivation never resets quiz status revision snapshot or deadline');
+stateExpect($savedAnswers === $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
+    . '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id '
+    . 'WHERE q.attempt_id=') . $aid)->loadAssocList(), 'saved quiz responses retained');
 // Stale preview after an authorized quiz save cannot suspend on an outdated impact.
 $stale = stateCommand($service->editor($actor, $qf['course_id'], $qe, 'suspended'));
 $runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, false);

@@ -145,7 +145,8 @@ $mailParams = $mailPrefsClass::merge(['mail_lesson_release' => 'inherit'], $mail
 expect(!$mailPrefsClass::enabled('lesson_release', false, $mailParams), 'lesson release notices default to off');
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('enrollment', true, $mailParams)
-    && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', 'inherit removes only the course override and retains unrelated course parameters');
+    && json_decode($mailParams, true)['unrelated_setting'] === 'retain-me', ('inherit removes only the course '
+        . 'override and retains unrelated course parameters'));
 rejects(static fn () => $mailPrefsClass::merge(['mail_completion'
     => 'yes'], '{}'), 'mail preference values are restricted to inherit, enabled or disabled');
 $lessonReleaseNow = new \DateTimeImmutable('2026-11-15 12:00:00', new \DateTimeZone('UTC'));
@@ -303,7 +304,8 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => '60000', 'params_json'
         => '{"video_duration_confirmed":true}']],
 );
-expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts confirmed video duration in the publication range');
+expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), ('pre-publication '
+    . 'checklist accepts confirmed video duration in the publication range'));
 
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
@@ -493,7 +495,8 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
     [(object) ['status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down' => null, 'scan_json' => '{}']],
 );
-expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist accepts a ready course-level public preview attachment');
+expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), ('pre-publication checklist accepts '
+    . 'a ready course-level public preview attachment'));
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],

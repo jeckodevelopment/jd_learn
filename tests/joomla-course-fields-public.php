@@ -144,7 +144,10 @@ if ($mode !== '') {
             if (!is_dir(dirname($path))) {
                 mkdir(dirname($path), 0755, true);
             }
-            file_put_contents($path, '<?php defined("_JEXEC") or die; if (!empty($displayData["fields"])) { echo "<div class=\"native-fields-override-proof\">"; foreach ($displayData["fields"] as $field) { echo $field->value; } echo "</div>"; }');
+            file_put_contents($path, ('<?php defined("_JEXEC") or die; if '
+                . '(!empty($displayData["fields"])) { echo "<div '
+                . 'class=\"native-fields-override-proof\">"; foreach '
+                . '($displayData["fields"] as $field) { echo $field->value; } echo "</div>"; }'));
         } elseif (is_file($path)) {
             unlink($path);
         }
@@ -162,7 +165,8 @@ publicFieldsExpect($categoryModel->save(['id' => 0,'parent_id' => 1,'extension' 
     => 'Public fields category','alias' => 'public-fields-category','published' => 1,'language' => '*','access'
         => 1]), 'Dedicated native category created');
 $cat = (int)$categoryModel->getState('category.id');
-$other = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$other = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 publicFieldsExpect($model->save(['id' => 0,'revision' => 1,'title' => 'Public course fields fixture','alias'
     => 'public-course-fields-fixture','catid' => $cat,'language' => 'en-GB','catalog_access'

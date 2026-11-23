@@ -22,7 +22,8 @@ final class HtmlView extends BaseHtmlView
     {
         $this->item = $this->get('Item');
         $this->form = $this->get('Form');
-        $field = new \SimpleXMLElement('<field name="lesson_id" type="list" label="COM_JLMS_MATERIAL_SCOPE" filter="integer" />');
+        $field = new \SimpleXMLElement(('<field name="lesson_id" type="list" '
+            . 'label="COM_JLMS_MATERIAL_SCOPE" filter="integer" />'));
         $field->addChild('option', Text::_('COM_JLMS_COURSE_MATERIALS'))->addAttribute('value', '0');
         foreach ($this->item['lessons'] as $lesson) {
             $field->addChild('option', htmlspecialchars($lesson->title, ENT_XML1))->addAttribute('value', (string) $lesson->id);

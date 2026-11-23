@@ -227,7 +227,8 @@ foreach (
     [
     'ManualEnrollmentService.php' => ['\'ENROLLMENT_DATE\' => $now'],
     'LearningService.php' => ['\'ENROLLMENT_DATE\' => $now', '\'COMPLETION_DATE\' => $completedAt',
-        '$this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language, (string) $update->completed_at)'],
+        ('$this->queueCourseCompletion($actor, $enrollmentId, (int) '
+            . '$version->course_id, $language, (string) $update->completed_at)')],
     ] as $producerFile => $needles
 ) {
     $producer = file_get_contents(__DIR__ . '/../component/administrator/src/Application/' . $producerFile);
@@ -249,8 +250,11 @@ foreach (['it-IT', 'en-GB'] as $locale) {
 
 
 // Upgrades migrate only legacy placeholders in installed Joomla templates.
-$legacy = 'Hello {NAME}, {COURSE} on {SITENAME}; {NAME_HTML} / {COURSE_HTML} / {SITENAME_HTML}. Keep {CUSTOM} and {COURSE_TITLE}.';
-$canonical = 'Hello {USER_FULLNAME}, {COURSE_TITLE} on {SITE_NAME}; {USER_FULLNAME_HTML} / {COURSE_TITLE_HTML} / {SITE_NAME_HTML}. Keep {CUSTOM} and {COURSE_TITLE}.';
+$legacy = ('Hello {NAME}, {COURSE} on {SITENAME}; {NAME_HTML} / {COURSE_HTML} '
+    . '/ {SITENAME_HTML}. Keep {CUSTOM} and {COURSE_TITLE}.');
+$canonical = ('Hello {USER_FULLNAME}, {COURSE_TITLE} on {SITE_NAME}; '
+    . '{USER_FULLNAME_HTML} / {COURSE_TITLE_HTML} / {SITE_NAME_HTML}. '
+    . 'Keep {CUSTOM} and {COURSE_TITLE}.');
 $migrated = MailTemplateTagUpdater::migratePlaceholders($legacy);
 if ($migrated !== $canonical || MailTemplateTagUpdater::migratePlaceholders($migrated) !== $canonical) {
     throw new RuntimeException('Installed mail placeholder migration must preserve content and be idempotent.');
