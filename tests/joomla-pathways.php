@@ -124,6 +124,22 @@ foreach ([
 }
 $stored = $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$pathwayId)->loadObject();
 $check($pathwayId>0 && (int)$stored->course_id===$courseId && (int)$stored->ordering===0,'native authoring normalizes and persists ordering');
+// SECDEV-03: submitted association IDs are literal integer identifiers,
+// never SQL syntax; rejected updates may not modify the existing links.
+$beforeAssociationInjection = $db->setQuery(
+    'SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$pathwayId.' ORDER BY ordering'
+)->loadAssocList();
+foreach (["1 OR 1=1 --", "1; DROP TABLE courses; --", "1 UNION SELECT 1"] as $sqlLikeCourseId) {
+    $check(!$pathModel->save([
+        'id'=>$pathwayId, 'revision'=>1,
+        'courses'=>[['course_id'=>$sqlLikeCourseId,'ordering'=>0]],
+    ]), 'SECDEV-03: reject SQL-like course association identifier');
+    $check($db->setQuery(
+        'SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$pathwayId.' ORDER BY ordering'
+    )->loadAssocList()===$beforeAssociationInjection,
+        'SECDEV-03: rejected association input preserves persisted links');
+}
+
 $operator = $app->getIdentity();
 $student = $component->getLearningService()->start($operator,'en-GB',$courseId,str_repeat('p',40));
 $detail = $service->detail($operator,'en-GB',$pathwayId);
