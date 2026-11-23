@@ -209,8 +209,7 @@ $report = [
     'unique_joomla_symbols' => count($symbols),
     'unique_static_method_calls' => count($methods),
     'verified_direct_instance_method_calls' => count($directInstanceMethods),
-    'unresolved_object_method_sites' => max(0, $objectCallSites - count($directInstanceMethods)),
-    'total_object_method_sites' => $objectCallSites,
+    'object_method_sites_needing_flow_analysis' => $objectCallSites,
     'unresolved_dynamic_static_sites' => $dynamicStaticSites,
     'failures' => count($failures),
 ];
