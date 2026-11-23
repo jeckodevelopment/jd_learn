@@ -90,3 +90,10 @@ Il workflow temporaneo `SECDEV-02 one-shot structural PHPCBF` ha applicato la ve
 Prima del commit, il workflow ha effettuato `php -l` su tutti i file modificati, eliminato esclusivamente whitespace finale prodotto dalla riformattazione e verificato `git diff --check`. Il workflow temporaneo con permessi di scrittura è stato rimosso dalla PR. La conformità effettiva è subordinata all'audit PHPCS completo e alla CI applicativa dell'HEAD della PR; le modifiche che rompono test strutturali devono essere corrette senza cancellare le relative invarianti.
 
 I **7.444 fix** non devono essere confusi con una diminuzione netta identica: la riformattazione può cambiare altri rilievi PSR-12. Il numero totale prima del batch era **18.745**; la CI della PR registra il nuovo totale. SECDEV-02 non è chiuso senza copertura dei criteri CORE-01–23, azzeramento del debito e audit delle API Joomla della patch target. I collaudi manuali sono separati.
+
+
+## Terzo batch massivo PSR-12 (PR #987)
+
+Il workflow temporaneo `SECDEV-02 one-shot final PSR-12 remediation` (run **45182734040**) ha eseguito PHPCBF 4.0.4 con lo standard completo PSR12 sull'intero insieme di PHP tracciato, nel ramo isolato `style/secdev02-psr12-final-remediation`. Il workflow è terminato con esito positivo: auto-fix, lint di ogni PHP modificato, `git diff --check` e commit. Il workflow temporaneo dotato di permessi di scrittura è stato rimosso dal ramo prima dell'apertura della PR.
+
+La PR deve superare il gate di non regressione PHPCS e la CI completa sul commit finale. Il formatter può lasciare regole senza fix automatico e alterare la struttura delle righe: **la riduzione del debito deve essere misurata sul run PHPCS della PR, non ricavata dal numero di file modificati**. Non sono introdotte eccezioni al gate di non regressione per il terzo batch. CORE-01–23, audit delle API Joomla della patch target e accettazione manuale sono distinti da questa attività; i criteri SECDEV-02 non vengono promossi senza evidenza.
