@@ -1,0 +1,39 @@
+name: SECDEV-02 one-shot token-safe expression line remediation
+on:
+  push:
+    branches:
+      - style/secdev02-bulk-comment-lines
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-expressions-once
+  cancel-in-progress: false
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Install pinned PHPCS
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Wrap only token-identical PHP expressions
+        run: |
+          python3 tools/secdev02_expression_wrap.py --self-test
+          python3 tools/secdev02_expression_wrap.py --apply --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs
+          git diff --check
+      - name: Commit safe reductions and remove disposable workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m 'style(SECDEV-02): repository-wide safe PHP expression line breaks'
+          fi
+          git rm .github/workflows/secdev02-expression-wrap-once.yml
+          git commit -m 'chore(SECDEV-02): remove one-shot write workflow'
+          git push origin HEAD:style/secdev02-bulk-comment-lines
