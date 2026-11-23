@@ -4,6 +4,7 @@
 Structural gate; acceptance in a real Joomla site is still required.
 """
 from pathlib import Path
+import re
 from subprocess import run
 import xml.etree.ElementTree as ET
 
