@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/** AUT-04: saved lesson equivalences must never be silently truncated. */
+/* AUT-04: saved lesson equivalences must never be silently truncated. */
 
 require_once dirname(__DIR__) . '/component/administrator/src/Application/EnrollmentMigrationService.php';
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/** Explicit one-enrollment migration; run only against the disposable Joomla CI installation. */
+/* Explicit one-enrollment migration; run only against the disposable Joomla CI installation. */
 
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {

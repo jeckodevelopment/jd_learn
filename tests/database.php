@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/** Disposable CI database only. Never run against a live site. */
+/* Disposable CI database only. Never run against a live site. */
 
 $dsn = getenv('JLMS_TEST_DSN');
 if (!$dsn || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
