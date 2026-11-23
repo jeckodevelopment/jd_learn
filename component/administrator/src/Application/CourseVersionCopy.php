@@ -154,7 +154,8 @@ final class CourseVersionCopy
         }
         $attachments = array_filter(
             $this->rows('attachments', 'course_version_id', $sourceVersion, 1000),
-            static fn(array $attachment): bool => $attachment['lesson_id'] === null ? $whole : isset($lessons[$attachment['lesson_id']])
+            static fn(array $attachment): bool => $attachment['lesson_id'] === null ? $whole : isset($lessons[
+                $attachment['lesson_id']])
         );
         $this->capacity('attachments', $target, count($attachments), 1000);
         foreach ($attachments as $attachment) {

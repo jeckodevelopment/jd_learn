@@ -47,7 +47,8 @@ final class CategoryreassignmentController extends BaseController
                 $code = 422;
             }
             if (preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {
-                throw new \RuntimeException(Text::_($key), in_array($code, [400, 403, 404, 409, 422], true) ? $code : 422);
+                throw new \RuntimeException(Text::_($key), in_array($code, [
+                    400, 403, 404, 409, 422], true) ? $code : 422);
             }
             throw $error;
         }

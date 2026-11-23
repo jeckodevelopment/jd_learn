@@ -143,7 +143,8 @@ foreach (['modules','lessons','quizzes','materials'] as $kind) {
         && $initial['changes'][$kind]['removed'] === 0, 'Unchanged working copy has no false changes for ' . $kind);
 }
 impactExpect(!$initial['rules_changed'], 'Equivalent teaching rules remain unchanged');
-impactExpect((int)$initial['enrollments'][0]['total'] === 1, 'Review counts existing assignments without learner identities');
+impactExpect((int)$initial['enrollments'][0][
+    'total'] === 1, 'Review counts existing assignments without learner identities');
 impactDenied(fn()=>$service->transition($actor, $course, $draft, (int)impactRow('courses', $course)
     ->revision, (int)impactRow('course_versions', $draft)->revision, $transition), 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
 $return = $findTransition('return');
@@ -167,11 +168,14 @@ $service->transition($actor, $course, $draft, (int)impactRow('courses', $course)
     ->revision, (int)impactRow('course_versions', $draft)->revision, (int)$submit->id);
 $transition = (int)$findTransition('publish')->id;
 $updated = $review();
-impactExpect($updated['changes']['modules']['changed'] === 1 && $updated['changes']['quizzes']['changed'] === 1, 'Existing module and quiz definition changes are recognised without exposing questions');
+impactExpect($updated['changes']['modules']['changed'] === 1 && $updated['changes']['quizzes'][
+    'changed'] === 1, 'Existing module and quiz definition changes are recognised without exposing questions');
 
-impactExpect($updated['changes']['modules']['added'] === 1 && $updated['changes']['lessons']['added'] === 1, 'New module and lesson classified as additions');
+impactExpect($updated['changes']['modules']['added'] === 1 && $updated['changes']['lessons'][
+    'added'] === 1, 'New module and lesson classified as additions');
 impactDenied(fn()=>$service->transition($actor, $course, $draft, (int)impactRow('courses', $course)
-    ->revision, (int)impactRow('course_versions', $draft)->revision, $transition, $initial['fingerprint']), 'COM_JLMS_PUBLICATION_REVIEW_STALE');
+    ->revision, (int)impactRow('course_versions', $draft)->revision, $transition, $initial[
+        'fingerprint']), 'COM_JLMS_PUBLICATION_REVIEW_STALE');
 impactExpect(impactRow('course_versions', $draft)->status === 'draft'
     && impactLearning() === $before, 'Stale review causes no publication or learning mutation');
 $return = $findTransition('return');

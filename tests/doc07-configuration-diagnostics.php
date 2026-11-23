@@ -305,7 +305,8 @@ $inheritInvalid = ConfigurationDiagnostics::inheritance(
 $inheritMalformed = ConfigurationDiagnostics::inheritance(['{malformed'], [
     ['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{bad']
 ], true, true);
-$inheritOverflow = ConfigurationDiagnostics::inheritance(['{"mail_preferences":{"completion":"enabled"}}'], [], false, false);
+$inheritOverflow = ConfigurationDiagnostics::inheritance(['{"mail_preferences":{"completion":"enabled"}}'], [
+    ], false, false);
 $inheritInvalidOverflow = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"completion":"untrusted"}}'],
     [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"999"}']],

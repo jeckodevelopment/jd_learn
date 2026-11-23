@@ -65,7 +65,8 @@ final class EnrollmentapprovalController extends BaseController
             }
             $known = ['COM_JLMS_INVALID_INPUT', 'COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED',
                 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_ENROLLMENT_APPROVAL_REASON',
-                'COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 'COM_JLMS_ENROLLMENT_APPROVAL_AUDIT_FAILED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_EDITION_FULL'];
+                'COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 'COM_JLMS_ENROLLMENT_APPROVAL_AUDIT_FAILED',
+                'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_EDITION_FULL'];
             if (in_array($code, [400,401,403,404,409,413,422,503], true) && in_array($key, $known, true)) {
                 throw new \RuntimeException(Text::_($key), $code);
             }

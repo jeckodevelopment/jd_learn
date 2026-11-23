@@ -34,7 +34,8 @@ final class TeachersModel extends ListModel
             $input->set('filter', $filters);
         }
         if ($input->get('list', null, 'array') !== null) {
-            $list = array_intersect_key($input->get('list', [], 'array'), array_flip(['fullordering', 'ordering', 'direction', 'limit']));
+            $list = array_intersect_key($input->get('list', [], 'array'), array_flip(['fullordering', 'ordering',
+            'direction', 'limit']));
             foreach ($list as $key => &$value) {
                 if (!is_scalar($value)) {
                     $value = $key === 'limit' ? 20 : '';
