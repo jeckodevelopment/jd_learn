@@ -42,9 +42,15 @@ def check() -> None:
     for marker in ("<script", "onclick=", "javascript:", "params_json", "current_version_id",
                    "cannot be mass-assigned", "Active markup"):
         assert marker in presentation, f"XSS or mass assignment fixture absent: {marker}"
+    pathways = source("tests/joomla-pathways.php")
+    for marker in ("<script>alert(1)</script>", "onclick=", "javascript:",
+                   "'params_json'=>'{", "'created_by'=>999999", "'checked_out'=>999999",
+                   "pathway ignores raw params, author identity and checkout fields"):
+        assert marker in pathways, f"SECDEV-03 pathway negative fixture absent: {marker}"
     # These are real Joomla model/database fixture assertions, not source-only tests.
     ci = source(".github/workflows/ci.yml")
     assert "joomla-course-presentation.php" in ci, "Joomla fixture absent from CI"
+    assert "joomla-pathways.php" in ci, "Pathway negative fixture absent from CI"
     assert "php tests/catalog-literal-search.php" in ci, "SQL literal fixture absent from CI"
     publication = source("tests/joomla-publication.php")
     assert "joomla-publication.php" in ci, "Database-level catalog regression absent from CI"
