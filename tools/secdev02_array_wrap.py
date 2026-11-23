@@ -67,7 +67,7 @@ def run():
     p.add_argument("--phpcs",type=Path)
     args=p.parse_args()
     if args.self_test:
-        line=b"    $data = ['one' => 1,'two' => 2,'three' => 3,'four' => 4,'five' => 5,'six' => 6,'seven' => 7,'eight' => 8];\n"
+        line=b"    $data = ['one' => 1,'two' => 2,'three' => 3,'four' => 4,'five' => 5,'six' => 6,'seven' => 7,'eight' => 8,'nine' => 9,'ten' => 10,'eleven' => 11];\n"
         points=[[i+1,","] for i,c in enumerate(line) if c==44]
         assert len(line)>100
         assert propose(line,points,90,4) != line
