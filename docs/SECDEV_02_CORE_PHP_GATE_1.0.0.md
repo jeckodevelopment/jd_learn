@@ -37,6 +37,10 @@ Fonti primarie: [Joomla 6, requisiti tecnici](https://manual.joomla.org/docs/nex
 
 ## Inventario PSR-4 e igiene sorgenti PHP
 
-Il gate `tests/secdev02-psr4-hygiene.py` analizza **tutti i file PHP tracciati** nelle tre radici PSR-4 dichiarate da Composer. Per ciascuno verifica la corrispondenza del namespace alla directory, la corrispondenza delle dichiarazioni di classi/interfacce/trait/enum con il nome del file, l'header PHP, `strict_types=1`, newline conclusiva e whitespace finale. Confronta i finding con il ramo base: **blocca nuove violazioni** e dichiara il numero di finding storici, senza rappresentarli come risolti. Sono comprese fixture positive e negative.
+Il gate `tests/secdev02-psr4-hygiene.py` analizza **tutti i file PHP tracciati** nelle tre radici PSR-4 dichiarate da Composer. Per ciascuno verifica la corrispondenza del namespace alla directory, la corrispondenza delle dichiarazioni di classi/interfacce/trait/enum con il nome del file, l'header PHP, `strict_types=1`, newline conclusiva e whitespace finale. Confronta i finding con il ramo base e **blocca qualsiasi violazione**: il debito residuo di un trailing whitespace in `MailQueue.php` è stato corretto nella PR #981. La CI attesta zero finding su questo insieme di regole dopo la correzione. Sono comprese fixture positive e negative.
 
 Questo è un **sottoinsieme delle convenzioni PSR-12**, non la verifica completa con uno standard PHPCS. È specifico per le radici PSR-4 del codice distribuito, non copre installer, bootstrap, layout e altri file PHP che richiedono controlli propri. La validazione sintattica PHP della CI continua separatamente. La chiusura di SECDEV-02/criterion_01 resta subordinata alla rimozione del debito PSR-12 e alla copertura di CORE-01–23; non è autorizzata una promozione automatica del criterio.
+
+## Eliminazione del debito del controllo PHP (PR #981)
+
+È stata rimossa l'ultima violazione di whitespace identificata nel file `component/administrator/src/Infrastructure/MailQueue.php`. Il gate ora esige **zero** finding sui 260 file mappati dal Composer e stampa per file le anomalie rilevate. Il controllo non equivale comunque a una verifica completa PSR-12 tramite PHPCS, che rimane distinta.
