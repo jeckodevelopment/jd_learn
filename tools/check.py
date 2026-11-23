@@ -153,7 +153,7 @@ sender=(ROOT/'component/administrator/src/Application/CourseMessageMailer.php').
 # The same immutable template snapshot is canonicalized before job lookup and insertion.
 assert "'template' => $plan['template']" in compose
 assert "hash_equals((string) $previous->payload_json, $expectedPayload)" in compose
-assert re.search(r"'payload_json'\\s*=>\\s*\\$expectedPayload", compose)
+assert re.search(r"'payload_json'\s*=>\s*\$expectedPayload", compose)
 assert "'__course_message_snapshot'" in compose and "'__course_message_snapshot'" in dispatch
 assert "CourseMessageTemplate::validate($snapshot, $data)" in dispatch
 assert "CourseMessageMailer::deliver(" in dispatch
