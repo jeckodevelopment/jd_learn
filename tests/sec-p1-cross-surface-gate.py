@@ -58,7 +58,7 @@ for kind, handler in {
     "jlms.mail.dispatch": "dispatchMail",
 }.items():
     assert re.search(r"'" + re.escape(kind) + r"'\s*=>\s*\[[^\]]*'method'\s*=>\s*'" + handler + r"'", task), (kind, handler)
-    assert "protected function " + handler + "(ExecuteTaskEvent $event):int" in task, handler
+    assert re.search(r"protected\\s+function\\s+" + re.escape(handler) + r"\\(\\s*ExecuteTaskEvent\\s+\\$event\\s*\\)\\s*:\\s*int\\b", task), handler
 assert task.count("logTask(") == 3, "Task logging requires review for PII/secrets"
 
 # Verify callback-limited SMTP dispatch, quiz expiry and protected orphan cleanup.
