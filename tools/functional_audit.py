@@ -54,7 +54,7 @@ def validate_evidence(reference):
                 raise ValueError(f"Invalid evidence line range: {reference}")
             original_fragment = "\n".join(original_lines[start - 1:end])
             def tokenized(value):
-                return re.sub(r"\\s+", "", value)
+                return re.sub(r"\s+", "", value)
             if len(original_fragment.strip()) < 8 or tokenized(original_fragment) not in tokenized(current_text):
                 raise ValueError(f"Stale evidence content: {reference}")
     elif anchor not in candidate.read_text(encoding="utf-8"):
