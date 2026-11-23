@@ -72,8 +72,7 @@ $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
 
-define('_JEXEC', 1);
-define('JPATH_BASE', $root . '/administrator');
+require __DIR__ . '/fixtures/secdev02-joomla-bootstrap-constants.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
 
