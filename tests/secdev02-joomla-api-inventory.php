@@ -25,11 +25,13 @@ PHP;
 
     $found = secdev02JoomlaTokenInventory($source);
 
-    if (!in_array('Joomla\CMS\Factory', $found['classes'], true)
+    if (
+        !in_array('Joomla\CMS\Factory', $found['classes'], true)
         || !in_array('Joomla\CMS\User\User', $found['classes'], true)
         || !in_array('Joomla\CMS\Language\Text', $found['classes'], true)
         || count($found['static_methods']) !== 2
-        || $found['object_call_sites'] !== 1) {
+        || $found['object_call_sites'] !== 1
+    ) {
         throw new RuntimeException('Joomla static inventory fixture mismatch');
     }
 
@@ -54,8 +56,10 @@ PHP;
 $root = realpath($argv[1] ?? '');
 $repository = realpath(__DIR__ . '/..');
 
-if ($root === false || $repository === false || getenv('JLMS_TEST_DISPOSABLE') !== '1'
-    || !is_file($root . '/administrator/includes/framework.php')) {
+if (
+    $root === false || $repository === false || getenv('JLMS_TEST_DISPOSABLE') !== '1'
+    || !is_file($root . '/administrator/includes/framework.php')
+) {
     throw new RuntimeException('Disposable installed Joomla CI runtime required');
 }
 

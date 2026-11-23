@@ -31,8 +31,10 @@ function secdev02JoomlaTokenInventory(string $source): array
         // closure captures and trait uses do not start with a Joomla name.
         $j = $i + 1;
 
-        while (isset($tokens[$j]) && is_array($tokens[$j])
-            && $tokens[$j][0] === T_WHITESPACE) {
+        while (
+            isset($tokens[$j]) && is_array($tokens[$j])
+            && $tokens[$j][0] === T_WHITESPACE
+        ) {
             $j++;
         }
 
@@ -41,8 +43,10 @@ function secdev02JoomlaTokenInventory(string $source): array
         }
 
         $name = $tokens[$j][1];
-        if (!str_starts_with($name, 'Joomla\\')
-            && !str_starts_with($name, '\\Joomla\\')) {
+        if (
+            !str_starts_with($name, 'Joomla\\')
+            && !str_starts_with($name, '\\Joomla\\')
+        ) {
             continue;
         }
 
@@ -54,16 +58,22 @@ function secdev02JoomlaTokenInventory(string $source): array
         $alias = substr($name, (int) strrpos($name, '\\') + 1);
         $k = $j + 1;
 
-        while (isset($tokens[$k]) && is_array($tokens[$k])
-            && $tokens[$k][0] === T_WHITESPACE) {
+        while (
+            isset($tokens[$k]) && is_array($tokens[$k])
+            && $tokens[$k][0] === T_WHITESPACE
+        ) {
             $k++;
         }
 
-        if (isset($tokens[$k]) && is_array($tokens[$k])
-            && $tokens[$k][0] === T_AS) {
+        if (
+            isset($tokens[$k]) && is_array($tokens[$k])
+            && $tokens[$k][0] === T_AS
+        ) {
             $k++;
-            while (isset($tokens[$k]) && is_array($tokens[$k])
-                && $tokens[$k][0] === T_WHITESPACE) {
+            while (
+                isset($tokens[$k]) && is_array($tokens[$k])
+                && $tokens[$k][0] === T_WHITESPACE
+            ) {
                 $k++;
             }
             if (isset($tokens[$k]) && is_array($tokens[$k])) {
@@ -71,8 +81,10 @@ function secdev02JoomlaTokenInventory(string $source): array
             }
         }
 
-        if (isset($aliases[strtolower($alias)])
-            && $aliases[strtolower($alias)] !== ltrim($name, '\\')) {
+        if (
+            isset($aliases[strtolower($alias)])
+            && $aliases[strtolower($alias)] !== ltrim($name, '\\')
+        ) {
             $unresolvedImports[] = $name . ' alias collision';
         }
 
@@ -88,15 +100,21 @@ function secdev02JoomlaTokenInventory(string $source): array
         if ($kind === T_OBJECT_OPERATOR || $kind === T_NULLSAFE_OBJECT_OPERATOR) {
             $j = $i + 1;
 
-            while (isset($tokens[$j]) && is_array($tokens[$j])
-                && $tokens[$j][0] === T_WHITESPACE) {
+            while (
+                isset($tokens[$j]) && is_array($tokens[$j])
+                && $tokens[$j][0] === T_WHITESPACE
+            ) {
                 $j++;
             }
-            if (isset($tokens[$j]) && is_array($tokens[$j])
-                && $tokens[$j][0] === T_STRING) {
+            if (
+                isset($tokens[$j]) && is_array($tokens[$j])
+                && $tokens[$j][0] === T_STRING
+            ) {
                 $k = $j + 1;
-                while (isset($tokens[$k]) && is_array($tokens[$k])
-                    && $tokens[$k][0] === T_WHITESPACE) {
+                while (
+                    isset($tokens[$k]) && is_array($tokens[$k])
+                    && $tokens[$k][0] === T_WHITESPACE
+                ) {
                     $k++;
                 }
                 if (($tokens[$k] ?? null) === '(') {
@@ -122,24 +140,32 @@ function secdev02JoomlaTokenInventory(string $source): array
         $classes[$className] = true;
 
         $j = $i + 1;
-        while (isset($tokens[$j]) && is_array($tokens[$j])
-            && $tokens[$j][0] === T_WHITESPACE) {
+        while (
+            isset($tokens[$j]) && is_array($tokens[$j])
+            && $tokens[$j][0] === T_WHITESPACE
+        ) {
             $j++;
         }
 
-        if (!isset($tokens[$j]) || !is_array($tokens[$j])
-            || $tokens[$j][0] !== T_DOUBLE_COLON) {
+        if (
+            !isset($tokens[$j]) || !is_array($tokens[$j])
+            || $tokens[$j][0] !== T_DOUBLE_COLON
+        ) {
             continue;
         }
 
         $j++;
-        while (isset($tokens[$j]) && is_array($tokens[$j])
-            && $tokens[$j][0] === T_WHITESPACE) {
+        while (
+            isset($tokens[$j]) && is_array($tokens[$j])
+            && $tokens[$j][0] === T_WHITESPACE
+        ) {
             $j++;
         }
 
-        if (!isset($tokens[$j]) || !is_array($tokens[$j])
-            || $tokens[$j][0] !== T_STRING) {
+        if (
+            !isset($tokens[$j]) || !is_array($tokens[$j])
+            || $tokens[$j][0] !== T_STRING
+        ) {
             $dynamicStaticCalls++;
             continue;
         }
@@ -151,8 +177,10 @@ function secdev02JoomlaTokenInventory(string $source): array
         }
 
         $k = $j + 1;
-        while (isset($tokens[$k]) && is_array($tokens[$k])
-            && $tokens[$k][0] === T_WHITESPACE) {
+        while (
+            isset($tokens[$k]) && is_array($tokens[$k])
+            && $tokens[$k][0] === T_WHITESPACE
+        ) {
             $k++;
         }
 
