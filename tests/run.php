@@ -56,7 +56,10 @@ expect(
 $storagePathCheck = new \ReflectionMethod(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class, 'isAbsolutePath');
 expect($storagePathCheck->invoke(null, '/srv/jlms-private') === true, 'LES-03 accepts Unix private storage root');
 expect($storagePathCheck->invoke(null, 'C:/jlms-private') === true, 'LES-03 accepts Windows slash drive root');
-expect($storagePathCheck->invoke(null, 'C:' . chr(92) . 'jlms-private') === true, 'LES-03 accepts Windows backslash drive root');
+expect(
+    $storagePathCheck->invoke(null, 'C:' . chr(92) . 'jlms-private') === true,
+    'LES-03 accepts Windows backslash drive root'
+);
 expect($storagePathCheck->invoke(null, 'C:jlms-private') === false, 'LES-03 rejects Windows drive-relative root');
 expect($storagePathCheck->invoke(null, '../public') === false, 'LES-03 rejects relative storage root');
 
@@ -115,32 +118,56 @@ expect(
 );
 $mailPrefsClass = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::class;
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'disabled'], '{"unrelated_setting":"retain-me"}');
-expect(!$mailPrefsClass::enabled('enrollment', true, $mailParams), 'course can disable a globally enabled enrollment email');
-expect($mailPrefsClass::enabled('completion', true, $mailParams), 'unset course preference inherits the global completion email setting');
-expect(!$mailPrefsClass::enabled('completion', false, $mailParams), 'inherited course setting follows the disabled global default');
+expect(
+    !$mailPrefsClass::enabled('enrollment', true, $mailParams),
+    'course can disable a globally enabled enrollment email'
+);
+expect(
+    $mailPrefsClass::enabled('completion', true, $mailParams),
+    'unset course preference inherits the global completion email setting'
+);
+expect(
+    !$mailPrefsClass::enabled('completion', false, $mailParams),
+    'inherited course setting follows the disabled global default'
+);
 $courseOverride = $mailPrefsClass::merge(['mail_completion' => 'enabled'], $mailParams);
-expect($mailPrefsClass::enabled('completion', false, $courseOverride), 'explicit course preference overrides the global default');
+expect(
+    $mailPrefsClass::enabled('completion', false, $courseOverride),
+    'explicit course preference overrides the global default'
+);
 $mailParams = $mailPrefsClass::merge(['mail_suspension' => 'disabled', 'mail_reactivation' => 'enabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('suspension', true, $mailParams)
     && $mailPrefsClass::enabled('reactivation', false, $mailParams), 'suspension and reactivation preferences support independent course overrides');
 $mailParams = $mailPrefsClass::merge(['mail_certificate' => 'disabled'], $mailParams);
-expect(!$mailPrefsClass::enabled('certificate', true, $mailParams), 'course can suppress certificate availability email');
+expect(
+    !$mailPrefsClass::enabled('certificate', true, $mailParams),
+    'course can suppress certificate availability email'
+);
 $mailParams = $mailPrefsClass::merge(['mail_certificate' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('certificate', true, $mailParams)
     && !$mailPrefsClass::enabled('certificate', false, $mailParams), 'certificate email preference inherits the global setting');
 $mailParams = $mailPrefsClass::merge(['mail_communication' => 'disabled'], $mailParams);
-expect(!$mailPrefsClass::enabled('communication', true, $mailParams), 'course communication obeys an explicit course-level disable');
+expect(
+    !$mailPrefsClass::enabled('communication', true, $mailParams),
+    'course communication obeys an explicit course-level disable'
+);
 $mailParams = $mailPrefsClass::merge(['mail_communication' => 'inherit'], $mailParams);
 expect($mailPrefsClass::enabled('communication', true, $mailParams)
     && !$mailPrefsClass::enabled('communication', false, $mailParams), 'course communication inherits the global switch');
 $mailParams = $mailPrefsClass::merge(['mail_expiry' => 'disabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('expiry', true, $mailParams), 'course can suppress an enabled course-expiry reminder');
 $mailParams = $mailPrefsClass::merge(['mail_expiry' => 'inherit'], $mailParams);
-expect($mailPrefsClass::enabled('expiry', true, $mailParams) && !$mailPrefsClass::enabled('expiry', false, $mailParams), 'course-expiry reminder preference inherits the global setting');
+expect(
+    $mailPrefsClass::enabled('expiry', true, $mailParams) && !$mailPrefsClass::enabled('expiry', false, $mailParams),
+    'course-expiry reminder preference inherits the global setting'
+);
 $mailParams = $mailPrefsClass::merge(['mail_lesson_release' => 'disabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('lesson_release', true, $mailParams), 'course can disable new lesson notifications');
 $mailParams = $mailPrefsClass::merge(['mail_lesson_release' => 'enabled'], $mailParams);
-expect($mailPrefsClass::enabled('lesson_release', false, $mailParams), 'course override can opt in while global lesson release notices are disabled');
+expect(
+    $mailPrefsClass::enabled('lesson_release', false, $mailParams),
+    'course override can opt in while global lesson release notices are disabled'
+);
 $mailParams = $mailPrefsClass::merge(['mail_lesson_release' => 'inherit'], $mailParams);
 expect(!$mailPrefsClass::enabled('lesson_release', false, $mailParams), 'lesson release notices default to off');
 $mailParams = $mailPrefsClass::merge(['mail_enrollment' => 'inherit'], $mailParams);
@@ -151,20 +178,41 @@ rejects(static fn () => $mailPrefsClass::merge(['mail_completion'
     => 'yes'], '{}'), 'mail preference values are restricted to inherit, enabled or disabled');
 $lessonReleaseNow = new \DateTimeImmutable('2026-11-15 12:00:00', new \DateTimeZone('UTC'));
 $lessonStart = LessonAvailability::effectiveStart('2026-11-15 09:00:00', 2, '2026-11-14 08:00:00');
-expect($lessonStart?->format('Y-m-d H:i:s') === '2026-11-16 08:00:00', 'relative lesson release must supersede an earlier absolute window');
-expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-14 08:00:00', $lessonReleaseNow) === 'upcoming', 'lesson still locked until relative release');
-expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-13 08:00:00', $lessonReleaseNow) === 'available', 'lesson available after effective release');
-expect(LessonAvailability::state('2026-11-15 09:00:00', null, 2, null, $lessonReleaseNow) === 'awaiting_start', 'no premature relative release before course start');
+expect(
+    $lessonStart?->format('Y-m-d H:i:s') === '2026-11-16 08:00:00',
+    'relative lesson release must supersede an earlier absolute window'
+);
+expect(
+    LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-14 08:00:00', $lessonReleaseNow) === 'upcoming',
+    'lesson still locked until relative release'
+);
+expect(
+    LessonAvailability::state('2026-11-15 09:00:00', null, 2, '2026-11-13 08:00:00', $lessonReleaseNow) === 'available',
+    'lesson available after effective release'
+);
+expect(
+    LessonAvailability::state('2026-11-15 09:00:00', null, 2, null, $lessonReleaseNow) === 'awaiting_start',
+    'no premature relative release before course start'
+);
 $mailParams = $mailPrefsClass::merge(['mail_course_update' => 'disabled'], $mailParams);
 expect(!$mailPrefsClass::enabled('course_update', true, $mailParams), 'course prevents significant update emails');
 $mailParams = $mailPrefsClass::merge(['mail_course_update' => 'enabled'], $mailParams);
-expect($mailPrefsClass::enabled('course_update', false, $mailParams), 'course can explicitly enable significant update notice');
+expect(
+    $mailPrefsClass::enabled('course_update', false, $mailParams),
+    'course can explicitly enable significant update notice'
+);
 $mailParams = $mailPrefsClass::merge(['mail_course_update' => 'inherit'], $mailParams);
 expect(!$mailPrefsClass::enabled('course_update', false, $mailParams), 'significant update is disabled by default');
 $mailParams = $mailPrefsClass::merge(['mail_manager_request' => 'disabled'], $mailParams);
-expect(!$mailPrefsClass::enabled('manager_request', true, $mailParams), 'course disables pending request notifications to managers');
+expect(
+    !$mailPrefsClass::enabled('manager_request', true, $mailParams),
+    'course disables pending request notifications to managers'
+);
 $mailParams = $mailPrefsClass::merge(['mail_manager_request' => 'enabled'], $mailParams);
-expect($mailPrefsClass::enabled('manager_request', false, $mailParams), 'course explicitly enables manager request notices');
+expect(
+    $mailPrefsClass::enabled('manager_request', false, $mailParams),
+    'course explicitly enables manager request notices'
+);
 $mailParams = $mailPrefsClass::merge(['mail_manager_request' => 'inherit'], $mailParams);
 expect(!$mailPrefsClass::enabled('manager_request', false, $mailParams), 'new request notices default to disabled');
 $readinessCourse = static fn (string $description, string $summary = '', string $image = ''): object => (object) [
@@ -175,12 +223,18 @@ $readinessCourse = static fn (string $description, string $summary = '', string 
 $certificatePrefs = \Jlms\Component\Jlms\Administrator\Application\CertificatePreferences::class;
 $certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'disabled'], '{"preserve_me":true}');
 expect(!$certificatePrefs::enabled(true, $certificateParams), 'course can disable globally enabled certificates');
-expect($certificatePrefs::enabled(true, '{}') && !$certificatePrefs::enabled(false, '{}'), 'certificate preference inherits the site setting');
+expect(
+    $certificatePrefs::enabled(true, '{}') && !$certificatePrefs::enabled(false, '{}'),
+    'certificate preference inherits the site setting'
+);
 $certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'enabled'], $certificateParams);
 expect($certificatePrefs::enabled(false, $certificateParams)
     && json_decode($certificateParams, true)['preserve_me'] === true, 'course can enable certificates and unrelated params are retained');
 $certificateParams = $certificatePrefs::merge(['certificate_enabled' => 'inherit'], $certificateParams);
-expect(!array_key_exists('certificate_enabled', json_decode($certificateParams, true)), 'inherit removes only the course certificate override');
+expect(
+    !array_key_exists('certificate_enabled', json_decode($certificateParams, true)),
+    'inherit removes only the course certificate override'
+);
 rejects(static fn () => $certificatePrefs::merge(['certificate_enabled'
     => 'yes'], '{}'), 'certificate preference is restricted to inherit, enabled or disabled');
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect($readinessCourse('  '), [], []);
@@ -194,7 +248,10 @@ $basis = \Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasComp
     ['progress_basis' => true, 'access' => 'unavailable', 'percent' => 0],
 ]);
 expect($basis === true, 'unavailable but enrolled course with defined rules retains a valid aggregation basis');
-expect(!\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasCompleteBasis([]), 'empty pathway has no learner progress basis');
+expect(
+    !\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasCompleteBasis([]),
+    'empty pathway has no learner progress basis'
+);
 expect(!\Jlms\Component\Jlms\Administrator\Application\PathwayProgress::hasCompleteBasis([
     ['progress_basis' => true], ['progress_basis' => false],
 ]), 'missing enrollment or completion rules hides aggregate progress');
@@ -242,7 +299,10 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     false,
     $consultationRules,
 );
-expect(!in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true), 'consultation courses may contain only optional lessons');
+expect(
+    !in_array('COM_JLMS_READINESS_REQUIRED_LESSON', $readiness['blockers'], true),
+    'consultation courses may contain only optional lessons'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -251,8 +311,14 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     false,
     $consultationRules,
 );
-expect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'consultation videos do not require tracked duration metadata');
-expect(in_array('COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED', $readiness['warnings'], true), 'consultation videos warn when duration is not confirmed');
+expect(
+    !in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true),
+    'consultation videos do not require tracked duration metadata'
+);
+expect(
+    in_array('COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED', $readiness['warnings'], true),
+    'consultation videos warn when duration is not confirmed'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -261,7 +327,10 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     false,
     $consultationRules,
 );
-expect(in_array('COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS', $readiness['blockers'], true), 'consultation courses reject required lessons');
+expect(
+    in_array('COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS', $readiness['blockers'], true),
+    'consultation courses reject required lessons'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -270,26 +339,41 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     false,
     $consultationRules,
 );
-expect(in_array('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED', $readiness['blockers'], true), 'consultation courses reject quiz lessons');
+expect(
+    in_array('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED', $readiness['blockers'], true),
+    'consultation courses reject quiz lessons'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'text']],
 );
-expect($readiness === ['blockers' => [], 'warnings' => []], 'complete basic structure passes preliminary checks without notices');
+expect(
+    $readiness === ['blockers' => [], 'warnings' => []],
+    'complete basic structure passes preliminary checks without notices'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['module_id' => 3, 'required' => 1, 'kind' => 'video', 'duration_ms' => null, 'params_json' => '{}']],
 );
-expect(in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist blocks a video without confirmed bounded duration');
-expect(!in_array('COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED', $readiness['warnings'], true), 'learning-mode duration remains a blocker without a duplicate warning');
+expect(
+    in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $readiness['blockers'], true),
+    'pre-publication checklist blocks a video without confirmed bounded duration'
+);
+expect(
+    !in_array('COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED', $readiness['warnings'], true),
+    'learning-mode duration remains a blocker without a duplicate warning'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
     [(object) ['id' => 9, 'module_id' => 3, 'required' => 1, 'kind' => 'document']],
 );
-expect(in_array('COM_JLMS_DOCUMENT_MATERIAL_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist requires a ready attachment for a document lesson');
+expect(
+    in_array('COM_JLMS_DOCUMENT_MATERIAL_REQUIRED', $readiness['blockers'], true),
+    'pre-publication checklist requires a ready attachment for a document lesson'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -297,7 +381,10 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['lesson_id' => 9, 'status' => 'ready', 'state' => 1, 'preview' => 0, 'publish_up'
         => null, 'publish_down' => null, 'scan_json' => '{}']],
 );
-expect(!in_array('COM_JLMS_DOCUMENT_MATERIAL_REQUIRED', $readiness['blockers'], true), 'pre-publication checklist accepts a ready lesson attachment');
+expect(
+    !in_array('COM_JLMS_DOCUMENT_MATERIAL_REQUIRED', $readiness['blockers'], true),
+    'pre-publication checklist accepts a ready lesson attachment'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -479,7 +566,10 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['status' => 'quarantine', 'preview' => 0, 'publish_up' => null, 'publish_down'
         => null, 'scan_json' => '{}']],
 );
-expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist blocks a material that is still quarantined');
+expect(
+    in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true),
+    'pre-publication checklist blocks a material that is still quarantined'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -488,7 +578,10 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
         => '{"engine":"clamd","result":"clean"}']],
     true,
 );
-expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist accepts a ready material with required clean scan');
+expect(
+    !in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true),
+    'pre-publication checklist accepts a ready material with required clean scan'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -504,31 +597,70 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
     [(object) ['lesson_id' => 12, 'status' => 'ready', 'preview' => 1, 'publish_up' => null, 'publish_down'
         => null, 'scan_json' => '{}']],
 );
-expect(in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true), 'pre-publication checklist rejects public preview on lesson attachments');
+expect(
+    in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true),
+    'pre-publication checklist rejects public preview on lesson attachments'
+);
 $scheduled = MaterialAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T12:00:00', 'Europe/Rome');
 expect($scheduled === ['publish_up' => '2026-02-02 09:30:00', 'publish_down'
     => '2026-02-02 11:00:00'], 'material window is stored as UTC using the course time zone');
-expect(MaterialAvailability::editor($scheduled['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00', 'stored material window is shown in the course time zone');
-expect(MaterialAvailability::validStored($scheduled['publish_up'], $scheduled['publish_down']), 'stored material schedule is publishable');
+expect(
+    MaterialAvailability::editor($scheduled['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00',
+    'stored material window is shown in the course time zone'
+);
+expect(
+    MaterialAvailability::validStored($scheduled['publish_up'], $scheduled['publish_down']),
+    'stored material schedule is publishable'
+);
 expect(MaterialAvailability::validStored($scheduled['publish_up'] . '.000000', $scheduled['publish_down']
     . '.000000'), 'MySQL zero-microsecond DATETIME(6) values preserve valid material schedules');
-rejects(static fn () => MaterialAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'material end must be later than its start');
+rejects(
+    static fn () => MaterialAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'),
+    'material end must be later than its start'
+);
 $lessonWindow = LessonAvailability::normalize('2026-02-02T10:30:00', '2026-02-02T12:00:00', 'Europe/Rome');
-expect($lessonWindow['publish_up'] === '2026-02-02 09:30:00' && $lessonWindow['publish_down'] === '2026-02-02 11:00:00', 'lesson availability is stored as UTC from the course time zone');
-expect(LessonAvailability::editor($lessonWindow['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00', 'lesson schedule editor restores the course-local time');
-expect(LessonAvailability::state('2099-01-01 00:00:00', null, null, null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'upcoming', 'future lesson start is marked upcoming');
-expect(LessonAvailability::state(null, '2025-01-01 00:00:00', null, null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'closed', 'elapsed lesson end is marked closed');
-expect(LessonAvailability::state(null, null, 3, null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'awaiting_start', 'relative lesson is held until enrollment learning starts');
-expect(LessonAvailability::state(null, null, 3, '2026-01-01 00:00:00', new DateTimeImmutable('2026-01-03 23:59:59', new DateTimeZone('UTC'))) === 'upcoming', 'relative lesson waits for the configured number of full days');
-expect(LessonAvailability::state(null, null, 3, '2026-01-01 00:00:00', new DateTimeImmutable('2026-01-04 00:00:00', new DateTimeZone('UTC'))) === 'available', 'relative lesson opens at the exact release boundary');
+expect(
+    $lessonWindow['publish_up'] === '2026-02-02 09:30:00' && $lessonWindow['publish_down'] === '2026-02-02 11:00:00',
+    'lesson availability is stored as UTC from the course time zone'
+);
+expect(
+    LessonAvailability::editor($lessonWindow['publish_up'], 'Europe/Rome') === '2026-02-02T10:30:00',
+    'lesson schedule editor restores the course-local time'
+);
+expect(
+    LessonAvailability::state('2099-01-01 00:00:00', null, null, null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'upcoming',
+    'future lesson start is marked upcoming'
+);
+expect(
+    LessonAvailability::state(null, '2025-01-01 00:00:00', null, null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'closed',
+    'elapsed lesson end is marked closed'
+);
+expect(
+    LessonAvailability::state(null, null, 3, null, new DateTimeImmutable('2026-01-01 00:00:00', new DateTimeZone('UTC'))) === 'awaiting_start',
+    'relative lesson is held until enrollment learning starts'
+);
+expect(
+    LessonAvailability::state(null, null, 3, '2026-01-01 00:00:00', new DateTimeImmutable('2026-01-03 23:59:59', new DateTimeZone('UTC'))) === 'upcoming',
+    'relative lesson waits for the configured number of full days'
+);
+expect(
+    LessonAvailability::state(null, null, 3, '2026-01-01 00:00:00', new DateTimeImmutable('2026-01-04 00:00:00', new DateTimeZone('UTC'))) === 'available',
+    'relative lesson opens at the exact release boundary'
+);
 expect(LessonAvailability::normalizeReleaseDays('3650') === 3650
     && LessonAvailability::normalizeReleaseDays('') === null, 'relative release is bounded and blank means no delay');
-rejects(static fn () => LessonAvailability::normalizeReleaseDays('3651'), 'relative release beyond ten years is rejected');
+rejects(
+    static fn () => LessonAvailability::normalizeReleaseDays('3651'),
+    'relative release beyond ten years is rejected'
+);
 expect(LessonAvailability::reachable('2026-01-02 00:00:00', null, ['publish_down'
     => '2026-01-03 00:00:00']), 'required lesson can open within the course window');
 expect(!LessonAvailability::reachable('2026-01-04 00:00:00', null, ['publish_down'
     => '2026-01-03 00:00:00']), 'required lesson outside course window is unreachable');
-rejects(static fn () => LessonAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'), 'lesson end must be later than its start');
+rejects(
+    static fn () => LessonAvailability::normalize('2026-02-02T12:00:00', '2026-02-02T10:00:00', 'UTC'),
+    'lesson end must be later than its start'
+);
 $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
     $readinessCourse('<p>Course description</p>', 'Short summary', 'images/course.png'),
     [(object) ['id' => 3]],
@@ -538,7 +670,10 @@ $readiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::ins
 );
 expect(!in_array('COM_JLMS_MATERIAL_NOT_READY', $readiness['blockers'], true)
     && in_array('COM_JLMS_READINESS_MATERIAL_SCHEDULED', $readiness['warnings'], true), 'valid scheduled material warns without blocking publication');
-expect(Coverage::merge([[0, 20000], [50000, 60000]], [[10000, 40000], [40000, 50000]], 100000) === [[0, 60000]], 'union across duplicates/adjacent intervals');
+expect(
+    Coverage::merge([[0, 20000], [50000, 60000]], [[10000, 40000], [40000, 50000]], 100000) === [[0, 60000]],
+    'union across duplicates/adjacent intervals'
+);
 $replayed = Coverage::merge([[0, 60000]], [[10000, 40000]], 100000);
 expect(Coverage::coveredMs($replayed) === 60000, 'replay does not double count');
 expect(!Coverage::isComplete(89999, 100000), '90 percent threshold is exact');
@@ -556,12 +691,30 @@ rejects(fn () => QuizScorer::passes(0, 0), 'zero denominator rejected');
 $policy = new AccessPolicy();
 $policy->assertCanLearn(42, true, [1,2], 2, 42, 'active', true, true, true);
 expect(true, 'current access and ownership accepted');
-rejects(fn () => $policy->assertCanLearn(42, true, [1], 2, 42, 'active', true, true, true), 'revocation after an earlier allowed request denies immediately');
-rejects(fn () => $policy->assertCanLearn(43, true, [2], 2, 42, 'active', true, true, true), 'another student cannot access');
-rejects(fn () => $policy->assertCanLearn(42, false, [2], 2, 42, 'active', true, true, true), 'blocked core account cannot access');
-rejects(fn () => $policy->assertCanLearn(42, true, [2], 2, 42, 'suspended', true, true, true), 'suspended enrolment cannot access');
-rejects(fn () => $policy->assertCanLearn(42, true, [2], 2, 42, 'active', true, false, true), 'expired access window cannot access');
-rejects(fn () => $policy->assertCanLearn(42, true, [2], 2, 42, 'active', true, true, false), 'missing prerequisite cannot access');
+rejects(
+    fn () => $policy->assertCanLearn(42, true, [1], 2, 42, 'active', true, true, true),
+    'revocation after an earlier allowed request denies immediately'
+);
+rejects(
+    fn () => $policy->assertCanLearn(43, true, [2], 2, 42, 'active', true, true, true),
+    'another student cannot access'
+);
+rejects(
+    fn () => $policy->assertCanLearn(42, false, [2], 2, 42, 'active', true, true, true),
+    'blocked core account cannot access'
+);
+rejects(
+    fn () => $policy->assertCanLearn(42, true, [2], 2, 42, 'suspended', true, true, true),
+    'suspended enrolment cannot access'
+);
+rejects(
+    fn () => $policy->assertCanLearn(42, true, [2], 2, 42, 'active', true, false, true),
+    'expired access window cannot access'
+);
+rejects(
+    fn () => $policy->assertCanLearn(42, true, [2], 2, 42, 'active', true, true, false),
+    'missing prerequisite cannot access'
+);
 expect(DecimalId::parse((string) PHP_INT_MAX) === PHP_INT_MAX, 'maximum safe PHP integer accepted from string');
 foreach (['0', '-1', '1e2', '01', '9223372036854775808', '18446744073709551615'] as $bad) {
     rejects(fn () => DecimalId::parse($bad), 'unsafe ID rejected: ' . $bad);
@@ -582,7 +735,10 @@ foreach (
     ['cloudflarestream', 'https://videodelivery.net/0123456789abcdef0123456789abcdef#apiKey=ci-secret'],
     ] as [$provider, $source]
 ) {
-    rejects(fn () => SourceNormalizer::normalise($provider, new SourceInput($source)), 'Credential-bearing video URL rejected: ' . $provider);
+    rejects(
+        fn () => SourceNormalizer::normalise($provider, new SourceInput($source)),
+        'Credential-bearing video URL rejected: ' . $provider
+    );
 }
 expect(SourceNormalizer::normalise('youtube', new SourceInput('https://youtu.be/dQw4w9WgXcQ?t=9&feature=share'))
     ->reference === 'dQw4w9WgXcQ', 'Non-secret YouTube URL options remain supported');
@@ -594,10 +750,19 @@ expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://vimeo.com/1
 expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://player.vimeo.com/video/12345?h=abc123'))
     ->options === ['privacy_hash' => 'abc123'], 'Vimeo player URL hash preserved');
 foreach (['https://youtube.com.evil.test/watch?v=dQw4w9WgXcQ', 'https://127.0.0.1/video', 'https://user:pass@youtube.com/watch?v=dQw4w9WgXcQ', 'https://youtube.com/playlist?list=123', 'https://youtube.com:443/watch?v=dQw4w9WgXcQ'] as $bad) {
-    rejects(fn () => SourceNormalizer::normalise('youtube', new SourceInput($bad)), 'unsafe/unsupported YouTube URL rejected');
+    rejects(
+        fn () => SourceNormalizer::normalise('youtube', new SourceInput($bad)),
+        'unsafe/unsupported YouTube URL rejected'
+    );
 }
-rejects(fn () => SourceNormalizer::normalise('html5', new SourceInput('../../private.mp4')), 'HTML5 physical paths are rejected');
-rejects(fn () => SourceNormalizer::normalise('html5', new SourceInput('https://example.com/video.mp4')), 'HTML5 remote URL is rejected');
+rejects(
+    fn () => SourceNormalizer::normalise('html5', new SourceInput('../../private.mp4')),
+    'HTML5 physical paths are rejected'
+);
+rejects(
+    fn () => SourceNormalizer::normalise('html5', new SourceInput('https://example.com/video.mp4')),
+    'HTML5 remote URL is rejected'
+);
 $readOnlyProviders = \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::inspectLocal([
     'youtube' => (object) ['enabled' => 1, 'params' => '{"playback_enabled":1}', 'name' => 'PLG_JLMSVIDEO_YOUTUBE'],
     'vimeo' => (object) ['enabled' => 1, 'params' => '{"playback_enabled":0}', 'name' => 'PLG_JLMSVIDEO_VIMEO'],
@@ -714,12 +879,27 @@ $event = static fn (int $id, string $type, int $position, int $time, bool $playi
         => $playing, 'rate_milli' => $rate];
 $consume = static fn (array $events, int $now = 110000): array
     => \Jlms\Component\Jlms\Administrator\Domain\VideoTelemetry::consume($state, $events, 10000, $now);
-expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 9000)])['intervals'] === [[0,9000]], 'continuous 90 percent coverage');
+expect(
+    $consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 9000)])['intervals'] === [[0,9000]],
+    'continuous 90 percent coverage'
+);
 expect($consume([$event(1, 'ended', 10000, 0, false)])['intervals'] === [], 'ended alone awards no coverage');
-expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 1000)])['intervals'] === [], 'seek jump does not count');
-expect($consume([$event(1, 'play', 0, 0), $event(2, 'seeked', 9000, 9000)])['intervals'] === [], 'explicit seek discards interval');
-expect($consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 9000)], 100000)['intervals'] === [], 'server time prevents instantaneous fabricated coverage');
-expect($consume([$event(1, 'play', 0, 0, true, 2000), $event(2, 'position', 10000, 5000, true, 2000)], 105000)['intervals'] === [[0,10000]], 'two times speed costs actual wall time');
+expect(
+    $consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 1000)])['intervals'] === [],
+    'seek jump does not count'
+);
+expect(
+    $consume([$event(1, 'play', 0, 0), $event(2, 'seeked', 9000, 9000)])['intervals'] === [],
+    'explicit seek discards interval'
+);
+expect(
+    $consume([$event(1, 'play', 0, 0), $event(2, 'position', 9000, 9000)], 100000)['intervals'] === [],
+    'server time prevents instantaneous fabricated coverage'
+);
+expect(
+    $consume([$event(1, 'play', 0, 0, true, 2000), $event(2, 'position', 10000, 5000, true, 2000)], 105000)['intervals'] === [[0,10000]],
+    'two times speed costs actual wall time'
+);
 rejects(fn () => $consume([$event(1, 'play', 0, 0),$event(1, 'position', 1000, 1000)]), 'duplicate event id rejected');
 rejects(fn () => $consume([$event(1, 'position', 10001, 0)]), 'out of duration sample rejected');
 rejects(fn () => $consume([$event(1, 'play', 0, 0, true, 3000)]), 'unsupported playback rate rejected');
@@ -778,8 +958,14 @@ $supportsTrackedLearning = static fn (\Jlms\Contracts\Video\VideoCapabilities $c
     $capabilities->position && $capabilities->duration && $capabilities->seek;
 $optional = new \Jlms\Contracts\Video\VideoCapabilities(true, true, true, false, false, false, false, false);
 expect($supportsTrackedLearning($optional), 'speed, captions and transcripts remain optional');
-expect(!$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, false, true, true, true, true, false, false)), 'provider without duration cannot support tracked learning');
-expect(!$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, true, false, true, true, true, false, false)), 'provider without seek cannot support tracked learning');
+expect(
+    !$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, false, true, true, true, true, false, false)),
+    'provider without duration cannot support tracked learning'
+);
+expect(
+    !$supportsTrackedLearning(new \Jlms\Contracts\Video\VideoCapabilities(true, true, false, true, true, true, false, false)),
+    'provider without seek cannot support tracked learning'
+);
 $playback = $enabled->createPlaybackDescriptor($source, new \Jlms\Contracts\Video\PlaybackContext(1, 2, 3, 'it-IT', 0, 'grant', new \DateTimeImmutable()));
 expect($playback->playerOptions['reference'] === 'dQw4w9WgXcQ' && $playback
     ->playerOptions['autoplay'] === false, 'canonical whitelisted playback options');

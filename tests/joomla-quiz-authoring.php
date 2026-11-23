@@ -99,8 +99,14 @@ if (($argv[2] ?? '') === 'retained') {
     $q = $bank->editor($actor, $f['question_id']);
     quizExpect($q['revision'] >= 2, 'question history survives upgrade');
     $config = $quizzes->editor($actor, $f['course_id'], $f['version_id'], $f['lesson_id']);
-    quizExpect((int)$config['data']['questions'][0]['revision_id'] === $f['first_revision'], 'quiz keeps pinned revision after upgrade');
-    quizExpect($db->setQuery('SELECT content_hash FROM #__jlms_question_revisions WHERE id=' . $f['first_revision'])->loadResult() === $f['first_hash'], 'original question content is immutable after upgrade');
+    quizExpect(
+        (int)$config['data']['questions'][0]['revision_id'] === $f['first_revision'],
+        'quiz keeps pinned revision after upgrade'
+    );
+    quizExpect(
+        $db->setQuery('SELECT content_hash FROM #__jlms_question_revisions WHERE id=' . $f['first_revision'])->loadResult() === $f['first_hash'],
+        'original question content is immutable after upgrade'
+    );
     echo json_encode(['quiz_authoring_upgrade' => 'passed','checks' => $checks], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit(0);
 }
@@ -113,44 +119,86 @@ $question = ['id' => 0,'revision' => 1,'catid' => $category,'language' => '*','s
  'options' => [['option_id' => 'first','label' => 'First answer','correct' => '1'],['option_id' => 'second','label' => 'Second answer','correct' => '0']],'default_points' => '3','explanation' => '<p>PRIVATE_CORRECT_EXPLANATION</p>'];
 $id = $bank->save($actor, $question);
 $edit = $bank->editor($actor, $id);
-quizExpect($edit['revision'] === 1 && $edit['options'][0]['correct'] === '1', 'real question saved with private answer key');
+quizExpect(
+    $edit['revision'] === 1 && $edit['options'][0]['correct'] === '1',
+    'real question saved with private answer key'
+);
 $record = $db->setQuery('SELECT * FROM #__jlms_questions WHERE id=' . $id)->loadObject();
 $firstRevision = (int)$record->current_revision_id;
 $firstHash = $db->setQuery('SELECT content_hash FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadResult();
 $firstContent = $db->setQuery('SELECT * FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadObject();
 quizExpect(str_contains($firstContent->prompt, 'PRIVATE_QUIZ_PROMPT_V1'), 'core-filtered question text was persisted');
 $parent = (int)$db->setQuery('SELECT parent_id FROM #__assets WHERE id=' . (int)$record->asset_id)->loadResult();
-quizExpect($parent === (int)$db->setQuery('SELECT asset_id FROM #__categories WHERE id=' . $category)->loadResult(), 'native question asset inherits its category');
+quizExpect(
+    $parent === (int)$db->setQuery('SELECT asset_id FROM #__categories WHERE id=' . $category)->loadResult(),
+    'native question asset inherits its category'
+);
 $bank->lock($actor, $id, false);
-quizExpect((int)$db->setQuery('SELECT checked_out FROM #__jlms_questions WHERE id=' . $id)->loadResult() === (int)$actor->id, 'native checkout stored');
+quizExpect(
+    (int)$db->setQuery('SELECT checked_out FROM #__jlms_questions WHERE id=' . $id)->loadResult() === (int)$actor->id,
+    'native checkout stored'
+);
 $bank->lock($actor, $id, true);
-quizExpect(!(int)$db->setQuery('SELECT checked_out FROM #__jlms_questions WHERE id=' . $id)->loadResult(), 'native checkin stored');
+quizExpect(
+    !(int)$db->setQuery('SELECT checked_out FROM #__jlms_questions WHERE id=' . $id)->loadResult(),
+    'native checkin stored'
+);
 $question['id'] = $id;
 $question['prompt'] = '<p>PRIVATE_QUIZ_PROMPT_V2</p>';
 $bank->save($actor, $question);
 quizExpect($bank->editor($actor, $id)['revision'] === 2, 'editing creates a new revision');
-quizExpect(json_encode($db->setQuery('SELECT * FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadObject(), JSON_THROW_ON_ERROR) === json_encode($firstContent, JSON_THROW_ON_ERROR), 'entire old revision remains byte-for-byte unchanged after native HTML filtering');
+quizExpect(
+    json_encode($db->setQuery('SELECT * FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadObject(), JSON_THROW_ON_ERROR) === json_encode($firstContent, JSON_THROW_ON_ERROR),
+    'entire old revision remains byte-for-byte unchanged after native HTML filtering'
+);
 $currentDefinition = $bank->editor($actor, $id);
 $copyId = $bank->duplicate($actor, $id);
 $copy = $bank->editor($actor, $copyId);
-quizExpect($copyId !== $id && $copy['revision'] === 1 && $copy['state'] === 0 && $copy['prompt'] === $currentDefinition['prompt'], 'question duplication creates a separate unpublished draft from the current definition');
-quizExpect($copy['options'][0]['option_id'] !== $currentDefinition['options'][0]['option_id'], 'duplicated question receives fresh answer option identities');
+quizExpect(
+    $copyId !== $id && $copy['revision'] === 1 && $copy['state'] === 0 && $copy['prompt'] === $currentDefinition['prompt'],
+    'question duplication creates a separate unpublished draft from the current definition'
+);
+quizExpect(
+    $copy['options'][0]['option_id'] !== $currentDefinition['options'][0]['option_id'],
+    'duplicated question receives fresh answer option identities'
+);
 $bank->trash($actor, $copyId);
 $trash = $db->setQuery('SELECT state,revision,current_revision_id FROM #__jlms_questions WHERE id=' . $copyId)->loadObject();
-quizExpect((int)$trash->state === -2 && (int)$trash->revision === 2 && $trash->current_revision_id !== null, 'question trash retains revisions and asset without hard delete');
-quizExpect($bank->adminListing($actor, ['search' => 'id:' . $copyId], 0, 20, 'q.id', 'DESC')['total'] === 0, 'trashed question excluded from normal bank listing');
-quizExpect($bank->adminListing($actor, ['search' => 'id:' . $copyId,'published' => '-2'], 0, 20, 'q.id', 'DESC')['total'] === 1, 'trashed question available in explicit trash filter');
+quizExpect(
+    (int)$trash->state === -2 && (int)$trash->revision === 2 && $trash->current_revision_id !== null,
+    'question trash retains revisions and asset without hard delete'
+);
+quizExpect(
+    $bank->adminListing($actor, ['search' => 'id:' . $copyId], 0, 20, 'q.id', 'DESC')['total'] === 0,
+    'trashed question excluded from normal bank listing'
+);
+quizExpect(
+    $bank->adminListing($actor, ['search' => 'id:' . $copyId,'published' => '-2'], 0, 20, 'q.id', 'DESC')['total'] === 1,
+    'trashed question available in explicit trash filter'
+);
 quizReject(fn()=>$bank->trash($actor, $copyId), 409, 'cannot trash an already trashed question');
 $bank->trash($actor, $copyId, true);
-quizExpect((int)$db->setQuery('SELECT state FROM #__jlms_questions WHERE id=' . $copyId)->loadResult() === 0, 'restore returns question to unpublished state');
+quizExpect(
+    (int)$db->setQuery('SELECT state FROM #__jlms_questions WHERE id=' . $copyId)->loadResult() === 0,
+    'restore returns question to unpublished state'
+);
 quizReject(fn()=>$bank->trash($actor, $copyId, true), 409, 'cannot restore a question that is not in trash');
 $bank->trash($actor, $copyId);
 $bank->delete($actor, $copyId);
-quizExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_questions WHERE id=' . $copyId)->loadResult() && !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_question_revisions WHERE question_id=' . $copyId)->loadResult(), 'unused question and revisions delete atomically');
+quizExpect(
+    !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_questions WHERE id=' . $copyId)->loadResult() && !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_question_revisions WHERE question_id=' . $copyId)->loadResult(),
+    'unused question and revisions delete atomically'
+);
 $list = $bank->adminListing($actor, ['search' => 'id:' . $id,'published' => '1'], 0, 20, 'q.id', 'DESC');
-quizExpect($list['total'] === 1 && (int)$list['items'][0]->id === $id, 'question administration list searches by ID and filters state');
+quizExpect(
+    $list['total'] === 1 && (int)$list['items'][0]->id === $id,
+    'question administration list searches by ID and filters state'
+);
 $filtered = $bank->adminListing($actor, ['catid' => (string)$category,'published' => '1','language' => '*','search' => 'id:' . $id], 0, 20, 'q.id', 'DESC');
-quizExpect($filtered['total'] === 1 && (int)$filtered['items'][0]->id === $id, 'question bank combines category, state, language and search filters');
+quizExpect(
+    $filtered['total'] === 1 && (int)$filtered['items'][0]->id === $id,
+    'question bank combines category, state, language and search filters'
+);
 $emptyFilter = $bank->adminListing($actor, ['catid' => (string)$category,'published' => '0','language' => '*'], 0, 20, 'q.id', 'DESC');
 quizExpect($emptyFilter['total'] === 0, ('question bank state filter excludes published questions when '
     . 'drafts are selected'));
@@ -158,7 +206,11 @@ quizReject(fn()=>$bank->save($actor, $question), 409, 'stale question revision r
 quizReject(fn()=>$bank->save(new \Joomla\CMS\User\User(), $question), 401, 'guest bank mutation rejected');
 $otherCategory = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
     . "alias='ci-courses'"))->loadResult();
-quizReject(fn()=>$bank->save($actor, array_replace($question, ['catid' => $otherCategory,'revision' => 2])), 422, 'course category cannot be used as a bank category');
+quizReject(
+    fn()=>$bank->save($actor, array_replace($question, ['catid' => $otherCategory,'revision' => 2])),
+    422,
+    'course category cannot be used as a bank category'
+);
 $multiple = $question;
 $multiple['id'] = 0;
 $multiple['revision'] = 1;
@@ -181,21 +233,47 @@ $config = $quizzes->editor($actor, $course, $version, $lesson);
 quizReject(fn()=>$bank->delete($actor, $id), 409, 'question used in quiz cannot be deleted');
 $revisionBeforeTrash = (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $id)->loadResult();
 $bank->trash($actor, $id);
-quizExpect((int)$db->setQuery('SELECT state FROM #__jlms_questions WHERE id=' . $id)->loadResult() === -2, 'referenced question can be trashed conservatively');
-quizExpect((int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $id)->loadResult() === $revisionBeforeTrash, 'trash preserves immutable revision references');
+quizExpect(
+    (int)$db->setQuery('SELECT state FROM #__jlms_questions WHERE id=' . $id)->loadResult() === -2,
+    'referenced question can be trashed conservatively'
+);
+quizExpect(
+    (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $id)->loadResult() === $revisionBeforeTrash,
+    'trash preserves immutable revision references'
+);
 quizReject(fn()=>$bank->delete($actor, $id), 409, 'hard delete still blocked while referenced');
 $bank->trash($actor, $id, true);
-quizExpect((int)$db->setQuery('SELECT state FROM #__jlms_questions WHERE id=' . $id)->loadResult() === 0, 'referenced question restores as draft');
+quizExpect(
+    (int)$db->setQuery('SELECT state FROM #__jlms_questions WHERE id=' . $id)->loadResult() === 0,
+    'referenced question restores as draft'
+);
 // Restore original fixture publication flag so downstream quiz publication checks retain their setup.
 $db->setQuery('UPDATE #__jlms_questions SET state=1 WHERE id=' . (int)$id)->execute();
-quizExpect($config['data']['threshold'] === '70.25' && $config['data']['time_minutes'] === 15, 'exact basis-point threshold and time configuration');
-quizExpect((int)$config['data']['questions'][0]['revision_id'] === $firstRevision, 'explicit older immutable revision remains pinned');
-quizExpect(!str_contains(json_encode($config, JSON_THROW_ON_ERROR), 'PRIVATE_CORRECT_EXPLANATION') && !str_contains(json_encode($config, JSON_THROW_ON_ERROR), '"correct"'), 'quiz editor DTO contains no answer key');
+quizExpect(
+    $config['data']['threshold'] === '70.25' && $config['data']['time_minutes'] === 15,
+    'exact basis-point threshold and time configuration'
+);
+quizExpect(
+    (int)$config['data']['questions'][0]['revision_id'] === $firstRevision,
+    'explicit older immutable revision remains pinned'
+);
+quizExpect(
+    !str_contains(json_encode($config, JSON_THROW_ON_ERROR), 'PRIVATE_CORRECT_EXPLANATION') && !str_contains(json_encode($config, JSON_THROW_ON_ERROR), '"correct"'),
+    'quiz editor DTO contains no answer key'
+);
 quizReject(fn()=>$quizzes->save($actor, $input), 409, 'stale aggregate revision rejected');
 $invalid = array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1,'selection_mode' => 'random','draw_count' => '3']);
 quizReject(fn()=>$quizzes->save($actor, $invalid), 400, 'oversized extraction rejected');
-quizReject(fn()=>$quizzes->save($actor, array_replace($invalid, ['draw_count' => '1','questions' => [['revision_id' => $firstRevision,'points' => 1],['revision_id' => $firstRevision,'points' => 2]]])), 422, 'duplicate pool revision rejected');
-quizReject(fn()=>$quizzes->save($actor, array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1,'feedback_policy' => 'after_submit'])), 422, 'graded tests cannot enable immediate answer feedback');
+quizReject(
+    fn()=>$quizzes->save($actor, array_replace($invalid, ['draw_count' => '1','questions' => [['revision_id' => $firstRevision,'points' => 1],['revision_id' => $firstRevision,'points' => 2]]])),
+    422,
+    'duplicate pool revision rejected'
+);
+quizReject(
+    fn()=>$quizzes->save($actor, array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1,'feedback_policy' => 'after_submit'])),
+    422,
+    'graded tests cannot enable immediate answer feedback'
+);
 // Native asset rules can deny a single question while leaving course authoring available.
 $group = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
 if (!$group->save(['id' => 0,'parent_id' => 2,'title' => 'CI Quiz author'])) {
@@ -222,11 +300,19 @@ $asset->load((int)$record->asset_id);
 $asset->rules = json_encode(['jlms.quiz.manage' => [(string)$groupId => false]], JSON_THROW_ON_ERROR);
 $asset->store();
 quizReject(fn()=>$bank->editor($editor, $id), 403, 'question ACL overrides component permission');
-quizReject(fn()=>$quizzes->save($editor, array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1])), 403, 'course permission cannot borrow a denied bank question');
+quizReject(
+    fn()=>$quizzes->save($editor, array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1])),
+    403,
+    'course permission cannot borrow a denied bank question'
+);
 $asset->rules = '{}';
 $asset->store();
 $bank->lock($actor, $id, false);
-quizReject(fn()=>$bank->save($editor, array_replace($question, ['revision' => 2])), 409, 'another native checkout blocks save');
+quizReject(
+    fn()=>$bank->save($editor, array_replace($question, ['revision' => 2])),
+    409,
+    'another native checkout blocks save'
+);
 $bank->lock($actor, $id, true);
 $publication = $component->getPublicationService();
 $blocked = false;
@@ -240,11 +326,20 @@ try {
     $blocked = $error->getMessage() === 'COM_JLMS_QUIZ_INVALID';
 }
 $db->setQuery('UPDATE #__jlms_quizzes SET selection_json=' . $db->quote($selectionBefore) . ' WHERE id=' . $quizId)->execute();
-quizExpect($blocked && $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft', 'invalid quiz publication fails atomically');
+quizExpect(
+    $blocked && $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft',
+    'invalid quiz publication fails atomically'
+);
 // Dedicated draft removal removes configuration and links, preserving immutable bank revisions.
 $temporary = $quizzes->save($actor, array_replace($input, $scope(), ['title' => 'Temporary quiz']));
 $quizzes->delete($actor, $course, $version, $temporary, $scope()['expected_version_revision']);
-quizExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lessons WHERE id=' . $temporary)->loadResult(), 'dedicated draft quiz removal');
-quizExpect($db->setQuery('SELECT content_hash FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadResult() === $firstHash, 'pool changes never mutate question revisions');
+quizExpect(
+    !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lessons WHERE id=' . $temporary)->loadResult(),
+    'dedicated draft quiz removal'
+);
+quizExpect(
+    $db->setQuery('SELECT content_hash FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadResult() === $firstHash,
+    'pool changes never mutate question revisions'
+);
 file_put_contents($fixturePath, json_encode(['question_id' => $id,'first_revision' => $firstRevision,'first_hash' => $firstHash,'other_revision' => $otherRevision,'category_id' => $category,'course_id' => $course,'version_id' => $version,'module_id' => $module,'lesson_id' => $lesson,'author_id' => (int)$editor->id], JSON_THROW_ON_ERROR));
 echo json_encode(['quiz_authoring_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

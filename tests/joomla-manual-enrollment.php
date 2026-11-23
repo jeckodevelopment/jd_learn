@@ -104,9 +104,18 @@ if (($argv[2] ?? '') === 'worker') {
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     $e = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE id=' . (int)$f['enrollment'])->loadObject();
-    manualExpect($e && $e->origin === 'manual' && (int)$e->user_id === $f['learner'] && (int)$e->created_by === $f['manager'], 'manual assignment provenance retained');
-    manualExpect($learning->resumeTarget(new \Joomla\CMS\User\User($f['learner']), 'en-GB', (int)$e->id)['lesson_id'] === $f['lesson'], 'manual learner remains able to resume');
-    manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id=' . (int)$e->id)->loadResult() === 1, 'single manual receipt retained');
+    manualExpect(
+        $e && $e->origin === 'manual' && (int)$e->user_id === $f['learner'] && (int)$e->created_by === $f['manager'],
+        'manual assignment provenance retained'
+    );
+    manualExpect(
+        $learning->resumeTarget(new \Joomla\CMS\User\User($f['learner']), 'en-GB', (int)$e->id)['lesson_id'] === $f['lesson'],
+        'manual learner remains able to resume'
+    );
+    manualExpect(
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id=' . (int)$e->id)->loadResult() === 1,
+        'single manual receipt retained'
+    );
     manualExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
         . "extension='com_jlms.manualenrollment' AND item_id=") . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
     echo json_encode(['manual_enrollment_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
@@ -150,12 +159,23 @@ $operations = $component->getCourseOperationsService();
 $closed = $operations->editor($manager, $course, 'admissions_close');
 $closedKey = manualKey();
 $operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Fixture closure', $closedKey, $closed['impact']['hash']);
-manualDenied(fn()=>$service->editor($manager, $course, (int)$users['one']->id, 'en-GB'), 409, 'closed admissions reject manual assignments');
+manualDenied(
+    fn()=>$service->editor($manager, $course, (int)$users['one']->id, 'en-GB'),
+    409,
+    'closed admissions reject manual assignments'
+);
 $staleKey = manualKey();
-manualDenied(fn()=>$operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Stale closure', $staleKey, $closed['impact']['hash']), 409, 'stale course operation preview is rejected');
+manualDenied(
+    fn()=>$operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Stale closure', $staleKey, $closed['impact']['hash']),
+    409,
+    'stale course operation preview is rejected'
+);
 $operationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult();
 $operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Fixture closure', $closedKey, $closed['impact']['hash']);
-manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount, 'identical course operation retry is idempotent');
+manualExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+    'identical course operation retry is idempotent'
+);
 // Archived courses must not be pre-armed: restore is editorial only and leaves both gates closed.
 $db->setQuery('UPDATE #__jlms_courses SET state=2, delivery_enabled=0 WHERE id=' . (int)$course)->execute();
 try {
@@ -168,7 +188,10 @@ try {
             'archived course operation denied ' . $blockedOperation
         );
     }
-    manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount, 'archived operations leave audit untouched');
+    manualExpect(
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+        'archived operations leave audit untouched'
+    );
 } finally {
     $db->setQuery('UPDATE #__jlms_courses SET state=1, delivery_enabled=1 WHERE id=' . (int)$course)->execute();
 }
@@ -176,8 +199,15 @@ $opened = $operations->editor($manager, $course, 'admissions_open');
 $brokenOperations = new \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService($db, $component->getEnrollmentRosterService(), static function (): void {
     throw new \RuntimeException('COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED', 503);
 });
-manualDenied(fn()=>$brokenOperations->apply($manager, $course, 'admissions_open', $opened['impact']['revision'], 'Fixture reopening', manualKey(), $opened['impact']['hash']), 503, 'course operation audit failure is not successful');
-manualExpect((int)$db->setQuery('SELECT admissions_open FROM #__jlms_courses WHERE id=' . $course)->loadResult() === 0 && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount, 'audit failure rolls back course and history');
+manualDenied(
+    fn()=>$brokenOperations->apply($manager, $course, 'admissions_open', $opened['impact']['revision'], 'Fixture reopening', manualKey(), $opened['impact']['hash']),
+    503,
+    'course operation audit failure is not successful'
+);
+manualExpect(
+    (int)$db->setQuery('SELECT admissions_open FROM #__jlms_courses WHERE id=' . $course)->loadResult() === 0 && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+    'audit failure rolls back course and history'
+);
 $opened = $operations->editor($manager, $course, 'admissions_open');
 $operations->apply($manager, $course, 'admissions_open', $opened['impact']['revision'], 'Fixture reopening', manualKey(), $opened['impact']['hash']);
 $groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
@@ -185,7 +215,10 @@ $counts = static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollm
 $before = $counts();
 $i = $service->editor($manager, $course, (int)$users['one']->id, 'en-GB');
 $edition = $i['impact']['edition_id'];
-manualExpect($counts() === $before && $i['impact']['blocked'] === null, 'preview creates no subject enrollment or receipt');
+manualExpect(
+    $counts() === $before && $i['impact']['blocked'] === null,
+    'preview creates no subject enrollment or receipt'
+);
 // SEC-P1 batch: a stale course manager must not perform manual admissions
 // after the current Joomla account record has been blocked.
 $managerId = (int)$manager->id;
@@ -211,12 +244,32 @@ manualExpect(
     'manual admission preview restored after unblock'
 );
 
-manualDenied(fn()=>$service->editor(new \Joomla\CMS\User\User(), $course, (int)$users['one']->id, 'en-GB'), 401, 'anonymous manual admission denied');
-manualDenied(fn()=>$service->editor($users['one'], $course, (int)$users['one']->id, 'en-GB'), 403, 'learner cannot admit themselves manually');
-manualDenied(fn()=>$service->editor($manager, (int)$rf['other_course'], (int)$users['one']->id, 'en-GB'), 403, 'management is course scoped');
-manualDenied(fn()=>$service->editor($manager, $course, (int)$users['denied']->id, 'en-GB'), 403, 'manual admission cannot grant missing level');
+manualDenied(
+    fn()=>$service->editor(new \Joomla\CMS\User\User(), $course, (int)$users['one']->id, 'en-GB'),
+    401,
+    'anonymous manual admission denied'
+);
+manualDenied(
+    fn()=>$service->editor($users['one'], $course, (int)$users['one']->id, 'en-GB'),
+    403,
+    'learner cannot admit themselves manually'
+);
+manualDenied(
+    fn()=>$service->editor($manager, (int)$rf['other_course'], (int)$users['one']->id, 'en-GB'),
+    403,
+    'management is course scoped'
+);
+manualDenied(
+    fn()=>$service->editor($manager, $course, (int)$users['denied']->id, 'en-GB'),
+    403,
+    'manual admission cannot grant missing level'
+);
 manualDenied(fn()=>$service->editor($manager, $course, 2147483647, 'en-GB'), 404, 'unknown core account rejected');
-manualDenied(fn()=>$service->editor($manager, $course, (int)$users['one']->id, 'zz-ZZ'), 400, 'uninstalled language rejected');
+manualDenied(
+    fn()=>$service->editor($manager, $course, (int)$users['one']->id, 'zz-ZZ'),
+    400,
+    'uninstalled language rejected'
+);
 $command = manualCommand($i);
 foreach ([[6,false,400],[3,'',422],[3,'<script>',422],[5,str_repeat('0', 64),409]] as [$index,$value,$code]) {
     $bad = $command;
@@ -226,21 +279,43 @@ foreach ([[6,false,400],[3,'',422],[3,'<script>',422],[5,str_repeat('0', 64),409
 manualExpect($counts() === $before, 'invalid confirmations and stale preview have no writes');
 $id = $service->apply($manager, ...$command);
 $record = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE id=' . $id)->loadObject();
-manualExpect($record->origin === 'manual' && (int)$record->created_by === (int)$manager->id && (int)$record->user_id === (int)$users['one']->id, 'manual creation has operator and learner provenance');
-manualExpect((int)$record->required_total === 1 && (int)$record->completed_total === 0 && $record->completed_at === null, 'new assignment carries no invented progress');
-manualExpect($learning->resumeTarget($users['one'], 'en-GB', $id)['lesson_id'] === $lesson, 'manual learner can enter published classroom');
+manualExpect(
+    $record->origin === 'manual' && (int)$record->created_by === (int)$manager->id && (int)$record->user_id === (int)$users['one']->id,
+    'manual creation has operator and learner provenance'
+);
+manualExpect(
+    (int)$record->required_total === 1 && (int)$record->completed_total === 0 && $record->completed_at === null,
+    'new assignment carries no invented progress'
+);
+manualExpect(
+    $learning->resumeTarget($users['one'], 'en-GB', $id)['lesson_id'] === $lesson,
+    'manual learner can enter published classroom'
+);
 $delivery = $operations->editor($manager, $course, 'delivery_suspend');
 $operations->apply($manager, $course, 'delivery_suspend', $delivery['impact']['revision'], 'Fixture delivery suspension', manualKey(), $delivery['impact']['hash']);
-manualDenied(fn()=>$learning->classroom($users['one'], 'en-GB', $id), 403, 'course delivery suspension blocks the active enrollment');
+manualDenied(
+    fn()=>$learning->classroom($users['one'], 'en-GB', $id),
+    403,
+    'course delivery suspension blocks the active enrollment'
+);
 $resume = $operations->editor($manager, $course, 'delivery_resume');
 $operations->apply($manager, $course, 'delivery_resume', $resume['impact']['revision'], 'Fixture delivery resumed', manualKey(), $resume['impact']['hash']);
-manualExpect($learning->resumeTarget($users['one'], 'en-GB', $id)['lesson_id'] === $lesson, 'resuming delivery preserves learner progress and access');
+manualExpect(
+    $learning->resumeTarget($users['one'], 'en-GB', $id)['lesson_id'] === $lesson,
+    'resuming delivery preserves learner progress and access'
+);
 $after = $counts();
-manualExpect($service->apply($manager, ...$command) === $id && $counts() === $after, 'identical retry returns one enrollment and receipt');
+manualExpect(
+    $service->apply($manager, ...$command) === $id && $counts() === $after,
+    'identical retry returns one enrollment and receipt'
+);
 $changed = $command;
 $changed[3] = 'Changed reason';
 manualDenied(fn()=>$service->apply($manager, ...$changed), 409, 'same UUID different payload rejected');
-manualExpect($service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['blocked'] === 'COM_JLMS_MANUAL_EXISTS', 'existing assignment blocks distinct creation');
+manualExpect(
+    $service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['blocked'] === 'COM_JLMS_MANUAL_EXISTS',
+    'existing assignment blocks distinct creation'
+);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$manager->id, (int)$rf['group']);
 try {
     manualDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked operator cannot replay');
@@ -259,7 +334,11 @@ $update = static function (string $table, int $id, array $fields) use ($db): voi
 };
 $update('users', (int)$users['failure']->id, ['block' => 1]);
 try {
-    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 403, 'blocked account rejected');
+    manualDenied(
+        fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'),
+        403,
+        'blocked account rejected'
+    );
 } finally {
     $update('users', (int)$users['failure']->id, ['block' => 0]);
 }
@@ -272,26 +351,41 @@ manualDenied(fn()=>$broken->apply($actor, ...$fail), 503, 'audit failure is not 
 manualExpect($counts() === $beforeFailure, 'audit failure rolls back subject enrollment and receipt');
 $update('jlms_courses', $course, ['enrollment_mode' => 'approval']);
 try {
-    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 409, 'approval flow cannot be bypassed');
+    manualDenied(
+        fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'),
+        409,
+        'approval flow cannot be bypassed'
+    );
 } finally {
     $update('jlms_courses', $course, ['enrollment_mode' => 'explicit']);
 }
 $update('jlms_courses', $course, ['state' => 0]);
 try {
-    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 404, 'unpublished course rejected');
+    manualDenied(
+        fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'),
+        404,
+        'unpublished course rejected'
+    );
 } finally {
     $update('jlms_courses', $course, ['state' => 1]);
 }
 $update('jlms_editions', $edition, ['ends_at' => '2000-01-01 00:00:00']);
 try {
-    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 403, 'expired default edition rejected');
+    manualDenied(
+        fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'),
+        403,
+        'expired default edition rejected'
+    );
 } finally {
     $update('jlms_editions', $edition, ['ends_at' => null]);
 }
 $state = $component->getEnrollmentStateService();
 $si = $state->editor($actor, $course, $id, 'suspended');
 $state->apply($actor, $course, $id, $si['impact']['enrollment_revision'], 'suspended', 'Fixture suspension', manualKey(), $si['impact']['hash'], true);
-manualExpect($service->apply($manager, ...$command) === $id && $service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['existing_status'] === 'suspended', 'creation replay never reactivates an existing enrollment');
+manualExpect(
+    $service->apply($manager, ...$command) === $id && $service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['existing_status'] === 'suspended',
+    'creation replay never reactivates an existing enrollment'
+);
 $si = $state->editor($actor, $course, $id, 'active');
 $state->apply($actor, $course, $id, $si['impact']['enrollment_revision'], 'active', 'Fixture reactivation', manualKey(), $si['impact']['hash'], true);
 $runRace = static function (array $commands, array $modes) use ($db, $root, $edition, $course): array {
@@ -332,19 +426,31 @@ $runRace = static function (array $commands, array $modes) use ($db, $root, $edi
 };
 $race = manualCommand($service->editor($actor, $course, (int)$users['race']->id, 'en-GB'));
 $result = $runRace([$race,$race], ['manual','manual']);
-manualExpect($result[0] === $result[1] && str_starts_with($result[0], 'ok:'), 'simultaneous identical retries return one result');
+manualExpect(
+    $result[0] === $result[1] && str_starts_with($result[0], 'ok:'),
+    'simultaneous identical retries return one result'
+);
 $used = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE edition_id=' . $edition)->loadResult();
 $update('jlms_editions', $edition, ['capacity' => $used + 1]);
 $c1 = manualCommand($service->editor($actor, $course, (int)$users['capacity1']->id, 'en-GB'));
 $c2 = manualCommand($service->editor($actor, $course, (int)$users['capacity2']->id, 'en-GB'));
 $result = $runRace([$c1,$c2], ['manual','manual']);
-manualExpect(count(array_filter($result, static fn($v)=>$v === 'conflict')) === 1 && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE edition_id=' . $edition)->loadResult() === $used + 1, 'simultaneous capacity boundary cannot overbook');
-manualExpect($service->editor($actor, $course, (int)$users['failure']->id, 'en-GB')['impact']['blocked'] === 'COM_JLMS_EDITION_FULL', 'full edition has no admission action');
+manualExpect(
+    count(array_filter($result, static fn($v)=>$v === 'conflict')) === 1 && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE edition_id=' . $edition)->loadResult() === $used + 1,
+    'simultaneous capacity boundary cannot overbook'
+);
+manualExpect(
+    $service->editor($actor, $course, (int)$users['failure']->id, 'en-GB')['impact']['blocked'] === 'COM_JLMS_EDITION_FULL',
+    'full edition has no admission action'
+);
 $update('jlms_editions', $edition, ['capacity' => null]);
 $update('jlms_courses', $course, ['enrollment_mode' => 'auto']);
 $auto = manualCommand($service->editor($actor, $course, (int)$users['automatic']->id, 'en-GB'));
 $result = $runRace([$auto,$auto], ['manual','auto']);
-manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course . ' AND user_id=' . (int)$users['automatic']->id)->loadResult() === 1, 'automatic start racing manual admission yields one enrollment');
+manualExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course . ' AND user_id=' . (int)$users['automatic']->id)->loadResult() === 1,
+    'automatic start racing manual admission yields one enrollment'
+);
 // Deterministic reproduction: the automatic worker must wait for this edition.
 // Commit a competing admission while it waits, then require it to reuse that row.
 // SHOW FULL PROCESSLIST exposes only this disposable database user's connections;
@@ -402,18 +508,30 @@ if (proc_close($worker) !== 0) {
 }
 manualExpect($result === 'ok:' . $winner->id, ('Automatic start sees the admission committed while its edition '
     . 'lock was blocked'));
-manualExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $snapshotUser . ' AND edition_id=' . $edition)->loadResult() === 1, 'Blocked automatic retry retains one enrollment');
+manualExpect(
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $snapshotUser . ' AND edition_id=' . $edition)->loadResult() === 1,
+    'Blocked automatic retry retains one enrollment'
+);
 
-manualExpect($learning->start($users['one'], 'en-GB', $course, bin2hex(random_bytes(16))) === $id, 'automatic start reuses manual assignment');
+manualExpect(
+    $learning->start($users['one'], 'en-GB', $course, bin2hex(random_bytes(16))) === $id,
+    'automatic start reuses manual assignment'
+);
 $update('jlms_courses', $course, ['enrollment_mode' => 'explicit']);
 manualExpect((int)$db->setQuery(('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE '
     . 'enrollment_id IS NULL OR course_version_id IS NULL'))->loadResult() === 0, 'no incomplete receipt committed');
-manualExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'admission never changes native group assignments');
+manualExpect(
+    $groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(),
+    'admission never changes native group assignments'
+);
 $receipt = (int)$db->setQuery('SELECT id FROM #__jlms_manual_enrollments WHERE enrollment_id=' . $id)->loadResult();
 $log = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
     . "extension='com_jlms.manualenrollment' AND item_id=") . $receipt)->loadResult();
 $message = json_decode($log, true, 16, JSON_THROW_ON_ERROR);
-manualExpect($message['enrollment_id'] === $id && !str_contains($log, 'PRIVATE_MANUAL_REASON'), 'native audit references internal reason without copying it');
+manualExpect(
+    $message['enrollment_id'] === $id && !str_contains($log, 'PRIVATE_MANUAL_REASON'),
+    'native audit references internal reason without copying it'
+);
 $projection = json_encode($service->editor($actor, $course, (int)$users['one']->id, 'en-GB'), JSON_THROW_ON_ERROR);
 foreach (['subject_key','claim_token','request_hash','rules_json','MANUAL_PRIVATE_BODY','email'] as $secret) {
     manualExpect(!str_contains($projection, $secret), 'preview excludes ' . $secret);

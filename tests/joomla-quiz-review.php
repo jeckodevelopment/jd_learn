@@ -153,11 +153,20 @@ if (($argv[2] ?? '') === 'retained') {
     $t = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     $u = new \Joomla\CMS\User\User($t['user_id']);
     $r = $runtime->state($u, 'en-GB', $t['enrollment_id'], $lesson);
-    reviewExpect(!$r['course_completed'] && $r['used_attempts'] === 3, 'effective result and attempt consumption survive upgrade');
+    reviewExpect(
+        !$r['course_completed'] && $r['used_attempts'] === 3,
+        'effective result and attempt consumption survive upgrade'
+    );
     $raw = $db->setQuery(('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM '
             . '#__jlms_attempts WHERE id=') . (int)$t['passed_attempt'])->loadObject();
-    reviewExpect(hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'], 'invalidated original grading evidence survives upgrade');
-    reviewExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.quizcancel' AND item_id=" . (int)$t['passed_attempt'])->loadResult() === 1, 'cancellation audit survives upgrade');
+    reviewExpect(
+        hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'],
+        'invalidated original grading evidence survives upgrade'
+    );
+    reviewExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.quizcancel' AND item_id=" . (int)$t['passed_attempt'])->loadResult() === 1,
+        'cancellation audit survives upgrade'
+    );
     echo json_encode(['quiz_review_upgrade_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit(0);
 }
@@ -175,8 +184,15 @@ $questionEvidence = $db->setQuery(('SELECT public_snapshot_json,grading_snapshot
         . 'a.attempt_question_id=q.id WHERE q.attempt_id=') . $first . ' ORDER BY q.id')->loadAssocList();
 $preview = $review->editor($actor, $course, $lesson, $enrollment, $first, true);
 $cmd = reviewCommand($preview);
-reviewExpect($preview['impact']['used_after'] === 0 && !$preview['impact']['after_lesson_completed'], 'preview shows refund without credit');
-reviewReject(fn()=>$review->editor($user, $course, $lesson, $enrollment, $first), 403, 'learner cannot view cancellation management');
+reviewExpect(
+    $preview['impact']['used_after'] === 0 && !$preview['impact']['after_lesson_completed'],
+    'preview shows refund without credit'
+);
+reviewReject(
+    fn()=>$review->editor($user, $course, $lesson, $enrollment, $first),
+    403,
+    'learner cannot view cancellation management'
+);
 reviewReject(fn()=>$review->cancel($user, ...$cmd), 403, 'learner cannot cancel own attempt');
 $bad = $cmd;
 $bad[10] = false;
@@ -194,14 +210,31 @@ $evidence = $db->setQuery(('SELECT public_snapshot_json,grading_snapshot_json,an
         . 'a.attempt_question_id=q.id WHERE q.attempt_id=') . $first . ' ORDER BY q.id')->loadAssocList();
 reviewExpect($evidence === $questionEvidence, 'cancellation preserves public/private snapshots and saved answers');
 $r = $runtime->state($user, 'en-GB', $enrollment, $lesson);
-reviewExpect($r['used_attempts'] === 0 && $r['remaining_attempts'] === 3 && $r['attempt']['state'] === 'invalidated' && !$r['feedback_available'] && $r['attempt']['score_points'] === null, 'refunded invalidation has no effective score or answer-key release');
-reviewExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id=' . $enrollment)->loadResult() === 0, 'invalidation releases active slot');
-reviewReject(fn()=>$runtime->mutate($user, 'en-GB', $enrollment, $lesson, $first, 1, $saveKey, $answers, false), 409, 'saved mutation replay cannot write through invalidation');
-reviewReject(fn()=>$runtime->mutate($user, 'en-GB', $enrollment, $lesson, $first, 2, reviewKey(), '{}', true), 409, 'submit cannot reopen invalidated attempt');
+reviewExpect(
+    $r['used_attempts'] === 0 && $r['remaining_attempts'] === 3 && $r['attempt']['state'] === 'invalidated' && !$r['feedback_available'] && $r['attempt']['score_points'] === null,
+    'refunded invalidation has no effective score or answer-key release'
+);
+reviewExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id=' . $enrollment)->loadResult() === 0,
+    'invalidation releases active slot'
+);
+reviewReject(
+    fn()=>$runtime->mutate($user, 'en-GB', $enrollment, $lesson, $first, 1, $saveKey, $answers, false),
+    409,
+    'saved mutation replay cannot write through invalidation'
+);
+reviewReject(
+    fn()=>$runtime->mutate($user, 'en-GB', $enrollment, $lesson, $first, 2, reviewKey(), '{}', true),
+    409,
+    'submit cannot reopen invalidated attempt'
+);
 $a = $runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey());
 $second = $a['attempt']['id'];
 reviewExpect($a['attempt']['number'] === 2, 'refund never reuses immutable attempt number');
-reviewExpect($runtime->start($user, 'en-GB', $enrollment, $lesson, $startKey)['attempt']['id'] === $first, 'old start replay returns old invalidated attempt');
+reviewExpect(
+    $runtime->start($user, 'en-GB', $enrollment, $lesson, $startKey)['attempt']['id'] === $first,
+    'old start replay returns old invalidated attempt'
+);
 $stale = reviewCommand($review->editor($actor, $course, $lesson, $enrollment, $second, false));
 $saved = $runtime->mutate($user, 'en-GB', $enrollment, $lesson, $second, 1, reviewKey(), reviewAnswers($a), false);
 reviewReject(fn()=>$review->cancel($actor, ...$stale), 409, 'autosave invalidates stale preview');
@@ -217,18 +250,33 @@ $a = $runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey());
 $third = $a['attempt']['id'];
 $runtime->mutate($user, 'en-GB', $enrollment, $lesson, $third, 1, reviewKey(), reviewAnswers($a), true);
 $item = $review->editor($actor, $course, $lesson, $enrollment, $second, false);
-reviewExpect($item['impact']['after_lesson_completed'] && $item['impact']['after_best']['best_attempt_id'] === $third, 'preview selects another valid passing attempt');
+reviewExpect(
+    $item['impact']['after_lesson_completed'] && $item['impact']['after_best']['best_attempt_id'] === $third,
+    'preview selects another valid passing attempt'
+);
 $review->cancel($actor, ...reviewCommand($item));
 $r = $runtime->state($user, 'en-GB', $enrollment, $lesson);
-reviewExpect($r['course_completed'] && $r['best']['best_attempt_id'] === $third && $r['used_attempts'] === 2, 'invalidating one pass preserves completion through another pass');
+reviewExpect(
+    $r['course_completed'] && $r['best']['best_attempt_id'] === $third && $r['used_attempts'] === 2,
+    'invalidating one pass preserves completion through another pass'
+);
 $review->cancel($actor, ...reviewCommand($review->editor($actor, $course, $lesson, $enrollment, $third, true)));
 $r = $runtime->state($user, 'en-GB', $enrollment, $lesson);
-reviewExpect(!$r['course_completed'] && $r['course_percent'] === 0 && $r['best'] === null && $r['used_attempts'] === 1, 'invalidating final valid pass clears effective completion and best');
+reviewExpect(
+    !$r['course_completed'] && $r['course_percent'] === 0 && $r['best'] === null && $r['used_attempts'] === 1,
+    'invalidating final valid pass clears effective completion and best'
+);
 $rawAfter = $db->setQuery(('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM '
         . '#__jlms_attempts WHERE id=') . $second)->loadObject();
-reviewExpect(hash('sha256', json_encode($rawAfter, JSON_THROW_ON_ERROR)) === $snapshotHash, 'raw closed attempt score and submission remain unchanged');
+reviewExpect(
+    hash('sha256', json_encode($rawAfter, JSON_THROW_ON_ERROR)) === $snapshotHash,
+    'raw closed attempt score and submission remain unchanged'
+);
 $old = $runtime->state($user, 'en-GB', $enrollment, $lesson, $second);
-reviewExpect($old['attempt']['passed'] && !$old['attempt']['valid'] && !$old['feedback_available'], 'historical pass is explicitly invalid and never releases correction');
+reviewExpect(
+    $old['attempt']['passed'] && !$old['attempt']['valid'] && !$old['feedback_available'],
+    'historical pass is explicitly invalid and never releases correction'
+);
 $a = $runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey());
 $fourth = $a['attempt']['id'];
 reviewExpect($a['attempt']['number'] === 4, 'number remains monotonic after multiple refunds');
@@ -239,7 +287,10 @@ $broken = new \Jlms\Component\Jlms\Administrator\Application\QuizReviewService($
 $item = $review->editor($actor, $course, $lesson, $enrollment, $fourth, false);
 $failure = reviewCommand($item);
 reviewReject(fn()=>$broken->cancel($actor, ...$failure), 503, 'missing audit rolls cancellation back');
-reviewExpect($runtime->state($user, 'en-GB', $enrollment, $lesson)['attempt']['state'] === 'open', 'failed cancellation preserves active attempt');
+reviewExpect(
+    $runtime->state($user, 'en-GB', $enrollment, $lesson)['attempt']['state'] === 'open',
+    'failed cancellation preserves active attempt'
+);
 $bad = $failure;
 $bad[9] = str_repeat('0', 64);
 reviewReject(fn()=>$review->cancel($actor, ...$bad), 409, 'forged impact hash rejected');
@@ -251,8 +302,15 @@ $version = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments
 $certificate = (object)['enrollment_id' => $enrollment,'course_version_id' => $version,'template_id' => (int)$template->id,'issued_at' => $nowSql];
 $db->insertObject('#__jlms_certificates', $certificate, 'id');
 $item = $review->editor($actor, $course, $lesson, $enrollment, $fourth, false);
-reviewExpect($item['impact']['blocked'] && $item['impact']['certificate_count'] === 1, 'certificate impact blocks destructive confirmation');
-reviewReject(fn()=>$review->cancel($actor, ...reviewCommand($item)), 409, 'direct cancellation cannot bypass certificate review');
+reviewExpect(
+    $item['impact']['blocked'] && $item['impact']['certificate_count'] === 1,
+    'certificate impact blocks destructive confirmation'
+);
+reviewReject(
+    fn()=>$review->cancel($actor, ...reviewCommand($item)),
+    409,
+    'direct cancellation cannot bypass certificate review'
+);
 $db->setQuery('DELETE FROM #__jlms_certificates WHERE id=' . (int)$certificate->id)->execute();
 $db->setQuery('DELETE FROM #__jlms_certificate_templates WHERE id=' . (int)$template->id)->execute();
 $job = (object)['kind' => 'ci_review_guard','scope_json' => '{}','payload_json' => '{}','available_at' => $nowSql,'created_at' => $nowSql];
@@ -260,8 +318,15 @@ $db->insertObject('#__jlms_jobs', $job, 'id');
 $correction = (object)['attempt_id' => $second,'revision_no' => 1,'job_id' => (int)$job->id,'reason' => 'CI review guard','rules_snapshot_json' => '{}','previous_score_points' => 5,'previous_passed' => 1,'result_score_points' => 0,'result_passed' => 0,'created_at' => $nowSql];
 $db->insertObject('#__jlms_assessment_revisions', $correction, 'id');
 $item = $review->editor($actor, $course, $lesson, $enrollment, $fourth, false);
-reviewExpect($item['impact']['blocked'] && $item['impact']['correction_count'] === 1, 'prior administrative grades require their dedicated review workflow');
-reviewReject(fn()=>$review->cancel($actor, ...reviewCommand($item)), 409, 'corrected grading is never silently ignored on apply');
+reviewExpect(
+    $item['impact']['blocked'] && $item['impact']['correction_count'] === 1,
+    'prior administrative grades require their dedicated review workflow'
+);
+reviewReject(
+    fn()=>$review->cancel($actor, ...reviewCommand($item)),
+    409,
+    'corrected grading is never silently ignored on apply'
+);
 $db->setQuery('DELETE FROM #__jlms_assessment_revisions WHERE id=' . (int)$correction->id)->execute();
 $db->setQuery('DELETE FROM #__jlms_jobs WHERE id=' . (int)$job->id)->execute();
 $review->cancel($actor, ...reviewCommand($review->editor($actor, $course, $lesson, $enrollment, $fourth, false)));
@@ -269,17 +334,31 @@ $a = $runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey());
 $fifth = $a['attempt']['id'];
 reviewExpect($a['attempt']['number'] === 5, 'all historical numbers remain reserved');
 $review->cancel($actor, ...reviewCommand($review->editor($actor, $course, $lesson, $enrollment, $fifth, false)));
-reviewReject(fn()=>$runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey()), 409, 'non-refunded invalidations consume finite quota');
+reviewReject(
+    fn()=>$runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey()),
+    409,
+    'non-refunded invalidations consume finite quota'
+);
 $practice = $runtime->start($user, 'en-GB', $enrollment, $f['practice_id'], reviewKey());
 $runtime->mutate($user, 'en-GB', $enrollment, $f['practice_id'], $practice['attempt']['id'], 1, reviewKey(), '{}', true);
 $item = $review->editor($actor, $course, $f['practice_id'], $enrollment, $practice['attempt']['id'], true);
-reviewExpect($item['impact']['before_lesson_completed'] && !$item['impact']['after_lesson_completed'], 'practice completion is recalculated too');
+reviewExpect(
+    $item['impact']['before_lesson_completed'] && !$item['impact']['after_lesson_completed'],
+    'practice completion is recalculated too'
+);
 $review->cancel($actor, ...reviewCommand($item));
-reviewExpect(!$runtime->state($user, 'en-GB', $enrollment, $f['practice_id'])['course_completed'], 'optional cancellation never invents required credit');
+reviewExpect(
+    !$runtime->state($user, 'en-GB', $enrollment, $f['practice_id'])['course_completed'],
+    'optional cancellation never invents required credit'
+);
 // Current native permissions apply even to an already successful replay.
 $authorId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='ciquizauthor'")->loadResult();
 $author = new \Joomla\CMS\User\User($authorId);
-reviewReject(fn()=>$review->editor($author, $course, $lesson, $enrollment, $first), 403, 'quiz author role alone cannot invalidate attempts');
+reviewReject(
+    fn()=>$review->editor($author, $course, $lesson, $enrollment, $first),
+    403,
+    'quiz author role alone cannot invalidate attempts'
+);
 $managerGroup = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI assessment time manager'")->loadResult();
 $managerId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='ciquiztimemanager'")->loadResult();
 \Joomla\CMS\User\UserHelper::addUserToGroup($managerId, $managerGroup);
@@ -291,16 +370,28 @@ $asset->load((int)$db->setQuery('SELECT asset_id FROM #__jlms_courses WHERE id='
 $oldRules = $asset->rules;
 $asset->rules = json_encode(['jlms.assessment.correct' => [(string)$managerGroup => false]], JSON_THROW_ON_ERROR);
 $asset->store();
-reviewReject(fn()=>$review->editor($manager, $course, $f['practice_id'], $enrollment, $pa['attempt']['id']), 403, 'course denial overrides global assessment permissions');
+reviewReject(
+    fn()=>$review->editor($manager, $course, $f['practice_id'], $enrollment, $pa['attempt']['id']),
+    403,
+    'course denial overrides global assessment permissions'
+);
 reviewReject(fn()=>$review->cancel($manager, ...$managed), 403, 'direct cancellation respects course denial');
 $asset->rules = $oldRules;
 $asset->store();
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$user->id, $group);
 $review->cancel($manager, ...$managed);
-reviewReject(fn()=>$runtime->state($user, 'en-GB', $enrollment, $f['practice_id']), 403, 'administrative cancellation never grants learner access');
+reviewReject(
+    fn()=>$runtime->state($user, 'en-GB', $enrollment, $f['practice_id']),
+    403,
+    'administrative cancellation never grants learner access'
+);
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$user->id, $group);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup($managerId, $managerGroup);
-reviewReject(fn()=>$review->cancel($manager, ...$managed), 403, 'successful replay reloads revoked manager permissions');
+reviewReject(
+    fn()=>$review->cancel($manager, ...$managed),
+    403,
+    'successful replay reloads revoked manager permissions'
+);
 // Prepare a learner-owned native HTTP target, without changing the previous quiz HTTP fixture's required result.
 $now = time();
 $http = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());
@@ -347,8 +438,14 @@ sort($results);
 reviewExpect($results === ['conflict','ok'], 'concurrent submit and cancellation have exactly one winner');
 $raceState = $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$raceA['attempt']['id'])->loadResult();
 $raceCount = (int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $raceEnrollment)->loadResult();
-reviewExpect(($raceState === 'invalidated' && $raceCount === 0) || ($raceState === 'submitted' && $raceCount === 1), 'race leaves consistent effective completion');
+reviewExpect(
+    ($raceState === 'invalidated' && $raceCount === 0) || ($raceState === 'submitted' && $raceCount === 1),
+    'race leaves consistent effective completion'
+);
 $log = json_decode($db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.quizcancel' AND item_id=" . $second)->loadResult(), true, 16, JSON_THROW_ON_ERROR);
-reviewExpect($log['before_status'] === 'submitted' && $log['after_status'] === 'invalidated' && !str_contains(json_encode($log, JSON_THROW_ON_ERROR), 'PRIVATE_CANCEL_REASON'), 'native audit preserves minimal transition metadata, not free-text reason');
+reviewExpect(
+    $log['before_status'] === 'submitted' && $log['after_status'] === 'invalidated' && !str_contains(json_encode($log, JSON_THROW_ON_ERROR), 'PRIVATE_CANCEL_REASON'),
+    'native audit preserves minimal transition metadata, not free-text reason'
+);
 file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $lesson,'user_id' => (int)$user->id,'enrollment_id' => $enrollment,'passed_attempt' => $second,'first_attempt' => $first,'snapshot_hash' => $snapshotHash,'http_enrollment' => $f['http_enrollment'],'http_lesson' => $f['never_id'],'http_attempt' => $httpA['attempt']['id']], JSON_THROW_ON_ERROR));
 echo json_encode(['quiz_review_checks' => $checks,'status' => 'passed']) . PHP_EOL;

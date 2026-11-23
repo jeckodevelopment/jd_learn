@@ -131,9 +131,18 @@ if (($argv[2] ?? '') === 'worker') {
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     $r = $service->state($student, 'en-GB', $f['enrollment_id'], $f['lesson_id']);
-    attemptExpect($r['course_completed'] && $r['best']['score_points'] === $r['best']['max_points'], 'quiz completion and best score survive upgrade');
-    attemptExpect(hash('sha256', json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' . (int)$f['passed_attempt'] . ' ORDER BY id')->loadAssocList(), JSON_THROW_ON_ERROR)) === $f['snapshot_hash'], 'public and private attempt snapshots and grades survive upgrade');
-    attemptExpect((int)$db->setQuery("SELECT enabled FROM #__extensions WHERE folder='task' AND element='jlms'")->loadResult() === 1, 'task plugin enablement survives upgrade');
+    attemptExpect(
+        $r['course_completed'] && $r['best']['score_points'] === $r['best']['max_points'],
+        'quiz completion and best score survive upgrade'
+    );
+    attemptExpect(
+        hash('sha256', json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' . (int)$f['passed_attempt'] . ' ORDER BY id')->loadAssocList(), JSON_THROW_ON_ERROR)) === $f['snapshot_hash'],
+        'public and private attempt snapshots and grades survive upgrade'
+    );
+    attemptExpect(
+        (int)$db->setQuery("SELECT enabled FROM #__extensions WHERE folder='task' AND element='jlms'")->loadResult() === 1,
+        'task plugin enablement survives upgrade'
+    );
     echo json_encode(['quiz_runtime_upgrade' => 'passed','checks' => $checks]) . PHP_EOL;
     exit(0);
 }
@@ -158,14 +167,36 @@ $tfRevision = (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questi
 $tfLesson = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'True false exercise','required' => '0','assessment' => 'practice','feedback_policy' => 'after_submit','max_attempts' => '1','retry_minutes' => '0','selection_mode' => 'fixed','questions' => [['revision_id' => $tfRevision,'points' => '7']]]));
 $subset = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Subset quiz','required' => '0','max_attempts' => '0','retry_minutes' => '0','questions' => [...$base['questions'],['revision_id' => $tfRevision,'points' => '7']]]));
 $publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
-attemptExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'published', 'valid quiz publishes through native workflow');
-attemptReject(fn()=>$quizzes->save($actor, $scope() + array_replace($base, ['lesson_id' => $lesson])), 409, 'published quiz immutable');
+attemptExpect(
+    $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'published',
+    'valid quiz publishes through native workflow'
+);
+attemptReject(
+    fn()=>$quizzes->save($actor, $scope() + array_replace($base, ['lesson_id' => $lesson])),
+    409,
+    'published quiz immutable'
+);
 $enrollment = $learning->start($student, 'en-GB', $course, bin2hex(random_bytes(16)));
-attemptReject(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lesson, bin2hex(random_bytes(16))), 403, 'manual completion cannot bypass quiz');
+attemptReject(
+    fn()=>$learning->complete($student, 'en-GB', $enrollment, $lesson, bin2hex(random_bytes(16))),
+    403,
+    'manual completion cannot bypass quiz'
+);
 $pre = $service->state($student, 'en-GB', $enrollment, $lesson);
-attemptExpect($pre['can_start'] && $pre['questions'] === [] && $pre['used_attempts'] === 0, 'reading before start does not consume attempt or expose questions');
-attemptReject(fn()=>$service->start($other, 'en-GB', $enrollment, $lesson, attemptKey()), 404, 'foreign enrollment rejected');
-attemptReject(fn()=>$service->start(new \Joomla\CMS\User\User(), 'en-GB', $enrollment, $lesson, attemptKey()), 401, 'guest rejected');
+attemptExpect(
+    $pre['can_start'] && $pre['questions'] === [] && $pre['used_attempts'] === 0,
+    'reading before start does not consume attempt or expose questions'
+);
+attemptReject(
+    fn()=>$service->start($other, 'en-GB', $enrollment, $lesson, attemptKey()),
+    404,
+    'foreign enrollment rejected'
+);
+attemptReject(
+    fn()=>$service->start(new \Joomla\CMS\User\User(), 'en-GB', $enrollment, $lesson, attemptKey()),
+    401,
+    'guest rejected'
+);
 $setWindow = static function (string $table, int $recordId, string $column, mixed $value) use ($db): void {
     $record = (object)['id' => $recordId,$column => $value];
     $db->updateObject($table, $record, 'id', true);
@@ -236,30 +267,80 @@ attemptExpect(
 $key = attemptKey();
 $a = $service->start($student, 'en-GB', $enrollment, $lesson, $key);
 $aid = $a['attempt']['id'];
-attemptExpect(count($a['questions']) === 2 && $a['attempt']['max_points'] === 5 && $a['attempt']['deadline'] === $now + 60, 'server snapshot and timer');
-attemptExpect(!str_contains(json_encode($a, JSON_THROW_ON_ERROR), '"correct"') && !str_contains(json_encode($a, JSON_THROW_ON_ERROR), 'PRIVATE_CORRECT_EXPLANATION'), 'open DTO never leaks grading or explanations');
-attemptExpect($service->start($student, 'en-GB', $enrollment, $lesson, $key)['attempt']['id'] === $aid && $service->start($student, 'en-GB', $enrollment, $lesson, attemptKey())['used_attempts'] === 1, 'key replay and new tab share one active attempt');
-attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $practice, $key), 409, 'start key is bound to its lesson and enrollment');
-attemptExpect($service->state($student, 'en-GB', $enrollment, $lesson)['questions'] === $a['questions'], 'draw and order stable on resume');
+attemptExpect(
+    count($a['questions']) === 2 && $a['attempt']['max_points'] === 5 && $a['attempt']['deadline'] === $now + 60,
+    'server snapshot and timer'
+);
+attemptExpect(
+    !str_contains(json_encode($a, JSON_THROW_ON_ERROR), '"correct"') && !str_contains(json_encode($a, JSON_THROW_ON_ERROR), 'PRIVATE_CORRECT_EXPLANATION'),
+    'open DTO never leaks grading or explanations'
+);
+attemptExpect(
+    $service->start($student, 'en-GB', $enrollment, $lesson, $key)['attempt']['id'] === $aid && $service->start($student, 'en-GB', $enrollment, $lesson, attemptKey())['used_attempts'] === 1,
+    'key replay and new tab share one active attempt'
+);
+attemptReject(
+    fn()=>$service->start($student, 'en-GB', $enrollment, $practice, $key),
+    409,
+    'start key is bound to its lesson and enrollment'
+);
+attemptExpect(
+    $service->state($student, 'en-GB', $enrollment, $lesson)['questions'] === $a['questions'],
+    'draw and order stable on resume'
+);
 $mut = attemptKey();
 $answers = attemptAnswers($a);
 $save = $service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, $answers, false);
-attemptExpect($save['attempt']['revision'] === 2 && $save['questions'] === [] && $service->state($student, 'en-GB', $enrollment, $lesson)['questions'][0]['selected'] !== [], 'answers saved with CAS revision');
-attemptExpect($service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, $answers, false)['replay'], 'identical save replay');
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, '{}', false), 409, 'same mutation key different body rejected');
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, attemptKey(), '{}', false), 409, 'stale tab cannot overwrite answers');
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), '{"999999":["first"]}', false), 422, 'foreign snapshot question rejected');
+attemptExpect(
+    $save['attempt']['revision'] === 2 && $save['questions'] === [] && $service->state($student, 'en-GB', $enrollment, $lesson)['questions'][0]['selected'] !== [],
+    'answers saved with CAS revision'
+);
+attemptExpect(
+    $service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, $answers, false)['replay'],
+    'identical save replay'
+);
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, '{}', false),
+    409,
+    'same mutation key different body rejected'
+);
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, attemptKey(), '{}', false),
+    409,
+    'stale tab cannot overwrite answers'
+);
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), '{"999999":["first"]}', false),
+    422,
+    'foreign snapshot question rejected'
+);
 $qid = $a['questions'][0]['id'];
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), json_encode([$qid => [['bad']]], JSON_THROW_ON_ERROR), false), 422, 'nested option value rejected without warning');
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), json_encode([$qid => [['bad']]], JSON_THROW_ON_ERROR), false),
+    422,
+    'nested option value rejected without warning'
+);
 $beforeRevokeAttempt = $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc();
 $beforeRevokeAnswers = $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
 . '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=') . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList();
 $student->getAuthorisedViewLevels();
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
 try {
-    attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, $answers, false), 403, 'current access checked even on save replay');
-    attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), $answers, true), 403, 'revoked user cannot submit open quiz');
-    attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, $key), 403, 'current access checked on start replay');
+    attemptReject(
+        fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, $answers, false),
+        403,
+        'current access checked even on save replay'
+    );
+    attemptReject(
+        fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), $answers, true),
+        403,
+        'revoked user cannot submit open quiz'
+    );
+    attemptReject(
+        fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, $key),
+        403,
+        'current access checked on start replay'
+    );
     attemptExpect(
         $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc() === $beforeRevokeAttempt,
         'revoked quiz operations preserve score revision and attempt state'
@@ -281,16 +362,32 @@ foreach ($a['questions'] as $q) {
     $partial[$q['id']] = ['first'];
 }
 $failed = $service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), json_encode($partial, JSON_THROW_ON_ERROR), true);
-attemptExpect($failed['attempt']['score_points'] === 3 && !$failed['attempt']['passed'] && !$failed['feedback_available'] && !$failed['course_completed'], '60 percent fails exact 60.01 threshold; partial multiple selection earns zero and feedback stays closed');
-attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()), 409, 'retry interval enforced');
+attemptExpect(
+    $failed['attempt']['score_points'] === 3 && !$failed['attempt']['passed'] && !$failed['feedback_available'] && !$failed['course_completed'],
+    '60 percent fails exact 60.01 threshold; partial multiple selection earns zero and feedback stays closed'
+);
+attemptReject(
+    fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()),
+    409,
+    'retry interval enforced'
+);
 $now += 61;
 $a = $service->start($student, 'en-GB', $enrollment, $lesson, attemptKey());
 $submit = attemptKey();
 $body = attemptAnswers($a);
 $passed = $service->mutate($student, 'en-GB', $enrollment, $lesson, $a['attempt']['id'], 1, $submit, $body, true);
-attemptExpect($passed['attempt']['passed'] && $passed['course_completed'] && $passed['course_percent'] === 100 && $passed['feedback_available'], 'exact set grading passes and completes course');
-attemptExpect($service->mutate($student, 'en-GB', $enrollment, $lesson, $a['attempt']['id'], 1, $submit, $body, true)['replay'], 'final submit idempotent');
-attemptExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === 1, 'completion counts once');
+attemptExpect(
+    $passed['attempt']['passed'] && $passed['course_completed'] && $passed['course_percent'] === 100 && $passed['feedback_available'],
+    'exact set grading passes and completes course'
+);
+attemptExpect(
+    $service->mutate($student, 'en-GB', $enrollment, $lesson, $a['attempt']['id'], 1, $submit, $body, true)['replay'],
+    'final submit idempotent'
+);
+attemptExpect(
+    (int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === 1,
+    'completion counts once'
+);
 // Quiz is the last required lesson: completion mail must be queued exactly once.
 $completionKey = hash('sha256', 'course.completed:' . $enrollment);
 $completionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($completionKey))->loadResult();
@@ -299,34 +396,81 @@ $passedAttempt = $a['attempt']['id'];
 $completedAt = $db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
 $now += 61;
 $a = $service->start($student, 'en-GB', $enrollment, $lesson, attemptKey());
-attemptExpect(!$service->state($student, 'en-GB', $enrollment, $lesson, $passedAttempt)['feedback_available'], 'no historical answer key while another attempt is active');
+attemptExpect(
+    !$service->state($student, 'en-GB', $enrollment, $lesson, $passedAttempt)['feedback_available'],
+    'no historical answer key while another attempt is active'
+);
 $now += 60;
 $expired = $service->mutate($student, 'en-GB', $enrollment, $lesson, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), true);
-attemptExpect($expired['attempt']['state'] === 'expired' && $expired['attempt']['score_points'] === 0 && $expired['best']['score_points'] === 5, 'late answers ignored and best score retained');
-attemptExpect($expired['feedback_available'] && $expired['remaining_attempts'] === 0, 'feedback after finite exhaustion');
-attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()), 409, 'attempt limit enforced');
-attemptExpect($db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === $completedAt, 'first course completion timestamp immutable');
+attemptExpect(
+    $expired['attempt']['state'] === 'expired' && $expired['attempt']['score_points'] === 0 && $expired['best']['score_points'] === 5,
+    'late answers ignored and best score retained'
+);
+attemptExpect(
+    $expired['feedback_available'] && $expired['remaining_attempts'] === 0,
+    'feedback after finite exhaustion'
+);
+attemptReject(
+    fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()),
+    409,
+    'attempt limit enforced'
+);
+attemptExpect(
+    $db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === $completedAt,
+    'first course completion timestamp immutable'
+);
 $a = $service->start($student, 'en-GB', $enrollment, $practice, attemptKey());
 $p = $service->mutate($student, 'en-GB', $enrollment, $practice, $a['attempt']['id'], 1, attemptKey(), '{}', true);
-attemptExpect($p['feedback_available'] && $p['attempt']['score_points'] === 0, 'practice immediate feedback without requiring correct answers');
+attemptExpect(
+    $p['feedback_available'] && $p['attempt']['score_points'] === 0,
+    'practice immediate feedback without requiring correct answers'
+);
 $a = $service->start($student, 'en-GB', $enrollment, $never, attemptKey());
 $p = $service->mutate($student, 'en-GB', $enrollment, $never, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), true);
-attemptExpect(!$p['feedback_available'] && $p['attempt']['passed'], 'never policy withholds feedback even after pass/exhaustion');
+attemptExpect(
+    !$p['feedback_available'] && $p['attempt']['passed'],
+    'never policy withholds feedback even after pass/exhaustion'
+);
 $a = $service->start($student, 'en-GB', $enrollment, $tfLesson, attemptKey());
 $p = $service->mutate($student, 'en-GB', $enrollment, $tfLesson, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), true);
-attemptExpect($p['attempt']['score_points'] === 7 && $p['attempt']['passed'], 'true false is graded through immutable runtime snapshot');
+attemptExpect(
+    $p['attempt']['score_points'] === 7 && $p['attempt']['passed'],
+    'true false is graded through immutable runtime snapshot'
+);
 $a = $service->start($student, 'en-GB', $enrollment, $subset, attemptKey());
-attemptExpect(count($a['questions']) === 2 && $service->state($student, 'en-GB', $enrollment, $subset)['questions'] === $a['questions'], 'proper subset extraction is stable on resume');
+attemptExpect(
+    count($a['questions']) === 2 && $service->state($student, 'en-GB', $enrollment, $subset)['questions'] === $a['questions'],
+    'proper subset extraction is stable on resume'
+);
 $p = $service->mutate($student, 'en-GB', $enrollment, $subset, $a['attempt']['id'], 1, attemptKey(), '{}', true);
-attemptExpect(!$p['feedback_available'] && $p['remaining_attempts'] === null, 'unlimited failed attempts never exhaust into feedback');
+attemptExpect(
+    !$p['feedback_available'] && $p['remaining_attempts'] === null,
+    'unlimited failed attempts never exhaust into feedback'
+);
 // Validation is scoped to this attempt's immutable public option identifiers.
 $validation = $service->start($student, 'en-GB', $enrollment, $subset, attemptKey());
 $validationId = $validation['attempt']['id'];
 $firstQ = $validation['questions'][0];
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), json_encode([$firstQ['id'] => ['first','first']], JSON_THROW_ON_ERROR), false), 422, 'duplicate option identifiers rejected');
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), 'null', false), 422, 'non-map answer document rejected');
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), str_repeat('x', 524289), false), 413, 'answer payload bound enforced before decoding');
-attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $practice, $validationId, 1, attemptKey(), '{}', true), 404, 'attempt from another quiz cannot be submitted through this lesson');
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), json_encode([$firstQ['id'] => ['first','first']], JSON_THROW_ON_ERROR), false),
+    422,
+    'duplicate option identifiers rejected'
+);
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), 'null', false),
+    422,
+    'non-map answer document rejected'
+);
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), str_repeat('x', 524289), false),
+    413,
+    'answer payload bound enforced before decoding'
+);
+attemptReject(
+    fn()=>$service->mutate($student, 'en-GB', $enrollment, $practice, $validationId, 1, attemptKey(), '{}', true),
+    404,
+    'attempt from another quiz cannot be submitted through this lesson'
+);
 $service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), '{}', true);
 // Separate user for timer grace and native scheduler execution; no test mutates a customer's site.
 $otherEnrollment = $learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16)));
@@ -334,8 +478,15 @@ $a = $service->start($other, 'en-GB', $otherEnrollment, $lesson, attemptKey());
 $r = $service->mutate($other, 'en-GB', $otherEnrollment, $lesson, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), false);
 $u = (object)['id' => $otherEnrollment,'ends_at' => gmdate('Y-m-d H:i:s', time() - 1)];
 $db->updateObject('#__jlms_enrollments', $u, 'id');
-attemptExpect($service->state($other, 'en-GB', $otherEnrollment, $lesson)['attempt']['state'] === 'open', 'existing attempt may finish after educational window ends');
-attemptReject(fn()=>$service->start($other, 'en-GB', $otherEnrollment, $practice, attemptKey()), 403, 'window grace does not allow new attempts');
+attemptExpect(
+    $service->state($other, 'en-GB', $otherEnrollment, $lesson)['attempt']['state'] === 'open',
+    'existing attempt may finish after educational window ends'
+);
+attemptReject(
+    fn()=>$service->start($other, 'en-GB', $otherEnrollment, $practice, attemptKey()),
+    403,
+    'window grace does not allow new attempts'
+);
 // A worker finishes only saved answers even when the current account has been blocked.
 $u = (object)['id' => (int)$other->id,'block' => 1];
 $db->updateObject('#__users', $u, 'id');
@@ -359,8 +510,14 @@ $record = (object)['id' => 0,'type' => 'jlms.quiz.expire','params' => '{"limit":
 $task = new \Joomla\Component\Scheduler\Administrator\Task\Task($record);
 $event = new \Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent('onExecuteTask', ['subject' => $task,'params' => (object)['limit' => 100]]);
 $app->getDispatcher()->dispatch('onExecuteTask', $event);
-attemptExpect(($event->getResultSnapshot()['status'] ?? null) === \Joomla\Component\Scheduler\Administrator\Task\Status::OK, 'native task event executes the plugin successfully');
-attemptExpect($db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->loadResult() === 'expired', 'scheduled routine closes due attempt without browser');
+attemptExpect(
+    ($event->getResultSnapshot()['status'] ?? null) === \Joomla\Component\Scheduler\Administrator\Task\Status::OK,
+    'native task event executes the plugin successfully'
+);
+attemptExpect(
+    $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->loadResult() === 'expired',
+    'scheduled routine closes due attempt without browser'
+);
 $httpUser = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());
 $httpEnrollment = $learning->start($httpUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 // Concurrency uses one enrollment and two independent database connections/processes.
@@ -417,5 +574,8 @@ foreach ($workers as [$process,$pipes]) {
     $ids[] = $out;
 }
 attemptExpect($ids[0] === $ids[1] && (int)$ids[0] > 0, 'concurrent starts allocate one attempt');
-attemptExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id=' . $concurrentEnrollment)->loadResult() === 1, 'one unique active slot after concurrent starts');
+attemptExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id=' . $concurrentEnrollment)->loadResult() === 1,
+    'one unique active slot after concurrent starts'
+);
 echo json_encode(['quiz_runtime_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

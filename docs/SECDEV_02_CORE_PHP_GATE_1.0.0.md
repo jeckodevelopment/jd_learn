@@ -176,3 +176,10 @@ La riduzione netta sul ramo è **229 rilievi**, rispetto ai **3.204** rimasti do
 ## Array e argomenti PHP lunghi: intervento applicativo (PR #999)
 
 Dopo la PR #998 il debito PHPCS PSR-12 atteso è 2.975 rilievi, ancora da confermare con inventario completo sul commit aggiornato. Un tentativo automatico sui token virgola ([run 45258866572](https://github.com/jeckodevelopment/jd_learn/actions/runs/45258866572)) ha rimosso **1 rilievo in 1 file**, scartandone 178; per evitare ulteriori iterazioni inefficienti il formatter temporaneo è stato eliminato. Sono stati quindi riformattati manualmente **12 array/espressioni** nei servizi QuizAttemptService e LearningService, senza modificare chiavi, valori o contratti applicativi. La riduzione PSR-12 effettiva va rilevata dalla CI integrale e non viene anticipata: SECDEV-02/01 resta non verificabile, come la compatibilità completa API Joomla e i criteri CORE. I collaudi in ambiente Joomla restano separati.
+
+
+## Riconciliazione massiva asserzioni PHP dei test (PR #1000)
+
+Il job [45262539964](https://github.com/jeckodevelopment/jd_learn/actions/runs/45262539964) ha trasformato le chiamate a funzioni di asserzione e verifica negativa dei test PHP più lunghi in invocazioni multilinea PSR-12: **9 file accettati, 271 rilievi rimossi, nessun file respinto**. Ogni cambiamento è stato sottoposto a lint PHP, verifica dell'identità dei token significativi con `token_get_all`, e PHPCS PSR12 4.0.4 senza incremento di nessuna regola per file. Il workflow di scrittura è stato rimosso dal ramo prima della PR; lo script con rollback è disponibile in `tools/secdev02_assertion_wrap.py`.
+
+Baseline su main prima del batch **2.962**; residuo **atteso 2.691**, da confermare nella CI della PR. La riformattazione delle asserzioni non completa l'audit CORE-01–23 e non certifica la compatibilità di ogni API Joomla; SECDEV-02 rimane aperto e i collaudi Joomla manuali restano separati.

@@ -113,14 +113,26 @@ if (($argv[2] ?? '') === 'worker') {
 }
 $actor = $app->getIdentity();
 $helper = $component->getAssociationsExtension();
-assocExpect($component instanceof \Joomla\CMS\Association\AssociationServiceInterface && $helper->hasAssociationsSupport(), 'native association service registered');
-assocExpect($helper->getItemTypes() === ['course', 'course.category'] && !$helper->getTypeSupport('course')['save2copy'], 'only implemented native association types advertised');
+assocExpect(
+    $component instanceof \Joomla\CMS\Association\AssociationServiceInterface && $helper->hasAssociationsSupport(),
+    'native association service registered'
+);
+assocExpect(
+    $helper->getItemTypes() === ['course', 'course.category'] && !$helper->getTypeSupport('course')['save2copy'],
+    'only implemented native association types advertised'
+);
 $fixturePath = dirname($root) . '/associations-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     assocExpect(assocRows() === $fixture['rows'], 'native course association graph survives package update');
-    assocExpect((int) $helper->getAssociations('course', $fixture['en'])['it-IT']->id === $fixture['it'], 'native API still resolves retained translation');
-    assocExpect((int) $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $fixture['en'])->loadResult() === $fixture['version'], 'published teaching pointer retained');
+    assocExpect(
+        (int) $helper->getAssociations('course', $fixture['en'])['it-IT']->id === $fixture['it'],
+        'native API still resolves retained translation'
+    );
+    assocExpect(
+        (int) $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $fixture['en'])->loadResult() === $fixture['version'],
+        'published teaching pointer retained'
+    );
     echo json_encode(['association_retention_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
@@ -153,7 +165,10 @@ $it = $create('association-it', 'it-IT');
 $otherEn = $create('association-other-en', 'en-GB');
 $otherIt = $create('association-other-it', 'it-IT');
 $all = $create('association-all', '*');
-assocExpect(assocSave(assocData($en) + ['associations' => ['it-IT' => $it]]), 'translation saved through native AdminModel');
+assocExpect(
+    assocSave(assocData($en) + ['associations' => ['it-IT' => $it]]),
+    'translation saved through native AdminModel'
+);
 assocExpect((int) $helper->getAssociations('course', $en)['it-IT']->id === $it, ('native Associations API reads '
     . 'course translation without wrong category-extension join'));
 $item = $factory->createModel('Course', 'Administrator', ['ignore_request' => true])->getItem($en);
@@ -162,34 +177,61 @@ $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => t
 $model->setState('course.id', $en);
 $form = $model->getForm();
 assocExpect((bool) $form->getField('it-IT', 'associations'), 'native language-specific association form field loaded');
-assocExpect(str_contains($form->getInput('it-IT', 'associations'), 'association-it'), 'native field renders editable language-filtered course title');
+assocExpect(
+    str_contains($form->getInput('it-IT', 'associations'), 'association-it'),
+    'native field renders editable language-filtered course title'
+);
 
 $baseline = assocRows();
 $titleChange = assocData($en);
 $titleChange['title'] = 'Changed with graph';
-assocExpect(!assocSave($titleChange + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline && assocData($en)['title'] !== 'Changed with graph', 'metadata and translation changes must not enter native implicit asset commit');
+assocExpect(
+    !assocSave($titleChange + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline && assocData($en)['title'] !== 'Changed with graph',
+    'metadata and translation changes must not enter native implicit asset commit'
+);
 foreach ([['it-IT' => $otherEn], ['en-GB' => $otherEn], ['not-a-language' => $it], ['it-IT' => -1], ['it-IT' => '1 OR 1=1'], ['it-IT' => 999999999], ['it-IT' => $en]] as $invalid) {
-    assocExpect(!assocSave(assocData($en) + ['associations' => $invalid]) && assocRows() === $baseline, 'invalid target/language rejected atomically');
+    assocExpect(
+        !assocSave(assocData($en) + ['associations' => $invalid]) && assocRows() === $baseline,
+        'invalid target/language rejected atomically'
+    );
 }
-assocExpect(!assocSave(assocData($all) + ['associations' => ['it-IT' => $it]]) && assocRows() === $baseline, 'all-languages course cannot join a translation group');
+assocExpect(
+    !assocSave(assocData($all) + ['associations' => ['it-IT' => $it]]) && assocRows() === $baseline,
+    'all-languages course cannot join a translation group'
+);
 $changed = assocData($en);
 $changed['language'] = 'it-IT';
-assocExpect(!assocSave($changed) && assocRows() === $baseline, 'associated source language cannot change behind native graph');
-assocExpect(assocSave(assocData($otherEn) + ['associations' => ['it-IT' => $otherIt]]), 'second independent group created');
+assocExpect(
+    !assocSave($changed) && assocRows() === $baseline,
+    'associated source language cannot change behind native graph'
+);
+assocExpect(
+    assocSave(assocData($otherEn) + ['associations' => ['it-IT' => $otherIt]]),
+    'second independent group created'
+);
 $baseline = assocRows();
-assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline, 'member cannot be stolen from another group');
+assocExpect(
+    !assocSave(assocData($en) + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline,
+    'member cannot be stolen from another group'
+);
 $update = static function (int $id, array $fields) use ($db): void {
     $record = (object) (['id' => $id] + $fields);
     $db->updateObject('#__jlms_courses', $record, 'id', true);
 };
 $update($it, ['checked_out' => 999999]);
-assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'removing another editor checkout denied');
+assocExpect(
+    !assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline,
+    'removing another editor checkout denied'
+);
 $update($it, ['checked_out' => null]);
 // A former super-user object must not retain permissions after a current account block.
 $blocked = (object) ['id' => (int)$actor->id, 'block' => 1];
 $db->updateObject('#__users', $blocked, 'id');
 try {
-    assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'fresh blocked actor denied before graph mutation');
+    assocExpect(
+        !assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline,
+        'fresh blocked actor denied before graph mutation'
+    );
 } finally {
     $blocked->block = 0;
     $db->updateObject('#__users', $blocked, 'id');
@@ -207,14 +249,23 @@ $asset = (object) ['id' => $assetId, 'rules' => '{"core.edit":{"6":false},"core.
 $db->updateObject('#__assets', $asset, 'id');
 $app->loadIdentity(new \Joomla\CMS\User\User((int)$restricted->id));
 try {
-    assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'removing a linked target requires target ACL too');
+    assocExpect(
+        !assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline,
+        'removing a linked target requires target ACL too'
+    );
 } finally {
     $asset->rules = $oldRules;
     $db->updateObject('#__assets', $asset, 'id');
     $app->loadIdentity($actor);
 }
-assocExpect(assocSave(assocData($otherEn) + ['associations' => ['it-IT' => 0]]), 'native zero selection clears whole old group');
-assocExpect(!$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($otherEn,$otherIt)")->loadResult(), 'no dangling old group after clear');
+assocExpect(
+    assocSave(assocData($otherEn) + ['associations' => ['it-IT' => 0]]),
+    'native zero selection clears whole old group'
+);
+assocExpect(
+    !$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($otherEn,$otherIt)")->loadResult(),
+    'no dangling old group after clear'
+);
 // Two independent native model requests compete for the same unassociated target.
 $raceEn1 = $create('association-race-en1', 'en-GB');
 $raceEn2 = $create('association-race-en2', 'en-GB');
@@ -260,9 +311,15 @@ foreach ($workers as [$process,$pipes]) {
     $workerDetails[] = ['out' => $out,'err' => $err];
     $outcomes[] = json_decode($out, true, 16, JSON_THROW_ON_ERROR)['saved'];
 }
-assocExpect(count(array_filter($outcomes)) === 1, 'concurrent groups cannot both claim one target: ' . json_encode($workerDetails, JSON_THROW_ON_ERROR));
+assocExpect(
+    count(array_filter($outcomes)) === 1,
+    'concurrent groups cannot both claim one target: ' . json_encode($workerDetails, JSON_THROW_ON_ERROR)
+);
 $raceMembers = $db->setQuery("SELECT b.id FROM #__associations a JOIN #__associations b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=$raceIt AND a.context='com_jlms.item'")->loadColumn();
-assocExpect(count($raceMembers) === 2 && count(array_intersect([$raceEn1,$raceEn2], array_map('intval', $raceMembers))) === 1, 'race leaves exactly one coherent native translation pair');
+assocExpect(
+    count($raceMembers) === 2 && count(array_intersect([$raceEn1,$raceEn2], array_map('intval', $raceMembers))) === 1,
+    'race leaves exactly one coherent native translation pair'
+);
 // Freeze and publish both courses through the actual native workflow.
 $versions = [];
 foreach ([$en,$it,$all] as $course) {
@@ -281,13 +338,19 @@ foreach ([$en,$it,$all] as $course) {
 }
 $app->loadIdentity(new \Joomla\CMS\User\User());
 $links = $helper->getAssociationsForItem($en, 'course');
-assocExpect(($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id=' . $it . '&lang=it-IT', 'native language switch resolves published course sheet');
+assocExpect(
+    ($links['it-IT'] ?? '') === 'index.php?option=com_jlms&view=course&id=' . $it . '&lang=it-IT',
+    'native language switch resolves published course sheet'
+);
 $app->loadIdentity($actor);
 $selectorModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $selectorItem = $selectorModel->getItem($otherEn);
 $selectorForm = $selectorModel->getForm((array) $selectorItem, false);
 $publishedTargetInput = $selectorForm->getInput('it-IT', 'associations');
-assocExpect(str_contains($publishedTargetInput, 'value="' . $it . '"'), 'published course is offered as an editable translation target');
+assocExpect(
+    str_contains($publishedTargetInput, 'value="' . $it . '"'),
+    'published course is offered as an editable translation target'
+);
 $app->loadIdentity(new \Joomla\CMS\User\User());
 // Joomla treats language access=0 as unrestricted; access=2 must still hide it from guests.
 $language->access = 2;
@@ -295,12 +358,21 @@ $language->store();
 assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'restricted content language omitted for guest');
 $language->access = 0;
 $language->store();
-assocExpect(isset($helper->getAssociationsForItem($en, 'course')['it-IT']), 'native unrestricted language access honored');
+assocExpect(
+    isset($helper->getAssociationsForItem($en, 'course')['it-IT']),
+    'native unrestricted language access honored'
+);
 $language->access = 1;
 $language->store();
-assocExpect($helper->getAssociationsForItem($en, 'classroom') === [] && $helper->getAssociationsForItem($en, 'quiz') === [], 'no attempt/enrollment or learning progress translation');
+assocExpect(
+    $helper->getAssociationsForItem($en, 'classroom') === [] && $helper->getAssociationsForItem($en, 'quiz') === [],
+    'no attempt/enrollment or learning progress translation'
+);
 $update($it, ['catalog_access' => 2]);
-assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'target visibility rechecked without stale association cache');
+assocExpect(
+    $helper->getAssociationsForItem($en, 'course') === [],
+    'target visibility rechecked without stale association cache'
+);
 $update($it, ['catalog_access' => 1,'state' => 0]);
 assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'unpublished target omitted');
 $update($it, ['state' => 1,'publish_up' => '2099-01-01 00:00:00']);
@@ -311,21 +383,39 @@ $db->updateObject('#__categories', $category, 'id');
 assocExpect($helper->getAssociationsForItem($en, 'course') === [], 'hidden source category cannot expose association');
 $category->published = 1;
 $db->updateObject('#__categories', $category, 'id');
-assocExpect(isset($helper->getAssociationsForItem($en, 'course')['it-IT']), 'restored category visibility reflected immediately');
+assocExpect(
+    isset($helper->getAssociationsForItem($en, 'course')['it-IT']),
+    'restored category visibility reflected immediately'
+);
 $app->loadIdentity($actor);
 $baseline = assocRows();
 $livePointers = json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR);
 $versionCount = (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult();
-assocExpect(assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]), 'authorized editor can detach a published translation group');
-assocExpect(!(int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult(), 'detaching a published group removes only its native association rows');
+assocExpect(
+    assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]),
+    'authorized editor can detach a published translation group'
+);
+assocExpect(
+    !(int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult(),
+    'detaching a published group removes only its native association rows'
+);
 assocExpect(
     json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR) === $livePointers
     && (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult() === $versionCount,
     'published translation graph edits preserve the live teaching pointers and versions'
 );
-assocExpect(assocSave(assocData($en) + ['associations' => ['it-IT' => $it]]), 'authorized editor can relink published translations');
-assocExpect((int) $helper->getAssociations('course', $en)['it-IT']->id === $it, 'native association API resolves the restored published translation');
-assocExpect((int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult() === 2, 'native association graph remains valid after published relink');
+assocExpect(
+    assocSave(assocData($en) + ['associations' => ['it-IT' => $it]]),
+    'authorized editor can relink published translations'
+);
+assocExpect(
+    (int) $helper->getAssociations('course', $en)['it-IT']->id === $it,
+    'native association API resolves the restored published translation'
+);
+assocExpect(
+    (int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult() === 2,
+    'native association graph remains valid after published relink'
+);
 file_put_contents($fixturePath, json_encode(['en' => $en,'it' => $it,'other_en' => $otherEn,'other_it' => $otherIt,'all' => $all,
     'version' => $versions[$en],'catid' => $catid,'rows' => $baseline], JSON_THROW_ON_ERROR));
 echo json_encode(['native_association_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
