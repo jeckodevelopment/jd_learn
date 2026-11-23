@@ -1186,6 +1186,8 @@ runpy.run_path(str(ROOT/'tests/doc04-technical-reference.py'), run_name='__main_
 
 # SECDEV-03: cross-surface input/output evidence and CSV formula-risk tripwire.
 runpy.run_path(str(ROOT/'tests/secdev03-input-output-gate.py'), run_name='__main__')
+# SECDEV-03: fail-closed 1.0.0 software inventory, regression families and taint sinks.
+runpy.run_path(str(ROOT/'tests/secdev03-implementation-coverage.py'), run_name='__main__')
 
 # DOC-10: keep candidate release notes verifiable in the standard CI gate.
 import runpy
