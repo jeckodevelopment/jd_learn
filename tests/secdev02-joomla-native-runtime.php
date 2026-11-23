@@ -27,9 +27,8 @@ PHP;
         throw new RuntimeException('Native import parser produced incorrect results');
     }
 
-    $resolver = static fn (string $name): bool => $name === 'Joomla\CMS\Factory';
-    $method = static fn (string $class, string $name): bool =>
-        $class === 'Joomla\CMS\Factory' && $name === 'getContainer';
+    $resolver = 'secdev02FixtureClassExists';
+    $method = 'secdev02FixtureMethodExists';
 
     if (secdev02MissingApis(['Joomla\CMS\Factory'], [['Joomla\CMS\Factory', 'getContainer']], $resolver, $method)) {
         throw new RuntimeException('Valid Joomla symbols were rejected');
@@ -114,14 +113,13 @@ $apiMethods = [
     ['Joomla\CMS\Plugin\PluginHelper', 'importPlugin'],
 ];
 
-$exists = static fn (string $name): bool =>
-    class_exists($name) || interface_exists($name) || trait_exists($name) || enum_exists($name);
+$exists = 'secdev02RealClassExists';
 
 $errors = secdev02MissingApis(
     $imports,
     $apiMethods,
     $exists,
-    static fn (string $class, string $method): bool => method_exists($class, $method)
+    'secdev02RealMethodExists'
 );
 
 foreach ($errors as $error) {
