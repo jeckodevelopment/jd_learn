@@ -36,3 +36,7 @@ Il test Joomla disposable sui percorsi include contenuto ostile nella descrizion
 ## Validazione rigorosa degli artwork dei percorsi (23/11/2026)
 
 Rilevata la conversione implicita a stringa di input `cover_image` e `cover_alt` nel modello amministrativo dei percorsi: un array, un oggetto o un valore UTF-8 invalido non deve essere salvato come metadato editoriale. Il modello ora controlla esplicitamente che entrambi i valori siano stringhe e che il testo alternativo sia UTF-8 valido prima della normalizzazione. `tests/joomla-pathways.php` esegue casi negativi sul modello reale e verifica, dopo ciascun rifiuto, la conservazione di revisione, JSON e descrizione persistiti. Il gate SECDEV-03 mantiene la prova obbligatoria. L'intervento è limitato alla superficie Percorsi; non sostituisce l'audit di tutti i form.
+
+## Binding SQL delle associazioni Percorso–Corso (23/11/2026)
+
+Individuato un inserimento in `#__jlms_pathway_courses` che concatenava tre interi previamente normalizzati. Per aderire pienamente alla policy SECDEV-03 sui dati in input, l'operazione usa ora parametri SQL `pathwayId`, `courseId` e `position` con tipo intero attraverso il query builder Joomla. La suite `tests/joomla-pathways.php` verifica gli inserimenti ordinati nel database e rifiuta identificativi di corso simili a SQL con conservazione delle associazioni già persistite. `tests/secdev03-input-output-gate.py` controlla che il binding non venga rimosso. Questa verifica non costituisce audit completo di tutte le query del repository.
