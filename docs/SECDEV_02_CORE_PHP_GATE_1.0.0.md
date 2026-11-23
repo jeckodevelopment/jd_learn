@@ -122,6 +122,12 @@ Il batch temporaneo `SECDEV-02 disposable operator wrap` (run [45197675520](http
 
 **Risultato reale del batch:** 158 file modificati, **902 rilievi eliminati**, nessuna nuova violazione nel confronto per-file; 142 altri file candidati lasciati invariati. Verificati `git diff --check` e lint di tutti i 158 file modificati. Gli strumenti e il workflow monouso sono stati eliminati prima di aprire la PR. La baseline complessiva precedente era 4.544: l'audit completo della CI dovrà confermare un residuo pari a **3.642**. La soglia di zero, l'audit integrale API Joomla e gli scenari CORE estesi non sono ancora raggiunti; **SECDEV-02 resta aperto**.
 
+## Estensione controllo API rimosse in Joomla 6 (PR successiva alla #991)
+
+Il controllo statico `tests/secdev02-joomla-api-gate.py` blocca anche un secondo insieme di API documentate come rimosse o disponibili soltanto tramite il plugin di retrocompatibilità **Behaviour - Backward Compatibility 6**: namespace `Joomla\\CMS\\Filesystem`, `Joomla\\CMS\\Adapter`, classi legacy `BaseApplication` e `CliApplication`, le costanti `JPATH_PLATFORM` e `JCOMPAT_UNICODE_PROPERTIES`, alias legacy Finder e invocazioni `isCli()`, `createThumbs()`, `fetchExtensionCompatibility()`, `getLogContentTypeParams()`. Ogni caso è protetto da fixture negativa. Fonte ufficiale: [Joomla 5.4 → 6.0: API rimosse e incompatibilità](https://manual.joomla.org/updates/54-60/removed-backward-incompatibility/).
+
+Il gate è limitato a pattern testuali e non risolve dinamicamente il tipo ricevente dei metodi. Non è pertanto una certificazione di *tutte* le API Joomla né della compatibilità con ogni patch; la suite esistente con `compat6` disabilitato resta la prova d'integrazione automatizzata. SECDEV-02 e i criteri ancora non verificabili **restano aperti**.
+
 ## Ulteriore batch di delimitatori PHP (dopo PR #991)
 
 Il workflow temporaneo di formattazione (run [45203214675](https://github.com/jeckodevelopment/jd_learn/actions/runs/45203214675)) ha valutato su tutto il PHP tracciato diverse indentazioni e punti di interruzione dopo virgole e parentesi. Per ciascun file ogni variante è stata ammessa **solo** se i token significativi PHP restavano identici, `php -l` riusciva e PHPCS PSR12 4.0.4 confermava una riduzione senza nuove violazioni di alcuna regola.

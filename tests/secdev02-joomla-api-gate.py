@@ -19,6 +19,22 @@ LEGACY_CLASS = re.compile(r"(?<![A-Za-z0-9_])(?:JFactory|JText|JInput|JDatabase|
 REMOVED_NAMESPACE = re.compile(r"(?<![A-Za-z0-9_])(?:Joomla\\CMS\\Input\\Input)(?![A-Za-z0-9_])")
 
 
+# Clear Joomla 6 removals and compat6-only names from the official 5.4->6 guide.
+# This is a conservative, non-exhaustive source scan, not an AST/type audit.
+REMOVED_JOOMLA6 = re.compile(
+    r"(?<![A-Za-z0-9_])(?:"
+    r"Joomla\\CMS\\Filesystem\\[A-Za-z_]\w*|"
+    r"Joomla\\CMS\\Adapter\\[A-Za-z_]\w*|"
+    r"Joomla\\CMS\\Application\\(?:BaseApplication|CliApplication)|"
+    r"JPATH_PLATFORM|JCOMPAT_UNICODE_PROPERTIES|FinderIndexerHelper"
+    r")(?![A-Za-z0-9_])"
+)
+REMOVED_CALLS = re.compile(
+    r"(?:->|::)\s*(?:isCli|createThumbs|fetchExtensionCompatibility|"
+    r"getLogContentTypeParams)\s*\("
+)
+
+
 def scan(root: Path) -> list[str]:
     findings: list[str] = []
     for folder in SOURCE_ROOTS:
@@ -35,7 +51,8 @@ def scan(root: Path) -> list[str]:
                 stripped = line.lstrip()
                 if stripped.startswith(("//", "*", "#")):
                     continue
-                if LEGACY_CLASS.search(line) or REMOVED_NAMESPACE.search(line):
+                if (LEGACY_CLASS.search(line) or REMOVED_NAMESPACE.search(line)
+                        or REMOVED_JOOMLA6.search(line) or REMOVED_CALLS.search(line)):
                     findings.append(f"{path.relative_to(root)}:{number}: legacy Joomla API reference")
     return findings
 
@@ -53,6 +70,15 @@ def self_test() -> None:
         assert scan(root)
         source.write_text("<?php\nuse Joomla\\CMS\\Input\\Input;\n", encoding="utf-8")
         assert scan(root)
+        for removed in (
+            r"use Joomla\CMS\Filesystem\File;",
+            "defined('JPATH_PLATFORM');",
+            "$app->isCli();",
+            "$image->createThumbs('50x50');",
+            r"use Joomla\CMS\Adapter\Adapter;",
+        ):
+            source.write_text("<?php\\n" + removed + "\\n", encoding="utf-8")
+            assert scan(root), removed
         source.write_text("<?php\n// JFactory is a legacy alias\n", encoding="utf-8")
         assert not scan(root)
 
