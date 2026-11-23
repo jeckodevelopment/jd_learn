@@ -38,7 +38,7 @@ for locale in ("it-IT", "en-GB"):
 # DOC-07 configuration tests are read-only, role-scoped, and render only
 # a known localization key and a controlled severity, never secrets or paths.
 assert "public array $configurationDiagnostics = [];" in view
-assert "ConfigurationDiagnostics::summarize($this->schedulerHealth, $this->providers)" in view
+assert re.search(r"ConfigurationDiagnostics::summarize\\s*\\(\\s*\\$this->schedulerHealth\\s*,\\s*\\$this->providers\\s*\\)", view)
 assert "$actor->authorise('core.manage', 'com_jlms')" in view
 assert 'id="jlms-admin-configuration-diagnostics"' in page
 diagnostic = page.split('id="jlms-admin-configuration-diagnostics"', 1)[1].split('id="jlms-admin-safe-operations"', 1)[0]
