@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """FE-03: classroom presentation and CSS/JS contract smoke checks."""
 from pathlib import Path
+import re
 ROOT = Path(__file__).resolve().parents[1]
 view = (ROOT / "component/site/tmpl/classroom/default.php").read_text()
 service = (ROOT / "component/administrator/src/Application/LearningService.php").read_text()
@@ -14,7 +15,7 @@ for old in ('id="jlms-classroom"', 'id="jlms-classroom-outline-toggle"',
 assert 'class="jlms-classroom-module"' in view
 assert '<details id="jlms-classroom-module-' in view
 assert '<summary class="jlms-classroom-module__summary">' in view
-assert 'if ($currentModule) : ?></ol></details>' in view
+assert re.search(r"if\s*\(\$currentModule\)\s*:\s*\?>\s*</ol></details>", view)
 assert '$selectedModule === $currentModule' in view
 assert 'id="jlms-classroom-teachers"' in view
 assert "TeacherProfiles::current($this->db, $actor, $language, (int) $course->id)" in service
