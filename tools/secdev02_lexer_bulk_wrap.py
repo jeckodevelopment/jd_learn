@@ -118,7 +118,7 @@ def main() -> int:
     p.add_argument("--self-test", action="store_true")
     args = p.parse_args()
     if args.self_test:
-        sample = b"$x = $db->select('foo')->from('bar')->where('a')->where('b')->where('c')->where('d')->where('e')->where('f');\n"
+        sample = b"$x = $db->select('foo')->from('bar')->where('a')->where('b')->where('c')->where('d')->where('e')->where('f')->where('g')->where('h')->where('i');\n"
         locations = [[i, "->"] for i in range(len(sample)) if sample[i:i+2] == b"->"]
         assert propose(sample, locations, 90, 4) != sample
         assert propose(b"<?php echo 1;\n", [[12, ";"]], 90, 4) == b"<?php echo 1;\n"
