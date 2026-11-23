@@ -1,7 +1,9 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Plugin\Task\Jlms\Extension;
+
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
@@ -13,31 +15,32 @@ use Joomla\Component\Scheduler\Administrator\Traits\TaskPluginTrait;
 final class Jlms extends CMSPlugin implements SubscriberInterface
 {
     use TaskPluginTrait;
+
     protected $autoloadLanguage = true;
     protected const TASKS_MAP = [
         'jlms.quiz.expire' => ['langConstPrefix' => 'PLG_TASK_JLMS_EXPIRE','form' => 'expire','method' => 'expireQuizzes'],
         'jlms.materials.cleanup' => ['langConstPrefix' => 'PLG_TASK_JLMS_CLEANUP','form' => 'expire','method' => 'cleanupMaterials'],
         'jlms.mail.dispatch' => ['langConstPrefix' => 'PLG_TASK_JLMS_MAIL','form' => 'expire','method' => 'dispatchMail'],
     ];
-    public static function getSubscribedEvents():array
+    public static function getSubscribedEvents(): array
     {
         return ['onTaskOptionsList' => 'advertiseRoutines','onExecuteTask' => 'standardRoutineHandler','onContentPrepareForm' => 'enhanceTaskItemForm'];
     }
-    protected function expireQuizzes(ExecuteTaskEvent $event):int
+    protected function expireQuizzes(ExecuteTaskEvent $event): int
     {
         $params = $event->getArgument('params');
         $result = $this->getApplication()->bootComponent('com_jlms')->getQuizAttemptService()->expireDue((int)($params->limit ?? 100));
         $this->logTask('Quiz expiry: closed=' . $result['closed'] . '; failed=' . $result['failed'] . '; more=' . (int)$result['has_more']);
         return $result['failed'] ? Status::KNOCKOUT : Status::OK;
     }
-    protected function cleanupMaterials(ExecuteTaskEvent $event):int
+    protected function cleanupMaterials(ExecuteTaskEvent $event): int
     {
         $params = $event->getArgument('params');
         $result = $this->getApplication()->bootComponent('com_jlms')->getMaterialService()->purgeOrphaned((int)($params->limit ?? 100));
         $this->logTask('Material cleanup: deleted=' . $result['deleted'] . '; failed=' . $result['failed'] . '; more=' . (int)$result['has_more']);
         return $result['failed'] ? Status::KNOCKOUT : Status::OK;
     }
-    protected function dispatchMail(ExecuteTaskEvent $event):int
+    protected function dispatchMail(ExecuteTaskEvent $event): int
     {
         $params = $event->getArgument('params');
         $app = Factory::getApplication();

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 if (getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new RuntimeException('Disposable site required');
 }

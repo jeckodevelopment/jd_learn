@@ -1,37 +1,56 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Joomla\CMS {
-    final class Factory {
+    final class Factory
+    {
         public static object $application;
-        public static function getApplication(): object { return self::$application;
+        public static function getApplication(): object
+        {
+            return self::$application;
         }
     }
 }
 namespace {
     require __DIR__ . '/../component/site/src/Helper/PublicBreadcrumbHelper.php';
 
-    final class BreadcrumbMenu {
+    final class BreadcrumbMenu
+    {
         public ?object $active = null;
-        public function getActive(): ?object { return $this->active;
+        public function getActive(): ?object
+        {
+            return $this->active;
         }
     }
-    final class BreadcrumbTrail {
+    final class BreadcrumbTrail
+    {
         public array $items = [];
-        public function getPathway(): array { return $this->items;
+        public function getPathway(): array
+        {
+            return $this->items;
         }
-        public function addItem(string $title): void { $this->items[] = (object) ['name' => $title];
+        public function addItem(string $title): void
+        {
+            $this->items[] = (object) ['name' => $title];
         }
     }
-    final class BreadcrumbApplication {
+    final class BreadcrumbApplication
+    {
         public BreadcrumbMenu $menu;
         public BreadcrumbTrail $trail;
-        public function __construct() { $this->menu = new BreadcrumbMenu();
+        public function __construct()
+        {
+            $this->menu = new BreadcrumbMenu();
             $this->trail = new BreadcrumbTrail();
         }
-        public function getMenu(): BreadcrumbMenu { return $this->menu;
+        public function getMenu(): BreadcrumbMenu
+        {
+            return $this->menu;
         }
-        public function getPathway(): BreadcrumbTrail { return $this->trail;
+        public function getPathway(): BreadcrumbTrail
+        {
+            return $this->trail;
         }
     }
 

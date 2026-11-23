@@ -288,14 +288,16 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
             // Clear optional Joomla account references on unrelated editorial
             // and operational records. Preserve the content and its stable IDs:
             // an account erasure must not delete published courses or assessments.
-            foreach ([
+            foreach (
+                [
                 '#__jlms_courses', '#__jlms_course_versions', '#__jlms_modules',
                 '#__jlms_lessons', '#__jlms_editions', '#__jlms_teachers',
                 '#__jlms_pathways', '#__jlms_assets', '#__jlms_attachments',
                 '#__jlms_quizzes', '#__jlms_questions', '#__jlms_question_revisions',
                 '#__jlms_enrollments', '#__jlms_enrollment_requests',
                 '#__jlms_certificate_templates',
-            ] as $editorialTable) {
+                ] as $editorialTable
+            ) {
                 $db->setQuery($db->createQuery()
                     ->update($db->quoteName($editorialTable))
                     ->set($db->quoteName('created_by') . ' = NULL')
@@ -377,11 +379,13 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         // Audit tables with NOT NULL account references cannot be safely
         // anonymized in place without altering legally relevant provenance.
         // Reject removal until the site controller documents disposition.
-        foreach ([
+        foreach (
+            [
             ['#__jlms_certificate_audit', 'actor_user_id'],
             ['#__jlms_version_equivalences', 'approved_by'],
             ['#__jlms_course_announcement_campaigns', 'requested_by'],
-        ] as [$auditTable, $auditColumn]) {
+            ] as [$auditTable, $auditColumn]
+        ) {
             $auditQuery = $db->createQuery()
                 ->select('COUNT(*)')
                 ->from($db->quoteName($auditTable))

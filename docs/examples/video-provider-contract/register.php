@@ -7,6 +7,7 @@ declare(strict_types=1);
  * in a CMSPlugin implementing SubscriberInterface and its service provider.
  * See plugins/jlmsvideo/youtube/src/Extension/Youtube.php.
  */
+
 use Jlms\Contracts\Video\VideoProviderRegistryInterface;
 use Jlms\Contracts\Video\ProviderDescriptor;
 use Jlms\Examples\Video\ExampleProvider;

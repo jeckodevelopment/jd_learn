@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
@@ -30,11 +32,11 @@ if ($enabled) :
   <li class="jlms-personal-navigation__item">
         <?php if ($view === $currentView) : ?>
     <span class="jlms-personal-navigation__current" aria-current="page"><?= Text::_($languageKey) ?></span>
-   <?php else : ?>
+        <?php else : ?>
     <a class="jlms-personal-navigation__link" href="<?= Route::_('index.php?option=com_jlms&view=' . $view) ?>"><?= Text::_($languageKey) ?></a>
-   <?php endif; ?>
+        <?php endif; ?>
   </li>
- <?php endforeach; ?>
+    <?php endforeach; ?>
  </ul>
 </nav>
 <?php endif; ?>

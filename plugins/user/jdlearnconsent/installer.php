@@ -10,13 +10,21 @@ use Joomla\CMS\Installer\InstallerScriptInterface;
 use Joomla\Database\DatabaseInterface;
 
 return new class implements InstallerScriptInterface {
-    public function install(InstallerAdapter $adapter): bool { return true;
+    public function install(InstallerAdapter $adapter): bool
+    {
+        return true;
     }
-    public function update(InstallerAdapter $adapter): bool { return true;
+    public function update(InstallerAdapter $adapter): bool
+    {
+        return true;
     }
-    public function uninstall(InstallerAdapter $adapter): bool { return true;
+    public function uninstall(InstallerAdapter $adapter): bool
+    {
+        return true;
     }
-    public function preflight(string $type, InstallerAdapter $adapter): bool { return true;
+    public function preflight(string $type, InstallerAdapter $adapter): bool
+    {
+        return true;
     }
 
     public function postflight(string $type, InstallerAdapter $adapter): bool

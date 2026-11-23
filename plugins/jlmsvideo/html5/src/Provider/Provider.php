@@ -14,11 +14,16 @@ use Jlms\Contracts\Video\PlaybackDescriptor;
 
 final class Provider extends AbstractFoundationProvider
 {
-    public function __construct(private readonly bool $enabled = false) {
+    public function __construct(private readonly bool $enabled = false)
+    {
     }
-    protected function key(): string { return 'html5';
+    protected function key(): string
+    {
+        return 'html5';
     }
-    public function getDescriptor(): ProviderDescriptor { return new ProviderDescriptor('html5', 'PLG_JLMSVIDEO_HTML5', 1, $this->enabled);
+    public function getDescriptor(): ProviderDescriptor
+    {
+        return new ProviderDescriptor('html5', 'PLG_JLMSVIDEO_HTML5', 1, $this->enabled);
     }
     public function getCapabilities(VideoSource $source): VideoCapabilities
     {
@@ -27,9 +32,11 @@ final class Provider extends AbstractFoundationProvider
     }
     public function createPlaybackDescriptor(VideoSource $source, PlaybackContext $context): PlaybackDescriptor
     {
-        if (!$this->enabled || $source->providerKey !== 'html5' || $context->userId < 1 || $context->lessonId < 1
+        if (
+            !$this->enabled || $source->providerKey !== 'html5' || $context->userId < 1 || $context->lessonId < 1
             || ($context->preview ? ($context->enrollmentId !== 0 || $context->courseId < 1 || $context->versionId < 1)
-                : ($context->enrollmentId < 1 || $context->authorisationGrant === ''))) {
+                : ($context->enrollmentId < 1 || $context->authorisationGrant === ''))
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
         }
         $this->normaliseSource(new SourceInput($source->reference));

@@ -93,7 +93,9 @@ final class HtmlView extends BaseHtmlView
         CategoryNavigationHelper::addPath((int) $this->category->id);
         try {
             $guestCategory = $app->bootComponent('com_jlms')->getCatalogService()->category(
-                Factory::getUser(0), $app->getLanguage()->getTag(), (int) $this->category->id
+                Factory::getUser(0),
+                $app->getLanguage()->getTag(),
+                (int) $this->category->id
             );
         } catch (\RuntimeException $error) {
             $guestCategory = null;

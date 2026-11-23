@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Contracts\Video;
 
 final class SourceNormalizer
@@ -26,8 +25,10 @@ final class SourceNormalizer
         $options = [];
         $parts = str_contains($value, '://') ? parse_url($value) : false;
         if ($parts !== false) {
-            if (($parts['scheme'] ?? '') !== 'https' || isset($parts['user'], $parts['pass'])
-                || isset($parts['user']) || isset($parts['pass']) || isset($parts['port'])) {
+            if (
+                ($parts['scheme'] ?? '') !== 'https' || isset($parts['user'], $parts['pass'])
+                || isset($parts['user']) || isset($parts['pass']) || isset($parts['port'])
+            ) {
                 throw new \InvalidArgumentException('SOURCE_INVALID');
             }
             $host = strtolower($parts['host'] ?? '');
@@ -62,8 +63,10 @@ final class SourceNormalizer
                     throw new \InvalidArgumentException('SOURCE_INVALID');
                 }
             } elseif ($provider === 'vimeo') {
-                if (!in_array($host, ['vimeo.com', 'www.vimeo.com', 'player.vimeo.com'], true)
-                    || !preg_match('~^/(?:video/)?([1-9][0-9]{0,18})(?:/([A-Za-z0-9_-]{1,256}))?/?$~D', $path, $m)) {
+                if (
+                    !in_array($host, ['vimeo.com', 'www.vimeo.com', 'player.vimeo.com'], true)
+                    || !preg_match('~^/(?:video/)?([1-9][0-9]{0,18})(?:/([A-Za-z0-9_-]{1,256}))?/?$~D', $path, $m)
+                ) {
                     throw new \InvalidArgumentException('SOURCE_INVALID');
                 }
                 $value = $m[1];
@@ -72,8 +75,10 @@ final class SourceNormalizer
                     $options['privacy_hash'] = $hash;
                 }
             } elseif ($provider === 'cloudflarestream') {
-                if (!in_array($host, ['videodelivery.net', 'iframe.videodelivery.net'], true)
-                    && !preg_match('/^customer-[a-z0-9]+\.cloudflarestream\.com$/D', $host)) {
+                if (
+                    !in_array($host, ['videodelivery.net', 'iframe.videodelivery.net'], true)
+                    && !preg_match('/^customer-[a-z0-9]+\.cloudflarestream\.com$/D', $host)
+                ) {
                     throw new \InvalidArgumentException('SOURCE_INVALID');
                 }
                 if (!preg_match('~^/([a-f0-9]{32})(?:/iframe)?/?$~D', $path, $m)) {
@@ -96,8 +101,10 @@ final class SourceNormalizer
                     || (strlen($value) === strlen((string) PHP_INT_MAX) && strcmp($value, (string) PHP_INT_MAX) <= 0)),
             default => false,
         };
-        if (!$valid || (isset($options['privacy_hash'])
-            && (!is_string($options['privacy_hash']) || !preg_match('/^[A-Za-z0-9_-]{1,256}$/D', $options['privacy_hash'])))) {
+        if (
+            !$valid || (isset($options['privacy_hash'])
+            && (!is_string($options['privacy_hash']) || !preg_match('/^[A-Za-z0-9_-]{1,256}$/D', $options['privacy_hash'])))
+        ) {
             throw new \InvalidArgumentException('SOURCE_INVALID');
         }
         return new VideoSource($provider, $value, 1, $options);

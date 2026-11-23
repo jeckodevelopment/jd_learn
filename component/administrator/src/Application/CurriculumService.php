@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\Application\ApplicationHelper;
@@ -46,8 +45,10 @@ final class CurriculumService
         $asset = 'com_jlms.course.' . (int) $course->id;
         $editOwn = $action === 'core.edit' && (int) $course->created_by === (int) $actor->id
             && $actor->authorise('core.edit.own', $asset);
-        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
-            || (!$actor->authorise($action, $asset) && !$editOwn)) {
+        if (
+            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            || (!$actor->authorise($action, $asset) && !$editOwn)
+        ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
     }
@@ -70,8 +71,10 @@ final class CurriculumService
         if ((int) $version->course_id !== $courseId) {
             throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
-        if (($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
-            || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) {
+        if (
+            ($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
+            || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)
+        ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         if ($version->status !== 'draft') {
@@ -293,16 +296,20 @@ final class CurriculumService
             if ((int)$source->course_id !== $courseId) {
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
-            if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id)
-                || ($source->checked_out && (int)$source->checked_out !== (int)$actor->id)) {
+            if (
+                ($course->checked_out && (int)$course->checked_out !== (int)$actor->id)
+                || ($source->checked_out && (int)$source->checked_out !== (int)$actor->id)
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             if ((int)$course->revision !== $courseRevision || (int)$source->revision !== $sourceRevision) {
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
-            if ($course->current_version_id === null || (int)$course->current_version_id === $sourceId
+            if (
+                $course->current_version_id === null || (int)$course->current_version_id === $sourceId
                 || !in_array($source->status, ['published', 'retired'], true) || !$source->published_at
-                || !is_string($source->structure_hash) || preg_match('/\A[a-f0-9]{64}\z/D', $source->structure_hash) !== 1) {
+                || !is_string($source->structure_hash) || preg_match('/\A[a-f0-9]{64}\z/D', $source->structure_hash) !== 1
+            ) {
                 throw new \DomainException('COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
             }
             $query = $this->db->createQuery()->select('COALESCE(MAX(version_no), 0)')->from('#__jlms_course_versions')
@@ -310,11 +317,14 @@ final class CurriculumService
             $number = (int)$this->db->setQuery($query)->loadResult() + 1;
             $target = (new CourseVersionCopy($this->db))->copy($actor, $source, $number);
             $this->update('courses', $course, [], $actor);
-            (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record($actor,
+            (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record(
+                $actor,
                 ['id' => $courseId, 'title' => $course->title, 'source_version_id' => $sourceId, 'target_version_id' => $target,
                  'source_version_no' => (int)$source->version_no, 'target_version_no' => $number,
                  'link' => 'index.php?option=com_jlms&view=curriculum&id=' . $courseId . '&version_id=' . $target,
-                 'correlation_id' => bin2hex(random_bytes(16))], 'programmerestore');
+                'correlation_id' => bin2hex(random_bytes(16))],
+                'programmerestore'
+            );
             return $target;
         });
     }
@@ -411,8 +421,10 @@ final class CurriculumService
         return $this->transaction(function () use ($actor, $kind, $table, $input, $courseId, $versionId, $id, $title): int {
             $version = $this->draft($actor, $courseId, $versionId, self::id($input['expected_version_revision'] ?? null));
             $course = $this->row('courses', $courseId);
-            if (($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
-                || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) {
+            if (
+                ($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
+                || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $source = $this->row($table, $id, true);
@@ -494,8 +506,10 @@ final class CurriculumService
             }
         }
         $provider = $input['provider_key'] ?? null;
-        if (!is_string($provider) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $provider)
-            || !is_string($input['source_reference'] ?? null) || !is_string($input['privacy_hash'] ?? '')) {
+        if (
+            !is_string($provider) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $provider)
+            || !is_string($input['source_reference'] ?? null) || !is_string($input['privacy_hash'] ?? '')
+        ) {
             throw new \DomainException('COM_JLMS_SOURCE_INVALID');
         }
         $source = ($this->registryFactory)()->get($provider)->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]));
@@ -539,8 +553,10 @@ final class CurriculumService
         $id = self::id($input['id'] ?? 0, true);
         $title = self::title($input['title'] ?? null);
         $kind = $input['kind'] ?? null;
-        if (!in_array($kind, ['text', 'document', 'audio', 'video'], true) || !is_string($input['body'] ?? '')
-            || strlen($input['body'] ?? '') > 1048576) {
+        if (
+            !in_array($kind, ['text', 'document', 'audio', 'video'], true) || !is_string($input['body'] ?? '')
+            || strlen($input['body'] ?? '') > 1048576
+        ) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         if (!is_string($input['required'] ?? '1') && !is_int($input['required'] ?? 1)) {
@@ -560,8 +576,10 @@ final class CurriculumService
             'params_json' => in_array($kind, ['audio', 'video'], true) ? LessonTranscript::encode($transcript, $kind) : '{}',
             'publish_up' => null, 'publish_down' => null, 'release_after_days' => null];
         $publicPreview = $input['public_preview'] ?? '0';
-        if ((!is_string($publicPreview) && !is_int($publicPreview)) || !in_array((string) $publicPreview, ['0', '1'], true)
-            || ((string) $publicPreview === '1' && $kind !== 'text')) {
+        if (
+            (!is_string($publicPreview) && !is_int($publicPreview)) || !in_array((string) $publicPreview, ['0', '1'], true)
+            || ((string) $publicPreview === '1' && $kind !== 'text')
+        ) {
             throw new \DomainException('COM_JLMS_INVALID_INPUT');
         }
         $fields['preview'] = (int) $publicPreview;
@@ -577,9 +595,11 @@ final class CurriculumService
             $origin = $mode === 'auto' ? 'unmeasured' : 'declared';
             $confirmed = $mode === 'manual' ? $duration !== null : ($mode === 'legacy' && ($input['duration_confirmed'] ?? '') === '1');
             if ($durationProof !== null) {
-                if ($mode !== 'auto' || !hash_equals($this->durationFingerprint($actor, $input), (string)($durationProof['fingerprint'] ?? ''))
+                if (
+                    $mode !== 'auto' || !hash_equals($this->durationFingerprint($actor, $input), (string)($durationProof['fingerprint'] ?? ''))
                     || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($durationProof['duration_ms'] ?? null)
-                    || !in_array($durationProof['origin'] ?? '', ['author_sdk','provider_api'], true)) {
+                    || !in_array($durationProof['origin'] ?? '', ['author_sdk','provider_api'], true)
+                ) {
                     throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
                 }
                 $duration = $durationProof['duration_ms'];
@@ -588,8 +608,10 @@ final class CurriculumService
             }
             $fields['duration_ms'] = $duration;
             $fields['params_json'] = json_encode(['video_duration_confirmed' => $confirmed, 'video_duration_origin' => $origin, 'video_transcript' => $transcript], JSON_THROW_ON_ERROR);
-            if (!is_string($input['provider_key'] ?? null) || !is_string($input['source_reference'] ?? null)
-                || !is_string($input['privacy_hash'] ?? '')) {
+            if (
+                !is_string($input['provider_key'] ?? null) || !is_string($input['source_reference'] ?? null)
+                || !is_string($input['privacy_hash'] ?? '')
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
             $adapter = ($this->registryFactory)()->get($input['provider_key']);
@@ -649,8 +671,10 @@ final class CurriculumService
                         $fields[$field] = $lesson->$field;
                     }
                 }
-                if ($fields['kind'] === 'video' && $fields['provider_key'] !== 'html5' && ($input['duration_mode'] ?? '') === 'auto'
-                    && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson->source_json === $fields['source_json']) {
+                if (
+                    $fields['kind'] === 'video' && $fields['provider_key'] !== 'html5' && ($input['duration_mode'] ?? '') === 'auto'
+                    && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson->source_json === $fields['source_json']
+                ) {
                     $fields['duration_ms'] = $lesson->duration_ms;
                     $fields['params_json'] = $lesson->params_json;
                 }
@@ -795,8 +819,10 @@ final class CurriculumService
                 continue;
             }
             $fieldId = (int) $field->id;
-            if (!$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
-                || !in_array((int) $field->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) {
+            if (
+                !$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
+                || !in_array((int) $field->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $value = $values[$field->name];
@@ -878,8 +904,10 @@ final class CurriculumService
             }
         }
         $kind = $input['kind'] ?? '';
-        if (!in_array($kind, ['module', 'lesson'], true) || !is_array($input['order'] ?? null)
-            || !array_is_list($input['order']) || count($input['order']) > ($kind === 'module' ? 1000 : 5000)) {
+        if (
+            !in_array($kind, ['module', 'lesson'], true) || !is_array($input['order'] ?? null)
+            || !array_is_list($input['order']) || count($input['order']) > ($kind === 'module' ? 1000 : 5000)
+        ) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $course = self::id($input['course_id'] ?? null);
@@ -970,8 +998,12 @@ final class CurriculumService
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             $table = $kind === 'module' ? 'modules' : 'lessons';
-            $items = $this->listRows($table, $kind === 'module' ? 'course_version_id' : 'module_id',
-                $kind === 'module' ? $versionId : (int) $item->module_id, 5001);
+            $items = $this->listRows(
+                $table,
+                $kind === 'module' ? 'course_version_id' : 'module_id',
+                $kind === 'module' ? $versionId : (int) $item->module_id,
+                5001
+            );
             $ids = array_map(static fn ($row): int => (int) $row->id, $items);
             $position = array_search($id, $ids, true);
             $target = $position + ($direction === 'up' ? -1 : 1);

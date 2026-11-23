@@ -18,16 +18,23 @@ final class HtmlView extends BaseHtmlView
         $app = \Joomla\CMS\Factory::getApplication();
         $this->materials = (!empty($this->item['lesson']->prerequisite_blocked) || !empty($this->item['lesson']->schedule_blocked))
             ? ['course' => ['items' => [], 'page' => 0, 'total' => 0], 'lesson' => ['items' => [], 'page' => 0, 'total' => 0]]
-            : $app->bootComponent('com_jlms')->getMaterialService()->learnerLists($app->getIdentity(),
-                $app->getLanguage()->getTag(), $this->item['enrollment_id'], (int) $this->item['lesson']->id,
-                $app->getInput()->getInt('course_material_page', 0), $app->getInput()->getInt('lesson_material_page', 0));
+            : $app->bootComponent('com_jlms')->getMaterialService()->learnerLists(
+                $app->getIdentity(),
+                $app->getLanguage()->getTag(),
+                $this->item['enrollment_id'],
+                (int) $this->item['lesson']->id,
+                $app->getInput()->getInt('course_material_page', 0),
+                $app->getInput()->getInt('lesson_material_page', 0)
+            );
         $this->mutationKey = bin2hex(random_bytes(16));
         $this->getDocument()->setTitle($this->item['title']);
         $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         $this->getDocument()->getWebAssetManager()->useScript('com_jlms.classroomOutline');
-        if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked)
-            && in_array($this->item['lesson']->kind, ['text', 'document', 'audio', 'video'], true)) {
+        if (
+            empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked)
+            && in_array($this->item['lesson']->kind, ['text', 'document', 'audio', 'video'], true)
+        ) {
             $this->getDocument()->addScriptOptions('com_jlms.lessonProgress', [
                 'enrollment' => (int) $this->item['enrollment_id'],
                 'lesson' => (int) $this->item['lesson']->id,

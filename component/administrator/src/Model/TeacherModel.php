@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
 
 use Joomla\CMS\Factory;
@@ -15,14 +16,18 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
     use \Joomla\CMS\Versioning\VersionableModelTrait;
 
     protected function versionHistoryEnabled(string $context): bool
-    { return (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('save_history', 1);
+    {
+        return (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('save_history', 1);
     }
 
     public $typeAlias = 'com_jlms.teacher';
     public function getForm($data = [], $loadData = true)
     {
-        $form = $this->loadForm('com_jlms.teacher', JPATH_ADMINISTRATOR . '/components/com_jlms/forms/teacher.xml',
-            ['control' => 'jform', 'load_data' => $loadData]);
+        $form = $this->loadForm(
+            'com_jlms.teacher',
+            JPATH_ADMINISTRATOR . '/components/com_jlms/forms/teacher.xml',
+            ['control' => 'jform', 'load_data' => $loadData]
+        );
         if ($form && !$this->getCurrentUser()->authorise('jlms.teachers.manage', 'com_jlms')) {
             foreach (['user_id', 'state', 'access', 'language'] as $field) {
                 $form->setFieldAttribute($field, 'disabled', 'true');
@@ -32,7 +37,9 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         }
         return $form;
     }
-    protected function loadFormData() { return Factory::getApplication()->getUserState('com_jlms.edit.teacher.data', []) ?: $this->getItem();
+    protected function loadFormData()
+    {
+        return Factory::getApplication()->getUserState('com_jlms.edit.teacher.data', []) ?: $this->getItem();
     }
     public function getItem($pk = null)
     {
@@ -78,8 +85,10 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                     throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
                 }
                 $scope = 'com_jlms.teacher.' . $id;
-                if (!\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $record)
-                    || ($record->checked_out && (int) $record->checked_out !== (int) $actor->id)) {
+                if (
+                    !\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $record)
+                    || ($record->checked_out && (int) $record->checked_out !== (int) $actor->id)
+                ) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 if ((int) ($data['revision'] ?? 0) !== (int) $record->revision) {
@@ -139,11 +148,13 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 $params['image_alt'] = '';
             }
             $website = trim($params['website'] ?? '');
-            if (strlen($website) > 2048 || ($website !== '' && (!filter_var($website, FILTER_VALIDATE_URL)
+            if (
+                strlen($website) > 2048 || ($website !== '' && (!filter_var($website, FILTER_VALIDATE_URL)
                 || !in_array(strtolower((string) parse_url($website, PHP_URL_SCHEME)), ['http', 'https'], true)
                 || parse_url($website, PHP_URL_USER) !== null || parse_url($website, PHP_URL_PASS) !== null
                 || \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::containsSensitiveParameters($website)
-                || preg_match('/[\x00-\x20\x7f]/', $website)))) {
+                || preg_match('/[\x00-\x20\x7f]/', $website)))
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
             }
             $params['website'] = $website;
@@ -203,16 +214,20 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
     /** Atomic and authorization-checked bulk teacher lifecycle transitions. */
     public function changeStates(array $ids, int $target): bool
     {
-        if (!in_array($target, [-2, 0, 1], true) || count($ids) < 1 || count($ids) > 100
+        if (
+            !in_array($target, [-2, 0, 1], true) || count($ids) < 1 || count($ids) > 100
             || count(array_unique($ids)) !== count($ids)
-            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1))) {
+            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1))
+        ) {
             $this->setError(Text::_('COM_JLMS_TEACHER_INVALID'));
             return false;
         }
         $actor = new User((int) $this->getCurrentUser()->id);
         $actor->clearAccessRights();
-        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
+        if (
+            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.teachers.manage', 'com_jlms')
+        ) {
             $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
@@ -228,9 +243,11 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 $query->setQuery((string) $query . ' FOR UPDATE');
                 $record = $db->setQuery($query)->loadObject()
                     ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
-                if (!$actor->authorise('core.edit', 'com_jlms.teacher.' . $id)
+                if (
+                    !$actor->authorise('core.edit', 'com_jlms.teacher.' . $id)
                     || !$actor->authorise('core.edit.state', 'com_jlms.teacher.' . $id)
-                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)
+                ) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 if ((int) $record->state === -2 && $target === 1) {
@@ -272,10 +289,12 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         }
         $actor = new User((int) $this->getCurrentUser()->id);
         $actor->clearAccessRights();
-        if (!$actor->id || $actor->block
+        if (
+            !$actor->id || $actor->block
             || !$actor->authorise('core.manage', 'com_jlms')
             || !$actor->authorise('jlms.teachers.manage', 'com_jlms')
-            || !$actor->authorise('core.delete', 'com_jlms.teacher.' . $id)) {
+            || !$actor->authorise('core.delete', 'com_jlms.teacher.' . $id)
+        ) {
             $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
@@ -340,8 +359,10 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             foreach ($db->setQuery($foreignKeys)->loadAssocList() as $reference) {
                 $tableName = (string) $reference['TABLE_NAME'];
                 $columnName = (string) $reference['COLUMN_NAME'];
-                if (!preg_match('/^[A-Za-z0-9_]+$/D', $tableName)
-                    || !preg_match('/^[A-Za-z0-9_]+$/D', $columnName)) {
+                if (
+                    !preg_match('/^[A-Za-z0-9_]+$/D', $tableName)
+                    || !preg_match('/^[A-Za-z0-9_]+$/D', $columnName)
+                ) {
                     throw new \DomainException('COM_JLMS_TEACHER_DEPENDENCIES');
                 }
                 $query = $db->createQuery()->select('COUNT(*)')
@@ -370,10 +391,14 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         }
     }
 
-    public function delete(&$pks) { $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE'));
+    public function delete(&$pks)
+    {
+        $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE'));
         return false;
     }
-    public function publish(&$pks, $value = 1) { $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE'));
+    public function publish(&$pks, $value = 1)
+    {
+        $this->setError(Text::_('COM_JLMS_DELETE_NOT_AVAILABLE'));
         return false;
     }
 }

@@ -16,7 +16,8 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue;
  */
 final class CourseVersionChangeNotice
 {
-    public function __construct(private readonly DatabaseInterface $db) {
+    public function __construct(private readonly DatabaseInterface $db)
+    {
     }
 
     /** @return array{queued:int,failed:int,processed:int} */
@@ -58,12 +59,15 @@ final class CourseVersionChangeNotice
                 $pair = (int) $row->source_version_id . ':' . (int) $row->target_version_id;
                 if (!array_key_exists($pair, $cache)) {
                     $cache[$pair] = $changes->significantVersionChange(
-                        (int) $row->source_version_id, (int) $row->target_version_id
+                        (int) $row->source_version_id,
+                        (int) $row->target_version_id
                     );
                 }
-                if (!$cache[$pair]
+                if (
+                    !$cache[$pair]
                     || !MailPreferences::enabled('course_update', $global, (string) $row->course_params)
-                    || !filter_var((string) $row->learner_email, FILTER_VALIDATE_EMAIL)) {
+                    || !filter_var((string) $row->learner_email, FILTER_VALIDATE_EMAIL)
+                ) {
                     continue;
                 }
                 $userParams = json_decode((string) $row->user_params ?: '{}', true);
@@ -75,9 +79,14 @@ final class CourseVersionChangeNotice
                 }
                 $name = trim((string) $row->learner_name);
                 $site = (string) Factory::getApplication()->get('sitename');
-                $queue->enqueue((int) $row->course_id,
+                $queue->enqueue(
+                    (int) $row->course_id,
                     hash('sha256', 'course.version.changed:' . (int) $row->migration_id),
-                    'com_jlms.course.updated', $language, (string) $row->learner_email, $name, [
+                    'com_jlms.course.updated',
+                    $language,
+                    (string) $row->learner_email,
+                    $name,
+                    [
                         'MIGRATION_ID' => (string) (int) $row->migration_id,
                         'TARGET_ENROLLMENT_ID' => (string) (int) $row->target_enrollment_id,
                         'USER_FULLNAME' => $name,
@@ -87,7 +96,9 @@ final class CourseVersionChangeNotice
                         'DASHBOARD_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard',
                         'SITE_NAME' => $site,
                         'SITE_NAME_HTML' => htmlspecialchars($site, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
-                    ], (int) $row->user_id);
+                    ],
+                    (int) $row->user_id
+                );
                 ++$queued;
             } catch (\Throwable) {
                 ++$failed;

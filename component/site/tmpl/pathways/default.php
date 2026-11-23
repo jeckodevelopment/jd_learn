@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
@@ -18,13 +20,13 @@ use Jlms\Component\Jlms\Administrator\Application\PathwayArtwork;
    <div class="jlms-pathway-card__cover">
     <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover['image'])))) ?>" alt="<?= $this->escape($cover['alt']) ?>" loading="lazy" decoding="async">
    </div>
-   <?php endif; ?>
+        <?php endif; ?>
    <div class="jlms-pathway-card__content">
     <p class="jlms-pathway-card__category"><?= $this->escape($item->category_title) ?></p>
     <h2 class="jlms-pathway-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=pathway&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
         <?php if (trim(strip_tags((string) $item->description)) !== '') : ?>
      <p class="jlms-pathway-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr(trim(strip_tags((string) $item->description)), 0, 300)) ?></p>
-    <?php endif; ?>
+        <?php endif; ?>
    </div>
   </article>
  <?php endforeach; ?>

@@ -39,7 +39,12 @@ final class AudioController extends BaseController
             $lesson = CurriculumService::id($this->input->post->get('lesson_id', null, 'RAW'));
             $position = CurriculumService::id($this->input->post->get('position_ms', null, 'RAW'), true);
             $saved = $this->app->bootComponent('com_jlms')->getLearningService()->saveAudioResume(
-                $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $enrollment, $lesson, $position);
+                $this->app->getIdentity(),
+                $this->app->getLanguage()->getTag(),
+                $enrollment,
+                $lesson,
+                $position
+            );
             echo new JsonResponse(['resume_ms' => $saved], null, false, true);
         } catch (\Throwable $error) {
             $code = (int) $error->getCode();
@@ -48,8 +53,10 @@ final class AudioController extends BaseController
                 $key = 'COM_JLMS_INVALID_INPUT';
                 $code = 400;
             }
-            if (!in_array($code, [400, 401, 403, 404, 405, 409, 413], true)
-                || (!preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) && $key !== 'JINVALID_TOKEN')) {
+            if (
+                !in_array($code, [400, 401, 403, 404, 405, 409, 413], true)
+                || (!preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) && $key !== 'JINVALID_TOKEN')
+            ) {
                 Log::add('Audio progress save failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
                 $key = 'COM_JLMS_SAVE_FAILED';
                 $code = 500;

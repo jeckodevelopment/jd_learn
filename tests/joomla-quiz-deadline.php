@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -69,40 +69,52 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function deadlineExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function deadlineExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function deadlineReject(callable $work,int $code,string $message):void{try {
+function deadlineReject(callable $work, int $code, string $message): void
+{
+    try {
         $work();
-
-} catch (\RuntimeException $error) {
-    deadlineExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $error) {
+        deadlineExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+        return;
+    }throw new \RuntimeException($message);
 }
-function deadlineKey():string{$s = bin2hex(random_bytes(16));
+function deadlineKey(): string
+{
+    $s = bin2hex(random_bytes(16));
     return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
 }
-function deadlineUser(string $name,int $group):\Joomla\CMS\User\User{$u = new \Joomla\CMS\User\User();
+function deadlineUser(string $name, int $group): \Joomla\CMS\User\User
+{
+    $u = new \Joomla\CMS\User\User();
     $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
-    if (!$u->bind($d) || !$u->save())throw new \RuntimeException((string)$u->getError());
+    if (!$u->bind($d) || !$u->save()) {
+        throw new \RuntimeException((string)$u->getError());
+    }
     return new \Joomla\CMS\User\User((int)$u->id);
 }
-function deadlineCommand(array $i,string $reason='PRIVATE_DEADLINE_REASON'):array{return [$i['course_id'],$i['lesson_id'],(int)$i['enrollment']->id,(int)$i['attempt']->id,$i['impact']['enrollment_revision'],$i['impact']['attempt_revision'],$i['minutes'],$reason,deadlineKey(),$i['impact']['hash'],true];
+function deadlineCommand(array $i, string $reason = 'PRIVATE_DEADLINE_REASON'): array
+{
+    return [$i['course_id'],$i['lesson_id'],(int)$i['enrollment']->id,(int)$i['attempt']->id,$i['impact']['enrollment_revision'],$i['impact']['attempt_revision'],$i['minutes'],$reason,deadlineKey(),$i['impact']['hash'],true];
 }
 $actor = $app->getIdentity();
 $learning = $component->getLearningService();
 $now = time();
-$audit = static function(\Joomla\CMS\User\User $actor,array $message)use($db):void{(new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($db))->record($actor, $message, 'quizextend');
-
+$audit = static function (\Joomla\CMS\User\User $actor, array $message) use ($db): void {
+    (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($db))->record($actor, $message, 'quizextend');
 };
-$deadline = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), $audit, static function()use(&$now):int{return $now;
-
+$deadline = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), $audit, static function () use (&$now): int {
+    return $now;
 });
-$runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function()use(&$now):int{return $now;
-
+$runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
+    return $now;
 }, $component->getQuizTimeService());
 $f = json_decode(file_get_contents(dirname($root) . '/quiz-attempts-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $course = $f['course_id'];
@@ -120,14 +132,17 @@ if (($argv[2] ?? '') === 'worker') {
             echo "expired\n";
         } else {
             $command = $race['command'];
-            if (($argv[3] ?? '') === 'extend2')$command[8] = deadlineKey();
+            if (($argv[3] ?? '') === 'extend2') {
+                $command[8] = deadlineKey();
+            }
             $deadline->extend($actor, ...$command);
             echo "ok\n";
         }
     } catch (\RuntimeException $error) {
-        if ($error->getCode() !== 409)throw $error;
+        if ($error->getCode() !== 409) {
+            throw $error;
+        }
         echo "conflict\n";
-
     }exit(0);
 }
 if (($argv[2] ?? '') === 'retained') {
@@ -174,7 +189,9 @@ deadlineExpect($raw === $original->rules_snapshot_json, 'frozen rules remain byt
 $compact = $runtime->state($u, 'en-GB', $enrollment, $lesson, $attempt, true);
 deadlineExpect($compact['questions'] === [] && $compact['attempt']['deadline'] === $r['attempt']['deadline'], 'compact synchronization carries the current deadline without question bodies');
 $answers = [];
-foreach ($a['questions']as$q)$answers[$q['id']] = $q['kind'] === 'multiple' ? ['first','second'] : ['first'];
+foreach ($a['questions'] as $q) {
+    $answers[$q['id']] = $q['kind'] === 'multiple' ? ['first','second'] : ['first'];
+}
 $stale = deadlineCommand($deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 1));
 $runtime->mutate($u, 'en-GB', $enrollment, $lesson, $attempt, 1, deadlineKey(), json_encode($answers, JSON_THROW_ON_ERROR), false);
 deadlineReject(fn()=>$deadline->extend($actor, ...$stale), 409, 'concurrent answer save invalidates the administrative preview');
@@ -185,10 +202,10 @@ $i = $deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 1);
 $secondCommand = deadlineCommand($i);
 $deadline->extend($actor, ...$secondCommand);
 deadlineExpect($deadline->extend($actor, ...$command) === $id, 'old successful replay after a later extension remains a no-op');
-$broken = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), static function():void{throw new \RuntimeException('COM_JLMS_QUIZ_EXTEND_AUDIT_FAILED', 503);
-
-}, static function()use(&$now):int{return $now;
-
+$broken = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), static function (): void {
+    throw new \RuntimeException('COM_JLMS_QUIZ_EXTEND_AUDIT_FAILED', 503);
+}, static function () use (&$now): int {
+    return $now;
 });
 $fail = deadlineCommand($deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 1));
 deadlineReject(fn()=>$broken->extend($actor, ...$fail), 503, 'audit failure rolls extension back');
@@ -244,10 +261,12 @@ $bank = json_decode(file_get_contents(dirname($root) . '/quiz-authoring-fixture.
 $cat = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning access'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Untimed extension fixture','alias' => 'untimed-extension-fixture','catid' => $cat,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Untimed guard']))throw new \RuntimeException($model->getError());
+if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Untimed extension fixture','alias' => 'untimed-extension-fixture','catid' => $cat,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Untimed guard'])) {
+    throw new \RuntimeException($model->getError());
+}
 $uc = (int)$model->getState('course.id');
 $uv = $author->createDraft($actor, $uc, 1);
-$scope = static fn():array=>['course_id' => $uc,'version_id' => $uv,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $uv)->loadResult()];
+$scope = static fn(): array=>['course_id' => $uc,'version_id' => $uv,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $uv)->loadResult()];
 $um = $author->saveModule($actor, $scope() + ['id' => 0,'title' => 'Untimed module']);
 $ul = $quizzes->save($actor, $scope() + ['lesson_id' => 0,'revision' => 1,'module_id' => $um,'title' => 'Untimed quiz','required' => '1','assessment' => 'graded','threshold' => '70','max_attempts' => '1','time_minutes' => '0','retry_minutes' => '0','selection_mode' => 'fixed','shuffle_questions' => '0','shuffle_options' => '0','feedback_policy' => 'never','questions' => [['revision_id' => $bank['first_revision'],'points' => '1']]]);
 $publication = $component->getPublicationService();
@@ -258,7 +277,7 @@ $ui = $deadline->editor($actor, $uc, $ul, $ue, $ua['attempt']['id'], 1);
 deadlineExpect($ui['impact']['blocked'] === 'COM_JLMS_QUIZ_EXTEND_UNTIMED', 'untimed attempts have no artificial extension deadline');
 deadlineReject(fn()=>$deadline->extend($actor, ...deadlineCommand($ui)), 409, 'untimed extension is rejected server-side');
 // Two fresh users isolate concurrency tests from the sequential fixture's simulated clock.
-$runRace = static function(string $name,bool $expiry)use($db,$root,$group,$learning,$runtime,$deadline,$actor,$course,$lesson,&$now):void{
+$runRace = static function (string $name, bool $expiry) use ($db, $root, $group, $learning, $runtime, $deadline, $actor, $course, $lesson, &$now): void {
     $now = time();
     $user = deadlineUser($name, $group);
     $e = $learning->start($user, 'en-GB', $course, bin2hex(random_bytes(16)));
@@ -267,20 +286,22 @@ $runRace = static function(string $name,bool $expiry)use($db,$root,$group,$learn
     $race = ['command' => $cmd,'clock' => $expiry ? $a['attempt']['deadline'] : $now];
     file_put_contents(dirname($root) . '/quiz-deadline-race.json', json_encode($race, JSON_THROW_ON_ERROR));
     $workers = [];
-    foreach ($expiry ? ['extend','expire'] : ['extend','extend2']as$mode) {
+    foreach ($expiry ? ['extend','expire'] : ['extend','extend2'] as $mode) {
         $pipes = [];
         $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-        if (!is_resource($process))throw new \RuntimeException('Worker failed');
+        if (!is_resource($process)) {
+            throw new \RuntimeException('Worker failed');
+        }
         $workers[] = [$process,$pipes];
     }
-    foreach ($workers as[$process,$pipes]) {
+    foreach ($workers as [$process,$pipes]) {
         stream_set_timeout($pipes[1], 30);
         $ready = trim((string)fgets($pipes[1]));
         if ($ready !== 'ready') {
             stream_set_blocking($pipes[1], false);
             stream_set_blocking($pipes[2], false);
             $detail = $ready . ' ' . stream_get_contents($pipes[1]) . ' ' . stream_get_contents($pipes[2]);
-            foreach ($workers as[$child,$channels]) {
+            foreach ($workers as [$child,$channels]) {
                 proc_terminate($child);
             }
             throw new \RuntimeException('Worker barrier failed: ' . $detail);
@@ -288,21 +309,21 @@ $runRace = static function(string $name,bool $expiry)use($db,$root,$group,$learn
     }
     $db->transactionStart();
     $db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id=' . $e . ' FOR UPDATE')->loadResult();
-    foreach ($workers as[$process,$pipes]) {
+    foreach ($workers as [$process,$pipes]) {
         fwrite($pipes[0], "go\n");
         fclose($pipes[0]);
-
     }usleep(200000);
     $db->transactionCommit();
     $results = [];
-    foreach ($workers as[$process,$pipes]) {
+    foreach ($workers as [$process,$pipes]) {
         $out = trim(stream_get_contents($pipes[1]));
         $err = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        if (proc_close($process) !== 0)throw new \RuntimeException($err . $out);
+        if (proc_close($process) !== 0) {
+            throw new \RuntimeException($err . $out);
+        }
         $results[] = $out;
-
     }sort($results);
     deadlineExpect($results === ($expiry ? ['conflict','expired'] : ['conflict','ok']), $expiry ? 'expiry and extension cannot reopen an elapsed attempt' : 'two concurrent extensions from one preview add time once');
     $status = $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->loadResult();

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -72,7 +72,8 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
-function editorialExpect(bool $condition, string $message): void {
+function editorialExpect(bool $condition, string $message): void
+{
     global $checks;
     if (!$condition) {
         throw new RuntimeException($message);
@@ -145,8 +146,10 @@ editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision
 // the same guarded CourseModel save without changing the active teaching version.
 PluginHelper::importPlugin('system', 'fields');
 $historyFieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
-if (!$historyFieldModel->save(['id' => 0,'context' => 'com_jlms.course','title' => 'History reference','name' => 'history-reference','type' => 'text',
-    'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'default_value' => '','description' => '','params' => [],'fieldparams' => ['filter' => 'string']])) {
+if (
+    !$historyFieldModel->save(['id' => 0,'context' => 'com_jlms.course','title' => 'History reference','name' => 'history-reference','type' => 'text',
+    'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'default_value' => '','description' => '','params' => [],'fieldparams' => ['filter' => 'string']])
+) {
     throw new RuntimeException('Native course history field fixture failed: ' . $historyFieldModel->getError());
 }
 $historyField = (int)$historyFieldModel->getState('field.id');
@@ -170,12 +173,16 @@ $assignedVersion = (int)$db->setQuery('SELECT current_version_id FROM #__jlms_co
 $assignedLearners = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList();
 editorialExpect($model->loadHistory((int)$targetHistory->version_id), 'Native history restores course custom fields through the guarded save');
 editorialExpect($fieldValue() === 'HISTORY_FIELD_ORIGINAL', 'Content History restores the custom field value');
-editorialExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $assignedVersion
+editorialExpect(
+    (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $assignedVersion
     && $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList() === $assignedLearners,
-    'Content History field restore preserves the active teaching version and learner assignments');
+    'Content History field restore preserves the active teaching version and learner assignments'
+);
 $item = $model->getItem($course);
-editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision,'title' => 'Editorially updated course']),
-    'History fixture restores the shared course title expected by later HTTP checks');
+editorialExpect(
+    $model->save(['id' => $course,'revision' => (int)$item->revision,'title' => 'Editorially updated course']),
+    'History fixture restores the shared course title expected by later HTTP checks'
+);
 
 // Copy material associations and native MP4 references without copying blobs or progress.
 foreach (['html5-fixture','materials-fixture'] as $alias) {

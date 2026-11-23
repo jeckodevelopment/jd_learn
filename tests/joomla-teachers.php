@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -71,10 +71,11 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
-function teacherExpect(bool $ok,string $message):void { global $checks;
+function teacherExpect(bool $ok, string $message): void
+{
+    global $checks;
     if (!$ok) {
         throw new RuntimeException($message);
-
     } $checks++;
 }
 $teacherListTemplate = file_get_contents(dirname(__DIR__) . '/component/administrator/tmpl/teachers/default.php');
@@ -100,24 +101,32 @@ teacherExpect($teacherModel->save($teacherBase + ['params_json' => '{"injected":
 $public = (int)$teacherModel->getState('teacher.id');
 $teacher = $teacherModel->getItem($public);
 $storedTeacherBio = (string)$db->setQuery('SELECT bio FROM #__jlms_teachers WHERE id=' . $public)->loadResult();
-teacherExpect(str_contains($storedTeacherBio, '<strong>biography</strong>')
+teacherExpect(
+    str_contains($storedTeacherBio, '<strong>biography</strong>')
     && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', $storedTeacherBio),
-    'public teacher biography retains safe formatting but strips scripts, arbitrary embeds and active URLs');
+    'public teacher biography retains safe formatting but strips scripts, arbitrary embeds and active URLs'
+);
 // SEC-P1: the session identity loaded before a block must never authorize
 // a teacher edit, including links and forms that call the shared helper.
 teacherExpect(TeacherProfiles::canEdit($actor, $teacher), 'teacher profile author may edit before account block');
 $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . (int)$actor->id)->execute();
 try {
-    teacherExpect(!TeacherProfiles::canEdit($actor, $teacher),
-        'blocked Joomla account cannot edit teacher through a stale session identity');
+    teacherExpect(
+        !TeacherProfiles::canEdit($actor, $teacher),
+        'blocked Joomla account cannot edit teacher through a stale session identity'
+    );
 } finally {
     $db->setQuery('UPDATE #__users SET block=0 WHERE id=' . (int)$actor->id)->execute();
 }
-teacherExpect(TeacherProfiles::canEdit($actor, $teacher),
-    'teacher profile edit authorization restores after account unblocked');
+teacherExpect(
+    TeacherProfiles::canEdit($actor, $teacher),
+    'teacher profile edit authorization restores after account unblocked'
+);
 teacherExpect((int)$teacher->revision === 1 && (int)$teacher->created_by === (int)$actor->id && !str_contains($teacher->params_json, 'injected'), 'Revision ownership and allowlisted params persisted');
-teacherExpect(($teacher->website ?? null) === 'https://example.invalid/teacher',
-    'SECDEV-03: harmless public teacher website remains available');
+teacherExpect(
+    ($teacher->website ?? null) === 'https://example.invalid/teacher',
+    'SECDEV-03: harmless public teacher website remains available'
+);
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('com_jlms.teacher.' . $public);
 $parent = (int)$db->setQuery('SELECT asset_id FROM #__categories WHERE id=' . $teacherCategory)->loadResult();
@@ -142,12 +151,14 @@ teacherExpect($teacherNoticeCount() === 1, 'A newly assigned linked Joomla accou
 $teacherNotice = $db->setQuery("SELECT recipient_user_id,recipient_email,template_data FROM #__jlms_mail_queue WHERE course_id="
     . $course . " AND template_id='com_jlms.teacher.assigned'")->loadObject();
 $teacherMailData = json_decode((string) $teacherNotice->template_data, true);
-teacherExpect((int) $teacherNotice->recipient_user_id === (int) $actor->id
+teacherExpect(
+    (int) $teacherNotice->recipient_user_id === (int) $actor->id
     && (string) $teacherNotice->recipient_email === (string) $actor->email
     && ($teacherMailData['TEACHER_NAME'] ?? '') === 'Original public teacher'
     && ($teacherMailData['COURSE_DESCRIPTION'] ?? '') === 'Course presentation for the publication fixture.'
     && !str_contains((string) $teacherNotice->template_data, 'PRIVATE_TEACHER_BIO'),
-    'Teacher notification supplies scoped course/profile context to the linked Joomla identity without disclosing unrelated details');
+    'Teacher notification supplies scoped course/profile context to the linked Joomla identity without disclosing unrelated details'
+);
 
 $directory = $factory->createModel('Teachers', 'Administrator', ['ignore_request' => true]);
 $directory->setCurrentUser($actor);
@@ -155,13 +166,13 @@ $directory->setCurrentUser($actor);
 if (!is_array($teacherRows)) {
     throw new RuntimeException('Teacher directory listing failed: ' . (string) $directory->getError());
 }
-$publicRow = array_values(array_filter($teacherRows, static fn($row):bool=>(int)$row->id === $public));
+$publicRow = array_values(array_filter($teacherRows, static fn($row): bool=>(int)$row->id === $public));
 teacherExpect(count($publicRow) === 1 && (int)$publicRow[0]->course_count === 1, 'Teacher list reports the number of assigned courses in the current editable course scope');
 $courseList = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
 $courseList->setCurrentUser($actor);
 $courseList->setState('list.limit', 100);
 $courseList->setState('filter.teacher_id', (string)$public);
-teacherExpect(array_map(static fn($row):int=>(int)$row->id, $courseList->getItems()) === [$course], 'Native course list filters by assigned teacher');
+teacherExpect(array_map(static fn($row): int=>(int)$row->id, $courseList->getItems()) === [$course], 'Native course list filters by assigned teacher');
 $courseList->setState('filter.teacher_id', '1 OR 1=1');
 teacherExpect($courseList->getItems() === [], 'Malformed teacher filter cannot broaden the course list');
 $courseData['revision'] = 2;
@@ -173,11 +184,13 @@ foreach ([[999999],[$public,$public],['1 OR 1=1'],[['bad']]] as $bad) {
     teacherExpect(TeacherProfiles::selected($db, $course) === [$public,$private] && (int)$courseModel->getItem($course)->revision === 3, 'Denied assignment preserves course and relations');
 }
 $edit = array_replace($teacherBase, ['id' => $public]);
-foreach ([['website' => 'javascript:alert(1)'],['website' => 'https://user:pass@example.invalid/'],
+foreach (
+    [['website' => 'javascript:alert(1)'],['website' => 'https://user:pass@example.invalid/'],
     ['website' => 'https://example.invalid/?accessToken=TEST_CREDENTIAL'],
     ['website' => 'https://example.invalid/path#clientSecret=TEST_CREDENTIAL'],
     ['website' => 'https://example.invalid/?api_key=TEST_CREDENTIAL'],
-    ['website' => ['https://example.invalid/']],['state' => '-1'],['image_alt' => ['array']],['access' => ['array']],['user_id' => 99999999],['bio' => str_repeat('a', 65536)]] as $bad) {
+    ['website' => ['https://example.invalid/']],['state' => '-1'],['image_alt' => ['array']],['access' => ['array']],['user_id' => 99999999],['bio' => str_repeat('a', 65536)]] as $bad
+) {
     teacherExpect(!$teacherModel->save(array_replace($edit, $bad)), 'Invalid teacher profile rejected');
     teacherExpect((int)$teacherModel->getItem($public)->revision === 1, 'Invalid profile retains revision');
 }
@@ -185,7 +198,7 @@ $teacherModel->setCurrentUser(new \Joomla\CMS\User\User());
 teacherExpect(!$teacherModel->save($edit), 'Guest cannot manage teachers');
 $teacherModel->setCurrentUser($actor);
 $version = $authoring->createDraft($actor, $course, 3);
-$rev = static fn():int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
+$rev = static fn(): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
 $module = $authoring->saveModule($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev(),'title' => 'Teacher chapter']);
 $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev(),'module_id' => $module,'title' => 'Teacher lesson','kind' => 'text','required' => '1','body' => '<p>TEACHER_PRIVATE_LESSON</p>']);
 $withdrawn = (object)['id' => $public,'state' => 0];
@@ -244,7 +257,6 @@ $directory->setCurrentUser($learner);
 try {
     $items = $directory->getItems();
     teacherExpect($items === false && $directory->getError() !== null, 'Native list model rejects unauthorised directory reads');
-
 } catch (RuntimeException $denied) {
     teacherExpect($denied->getCode() === 403, 'Authenticated viewer cannot read administrative teacher directory');
 }
@@ -270,57 +282,95 @@ teacherExpect($snapshot === $db->setQuery('SELECT presentation_json,structure_ha
 $beforeCourseTeachers = TeacherProfiles::selected($db, $course);
 $beforeUsers = $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc();
 $beforeSnapshot = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
-teacherExpect($teacherModel->changeStates([$public, $private], -2),
-    'bulk teacher trash succeeds without modifying associations');
-teacherExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id IN (' . $public . ',' . $private . ') AND state=-2')->loadResult() === 2,
-    'both teachers are trashed');
-teacherExpect(TeacherProfiles::available($db, $guest, 'en-GB', [$public, $private]) === [],
-    'trashed teacher profiles are excluded from public visibility');
-teacherExpect(!$teacherModel->changeStates([$public, 999999999], 0),
-    'mixed selection with absent teacher is rolled back atomically');
-teacherExpect((int) $db->setQuery('SELECT state FROM #__jlms_teachers WHERE id=' . $public)->loadResult() === -2,
-    'rollback leaves originally trashed teacher unchanged');
-teacherExpect(!$teacherModel->changeStates([$public], 1),
-    'direct republication from trash is rejected');
-teacherExpect($teacherModel->changeStates([$public, $private], 0),
-    'bulk teacher restoration succeeds to unpublished only');
-teacherExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id IN (' . $public . ',' . $private . ') AND state=0')->loadResult() === 2,
-    'restoration does not republish teacher profiles');
-teacherExpect(TeacherProfiles::selected($db, $course) === $beforeCourseTeachers,
-    'trashed and restored teachers retain all course associations');
-teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $beforeUsers,
-    'teacher lifecycle never changes linked Joomla user status');
-teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $beforeSnapshot,
-    'teacher lifecycle preserves immutable course snapshot');
-teacherExpect($teacherModel->changeStates([$public, $private], 1),
-    'teachers are explicitly republished after restoration');
+teacherExpect(
+    $teacherModel->changeStates([$public, $private], -2),
+    'bulk teacher trash succeeds without modifying associations'
+);
+teacherExpect(
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id IN (' . $public . ',' . $private . ') AND state=-2')->loadResult() === 2,
+    'both teachers are trashed'
+);
+teacherExpect(
+    TeacherProfiles::available($db, $guest, 'en-GB', [$public, $private]) === [],
+    'trashed teacher profiles are excluded from public visibility'
+);
+teacherExpect(
+    !$teacherModel->changeStates([$public, 999999999], 0),
+    'mixed selection with absent teacher is rolled back atomically'
+);
+teacherExpect(
+    (int) $db->setQuery('SELECT state FROM #__jlms_teachers WHERE id=' . $public)->loadResult() === -2,
+    'rollback leaves originally trashed teacher unchanged'
+);
+teacherExpect(
+    !$teacherModel->changeStates([$public], 1),
+    'direct republication from trash is rejected'
+);
+teacherExpect(
+    $teacherModel->changeStates([$public, $private], 0),
+    'bulk teacher restoration succeeds to unpublished only'
+);
+teacherExpect(
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id IN (' . $public . ',' . $private . ') AND state=0')->loadResult() === 2,
+    'restoration does not republish teacher profiles'
+);
+teacherExpect(
+    TeacherProfiles::selected($db, $course) === $beforeCourseTeachers,
+    'trashed and restored teachers retain all course associations'
+);
+teacherExpect(
+    $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $beforeUsers,
+    'teacher lifecycle never changes linked Joomla user status'
+);
+teacherExpect(
+    $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $beforeSnapshot,
+    'teacher lifecycle preserves immutable course snapshot'
+);
+teacherExpect(
+    $teacherModel->changeStates([$public, $private], 1),
+    'teachers are explicitly republished after restoration'
+);
 // LCM-04: permanent removal is a deliberate, single-record action with a
 // conservative dependency gate. Native users and course history are immutable.
 $linkedBefore = $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc();
 $versionBefore = $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
-teacherExpect(!$teacherModel->purgeUnreferenced($public),
-    'published teacher profile cannot be deleted permanently');
+teacherExpect(
+    !$teacherModel->purgeUnreferenced($public),
+    'published teacher profile cannot be deleted permanently'
+);
 teacherExpect($teacherModel->changeStates([$public], -2), 'assigned teacher can be trashed');
-teacherExpect(!$teacherModel->purgeUnreferenced($public),
-    'teacher with associated courses cannot be deleted permanently');
-teacherExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $public)->loadResult() === 1,
-    'blocked deletion retains teacher profile');
+teacherExpect(
+    !$teacherModel->purgeUnreferenced($public),
+    'teacher with associated courses cannot be deleted permanently'
+);
+teacherExpect(
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $public)->loadResult() === 1,
+    'blocked deletion retains teacher profile'
+);
 teacherExpect(!$teacherModel->purgeUnreferenced(0), 'invalid teacher purge ID denied');
 // Even after an association is removed, the immutable published version
 // must prevent removing a previously published teacher identity.
 $db->setQuery('DELETE FROM #__jlms_course_teachers WHERE course_id=' . $course . ' AND teacher_id=' . $public)->execute();
-teacherExpect(!$teacherModel->purgeUnreferenced($public),
-    'frozen teacher snapshot independently blocks destructive deletion');
+teacherExpect(
+    !$teacherModel->purgeUnreferenced($public),
+    'frozen teacher snapshot independently blocks destructive deletion'
+);
 $db->setQuery('INSERT INTO #__jlms_course_teachers (course_id,teacher_id,ordering) VALUES ('
     . $course . ',' . $public . ',0)')->execute();
 teacherExpect($teacherModel->changeStates([$public], 0)
     && $teacherModel->changeStates([$public], 1), 'published teacher fixture restored');
-teacherExpect(TeacherProfiles::selected($db, $course) === $beforeCourseTeachers,
-    'protected deletion does not disturb teacher ordering');
-teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $linkedBefore,
-    'deletion attempt never removes or blocks linked Joomla account');
-teacherExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $versionBefore,
-    'frozen presentation remains byte-for-byte identical');
+teacherExpect(
+    TeacherProfiles::selected($db, $course) === $beforeCourseTeachers,
+    'protected deletion does not disturb teacher ordering'
+);
+teacherExpect(
+    $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $linkedBefore,
+    'deletion attempt never removes or blocks linked Joomla account'
+);
+teacherExpect(
+    $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $versionBefore,
+    'frozen presentation remains byte-for-byte identical'
+);
 
 $linkedUserId = (int)$db->setQuery('SELECT id FROM #__users WHERE id <> ' . (int)$actor->id . ' ORDER BY id LIMIT 1')->loadResult();
 teacherExpect($linkedUserId > 0, 'second Joomla user exists to test independent teacher account dependency');
@@ -335,19 +385,27 @@ teacherExpect($emptyTeacherId > 0, 'empty teacher fixture created');
 teacherExpect($teacherModel->changeStates([$emptyTeacherId], -2), 'empty teacher placed in trash');
 // LCM-04: linking a native Joomla account forbids destructive purge even
 // when there are no course assignments or frozen presentation references.
-teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
-    'unassigned trashed teacher linked to a Joomla account cannot be purged');
-teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
-    'linked teacher profile survives denied purge');
+teacherExpect(
+    !$teacherModel->purgeUnreferenced($emptyTeacherId),
+    'unassigned trashed teacher linked to a Joomla account cannot be purged'
+);
+teacherExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
+    'linked teacher profile survives denied purge'
+);
 $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $linkedUserId)->execute();
 try {
-    teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
-        'blocked native Joomla account must not make linked teacher purgable');
+    teacherExpect(
+        !$teacherModel->purgeUnreferenced($emptyTeacherId),
+        'blocked native Joomla account must not make linked teacher purgable'
+    );
 } finally {
     $db->setQuery('UPDATE #__users SET block=' . $linkedUserBlock . ' WHERE id=' . $linkedUserId)->execute();
 }
-teacherExpect((int)$db->setQuery('SELECT user_id FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === $linkedUserId,
-    'denied purges retain teacher-to-Joomla-account reference');
+teacherExpect(
+    (int)$db->setQuery('SELECT user_id FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === $linkedUserId,
+    'denied purges retain teacher-to-Joomla-account reference'
+);
 // Explicitly unlink only the disposable teacher fixture to allow purging.
 $db->setQuery('UPDATE #__jlms_teachers SET user_id=NULL WHERE id=' . $emptyTeacherId)->execute();
 
@@ -357,10 +415,14 @@ $association = (object)[
     'key' => md5('jd-learn-ci-teacher-' . $emptyTeacherId),
 ];
 $db->insertObject('#__associations', $association);
-teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
-    'multilingual association blocks permanent teacher deletion');
-teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
-    'blocked teacher purge preserves profile');
+teacherExpect(
+    !$teacherModel->purgeUnreferenced($emptyTeacherId),
+    'multilingual association blocks permanent teacher deletion'
+);
+teacherExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 1,
+    'blocked teacher purge preserves profile'
+);
 $db->setQuery("DELETE FROM #__associations WHERE context='com_jlms.teacher' AND id=" . $emptyTeacherId)->execute();
 // LCM-04: declared third-party FK must block deletion even with CASCADE.
 $externalTable = '#__jlms_ci_teacher_fk_guard';
@@ -371,20 +433,32 @@ $db->setQuery('CREATE TABLE ' . $db->quoteName($externalTable)
 try {
     $db->setQuery('INSERT INTO ' . $db->quoteName($externalTable)
         . ' (teacher_id,note) VALUES (' . (int)$emptyTeacherId . ", 'must-survive')")->execute();
-    teacherExpect(!$teacherModel->purgeUnreferenced($emptyTeacherId),
-        'external FK blocks teacher purge even with ON DELETE CASCADE');
-    teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . (int)$emptyTeacherId)->loadResult() === 1,
-        'external reference denial preserves teacher');
-    teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM ' . $db->quoteName($externalTable))->loadResult() === 1,
-        'external reference denial preserves integration history');
+    teacherExpect(
+        !$teacherModel->purgeUnreferenced($emptyTeacherId),
+        'external FK blocks teacher purge even with ON DELETE CASCADE'
+    );
+    teacherExpect(
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . (int)$emptyTeacherId)->loadResult() === 1,
+        'external reference denial preserves teacher'
+    );
+    teacherExpect(
+        (int)$db->setQuery('SELECT COUNT(*) FROM ' . $db->quoteName($externalTable))->loadResult() === 1,
+        'external reference denial preserves integration history'
+    );
 } finally {
     $db->setQuery('DROP TABLE IF EXISTS ' . $db->quoteName($externalTable))->execute();
 }
-teacherExpect($teacherModel->purgeUnreferenced($emptyTeacherId),
-    'empty unreferenced trashed teacher may be permanently deleted: ' . $teacherModel->getError());
-teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 0,
-    'empty teacher profile record removed');
-teacherExpect($db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $linkedBefore,
-    'empty profile deletion never touches Joomla accounts');
+teacherExpect(
+    $teacherModel->purgeUnreferenced($emptyTeacherId),
+    'empty unreferenced trashed teacher may be permanently deleted: ' . $teacherModel->getError()
+);
+teacherExpect(
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_teachers WHERE id=' . $emptyTeacherId)->loadResult() === 0,
+    'empty teacher profile record removed'
+);
+teacherExpect(
+    $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $linkedBefore,
+    'empty profile deletion never touches Joomla accounts'
+);
 file_put_contents($fixture, json_encode(['course' => $course,'version' => $version,'ids' => [$public,$private],'public' => $public,'private' => $private,'teacher_category' => $teacherCategory,'snapshot' => $snapshot], JSON_THROW_ON_ERROR));
 echo json_encode(['teacher_checks' => $checks,'status' => 'passed']) . PHP_EOL;

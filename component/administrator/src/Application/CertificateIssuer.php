@@ -13,7 +13,8 @@ use Joomla\CMS\Log\Log;
 /** Creates one immutable certificate issuance record for a persisted course completion. */
 final class CertificateIssuer
 {
-    public function __construct(private readonly DatabaseInterface $db) {
+    public function __construct(private readonly DatabaseInterface $db)
+    {
     }
 
     public function issueForCompletedEnrollment(int $enrollmentId, int $courseVersionId, string $completedAt, bool $explicitAdminRecovery = false): bool
@@ -29,8 +30,10 @@ final class CertificateIssuer
             return false;
         }
         $rules = json_decode((string) $row->rules_json, true, 32, JSON_THROW_ON_ERROR);
-        if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
-            || (!$explicitAdminRecovery && ($rules['certificate_enabled'] ?? false) !== true)) {
+        if (
+            !is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
+            || (!$explicitAdminRecovery && ($rules['certificate_enabled'] ?? false) !== true)
+        ) {
             return false;
         }
         $params = ComponentHelper::getParams('com_jlms');
@@ -98,7 +101,8 @@ final class CertificateIssuer
                 (string) $row->name,
                 ['USER_FULLNAME' => (string) $row->name, 'COURSE_TITLE' => (string) ($row->title_snapshot ?: $row->title),
                     'SITE_NAME' => (string) \Joomla\CMS\Factory::getConfig()->get('sitename', ''),
-                    'CERTIFICATE_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard'], (int) $row->user_id
+                    'CERTIFICATE_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard'],
+                (int) $row->user_id
             );
         } catch (\Throwable $error) {
             Log::add('Could not enqueue a certificate availability email.', Log::WARNING, 'com_jlms');

@@ -10,16 +10,17 @@ use Jlms\Contracts\Video\PlaybackContext;
 use Jlms\Contracts\Video\MetadataContext;
 
 $checks = 0;
-function cfExpect(bool $value, string $message): void { global $checks;
+function cfExpect(bool $value, string $message): void
+{
+    global $checks;
     if (!$value) {
         throw new \RuntimeException($message);
-
     } $checks++;
 }
-function cfDenied(callable $work, string $key): void {
+function cfDenied(callable $work, string $key): void
+{
     try {
         $work();
-
     } catch (\RuntimeException $error) {
         cfExpect($error->getMessage() === $key, $key . ': received ' . $error->getMessage());
         return;

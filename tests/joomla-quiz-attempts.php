@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -69,25 +69,34 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function attemptExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function attemptExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function attemptReject(callable $call,int $code,string $message):void{try {
+function attemptReject(callable $call, int $code, string $message): void
+{
+    try {
         $call();
-
-} catch (\RuntimeException $error) {
-    attemptExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $error) {
+        attemptExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+        return;
+    }throw new \RuntimeException($message);
 }
-function attemptKey():string{$s = bin2hex(random_bytes(16));
+function attemptKey(): string
+{
+    $s = bin2hex(random_bytes(16));
     return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
 }
-function attemptAnswers(array $dto,bool $correct=true):string{
+function attemptAnswers(array $dto, bool $correct = true): string
+{
     $a = [];
-    foreach ($dto['questions']as$q)$a[$q['id']] = $correct ? ($q['kind'] === 'multiple' ? ['first','second'] : ['first']) : [];
+    foreach ($dto['questions'] as $q) {
+        $a[$q['id']] = $correct ? ($q['kind'] === 'multiple' ? ['first','second'] : ['first']) : [];
+    }
     return json_encode($a, JSON_THROW_ON_ERROR);
 }
 $learning = $component->getLearningService();
@@ -98,8 +107,8 @@ $actor = $app->getIdentity();
 $student = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult());
 $other = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerother'")->loadResult());
 $now = time();
-$service = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function()use(&$now):int{return $now;
-
+$service = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
+    return $now;
 }, $component->getQuizTimeService());
 $fixturePath = dirname($root) . '/quiz-attempts-fixture.json';
 if (($argv[2] ?? '') === 'worker') {
@@ -126,10 +135,12 @@ $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learni
 $group = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learning entitlement'")->loadResult();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Quiz runtime fixture','alias' => 'quiz-runtime-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Quiz runtime']))throw new \RuntimeException($model->getError());
+if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Quiz runtime fixture','alias' => 'quiz-runtime-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Quiz runtime'])) {
+    throw new \RuntimeException($model->getError());
+}
 $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
-$scope = static fn():array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
+$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Quiz runtime chapter']);
 $base = ['lesson_id' => 0,'revision' => 1,'module_id' => $module,'title' => 'Graded quiz','required' => '1','assessment' => 'graded','threshold' => '60.01','max_attempts' => '3','time_minutes' => '1','retry_minutes' => '1','selection_mode' => 'random','draw_count' => '2','shuffle_questions' => '1','shuffle_options' => '1','feedback_policy' => 'pass_or_exhausted','questions' => [['revision_id' => $bank['first_revision'],'points' => '3'],['revision_id' => $bank['other_revision'],'points' => '2']]];
 $lesson = $quizzes->save($actor, $scope() + $base);
@@ -148,7 +159,7 @@ $pre = $service->state($student, 'en-GB', $enrollment, $lesson);
 attemptExpect($pre['can_start'] && $pre['questions'] === [] && $pre['used_attempts'] === 0, 'reading before start does not consume attempt or expose questions');
 attemptReject(fn()=>$service->start($other, 'en-GB', $enrollment, $lesson, attemptKey()), 404, 'foreign enrollment rejected');
 attemptReject(fn()=>$service->start(new \Joomla\CMS\User\User(), 'en-GB', $enrollment, $lesson, attemptKey()), 401, 'guest rejected');
-$setWindow = static function(string $table,int $recordId,string $column,mixed $value) use ($db):void {
+$setWindow = static function (string $table, int $recordId, string $column, mixed $value) use ($db): void {
     $record = (object)['id' => $recordId,$column => $value];
     $db->updateObject($table, $record, 'id', true);
 };
@@ -156,24 +167,33 @@ $setWindow = static function(string $table,int $recordId,string $column,mixed $v
 // not an implicit truncated duration. No denied request consumes an attempt.
 $nearClose = gmdate('Y-m-d H:i:s', $now + 30);
 $editionId = (int)$db->setQuery('SELECT edition_id FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
-foreach ([
+foreach (
+    [
     ['#__jlms_enrollments',$enrollment,'ends_at'],
     ['#__jlms_editions',$editionId,'ends_at'],
     ['#__jlms_lessons',$lesson,'publish_down'],
     ['#__jlms_courses',$course,'publish_down'],
-] as [$table,$recordId,$column]) {
+    ] as [$table,$recordId,$column]
+) {
     $original = $db->setQuery('SELECT ' . $column . ' FROM ' . $table . ' WHERE id=' . (int)$recordId)->loadResult();
     $setWindow($table, $recordId, $column, $nearClose);
     $preview = $service->state($student, 'en-GB', $enrollment, $lesson);
-    attemptExpect(!$preview['can_start'] && $preview['start_window_insufficient']
+    attemptExpect(
+        !$preview['can_start'] && $preview['start_window_insufficient']
         && $preview['start_window_close_at'] === $now + 30
         && $preview['remaining_window_seconds'] === 30
         && $preview['next_time_seconds'] === 60,
-        'STA-02 refusal previews exactly 30/60 seconds for ' . $table . '.' . $column);
-    attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()), 403,
-        'STA-02 refuses a truncated attempt for ' . $table . '.' . $column);
-    attemptExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id=' . $enrollment)->loadResult() === 0,
-        'STA-02 refused start consumes no attempt for ' . $table . '.' . $column);
+        'STA-02 refusal previews exactly 30/60 seconds for ' . $table . '.' . $column
+    );
+    attemptReject(
+        fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()),
+        403,
+        'STA-02 refuses a truncated attempt for ' . $table . '.' . $column
+    );
+    attemptExpect(
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id=' . $enrollment)->loadResult() === 0,
+        'STA-02 refused start consumes no attempt for ' . $table . '.' . $column
+    );
     $setWindow($table, $recordId, $column, $original);
 }
 // Course calendar starts_at/ends_at is a separate normalized availability gate.
@@ -182,21 +202,30 @@ $calendarParams = json_decode($oldParams, true, 32, JSON_THROW_ON_ERROR);
 $calendarParams['calendar'] = array_replace($calendarParams['calendar'] ?? ['_schema' => 1,'timezone' => 'UTC'], ['ends_at' => $nearClose]);
 $setWindow('#__jlms_courses', $course, 'params_json', json_encode($calendarParams, JSON_THROW_ON_ERROR));
 $calendarPreview = $service->state($student, 'en-GB', $enrollment, $lesson);
-attemptExpect(!$calendarPreview['can_start'] && $calendarPreview['start_window_insufficient']
+attemptExpect(
+    !$calendarPreview['can_start'] && $calendarPreview['start_window_insufficient']
     && $calendarPreview['start_window_close_at'] === $now + 30,
-    'STA-02 respects course calendar end and explains rejection before start');
-attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()), 403,
-    'STA-02 cannot start beyond course calendar end');
+    'STA-02 respects course calendar end and explains rejection before start'
+);
+attemptReject(
+    fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()),
+    403,
+    'STA-02 cannot start beyond course calendar end'
+);
 $setWindow('#__jlms_courses', $course, 'params_json', $oldParams);
 // At the exact minute boundary full duration fits and is not shortened.
 $setWindow('#__jlms_enrollments', $enrollment, 'ends_at', gmdate('Y-m-d H:i:s', $now + 60));
 $exact = $service->state($student, 'en-GB', $enrollment, $lesson);
-attemptExpect($exact['can_start'] && !$exact['start_window_insufficient']
+attemptExpect(
+    $exact['can_start'] && !$exact['start_window_insufficient']
     && $exact['remaining_window_seconds'] === 60,
-    'STA-02 exact-duration boundary remains a valid start');
+    'STA-02 exact-duration boundary remains a valid start'
+);
 $setWindow('#__jlms_enrollments', $enrollment, 'ends_at', null);
-attemptExpect($service->state($student, 'en-GB', $enrollment, $lesson)['can_start'],
-    'STA-02 restores normal start when all closing limits are removed');
+attemptExpect(
+    $service->state($student, 'en-GB', $enrollment, $lesson)['can_start'],
+    'STA-02 restores normal start when all closing limits are removed'
+);
 $key = attemptKey();
 $a = $service->start($student, 'en-GB', $enrollment, $lesson, $key);
 $aid = $a['attempt']['id'];
@@ -223,17 +252,25 @@ try {
     attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, $answers, false), 403, 'current access checked even on save replay');
     attemptReject(fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), $answers, true), 403, 'revoked user cannot submit open quiz');
     attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, $key), 403, 'current access checked on start replay');
-    attemptExpect($db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc() === $beforeRevokeAttempt,
-        'revoked quiz operations preserve score revision and attempt state');
-    attemptExpect($db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList() === $beforeRevokeAnswers,
-        'previously saved answers survive access revocation');
+    attemptExpect(
+        $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc() === $beforeRevokeAttempt,
+        'revoked quiz operations preserve score revision and attempt state'
+    );
+    attemptExpect(
+        $db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList() === $beforeRevokeAnswers,
+        'previously saved answers survive access revocation'
+    );
 } finally {
     \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);
 }
-attemptExpect($service->state($student, 'en-GB', $enrollment, $lesson)['questions'][0]['selected'] !== [],
-    'restoring the entitlement restores saved answers in the active quiz');
+attemptExpect(
+    $service->state($student, 'en-GB', $enrollment, $lesson)['questions'][0]['selected'] !== [],
+    'restoring the entitlement restores saved answers in the active quiz'
+);
 $partial = [];
-foreach ($a['questions']as$q)$partial[$q['id']] = ['first'];
+foreach ($a['questions'] as $q) {
+    $partial[$q['id']] = ['first'];
+}
 $failed = $service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), json_encode($partial, JSON_THROW_ON_ERROR), true);
 attemptExpect($failed['attempt']['score_points'] === 3 && !$failed['attempt']['passed'] && !$failed['feedback_available'] && !$failed['course_completed'], '60 percent fails exact 60.01 threshold; partial multiple selection earns zero and feedback stays closed');
 attemptReject(fn()=>$service->start($student, 'en-GB', $enrollment, $lesson, attemptKey()), 409, 'retry interval enforced');
@@ -320,7 +357,9 @@ $httpEnrollment = $learning->start($httpUser, 'en-GB', $course, bin2hex(random_b
 // Concurrency uses one enrollment and two independent database connections/processes.
 $concurrentUser = new \Joomla\CMS\User\User();
 $userData = ['name' => 'CI Concurrent quiz','username' => 'ciquizconcurrent','email' => 'ciquizconcurrent@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
-if (!$concurrentUser->bind($userData) || !$concurrentUser->save())throw new \RuntimeException($concurrentUser->getError());
+if (!$concurrentUser->bind($userData) || !$concurrentUser->save()) {
+    throw new \RuntimeException($concurrentUser->getError());
+}
 $concurrentUser = new \Joomla\CMS\User\User((int)$concurrentUser->id);
 $concurrentEnrollment = $learning->start($concurrentUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 $f = ['course_id' => $course,'lesson_id' => $lesson,'practice_id' => $practice,'never_id' => $never,'enrollment_id' => $enrollment,'http_enrollment' => $httpEnrollment,'passed_attempt' => $passedAttempt,'concurrent_user' => (int)$concurrentUser->id,'concurrent_enrollment' => $concurrentEnrollment];
@@ -328,20 +367,22 @@ $snapshotHash = hash('sha256', json_encode($db->setQuery('SELECT * FROM #__jlms_
 $f['snapshot_hash'] = $snapshotHash;
 file_put_contents($fixturePath, json_encode($f, JSON_THROW_ON_ERROR));
 $workers = [];
-for ($i = 0;$i < 2;$i++) {
+for ($i = 0; $i < 2; $i++) {
     $pipes = [];
     $process = proc_open([PHP_BINARY,__FILE__,$root,'worker'], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-    if (!is_resource($process))throw new \RuntimeException('Worker not started');
+    if (!is_resource($process)) {
+        throw new \RuntimeException('Worker not started');
+    }
     $workers[] = [$process,$pipes];
 }
-foreach ($workers as[$process,$pipes]) {
+foreach ($workers as [$process,$pipes]) {
     stream_set_timeout($pipes[1], 30);
     $ready = trim((string)fgets($pipes[1]));
     if ($ready !== 'ready') {
         stream_set_blocking($pipes[1], false);
         stream_set_blocking($pipes[2], false);
         $detail = $ready . ' ' . stream_get_contents($pipes[1]) . ' ' . stream_get_contents($pipes[2]);
-        foreach ($workers as[$child,$channels]) {
+        foreach ($workers as [$child,$channels]) {
             proc_terminate($child);
         }
         throw new \RuntimeException('Worker barrier failed: ' . $detail);
@@ -349,19 +390,21 @@ foreach ($workers as[$process,$pipes]) {
 }
 $db->transactionStart();
 $db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id=' . $concurrentEnrollment . ' FOR UPDATE')->loadResult();
-foreach ($workers as[$process,$pipes]) {
+foreach ($workers as [$process,$pipes]) {
     fwrite($pipes[0], "go\n");
     fclose($pipes[0]);
 }
 usleep(200000);
 $db->transactionCommit();
 $ids = [];
-foreach ($workers as[$process,$pipes]) {
+foreach ($workers as [$process,$pipes]) {
     $out = trim(stream_get_contents($pipes[1]));
     $err = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    if (proc_close($process) !== 0)throw new \RuntimeException('Worker failure ' . $err . $out);
+    if (proc_close($process) !== 0) {
+        throw new \RuntimeException('Worker failure ' . $err . $out);
+    }
     $ids[] = $out;
 }
 attemptExpect($ids[0] === $ids[1] && (int)$ids[0] > 0, 'concurrent starts allocate one attempt');

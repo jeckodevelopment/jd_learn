@@ -17,17 +17,25 @@ final class VideoFilePolicy
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
         $head = file_get_contents($path, false, null, 0, 12);
-        if (strtolower(pathinfo($name, PATHINFO_EXTENSION)) !== 'mp4' || substr((string) $head, 4, 4) !== 'ftyp'
-            || (new \finfo(FILEINFO_MIME_TYPE))->file($path) !== 'video/mp4') {
+        if (
+            strtolower(pathinfo($name, PATHINFO_EXTENSION)) !== 'mp4' || substr((string) $head, 4, 4) !== 'ftyp'
+            || (new \finfo(FILEINFO_MIME_TYPE))->file($path) !== 'video/mp4'
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
         if (!function_exists('proc_open') || $binary === '' || $binary[0] !== '/' || !is_file($binary) || !is_executable($binary) || is_link($binary)) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROBE_UNAVAILABLE', 503);
         }
         $pipes = [];
-        $process = @proc_open([$binary, '-v', 'error', '-protocol_whitelist', 'file', '-enable_drefs', '0', '-use_absolute_path', '0',
+        $process = @proc_open(
+            [$binary, '-v', 'error', '-protocol_whitelist', 'file', '-enable_drefs', '0', '-use_absolute_path', '0',
             '-f', 'mov', '-i', $path, '-show_entries', 'format=duration,format_name:stream=codec_type,codec_name,width,height,pix_fmt', '-of', 'json'],
-            [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, null, null, ['bypass_shell' => true]);
+            [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+            $pipes,
+            null,
+            null,
+            ['bypass_shell' => true]
+        );
         if (!is_resource($process)) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROBE_UNAVAILABLE', 503);
         }
@@ -70,16 +78,20 @@ final class VideoFilePolicy
         }
         $duration = $data['format']['duration'] ?? null;
         $streams = $data['streams'] ?? null;
-        if (!is_string($duration) || !preg_match('/\A[0-9]{1,5}(?:\.[0-9]{1,6})?\z/D', $duration)
-            || (float) $duration < 1 || (float) $duration > 28800 || !is_array($streams) || count($streams) < 1 || count($streams) > 2) {
+        if (
+            !is_string($duration) || !preg_match('/\A[0-9]{1,5}(?:\.[0-9]{1,6})?\z/D', $duration)
+            || (float) $duration < 1 || (float) $duration > 28800 || !is_array($streams) || count($streams) < 1 || count($streams) > 2
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
         $videos = 0;
         $audios = 0;
         foreach ($streams as $stream) {
-            if (($stream['codec_type'] ?? '') === 'video' && ($stream['codec_name'] ?? '') === 'h264'
+            if (
+                ($stream['codec_type'] ?? '') === 'video' && ($stream['codec_name'] ?? '') === 'h264'
                 && ($stream['pix_fmt'] ?? '') === 'yuv420p' && ($stream['width'] ?? 0) >= 16 && ($stream['width'] ?? 8193) <= 8192
-                && ($stream['height'] ?? 0) >= 16 && ($stream['height'] ?? 8193) <= 8192) {
+                && ($stream['height'] ?? 0) >= 16 && ($stream['height'] ?? 8193) <= 8192
+            ) {
                 $videos++;
             } elseif (($stream['codec_type'] ?? '') === 'audio' && ($stream['codec_name'] ?? '') === 'aac') {
                 $audios++;

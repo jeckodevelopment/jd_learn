@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -73,18 +73,22 @@ $quizzes = $component->getQuizAuthoringService();
 $authoring = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
-function quizExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function quizExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function quizReject(callable $work,int $code,string $message):void{try {
+function quizReject(callable $work, int $code, string $message): void
+{
+    try {
         $work();
-
-} catch (\RuntimeException $error) {
-    quizExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $error) {
+        quizExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+        return;
+    }throw new \RuntimeException($message);
 }
 $fixturePath = dirname($root) . '/quiz-authoring-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
@@ -98,7 +102,9 @@ if (($argv[2] ?? '') === 'retained') {
     exit(0);
 }
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
-if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.question','title' => 'CI Question bank','alias' => 'ci-questions','published' => 1,'language' => '*','access' => 1]))throw new \RuntimeException($categoryModel->getError());
+if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.question','title' => 'CI Question bank','alias' => 'ci-questions','published' => 1,'language' => '*','access' => 1])) {
+    throw new \RuntimeException($categoryModel->getError());
+}
 $category = (int)$categoryModel->getState('category.id');
 $question = ['id' => 0,'revision' => 1,'catid' => $category,'language' => '*','state' => '1','kind' => 'single','prompt' => '<p>PRIVATE_QUIZ_PROMPT_V1</p>',
  'options' => [['option_id' => 'first','label' => 'First answer','correct' => '1'],['option_id' => 'second','label' => 'Second answer','correct' => '0']],'default_points' => '3','explanation' => '<p>PRIVATE_CORRECT_EXPLANATION</p>'];
@@ -156,10 +162,12 @@ $multiple['options'][1]['correct'] = '1';
 $otherQuestion = $bank->save($actor, $multiple);
 $otherRevision = (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $otherQuestion)->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Quiz draft fixture','alias' => 'quiz-draft-fixture','catid' => $otherCategory,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Draft quiz fixture']))throw new \RuntimeException($model->getError());
+if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Quiz draft fixture','alias' => 'quiz-draft-fixture','catid' => $otherCategory,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Draft quiz fixture'])) {
+    throw new \RuntimeException($model->getError());
+}
 $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
-$scope = static fn():array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
+$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Quiz chapter']);
 $input = $scope() + ['lesson_id' => 0,'revision' => 1,'module_id' => $module,'title' => 'Quiz draft','required' => '1','assessment' => 'graded','threshold' => '70.25','max_attempts' => '3','time_minutes' => '15','retry_minutes' => '2',
  'selection_mode' => 'fixed','shuffle_questions' => '0','shuffle_options' => '1','feedback_policy' => 'pass_or_exhausted','questions' => [['revision_id' => $firstRevision,'points' => '3'],['revision_id' => $otherRevision,'points' => '2']]];
@@ -185,17 +193,25 @@ quizReject(fn()=>$quizzes->save($actor, array_replace($invalid, ['draw_count' =>
 quizReject(fn()=>$quizzes->save($actor, array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1,'feedback_policy' => 'after_submit'])), 422, 'graded tests cannot enable immediate answer feedback');
 // Native asset rules can deny a single question while leaving course authoring available.
 $group = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
-if (!$group->save(['id' => 0,'parent_id' => 2,'title' => 'CI Quiz author']))throw new \RuntimeException($group->getError());
+if (!$group->save(['id' => 0,'parent_id' => 2,'title' => 'CI Quiz author'])) {
+    throw new \RuntimeException($group->getError());
+}
 $groupId = (int)$group->getState('group.id');
 $rules = json_decode($db->setQuery("SELECT rules FROM #__assets WHERE name='com_jlms'")->loadResult(), true);
-foreach (['core.manage','core.create','core.edit','core.edit.state','jlms.quiz.manage']as$action)$rules[$action][(string)$groupId] = true;
+foreach (['core.manage','core.create','core.edit','core.edit.state','jlms.quiz.manage'] as $action) {
+    $rules[$action][(string)$groupId] = true;
+}
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('com_jlms');
 $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
-if (!$asset->store())throw new \RuntimeException($asset->getError());
+if (!$asset->store()) {
+    throw new \RuntimeException($asset->getError());
+}
 $user = new \Joomla\CMS\User\User();
 $userData = ['name' => 'CI Quiz Author','username' => 'ciquizauthor','email' => 'ciquizauthor@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$groupId],'block' => 0,'activation' => ''];
-if (!$user->bind($userData) || !$user->save())throw new \RuntimeException($user->getError());
+if (!$user->bind($userData) || !$user->save()) {
+    throw new \RuntimeException($user->getError());
+}
 $editor = new \Joomla\CMS\User\User((int)$user->id);
 $asset->load((int)$record->asset_id);
 $asset->rules = json_encode(['jlms.quiz.manage' => [(string)$groupId => false]], JSON_THROW_ON_ERROR);
@@ -214,7 +230,6 @@ $selectionBefore = $db->setQuery('SELECT selection_json FROM #__jlms_quizzes WHE
 $db->setQuery("UPDATE #__jlms_quizzes SET selection_json=JSON_SET(selection_json,'$._schema',99) WHERE id=" . $quizId)->execute();
 try {
     $publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
-
 } catch (\RuntimeException $error) {
     $blocked = $error->getMessage() === 'COM_JLMS_QUIZ_INVALID';
 }

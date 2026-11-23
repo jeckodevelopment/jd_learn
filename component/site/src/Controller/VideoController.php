@@ -84,12 +84,20 @@ final class VideoController extends BaseController
         return ['closed' => true];
     }
 
-    public function playback(): void { $this->respond('playback');
+    public function playback(): void
+    {
+        $this->respond('playback');
     }
-    public function renew(): void { $this->respond('renew');
+    public function renew(): void
+    {
+        $this->respond('renew');
     }
-    public function save(): void { $this->respond('save');
+    public function save(): void
+    {
+        $this->respond('save');
     }
-    public function close(): void { $this->respond('close');
+    public function close(): void
+    {
+        $this->respond('close');
     }
 }

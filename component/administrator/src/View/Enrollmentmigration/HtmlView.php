@@ -1,16 +1,19 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\View\Enrollmentmigration;
+
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+
 final class HtmlView extends BaseHtmlView
 {
     public array $item;
     public $form;
-    public function display($tpl=null)
+    public function display($tpl = null)
     {
         Factory::getApplication()->setHeader('Cache-Control', 'private, no-store', true);
         $this->item = $this->get('Item');

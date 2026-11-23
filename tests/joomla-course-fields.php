@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -63,10 +63,11 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function fieldsExpect(bool $ok,string $message): void { global $checks;
+function fieldsExpect(bool $ok, string $message): void
+{
+    global $checks;
     if (!$ok) {
         throw new RuntimeException($message);
-
     } $checks++;
 }
 $actor = $app->getIdentity();

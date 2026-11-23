@@ -1,11 +1,15 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Controller;
+
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Router\Route;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Jlms\Component\Jlms\Administrator\Application\CourseMessageVariableException;
+
 final class CoursemessageController extends BaseController
 {
     public function execute($task)
@@ -36,9 +40,11 @@ final class CoursemessageController extends BaseController
         if (!is_array($raw['template'] ?? null)) {
             throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
         }
-        if (!is_string($raw['course_id'] ?? null)
+        if (
+            !is_string($raw['course_id'] ?? null)
             || !is_string($raw['template']['subject'] ?? null)
-            || !is_string($raw['template']['htmlbody'] ?? null)) {
+            || !is_string($raw['template']['htmlbody'] ?? null)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         // HTML is the only body editor; generate the plain-text alternative

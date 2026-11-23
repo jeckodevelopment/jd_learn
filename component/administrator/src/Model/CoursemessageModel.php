@@ -1,12 +1,15 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Jlms\Component\Jlms\Administrator\Application\CourseMessageVariableException;
+
 final class CoursemessageModel extends BaseDatabaseModel
 {
     public function getItem(): array

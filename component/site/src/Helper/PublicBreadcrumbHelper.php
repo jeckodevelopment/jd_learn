@@ -17,9 +17,11 @@ final class PublicBreadcrumbHelper
         $app = Factory::getApplication();
         $active = $app->getMenu()->getActive();
         $query = $active?->query ?? [];
-        if (($query['option'] ?? '') === 'com_jlms'
+        if (
+            ($query['option'] ?? '') === 'com_jlms'
             && ($query['view'] ?? '') === $view
-            && (int) ($query['id'] ?? 0) === $id) {
+            && (int) ($query['id'] ?? 0) === $id
+        ) {
             return;
         }
 

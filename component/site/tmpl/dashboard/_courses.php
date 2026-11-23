@@ -1,5 +1,7 @@
 <?php
+
 /** Shared FE-05 learner course cards; $this holds the active Joomla HtmlView. */
+
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -18,12 +20,12 @@ use Joomla\CMS\Router\Route;
         <?php if ($item['percent'] !== null) : ?>
       <label for="jlms-my-course-progress-<?= (int) $item['id'] ?>"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $item['percent'] ?>%</label>
       <progress id="jlms-my-course-progress-<?= (int) $item['id'] ?>" class="jlms-my-course__progress" max="100" value="<?= (int) $item['percent'] ?>"><?= (int) $item['percent'] ?>%</progress>
-     <?php else :
+        <?php else :
             ?><p><?= Text::_(!empty($item['progress_applicable']) ? 'COM_JLMS_DASHBOARD_PROGRESS_UNKNOWN' : 'COM_JLMS_DASHBOARD_PROGRESS_NOT_APPLICABLE') ?></p><?php
-     endif; ?>
+        endif; ?>
         <?php if ($item['access'] === 'available') :
             ?><a id="jlms-my-course-resume-<?= (int) $item['id'] ?>" class="jlms-my-course__action" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $item['id']) ?>"><?= Text::_($item['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : 'COM_JLMS_DASHBOARD_RESUME') ?></a><?php
-     endif; ?>
+        endif; ?>
     </article>
                                     <?php endforeach; ?></div>
   </section>

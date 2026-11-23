@@ -38,7 +38,12 @@ final class LessonController extends EnrollmentController
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $state = $this->app->bootComponent('com_jlms')->getLearningService()->beginLesson(
-                $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $enrollmentId, $lessonId, $key);
+                $this->app->getIdentity(),
+                $this->app->getLanguage()->getTag(),
+                $enrollmentId,
+                $lessonId,
+                $key
+            );
             echo new JsonResponse(['state' => $state], null, false, true);
         } catch (\Throwable $error) {
             $code = (int) $error->getCode();

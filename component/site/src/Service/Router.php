@@ -61,29 +61,49 @@ final class Router extends RouterView
         $this->attachRule(new NomenuRules($this));
     }
 
-    public function getTeachereditSegment($id, $query): array { return [(int) $id => (string) (int) $id];
+    public function getTeachereditSegment($id, $query): array
+    {
+        return [(int) $id => (string) (int) $id];
     }
-    public function getTeachereditId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0;
-    }
-
-    public function getTeacherSegment($id, $query): array { return [(int) $id => (string) (int) $id];
-    }
-    public function getTeacherId($segment, $query): int { return ctype_digit((string) $segment) ? (int) $segment : 0;
-    }
-
-    public function getCategorySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__categories', (int) $id, true)];
-    }
-    public function getCategoryId($segment, $query): int { return $this->segmentId($segment);
+    public function getTeachereditId($segment, $query): int
+    {
+        return ctype_digit((string) $segment) ? (int) $segment : 0;
     }
 
-    public function getPathwaySegment($id, $query): array { return [(int) $id => $this->itemSegment('#__jlms_pathways', (int) $id)];
+    public function getTeacherSegment($id, $query): array
+    {
+        return [(int) $id => (string) (int) $id];
     }
-    public function getPathwayId($segment, $query): int { return $this->segmentId($segment);
+    public function getTeacherId($segment, $query): int
+    {
+        return ctype_digit((string) $segment) ? (int) $segment : 0;
     }
 
-    public function getQuizSegment($id, $query): array { return [(int)$id => (string)(int)$id];
+    public function getCategorySegment($id, $query): array
+    {
+        return [(int) $id => $this->itemSegment('#__categories', (int) $id, true)];
     }
-    public function getQuizId($segment, $query): int { return ctype_digit((string)$segment) ? (int)$segment : 0;
+    public function getCategoryId($segment, $query): int
+    {
+        return $this->segmentId($segment);
+    }
+
+    public function getPathwaySegment($id, $query): array
+    {
+        return [(int) $id => $this->itemSegment('#__jlms_pathways', (int) $id)];
+    }
+    public function getPathwayId($segment, $query): int
+    {
+        return $this->segmentId($segment);
+    }
+
+    public function getQuizSegment($id, $query): array
+    {
+        return [(int)$id => (string)(int)$id];
+    }
+    public function getQuizId($segment, $query): int
+    {
+        return ctype_digit((string)$segment) ? (int)$segment : 0;
     }
 
     public function getClassroomSegment($id, $query): array

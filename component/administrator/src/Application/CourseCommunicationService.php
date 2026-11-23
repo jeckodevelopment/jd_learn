@@ -77,7 +77,8 @@ final class CourseCommunicationService
         $course = $this->editor($identity, $courseId)['course'];
         $data = $this->templateData('Destinatario di esempio', (string) $course->title, $subject, $body);
         $snapshot = CourseMessageTemplate::validate(
-            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
+            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'),
+            $data
         );
         $renderer = new CourseMessageMailer();
         $rendered = [
@@ -86,8 +87,10 @@ final class CourseCommunicationService
             'htmlbody' => $snapshot['htmlbody'] !== ''
                 ? $renderer->render($snapshot['htmlbody'], $data, true) : '',
         ];
-        if (trim($rendered['subject']) === '' || mb_strlen($rendered['subject']) > 300
-            || preg_match('/[\\x00-\\x1f\\x7f]/', $rendered['subject'])) {
+        if (
+            trim($rendered['subject']) === '' || mb_strlen($rendered['subject']) > 300
+            || preg_match('/[\\x00-\\x1f\\x7f]/', $rendered['subject'])
+        ) {
             throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
         }
         $hash = hash('sha256', json_encode([$courseId, $subject, $body, $ids, $snapshot], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
@@ -152,8 +155,11 @@ final class CourseCommunicationService
                 $created = true;
             }
             if ($created) {
-                (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record($actor,
-                    ['id' => $jobId,'course_id' => $courseId,'recipient_count' => $plan['count'],'event' => 'queued','correlation_id' => $mutationId], 'coursecommunication');
+                (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record(
+                    $actor,
+                    ['id' => $jobId,'course_id' => $courseId,'recipient_count' => $plan['count'],'event' => 'queued','correlation_id' => $mutationId],
+                    'coursecommunication'
+                );
             }
             $this->db->transactionCommit();
             return $jobId;
@@ -178,7 +184,8 @@ final class CourseCommunicationService
         $course = $this->editor($actor, $courseId)['course'];
         $data = $this->templateData((string) $actor->name, (string) $course->title, $subject, $body);
         $data['__course_message_snapshot'] = CourseMessageTemplate::validate(
-            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'), $data
+            $template !== [] ? $template : CourseMessageTemplate::forComposition('*'),
+            $data
         );
         $key = CourseMessageMutation::testEventKey($courseId, (int) $actor->id, $mutationId);
         (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data, (int) $actor->id);

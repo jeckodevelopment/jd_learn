@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\User\User;
@@ -11,8 +12,12 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 /** Audited enrollment state changes. Never grants Joomla groups or resets learning history. */
 final class EnrollmentStateService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
-        private readonly EnrollmentRosterService $roster, private readonly \Closure $audit) {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly LearningService $learning,
+        private readonly EnrollmentRosterService $roster,
+        private readonly \Closure $audit
+    ) {
     }
 
     private function scope(User $identity, int $course, int $enrollment): array
@@ -75,12 +80,22 @@ final class EnrollmentStateService
             'impact' => $this->plan($e, $target), 'history' => $this->db->setQuery($q, 0, 20)->loadObjectList()];
     }
 
-    public function apply(User $identity, int $course, int $enrollment, int $expected, string $target,
-        string $reason, string $key, string $impactHash, bool $confirmed): int
-    {
-        if (!$confirmed || $expected < 1 || !in_array($target, ['active', 'suspended', 'cancelled'], true)
+    public function apply(
+        User $identity,
+        int $course,
+        int $enrollment,
+        int $expected,
+        string $target,
+        string $reason,
+        string $key,
+        string $impactHash,
+        bool $confirmed
+    ): int {
+        if (
+            !$confirmed || $expected < 1 || !in_array($target, ['active', 'suspended', 'cancelled'], true)
             || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key)
-            || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)) {
+            || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $reason = trim($reason);
@@ -151,11 +166,16 @@ final class EnrollmentStateService
             };
             $name = trim((string) ($e->learner_name ?? ''));
             (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(
-                $course, hash('sha256', 'enrollment.state:' . (int) $record->id), $template,
-                (string) ($e->course_language ?: '*'), (string) ($e->learner_email ?? ''), $name,
+                $course,
+                hash('sha256', 'enrollment.state:' . (int) $record->id),
+                $template,
+                (string) ($e->course_language ?: '*'),
+                (string) ($e->learner_email ?? ''),
+                $name,
                 ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $e->course_title,
                     'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
-                    + ($target === 'active' ? ['DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard'] : []), (int) $e->user_id
+                    + ($target === 'active' ? ['DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard'] : []),
+                (int) $e->user_id
             );
             $this->db->transactionCommit();
             return (int) $record->id;

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -71,8 +71,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess as EditorAccess;
 $checks = 0;
-function editorExpect(bool $ok,string $message):void { global $checks;
-    if (!$ok)throw new RuntimeException($message);
+function editorExpect(bool $ok, string $message): void
+{
+    global $checks;
+    if (!$ok) {
+        throw new RuntimeException($message);
+    }
     $checks++;
 }
 $fixture = dirname($root) . '/editor-access-fixture.json';
@@ -90,9 +94,13 @@ if (($argv[2] ?? '') === 'retained') {
     exit;
 }
 $groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
-if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI category course editor']))throw new RuntimeException($groupModel->getError());
+if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI category course editor'])) {
+    throw new RuntimeException($groupModel->getError());
+}
 $group = (int)$groupModel->getState('group.id');
-if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI editor backend entry']))throw new RuntimeException($groupModel->getError());
+if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI editor backend entry'])) {
+    throw new RuntimeException($groupModel->getError());
+}
 $backend = (int)$groupModel->getState('group.id');
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('root.1');
@@ -107,18 +115,24 @@ $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
 $asset->store();
 $user = new \Joomla\CMS\User\User();
 $userData = ['name' => 'CI category editor','username' => 'cieditor','email' => 'cieditor@example.invalid','password' => 'Ci-only-Editor-Password-2026','password2' => 'Ci-only-Editor-Password-2026','groups' => [2,$group,$backend],'block' => 0,'activation' => ''];
-if (!$user->bind($userData) || !$user->save())throw new RuntimeException('Editor user failed');
+if (!$user->bind($userData) || !$user->save()) {
+    throw new RuntimeException('Editor user failed');
+}
 $user = new \Joomla\CMS\User\User((int)$user->id);
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
 $categories = [];
-foreach (['allowed','other','owned','trash']as$name) {
-    if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'published' => $name === 'trash' ? -2 : 1,'language' => '*','access' => 1]))throw new RuntimeException($categoryModel->getError());
+foreach (['allowed','other','owned','trash'] as $name) {
+    if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'published' => $name === 'trash' ? -2 : 1,'language' => '*','access' => 1])) {
+        throw new RuntimeException($categoryModel->getError());
+    }
     $categories[$name] = (int)$categoryModel->getState('category.id');
 }
-foreach (['allowed' => ['core.create','core.edit'],'owned' => ['core.edit.own']]as$name => $actions) {
+foreach (['allowed' => ['core.create','core.edit'],'owned' => ['core.edit.own']] as $name => $actions) {
     $asset->loadByName('com_jlms.course.category.' . $categories[$name]);
     $rules = json_decode($asset->rules, true);
-    foreach ($actions as$action)$rules[$action][(string)$group] = true;
+    foreach ($actions as $action) {
+        $rules[$action][(string)$group] = true;
+    }
     $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
     $asset->store();
 }
@@ -128,7 +142,7 @@ editorExpect(EditorAccess::canCreate($db, $user, $categories['allowed']) && !Edi
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $base = ['id' => 0,'revision' => 1,'title' => '','alias' => '','catid' => 0,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Editor access fixture'];
 $courses = [];
-foreach (['allowed1' => 'allowed','allowed2' => 'allowed','denied' => 'allowed','foreign' => 'other','own' => 'owned','other_owner' => 'owned','locked' => 'other']as$name => $category) {
+foreach (['allowed1' => 'allowed','allowed2' => 'allowed','denied' => 'allowed','foreign' => 'other','own' => 'owned','other_owner' => 'owned','locked' => 'other'] as $name => $category) {
     editorExpect($model->save(array_replace($base, ['title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'catid' => $categories[$category]])), 'Fixture course saved');
     $courses[$name] = (int)$model->getState('course.id');
 }
@@ -229,15 +243,16 @@ $rules['core.execute.transition'][(string) $group] = true;
 $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
 $asset->store();
 $user = EditorAccess::fresh($user);
-editorExpect(!$user->authorise('core.edit.state', 'com_jlms')
+editorExpect(
+    !$user->authorise('core.edit.state', 'com_jlms')
     && $user->authorise('core.edit.state', 'com_jlms.course.' . $delegated)
     && $user->authorise('core.execute.transition', 'com_jlms.transition.' . $transitionId),
-    'Publisher fixture has scoped rights only');
+    'Publisher fixture has scoped rights only'
+);
 $list->setCurrentUser(new \Joomla\CMS\User\User());
 try {
     $items = $list->getItems();
     editorExpect($items === false, 'Anonymous administration does not return course metadata');
-
 } catch (RuntimeException $error) {
     editorExpect($error->getCode() === 403, 'Anonymous administration denied');
 }

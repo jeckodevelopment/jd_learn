@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Site\View\Teacheredit;
 
 final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView

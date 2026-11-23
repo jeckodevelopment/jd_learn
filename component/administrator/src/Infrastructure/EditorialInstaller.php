@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Infrastructure;
 
 use Joomla\CMS\Table\ContentType;

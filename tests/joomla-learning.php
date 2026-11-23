@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -69,8 +69,10 @@ $learning = $component->getLearningService();
 if (($argv[2] ?? '') === 'retained') {
     $owner = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult();
     $saved = $db->setQuery('SELECT id, required_total, completed_total, completed_at FROM #__jlms_enrollments WHERE user_id=' . $owner)->loadObject();
-    if (!$saved || (int)$saved->required_total !== 3 || (int)$saved->completed_total !== 3 || !$saved->completed_at
-        || $learning->classroom(new \Joomla\CMS\User\User($owner), 'en-GB', (int)$saved->id)['percent'] !== 100) {
+    if (
+        !$saved || (int)$saved->required_total !== 3 || (int)$saved->completed_total !== 3 || !$saved->completed_at
+        || $learning->classroom(new \Joomla\CMS\User\User($owner), 'en-GB', (int)$saved->id)['percent'] !== 100
+    ) {
         throw new \RuntimeException('Package update lost learning history');
     }
     echo json_encode(['learning_upgrade' => 'passed','required_completed' => 3], JSON_THROW_ON_ERROR) . PHP_EOL;
@@ -99,28 +101,31 @@ if (in_array($argv[2] ?? '', ['revoke','grant'], true)) {
     exit(0);
 }
 $checks = 0;
-function learningExpect(bool $ok,string $message): void {
+function learningExpect(bool $ok, string $message): void
+{
     global $checks;
     if (!$ok) {
         throw new \RuntimeException($message);
     }
     $checks++;
 }
-function learningDenied(callable $call,int $code,string $message): void {
+function learningDenied(callable $call, int $code, string $message): void
+{
     try {
         $call();
-
     } catch (\RuntimeException $error) {
         learningExpect($error->getCode() === $code, $message . '; received ' . $error->getMessage() . ' / ' . $error->getCode());
         return;
     }
     throw new \RuntimeException($message);
 }
-function fixtureUpdate(string $table,object $record,bool $nulls=false): void {
+function fixtureUpdate(string $table, object $record, bool $nulls = false): void
+{
     global $db;
     $db->updateObject('#__' . $table, $record, 'id', $nulls);
 }
-function fixtureStudent(string $username): \Joomla\CMS\User\User {
+function fixtureStudent(string $username): \Joomla\CMS\User\User
+{
     global $learningGroup;
     $user = new \Joomla\CMS\User\User();
     $data = ['name' => 'CI Learner','username' => $username,'email' => $username . '@example.invalid',
@@ -146,18 +151,20 @@ $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Learning fixture','alias' => 'learning-fixture','catid' => $catid,
-    'language' => '*','catalog_access' => 1,'content_access' => $learningLevel,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Text learning fixture'])) {
+if (
+    !$model->save(['id' => 0,'revision' => 1,'title' => 'Learning fixture','alias' => 'learning-fixture','catid' => $catid,
+    'language' => '*','catalog_access' => 1,'content_access' => $learningLevel,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Text learning fixture'])
+) {
     throw new \RuntimeException($model->getError());
 }
 $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
-$scope = static function()use($db,$course,$version):array{return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
-
+$scope = static function () use ($db, $course, $version): array {
+    return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 };
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Learning chapter']);
 $lessons = [];
-for ($i = 1;$i <= 4;$i++) {
+for ($i = 1; $i <= 4; $i++) {
     $schedule = $i === 2 ? ['publish_up' => gmdate('Y-m-d H:i:s', time() + 3600),'publish_down' => gmdate('Y-m-d H:i:s', time() + 7200)] : [];
     $lessons[] = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Learning lesson ' . $i,'kind' => 'text',
     'required' => $i === 4 ? '0' : '1','body' => '<p>LEARNING_PRIVATE_BODY_' . $i . '</p><img src="x" onerror="alert(1)"><script>alert(2)</script>'] + $schedule);
@@ -206,8 +213,10 @@ learningDenied(fn()=>$learning->resourceContext($student, 'en-GB', $enrollment, 
 fixtureUpdate('jlms_lessons', (object)['id' => $lessons[1],'publish_up' => null,'publish_down' => null], true);
 fixtureUpdate('jlms_lessons', (object)['id' => $lessons[2],'release_after_days' => 2]);
 $relative = $learning->classroom($student, 'en-GB', $enrollment, $lessons[2]);
-learningExpect($relative['lesson']->schedule_state === 'awaiting_start' && $relative['lesson']->schedule_after_days === 2 && $relative['lesson']->body === '',
-    'relative lesson stays private until the student starts learning');
+learningExpect(
+    $relative['lesson']->schedule_state === 'awaiting_start' && $relative['lesson']->schedule_after_days === 2 && $relative['lesson']->body === '',
+    'relative lesson stays private until the student starts learning'
+);
 learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lessons[2], bin2hex(random_bytes(16))), 403, 'relative lesson cannot be completed before course start');
 fixtureUpdate('jlms_enrollments', (object)['id' => $enrollment,'started_at' => gmdate('Y-m-d H:i:s', time() - 86400)]);
 $relative = $learning->classroom($student, 'en-GB', $enrollment, $lessons[2]);
@@ -223,7 +232,8 @@ $foreign = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_versi
 learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment, $foreign), 404, 'foreign lesson hidden');
 learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $foreign, bin2hex(random_bytes(16))), 404, 'foreign lesson completion rejected');
 // Independent PHP processes use the actual database locks, without a pcntl dependency.
-function learningWorkers(array $lessonIds): void {
+function learningWorkers(array $lessonIds): void
+{
     global $student,$enrollment,$root;
     $workers = [];
     foreach ($lessonIds as $lessonId) {

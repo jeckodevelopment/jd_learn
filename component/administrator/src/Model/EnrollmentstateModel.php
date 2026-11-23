@@ -1,11 +1,14 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\FormModel;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+
 final class EnrollmentstateModel extends FormModel
 {
     public function getForm($data = [], $loadData = true)
@@ -21,8 +24,12 @@ final class EnrollmentstateModel extends FormModel
             if (!is_string($target)) {
                 throw new \InvalidArgumentException();
             }
-            return $app->bootComponent('com_jlms')->getEnrollmentStateService()->editor($app->getIdentity(),
-                CurriculumService::id($input->get('id', 0, 'raw')), CurriculumService::id($input->get('enrollment_id', 0, 'raw')), $target);
+            return $app->bootComponent('com_jlms')->getEnrollmentStateService()->editor(
+                $app->getIdentity(),
+                CurriculumService::id($input->get('id', 0, 'raw')),
+                CurriculumService::id($input->get('enrollment_id', 0, 'raw')),
+                $target
+            );
         } catch (\Throwable $error) {
             if ($error instanceof \InvalidArgumentException) {
                 throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 400);

@@ -12,8 +12,10 @@ $registry = new VideoProviderRegistry();
 $registration = require __DIR__ . '/../docs/examples/video-provider-contract/register.php';
 $registration($registry);
 $descriptors = $registry->descriptors();
-if (count($descriptors) !== 1 || $descriptors[0]->key !== 'exampleprovider'
-    || $descriptors[0]->contractMajor !== 1 || $descriptors[0]->configured) {
+if (
+    count($descriptors) !== 1 || $descriptors[0]->key !== 'exampleprovider'
+    || $descriptors[0]->contractMajor !== 1 || $descriptors[0]->configured
+) {
     throw new RuntimeException('Example descriptor mismatch');
 }
 $instance = $registry->get('exampleprovider');
@@ -44,14 +46,18 @@ try {
 }
 require_once __DIR__ . '/../docs/examples/video-provider-contract/plugin/src/Provider/Provider.php';
 $pluginAdapter = new \Jlms\Plugin\Jlmsvideo\Exampleprovider\Provider\Provider();
-if ($pluginAdapter->getDescriptor()->key !== 'exampleprovider'
+if (
+    $pluginAdapter->getDescriptor()->key !== 'exampleprovider'
     || $pluginAdapter->getDescriptor()->contractMajor !== 1
-    || $pluginAdapter->getDescriptor()->configured) {
+    || $pluginAdapter->getDescriptor()->configured
+) {
     throw new RuntimeException('Joomla skeleton descriptor mismatch');
 }
 $manifest = simplexml_load_file(__DIR__ . '/../docs/examples/video-provider-contract/plugin/exampleprovider.xml');
-if (!$manifest || (string) $manifest['group'] !== 'jlmsvideo'
-    || (string) $manifest->namespace !== 'Jlms\Plugin\Jlmsvideo\Exampleprovider') {
+if (
+    !$manifest || (string) $manifest['group'] !== 'jlmsvideo'
+    || (string) $manifest->namespace !== 'Jlms\Plugin\Jlmsvideo\Exampleprovider'
+) {
     throw new RuntimeException('Sample Joomla plugin manifest is not aligned with source namespace');
 }
 echo "PBASE-03: registry and Joomla plugin skeleton contract OK\n";

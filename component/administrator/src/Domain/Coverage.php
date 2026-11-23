@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Domain;
 
 /** Half-open intervals in milliseconds. Calling service validates telemetry and authorisation first. */
@@ -15,9 +14,11 @@ final class Coverage
         }
         $intervals = array_merge($existing, $incoming);
         foreach ($intervals as $pair) {
-            if (!is_array($pair) || count($pair) !== 2 || !isset($pair[0], $pair[1])
+            if (
+                !is_array($pair) || count($pair) !== 2 || !isset($pair[0], $pair[1])
                 || !is_int($pair[0]) || !is_int($pair[1]) || $pair[0] < 0
-                || $pair[0] >= $pair[1] || $pair[1] > $durationMs) {
+                || $pair[0] >= $pair[1] || $pair[1] > $durationMs
+            ) {
                 throw new \InvalidArgumentException('INVALID_INTERVAL');
             }
         }

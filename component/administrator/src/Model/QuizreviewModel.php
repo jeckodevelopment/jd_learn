@@ -1,14 +1,19 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
+
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\FormModel;
+
 final class QuizreviewModel extends FormModel
 {
-    public function getForm($data=[],$loadData=true){return $this->loadForm('com_jlms.quizreview', 'quizreview', ['control' => 'jform','load_data' => false]);
+    public function getForm($data = [], $loadData = true)
+    {
+        return $this->loadForm('com_jlms.quizreview', 'quizreview', ['control' => 'jform','load_data' => false]);
     }
-    public function getItem():array
+    public function getItem(): array
     {
         $app = Factory::getApplication();
         $i = $app->getInput();

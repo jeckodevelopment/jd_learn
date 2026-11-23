@@ -17,11 +17,11 @@ $draft = $this->item['version']->status === 'draft';
  <form id="jlms-quiz-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>"><?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="quiz.save"><?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button></form>
         <?php if ($data['lesson_id']) :
             ?><form id="jlms-quiz-delete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
-            <?php foreach (['course_id','version_id','lesson_id','expected_version_revision']as$key) :
+            <?php foreach (['course_id','version_id','lesson_id','expected_version_revision'] as $key) :
                 ?><input type="hidden" name="jform[<?= $key ?>]" value="<?= (int)$data[$key] ?>"><?php
- endforeach; ?><input type="hidden" name="task" value="quiz.delete">
+            endforeach; ?><input type="hidden" name="task" value="quiz.delete">
  <label><input type="checkbox" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_CONFIRM_DELETE_LESSON') ?></label><?= HTMLHelper::_('form.token') ?><button class="btn btn-outline-danger" type="submit"><?= Text::_('JACTION_DELETE') ?></button></form><?php
- endif; ?>
+        endif; ?>
  <?php else :
         ?><p><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php
  endif; ?>

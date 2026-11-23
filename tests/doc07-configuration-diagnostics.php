@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require __DIR__ . '/../component/administrator/src/Infrastructure/SchedulerHealth.php';
@@ -32,8 +33,10 @@ $thirdPartyLabel = ConfigurationDiagnostics::summarize([], [
     ['labelKey' => 'PLG_JLMSVIDEO_CUSTOM_TITLE', 'stateKey' => 'COM_JLMS_READY'],
     ['labelKey' => 'PLG_JLMSVIDEO_PRIVATE_SECRET=TOKEN', 'stateKey' => 'COM_JLMS_READY'],
 ]);
-if ($thirdPartyLabel[0]['labelKey'] !== 'PLG_JLMSVIDEO_CUSTOM_TITLE'
-    || $thirdPartyLabel[1]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL') {
+if (
+    $thirdPartyLabel[0]['labelKey'] !== 'PLG_JLMSVIDEO_CUSTOM_TITLE'
+    || $thirdPartyLabel[1]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL'
+) {
     throw new RuntimeException('SCR-16 did not preserve safe labels or redact untrusted plugin labels');
 }
 
@@ -41,31 +44,37 @@ if (count($result) !== count($scheduler) + count($providers)) {
     throw new RuntimeException('Configuration checks lost or added an unrecognized check');
 }
 foreach ($result as $check) {
-    if (!in_array($check['severity'], ['ok', 'warning', 'error'], true)
+    if (
+        !in_array($check['severity'], ['ok', 'warning', 'error'], true)
         || !preg_match('/^COM_JLMS_[A-Z0-9_]+$/', $check['labelKey'])
         || !preg_match('/^COM_JLMS_[A-Z0-9_]+$/', $check['stateKey'])
-        || !preg_match('/^COM_JLMS_[A-Z0-9_]+$/', $check['guidanceKey'])) {
+        || !preg_match('/^COM_JLMS_[A-Z0-9_]+$/', $check['guidanceKey'])
+    ) {
         throw new RuntimeException('A configuration diagnostic contains unsafe raw data');
     }
     if (array_diff(array_keys($check), ['kind', 'labelKey', 'severity', 'guidanceKey', 'stateKey'])) {
         throw new RuntimeException('A configuration diagnostic exposed unexpected fields');
     }
 }
-if ($result[3]['severity'] !== 'error' || $result[9]['severity'] !== 'error'
+if (
+    $result[3]['severity'] !== 'error' || $result[9]['severity'] !== 'error'
     || $result[7]['severity'] !== 'ok'
     || $result[count($scheduler) + 2]['severity'] !== 'error'
     || $result[count($scheduler) + 3]['severity'] !== 'warning'
     || $result[count($scheduler) + 3]['stateKey'] !== 'COM_JLMS_PROVIDER_UNVERIFIED'
     || $result[count($scheduler) + 5]['severity'] !== 'ok'
-    || $result[count($scheduler) + 6]['severity'] !== 'warning') {
+    || $result[count($scheduler) + 6]['severity'] !== 'warning'
+) {
     throw new RuntimeException('Unsafe severity classification or duplicate precedence');
 }
 if ($result[9]['guidanceKey'] !== 'COM_JLMS_SCHEDULER_GUIDANCE_DUPLICATES') {
     throw new RuntimeException('Duplicate scheduler task did not override healthy status');
 }
 $untrusted = ConfigurationDiagnostics::summarize([], [['labelKey' => '<script>secret</script>', 'stateKey' => 'unexpected']]);
-if ($untrusted[0]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL'
-    || $untrusted[0]['stateKey'] !== 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN') {
+if (
+    $untrusted[0]['labelKey'] !== 'COM_JLMS_CONFIG_DIAGNOSTICS_UNKNOWN_LABEL'
+    || $untrusted[0]['stateKey'] !== 'COM_JLMS_PROVIDER_GUIDANCE_UNKNOWN'
+) {
     throw new RuntimeException('Unknown provider labels or states must fail closed');
 }
 $tmpBase = sys_get_temp_dir() . '/jdlearn-scr16-' . bin2hex(random_bytes(5));
@@ -78,14 +87,18 @@ try {
     $missing = ConfigurationDiagnostics::storage($tmpBase . '/missing', $tmpBase . '/public', $tmpBase . '/public');
     $managed = ConfigurationDiagnostics::storage('', $tmpBase . '/public', $tmpBase . '/public');
     foreach ([$private, $public, $missing, $managed] as $result) {
-        if (array_keys($result) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+        if (
+            array_keys($result) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
             || !in_array($result['severity'], ['ok', 'warning', 'error'], true)
-            || str_contains(json_encode($result, JSON_THROW_ON_ERROR), $tmpBase)) {
+            || str_contains(json_encode($result, JSON_THROW_ON_ERROR), $tmpBase)
+        ) {
             throw new RuntimeException('SCR-16 storage diagnostic leaks paths or unexpected fields');
         }
     }
-    if ($private['severity'] !== 'ok' || $public['severity'] !== 'error'
-        || $missing['severity'] !== 'error' || $managed['severity'] !== 'warning') {
+    if (
+        $private['severity'] !== 'ok' || $public['severity'] !== 'error'
+        || $missing['severity'] !== 'error' || $managed['severity'] !== 'warning'
+    ) {
         throw new RuntimeException('SCR-16 private/public/unavailable/managed classification failed');
     }
 } finally {
@@ -107,13 +120,17 @@ $translatedOnly = ConfigurationDiagnostics::mailTemplates($requiredTemplates, [
 ]);
 $none = ConfigurationDiagnostics::mailTemplates($requiredTemplates, []);
 foreach ([$readyTemplates, $missingTemplates, $translatedOnly, $none] as $diagnostic) {
-    if (array_keys($diagnostic) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
-        || str_contains(json_encode($diagnostic, JSON_THROW_ON_ERROR), 'com_jlms.course.completed')) {
+    if (
+        array_keys($diagnostic) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+        || str_contains(json_encode($diagnostic, JSON_THROW_ON_ERROR), 'com_jlms.course.completed')
+    ) {
         throw new RuntimeException('SCR-16 mail diagnostics disclose identifiers or unexpected fields');
     }
 }
-if ($readyTemplates['severity'] !== 'ok' || $missingTemplates['severity'] !== 'error'
-    || $translatedOnly['severity'] !== 'error' || $none['severity'] !== 'error') {
+if (
+    $readyTemplates['severity'] !== 'ok' || $missingTemplates['severity'] !== 'error'
+    || $translatedOnly['severity'] !== 'error' || $none['severity'] !== 'error'
+) {
     throw new RuntimeException('SCR-16 mail default-template detection failed');
 }
 // The runtime rejects DOCUMENT_ROOT even when Joomla site/public roots differ.
@@ -124,10 +141,16 @@ foreach (['site', 'public', 'web', 'web/private', 'private'] as $dir) {
 }
 try {
     $exposed = ConfigurationDiagnostics::storage(
-        $separate . '/web/private', $separate . '/site', $separate . '/public', $separate . '/web'
+        $separate . '/web/private',
+        $separate . '/site',
+        $separate . '/public',
+        $separate . '/web'
     );
     $outside = ConfigurationDiagnostics::storage(
-        $separate . '/private', $separate . '/site', $separate . '/public', $separate . '/web'
+        $separate . '/private',
+        $separate . '/site',
+        $separate . '/public',
+        $separate . '/web'
     );
     if ($exposed['severity'] !== 'error' || $outside['severity'] !== 'ok') {
         throw new RuntimeException('SCR-16 must honor actual web server DOCUMENT_ROOT');
@@ -139,10 +162,12 @@ try {
     rmdir($separate);
 }
 $settings = ConfigurationDiagnostics::operationalSettings([]);
-if (count($settings) !== 20 || $settings[0]['stateKey'] !== 'COM_JLMS_CONFIG_SCAN_DISABLED'
+if (
+    count($settings) !== 20 || $settings[0]['stateKey'] !== 'COM_JLMS_CONFIG_SCAN_DISABLED'
     || $settings[1]['stateKey'] !== 'COM_JLMS_CONFIG_VIDEO_LOCAL_DISABLED'
     || $settings[2]['stateKey'] !== 'COM_JLMS_CONFIG_CERTIFICATES_DISABLED'
-    || $settings[3]['severity'] !== 'ok' || $settings[19]['severity'] !== 'ok') {
+    || $settings[3]['severity'] !== 'ok' || $settings[19]['severity'] !== 'ok'
+) {
     throw new RuntimeException('SCR-16 defaults do not reflect declared component configuration');
 }
 $settingsInvalid = ConfigurationDiagnostics::operationalSettings([
@@ -151,8 +176,10 @@ $settingsInvalid = ConfigurationDiagnostics::operationalSettings([
     'catalog_page_size' => '999', 'catalog_default_order' => 'unknown',
     'mail_enrollment_enabled' => 0, 'mail_completion_enabled' => 0,
 ]);
-if ($settingsInvalid[0]['severity'] !== 'error' || $settingsInvalid[1]['severity'] !== 'warning'
-    || $settingsInvalid[2]['severity'] !== 'ok' || $settingsInvalid[19]['severity'] !== 'warning') {
+if (
+    $settingsInvalid[0]['severity'] !== 'error' || $settingsInvalid[1]['severity'] !== 'warning'
+    || $settingsInvalid[2]['severity'] !== 'ok' || $settingsInvalid[19]['severity'] !== 'warning'
+) {
     throw new RuntimeException('SCR-16 operational flags or invalid configuration not classified');
 }
 $invalidGlobalCatalog = ConfigurationDiagnostics::operationalSettings(['catalog_show_filters' => 'unexpected']);
@@ -161,9 +188,11 @@ $validGlobalCatalog = ConfigurationDiagnostics::operationalSettings([
     'catalog_show_category' => '0', 'catalog_show_cover' => '1',
     'catalog_show_summary' => '0',
 ]);
-if ($invalidGlobalCatalog[19]['severity'] !== 'warning'
+if (
+    $invalidGlobalCatalog[19]['severity'] !== 'warning'
     || $invalidGlobalCatalog[19]['stateKey'] !== 'COM_JLMS_CONFIG_CATALOG_INVALID'
-    || $validGlobalCatalog[19]['severity'] !== 'ok') {
+    || $validGlobalCatalog[19]['severity'] !== 'ok'
+) {
     throw new RuntimeException('SCR-16 must diagnose every global catalogue presentation flag');
 }
 $settingsConfiguredScan = ConfigurationDiagnostics::operationalSettings([
@@ -172,17 +201,21 @@ $settingsConfiguredScan = ConfigurationDiagnostics::operationalSettings([
 if ($settingsConfiguredScan[0]['severity'] !== 'warning') {
     throw new RuntimeException('SCR-16 must not equate configured scanner with reachable scanner');
 }
-if ($settings[4]['labelKey'] !== 'COM_JLMS_MAIL_MANAGER_REQUEST_ENABLED'
+if (
+    $settings[4]['labelKey'] !== 'COM_JLMS_MAIL_MANAGER_REQUEST_ENABLED'
     || $settings[4]['severity'] !== 'warning'
     || $settings[11]['labelKey'] !== 'COM_JLMS_MAIL_ENROLLMENT_ENABLED'
     || $settings[11]['severity'] !== 'ok'
     || $settingsInvalid[11]['severity'] !== 'warning'
-    || $settingsInvalid[12]['severity'] !== 'warning') {
+    || $settingsInvalid[12]['severity'] !== 'warning'
+) {
     throw new RuntimeException('SCR-16 must expose individual inherited email notification flags');
 }
 foreach (array_merge($settings, $settingsInvalid, $settingsConfiguredScan, $invalidGlobalCatalog, $validGlobalCatalog) as $check) {
-    if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
-        || !in_array($check['severity'], ['ok', 'warning', 'error'], true)) {
+    if (
+        array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+        || !in_array($check['severity'], ['ok', 'warning', 'error'], true)
+    ) {
         throw new RuntimeException('SCR-16 configuration projection contains unexpected fields');
     }
     foreach ($check as $value) {
@@ -204,25 +237,38 @@ try {
     $inactive = ConfigurationDiagnostics::localVideoPrerequisites('disabled', '', '', ...$base);
     $missingVideo = ConfigurationDiagnostics::localVideoPrerequisites('php_bounded', '', '', ...$base);
     $publicVideo = ConfigurationDiagnostics::localVideoPrerequisites(
-        'php_bounded', $videoFixtures . '/public/media', $probe, ...$base
+        'php_bounded',
+        $videoFixtures . '/public/media',
+        $probe,
+        ...$base
     );
     $privateVideo = ConfigurationDiagnostics::localVideoPrerequisites(
-        'php_bounded', $videoFixtures . '/private', $probe, ...$base
+        'php_bounded',
+        $videoFixtures . '/private',
+        $probe,
+        ...$base
     );
     $noProbe = ConfigurationDiagnostics::localVideoPrerequisites(
-        'php_bounded', $videoFixtures . '/private', $videoFixtures . '/missing', ...$base
+        'php_bounded',
+        $videoFixtures . '/private',
+        $videoFixtures . '/missing',
+        ...$base
     );
     $relative = ConfigurationDiagnostics::localVideoPrerequisites('php_bounded', 'relative', $probe, ...$base);
-    if ($inactive !== [] || count($missingVideo) !== 2 || $missingVideo[0]['severity'] !== 'error'
+    if (
+        $inactive !== [] || count($missingVideo) !== 2 || $missingVideo[0]['severity'] !== 'error'
         || $publicVideo[0]['severity'] !== 'error' || $privateVideo[0]['severity'] !== 'ok'
         || $privateVideo[1]['severity'] !== 'warning' || $noProbe[1]['severity'] !== 'error'
-        || $relative[0]['severity'] !== 'error') {
+        || $relative[0]['severity'] !== 'error'
+    ) {
         throw new RuntimeException('SCR-16 local video root/probe readiness incorrectly classified');
     }
     foreach ([$missingVideo, $publicVideo, $privateVideo, $noProbe, $relative] as $group) {
         foreach ($group as $check) {
-            if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
-                || str_contains(json_encode($check, JSON_THROW_ON_ERROR), $videoFixtures)) {
+            if (
+                array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+                || str_contains(json_encode($check, JSON_THROW_ON_ERROR), $videoFixtures)
+            ) {
                 throw new RuntimeException('SCR-16 local-video prerequisites disclose raw paths');
             }
         }
@@ -244,11 +290,15 @@ $inheritWrongShape = ConfigurationDiagnostics::inheritance(['{}'], [
 ], true, true);
 $inheritOverridden = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"enrollment":"disabled","completion":"enabled"}}'],
-    [['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '{"catalog_page_size":"24"}']], true, true
+    [['link' => 'index.php?option=com_jlms&view=category&id=5', 'params' => '{"catalog_page_size":"24"}']],
+    true,
+    true
 );
 $inheritInvalid = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"completion":"untrusted"}}'],
-    [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"secret-value"}']], true, true
+    [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"secret-value"}']],
+    true,
+    true
 );
 $inheritMalformed = ConfigurationDiagnostics::inheritance(['{malformed'], [
     ['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{bad']
@@ -257,11 +307,13 @@ $inheritOverflow = ConfigurationDiagnostics::inheritance(['{"mail_preferences":{
 $inheritInvalidOverflow = ConfigurationDiagnostics::inheritance(
     ['{"mail_preferences":{"completion":"untrusted"}}'],
     [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{"catalog_page_size":"999"}']],
-    false, false
+    false,
+    false
 );
 $courseOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], false, true);
 $menuOverflowOnly = ConfigurationDiagnostics::inheritance(['{}'], [['link' => 'index.php?option=com_jlms&view=courses', 'params' => '{}']], true, false);
-if ($inheritBlankMenu[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
+if (
+    $inheritBlankMenu[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
     || $inheritWrongShape[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INVALID'
     || $inheritDefault[0]['severity'] !== 'ok' || $inheritDefault[1]['severity'] !== 'ok'
     || $inheritOverridden[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_OVERRIDES'
@@ -277,14 +329,17 @@ if ($inheritBlankMenu[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
     || $courseOverflowOnly[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE'
     || $courseOverflowOnly[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
     || $menuOverflowOnly[0]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INHERITED'
-    || $menuOverflowOnly[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE') {
+    || $menuOverflowOnly[1]['stateKey'] !== 'COM_JLMS_CONFIG_INHERIT_INCOMPLETE'
+) {
     throw new RuntimeException('SCR-16 course/menu inheritance classification regression');
 }
 foreach ([$inheritDefault, $inheritBlankMenu, $inheritWrongShape, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow, $courseOverflowOnly, $menuOverflowOnly] as $checks) {
     foreach ($checks as $check) {
-        if (array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
+        if (
+            array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
             || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'secret-value')
-            || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'enrollment')) {
+            || str_contains(json_encode($check, JSON_THROW_ON_ERROR), 'enrollment')
+        ) {
             throw new RuntimeException('SCR-16 inheritance diagnostic exposes raw context');
         }
     }

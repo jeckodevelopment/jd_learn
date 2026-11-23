@@ -14,9 +14,12 @@ final class ClassroomModel extends ItemModel
     {
         $app = Factory::getApplication();
         try {
-            return $app->bootComponent('com_jlms')->getLearningService()->classroom($app->getIdentity(),
-                $app->getLanguage()->getTag(), (int) ($pk ?? $app->getInput()->getInt('id', 0)),
-                $app->getInput()->getInt('lesson_id', 0));
+            return $app->bootComponent('com_jlms')->getLearningService()->classroom(
+                $app->getIdentity(),
+                $app->getLanguage()->getTag(),
+                (int) ($pk ?? $app->getInput()->getInt('id', 0)),
+                $app->getInput()->getInt('lesson_id', 0)
+            );
         } catch (\RuntimeException $error) {
             $allowed = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW',
                 'COM_JLMS_RESOURCE_NOT_FOUND', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];

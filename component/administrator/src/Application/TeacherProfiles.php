@@ -161,9 +161,11 @@ final class TeacherProfiles
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
         $result = [];
         foreach ($snapshots as $profile) {
-            if (!isset($current[$profile['id']]) || !in_array($profile['access'], $levels, true)
+            if (
+                !isset($current[$profile['id']]) || !in_array($profile['access'], $levels, true)
                 || array_diff($profile['category_access'], $levels) || array_diff($profile['category_language'], ['*',$language])
-                || !in_array($profile['language'], ['*', $language], true)) {
+                || !in_array($profile['language'], ['*', $language], true)
+            ) {
                 continue;
             }
             // Live availability gates historical text; profile edits never rewrite the snapshot.

@@ -46,8 +46,12 @@ final class EnrollmentapprovalController extends BaseController
             $requestId = CurriculumService::id($raw['request_id']);
             $revision = CurriculumService::id($raw['revision']);
             $this->app->bootComponent('com_jlms')->getEnrollmentApprovalService()->decide(
-                $this->app->getIdentity(), $courseId, $requestId, $revision,
-                $raw['decision'], $raw['reason'],
+                $this->app->getIdentity(),
+                $courseId,
+                $requestId,
+                $revision,
+                $raw['decision'],
+                $raw['reason'],
             );
             $this->setMessage(Text::_('COM_JLMS_ENROLLMENT_APPROVAL_SAVED'));
             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollments&id=' . $courseId, false));

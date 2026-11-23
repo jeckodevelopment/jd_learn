@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -69,29 +69,37 @@ $registry = new VideoProviderRegistry();
 foreach ([new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
     $registry->register($provider->getDescriptor(), static fn()=>$provider);
 }
-$authoring = new \Jlms\Component\Jlms\Administrator\Application\CurriculumService($db, static fn(string $body):string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), static fn()=>$registry);
+$authoring = new \Jlms\Component\Jlms\Administrator\Application\CurriculumService($db, static fn(string $body): string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), static fn()=>$registry);
 $component->setCurriculumService($authoring);
 $actor = $app->getIdentity();
 $publication = $component->getPublicationService();
 $learning = $component->getLearningService();
 $checks = 0;
-function durationExpect(bool $ok,string $message):void{global $checks;
-    if (!$ok)throw new RuntimeException($message);
+function durationExpect(bool $ok, string $message): void
+{
+    global $checks;
+    if (!$ok) {
+        throw new RuntimeException($message);
+    }
     $checks++;
 }
-function durationDenied(callable $work,string $key):void{try {
+function durationDenied(callable $work, string $key): void
+{
+    try {
         $work();
-
-} catch (\Throwable $e) {
-    durationExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
-    return;
-
-}throw new RuntimeException('Expected ' . $key);
+    } catch (\Throwable $e) {
+        durationExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
+        return;
+    }throw new RuntimeException('Expected ' . $key);
 }
-function durationRow(string $table,int $id):object{global $db;
+function durationRow(string $table, int $id): object
+{
+    global $db;
     return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
-function durationState(int $course):array{global $db;
+function durationState(int $course): array
+{
+    global $db;
     $versions = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList();
     $ids = implode(',', array_column($versions, 'id'));
     return ['course' => (array)durationRow('courses', $course),'versions' => $versions,'lessons' => $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id IN (' . $ids . ') ORDER BY id')->loadAssocList(),'enrollments' => $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(),'progress' => $db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
@@ -104,12 +112,10 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
     if ($mode === 'checkpoint') {
         file_put_contents($fixture . '.snapshot', json_encode($state, JSON_THROW_ON_ERROR));
         return;
-
     }if ($mode === 'retained') {
         durationExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Measured provenance, frozen lessons and observed-duration progress survive upgrade');
         echo json_encode(['video_duration_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
         return;
-
     }echo json_encode($state, JSON_THROW_ON_ERROR);
     return;
 }
@@ -132,8 +138,8 @@ durationExpect($model->save(['id' => $course,'revision' => $item->revision,'cata
 $version = (int)$authoring->outline($actor, $course)['version']->id;
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
 $lesson = (int)$authoring->outline($actor, $course, $version)['lessons'][0]->id;
-$scope = static fn():array=>['course_id' => $course,'version_id' => $version,'module_id' => $module,'expected_version_revision' => durationRow('course_versions', $version)->revision];
-$input = static fn():array=>$scope() + ['id' => $lesson,'revision' => durationRow('lessons', $lesson)->revision,'title' => 'Automatically measured lesson','kind' => 'video','required' => '1','body' => '<p>Metadata authoring fixture</p>','provider_key' => 'youtube','source_reference' => 'dQw4w9WgXcQ','privacy_hash' => '','duration_mode' => 'auto'];
+$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'module_id' => $module,'expected_version_revision' => durationRow('course_versions', $version)->revision];
+$input = static fn(): array=>$scope() + ['id' => $lesson,'revision' => durationRow('lessons', $lesson)->revision,'title' => 'Automatically measured lesson','kind' => 'video','required' => '1','body' => '<p>Metadata authoring fixture</p>','provider_key' => 'youtube','source_reference' => 'dQw4w9WgXcQ','privacy_hash' => '','duration_mode' => 'auto'];
 $before = durationState($course);
 $data = $authoring->authoringMetadata($actor, $input());
 durationExpect($data['duration_ms'] === null && $data['origin'] === 'author_sdk' && $data['options']['reference'] === 'dQw4w9WgXcQ', 'YouTube inspection returns normalized SDK options without fake enrollment');
@@ -158,10 +164,10 @@ $calls = count($remote->calls);
 durationDenied(fn()=>$authoring->authoringMetadata(new \Joomla\CMS\User\User(0), $stream), 'JERROR_ALERTNOAUTHOR');
 durationExpect(count($remote->calls) === $calls, 'Remote API is not contacted before author authorization');
 $previousRevision = (int)durationRow('course_versions', $version)->revision;
-$remote->callback = static function()use($db,$version,$previousRevision,$remote):void{$remote->callback = null;
+$remote->callback = static function () use ($db, $version, $previousRevision, $remote): void {
+    $remote->callback = null;
     $changed = (object)['id' => $version,'revision' => $previousRevision + 1];
     $db->updateObject('#__jlms_course_versions', $changed, 'id');
-
 };
 durationDenied(fn()=>$authoring->authoringMetadata($actor, $stream), 'COM_JLMS_REVISION_CONFLICT');
 $reset = (object)['id' => $version,'revision' => $previousRevision];
@@ -170,23 +176,23 @@ $api = $authoring->authoringMetadata($actor, $stream);
 durationExpect($api['duration_ms'] === 10000 && $api['origin'] === 'provider_api', 'Stream duration comes from controlled official API metadata');
 $streamId = $authoring->saveLesson($actor, $stream, ['fingerprint' => $api['fingerprint'],'duration_ms' => $api['duration_ms'],'origin' => $api['origin']]);
 durationExpect(json_decode(durationRow('lessons', $streamId)->params_json, true)['video_duration_origin'] === 'provider_api', 'Server API provenance retained');
-$publish = static function(int $id)use($publication,$actor,$course):void{$t = (int)$publication->transitions($actor, $course, $id)[0]->id;
+$publish = static function (int $id) use ($publication, $actor, $course): void {
+    $t = (int)$publication->transitions($actor, $course, $id)[0]->id;
     $impact = $publication->updateImpact($actor, $course, $id, $t);
     $publication->transition($actor, $course, $id, (int)durationRow('courses', $course)->revision, (int)durationRow('course_versions', $id)->revision, $t, $impact['fingerprint'] ?? null);
-
 };
 $publish($version);
 $frozen = durationRow('lessons', $lesson);
 durationDenied(fn()=>$authoring->authoringMetadata($actor, $input()), 'COM_JLMS_VERSION_IMMUTABLE');
 $enrollment = $learning->start($actor, 'en-GB', $course, bin2hex(random_bytes(20)));
 $now = (int)floor(microtime(true) * 1000);
-$video = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function()use(&$now):int{return $now;
-
+$video = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
+    return $now;
 });
 $grant = $video->playback($actor, 'en-GB', $enrollment, $lesson, true);
-$event = static fn(int $id,string $type,int $p,int $time,bool $playing=true):array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $time,'rate_milli' => 1000,'playing' => $playing];
+$event = static fn(int $id, string $type, int $p, int $time, bool $playing = true): array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $time,'rate_milli' => 1000,'playing' => $playing];
 $now += 1000;
-$save = static fn(int $seq,array $events,int $duration)=>$video->save($actor, 'en-GB', $enrollment, $lesson, $grant['session_id'], $grant['source_revision'], $seq, $duration, json_encode($events, JSON_THROW_ON_ERROR));
+$save = static fn(int $seq, array $events, int $duration)=>$video->save($actor, 'en-GB', $enrollment, $lesson, $grant['session_id'], $grant['source_revision'], $seq, $duration, json_encode($events, JSON_THROW_ON_ERROR));
 $r = $save(1, [$event(1, 'play', 0, 0),$event(2, 'seeking', 8000, 1, false),$event(3, 'ended', 8000, 2, false)], 8000);
 durationExpect(!$r['lesson_completed'] && $r['covered_ms'] === 0, 'Minor duration difference and ended event never count skipped content');
 $now += 7200;

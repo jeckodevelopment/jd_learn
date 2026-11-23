@@ -1,11 +1,14 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Controller;
+
 use Joomla\CMS\MVC\Controller\BaseController;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+
 final class ManualenrollmentController extends BaseController
 {
     public function execute($task)

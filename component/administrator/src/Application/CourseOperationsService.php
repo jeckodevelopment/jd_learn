@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\User\User;
@@ -11,13 +13,16 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 final class CourseOperationsService
 {
     private const FIELDS = ['admissions' => 'admissions_open', 'delivery' => 'delivery_enabled'];
-    public function __construct(private readonly DatabaseInterface $db, private readonly EnrollmentRosterService $roster, private readonly \Closure $audit) {
+    public function __construct(private readonly DatabaseInterface $db, private readonly EnrollmentRosterService $roster, private readonly \Closure $audit)
+    {
     }
 
     private function preview(User $actor, int $courseId, string $operation): array
     {
-        if (!isset(self::FIELDS[substr($operation, 0, strrpos($operation, '_'))])
-            || !in_array($operation, ['admissions_close','admissions_open','delivery_suspend','delivery_resume'], true)) {
+        if (
+            !isset(self::FIELDS[substr($operation, 0, strrpos($operation, '_'))])
+            || !in_array($operation, ['admissions_close','admissions_open','delivery_suspend','delivery_resume'], true)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $course = $this->roster->course($actor, $courseId);
@@ -52,9 +57,13 @@ final class CourseOperationsService
     {
         $this->roster->course($actor, $courseId);
         $reason = trim($reason);
-        if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)
+        if (
+            $reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)
             || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $mutation)
-            || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_REASON', 422);
+            || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)
+        ) {
+            throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_REASON', 422);
+        }
         $this->db->transactionStart();
         try {
             $q = $this->db->createQuery()->select('id')->from('#__jlms_courses')->where('id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
@@ -78,7 +87,9 @@ final class CourseOperationsService
                 }
                 throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
             }
-            if ($p['blocked'] || $p['revision'] !== $revision || !hash_equals($p['hash'], $impactHash)) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
+            if ($p['blocked'] || $p['revision'] !== $revision || !hash_equals($p['hash'], $impactHash)) {
+                throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
+            }
             $field = self::FIELDS[substr($operation, 0, strrpos($operation, '_'))];
             $target = (int)$p['target'];
             $actorId = (int)$actor->id;
@@ -86,7 +97,9 @@ final class CourseOperationsService
             $q = $this->db->createQuery()->update('#__jlms_courses')->set($this->db->quoteName($field) . '=:target')->set('revision=revision+1')->set('modified_by=:actor')->set('modified_at=:now')->where('id=:course')->where('revision=:revision')
                 ->bind(':target', $target, ParameterType::INTEGER)->bind(':actor', $actorId, ParameterType::INTEGER)->bind(':now', $now)->bind(':course', $courseId, ParameterType::INTEGER)->bind(':revision', $revision, ParameterType::INTEGER);
             $this->db->setQuery($q)->execute();
-            if ($this->db->getAffectedRows() !== 1) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
+            if ($this->db->getAffectedRows() !== 1) {
+                throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
+            }
             $q = $this->db->createQuery()->select('COALESCE(MAX(revision_no),0)+1')->from('#__jlms_course_operations')->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
             $sequence = (int)$this->db->setQuery($q)->loadResult();
             $record = (object)['course_id' => $courseId,'revision_no' => $sequence,'operation' => $operation,'previous_value' => (int)$p['current'],'target_value' => $target,'impact_hash' => $impactHash,'reason' => $reason,'actor_user_id' => (int)$actor->id,'mutation_id' => $mutation,'created_at' => $now];

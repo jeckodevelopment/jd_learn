@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -69,33 +69,47 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function reviewExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function reviewExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function reviewReject(callable $work,int $code,string $message):void{try {
+function reviewReject(callable $work, int $code, string $message): void
+{
+    try {
         $work();
-
-} catch (\RuntimeException $error) {
-    reviewExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $error) {
+        reviewExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+        return;
+    }throw new \RuntimeException($message);
 }
-function reviewKey():string{$s = bin2hex(random_bytes(16));
+function reviewKey(): string
+{
+    $s = bin2hex(random_bytes(16));
     return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
 }
-function reviewAnswers(array $a):string{$r = [];
-    foreach ($a['questions']as$q)$r[$q['id']] = $q['kind'] === 'multiple' ? ['first','second'] : ['first'];
+function reviewAnswers(array $a): string
+{
+    $r = [];
+    foreach ($a['questions'] as $q) {
+        $r[$q['id']] = $q['kind'] === 'multiple' ? ['first','second'] : ['first'];
+    }
     return json_encode($r, JSON_THROW_ON_ERROR);
 }
-function reviewUser(string $name,int $group):\Joomla\CMS\User\User{
+function reviewUser(string $name, int $group): \Joomla\CMS\User\User
+{
     $u = new \Joomla\CMS\User\User();
     $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
-    if (!$u->bind($d) || !$u->save())throw new \RuntimeException((string)$u->getError());
+    if (!$u->bind($d) || !$u->save()) {
+        throw new \RuntimeException((string)$u->getError());
+    }
     return new \Joomla\CMS\User\User((int)$u->id);
 }
-function reviewCommand(array $item,string $reason='PRIVATE_CANCEL_REASON',?string $key=null):array{
+function reviewCommand(array $item, string $reason = 'PRIVATE_CANCEL_REASON', ?string $key = null): array
+{
     $p = $item['impact'];
     return [$item['course_id'],$item['lesson_id'],(int)$item['enrollment']->id,(int)$item['selected']->id,$p['enrollment_revision'],$p['attempt_revision'],$item['refund'],$reason,$key ?? reviewKey(),$p['hash'],true];
 }
@@ -103,8 +117,8 @@ $actor = $app->getIdentity();
 $review = $component->getQuizReviewService();
 $learning = $component->getLearningService();
 $now = time();
-$runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function()use(&$now):int{return $now;
-
+$runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
+    return $now;
 }, $component->getQuizTimeService());
 $f = json_decode(file_get_contents(dirname($root) . '/quiz-attempts-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $course = $f['course_id'];
@@ -116,16 +130,17 @@ if (($argv[2] ?? '') === 'worker') {
     fgets(STDIN);
     $race = json_decode(file_get_contents(dirname($root) . '/quiz-review-race.json'), true, 16, JSON_THROW_ON_ERROR);
     try {
-        if (($argv[3] ?? '') === 'cancel')$review->cancel($actor, ...$race['command']);
-        else {
+        if (($argv[3] ?? '') === 'cancel') {
+            $review->cancel($actor, ...$race['command']);
+        } else {
             $u = new \Joomla\CMS\User\User($race['user']);
             $runtime->mutate($u, 'en-GB', $race['enrollment'], $lesson, $race['attempt'], 1, reviewKey(), $race['answers'], true);
-
         }echo "ok\n";
     } catch (\RuntimeException $error) {
-        if ($error->getCode() !== 409)throw $error;
+        if ($error->getCode() !== 409) {
+            throw $error;
+        }
         echo "conflict\n";
-
     }exit(0);
 }
 if (($argv[2] ?? '') === 'retained') {
@@ -205,8 +220,8 @@ $a = $runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey());
 $fourth = $a['attempt']['id'];
 reviewExpect($a['attempt']['number'] === 4, 'number remains monotonic after multiple refunds');
 // Audit failure must leave attempt, slot and projections unchanged.
-$broken = new \Jlms\Component\Jlms\Administrator\Application\QuizReviewService($db, $component->getQuizTimeService(), static function():void{throw new \RuntimeException('COM_JLMS_QUIZ_REVIEW_AUDIT_FAILED', 503);
-
+$broken = new \Jlms\Component\Jlms\Administrator\Application\QuizReviewService($db, $component->getQuizTimeService(), static function (): void {
+    throw new \RuntimeException('COM_JLMS_QUIZ_REVIEW_AUDIT_FAILED', 503);
 });
 $item = $review->editor($actor, $course, $lesson, $enrollment, $fourth, false);
 $failure = reviewCommand($item);
@@ -284,28 +299,35 @@ $raceA = $runtime->start($raceUser, 'en-GB', $raceEnrollment, $lesson, reviewKey
 $race = ['user' => (int)$raceUser->id,'enrollment' => $raceEnrollment,'attempt' => $raceA['attempt']['id'],'answers' => reviewAnswers($raceA),'command' => reviewCommand($review->editor($actor, $course, $lesson, $raceEnrollment, $raceA['attempt']['id'], false))];
 file_put_contents(dirname($root) . '/quiz-review-race.json', json_encode($race, JSON_THROW_ON_ERROR));
 $workers = [];
-foreach (['cancel','submit']as$mode) {
+foreach (['cancel','submit'] as $mode) {
     $pipes = [];
     $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-    if (!is_resource($process))throw new \RuntimeException('Worker failed');
+    if (!is_resource($process)) {
+        throw new \RuntimeException('Worker failed');
+    }
     $workers[] = [$process,$pipes];
 }
-foreach ($workers as[$process,$pipes])if (trim((string)fgets($pipes[1])) !== 'ready')throw new \RuntimeException('Worker barrier failed');
+foreach ($workers as [$process,$pipes]) {
+    if (trim((string)fgets($pipes[1])) !== 'ready') {
+        throw new \RuntimeException('Worker barrier failed');
+    }
+}
 $db->transactionStart();
 $db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id=' . $raceEnrollment . ' FOR UPDATE')->loadResult();
-foreach ($workers as[$process,$pipes]) {
+foreach ($workers as [$process,$pipes]) {
     fwrite($pipes[0], "go\n");
     fclose($pipes[0]);
-
 }usleep(200000);
 $db->transactionCommit();
 $results = [];
-foreach ($workers as[$process,$pipes]) {
+foreach ($workers as [$process,$pipes]) {
     $out = trim(stream_get_contents($pipes[1]));
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    if (proc_close($process) !== 0)throw new \RuntimeException($error . $out);
+    if (proc_close($process) !== 0) {
+        throw new \RuntimeException($error . $out);
+    }
     $results[] = $out;
 }
 sort($results);

@@ -1,34 +1,39 @@
 <?php
 
 declare(strict_types=1);
+
 require __DIR__ . '/bootstrap.php';
 use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 use Jlms\Component\Jlms\Administrator\Domain\QuizScorer;
 $checks = 0;
-function qExpect(bool $ok,string $message):void{global$checks;
-    if (!$ok)throw new \RuntimeException($message);
+function qExpect(bool $ok, string $message): void
+{
+    global$checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+    }
     $checks++;
 }
-function qReject(callable $work,string $message):void{try {
+function qReject(callable $work, string $message): void
+{
+    try {
         $work();
-
-} catch (\RuntimeException $e) {
-    qExpect(in_array($e->getCode(), [400,422], true), $message);
-    return;
-
-}throw new \RuntimeException($message);
+    } catch (\RuntimeException $e) {
+        qExpect(in_array($e->getCode(), [400,422], true), $message);
+        return;
+    }throw new \RuntimeException($message);
 }
-function qReason(callable $work,string $reason):void{try {
+function qReason(callable $work, string $reason): void
+{
+    try {
         $work();
-
-} catch (\RuntimeException $e) {
-    qExpect($e->getMessage() === $reason, 'specific validation reason: ' . $reason);
-    return;
-
-}throw new \RuntimeException('Expected validation reason: ' . $reason);
+    } catch (\RuntimeException $e) {
+        qExpect($e->getMessage() === $reason, 'specific validation reason: ' . $reason);
+        return;
+    }throw new \RuntimeException('Expected validation reason: ' . $reason);
 }
 $input = ['kind' => 'single','prompt' => '<p>A question?</p>','options' => [['option_id' => 'a','label' => 'First','correct' => '1'],['option_id' => 'b','label' => 'Second','correct' => '0']],'default_points' => '3','explanation' => '<p>Explanation</p>'];
-$filter = static fn(string $html):string=>strip_tags($html, '<p>');
+$filter = static fn(string $html): string=>strip_tags($html, '<p>');
 $d = QuestionDefinition::normalise($input, $filter);
 qExpect($d['grading']['correct'] === ['a'] && $d['grading']['default_points'] === 3, 'correct IDs and integral points retained');
 $nativeUnchecked = $input;
@@ -61,7 +66,7 @@ $tf['kind'] = 'true_false';
 qExpect(QuestionDefinition::normalise($tf, $filter)['kind'] === 'true_false', 'two-option true false accepted');
 $tf['options'][] = ['label' => 'Third','correct' => '0'];
 qReject(fn()=>QuestionDefinition::normalise($tf, $filter), 'true false has exactly two options');
-foreach (['0','-1','1.5','1e2','10001']as$bad) {
+foreach (['0','-1','1.5','1e2','10001'] as $bad) {
     qReject(fn()=>QuestionDefinition::normalise(array_replace($input, ['default_points' => $bad]), $filter), 'invalid points: ' . $bad);
 }
 $bad = $input;

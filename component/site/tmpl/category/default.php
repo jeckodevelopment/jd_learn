@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -14,7 +16,7 @@ use Joomla\CMS\Router\Route;
                                                               <?php endforeach; ?></ul>
         <?php if (!$this->children) :
             ?><p id="jlms-subcategories-empty"><?= Text::_('COM_JLMS_NO_VISIBLE_CATEGORIES') ?></p><?php
-  endif; ?>
+        endif; ?>
   <nav id="jlms-subcategories-pagination" aria-label="<?= Text::_('COM_JLMS_SUBCATEGORIES') ?>"><?= $this->childrenPagination->getPagesLinks() ?></nav>
  </section>
  <?php endif; ?>
@@ -28,7 +30,7 @@ use Joomla\CMS\Router\Route;
             <?php if ($this->showOrder) : ?>
    <label for="jlms-category-catalog-order"><?= Text::_('COM_JLMS_CATALOG_ORDER') ?></label>
    <select id="jlms-category-catalog-order" name="filter[order]"><option value="editorial"<?= $this->order === 'editorial' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_EDITORIAL') ?></option><option value="recent"<?= $this->order === 'recent' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_RECENT') ?></option><option value="title"<?= $this->order === 'title' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_TITLE') ?></option><option value="duration"<?= $this->order === 'duration' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_DURATION') ?></option><option value="published"<?= $this->order === 'published' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_PUBLISHED') ?></option></select>
-   <?php endif; ?>
+            <?php endif; ?>
    <label for="jlms-category-catalog-tag"><?= Text::_('COM_JLMS_CATALOG_TAG') ?></label>
    <select id="jlms-category-catalog-tag" name="filter[tag_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
         ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php
@@ -51,7 +53,7 @@ use Joomla\CMS\Router\Route;
                                                                                           endforeach; ?></select>
    <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
   </form>
-  <?php endif; ?>
+        <?php endif; ?>
   <div id="jlms-category-course-grid" class="jlms-course-grid<?= $this->layout === 'list' ? ' jlms-course-grid--list' : '' ?>" data-layout="<?= $this->escape($this->layout) ?>"><?php foreach ($this->items as $item) : ?>
    <article id="jlms-course-card-<?= (int) $item->id ?>" class="jlms-card jlms-course-card" data-course-id="<?= (int) $item->id ?>">
     <h3 class="jlms-course-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h3>
@@ -62,8 +64,8 @@ use Joomla\CMS\Router\Route;
             ?><p id="jlms-category-courses-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p>
             <?php if ($this->showFilters && ($this->search !== '' || $this->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->available === '1' || $this->teacherId > 0 || $this->pathwayId > 0)) : ?>
     <p id="jlms-category-clear-filters"><a href="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $this->category->id) ?>"><?= Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
-   <?php endif; ?>
-  <?php endif; ?>
+            <?php endif; ?>
+        <?php endif; ?>
   <nav id="jlms-category-courses-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
  </section>
  <?php endif; ?>

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 \defined('_JEXEC') or die;
 
 if (!\defined('JLMS_CONTRACTS_AUTOLOAD')) {

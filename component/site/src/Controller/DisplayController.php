@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Site\Controller;
+
 use Joomla\CMS\MVC\Controller\BaseController;
 
 final class DisplayController extends BaseController

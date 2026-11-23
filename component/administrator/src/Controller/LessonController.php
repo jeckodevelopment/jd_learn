@@ -59,10 +59,14 @@ final class LessonController extends CurriculumController
         $this->app->close();
     }
 
-    public function move(): void { $this->perform('move', 'lesson');
+    public function move(): void
+    {
+        $this->perform('move', 'lesson');
     }
 
-    public function duplicate(): void { $this->perform('duplicate', 'lesson');
+    public function duplicate(): void
+    {
+        $this->perform('duplicate', 'lesson');
     }
 
     public function save(): void

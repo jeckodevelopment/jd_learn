@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -72,32 +72,36 @@ if (!$model->save($data)) {
 $course = (int) $model->getState('course.id');
 $version = $service->createDraft($actor, $course, 1);
 $checks = 0;
-function curriculumExpect(bool $ok, string $message): void {
+function curriculumExpect(bool $ok, string $message): void
+{
     global $checks;
     if (!$ok) {
         throw new \RuntimeException($message);
     }
     $checks++;
 }
-function curriculumDenied(callable $call, string $message): void {
+function curriculumDenied(callable $call, string $message): void
+{
     try {
         $call();
-
     } catch (\DomainException | \InvalidArgumentException $expected) {
         curriculumExpect(true, $message);
         return;
     }
     throw new \RuntimeException($message);
 }
-function versionRevision(): int {
+function versionRevision(): int
+{
     global $db, $version;
     return (int) $db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
 }
-function scopeInput(): array {
+function scopeInput(): array
+{
     global $course, $version;
     return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => versionRevision()];
 }
-function recordRevision(string $table, int $id): int {
+function recordRevision(string $table, int $id): int
+{
     global $db;
     return (int) $db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadResult();
 }

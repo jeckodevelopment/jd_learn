@@ -72,7 +72,7 @@ assert "function mailTemplates(array $required, array $installed): array" in dia
 assert "string $documentRoot = ''" in diagnostics_code
 assert "static function (string $label, bool $enabled" in diagnostics_code
 assert "$params['material_clamd_socket']" in diagnostics_code
-assert "array_push($this->configurationDiagnostics" in view
+assert re.search(r"array_push\s*\(\s*\$this->configurationDiagnostics\b", view) is not None
 assert "is_string($_SERVER['DOCUMENT_ROOT'] ?? null)" in view
 assert "->select($db->quoteName(['template_id', 'language']))" in view
 for forbidden in ("->insert(", "->update(", "->delete(", "stream_socket_client(", "sendMail("):
@@ -159,7 +159,7 @@ assert "array_slice($courseOptions, 0, 500)" in view
 assert "array_slice($menuOptions, 0, 500)" in view
 assert "$coursesComplete = count($courseOptions) <= 500;" in view
 assert "$menusComplete = count($menuOptions) <= 500;" in view
-assert "$coursesComplete, $menusComplete" in view
+assert re.search(r"\$coursesComplete\s*,\s*\$menusComplete", view) is not None
 # Unrelated Joomla component menu links must not consume the 500-row limit.
 assert "index.php?option=com_jlms&view=courses&%" in view
 assert "index.php?option=com_jlms&view=category&%" in view

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -77,20 +77,17 @@ foreach ([(int) $account->id + 1000000, 0] as $unknownId) {
         $consentClass::verifiedRecipient($db, $unknownId, (string) $account->email, 'registration');
         throw new \RuntimeException('Nonexistent Joomla account accepted for consent.');
     } catch (\InvalidArgumentException) {
-
     }
 }
 try {
     $consentClass::verifiedRecipient($db, (int) $account->id, 'stale-recipient@example.invalid', 'registration');
     throw new \RuntimeException('Stale session email accepted for consent.');
 } catch (\InvalidArgumentException) {
-
 }
 try {
     $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, 'unsupported');
     throw new \RuntimeException('Unsupported consent origin accepted.');
 } catch (\InvalidArgumentException) {
-
 }
 $oldBlock = (int) $account->block;
 try {
@@ -105,7 +102,6 @@ try {
             $consentClass::verifiedRecipient($db, (int) $account->id, (string) $account->email, $origin);
             throw new \RuntimeException('Blocked account accepted for consent origin: ' . $origin);
         } catch (\InvalidArgumentException) {
-
         }
     }
 } finally {
@@ -125,7 +121,8 @@ try {
     if (!$mailQueueClass::currentRecipient($db, $queued)) {
         throw new \RuntimeException('Valid current Joomla outbox recipient must be deliverable.');
     }
-    foreach ([
+    foreach (
+        [
         (object) ['recipient_user_id' => 0, 'recipient_email' => (string) $account->email],
         (object) ['recipient_user_id' => (int) $account->id + 1000000,
             'recipient_email' => (string) $account->email],
@@ -133,7 +130,8 @@ try {
             'recipient_email' => 'stale-outbox@example.invalid'],
         (object) ['recipient_user_id' => (int) $account->id,
             'recipient_email' => 'not-an-email'],
-    ] as $badRecipient) {
+        ] as $badRecipient
+    ) {
         if ($mailQueueClass::currentRecipient($db, $badRecipient)) {
             throw new \RuntimeException('Stale, invalid or unbound outbox recipient passed.');
         }
@@ -154,16 +152,23 @@ $renderTemplate->addUnsafeTags($mailEscaping::tagsRequiringHtmlEscape('com_jlms.
 $replaceTokens = new \ReflectionMethod(\Joomla\CMS\Mail\MailTemplate::class, 'replaceTags');
 $unsafeTitle = '<img src=x onerror=alert(1)>';
 $htmlTitle = htmlspecialchars($unsafeTitle, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-$rendered = $replaceTokens->invoke($renderTemplate,
+$rendered = $replaceTokens->invoke(
+    $renderTemplate,
     '<p>{COURSE_TITLE}</p><p>{COURSE_TITLE_HTML}</p>',
-    ['COURSE_TITLE' => $unsafeTitle, 'COURSE_TITLE_HTML' => $htmlTitle], true);
+    ['COURSE_TITLE' => $unsafeTitle, 'COURSE_TITLE_HTML' => $htmlTitle],
+    true
+);
 if ($rendered !== '<p>' . $htmlTitle . '</p><p>' . $htmlTitle . '</p>') {
     throw new \RuntimeException('Mail template must escape raw text and avoid double-escaping prepared HTML.');
 }
 $renderFragment = new \Joomla\CMS\Mail\MailTemplate('com_jlms.course.message', 'en-GB');
 $renderFragment->addUnsafeTags($mailEscaping::tagsRequiringHtmlEscape('com_jlms.course.message'));
-$rendered = $replaceTokens->invoke($renderFragment, '<p>{MESSAGE_BODY_HTML}</p><p>{MESSAGE_BODY_TEXT}</p>',
-    ['MESSAGE_BODY_HTML' => '<strong>Allowed</strong>', 'MESSAGE_BODY_TEXT' => '<img src=x onerror=alert(1)>'], true);
+$rendered = $replaceTokens->invoke(
+    $renderFragment,
+    '<p>{MESSAGE_BODY_HTML}</p><p>{MESSAGE_BODY_TEXT}</p>',
+    ['MESSAGE_BODY_HTML' => '<strong>Allowed</strong>', 'MESSAGE_BODY_TEXT' => '<img src=x onerror=alert(1)>'],
+    true
+);
 if ($rendered !== '<p><strong>Allowed</strong></p><p>' . $htmlTitle . '</p>') {
     throw new \RuntimeException('Joomla must preserve sanitized mail HTML and escape raw body text.');
 }
@@ -225,9 +230,11 @@ foreach ($mailTemplateIds as $templateId) {
 // Course-message composition must load the actual Joomla template and validate a
 // per-send snapshot without changing the global template.
 $templateSource = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::load('*');
-if (!str_contains($templateSource['subject'], '{MESSAGE_SUBJECT}')
+if (
+    !str_contains($templateSource['subject'], '{MESSAGE_SUBJECT}')
     || !str_contains($templateSource['body'], '{MESSAGE_BODY_TEXT}')
-    || !str_contains($templateSource['htmlbody'], '{MESSAGE_BODY_HTML}')) {
+    || !str_contains($templateSource['htmlbody'], '{MESSAGE_BODY_HTML}')
+) {
     throw new \RuntimeException('Course communication must preload the Joomla Mail Template.');
 }
 $sampleVars = [
@@ -237,9 +244,11 @@ $sampleVars = [
     'SITE_NAME' => 'Sito', 'SITE_NAME_HTML' => 'Sito',
 ];
 $composerSource = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
-if (str_contains(implode(' ', $composerSource), '{MESSAGE_SUBJECT}')
+if (
+    str_contains(implode(' ', $composerSource), '{MESSAGE_SUBJECT}')
     || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_TEXT}')
-    || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_HTML}')) {
+    || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_HTML}')
+) {
     throw new \RuntimeException('Legacy free-message fields were not resolved for the single composer.');
 }
 $checked = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($composerSource, $sampleVars);
@@ -248,7 +257,8 @@ if ($checked['subject'] !== $composerSource['subject']) {
 }
 try {
     \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
-        ['subject' => '{UNSUPPORTED_TAG}', 'body' => 'Text', 'htmlbody' => '<p>Text</p>'], $sampleVars
+        ['subject' => '{UNSUPPORTED_TAG}', 'body' => 'Text', 'htmlbody' => '<p>Text</p>'],
+        $sampleVars
     );
     throw new \RuntimeException('Unsupported mail variables must be rejected.');
 } catch (\RuntimeException $expected) {
@@ -279,9 +289,11 @@ $singleComposer['subject'] = 'Aggiornamento {COURSE_TITLE}';
 $singleComposer['htmlbody'] = '<p>Ciao {USER_FULLNAME_HTML}, novità sul corso {COURSE_TITLE_HTML}.</p><p>{SITE_NAME_HTML}</p>';
 $singleComposer['body'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($singleComposer['htmlbody']);
 $checkedSingle = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($singleComposer, $sampleVars);
-if ($checkedSingle['subject'] !== 'Aggiornamento {COURSE_TITLE}'
+if (
+    $checkedSingle['subject'] !== 'Aggiornamento {COURSE_TITLE}'
     || !str_contains($checkedSingle['body'], '{USER_FULLNAME}')
-    || $composerRenderer->render($checkedSingle['subject'], $sampleVars) !== 'Aggiornamento Corso') {
+    || $composerRenderer->render($checkedSingle['subject'], $sampleVars) !== 'Aggiornamento Corso'
+) {
     throw new \RuntimeException('Single editor rejects standard recipient/course variables.');
 }
 // Upgrades synchronize the Joomla tag list but preserve the old content.
@@ -305,12 +317,14 @@ try {
     ] + $sampleVars;
     $renderedBody = $composerRenderer->render($snapshot['body'], $escapedSample);
     $renderedHtml = $composerRenderer->render($snapshot['htmlbody'], $escapedSample, true);
-    if (!str_starts_with($renderedSubject, '[Aggiornamento] Corso: ')
+    if (
+        !str_starts_with($renderedSubject, '[Aggiornamento] Corso: ')
         || !str_starts_with($renderedBody, 'Ciao Test & Figli, Corso')
         || !str_contains($renderedHtml, 'Ciao Test &amp; Figli, Corso')
         || !str_ends_with($renderedHtml, '<p>Sito</p>')
         || preg_match('/\{[A-Z][A-Z0-9_]*\}/', $renderedSubject . $renderedBody . $renderedHtml)
-        || $messageTemplate::load('*')['htmlbody'] !== $legacyMessage->htmlbody) {
+        || $messageTemplate::load('*')['htmlbody'] !== $legacyMessage->htmlbody
+    ) {
         throw new \RuntimeException('The upgraded Joomla model must render canonically without changing its saved content.');
     }
     $expectedTags = array_diff(array_keys($sampleVars), ['MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML']);
@@ -338,7 +352,8 @@ if (str_contains($dangerousPlain, 'alert') || !str_contains($dangerousPlain, 'Me
 }
 try {
     \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
-        ['subject' => '{MESSAGE_SUBJECT}', 'body' => 'Testo', 'htmlbody' => '<p>Testo</p>'], $sampleVars
+        ['subject' => '{MESSAGE_SUBJECT}', 'body' => 'Testo', 'htmlbody' => '<p>Testo</p>'],
+        $sampleVars
     );
     throw new \RuntimeException('Recursive legacy composer slot should not be accepted.');
 } catch (\RuntimeException $legacy) {
@@ -387,9 +402,11 @@ if ($changedTags < 1) {
 }
 $mailAfter = $db->setQuery($mailRowQuery)->loadObject();
 $finalTags = json_decode((string) $mailAfter->params, true, 64, JSON_THROW_ON_ERROR)['tags'];
-if (!in_array('COURSE_TITLE', $finalTags, true) || in_array('NAME', $finalTags, true)
+if (
+    !in_array('COURSE_TITLE', $finalTags, true) || in_array('NAME', $finalTags, true)
     || (string) $mailAfter->subject !== $customSubject
-    || \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateTagUpdater::synchronize($db) !== 0) {
+    || \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateTagUpdater::synchronize($db) !== 0
+) {
     throw new \RuntimeException('Upgrade regression: tags, editor content or idempotency lost.');
 }
 $menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
@@ -448,7 +465,8 @@ foreach ($privacyDescriptionKeys as $index => $key) {
 }
 $hasPrivacyCapabilities = false;
 foreach ($privacyData as $capabilitySet) {
-    if (is_array($capabilitySet)
+    if (
+        is_array($capabilitySet)
         && array_key_exists($privacyTitle, $capabilitySet)
         && is_array($capabilitySet[$privacyTitle])
         && array_diff($privacyDescriptions, $capabilitySet[$privacyTitle]) === []
@@ -560,8 +578,10 @@ foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
     $foundConsentDomain = false;
     foreach ($consentExportEvent->getArgument('result', []) as $contribution) {
         foreach ((array) $contribution as $domain) {
-            if ($domain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
-                && $domain->name === 'jdlearn_course_announcement_consent') {
+            if (
+                $domain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
+                && $domain->name === 'jdlearn_course_announcement_consent'
+            ) {
                 $foundConsentDomain = count($domain->getItems()) === 1;
             }
         }
@@ -573,13 +593,19 @@ foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
 // PRIV-C2: administrator sees only the current consent record and safe fields.
 $consentAudit = new \Jlms\Component\Jlms\Administrator\Application\ConsentAuditService($db);
 $consentAuditData = $consentAudit->page($app->getIdentity(), $privacyUserId, 0, 25);
-if ($consentAuditData['total'] !== 1 || count($consentAuditData['rows']) !== 1
+if (
+    $consentAuditData['total'] !== 1 || count($consentAuditData['rows']) !== 1
     || (int) $consentAuditData['rows'][0]['user_id'] !== $privacyUserId
-    || $consentAuditData['rows'][0]['state'] !== 'revoked') {
+    || $consentAuditData['rows'][0]['state'] !== 'revoked'
+) {
     throw new \RuntimeException('Protected consent audit does not show current revocation state.');
 }
-if (array_diff(array_keys($consentAuditData['rows'][0]),
-    ['user_id', 'state', 'origin', 'policy_version', 'requested_at', 'confirmed_at', 'revoked_at'])) {
+if (
+    array_diff(
+        array_keys($consentAuditData['rows'][0]),
+        ['user_id', 'state', 'origin', 'policy_version', 'requested_at', 'confirmed_at', 'revoked_at']
+    )
+) {
     throw new \RuntimeException('Protected consent audit exposed unapproved fields.');
 }
 $consentAuditDenied = false;
@@ -629,8 +655,10 @@ $privacySubjectDomains = $privacySubjectExport->getArgument('result', []);
 $privacyMailDomains = [];
 foreach ($privacySubjectDomains as $privacyContribution) {
     foreach ((array) $privacyContribution as $privacyDomain) {
-        if ($privacyDomain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
-            && $privacyDomain->name === 'jdlearn_mail_deliveries') {
+        if (
+            $privacyDomain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
+            && $privacyDomain->name === 'jdlearn_mail_deliveries'
+        ) {
             $privacyMailDomains[] = $privacyDomain;
         }
     }
@@ -674,10 +702,12 @@ $otherPrivacyRemaining = $db->setQuery($db->createQuery()
     ->select(['recipient_user_id', 'recipient_email', 'template_data', 'reconciliation_by'])
     ->from('#__jlms_mail_queue')
     ->where('event_key = ' . $db->quote($otherPrivacyMailKey)))->loadObject();
-if (!$otherPrivacyRemaining || (int) $otherPrivacyRemaining->recipient_user_id !== $otherPrivacyUserId
+if (
+    !$otherPrivacyRemaining || (int) $otherPrivacyRemaining->recipient_user_id !== $otherPrivacyUserId
     || $otherPrivacyRemaining->recipient_email !== 'other-privacy-fixture@example.invalid'
     || $otherPrivacyRemaining->template_data !== '{"fixture":"other-account"}'
-    || $otherPrivacyRemaining->reconciliation_by !== null) {
+    || $otherPrivacyRemaining->reconciliation_by !== null
+) {
     throw new \RuntimeException('Privacy erasure affected an unrelated account.');
 }
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
@@ -702,8 +732,10 @@ $db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->se
 if ($mailConsent->revokeByToken($tokenOne) || $mailConsent->state((int) $userId) !== 'confirmed') {
     throw new \RuntimeException('Expired unsubscribe token revoked consent.');
 }
-if (!$mailConsent->revokeByToken($tokenTwo) || $mailConsent->state((int) $userId) !== 'revoked'
-    || $mailConsent->revokeByToken($tokenTwo)) {
+if (
+    !$mailConsent->revokeByToken($tokenTwo) || $mailConsent->state((int) $userId) !== 'revoked'
+    || $mailConsent->revokeByToken($tokenTwo)
+) {
     throw new \RuntimeException('Valid unsubscribe token was not one-use or did not revoke consent.');
 }
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();
@@ -749,10 +781,12 @@ if (!is_array($unissued) || count($unissued) > 25) {
     throw new \RuntimeException('Certificate non-issuance diagnosis must be bounded.');
 }
 foreach ($unissued as $entry) {
-    if (!in_array($entry['reason'] ?? '', [
+    if (
+        !in_array($entry['reason'] ?? '', [
         'version_disabled', 'preferences_disabled', 'template_missing',
         'eligible_missing', 'document_missing', 'invalid_configuration',
-    ], true)) {
+        ], true)
+    ) {
         throw new \RuntimeException('Certificate non-issuance diagnosis returned an invalid status.');
     }
 }
@@ -899,8 +933,10 @@ if (!$model->save($data + ['state' => 1,'asset_id' => 999999,'current_version_id
 $id = (int) $model->getState('course.id');
 $managerNotice = new \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice($db);
 $pendingScan = $managerNotice->enqueueDue(3);
-if (($pendingScan['processed'] ?? -1) !== 0 || $pendingScan['failed'] !== 0
-    || \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice::authorized($db, $id, 0)) {
+if (
+    ($pendingScan['processed'] ?? -1) !== 0 || $pendingScan['failed'] !== 0
+    || \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice::authorized($db, $id, 0)
+) {
     throw new \RuntimeException('Pending manager alerts must not send without a real pending request and authorized manager.');
 }
 $record = $model->getItem($id);

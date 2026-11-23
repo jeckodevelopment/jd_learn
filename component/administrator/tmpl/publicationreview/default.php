@@ -23,7 +23,7 @@ $changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed' => 'C
   <tbody><?php foreach ($labels as $kind => $label) :
         ?><tr><th scope="row"><?= Text::_($label) ?></th><?php foreach ($changeLabels as $change => $unused) :
     ?><td data-kind="<?= $kind ?>" data-change="<?= $change ?>"><?= (int)$item['changes'][$kind][$change] ?></td><?php
-endforeach; ?></tr><?php
+        endforeach; ?></tr><?php
          endforeach; ?></tbody>
  </table></div>
  <p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_RULES') ?>: <strong><?= Text::_($item['rules_changed'] ? 'JYES' : 'JNO') ?></strong></p>
@@ -40,7 +40,7 @@ endforeach; ?></tr><?php
       endforeach; ?></ul>
         <?php if (array_sum(array_intersect_key($item['changes'][$kind], $changeLabels)) > 100) :
             ?><p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_LIMIT') ?></p><?php
-  endif; ?>
+        endif; ?>
  </details>
  <?php endforeach; ?>
  <h2 class="h4"><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_ENROLLMENTS') ?></h2>
@@ -48,7 +48,7 @@ endforeach; ?></tr><?php
  <?php if ($item['enrollments']) :
         ?><ul><?php foreach ($item['enrollments'] as $row) :
     ?><li><?= Text::sprintf('COM_JLMS_PUBLICATION_REVIEW_ASSIGNED', (int)$row['version_no'], (int)$row['total']) ?></li><?php
-endforeach; ?></ul>
+        endforeach; ?></ul>
  <?php else :
         ?><p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_NO_ENROLLMENTS') ?></p><?php
  endif; ?>

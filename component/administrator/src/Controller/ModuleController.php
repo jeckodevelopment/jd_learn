@@ -14,7 +14,9 @@ final class ModuleController extends CurriculumController
         return parent::execute($task);
     }
 
-    public function duplicate(): void { $this->perform('duplicate', 'module');
+    public function duplicate(): void
+    {
+        $this->perform('duplicate', 'module');
     }
 
     public function save(): void

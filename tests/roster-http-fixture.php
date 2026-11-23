@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 $root = realpath($argv[1] ?? '');
-if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1')throw new \RuntimeException('Disposable Joomla site required');
+if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
+    throw new \RuntimeException('Disposable Joomla site required');
+}
 $db = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
 $f = json_decode(file_get_contents(dirname($root) . '/roster-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $mode = $argv[2] ?? '';
@@ -10,7 +14,9 @@ if ($mode === 'snapshot') {
 } elseif (in_array($mode, ['revoke','grant','restore'], true)) {
     $q = $db->prepare('SELECT username FROM joomla_users WHERE id=?');
     $q->execute([$f['manager']]);
-    if ($q->fetchColumn() !== 'cirosterreader')throw new \RuntimeException('Unexpected fixture user');
+    if ($q->fetchColumn() !== 'cirosterreader') {
+        throw new \RuntimeException('Unexpected fixture user');
+    }
     if ($mode === 'revoke') {
         $q = $db->prepare('DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?');
         $q->execute([$f['manager'],$f['group']]);

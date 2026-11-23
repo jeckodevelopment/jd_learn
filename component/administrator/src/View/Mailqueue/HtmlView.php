@@ -26,9 +26,12 @@ final class HtmlView extends BaseHtmlView
         $this->data = (new MailQueueAuditService(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)))
             ->page(Factory::getApplication()->getIdentity(), $filters, $start, 50);
         $this->consentData = (new ConsentAuditService(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)))
-            ->page(Factory::getApplication()->getIdentity(),
+            ->page(
+                Factory::getApplication()->getIdentity(),
                 max(0, $input->getInt('consent_user_id', 0)),
-                max(0, $input->getInt('consentstart', 0)), 25);
+                max(0, $input->getInt('consentstart', 0)),
+                25
+            );
         $this->mailScheduler = \Jlms\Component\Jlms\Administrator\Infrastructure\MailSchedulerSetup::status(
             Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class)
         );

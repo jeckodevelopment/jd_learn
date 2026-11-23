@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\User\User;
@@ -10,7 +11,8 @@ use Joomla\Database\ParameterType;
 /** Copies authoring records only, under the caller's course/version locks and transaction. */
 final class CourseVersionCopy
 {
-    public function __construct(private readonly DatabaseInterface $db) {
+    public function __construct(private readonly DatabaseInterface $db)
+    {
     }
 
     private function rows(string $table, string $column, int $id, int $limit): array
@@ -81,14 +83,29 @@ final class CourseVersionCopy
         $version['status'] = 'draft';
         $version['structure_hash'] = $version['published_at'] = null;
         $target = $this->insert('course_versions', $version, $actor);
-        $this->nodes($actor, $original, $target, $this->rows('modules', 'course_version_id', $original, 1000),
-            $this->rows('lessons', 'course_version_id', $original, 5000), $newIdentity, true);
+        $this->nodes(
+            $actor,
+            $original,
+            $target,
+            $this->rows('modules', 'course_version_id', $original, 1000),
+            $this->rows('lessons', 'course_version_id', $original, 5000),
+            $newIdentity,
+            true
+        );
         return $target;
     }
 
-    private function nodes(User $actor, int $sourceVersion, int $target, array $moduleRows, array $lessonRows,
-        bool $freshKeys, bool $whole, ?string $title = null, int $destinationModule = 0): int
-    {
+    private function nodes(
+        User $actor,
+        int $sourceVersion,
+        int $target,
+        array $moduleRows,
+        array $lessonRows,
+        bool $freshKeys,
+        bool $whole,
+        ?string $title = null,
+        int $destinationModule = 0
+    ): int {
         $this->capacity('modules', $target, count($moduleRows), 1000);
         $this->capacity('lessons', $target, count($lessonRows), 5000);
         $sourceCourse = $this->course($sourceVersion);
@@ -132,8 +149,10 @@ final class CourseVersionCopy
             $this->copyLessonFields($actor, $old, $lessons[$old]);
             $first = $first ?: $lessons[$old];
         }
-        $attachments = array_filter($this->rows('attachments', 'course_version_id', $sourceVersion, 1000),
-            static fn(array $attachment): bool => $attachment['lesson_id'] === null ? $whole : isset($lessons[$attachment['lesson_id']]));
+        $attachments = array_filter(
+            $this->rows('attachments', 'course_version_id', $sourceVersion, 1000),
+            static fn(array $attachment): bool => $attachment['lesson_id'] === null ? $whole : isset($lessons[$attachment['lesson_id']])
+        );
         $this->capacity('attachments', $target, count($attachments), 1000);
         foreach ($attachments as $attachment) {
             if (!$materialsAllowed) {
@@ -208,8 +227,10 @@ final class CourseVersionCopy
         $values = [];
         foreach ($rows as $row) {
             $fieldId = (int) $row->id;
-            if (!in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)
-                || !$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)) {
+            if (
+                !in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)
+                || !$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $values[$fieldId][] = (string) $row->value;

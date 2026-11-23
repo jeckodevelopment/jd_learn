@@ -9,6 +9,7 @@ import io
 import json
 from pathlib import Path
 import re
+import subprocess
 
 from functional_progress import CRITERIA, REGISTER, ROOT, calculate
 
@@ -34,8 +35,28 @@ def validate_evidence(reference):
     if line_range:
         start = int(line_range[1])
         end = int(line_range[2] or line_range[1])
-        if not start <= end <= len(candidate.read_text(encoding="utf-8").splitlines()):
-            raise ValueError(f"Invalid evidence line range: {reference}")
+        current_text = candidate.read_text(encoding="utf-8")
+        if not start <= end <= len(current_text.split("\n")):
+            # A PSR-12 formatter may remove purely presentational lines.
+            # For stale historic ranges, verify that the original referenced
+            # source fragment still exists in the current PHP as token-equivalent
+            # text rather than accepting the out-of-range location blindly.
+            if not path.endswith(".php"):
+                raise ValueError(f"Invalid evidence line range: {reference}")
+            old = subprocess.run(
+                ["git", "show", f"origin/main:{path}"],
+                cwd=ROOT, text=True, capture_output=True, check=False,
+            )
+            if old.returncode != 0:
+                raise ValueError(f"Invalid evidence line range: {reference}")
+            original_lines = old.stdout.splitlines()
+            if end > len(original_lines):
+                raise ValueError(f"Invalid evidence line range: {reference}")
+            original_fragment = "\n".join(original_lines[start - 1:end])
+            def tokenized(value):
+                return re.sub(r"\s+", "", value)
+            if len(original_fragment.strip()) < 8 or tokenized(original_fragment) not in tokenized(current_text):
+                raise ValueError(f"Stale evidence content: {reference}")
     elif anchor not in candidate.read_text(encoding="utf-8"):
         # PHPCBF may add whitespace around PHP operators and argument commas.
         # Preserve evidence anchors when only that token-level formatting changes.
@@ -46,8 +67,7 @@ def validate_evidence(reference):
         def normalize(text):
             return token_spacing.sub(r"\1", text)
         normalized_anchor = normalize(anchor)
-        if not any(normalized_anchor in normalize(line)
-                   for line in candidate.read_text(encoding="utf-8").splitlines()):
+        if normalized_anchor not in normalize(candidate.read_text(encoding="utf-8")):
             raise ValueError(f"Evidence anchor not found: {reference}")
     return path
 

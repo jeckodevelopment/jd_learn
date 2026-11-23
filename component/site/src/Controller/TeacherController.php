@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Site\Controller;
 
 final class TeacherController extends \Joomla\CMS\MVC\Controller\FormController
@@ -18,7 +19,9 @@ final class TeacherController extends \Joomla\CMS\MVC\Controller\FormController
     {
         return parent::getModel($name, $prefix, $config);
     }
-    protected function allowAdd($data = []) { return false;
+    protected function allowAdd($data = [])
+    {
+        return false;
     }
     protected function allowEdit($data = [], $key = 'id')
     {

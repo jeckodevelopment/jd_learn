@@ -39,13 +39,20 @@ final class DashboardProviderStatus
             if ($key === 'html5') {
                 $enabled = $enabled
                     && (string) ($componentSettings['video_storage_root'] ?? '') !== ''
-                    && in_array((string) ($componentSettings['video_delivery_mode'] ?? 'disabled'),
-                        ['php_bounded', 'x_accel'], true);
+                    && in_array(
+                        (string) ($componentSettings['video_delivery_mode'] ?? 'disabled'),
+                        ['php_bounded', 'x_accel'],
+                        true
+                    );
             }
             // Cloudflare and arbitrary third-party providers cannot be certified
             // locally: a present token reference is not proof of connectivity.
-            $descriptors[] = new ProviderDescriptor($key, self::BUNDLED[$key], 1,
-                $key !== 'cloudflarestream' && $enabled);
+            $descriptors[] = new ProviderDescriptor(
+                $key,
+                self::BUNDLED[$key],
+                1,
+                $key !== 'cloudflarestream' && $enabled
+            );
         }
         $projection = self::summarize($extensions, $descriptors);
         foreach ($projection as &$provider) {

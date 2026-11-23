@@ -30,14 +30,14 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
  <form id="jlms-material-upload" enctype="multipart/form-data" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
         <?php if ($this->replacement) :
             ?><h2><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></h2><input type="hidden" name="jform[lesson_id]" value="<?= $this->replacementLesson ?>"><?php
-  endif; ?>
+        endif; ?>
         <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="material.upload">
   <label><?= Text::_('COM_JLMS_CALENDAR_PUBLISH_UP') ?><input type="datetime-local" step="1" name="jform[publish_up]" value="<?= $this->escape($this->dateValues['publish_up']) ?>"></label>
   <label><?= Text::_('COM_JLMS_CALENDAR_PUBLISH_DOWN') ?><input type="datetime-local" step="1" name="jform[publish_down]" value="<?= $this->escape($this->dateValues['publish_down']) ?>"></label>
         <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_($this->replacement ? 'COM_JLMS_REPLACE_MATERIAL' : 'COM_JLMS_UPLOAD_MATERIAL') ?></button>
         <?php if ($this->replacement) :
             ?><a href="<?= $link($base) ?>"><?= Text::_('JCANCEL') ?></a><?php
-  endif; ?>
+        endif; ?>
  </form>
  <?php else :
         ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php
@@ -62,7 +62,7 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <p><?= $this->escape($file->original_name) ?> · <?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B · <?= $this->escape($file->status) ?> · <?= Text::_((int) $file->preview === 1 ? 'COM_JLMS_MATERIAL_PUBLIC_PREVIEW' : 'COM_JLMS_MATERIAL_PRIVATE') ?> · ID <?= (int) $file->id ?> · <?= $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
         <?php if ($file->status === 'ready') :
             ?><a href="<?= $link('index.php?option=com_jlms&task=material.download&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&id=' . (int) $file->id) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a><?php
-  endif; ?>
+        endif; ?>
         <?php if ($editable) : ?>
   <a class="btn btn-secondary" href="<?= $link($base . '&page=' . (int) $item['files']['page'] . '&replace_id=' . (int) $file->id) ?>#jlms-material-upload"><?= Text::_('COM_JLMS_REPLACE_MATERIAL') ?></a>
   <form method="post" class="jlms-material-edit" action="<?= $link('index.php?option=com_jlms') ?>">
@@ -84,15 +84,15 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
    <label><?= Text::_('COM_JLMS_MATERIAL_REUSE_TARGET') ?><select name="jform[target_lesson_id]" required>
                 <?php if ($file->lesson_id) :
                     ?><option value="0"><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></option><?php
-    endif; ?>
+                endif; ?>
                 <?php foreach ($reuseTargets as $lesson) :
                     ?><option value="<?= (int) $lesson->id ?>"><?= $this->escape($lesson->title) ?></option><?php
-    endforeach; ?>
+                endforeach; ?>
    </select></label>
                 <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_MATERIAL_REUSE') ?></button>
   </form>
-  <?php endif; ?>
-  <?php endif; ?>
+            <?php endif; ?>
+        <?php endif; ?>
   <form method="post" action="<?= $link('index.php?option=com_jlms') ?>"><?php $hidden($scope + ['id' => $file->id]); ?><input type="hidden" name="task" value="material.scan"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_RESCAN') ?></button></form>
  </section>
  <?php endforeach; ?></div>

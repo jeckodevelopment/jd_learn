@@ -21,8 +21,10 @@ final class ConsentAuditService
     public function page(User $identity, int $userId = 0, int $start = 0, int $limit = 25): array
     {
         $actor = CourseEditorAccess::fresh($identity);
-        if (!$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.audit.view', 'com_jlms')) {
+        if (
+            !$actor->authorise('core.manage', 'com_jlms')
+            || !$actor->authorise('jlms.audit.view', 'com_jlms')
+        ) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
 

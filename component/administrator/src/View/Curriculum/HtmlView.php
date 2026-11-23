@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\View\Curriculum;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -91,7 +90,8 @@ final class HtmlView extends BaseHtmlView
                             continue;
                         }
                         $normal = $provider->normaliseSource(new \Jlms\Contracts\Video\SourceInput(
-                            $source['reference'], is_array($source['options'] ?? null) ? $source['options'] : []
+                            $source['reference'],
+                            is_array($source['options'] ?? null) ? $source['options'] : []
                         ));
                         $capabilities = $provider->getCapabilities($normal);
                         $providerChecks[$id]['trackable'] = $capabilities->position && $capabilities->duration && $capabilities->seek;
@@ -234,7 +234,10 @@ final class HtmlView extends BaseHtmlView
                 }
                 if ((int) $lesson->id === $editLesson) {
                     $lesson = $app->bootComponent('com_jlms')->getCurriculumService()->lessonForEdit(
-                        $app->getIdentity(), (int) $course->id, (int) $version->id, $editLesson,
+                        $app->getIdentity(),
+                        (int) $course->id,
+                        (int) $version->id,
+                        $editLesson,
                     );
                     $this->selectedItem = $lesson;
                     $this->selectedModule = (int) $lesson->module_id;
@@ -295,19 +298,25 @@ final class HtmlView extends BaseHtmlView
                     // submission. Only fields already resolved for this lesson
                     // are accepted; unknown/oversized user-state payloads are
                     // never rebound into the editor.
-                    if ($this->editorMode === 'lesson' && is_array($saved['com_fields'] ?? null)
-                        && count($saved['com_fields']) <= 100 && is_array($lessonData['com_fields'] ?? null)) {
+                    if (
+                        $this->editorMode === 'lesson' && is_array($saved['com_fields'] ?? null)
+                        && count($saved['com_fields']) <= 100 && is_array($lessonData['com_fields'] ?? null)
+                    ) {
                         foreach ($saved['com_fields'] as $fieldName => $fieldValue) {
                             if (!is_string($fieldName) || !array_key_exists($fieldName, $lessonData['com_fields'])) {
                                 continue;
                             }
-                            if ((is_string($fieldValue) || is_int($fieldValue))
-                                && strlen((string) $fieldValue) <= 65536) {
+                            if (
+                                (is_string($fieldValue) || is_int($fieldValue))
+                                && strlen((string) $fieldValue) <= 65536
+                            ) {
                                 $lessonData['com_fields'][$fieldName] = $fieldValue;
-                            } elseif (is_array($fieldValue) && array_is_list($fieldValue) && count($fieldValue) <= 100
+                            } elseif (
+                                is_array($fieldValue) && array_is_list($fieldValue) && count($fieldValue) <= 100
                                 && array_reduce($fieldValue, static fn(bool $valid, mixed $value): bool =>
                                     $valid && (is_string($value) || is_int($value))
-                                    && strlen((string) $value) <= 65536, true)) {
+                                    && strlen((string) $value) <= 65536, true)
+                            ) {
                                 $lessonData['com_fields'][$fieldName] = $fieldValue;
                             }
                         }
@@ -350,7 +359,7 @@ final class HtmlView extends BaseHtmlView
                 $this->getDocument()->addScriptOptions('com_jlms.videoMetadata', [
                     'url' => \Joomla\CMS\Router\Route::link('administrator', 'index.php?option=com_jlms&task=lesson.metadata&format=json', false),
                     'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
-                    'labels' => array_map(static fn($key):string=>Text::_($key), [
+                    'labels' => array_map(static fn($key): string=>Text::_($key), [
                         'detected' => 'COM_JLMS_VIDEO_DURATION_DETECTED','loading' => 'COM_JLMS_VIDEO_DURATION_LOADING','play' => 'COM_JLMS_VIDEO_DURATION_PLAY',
                         'failed' => 'COM_JLMS_VIDEO_METADATA_FAILED','consent' => 'COM_JLMS_VIDEO_DURATION_CONSENT','manual' => 'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
                         'local' => 'COM_JLMS_VIDEO_DURATION_LOCAL','source' => 'COM_JLMS_VIDEO_DURATION_SOURCE',

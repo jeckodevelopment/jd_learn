@@ -1060,7 +1060,7 @@ assert "assertCertificateAdministrator($identity)" in regen_service
 assert "FOR UPDATE" in regen_service and "COM_JLMS_CERTIFICATE_REVISION_CONFLICT" in regen_service
 assert "identity_snapshot_json !== (string) $record->identity_snapshot_json" in regen_service
 assert "template_snapshot_json !== (string) $record->template_snapshot_json" in regen_service
-assert "transactionStart()" in regen_service and "recordCertificateAudit($certificateId" in regen_service
+assert "transactionStart()" in regen_service and re.search(r"recordCertificateAudit\(\s*\$certificateId\b", regen_service) is not None
 assert "admin_regenerate" in regen_service and "'pdf_asset_id' => $newAssetId" in regen_service
 assert "storage->remove((object) $staged)" in regen_service
 assert "'revision' => (int) $record->revision" in regen_service

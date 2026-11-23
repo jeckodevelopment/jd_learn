@@ -9,8 +9,10 @@ final class QuestionDefinition
 {
     public static function integer(mixed $value, int $minimum, int $maximum): int
     {
-        if ((!is_int($value) && !is_string($value)) || !preg_match('/\A(?:0|[1-9][0-9]{0,8})\z/D', (string) $value)
-            || (int) $value < $minimum || (int) $value > $maximum) {
+        if (
+            (!is_int($value) && !is_string($value)) || !preg_match('/\A(?:0|[1-9][0-9]{0,8})\z/D', (string) $value)
+            || (int) $value < $minimum || (int) $value > $maximum
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         return (int) $value;
@@ -27,7 +29,6 @@ final class QuestionDefinition
             }
             foreach ($item as &$child) {
                 $child = $normalise($child);
-
             } unset($child);
             return $item;
         };
@@ -37,8 +38,10 @@ final class QuestionDefinition
     public static function normalise(array $input, \Closure $filter): array
     {
         $kind = $input['kind'] ?? '';
-        if (!in_array($kind, ['single', 'true_false', 'multiple'], true) || !is_string($input['prompt'] ?? null)
-            || !is_string($input['explanation'] ?? '') || strlen($input['prompt']) > 65536 || strlen($input['explanation'] ?? '') > 65536) {
+        if (
+            !in_array($kind, ['single', 'true_false', 'multiple'], true) || !is_string($input['prompt'] ?? null)
+            || !is_string($input['explanation'] ?? '') || strlen($input['prompt']) > 65536 || strlen($input['explanation'] ?? '') > 65536
+        ) {
             throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_CONTENT', 422);
         }
         $prompt = $filter($input['prompt']);
@@ -72,8 +75,10 @@ final class QuestionDefinition
             if ($id === '') {
                 $id = bin2hex(random_bytes(12));
             }
-            if (!preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D', $id) || isset($ids[$id]) || $label === '' || strlen($label) > 4096
-                || preg_match('/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/', $label) || isset($labels[$label])) {
+            if (
+                !preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D', $id) || isset($ids[$id]) || $label === '' || strlen($label) > 4096
+                || preg_match('/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/', $label) || isset($labels[$label])
+            ) {
                 throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_OPTION_LABELS', 422);
             }
             $ids[$id] = true;

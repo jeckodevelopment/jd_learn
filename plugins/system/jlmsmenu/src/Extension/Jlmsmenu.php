@@ -24,16 +24,20 @@ final class Jlmsmenu extends CMSPlugin implements SubscriberInterface
     {
         $app = $event->getApplication();
         $input = $app->getInput();
-        if (!$app->isClient('administrator') || $input->getMethod() !== 'POST'
+        if (
+            !$app->isClient('administrator') || $input->getMethod() !== 'POST'
             || $input->getCmd('option') !== 'com_fields' || $input->getCmd('view') !== 'fields'
-            || $input->getCmd('task', '') !== '' || $input->getCmd('layout', 'default') !== 'default') {
+            || $input->getCmd('task', '') !== '' || $input->getCmd('layout', 'default') !== 'default'
+        ) {
             return;
         }
 
         $current = $input->get->getCmd('context');
         $selected = $input->post->getCmd('context');
-        if ($current === $selected || !str_starts_with($current ?? '', 'com_jlms.')
-            || !str_starts_with($selected ?? '', 'com_jlms.')) {
+        if (
+            $current === $selected || !str_starts_with($current ?? '', 'com_jlms.')
+            || !str_starts_with($selected ?? '', 'com_jlms.')
+        ) {
             return;
         }
         $contexts = $app->bootComponent('com_jlms')->getContexts();

@@ -24,9 +24,11 @@ abstract class EmbedProvider extends AbstractFoundationProvider
 
     public function createPlaybackDescriptor(VideoSource $source, PlaybackContext $context): PlaybackDescriptor
     {
-        if (!$this->enabled || $source->providerKey !== $this->key() || $context->userId < 1 || $context->lessonId < 1
+        if (
+            !$this->enabled || $source->providerKey !== $this->key() || $context->userId < 1 || $context->lessonId < 1
             || ($context->preview ? ($context->enrollmentId !== 0 || $context->courseId < 1 || $context->versionId < 1)
-                : ($context->enrollmentId < 1 || $context->authorisationGrant === ''))) {
+                : ($context->enrollmentId < 1 || $context->authorisationGrant === ''))
+        ) {
             throw new \DomainException('COM_JLMS_VIDEO_UNAVAILABLE');
         }
         $normal = $this->normaliseSource(new SourceInput($source->reference, $source->options));

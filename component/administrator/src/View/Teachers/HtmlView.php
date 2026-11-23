@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\View\Teachers;
 
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
@@ -34,8 +33,10 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.create', 'com_jlms') && $actor->authorise('jlms.teachers.manage', 'com_jlms')) {
             ToolbarHelper::addNew('teacher.add');
         }
-        if ($actor->authorise('jlms.teachers.manage', 'com_jlms')
-            && $actor->authorise('core.edit.state', 'com_jlms')) {
+        if (
+            $actor->authorise('jlms.teachers.manage', 'com_jlms')
+            && $actor->authorise('core.edit.state', 'com_jlms')
+        ) {
             if ((string) $this->state->get('filter.published') === '-2') {
                 ToolbarHelper::custom('teacher.restore', 'refresh', 'refresh', 'JTOOLBAR_RESTORE', true);
                 if ($actor->authorise('core.delete', 'com_jlms')) {

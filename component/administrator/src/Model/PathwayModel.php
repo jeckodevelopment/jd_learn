@@ -19,8 +19,11 @@ final class PathwayModel extends AdminModel
 
     public function getForm($data = [], $loadData = true)
     {
-        return $this->loadForm('com_jlms.pathway', JPATH_ADMINISTRATOR . '/components/com_jlms/forms/pathway.xml',
-            ['control' => 'jform', 'load_data' => $loadData]);
+        return $this->loadForm(
+            'com_jlms.pathway',
+            JPATH_ADMINISTRATOR . '/components/com_jlms/forms/pathway.xml',
+            ['control' => 'jform', 'load_data' => $loadData]
+        );
     }
 
     protected function loadFormData()
@@ -60,8 +63,10 @@ final class PathwayModel extends AdminModel
             $actor = new User((int) $this->getCurrentUser()->id);
             $actor->clearAccessRights();
             $this->setCurrentUser($actor);
-            if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
-                || !$actor->authorise('jlms.pathways.manage', 'com_jlms')) {
+            if (
+                !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+                || !$actor->authorise('jlms.pathways.manage', 'com_jlms')
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
 
@@ -71,8 +76,10 @@ final class PathwayModel extends AdminModel
             $stage = 'prepare-asset';
             if (!(int) ($input['id'] ?? 0)) {
                 $categoryId = $input['catid'] ?? null;
-                if ((!is_int($categoryId) && !is_string($categoryId))
-                    || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $categoryId)) {
+                if (
+                    (!is_int($categoryId) && !is_string($categoryId))
+                    || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $categoryId)
+                ) {
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
                 $categoryId = (int) $categoryId;
@@ -111,8 +118,10 @@ final class PathwayModel extends AdminModel
             $allowed = ['id', 'revision', 'title', 'alias', 'description', 'catid', 'access', 'language', 'state', 'courses', 'cover_image', 'cover_alt', 'cover_decorative'];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id', 'revision', 'catid', 'access', 'state'] as $key) {
-                if (isset($data[$key]) && ((!is_int($data[$key]) && !is_string($data[$key]))
-                    || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))) {
+                if (
+                    isset($data[$key]) && ((!is_int($data[$key]) && !is_string($data[$key]))
+                    || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))
+                ) {
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
             }
@@ -124,8 +133,10 @@ final class PathwayModel extends AdminModel
                     ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $query->setQuery((string) $query . ' FOR UPDATE');
                 $record = $db->setQuery($query)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
-                if (!$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
-                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
+                if (
+                    !$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)
+                ) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 if ((int) ($data['revision'] ?? 0) !== (int) $record->revision) {
@@ -142,8 +153,10 @@ final class PathwayModel extends AdminModel
             if (!$categoryId || !$db->setQuery($categoryQuery)->loadResult()) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
-            if ((!$record || $categoryId !== (int) $record->catid)
-                && !$actor->authorise('core.create', 'com_jlms.pathway.category.' . $categoryId)) {
+            if (
+                (!$record || $categoryId !== (int) $record->catid)
+                && !$actor->authorise('core.create', 'com_jlms.pathway.category.' . $categoryId)
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             if ($record && $categoryId !== (int) $record->catid) {
@@ -152,8 +165,10 @@ final class PathwayModel extends AdminModel
             if ($record && (int) $record->state === -2 && isset($data['state']) && (int) $data['state'] !== -2 && (int) $data['state'] !== 0) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
-            if (isset($data['state']) && (int) $data['state'] !== (int) ($record->state ?? 0)
-                && !$actor->authorise('core.edit.state', $id ? 'com_jlms.pathway.' . $id : 'com_jlms')) {
+            if (
+                isset($data['state']) && (int) $data['state'] !== (int) ($record->state ?? 0)
+                && !$actor->authorise('core.edit.state', $id ? 'com_jlms.pathway.' . $id : 'com_jlms')
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
 
@@ -178,16 +193,20 @@ final class PathwayModel extends AdminModel
             // "Array" or accepted as editorial artwork metadata.
             $imageInput = $data['cover_image'] ?? ($artwork['cover_image'] ?? '');
             $altInput = $data['cover_alt'] ?? ($artwork['cover_alt'] ?? '');
-            if (!is_string($imageInput) || !is_string($altInput)
-                || preg_match('//u', $altInput) !== 1) {
+            if (
+                !is_string($imageInput) || !is_string($altInput)
+                || preg_match('//u', $altInput) !== 1
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
             $image = CourseArtwork::path($imageInput);
             CourseArtwork::validateLocal($image);
             $alt = trim($altInput);
             $decorative = $data['cover_decorative'] ?? ($artwork['cover_decorative'] ?? false);
-            if (!in_array($decorative, [true, false, 0, 1, '0', '1'], true)
-                || mb_strlen($alt) > 500 || preg_match('/[\x00-\x1f\x7f]/', $alt)) {
+            if (
+                !in_array($decorative, [true, false, 0, 1, '0', '1'], true)
+                || mb_strlen($alt) > 500 || preg_match('/[\x00-\x1f\x7f]/', $alt)
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
             $decorative = in_array($decorative, [true, 1, '1'], true);
@@ -273,8 +292,10 @@ final class PathwayModel extends AdminModel
         }
         $normalized = [];
         foreach ($rows as $index => $row) {
-            if (!is_array($row) || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) ($row['course_id'] ?? ''))
-                || !preg_match('/^[0-9]{1,4}$/D', (string) ($row['ordering'] ?? $index))) {
+            if (
+                !is_array($row) || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) ($row['course_id'] ?? ''))
+                || !preg_match('/^[0-9]{1,4}$/D', (string) ($row['ordering'] ?? $index))
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
             $courseId = (int) $row['course_id'];
@@ -304,18 +325,22 @@ final class PathwayModel extends AdminModel
      */
     public function changeStates(array $ids, int $target): bool
     {
-        if (!in_array($target, [-2, 0, 1, 2], true) || $ids === [] || count($ids) > 100
+        if (
+            !in_array($target, [-2, 0, 1, 2], true) || $ids === [] || count($ids) > 100
             || count(array_unique($ids)) !== count($ids)
-            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1)) > 0) {
+            || count(array_filter($ids, static fn ($id): bool => !is_int($id) || $id < 1)) > 0
+        ) {
             $this->setError(Text::_('COM_JLMS_PATHWAY_INVALID'));
             return false;
         }
 
         $actor = new User((int) $this->getCurrentUser()->id);
         $actor->clearAccessRights();
-        if (!$actor->id || $actor->block
+        if (
+            !$actor->id || $actor->block
             || !$actor->authorise('core.manage', 'com_jlms')
-            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')) {
+            || !$actor->authorise('jlms.pathways.manage', 'com_jlms')
+        ) {
             $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
@@ -333,9 +358,11 @@ final class PathwayModel extends AdminModel
                 $query->setQuery((string) $query . ' FOR UPDATE');
                 $record = $db->setQuery($query)->loadObject()
                     ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
-                if (!$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
+                if (
+                    !$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
                     || !$actor->authorise('core.edit.state', 'com_jlms.pathway.' . $id)
-                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)) {
+                    || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)
+                ) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 // Restoration never silently republishes a trashed pathway.
@@ -380,10 +407,12 @@ final class PathwayModel extends AdminModel
         }
         $actor = new User((int) $this->getCurrentUser()->id);
         $actor->clearAccessRights();
-        if (!$actor->id || $actor->block
+        if (
+            !$actor->id || $actor->block
             || !$actor->authorise('core.manage', 'com_jlms')
             || !$actor->authorise('jlms.pathways.manage', 'com_jlms')
-            || !$actor->authorise('core.delete', 'com_jlms.pathway.' . $id)) {
+            || !$actor->authorise('core.delete', 'com_jlms.pathway.' . $id)
+        ) {
             $this->setError(Text::_('JERROR_ALERTNOAUTHOR'));
             return false;
         }
@@ -433,8 +462,10 @@ final class PathwayModel extends AdminModel
             foreach ($db->setQuery($referencingKeys)->loadAssocList() as $reference) {
                 $tableName = (string) $reference['TABLE_NAME'];
                 $columnName = (string) $reference['COLUMN_NAME'];
-                if (!preg_match('/^[A-Za-z0-9_]+$/D', $tableName)
-                    || !preg_match('/^[A-Za-z0-9_]+$/D', $columnName)) {
+                if (
+                    !preg_match('/^[A-Za-z0-9_]+$/D', $tableName)
+                    || !preg_match('/^[A-Za-z0-9_]+$/D', $columnName)
+                ) {
                     throw new \DomainException('COM_JLMS_PATHWAY_DEPENDENCIES');
                 }
                 $query = $db->createQuery()->select('COUNT(*)')

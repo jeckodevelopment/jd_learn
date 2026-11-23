@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Controller;
 
 use Joomla\CMS\MVC\Controller\FormController;
@@ -38,8 +37,10 @@ final class CourseController extends FormController
         }
         $ids = [];
         foreach ($raw as $id) {
-            if ((!is_int($id) && !is_string($id))
-                || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $id)) {
+            if (
+                (!is_int($id) && !is_string($id))
+                || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $id)
+            ) {
                 throw new \RuntimeException('COM_JLMS_INVALID_COURSE', 422);
             }
             $ids[] = (int) $id;
@@ -49,14 +50,21 @@ final class CourseController extends FormController
         if (!$model->changeStates($ids, $target)) {
             throw new \RuntimeException((string) $model->getError(), 403);
         }
-        $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
+        $this->setRedirect(\Joomla\CMS\Router\Route::link(
+            'administrator',
             'index.php?option=com_jlms&view=courses'
-            . ($target === 0 ? '&filter[published]=-2' : ''), false));
+            . ($target === 0 ? '&filter[published]=-2' : ''),
+            false
+        ));
     }
 
-    public function trash(): void { $this->lifecycle(-2);
+    public function trash(): void
+    {
+        $this->lifecycle(-2);
     }
-    public function restore(): void { $this->lifecycle(0);
+    public function restore(): void
+    {
+        $this->lifecycle(0);
     }
 
     /** Destructive operation: exactly one trashed, unreferenced course. */
@@ -69,8 +77,10 @@ final class CourseController extends FormController
             throw new \RuntimeException('JINVALID_TOKEN', 403);
         }
         $raw = $this->input->post->get('cid', [], 'array');
-        if (count($raw) !== 1 || (!is_int($raw[0]) && !is_string($raw[0]))
-            || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $raw[0])) {
+        if (
+            count($raw) !== 1 || (!is_int($raw[0]) && !is_string($raw[0]))
+            || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $raw[0])
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_COURSE', 422);
         }
         if ($this->input->post->getInt('confirm_purge', 0) !== 1) {
@@ -85,8 +95,11 @@ final class CourseController extends FormController
         if (!$model->purgeEmpty((int) $raw[0], $expectedRevision)) {
             throw new \RuntimeException((string) $model->getError(), 403);
         }
-        $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator',
-            'index.php?option=com_jlms&view=courses&filter[published]=-2', false));
+        $this->setRedirect(\Joomla\CMS\Router\Route::link(
+            'administrator',
+            'index.php?option=com_jlms&view=courses&filter[published]=-2',
+            false
+        ));
     }
 
     protected function postSaveHook(\Joomla\CMS\MVC\Model\BaseDatabaseModel $model, $validData = [])

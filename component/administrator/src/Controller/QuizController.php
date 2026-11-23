@@ -63,8 +63,12 @@ final class QuizController extends BaseController
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
-    public function save(): void { $this->perform(false);
+    public function save(): void
+    {
+        $this->perform(false);
     }
-    public function delete(): void { $this->perform(true);
+    public function delete(): void
+    {
+        $this->perform(true);
     }
 }

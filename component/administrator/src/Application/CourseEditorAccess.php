@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Application;
 
 use Joomla\CMS\User\User;
@@ -19,13 +20,13 @@ final class CourseEditorAccess
         }
         return $actor;
     }
-    public static function canEdit(User $actor,object $course): bool
+    public static function canEdit(User $actor, object $course): bool
     {
         $asset = 'com_jlms.course.' . (int)$course->id;
         return $actor->authorise('core.edit', $asset)
             || ((int)$course->created_by === (int)$actor->id && $actor->authorise('core.edit.own', $asset));
     }
-    public static function canCreate(DatabaseInterface $db,User $actor,?int $category=null): bool
+    public static function canCreate(DatabaseInterface $db, User $actor, ?int $category = null): bool
     {
         if ($category === null && $actor->authorise('core.create', 'com_jlms')) {
             return true;
@@ -41,7 +42,7 @@ final class CourseEditorAccess
         }
         return false;
     }
-    public static function editableIds(DatabaseInterface $db,User $actor): array
+    public static function editableIds(DatabaseInterface $db, User $actor): array
     {
         $ids = [];
         $after = 0;

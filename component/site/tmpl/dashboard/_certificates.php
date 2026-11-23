@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
@@ -13,7 +15,7 @@ use Joomla\CMS\Router\Route;
   <p><?= Text::_('COM_JLMS_CERTIFICATE_CODE') ?>: <?= $this->escape($certificate['serial']) ?></p>
         <?php if ($certificate['status'] === 'ready' || $certificate['status'] === 'pending_render') : ?>
    <a class="jlms-my-course__action" href="<?= Route::_('index.php?option=com_jlms&task=certificate.download&enrollment_id=' . (int) $certificate['enrollment_id']) ?>"><?= Text::_('COM_JLMS_CERTIFICATE_DOWNLOAD') ?></a>
-  <?php endif; ?>
+        <?php endif; ?>
  </article>
  <?php endforeach; ?>
 </div>

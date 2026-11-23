@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -65,30 +65,36 @@ $factory = $component->getMVCFactory();
 $service = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
-function builderExpect(bool $ok, string $message): void { global $checks;
+function builderExpect(bool $ok, string $message): void
+{
+    global $checks;
     if (!$ok) {
         throw new RuntimeException($message);
-
     } $checks++;
 }
-function builderDenied(callable $work, string $key): void {
+function builderDenied(callable $work, string $key): void
+{
     try {
         $work();
-
     } catch (\Throwable $e) {
         builderExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
         return;
     }
     throw new RuntimeException('Expected rejection: ' . $key);
 }
-function builderRow(string $table, int $id): object { global $db;
+function builderRow(string $table, int $id): object
+{
+    global $db;
     return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
-function builderCheckout(string $table, int $id, ?int $user): void { global $db;
+function builderCheckout(string $table, int $id, ?int $user): void
+{
+    global $db;
     $row = (object)['id' => $id,'checked_out' => $user];
     $db->updateObject('#__jlms_' . $table, $row, 'id', true);
 }
-function builderSnapshot(int $course, int $version): array {
+function builderSnapshot(int $course, int $version): array
+{
     global $db;
     return [$db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadAssoc(),
         $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc(),
@@ -130,10 +136,12 @@ $l1 = $service->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $m1,'tit
 $l2 = $service->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $m1,'title' => 'Builder lesson two','kind' => 'text','body' => '<p>Second body</p>','required' => '0']);
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system', 'fields');
 $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
-if (!$fieldModel->save(['id' => 0,'context' => 'com_jlms.lesson','title' => 'Lesson editorial fixture',
+if (
+    !$fieldModel->save(['id' => 0,'context' => 'com_jlms.lesson','title' => 'Lesson editorial fixture',
     'label' => 'Lesson editorial fixture','name' => 'lesson-editorial-fixture','type' => 'text',
     'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'default_value' => '',
-    'description' => '','params' => [],'fieldparams' => ['filter' => 'string']])) {
+    'description' => '','params' => [],'fieldparams' => ['filter' => 'string']])
+) {
     throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
 }
 $lessonField = (int)$fieldModel->getState('field.id');

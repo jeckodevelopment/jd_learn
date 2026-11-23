@@ -121,8 +121,10 @@ final class SchedulerHealth
                 // normalizes impossible dates (February 30, invalid hours).
                 $due = \DateTimeImmutable::createFromFormat('!Y-m-d H:i:s', $next, new \DateTimeZone('UTC'));
                 $errors = \DateTimeImmutable::getLastErrors();
-                if ($due === false || $due->format('Y-m-d H:i:s') !== $next
-                    || ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0))) {
+                if (
+                    $due === false || $due->format('Y-m-d H:i:s') !== $next
+                    || ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0))
+                ) {
                     $state = 'unknown';
                 } else {
                     $lateBy = $now->getTimestamp() - $due->getTimestamp();

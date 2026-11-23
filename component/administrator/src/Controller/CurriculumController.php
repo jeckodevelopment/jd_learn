@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Controller;
 
 use Joomla\CMS\MVC\Controller\BaseController;
@@ -41,8 +40,10 @@ class CurriculumController extends BaseController
                         $key = 'com_jlms.publication.review.' . $courseId . '.' . $versionId;
                         $ticket = $input['review_ticket'] ?? '';
                         if ($ticket === '' && !isset($input['publication_confirmation'])) {
-                            if ((int)$impact['course']->revision !== CurriculumService::id($input['revision'] ?? null)
-                                || (int)$impact['version']->revision !== CurriculumService::id($input['expected_version_revision'] ?? null)) {
+                            if (
+                                (int)$impact['course']->revision !== CurriculumService::id($input['revision'] ?? null)
+                                || (int)$impact['version']->revision !== CurriculumService::id($input['expected_version_revision'] ?? null)
+                            ) {
                                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                             }
                             $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' => $transition, 'expires' => time() + 900,
@@ -51,16 +52,25 @@ class CurriculumController extends BaseController
                             return;
                         }
                         $plan = $this->app->getUserState($key);
-                        if (!is_array($plan) || (int)$plan['actor'] !== (int)$actor->id || (int)$plan['transition'] !== $transition
+                        if (
+                            !is_array($plan) || (int)$plan['actor'] !== (int)$actor->id || (int)$plan['transition'] !== $transition
                             || (int)$plan['expires'] < time() || !is_string($ticket) || !hash_equals($plan['ticket'], $ticket)
-                            || ($input['publication_confirmation'] ?? '') !== '1') {
+                            || ($input['publication_confirmation'] ?? '') !== '1'
+                        ) {
                             throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
                         }
                         $fingerprint = $plan['fingerprint'];
                         $this->app->setUserState($key, null);
                     }
-                    $publication->transition($actor, $courseId, $versionId, CurriculumService::id($input['revision'] ?? null),
-                        CurriculumService::id($input['expected_version_revision'] ?? null), $transition, $fingerprint);
+                    $publication->transition(
+                        $actor,
+                        $courseId,
+                        $versionId,
+                        CurriculumService::id($input['revision'] ?? null),
+                        CurriculumService::id($input['expected_version_revision'] ?? null),
+                        $transition,
+                        $fingerprint
+                    );
                     break;
                 case 'rules':
                     $service->saveTeachingRules($actor, $input);
@@ -153,8 +163,10 @@ class CurriculumController extends BaseController
         $plans = $this->app->getUserState($key, []);
         $plans = is_array($plans) ? $plans : [];
         $proof = is_string($ticket) ? ($plans[$ticket] ?? null) : null;
-        if (!is_array($proof) || ($proof['expires'] ?? 0) < time()
-            || !hash_equals($proof['fingerprint'], $this->app->bootComponent('com_jlms')->getCurriculumService()->durationFingerprint($actor, $input))) {
+        if (
+            !is_array($proof) || ($proof['expires'] ?? 0) < time()
+            || !hash_equals($proof['fingerprint'], $this->app->bootComponent('com_jlms')->getCurriculumService()->durationFingerprint($actor, $input))
+        ) {
             throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
         }
         unset($plans[$ticket]);
@@ -213,13 +225,19 @@ class CurriculumController extends BaseController
         $this->app->close();
     }
 
-    public function saveTeachingRules(): void { $this->perform('rules');
+    public function saveTeachingRules(): void
+    {
+        $this->perform('rules');
     }
 
-    public function restoreVersion(): void { $this->perform('restore');
+    public function restoreVersion(): void
+    {
+        $this->perform('restore');
     }
 
-    public function duplicateCourse(): void { $this->perform('duplicatecourse');
+    public function duplicateCourse(): void
+    {
+        $this->perform('duplicatecourse');
     }
 
     public function transition(): void

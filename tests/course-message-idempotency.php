@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 /** Regression contract: one preview -> one mutation -> one outbox test event. */
+
 require_once __DIR__ . '/../component/administrator/src/Application/CourseMessageMutation.php';
 use Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation;
 

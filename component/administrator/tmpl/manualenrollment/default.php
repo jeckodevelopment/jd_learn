@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
@@ -22,21 +24,21 @@ $i = $this->item;
   <p><?= Text::_('COM_JLMS_ROSTER_VERSION') ?> #<?= (int) $p['version_id'] ?> · <?= Text::_('COM_JLMS_ROSTER_EDITION') ?> #<?= (int) $p['edition_id'] ?> · <?= $this->escape($p['language']) ?></p>
         <?php if (!$p['has_current_access']) :
             ?><p id="jlms-manual-access-warning" class="alert alert-warning" role="status"><?= Text::_('COM_JLMS_PREASSIGN_WARNING') ?></p><?php
-  endif; ?>
+        endif; ?>
   <p><?= Text::_('COM_JLMS_MANUAL_CAPACITY') ?>: <?= (int) $p['used'] ?> / <?= $p['capacity'] === null ? Text::_('COM_JLMS_MANUAL_UNLIMITED') : (int) $p['capacity'] ?></p>
         <?php if ($p['blocked'] !== null) :
             ?><p id="jlms-manual-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
             <?php if ($p['existing_id']) :
                 ?><p id="jlms-manual-existing">#<?= (int) $p['existing_id'] ?> · <?= $this->escape($p['existing_status']) ?></p><?php
-   endif; ?>
-  <?php else :
-        ?><form id="jlms-manual-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
-      <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="manualenrollment.apply"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MANUAL_APPLY') ?></button>
+            endif; ?>
+        <?php else :
+            ?><form id="jlms-manual-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
+            <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="manualenrollment.apply"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MANUAL_APPLY') ?></button>
   </form>
-  <?php endif; ?>
+        <?php endif; ?>
         <?php if ($v['receipt']) :
             $h = $v['receipt']; ?><section id="jlms-manual-receipt"><h3><?= Text::_('COM_JLMS_MANUAL_RECEIPT') ?> #<?= (int) $h->id ?></h3><p><?= $this->escape($h->reason) ?> · <?= (int) $h->actor_user_id ?> · <?= $this->escape($h->created_at) ?> UTC</p></section><?php
-  endif; ?>
+        endif; ?>
  </section>
  <?php endif; ?>
 </section>

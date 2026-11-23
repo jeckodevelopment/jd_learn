@@ -240,9 +240,14 @@ final class MailQueue
                         $invalidTemplate = true;
                         throw $invalid;
                     }
-                    if (!\Jlms\Component\Jlms\Administrator\Application\CourseMessageMailer::deliver(
-                        $snapshot, $data, (string) $row->recipient_email, (string) $row->recipient_name
-                    )) {
+                    if (
+                        !\Jlms\Component\Jlms\Administrator\Application\CourseMessageMailer::deliver(
+                            $snapshot,
+                            $data,
+                            (string) $row->recipient_email,
+                            (string) $row->recipient_name
+                        )
+                    ) {
                         throw new \RuntimeException('Joomla mailer rejected the communication.');
                     }
                 } else {
@@ -254,8 +259,11 @@ final class MailQueue
                         throw new \RuntimeException('JD Learn mail template not registered.');
                     }
                     $unresolved = MailTemplatePlaceholderValidator::unresolved(
-                        $templateId, $data, (string) $selected->subject,
-                        (string) $selected->body, (string) $selected->htmlbody
+                        $templateId,
+                        $data,
+                        (string) $selected->subject,
+                        (string) $selected->body,
+                        (string) $selected->htmlbody
                     );
                     if ($unresolved !== []) {
                         $invalidTemplate = true;
@@ -338,17 +346,21 @@ final class MailQueue
                 ->bind(':request', $requestId, ParameterType::INTEGER)
                 ->bind(':email', (string) $row->recipient_email);
             $current = $this->db->setQuery($query)->loadObject();
-            if (!$current || (int) $current->applicant_id === $userId
+            if (
+                !$current || (int) $current->applicant_id === $userId
                 || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
                     'manager_request',
                     (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
                         ->get('mail_manager_request_enabled', false),
                     (string) $current->params_json
-                )) {
+                )
+            ) {
                 return false;
             }
             return \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice::authorized(
-                $this->db, $courseId, $userId
+                $this->db,
+                $courseId,
+                $userId
             );
         } catch (\Throwable) {
             return false;
@@ -395,11 +407,13 @@ final class MailQueue
                 ->bind(':user', $userId, ParameterType::INTEGER)
                 ->bind(':email', (string) $row->recipient_email);
             $record = $this->db->setQuery($query)->loadObject();
-            if (!$record || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
-                'course_update',
-                (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_course_update_enabled', false),
-                (string) $record->params_json
-            )) {
+            if (
+                !$record || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
+                    'course_update',
+                    (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_course_update_enabled', false),
+                    (string) $record->params_json
+                )
+            ) {
                 return false;
             }
             $user = new User($userId);
@@ -455,23 +469,33 @@ final class MailQueue
                 ->bind(':course', (int) $row->course_id, ParameterType::INTEGER)
                 ->bind(':email', (string) $row->recipient_email);
             $record = $this->db->setQuery($query)->loadObject();
-            if (!$record || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
-                'lesson_release',
-                (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_lesson_release_enabled', false),
-                (string) $record->params_json
-            )) {
+            if (
+                !$record || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
+                    'lesson_release',
+                    (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_lesson_release_enabled', false),
+                    (string) $record->params_json
+                )
+            ) {
                 return false;
             }
             $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
             $start = \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::effectiveStart(
-                $record->publish_up, $record->release_after_days, $record->started_at
+                $record->publish_up,
+                $record->release_after_days,
+                $record->started_at
             );
-            if ($start === null || $start > $now ||
+            if (
+                $start === null || $start > $now ||
                 $start <= new \DateTimeImmutable((string) $record->created_at, new \DateTimeZone('UTC')) ||
                 $start <= new \DateTimeImmutable((string) $record->published_at, new \DateTimeZone('UTC')) ||
                 \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
-                    $record->publish_up, $record->publish_down, $record->release_after_days, $record->started_at, $now
-                ) !== 'available') {
+                    $record->publish_up,
+                    $record->publish_down,
+                    $record->release_after_days,
+                    $record->started_at,
+                    $now
+                ) !== 'available'
+            ) {
                 return false;
             }
 
@@ -566,5 +590,4 @@ final class MailQueue
             return false;
         }
     }
-
 }

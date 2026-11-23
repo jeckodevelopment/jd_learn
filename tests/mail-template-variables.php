@@ -10,16 +10,19 @@ require_once __DIR__ . '/../component/administrator/src/Infrastructure/MailTempl
 
 // MAIL-10: optional course start dates are absolute, validated and UTC-normalized.
 $courseDateParser = new ReflectionMethod(
-    \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateContext::class, 'dateValue'
+    \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateContext::class,
+    'dateValue'
 );
 foreach ([null, '', 'tomorrow', '2026-02-30', '2026-13-01', '2026-11-13 junk'] as $invalid) {
     if ($courseDateParser->invoke(null, $invalid) !== '') {
         throw new RuntimeException('Unsafe course start date accepted in email context.');
     }
 }
-if ($courseDateParser->invoke(null, '2026-11-13 12:00:00') !== '2026-11-13 12:00:00 UTC'
+if (
+    $courseDateParser->invoke(null, '2026-11-13 12:00:00') !== '2026-11-13 12:00:00 UTC'
     || $courseDateParser->invoke(null, '2026-11-13T12:00:00Z') !== '2026-11-13 12:00:00 UTC'
-    || $courseDateParser->invoke(null, '2026-11-13T14:00:00+02:00') !== '2026-11-13 12:00:00 UTC') {
+    || $courseDateParser->invoke(null, '2026-11-13T14:00:00+02:00') !== '2026-11-13 12:00:00 UTC'
+) {
     throw new RuntimeException('Course start date was not normalized safely to UTC.');
 }
 
@@ -67,14 +70,16 @@ $teacherTemplate = $definitions['com_jlms.teacher.assigned'] ?? null;
 if (!$teacherTemplate || !in_array('TEACHER_NAME', $teacherTemplate[2], true)) {
     throw new RuntimeException('Native teacher assignment mail template missing.');
 }
-foreach ([
+foreach (
+    [
     'component/administrator/config.xml' => 'mail_teacher_assignment_enabled',
     'component/administrator/forms/course.xml' => 'mail_teacher_assignment',
     'component/administrator/src/Application/MailPreferences.php' => "'teacher_assignment'",
     'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.teacher.assigned' => 'teacher_assignment'",
     'component/administrator/src/Model/CourseModel.php' => 'queueAdded($id, $previousTeacherIds, $teachers)',
     'component/administrator/src/Application/TeacherAssignmentNotice.php' => 'public function queueAdded(',
-] as $file => $expected) {
+    ] as $file => $expected
+) {
     $source = file_get_contents(__DIR__ . '/../' . $file);
     if ($source === false || !str_contains($source, $expected)) {
         throw new RuntimeException('MAIL-G assignment notification wiring incomplete: ' . $file);
@@ -86,8 +91,10 @@ foreach ([
 $contextTags = ['COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'LESSON_DESCRIPTION', 'LESSON_URL', 'TEACHER_NAME', 'CONTACT_EMAIL'];
 $contextSource = file_get_contents(__DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateContext.php');
 $queueSource = file_get_contents(__DIR__ . '/../component/administrator/src/Infrastructure/MailQueue.php');
-if ($contextSource === false || $queueSource === false
-    || !str_contains($queueSource, 'MailTemplateContext::enrich($this->db, $courseId, $data)')) {
+if (
+    $contextSource === false || $queueSource === false
+    || !str_contains($queueSource, 'MailTemplateContext::enrich($this->db, $courseId, $data)')
+) {
     throw new RuntimeException('Mail template context enrichment is not connected to both queue paths.');
 }
 foreach (['com_jlms.lesson.available', 'com_jlms.teacher.assigned', 'com_jlms.course.published'] as $templateId) {
@@ -111,27 +118,33 @@ foreach ($definitions as $definition) {
 if (in_array('USER_FIRSTNAME', $registeredTags, true)) {
     throw new RuntimeException('USER_FIRSTNAME must not be registered without a reliable name source.');
 }
-foreach (['LESSON_URL' => 'view=classroom', 'LESSON_DESCRIPTION' => "'LESSON_DESCRIPTION' => ''",
+foreach (
+    ['LESSON_URL' => 'view=classroom', 'LESSON_DESCRIPTION' => "'LESSON_DESCRIPTION' => ''",
           'COURSE_DURATION' => 'estimated_minutes', 'COURSE_START_DATE' => 'starts_at',
-          'CONTACT_EMAIL' => 'FILTER_VALIDATE_EMAIL'] as $tag => $sourceNeedle) {
+          'CONTACT_EMAIL' => 'FILTER_VALIDATE_EMAIL'] as $tag => $sourceNeedle
+) {
     if (!str_contains($contextSource, $sourceNeedle)) {
         throw new RuntimeException('Mail context producer missing safe source for ' . $tag);
     }
 }
 
 $cancelled = $definitions['com_jlms.enrollment.cancelled'] ?? null;
-if (!$cancelled || !str_contains($cancelled[1], '{COURSE_TITLE}')
+if (
+    !$cancelled || !str_contains($cancelled[1], '{COURSE_TITLE}')
     || !str_contains($cancelled[3], '{USER_FULLNAME}')
-    || $cancelled[2] !== ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME']) {
+    || $cancelled[2] !== ['USER_FULLNAME', 'COURSE_TITLE', 'SITE_NAME']
+) {
     throw new RuntimeException('Cancellation mail must be declared in native HTML/text templates.');
 }
-foreach ([
+foreach (
+    [
     'component/administrator/config.xml' => 'mail_cancellation_enabled',
     'component/administrator/forms/course.xml' => 'mail_cancellation',
     'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.cancelled' => 'cancellation'",
     'component/administrator/src/Application/MailPreferences.php' => "'cancellation'",
     'component/administrator/src/Application/EnrollmentStateService.php' => "'cancelled' => 'com_jlms.enrollment.cancelled'",
-] as $file => $expected) {
+    ] as $file => $expected
+) {
     $contents = file_get_contents(__DIR__ . '/../' . $file);
     if ($contents === false || !str_contains($contents, $expected)) {
         throw new RuntimeException('Missing cancellation event wiring: ' . $file);
@@ -139,7 +152,8 @@ foreach ([
 }
 
 // MAIL-F: the public request action must use the native queue and course-level preferences.
-foreach ([
+foreach (
+    [
     'component/administrator/config.xml' => 'mail_request_enabled',
     'component/administrator/forms/course.xml' => 'mail_request',
     'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.requested' => 'request'",
@@ -147,7 +161,8 @@ foreach ([
     'component/administrator/src/Application/LearningService.php' => 'public function requestApproval(',
     'component/site/src/Controller/EnrollmentController.php' => 'public function request(): void',
     'component/site/tmpl/course/default.php' => 'jlms-enrollment-request-form',
-] as $file => $expected) {
+    ] as $file => $expected
+) {
     $source = file_get_contents(__DIR__ . '/../' . $file);
     if ($source === false || !str_contains($source, $expected)) {
         throw new RuntimeException('Incomplete approval request wiring: ' . $file);
@@ -156,21 +171,26 @@ foreach ([
 foreach (['it-IT', 'en-GB'] as $locale) {
     $admin = file_get_contents(__DIR__ . '/../component/administrator/language/' . $locale . '/com_jlms.ini');
     $site = file_get_contents(__DIR__ . '/../component/site/language/' . $locale . '/com_jlms.ini');
-    if ($admin === false || !str_contains($admin, 'COM_JLMS_MAIL_REQUEST_ENABLED=')
-        || $site === false || !str_contains($site, 'COM_JLMS_ENROLLMENT_REQUEST_SUBMIT=')) {
+    if (
+        $admin === false || !str_contains($admin, 'COM_JLMS_MAIL_REQUEST_ENABLED=')
+        || $site === false || !str_contains($site, 'COM_JLMS_ENROLLMENT_REQUEST_SUBMIT=')
+    ) {
         throw new RuntimeException('Missing MAIL-F translation: ' . $locale);
     }
 }
 
 // MAIL-F: outcome notifications and the administrative authorization boundary are explicit.
-foreach (['approved' => ['USER_FULLNAME','COURSE_TITLE','DASHBOARD_URL','SITE_NAME'],
-          'rejected' => ['USER_FULLNAME','COURSE_TITLE','SITE_NAME']] as $event => $expectedTags) {
+foreach (
+    ['approved' => ['USER_FULLNAME','COURSE_TITLE','DASHBOARD_URL','SITE_NAME'],
+          'rejected' => ['USER_FULLNAME','COURSE_TITLE','SITE_NAME']] as $event => $expectedTags
+) {
     $id = 'com_jlms.enrollment.' . $event;
     if (!isset($definitions[$id]) || $definitions[$id][2] !== $expectedTags) {
         throw new RuntimeException('MAIL-F outcome template missing or inconsistent: ' . $id);
     }
 }
-foreach ([
+foreach (
+    [
     'component/administrator/config.xml' => 'mail_approval_enabled',
     'component/administrator/forms/course.xml' => 'mail_rejection',
     'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.approved' => 'approval'",
@@ -179,7 +199,8 @@ foreach ([
     'component/administrator/src/Infrastructure/AssessmentAudit.php' => "'enrollmentapproval'=>'COM_JLMS_LOG_ENROLLMENT_APPROVAL'",
     'component/administrator/src/Controller/EnrollmentapprovalController.php' => "checkToken('post', false)",
     'component/administrator/tmpl/enrollments/default.php' => 'enrollmentapproval.decide',
-] as $file => $needle) {
+    ] as $file => $needle
+) {
     $source = file_get_contents(__DIR__ . '/../' . $file);
     if ($source === false || !str_contains($source, $needle)) {
         throw new RuntimeException('MAIL-F outcome wiring missing: ' . $file);
@@ -188,21 +209,27 @@ foreach ([
 
 $confirmed = $definitions['com_jlms.enrollment.confirmed'];
 $completed = $definitions['com_jlms.course.completed'];
-if (!in_array('ENROLLMENT_DATE', $confirmed[2], true)
+if (
+    !in_array('ENROLLMENT_DATE', $confirmed[2], true)
     || !str_contains($confirmed[1], '{ENROLLMENT_DATE}')
-    || !str_contains($confirmed[3], '{ENROLLMENT_DATE}')) {
+    || !str_contains($confirmed[3], '{ENROLLMENT_DATE}')
+) {
     throw new RuntimeException('Enrollment date must be registered in both text and HTML.');
 }
-if (!in_array('COMPLETION_DATE', $completed[2], true)
+if (
+    !in_array('COMPLETION_DATE', $completed[2], true)
     || !str_contains($completed[1], '{COMPLETION_DATE}')
-    || !str_contains($completed[3], '{COMPLETION_DATE}')) {
+    || !str_contains($completed[3], '{COMPLETION_DATE}')
+) {
     throw new RuntimeException('Completion date must be registered in both text and HTML.');
 }
-foreach ([
+foreach (
+    [
     'ManualEnrollmentService.php' => ['\'ENROLLMENT_DATE\' => $now'],
     'LearningService.php' => ['\'ENROLLMENT_DATE\' => $now', '\'COMPLETION_DATE\' => $completedAt',
         '$this->queueCourseCompletion($actor, $enrollmentId, (int) $version->course_id, $language, (string) $update->completed_at)'],
-] as $producerFile => $needles) {
+    ] as $producerFile => $needles
+) {
     $producer = file_get_contents(__DIR__ . '/../component/administrator/src/Application/' . $producerFile);
     foreach ($needles as $needle) {
         if ($producer === false || !str_contains($producer, $needle)) {
@@ -211,8 +238,10 @@ foreach ([
     }
 }
 foreach (['it-IT', 'en-GB'] as $locale) {
-    if (MailTemplateVariableCatalog::forTemplate('com_jlms.enrollment.confirmed', $locale)['ENROLLMENT_DATE']['type'] !== 'date'
-        || MailTemplateVariableCatalog::forTemplate('com_jlms.course.completed', $locale)['COMPLETION_DATE']['type'] !== 'date') {
+    if (
+        MailTemplateVariableCatalog::forTemplate('com_jlms.enrollment.confirmed', $locale)['ENROLLMENT_DATE']['type'] !== 'date'
+        || MailTemplateVariableCatalog::forTemplate('com_jlms.course.completed', $locale)['COMPLETION_DATE']['type'] !== 'date'
+    ) {
         throw new RuntimeException('Missing typed localized date variables: ' . $locale);
     }
 }
@@ -239,9 +268,11 @@ $originalParams = [
     'custom' => ['format' => 'html', 'enabled' => false],
 ];
 $mergedParams = MailTemplateTagUpdater::mergeParams(
-    $originalParams, MailTemplateInstaller::tagsFor('com_jlms.enrollment.confirmed')
+    $originalParams,
+    MailTemplateInstaller::tagsFor('com_jlms.enrollment.confirmed')
 );
-if (!in_array('ENROLLMENT_DATE', $mergedParams['tags'], true)
+if (
+    !in_array('ENROLLMENT_DATE', $mergedParams['tags'], true)
     || !in_array('COURSE_URL', $mergedParams['tags'], true)
     || !in_array('EXTRA_CUSTOM', $mergedParams['tags'], true)
     || in_array('NAME', $mergedParams['tags'], true)
@@ -249,17 +280,24 @@ if (!in_array('ENROLLMENT_DATE', $mergedParams['tags'], true)
     || $mergedParams['mailfrom'] !== $originalParams['mailfrom']
     || $mergedParams['replyto'] !== $originalParams['replyto']
     || $mergedParams['custom'] !== $originalParams['custom']
-    || $originalParams['tags'][2] !== 'NAME') {
+    || $originalParams['tags'][2] !== 'NAME'
+) {
     throw new RuntimeException('Upgrade tag synchronization must preserve preferences and add canonical tags.');
 }
-if (MailTemplateTagUpdater::mergeParams(
-    $mergedParams, MailTemplateInstaller::tagsFor('com_jlms.enrollment.confirmed')
-) !== $mergedParams) {
+if (
+    MailTemplateTagUpdater::mergeParams(
+        $mergedParams,
+        MailTemplateInstaller::tagsFor('com_jlms.enrollment.confirmed')
+    ) !== $mergedParams
+) {
     throw new RuntimeException('Upgrading already synchronized template tags must be idempotent.');
 }
-if (!in_array('COMPLETION_DATE', MailTemplateTagUpdater::mergeParams(
-    ['tags' => []], MailTemplateInstaller::tagsFor('com_jlms.course.completed')
-)['tags'], true)) {
+if (
+    !in_array('COMPLETION_DATE', MailTemplateTagUpdater::mergeParams(
+        ['tags' => []],
+        MailTemplateInstaller::tagsFor('com_jlms.course.completed')
+    )['tags'], true)
+) {
     throw new RuntimeException('Completion date must be available on upgraded templates.');
 }
 try {
@@ -276,9 +314,11 @@ if ($script === false || !str_contains($script, 'MailTemplateTagUpdater::synchro
 
 foreach (['com_jlms.course.completed', 'com_jlms.enrollment.reactivated'] as $templateId) {
     $definition = $definitions[$templateId];
-    if (!in_array('DASHBOARD_URL', $definition[2], true)
+    if (
+        !in_array('DASHBOARD_URL', $definition[2], true)
         || !str_contains($definition[1], '{DASHBOARD_URL}')
-        || !str_contains($definition[3], 'href="{DASHBOARD_URL}"')) {
+        || !str_contains($definition[3], 'href="{DASHBOARD_URL}"')
+    ) {
         throw new RuntimeException('Authenticated dashboard URL must be available in text and HTML: ' . $templateId);
     }
     foreach (['it-IT', 'en-GB'] as $locale) {
@@ -287,10 +327,12 @@ foreach (['com_jlms.course.completed', 'com_jlms.enrollment.reactivated'] as $te
         }
     }
 }
-foreach ([
+foreach (
+    [
     'LearningService.php' => ["'DASHBOARD_URL' => \\Joomla\\CMS\\Uri\\Uri::root()"],
     'EnrollmentStateService.php' => ["\$target === 'active' ? ['DASHBOARD_URL' => \\Joomla\\CMS\\Uri\\Uri::root()"],
-] as $filename => $needles) {
+    ] as $filename => $needles
+) {
     $source = file_get_contents(__DIR__ . '/../component/administrator/src/Application/' . $filename);
     foreach ($needles as $needle) {
         if ($source === false || !str_contains($source, $needle)) {
@@ -306,17 +348,21 @@ $guide = file_get_contents(__DIR__ . '/../component/administrator/tmpl/mailvaria
 $queue = file_get_contents(__DIR__ . '/../component/administrator/tmpl/mailqueue/default.php');
 $dashboard = file_get_contents(__DIR__ . '/../component/administrator/src/View/Dashboard/HtmlView.php');
 $guideView = file_get_contents(__DIR__ . '/../component/administrator/src/View/Mailvariables/HtmlView.php');
-if ($guide === false || !str_contains($guide, 'MailTemplateInstaller::templateIds()')
+if (
+    $guide === false || !str_contains($guide, 'MailTemplateInstaller::templateIds()')
     || !str_contains($guide, 'MailTemplateVariableCatalog::class')
     || !str_contains($guide, 'forTemplate($mailId, $mailLanguage)')
-    || !str_contains($guide, 'jlms-mail-variable-guide')) {
+    || !str_contains($guide, 'jlms-mail-variable-guide')
+) {
     throw new RuntimeException('Standalone variable guide must use the registered catalog.');
 }
 // Issue #404: the guide shows the Joomla-localized name above its technical template ID.
-if ($guide === false || !str_contains($guide, "'JLMS_MAIL_'")
+if (
+    $guide === false || !str_contains($guide, "'JLMS_MAIL_'")
     || !str_contains($guide, "strtoupper(str_replace(")
     || !str_contains($guide, '$displayTitle')
-    || !str_contains($guide, '$this->escape($mailId)')) {
+    || !str_contains($guide, '$this->escape($mailId)')
+) {
     throw new RuntimeException('Mail variable guide must expose translated model titles and canonical IDs.');
 }
 foreach (['it-IT', 'en-GB'] as $locale) {
@@ -329,8 +375,10 @@ foreach (['it-IT', 'en-GB'] as $locale) {
     }
 }
 
-if ($queue === false || str_contains($queue, 'jlms-mail-variable-guide')
-    || !str_contains($queue, 'MailTemplateInstaller::templateIds()')) {
+if (
+    $queue === false || str_contains($queue, 'jlms-mail-variable-guide')
+    || !str_contains($queue, 'MailTemplateInstaller::templateIds()')
+) {
     throw new RuntimeException('Mail queue must remain operational and keep the shared filter list.');
 }
 $displayController = file_get_contents(__DIR__ . '/../component/administrator/src/Controller/DisplayController.php');
@@ -341,17 +389,21 @@ $queueController = file_get_contents(__DIR__ . '/../component/administrator/src/
 if ($queueController === false || !str_contains($queueController, "['reconcile', 'display']")) {
     throw new RuntimeException('Operational outbox read-only display must stay permitted.');
 }
-if ($dashboard === false || !str_contains($dashboard, "view=mailvariables")
+if (
+    $dashboard === false || !str_contains($dashboard, "view=mailvariables")
     || $guideView === false || !str_contains($guideView, 'CourseEditorAccess::fresh($app->getIdentity())')
     || !str_contains($guideView, "authorise('core.manage', 'com_mails')")
-    || !str_contains($guideView, "authorise('core.edit', 'com_mails')")) {
+    || !str_contains($guideView, "authorise('core.edit', 'com_mails')")
+) {
     throw new RuntimeException('Guide navigation and native editor ACL must be enforced by the toolbar view.');
 }
 foreach (['it-IT', 'en-GB'] as $locale) {
     $language = file_get_contents(__DIR__ . '/../component/administrator/language/' . $locale . '/com_jlms.ini');
-    foreach (['COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE', 'COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO',
+    foreach (
+        ['COM_JLMS_MAIL_VARIABLE_GUIDE_TITLE', 'COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO',
         'COM_JLMS_MAIL_VARIABLE_GUIDE_WARNING', 'COM_JLMS_MAIL_VARIABLE_GUIDE_TAG',
-        'COM_JLMS_MAIL_VARIABLE_GUIDE_TYPE', 'COM_JLMS_MAIL_VARIABLE_GUIDE_DESCRIPTION'] as $key) {
+        'COM_JLMS_MAIL_VARIABLE_GUIDE_TYPE', 'COM_JLMS_MAIL_VARIABLE_GUIDE_DESCRIPTION'] as $key
+    ) {
         if ($language === false || !str_contains($language, $key . '=')) {
             throw new RuntimeException('Missing translated guide key: ' . $locale . '/' . $key);
         }
@@ -359,11 +411,13 @@ foreach (['it-IT', 'en-GB'] as $locale) {
 }
 
 // The native Mail Templates shortcut belongs in the Joomla toolbar and retains its ACL boundary.
-if ($guideView === false
+if (
+    $guideView === false
     || !str_contains($guideView, "ToolbarHelper::link(")
     || !str_contains($guideView, "authorise('core.edit', 'com_mails')")
     || !str_contains($guideView, "filter[extension]=com_jlms")
-    || str_contains($guide, 'COM_JLMS_MAIL_TEMPLATES')) {
+    || str_contains($guide, 'COM_JLMS_MAIL_TEMPLATES')
+) {
     throw new RuntimeException('Mail template shortcut must be toolbar-only and ACL protected.');
 }
 
@@ -406,20 +460,24 @@ foreach (['USER_FULLNAME','COURSE_TITLE','COMPLETION_DATE','DASHBOARD_URL','SITE
 // recipient addresses, template values or transport exceptions in the outbox.
 $auditSource = file_get_contents(__DIR__ . '/../component/administrator/src/Application/MailQueueAuditService.php');
 $auditView = file_get_contents(__DIR__ . '/../component/administrator/tmpl/mailqueue/default.php');
-if (!str_contains($auditSource, 'MailTemplatePlaceholderValidator::unresolved(')
+if (
+    !str_contains($auditSource, 'MailTemplatePlaceholderValidator::unresolved(')
     || !str_contains($auditSource, 'unset($row->template_data, $row->language);')
     || !str_contains($auditView, 'diagnostic_tokens')
-    || !str_contains($auditView, '$this->escape(implode(')) {
+    || !str_contains($auditView, '$this->escape(implode(')
+) {
     throw new RuntimeException('Safe mail queue placeholder diagnostics not integrated.');
 }
 
 // A failed template validation is pre-SMTP and may be manually retried only
 // after repair; uncertain transport failures must never be auto-requeued.
 $mailAuditSource = file_get_contents(__DIR__ . '/../component/administrator/src/Application/MailQueueAuditService.php');
-if ($mailAuditSource === false || !str_contains($mailAuditSource, 'private function retryFailedTemplate(')
+if (
+    $mailAuditSource === false || !str_contains($mailAuditSource, 'private function retryFailedTemplate(')
     || !str_contains($mailAuditSource, "state = 'failed'")
     || !str_contains($mailAuditSource, 'MailTemplatePlaceholderValidator::unresolved(')
     || !str_contains($mailAuditSource, "template_id IN ('com_jlms.enrollment.confirmed', 'com_jlms.course.completed')")
-    || !str_contains($mailAuditSource, 'getAffectedRows() !== 1')) {
+    || !str_contains($mailAuditSource, 'getAffectedRows() !== 1')
+) {
     throw new RuntimeException('Failed pre-SMTP template retry guard is missing.');
 }

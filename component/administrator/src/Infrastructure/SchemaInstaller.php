@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Administrator\Infrastructure;
 
 use Joomla\Database\DatabaseInterface;
@@ -38,8 +37,10 @@ final class SchemaInstaller
                 foreach ($types as $column) {
                     $normalise = static fn (string $type): string => strtolower((string) preg_replace('/(tinyint|smallint|mediumint|bigint|int)\(\d+\)/i', '$1', $type));
                     $actual = $metadata[$column[1]];
-                    if ($normalise($actual->Type) !== $normalise($column[2])
-                        || (($actual->Null === 'NO') !== ($column[3] === 'NOT NULL'))) {
+                    if (
+                        $normalise($actual->Type) !== $normalise($column[2])
+                        || (($actual->Null === 'NO') !== ($column[3] === 'NOT NULL'))
+                    ) {
                         throw new \RuntimeException('COM_JLMS_SCHEMA_MISMATCH');
                     }
                 }

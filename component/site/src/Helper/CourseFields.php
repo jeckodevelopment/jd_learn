@@ -14,8 +14,10 @@ final class CourseFields
     public static function prepare(object $course, string $language): array
     {
         $positions = [1 => [], 2 => [], 3 => []];
-        if (!PluginHelper::isEnabled('system', 'fields')
-            || !ComponentHelper::getParams('com_jlms')->get('custom_fields_enable', 1)) {
+        if (
+            !PluginHelper::isEnabled('system', 'fields')
+            || !ComponentHelper::getParams('com_jlms')->get('custom_fields_enable', 1)
+        ) {
             return $positions;
         }
         // The native helper applies publication, field/group access, category and

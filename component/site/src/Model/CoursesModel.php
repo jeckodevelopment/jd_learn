@@ -62,8 +62,14 @@ class CoursesModel extends ListModel
         if ($pathwayId && !isset($this->getPathways()[$pathwayId])) {
             $pathwayId = -1;
         }
-        $query = $component->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag(),
-            (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'), $teacherId, $pathwayId);
+        $query = $component->getCatalogService()->query(
+            $app->getIdentity(),
+            $app->getLanguage()->getTag(),
+            (int) $this->getState('filter.category_id'),
+            (int) $this->getState('filter.tag_id'),
+            $teacherId,
+            $pathwayId
+        );
         // Only public presentation fields from the published course version.
         $query->select('v.presentation_json AS catalog_presentation_json');
         $categoryChoice = (int) $this->getState('filter.category_choice');
@@ -143,7 +149,10 @@ class CoursesModel extends ListModel
             $id = (int) $course->id;
             try {
                 $result[$id] = TeacherProfiles::visible(
-                    $db, $actor, $language, (string) ($course->catalog_presentation_json ?? '')
+                    $db,
+                    $actor,
+                    $language,
+                    (string) ($course->catalog_presentation_json ?? '')
                 );
             } catch (\JsonException | \RuntimeException | \TypeError $error) {
                 // A malformed historical snapshot must not break the public catalogue.
@@ -163,7 +172,9 @@ class CoursesModel extends ListModel
         }
         $ids = array_map(static fn (object $item): int => (int) $item->id, $items);
         return $app->bootComponent('com_jlms')->getDashboardService()->catalogStates(
-            $identity, $app->getLanguage()->getTag(), $ids
+            $identity,
+            $app->getLanguage()->getTag(),
+            $ids
         );
     }
 
@@ -195,8 +206,10 @@ class CoursesModel extends ListModel
         $courseIds = [];
         foreach ($items as $item) {
             $courseId = (int) $item->id;
-            if ($courseId > 0 && (string) $item->enrollment_mode === 'approval'
-                && !isset($enrollmentStates[$courseId])) {
+            if (
+                $courseId > 0 && (string) $item->enrollment_mode === 'approval'
+                && !isset($enrollmentStates[$courseId])
+            ) {
                 $courseIds[] = $courseId;
             }
         }
@@ -236,7 +249,8 @@ class CoursesModel extends ListModel
             $app = Factory::getApplication();
             $this->visibleCatalogCategories = $app->bootComponent('com_jlms')
                 ->getCatalogService()->publicCourseCategories(
-                    $app->getIdentity(), $app->getLanguage()->getTag(),
+                    $app->getIdentity(),
+                    $app->getLanguage()->getTag(),
                     (int) $this->getState('filter.category_id')
                 );
         }
@@ -262,7 +276,9 @@ class CoursesModel extends ListModel
     {
         $app = Factory::getApplication();
         return $app->bootComponent('com_jlms')->getCatalogService()->publicTags(
-            $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
+            $app->getIdentity(),
+            $app->getLanguage()->getTag(),
+            (int) $this->getState('filter.category_id')
         );
     }
 
@@ -286,16 +302,22 @@ class CoursesModel extends ListModel
         return (string) $this->getState('filter.layout');
     }
 
-    public function getTeacherId(): int { return (int) $this->getState('filter.teacher_id');
+    public function getTeacherId(): int
+    {
+        return (int) $this->getState('filter.teacher_id');
     }
-    public function getPathwayId(): int { return (int) $this->getState('filter.pathway_id');
+    public function getPathwayId(): int
+    {
+        return (int) $this->getState('filter.pathway_id');
     }
 
     public function getTeachers(): array
     {
         $app = Factory::getApplication();
         return $app->bootComponent('com_jlms')->getCatalogService()->publicTeachers(
-            $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
+            $app->getIdentity(),
+            $app->getLanguage()->getTag(),
+            (int) $this->getState('filter.category_id')
         );
     }
 
@@ -304,7 +326,9 @@ class CoursesModel extends ListModel
         $app = Factory::getApplication();
         $component = $app->bootComponent('com_jlms');
         $ids = $component->getCatalogService()->publicPathwayIds(
-            $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
+            $app->getIdentity(),
+            $app->getLanguage()->getTag(),
+            (int) $this->getState('filter.category_id')
         );
         if (!$ids) {
             return [];

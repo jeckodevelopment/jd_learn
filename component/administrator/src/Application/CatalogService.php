@@ -133,8 +133,10 @@ final class CatalogService
         $course = $this->db->setQuery($q)->loadObject() ?: throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         $asset = 'com_jlms.course.' . (int) $course->id;
         $own = (int) $course->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset);
-        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
-            || (!$actor->authorise('core.edit', $asset) && !$own)) {
+        if (
+            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            || (!$actor->authorise('core.edit', $asset) && !$own)
+        ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $available = $this->db->setQuery($this->db->createQuery()->select('id, title')->from('#__viewlevels')->order('ordering, id'))->loadObjectList();
@@ -155,8 +157,10 @@ final class CatalogService
             && in_array((int) $course->category_access, $selected, true)
             && ((string) $course->category_language === '*' || (string) $course->category_language === $language);
         foreach ($ancestors as $category) {
-            if ((int) $category->published !== 1 || !in_array((int) $category->access, $selected, true)
-                || !in_array((string) $category->language, ['*', $language], true)) {
+            if (
+                (int) $category->published !== 1 || !in_array((int) $category->access, $selected, true)
+                || !in_array((string) $category->language, ['*', $language], true)
+            ) {
                 $categoryVisible = false;
                 break;
             }
@@ -293,7 +297,9 @@ final class CatalogService
             // Publication windows and enrollment-relative releases are server-authoritative.
             try {
                 $publishable = \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
-                    $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days
+                    $lesson->publish_up,
+                    $lesson->publish_down,
+                    $lesson->release_after_days
                 ) === 'available';
             } catch (\InvalidArgumentException $exception) {
                 // Fail closed on malformed historical scheduling metadata.
@@ -347,7 +353,10 @@ final class CatalogService
         // Malformed historical scheduling must fail closed just like the public outline.
         try {
             $available = \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
-                $lesson->publish_up, $lesson->publish_down, $lesson->release_after_days) === 'available';
+                $lesson->publish_up,
+                $lesson->publish_down,
+                $lesson->release_after_days
+            ) === 'available';
         } catch (\InvalidArgumentException $exception) {
             $available = false;
         }

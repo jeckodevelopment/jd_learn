@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Disposable CI database only. Never run against a live site. */
+
 $dsn = getenv('JLMS_TEST_DSN');
 if (!$dsn || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Explicit disposable database opt-in required.');

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 namespace Jlms\Component\Jlms\Site\View\Courses;
+
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Language\Text;
 use Jlms\Component\Jlms\Site\Helper\CatalogOptions;

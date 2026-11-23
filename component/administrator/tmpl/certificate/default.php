@@ -42,7 +42,7 @@ $i = $this->item;
         ?><table class="table"><thead><tr><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTION') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTOR') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_DATE') ?></th></tr></thead><tbody>
      <?php foreach ($i['audit'] as $event) :
             ?><tr><td><?= $this->escape($event->action) ?></td><td><?= (int) $event->actor_user_id ?></td><td><?= $this->escape($event->created_at) ?></td></tr><?php
- endforeach; ?>
+     endforeach; ?>
  </tbody></table>
  <?php endif; ?>
  <a class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=certificates') ?>"><?= Text::_('JTOOLBAR_BACK') ?></a>

@@ -12,9 +12,12 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage;
 /** A video is attached directly to a lesson; no unscoped asset IDs can be assigned by authors. */
 final class LocalVideoService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning,
-        private readonly ProtectedVideoStorage $storage, private readonly ?\Closure $enabled = null)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly LearningService $learning,
+        private readonly ProtectedVideoStorage $storage,
+        private readonly ?\Closure $enabled = null
+    ) {
     }
 
     private function row(string $table, int $id, bool $lock = false): object
@@ -30,14 +33,18 @@ final class LocalVideoService
     {
         $actor = $this->learning->freshActor($identity);
         $courseRow = $this->row('courses', $course, $lock);
-        if (!$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('core.edit', 'com_jlms.course.' . $course)
-            || !$actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $course)) {
+        if (
+            !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('core.edit', 'com_jlms.course.' . $course)
+            || !$actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $course)
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $versionRow = $this->row('course_versions', $version, $lock);
         $lessonRow = $this->row('lessons', $lesson, $lock);
-        if ((int) $versionRow->course_id !== $course || (int) $lessonRow->course_version_id !== $version
-            || $lessonRow->kind !== 'video' || $lessonRow->provider_key !== 'html5') {
+        if (
+            (int) $versionRow->course_id !== $course || (int) $lessonRow->course_version_id !== $version
+            || $lessonRow->kind !== 'video' || $lessonRow->provider_key !== 'html5'
+        ) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         if ($courseRow->checked_out && (int) $courseRow->checked_out !== (int) $actor->id) {
@@ -76,8 +83,10 @@ final class LocalVideoService
         if (in_array($upload['error'] ?? 0, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
-        if (($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || !is_string($upload['tmp_name'] ?? null)
-            || !is_string($upload['name'] ?? null) || !is_uploaded_file($upload['tmp_name'])) {
+        if (
+            ($upload['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || !is_string($upload['tmp_name'] ?? null)
+            || !is_string($upload['name'] ?? null) || !is_uploaded_file($upload['tmp_name'])
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
         $staged = $this->storage->stage($upload['tmp_name'], $upload['name']);
@@ -132,10 +141,12 @@ final class LocalVideoService
         $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
         $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
         $metadata = $params['local_video'] ?? [];
-        if ($asset->storage !== 'local_video' || $asset->mime_type !== 'video/mp4' || $asset->status !== 'ready'
+        if (
+            $asset->storage !== 'local_video' || $asset->mime_type !== 'video/mp4' || $asset->status !== 'ready'
             || ($source['reference'] ?? '') !== (string) $asset->id || ($source['asset_sha256'] ?? '') !== $asset->sha256
             || ($metadata['sha256'] ?? '') !== $asset->sha256 || ($metadata['duration_ms'] ?? 0) !== (int) $lesson->duration_ms
-            || ($metadata['video_codec'] ?? '') !== 'h264') {
+            || ($metadata['video_codec'] ?? '') !== 'h264'
+        ) {
             throw new \RuntimeException('COM_JLMS_MATERIAL_NOT_READY', 503);
         }
         if ((bool) $this->storage->config()->get('material_scan_required', false)) {
@@ -162,7 +173,6 @@ final class LocalVideoService
             if (!$stat || $stat['size'] !== (int) $asset->byte_size || ($stat['mode'] & 0170000) !== 0100000) {
                 if (is_resource($handle)) {
                     fclose($handle);
-
                 } throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
             $delivery['handle'] = $handle;
@@ -181,8 +191,10 @@ final class LocalVideoService
         }
         $version = $this->row('course_versions', $versionId);
         $lesson = $this->row('lessons', $lessonId);
-        if ((int) $version->course_id !== $courseId || (int) $lesson->course_version_id !== $versionId
-            || $lesson->kind !== 'video' || $lesson->provider_key !== 'html5' || (int) $lesson->source_revision !== $sourceRevision) {
+        if (
+            (int) $version->course_id !== $courseId || (int) $lesson->course_version_id !== $versionId
+            || $lesson->kind !== 'video' || $lesson->provider_key !== 'html5' || (int) $lesson->source_revision !== $sourceRevision
+        ) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $asset = $this->assertReady($lesson);

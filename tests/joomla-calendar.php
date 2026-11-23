@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -71,18 +71,22 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 use Jlms\Component\Jlms\Administrator\Application\CourseSchedule as Schedule;
 $checks = 0;
-function scheduleExpect(bool $ok,string $message):void { global $checks;
-    if (!$ok)throw new RuntimeException($message);
+function scheduleExpect(bool $ok, string $message): void
+{
+    global $checks;
+    if (!$ok) {
+        throw new RuntimeException($message);
+    }
     $checks++;
 }
-function scheduleDenied(callable $call,int $code,string $message):void { try {
+function scheduleDenied(callable $call, int $code, string $message): void
+{
+    try {
         $call();
-
-} catch (RuntimeException $e) {
-    scheduleExpect($e->getCode() === $code, $message);
-    return;
-
-}throw new RuntimeException($message);
+    } catch (RuntimeException $e) {
+        scheduleExpect($e->getCode() === $code, $message);
+        return;
+    }throw new RuntimeException($message);
 }
 $fixture = dirname($root) . '/calendar-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
@@ -122,7 +126,7 @@ foreach ([['calendar_timezone' => ['UTC']],['calendar_timezone' => 'bad/zone'],[
     scheduleExpect((int)$after->revision === 2 && $after->params_json === $before->params_json && $after->publish_up === $before->publish_up, 'Invalid calendar preserves revision and stored values');
 }
 $version = $authoring->createDraft($actor, $course, 2);
-$rev = static fn():int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
+$rev = static fn(): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
 $module = $authoring->saveModule($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev(),'title' => 'Calendar chapter']);
 $lesson = $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev(),'module_id' => $module,'title' => 'Calendar lesson','kind' => 'text','required' => '1','body' => '<p>CALENDAR_PRIVATE_BODY</p>']);
 $edit['revision'] = (int)$model->getItem($course)->revision;
@@ -136,7 +140,9 @@ $outline = $catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', $course);
 scheduleExpect($outline['calendar']['timezone'] === 'Europe/Rome' && str_starts_with($outline['calendar']['ends_at'], '2098-01-01 00:00:00') && $outline['start_window_open'], 'Public calendar comes from frozen publication');
 $learner = new \Joomla\CMS\User\User();
 $userData = ['name' => 'CI calendar viewer','username' => 'cicalendarviewer','email' => 'cicalendarviewer@example.invalid','password' => 'Ci-only-Calendar-Viewer-2026','password2' => 'Ci-only-Calendar-Viewer-2026','groups' => [2],'block' => 0,'activation' => ''];
-if (!$learner->bind($userData) || !$learner->save())throw new RuntimeException('Calendar viewer fixture failed');
+if (!$learner->bind($userData) || !$learner->save()) {
+    throw new RuntimeException('Calendar viewer fixture failed');
+}
 $learner = new \Joomla\CMS\User\User((int)$learner->id);
 $learning = $component->getLearningService();
 $key = bin2hex(random_bytes(16));

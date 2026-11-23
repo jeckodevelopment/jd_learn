@@ -41,8 +41,10 @@ final class Jlms extends Adapter implements SubscriberInterface
             $this->refreshCourse((int) $event->getItem()->id);
             return;
         }
-        if ($event->getContext() === 'com_categories.category'
-            && ($event->getItem()->extension ?? '') === 'com_jlms.course') {
+        if (
+            $event->getContext() === 'com_categories.category'
+            && ($event->getItem()->extension ?? '') === 'com_jlms.course'
+        ) {
             $this->reindexAllCourses();
         }
     }
@@ -51,8 +53,10 @@ final class Jlms extends Adapter implements SubscriberInterface
     {
         if ($event->getContext() === 'com_jlms.course') {
             $this->remove((int) $event->getItem()->id);
-        } elseif ($event->getContext() === 'com_categories.category'
-            && ($event->getItem()->extension ?? '') === 'com_jlms.course') {
+        } elseif (
+            $event->getContext() === 'com_categories.category'
+            && ($event->getItem()->extension ?? '') === 'com_jlms.course'
+        ) {
             $this->reindexAllCourses();
         }
     }
@@ -120,7 +124,9 @@ final class Jlms extends Adapter implements SubscriberInterface
         $this->indexer->index($item);
     }
 
-    protected function setup(): bool { return true;
+    protected function setup(): bool
+    {
+        return true;
     }
 
     protected function getListQuery($query = null): QueryInterface

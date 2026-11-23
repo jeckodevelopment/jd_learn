@@ -38,13 +38,13 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
         <option value=""><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_CHOOSE_TARGET') ?></option>
                 <?php foreach ($this->inspection['targets'][$key] as $target) : ?>
          <option value="<?= (int) $target->id ?>"><?= $this->escape($target->title) ?></option>
-        <?php endforeach; ?>
+                <?php endforeach; ?>
        </select>
-      <?php else :
-            ?>—<?php
-      endif; ?>
+            <?php else :
+                ?>—<?php
+            endif; ?>
      </td></tr>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
     </tbody>
    </table>
    <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_SUBMIT') ?></button>

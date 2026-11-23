@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
 
 use Joomla\CMS\MVC\Model\ListModel;
@@ -79,7 +80,6 @@ final class CoursesModel extends ListModel
             ->leftJoin('#__languages AS lang ON lang.lang_code=a.language');
         if ($ids) {
             $q->whereIn('a.id', $ids);
-
         } else {
             $q->where('1=0');
         }

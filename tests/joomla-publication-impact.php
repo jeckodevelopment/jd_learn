@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-
 /** Run after Joomla's CLI installer and extension:install in an isolated CI site. */
+
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
@@ -66,25 +66,30 @@ $service = $component->getPublicationService();
 $authoring = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
-function impactExpect(bool $ok,string $message): void { global $checks;
+function impactExpect(bool $ok, string $message): void
+{
+    global $checks;
     if (!$ok) {
         throw new RuntimeException($message);
-
     } $checks++;
 }
-function impactDenied(callable $work,string $message): void { try {
+function impactDenied(callable $work, string $message): void
+{
+    try {
         $work();
-
-} catch (\DomainException $e) {
-    impactExpect($e->getMessage() === $message, 'Expected ' . $message . ', got ' . $e->getMessage());
-    return;
-
-} throw new RuntimeException('Expected rejection: ' . $message);
+    } catch (\DomainException $e) {
+        impactExpect($e->getMessage() === $message, 'Expected ' . $message . ', got ' . $e->getMessage());
+        return;
+    } throw new RuntimeException('Expected rejection: ' . $message);
 }
-function impactRow(string $table,int $id): object { global $db;
+function impactRow(string $table, int $id): object
+{
+    global $db;
     return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
-function impactLearning(): array { global $db;
+function impactLearning(): array
+{
+    global $db;
     return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
 }
 $mode = $argv[2] ?? '';
@@ -112,9 +117,11 @@ $enrollment = $component->getLearningService()->start($actor, 'en-GB', $course, 
 impactExpect((int)impactRow('enrollments', $enrollment)->course_version_id === $old, 'Real enrollment assigned to the original programme');
 $before = impactLearning();
 $draft = $authoring->createDraft($actor, $course, (int)impactRow('courses', $course)->revision);
-$findTransition = static function(string $action)use($service,$actor,$course,$draft):object {
+$findTransition = static function (string $action) use ($service, $actor, $course, $draft): object {
     foreach ($service->transitions($actor, $course, $draft) as $candidate) {
-        if ((new \Joomla\Registry\Registry($candidate->options))->get('jlms_action') === $action)return $candidate;
+        if ((new \Joomla\Registry\Registry($candidate->options))->get('jlms_action') === $action) {
+            return $candidate;
+        }
     }
     throw new RuntimeException('Missing editorial transition ' . $action);
 };

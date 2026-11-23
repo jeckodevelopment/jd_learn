@@ -12,7 +12,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
  <?php if ($this->getLayout() !== 'courses') : ?>
         <?php if ($this->profile->image) :
             $imageParams = json_decode($this->profile->params_json, true); ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root(true) . '/' . $this->profile->image) ?>" alt="<?= $this->escape($imageParams['image_alt'] ?? '') ?>" loading="lazy"><?php
- endif; ?>
+        endif; ?>
  <div id="jlms-teacher-presentation"><?= nl2br($this->escape($this->profile->bio)) ?></div>
  <dl id="jlms-teacher-fields">
         <?php foreach ($this->profile->fields as $field) : ?>
@@ -20,7 +20,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
                 continue;
             } ?>
   <dt><?= $this->escape($field->label) ?></dt><dd><?= CoursePresentation::html((string) $field->value) ?></dd>
- <?php endforeach; ?>
+        <?php endforeach; ?>
  </dl>
  <?php endif; ?>
  <h2><?= Text::_('COM_JLMS_TEACHER_COURSES') ?></h2>

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Site\Model;
 
 use Joomla\CMS\Factory;

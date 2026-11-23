@@ -1,12 +1,17 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Jlms\Component\Jlms\Administrator\Model;
+
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Factory;
+
 final class QuizModel extends FormModel
 {
-    public function getForm($data = [], $loadData = true) { return $this->loadForm('com_jlms.quiz', 'quiz', ['control' => 'jform','load_data' => false]);
+    public function getForm($data = [], $loadData = true)
+    {
+        return $this->loadForm('com_jlms.quiz', 'quiz', ['control' => 'jform','load_data' => false]);
     }
     public function getItem(): array
     {

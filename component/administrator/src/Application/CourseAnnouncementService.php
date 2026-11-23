@@ -214,16 +214,18 @@ final class CourseAnnouncementService
                 $language = is_array($profile) && in_array($profile['language'] ?? '', ['it-IT','en-GB'], true)
                     ? (string) $profile['language'] : (string) $preview['language'];
                 $key = hash('sha256', 'jd-learn-course-announcement:' . $courseId . ':' . (int) $recipient->id);
-                if ($queue->enqueueAnnouncement(
-                    $courseId,
-                    (int) $recipient->id,
-                    (string) $recipient->confirmed_at,
-                    $key,
-                    $language,
-                    (string) $recipient->email,
-                    (string) $recipient->name,
-                    $data
-                )) {
+                if (
+                    $queue->enqueueAnnouncement(
+                        $courseId,
+                        (int) $recipient->id,
+                        (string) $recipient->confirmed_at,
+                        $key,
+                        $language,
+                        (string) $recipient->email,
+                        (string) $recipient->name,
+                        $data
+                    )
+                ) {
                     $queued++;
                 }
             }
