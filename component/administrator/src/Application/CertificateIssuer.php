@@ -25,7 +25,8 @@ final class CertificateIssuer
             ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id = e.user_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
             ->where('e.id = :enrollment')->where('e.course_version_id = :version')->where('e.completed_at = :completed')
-            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':version', $courseVersionId, ParameterType::INTEGER)
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':version', $courseVersionId, ParameterType::INTEGER)
             ->bind(':completed', $completedAt);
         $row = $this->db->setQuery($q)->loadObject();
         if (!$row) {
@@ -45,7 +46,8 @@ final class CertificateIssuer
 
         $existing = $this->db->createQuery()->select('id')->from('#__jlms_certificates')
             ->where('enrollment_id = :enrollment')->where('course_version_id = :version')
-            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':version', $courseVersionId, ParameterType::INTEGER);
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':version', $courseVersionId, ParameterType::INTEGER);
         if ((int) $this->db->setQuery($existing)->loadResult() > 0) {
             return false;
         }

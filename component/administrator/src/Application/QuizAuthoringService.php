@@ -18,7 +18,11 @@ final class QuizAuthoringService
 
     private function row(string $table, int $id, bool $lock = false): object
     {
-        $q = $this->db->createQuery()->select('*')->from($table === 'categories' ? '#__categories' : '#__jlms_' . $table)->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from($table === 'categories' ? '#__categories' : '#__jlms_' . $table)
+            ->where('id = :id')
+            ->bind(':id', $id, ParameterType::INTEGER);
         if ($lock) {
             $q->setQuery((string) $q . ' FOR UPDATE');
         }
@@ -50,7 +54,10 @@ final class QuizAuthoringService
     public function editor(User $identity, int $course, int $version, int $lesson = 0): array
     {
         [, $c, $v] = $this->scope($identity, $course, $version);
-        $q = $this->db->createQuery()->select('id, title')->from('#__jlms_modules')->where('course_version_id = :version')
+        $q = $this->db->createQuery()
+            ->select('id, title')
+            ->from('#__jlms_modules')
+            ->where('course_version_id = :version')
             ->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1000)->loadObjectList();
         $data = ['course_id' => $course, 'version_id' => $version, 'expected_version_revision' => (int) $v->revision, 'lesson_id' => 0,
@@ -61,11 +68,17 @@ final class QuizAuthoringService
             if ((int) $l->course_version_id !== $version || $l->kind !== 'quiz') {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
-            $q = $this->db->createQuery()->select('*')->from('#__jlms_quizzes')->where('lesson_id = :lesson')->bind(':lesson', $lesson, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('*')
+                ->from('#__jlms_quizzes')
+                ->where('lesson_id = :lesson')
+                ->bind(':lesson', $lesson, ParameterType::INTEGER);
             $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             $selection = json_decode($quiz->selection_json, true, 16, JSON_THROW_ON_ERROR);
             $quizId = (int) $quiz->id;
-            $q = $this->db->createQuery()->select('question_revision_id AS revision_id, points')->from('#__jlms_quiz_questions')->where('quiz_id = :quiz')
+            $q = $this->db->createQuery()
+                ->select('question_revision_id AS revision_id, points')
+                ->from('#__jlms_quiz_questions')->where('quiz_id = :quiz')
                 ->bind(':quiz', $quizId, ParameterType::INTEGER)->order('ordering');
             $data = array_replace($data, ['lesson_id' => $lesson, 'revision' => (int) $quiz->revision, 'title' => $l->title,
                 'module_id' => (int) $l->module_id, 'required' => (string) $l->required, 'threshold' => (string) ((int) $quiz->pass_basis_points / 100),
@@ -170,7 +183,11 @@ final class QuizAuthoringService
                 if ((int) $l->course_version_id !== $version || $l->kind !== 'quiz' || (int) $l->module_id !== $module) {
                     throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 }
-                $q = $this->db->createQuery()->select('*')->from('#__jlms_quizzes')->where('lesson_id = :lesson')->bind(':lesson', $lesson, ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->select('*')
+                    ->from('#__jlms_quizzes')
+                    ->where('lesson_id = :lesson')
+                    ->bind(':lesson', $lesson, ParameterType::INTEGER);
                 $q->setQuery((string) $q . ' FOR UPDATE');
                 $quiz = $this->db->setQuery($q)->loadObject();
                 if (!$quiz || (int) $quiz->revision !== $revision) {
@@ -180,11 +197,19 @@ final class QuizAuthoringService
                     'modified_by' => (int) $actor->id, 'modified_at' => $now];
                 $this->db->updateObject('#__jlms_lessons', $update, 'id');
             } else {
-                $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from('#__jlms_lessons')
+                    ->where('course_version_id = :version')
+                    ->bind(':version', $version, ParameterType::INTEGER);
                 if ((int) $this->db->setQuery($q)->loadResult() >= 5000) {
                     throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409);
                 }
-                $q = $this->db->createQuery()->select('MAX(ordering)')->from('#__jlms_lessons')->where('module_id = :module')->bind(':module', $module, ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->select('MAX(ordering)')
+                    ->from('#__jlms_lessons')
+                    ->where('module_id = :module')
+                    ->bind(':module', $module, ParameterType::INTEGER);
                 $order = (int) $this->db->setQuery($q)->loadResult() + 1;
                 $l = (object) ['course_version_id' => $version, 'module_id' => $module, 'logical_key' => sprintf('%s-%s-4%s-a%s-%s', bin2hex(random_bytes(4)), bin2hex(random_bytes(2)), substr(bin2hex(random_bytes(2)), 1), substr(bin2hex(random_bytes(2)), 1), bin2hex(random_bytes(6))), 'alias' => 'quiz-' . bin2hex(random_bytes(8)),
                     'title' => trim($title), 'kind' => 'quiz', 'required' => (int) $required, 'ordering' => $order, 'completion_rule' => 'quiz_pass',
@@ -204,7 +229,10 @@ final class QuizAuthoringService
                 $this->db->insertObject('#__jlms_quizzes', $config, 'id');
             }
             $quizId = (int) $config->id;
-            $q = $this->db->createQuery()->delete('#__jlms_quiz_questions')->where('quiz_id = :quiz')->bind(':quiz', $quizId, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->delete('#__jlms_quiz_questions')
+                ->where('quiz_id = :quiz')
+                ->bind(':quiz', $quizId, ParameterType::INTEGER);
             $this->db->setQuery($q)->execute();
             $order = 0;
             foreach ($pool as $id => $points) {
@@ -238,16 +266,27 @@ final class QuizAuthoringService
             if ($l->kind !== 'quiz' || (int) $l->course_version_id !== $version) {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_quizzes')->where('lesson_id = :lesson')->bind(':lesson', $lesson, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_quizzes')
+                ->where('lesson_id = :lesson')
+                ->bind(':lesson', $lesson, ParameterType::INTEGER);
             $quiz = (int) $this->db->setQuery($q)->loadResult();
             foreach ([['attempts','quiz_id',$quiz],['attachments','lesson_id',$lesson],['prerequisites','lesson_id',$lesson],['prerequisites','required_lesson_id',$lesson]] as [$table,$column,$id]) {
-                $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_' . $table)->where($column . ' = :id')->bind(':id', $id, ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from('#__jlms_' . $table)
+                    ->where($column . ' = :id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
                 if ((int) $this->db->setQuery($q)->loadResult()) {
                     throw new \RuntimeException('COM_JLMS_ITEM_HAS_DEPENDENCIES', 409);
                 }
             }
             foreach ([['quiz_questions','quiz_id',$quiz],['quizzes','id',$quiz],['lessons','id',$lesson]] as [$table,$column,$id]) {
-                $q = $this->db->createQuery()->delete('#__jlms_' . $table)->where($column . ' = :id')->bind(':id', $id, ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->delete('#__jlms_' . $table)
+                    ->where($column . ' = :id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($q)->execute();
             }
             $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];

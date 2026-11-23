@@ -21,7 +21,11 @@ final class MaterialService
 
     private function row(string $table, int $id, bool $lock = false): object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_' . $table)->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_' . $table)
+            ->where('id = :id')
+            ->bind(':id', $id, ParameterType::INTEGER);
         if ($lock) {
             $q->setQuery((string) $q . ' FOR UPDATE');
         }
@@ -110,7 +114,10 @@ final class MaterialService
     public function administration(User $actor, int $courseId, int $versionId, int $page = 0, int $scope = 0): array
     {
         [, $course, $version] = $this->author($actor, $courseId, $versionId);
-        $q = $this->db->createQuery()->select('id, title')->from('#__jlms_lessons')->where('course_version_id = :version')
+        $q = $this->db->createQuery()
+            ->select('id, title')
+            ->from('#__jlms_lessons')
+            ->where('course_version_id = :version')
             ->bind(':version', $versionId, ParameterType::INTEGER)->order('module_id, ordering, id');
         $lessons = $this->db->setQuery($q, 0, 5000)->loadObjectList();
         $lessonIds = array_map(static fn ($lesson): int => (int) $lesson->id, $lessons);
@@ -135,7 +142,9 @@ final class MaterialService
             ->innerJoin(('#__jlms_course_versions AS v ON v.id = a.course_version_id AND '
                 . 'v.course_id = :course AND v.status = :published'))
             ->innerJoin('#__jlms_courses AS c ON c.id = v.course_id AND c.current_version_id = v.id AND c.state = 1')
-            ->where('a.course_version_id = :version')->where('a.lesson_id IS NULL')->where('a.preview = 1 AND a.state = 1')
+            ->where('a.course_version_id = :version')
+                ->where('a.lesson_id IS NULL')
+                ->where('a.preview = 1 AND a.state = 1')
             ->where("f.status = 'ready'")
             ->where(('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND '
                 . '(a.publish_down IS NULL OR a.publish_down > :nowDown)'))
@@ -153,7 +162,8 @@ final class MaterialService
     {
         $published = 'published';
         $now = gmdate('Y-m-d H:i:s');
-        $query = $this->db->createQuery()->select('a.*, f.status AS asset_status, f.original_name, f.mime_type, f.byte_size')
+        $query = $this->db->createQuery()
+            ->select('a.*, f.status AS asset_status, f.original_name, f.mime_type, f.byte_size')
             ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->innerJoin(('#__jlms_course_versions AS v ON v.id = a.course_version_id AND '
                 . 'v.course_id = :course AND v.status = :published'))
@@ -179,7 +189,9 @@ final class MaterialService
             ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->innerJoin(("#__jlms_lessons AS l ON l.id = a.lesson_id AND l.course_version_id "
                 . "= a.course_version_id AND l.kind = 'text' AND l.preview = 1"))
-            ->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')->where('a.preview = 1 AND a.state = 1')
+            ->where('a.course_version_id = :version')
+                ->where('a.lesson_id = :lesson')
+                ->where('a.preview = 1 AND a.state = 1')
             ->where("f.status = 'ready'")
             ->where(('(a.publish_up IS NULL OR a.publish_up <= :nowUp) AND '
                 . '(a.publish_down IS NULL OR a.publish_down > :nowDown)'))
@@ -320,7 +332,10 @@ final class MaterialService
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');
                 $id = $replaceId;
             } else {
-                $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')->where('course_version_id = :version')
+                $q = $this->db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from('#__jlms_attachments')
+                    ->where('course_version_id = :version')
                     ->bind(':version', $versionId, ParameterType::INTEGER);
                 $count = (int) $this->db->setQuery($q)->loadResult();
                 if ($count >= 1000) {
@@ -356,14 +371,19 @@ final class MaterialService
             $duplicate = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')
                 ->where('course_version_id = :version')->where('asset_id = :asset')
                 ->where('lesson_id ' . ($lessonId ? '= :lesson' : 'IS NULL'))
-                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':asset', $sourceAssetId, ParameterType::INTEGER);
+                ->bind(':version', $versionId, ParameterType::INTEGER)
+                    ->bind(':asset', $sourceAssetId, ParameterType::INTEGER);
             if ($lessonId) {
                 $duplicate->bind(':lesson', $lessonId, ParameterType::INTEGER);
             }
             if ((int) $this->db->setQuery($duplicate)->loadResult() > 0) {
                 throw new \RuntimeException('COM_JLMS_MATERIAL_ALREADY_LINKED', 409);
             }
-            $countQuery = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments')->where('course_version_id = :version')
+            $countQuery = $this->db
+                ->createQuery()
+                ->select('COUNT(*)')
+                ->from('#__jlms_attachments')
+                ->where('course_version_id = :version')
                 ->bind(':version', $versionId, ParameterType::INTEGER);
             $count = (int) $this->db->setQuery($countQuery)->loadResult();
             if ($count >= 1000) {
@@ -410,7 +430,10 @@ final class MaterialService
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
             if ($operation === 'delete') {
-                $q = $this->db->createQuery()->delete('#__jlms_attachments')->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->delete('#__jlms_attachments')
+                    ->where('id = :id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($q)->execute();
             } elseif ($operation === 'scan') {
                 if ((int) $link->asset_id !== $scannedId) {

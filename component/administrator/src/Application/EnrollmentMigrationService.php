@@ -72,12 +72,15 @@ final class EnrollmentMigrationService
             ->from('#__jlms_enrollments AS e')->leftJoin('#__users AS u ON u.id=e.user_id')
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
             ->where('e.id=:enrollment')->where('e.course_id=:course')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':course', $course, ParameterType::INTEGER);
         $source = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         if (!in_array($source->status, ['active','completed','suspended'], true) || !(int) $source->user_id) {
             throw new \RuntimeException('COM_JLMS_MIGRATION_SOURCE_INVALID', 409);
         }
-        $q = $this->db->createQuery()->select('current_version_id, delivery_enabled, state')->from('#__jlms_courses')->where('id=:course')
+        $q = $this->db->createQuery()
+            ->select('current_version_id, delivery_enabled, state')
+            ->from('#__jlms_courses')->where('id=:course')
             ->bind(':course', $course, ParameterType::INTEGER);
         $courseRecord = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $targetVersion = (int)$courseRecord->current_version_id;
@@ -88,7 +91,9 @@ final class EnrollmentMigrationService
         $defaultEditionCode = 'default-v' . (int)$target->version_no;
         $q = $this->db->createQuery()->select('id,status,starts_at,ends_at,capacity')->from('#__jlms_editions')
             ->where('course_id=:course')->where('course_version_id=:version')->where('code=:code')
-            ->bind(':course', $course, ParameterType::INTEGER)->bind(':version', $targetVersion, ParameterType::INTEGER)->bind(':code', $defaultEditionCode);
+            ->bind(':course', $course, ParameterType::INTEGER)
+                ->bind(':version', $targetVersion, ParameterType::INTEGER)
+                ->bind(':code', $defaultEditionCode);
         $targetEdition = $this->db->setQuery($q)->loadObject();
         $now = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s.u');
         $q = $this->db->createQuery()->select('id, title, kind, required, source_revision')->from('#__jlms_lessons')
@@ -110,17 +115,23 @@ final class EnrollmentMigrationService
                 . 'l.course_version_id=p.course_version_id'))
             ->where('p.enrollment_id=:enrollment')->where('p.course_version_id=:version')->where("p.state='completed'")
             ->where("l.kind <> 'quiz'")->order('p.lesson_id')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':version', $source->course_version_id, ParameterType::INTEGER);
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':version', $source
+                ->course_version_id, ParameterType::INTEGER);
         $completed = $this->db->setQuery($q, 0, 1001)->loadObjectList();
         if (count($completed) > 1000) {
             throw new \RuntimeException('COM_JLMS_MIGRATION_LIMIT', 409);
         }
         if ($mapping === [] && $useSavedMappings) {
             $completedSet = array_fill_keys(array_map(static fn(object $row): int=>(int)$row->lesson_id, $completed), true);
-            $q = $this->db->createQuery()->select('e.source_lesson_id,e.target_lesson_id')->from('#__jlms_version_equivalences AS e')
+            $q = $this->db->createQuery()
+                ->select('e.source_lesson_id,e.target_lesson_id')
+                ->from('#__jlms_version_equivalences AS e')
                 ->innerJoin('#__jlms_lessons AS s ON s.id=e.source_lesson_id')->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')
                 ->where('s.course_version_id=:source')->where('t.course_version_id=:target')
-                ->bind(':source', $source->course_version_id, ParameterType::INTEGER)->bind(':target', $targetVersion, ParameterType::INTEGER);
+                ->bind(':source', $source
+                    ->course_version_id, ParameterType::INTEGER)
+                    ->bind(':target', $targetVersion, ParameterType::INTEGER);
             // Never silently ignore saved equivalences beyond the scan bound.
             // A truncated set could produce an incomplete migration preview.
             $savedEquivalences = $this->db->setQuery($q, 0, 1001)->loadObjectList();
@@ -176,7 +187,9 @@ final class EnrollmentMigrationService
             $q = $this->db->createQuery()->select('e.target_lesson_id')->from('#__jlms_version_equivalences AS e')
                 ->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')->where('e.source_lesson_id=:source')
                 ->where('t.course_version_id=:version')->where('e.target_lesson_id<>:target')
-                ->bind(':source', $from, ParameterType::INTEGER)->bind(':version', $targetVersion, ParameterType::INTEGER)->bind(':target', $to, ParameterType::INTEGER);
+                ->bind(':source', $from, ParameterType::INTEGER)
+                    ->bind(':version', $targetVersion, ParameterType::INTEGER)
+                    ->bind(':target', $to, ParameterType::INTEGER);
             if ($this->db->setQuery($q)->loadResult()) {
                 $mappingConflict = true;
                 break;
@@ -192,7 +205,10 @@ final class EnrollmentMigrationService
         $editionFull = false;
         if ($targetEdition && $targetEdition->capacity !== null) {
             $editionId = (int)$targetEdition->id;
-            $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')->where('edition_id=:edition')->where("status <> 'cancelled'")
+            $q = $this->db->createQuery()
+                ->select('COUNT(*)')
+                ->from('#__jlms_enrollments')
+                ->where('edition_id=:edition')->where("status <> 'cancelled'")
                 ->bind(':edition', $editionId, ParameterType::INTEGER);
             $editionFull = (int)$this->db->setQuery($q)->loadResult() >= (int)$targetEdition->capacity;
         }
@@ -254,18 +270,28 @@ final class EnrollmentMigrationService
         $scopeHash = hash('sha256', 'enrollment-migration:' . $actor->id . ':' . $course . ':' . $enrollment);
         $this->db->transactionStart();
         try {
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_courses')->where('id=:course')->bind(':course', $course, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_courses')
+                ->where('id=:course')
+                ->bind(':course', $course, ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             if (!$this->db->setQuery($q)->loadResult()) {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id=:id')->where('course_id=:course')
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_enrollments')
+                ->where('id=:id')->where('course_id=:course')
                 ->bind(':id', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             if (!$this->db->setQuery($q)->loadResult()) {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
-            $q = $this->db->createQuery()->select('request_hash,result_id')->from('#__jlms_idempotency')->where('scope_hash=:scope')->bind(':scope', $scopeHash);
+            $q = $this->db->createQuery()
+                ->select('request_hash,result_id')
+                ->from('#__jlms_idempotency')
+                ->where('scope_hash=:scope')->bind(':scope', $scopeHash);
             $old = $this->db->setQuery($q)->loadObject();
             if ($old) {
                 if (!hash_equals($old->request_hash, $requestHash) || !(int)$old->result_id) {
@@ -278,8 +304,15 @@ final class EnrollmentMigrationService
             if ($plan['blocked'] !== null) {
                 throw new \RuntimeException($plan['blocked'], 409);
             }
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('id=:edition')->where('course_id=:course')->where('course_version_id=:version')
-                ->bind(':edition', $plan['target_edition_id'], ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER)->bind(':version', $plan['target_version_id'], ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_editions')
+                ->where('id=:edition')
+                ->where('course_id=:course')
+                ->where('course_version_id=:version')
+                ->bind(':edition', $plan['target_edition_id'], ParameterType::INTEGER)
+                    ->bind(':course', $course, ParameterType::INTEGER)
+                    ->bind(':version', $plan['target_version_id'], ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             if (!$this->db->setQuery($q)->loadResult()) {
                 throw new \RuntimeException('COM_JLMS_MIGRATION_EDITION_MISSING', 409);
@@ -292,13 +325,20 @@ final class EnrollmentMigrationService
                 throw new \RuntimeException('COM_JLMS_MIGRATION_CONFLICT', 409);
             }
             $now = gmdate('Y-m-d H:i:s');
-            $q = $this->db->createQuery()->select('*')->from('#__jlms_enrollments')->where('id=:id')->bind(':id', $enrollment, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('*')
+                ->from('#__jlms_enrollments')
+                ->where('id=:id')
+                ->bind(':id', $enrollment, ParameterType::INTEGER);
             $source = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             $editionId = $plan['target_edition_id'];
             if (!$editionId) {
                 throw new \RuntimeException('COM_JLMS_MIGRATION_EDITION_MISSING', 409);
             }
-            $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')->where('course_version_id=:version')->where('required=1')
+            $q = $this->db->createQuery()
+                ->select('COUNT(*)')
+                ->from('#__jlms_lessons')
+                ->where('course_version_id=:version')->where('required=1')
                 ->bind(':version', $plan['target_version_id'], ParameterType::INTEGER);
             $required = (int)$this->db->setQuery($q)->loadResult();
             $completedRequired = count(array_filter($plan['transfers'], static fn(array $row): bool=>$row['required']));
@@ -328,7 +368,8 @@ final class EnrollmentMigrationService
                 $targetLessonId = (int)$to;
                 $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_version_equivalences')
                     ->where('source_lesson_id=:source')->where('target_lesson_id=:target')
-                    ->bind(':source', $sourceLessonId, ParameterType::INTEGER)->bind(':target', $targetLessonId, ParameterType::INTEGER);
+                    ->bind(':source', $sourceLessonId, ParameterType::INTEGER)
+                        ->bind(':target', $targetLessonId, ParameterType::INTEGER);
                 if (!(int)$this->db->setQuery($q)->loadResult()) {
                     $equivalence = (object)['source_lesson_id' => (int)$from,'target_lesson_id' => (int)$to,
                         'policy_json' => json_encode(['transfer' => 'completion_only'], JSON_THROW_ON_ERROR),
@@ -340,7 +381,11 @@ final class EnrollmentMigrationService
                 $progress = (object)['enrollment_id' => $targetId,'course_version_id' => $plan['target_version_id'],'lesson_id' => $row['target_lesson_id'],
                     'source_revision' => 1,'coverage_json' => '[]','covered_ms' => 0,'resume_ms' => 0,'state' => 'completed',
                     'completed_at' => $row['completed_at'] ?: $now,'last_activity_at' => $now,'revision' => 1];
-                $q = $this->db->createQuery()->select('source_revision')->from('#__jlms_lessons')->where('id=:lesson')->bind(':lesson', $row['target_lesson_id'], ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->select('source_revision')
+                    ->from('#__jlms_lessons')
+                    ->where('id=:lesson')
+                    ->bind(':lesson', $row['target_lesson_id'], ParameterType::INTEGER);
                 $progress->source_revision = (int)$this->db->setQuery($q)->loadResult();
                 $this->db->insertObject('#__jlms_lesson_progress', $progress);
             }
@@ -349,8 +394,13 @@ final class EnrollmentMigrationService
             $this->db->insertObject('#__jlms_enrollment_migrations', $migration);
             $migratedStatus = 'migrated';
             $actorId = (int)$actor->id;
-            $q = $this->db->createQuery()->update('#__jlms_enrollments')->set('status=:status')->set('revision=revision+1')->set('modified_by=:actor')->set('modified_at=:now')
-                ->where('id=:id')->bind(':status', $migratedStatus)->bind(':actor', $actorId, ParameterType::INTEGER)->bind(':now', $now)
+            $q = $this->db->createQuery()
+                ->update('#__jlms_enrollments')
+                ->set('status=:status')
+                ->set('revision=revision+1')
+                ->set('modified_by=:actor')->set('modified_at=:now')
+                ->where('id=:id')->bind(':status', $migratedStatus)
+                    ->bind(':actor', $actorId, ParameterType::INTEGER)->bind(':now', $now)
                 ->bind(':id', $enrollment, ParameterType::INTEGER);
             $this->db->setQuery($q)->execute();
             ($this->audit)($actor, ['id' => (int)$job->id,'actor_id' => (int)$actor->id,'course_id' => $course,

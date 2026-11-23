@@ -52,12 +52,19 @@ final class QuizAttemptService
         // Acquire the serialisation lock before core user/category reads establish an InnoDB read view.
         // A request waiting for another tab must authorise and read answers after that tab commits.
         $owner = (int)$identity->id;
-        $lock = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id = :id')->where('user_id = :owner')
+        $lock = $this->db->createQuery()
+            ->select('id')
+            ->from('#__jlms_enrollments')
+            ->where('id = :id')->where('user_id = :owner')
             ->bind(':id', $enrollment, ParameterType::INTEGER)->bind(':owner', $owner, ParameterType::INTEGER);
         $lock->setQuery((string)$lock . ' FOR UPDATE');
         $this->db->setQuery($lock)->loadResult();
         [$actor,$e,$l] = $this->learning->quizContext($identity, $language, $enrollment, $lesson, true, true);
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_quizzes')->where('lesson_id = :lesson')->where('course_version_id = :version');
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_quizzes')
+            ->where('lesson_id = :lesson')
+            ->where('course_version_id = :version');
         $version = (int)$l->course_version_id;
         $q->bind(':lesson', $lesson, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER);
         $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
@@ -69,14 +76,23 @@ final class QuizAttemptService
     }
     private function attempt(int $id, int $enrollment, int $quiz): object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_attempts')->where('id = :id')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-            ->bind(':id', $id, ParameterType::INTEGER)->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_attempts')
+            ->where('id = :id')
+            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+            ->bind(':id', $id, ParameterType::INTEGER)
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':quiz', $quiz, ParameterType::INTEGER);
         $q->setQuery((string)$q . ' FOR UPDATE');
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
     }
     private function active(int $enrollment, int $quiz): ?object
     {
-        $q = $this->db->createQuery()->select('attempt_id')->from('#__jlms_active_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+        $q = $this->db->createQuery()
+            ->select('attempt_id')
+            ->from('#__jlms_active_attempts')
+            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER);
         $q->setQuery((string)$q . ' FOR UPDATE');
         $id = (int)$this->db->setQuery($q)->loadResult();
@@ -98,7 +114,10 @@ final class QuizAttemptService
     {
         $scope = hash('sha256', $actor . ':quiz.start:' . $key);
         $hash = hash('sha256', $enrollment . ':' . $lesson);
-        $q = $this->db->createQuery()->select('request_hash,result_id')->from('#__jlms_idempotency')->where('scope_hash = :scope')->bind(':scope', $scope);
+        $q = $this->db->createQuery()
+            ->select('request_hash,result_id')
+            ->from('#__jlms_idempotency')
+            ->where('scope_hash = :scope')->bind(':scope', $scope);
         $q->setQuery((string)$q . ' FOR UPDATE');
         $r = $this->db->setQuery($q)->loadObject();
         if ($r) {
@@ -112,7 +131,10 @@ final class QuizAttemptService
             $expires = self::date(($this->clock)() + 604800);
             $q = $this->db->createQuery();$q->setQuery(("INSERT INTO #__jlms_idempotency "
                 . "(scope_hash,request_hash,state,result_type,result_id,http_status,created_at,expires_at) VALUES (:scope,:hash,'completed','quiz_attempt',:result,200,:now,:expires) ON DUPLICATE KEY UPDATE scope_hash=scope_hash"))
-                ->bind(':scope', $scope)->bind(':hash', $hash)->bind(':result', $result, ParameterType::INTEGER)->bind(':now', $now)->bind(':expires', $expires);
+                ->bind(':scope', $scope)
+                    ->bind(':hash', $hash)
+                    ->bind(':result', $result, ParameterType::INTEGER)
+                    ->bind(':now', $now)->bind(':expires', $expires);
             $this->db->setQuery($q)->execute();
             return $this->startLedger($actor, $key, $enrollment, $lesson);
         }return null;
@@ -224,7 +246,9 @@ final class QuizAttemptService
     private function questions(int $attempt): array
     {
         $q = $this->db->createQuery()->select('q.*, a.answer_json')->from('#__jlms_attempt_questions AS q')
-            ->leftJoin('#__jlms_attempt_answers AS a ON a.attempt_question_id=q.id')->where('q.attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER)->order('q.display_order');
+            ->leftJoin('#__jlms_attempt_answers AS a ON a.attempt_question_id=q.id')
+                ->where('q.attempt_id = :attempt')
+                ->bind(':attempt', $attempt, ParameterType::INTEGER)->order('q.display_order');
         $q->setQuery((string)$q . ' LIMIT 201 FOR UPDATE');
         $rows = $this->db->setQuery($q)->loadObjectList();
         if (!$rows || count($rows) > 200) {
@@ -237,7 +261,9 @@ final class QuizAttemptService
     {
         $q = $this->db->createQuery()->select(("id, JSON_UNQUOTE(JSON_EXTRACT(public_snapshot_json, '$.kind')) AS "
             . "kind, JSON_EXTRACT(public_snapshot_json, '$.options[*].id') AS option_ids"))
-            ->from('#__jlms_attempt_questions')->where('attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER)->order('display_order');
+            ->from('#__jlms_attempt_questions')
+                ->where('attempt_id = :attempt')
+                ->bind(':attempt', $attempt, ParameterType::INTEGER)->order('display_order');
         $rows = $this->db->setQuery($q, 0, 201)->loadObjectList();
         if (!$rows || count($rows) > 200) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
@@ -300,7 +326,10 @@ final class QuizAttemptService
             $rows = $this->answerQuestions($attempt);
             $patch = $this->patch($rows, $json);
             $hash = hash('sha256', QuestionDefinition::canonical(['operation' => $submit ? 'submit' : 'save','revision' => $revision,'answers' => $patch]));
-            $q = $this->db->createQuery()->select('*')->from('#__jlms_quiz_mutations')->where('attempt_id = :attempt')->where('mutation_id = :mutation')
+            $q = $this->db->createQuery()
+                ->select('*')
+                ->from('#__jlms_quiz_mutations')
+                ->where('attempt_id = :attempt')->where('mutation_id = :mutation')
                 ->bind(':attempt', $attempt, ParameterType::INTEGER)->bind(':mutation', $key);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $mutation = $this->db->setQuery($q)->loadObject();
@@ -314,7 +343,11 @@ final class QuizAttemptService
                 $dto['replay'] = true;
                 return $dto;
             }
-            $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quiz_mutations')->where('attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('COUNT(*)')
+                ->from('#__jlms_quiz_mutations')
+                ->where('attempt_id = :attempt')
+                ->bind(':attempt', $attempt, ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             if ((int)$this->db->setQuery($q)->loadResult() >= 50000) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_LIMIT', 429);
@@ -388,12 +421,19 @@ final class QuizAttemptService
         $update = (object)['id' => (int)$a->id,'status' => $status,'score_points' => $score,'passed' => (int)$passed,'submitted_at' => $a->submitted_at,'revision' => $a->revision];
         $this->db->updateObject('#__jlms_attempts', $update, 'id');
         $attempt = (int)$a->id;
-        $q = $this->db->createQuery()->delete('#__jlms_active_attempts')->where('attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->delete('#__jlms_active_attempts')
+            ->where('attempt_id = :attempt')
+            ->bind(':attempt', $attempt, ParameterType::INTEGER);
         $this->db->setQuery($q)->execute();
         $enrollment = (int)$e->id;
         $lesson = (int)$l->id;
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_lesson_progress')
+            ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':lesson', $lesson, ParameterType::INTEGER);
         $q->setQuery((string)$q . ' FOR UPDATE');
         $progress = $this->db->setQuery($q)->loadObject();
         $best = $progress ? json_decode($progress->coverage_json, true, 16, JSON_THROW_ON_ERROR) : null;
@@ -405,10 +445,19 @@ final class QuizAttemptService
         $fields = ['coverage_json' => QuestionDefinition::canonical($best),'state' => $completed ? 'completed' : 'started','last_activity_at' => self::date($time),
             'completed_at' => $progress?->completed_at ?: ($completed ? self::date($time) : null),'revision' => $progress ? (int)$progress->revision + 1 : 1];
         if ($progress) {
-            $q = $this->db->createQuery()->update('#__jlms_lesson_progress')->set('coverage_json = :coverage')->set('state = :state')->set('last_activity_at = :time')->set('revision = :revision')
-                ->set($fields['completed_at'] === null ? 'completed_at = NULL' : 'completed_at = :completed')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
-                ->bind(':coverage', $fields['coverage_json'])->bind(':state', $fields['state'])->bind(':time', $fields['last_activity_at'])->bind(':revision', $fields['revision'], ParameterType::INTEGER)
-                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->update('#__jlms_lesson_progress')
+                ->set('coverage_json = :coverage')
+                ->set('state = :state')
+                ->set('last_activity_at = :time')->set('revision = :revision')
+                ->set($fields['completed_at'] === null ? 'completed_at = NULL' : 'completed_at = :completed')
+                    ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
+                ->bind(':coverage', $fields['coverage_json'])
+                    ->bind(':state', $fields['state'])
+                    ->bind(':time', $fields['last_activity_at'])
+                    ->bind(':revision', $fields['revision'], ParameterType::INTEGER)
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                    ->bind(':lesson', $lesson, ParameterType::INTEGER);
             if ($fields['completed_at'] !== null) {
                 $q->bind(':completed', $fields['completed_at']);
             }
@@ -465,8 +514,12 @@ final class QuizAttemptService
             } elseif ($active) {
                 $a = $active;
             } else {
-                $q = $this->db->createQuery()->select('id')->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-                    ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER)->order('attempt_no DESC');
+                $q = $this->db->createQuery()
+                    ->select('id')
+                    ->from('#__jlms_attempts')
+                    ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+                    ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                        ->bind(':quiz', $quizId, ParameterType::INTEGER)->order('attempt_no DESC');
                 $q->setQuery((string)$q . ' LIMIT 1 FOR UPDATE');
                 $id = (int)$this->db->setQuery($q)->loadResult();
                 $a = $id ? $this->attempt($id, $enrollment, $quizId) : null;
@@ -543,11 +596,18 @@ final class QuizAttemptService
                 $dto['questions'][] = $public;
             }
         }
-        $q = $this->db->createQuery()->select('id,attempt_no,status,score_points,max_points,passed,submitted_at,counted_for_limit')->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER)->order('attempt_no DESC');
+        $q = $this->db->createQuery()
+            ->select('id,attempt_no,status,score_points,max_points,passed,submitted_at,counted_for_limit')
+            ->from('#__jlms_attempts')
+            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':quiz', $quizId, ParameterType::INTEGER)->order('attempt_no DESC');
         $q->setQuery((string)$q . ' LIMIT 20 FOR UPDATE');
         $dto['history'] = $this->db->setQuery($q)->loadAssocList();
-        $q = $this->db->createQuery()->select('coverage_json')->from('#__jlms_lesson_progress')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson');
+        $q = $this->db->createQuery()
+            ->select('coverage_json')
+            ->from('#__jlms_lesson_progress')
+            ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson');
         $lesson = (int)$l->id;
         $q->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
         $q->setQuery((string)$q . ' FOR UPDATE');
@@ -559,7 +619,10 @@ final class QuizAttemptService
     {
         $limit = max(1, min(100, $limit));
         $now = self::date(($this->clock)());
-        $q = $this->db->createQuery()->select('id,enrollment_id,quiz_id')->from('#__jlms_attempts')->where("status = 'open' AND deadline_at IS NOT NULL AND deadline_at <= :now")
+        $q = $this->db->createQuery()
+            ->select('id,enrollment_id,quiz_id')
+            ->from('#__jlms_attempts')
+            ->where("status = 'open' AND deadline_at IS NOT NULL AND deadline_at <= :now")
             ->bind(':now', $now)->order('deadline_at,id');
         $due = $this->db->setQuery($q, 0, $limit)->loadObjectList();
         $closed = 0;
@@ -568,7 +631,11 @@ final class QuizAttemptService
             try {
                 $changed = $this->transaction(function () use ($record): bool {
                     $enrollment = (int)$record->enrollment_id;
-                    $q = $this->db->createQuery()->select('*')->from('#__jlms_enrollments')->where('id = :id')->bind(':id', $enrollment, ParameterType::INTEGER);
+                    $q = $this->db->createQuery()
+                        ->select('*')
+                        ->from('#__jlms_enrollments')
+                        ->where('id = :id')
+                        ->bind(':id', $enrollment, ParameterType::INTEGER);
                     $q->setQuery((string)$q . ' FOR UPDATE');
                     $e = $this->db->setQuery($q)->loadObject();
                     if (!$e) {
@@ -576,7 +643,12 @@ final class QuizAttemptService
                     }
                     $a = $this->attempt((int)$record->id, $enrollment, (int)$record->quiz_id);
                     $quiz = (int)$record->quiz_id;
-                    $q = $this->db->createQuery()->select('l.*')->from('#__jlms_lessons AS l')->innerJoin('#__jlms_quizzes AS q ON q.lesson_id=l.id')->where('q.id = :quiz')->bind(':quiz', $quiz, ParameterType::INTEGER);
+                    $q = $this->db->createQuery()
+                        ->select('l.*')
+                        ->from('#__jlms_lessons AS l')
+                        ->innerJoin('#__jlms_quizzes AS q ON q.lesson_id=l.id')
+                        ->where('q.id = :quiz')
+                        ->bind(':quiz', $quiz, ParameterType::INTEGER);
                     $l = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
                     return $this->expireIfDue($a, $e, $l, ($this->clock)());
                 });

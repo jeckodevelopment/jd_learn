@@ -78,7 +78,11 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             $id = (int) ($data['id'] ?? 0);
             $record = null;
             if ($id) {
-                $q = $db->createQuery()->select('*')->from('#__jlms_teachers')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
+                $q = $db->createQuery()
+                    ->select('*')
+                    ->from('#__jlms_teachers')
+                    ->where('id=:id')
+                    ->bind(':id', $id, ParameterType::INTEGER);
                 $q->setQuery((string) $q . ' FOR UPDATE');
                 $record = $db->setQuery($q)->loadObject();
                 if (!$record) {
@@ -98,7 +102,10 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 if (!$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
-                $query = $db->createQuery()->select('id')->from('#__categories')->where("extension='com_jlms.teacher' AND alias='jd-learn-teachers'");
+                $query = $db->createQuery()
+                    ->select('id')
+                    ->from('#__categories')
+                    ->where("extension='com_jlms.teacher' AND alias='jd-learn-teachers'");
                 $data['catid'] = (int) ($data['catid'] ?? $db->setQuery($query)->loadResult());
                 $scope = 'com_jlms';
             }

@@ -36,7 +36,11 @@ final class QuestionBankService
 
     private function row(int $id, bool $lock = false): object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_questions')->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_questions')
+            ->where('id = :id')
+            ->bind(':id', $id, ParameterType::INTEGER);
         if ($lock) {
             $q->setQuery((string) $q . ' FOR UPDATE');
         }
@@ -56,7 +60,11 @@ final class QuestionBankService
 
     private function category(User $actor, int $id): object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__categories')->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__categories')
+            ->where('id = :id')
+            ->bind(':id', $id, ParameterType::INTEGER);
         $row = $this->db->setQuery($q)->loadObject();
         if (!$row || $row->extension !== 'com_jlms.question') {
             throw new \RuntimeException('COM_JLMS_QUESTION_CATEGORY', 422);
@@ -78,7 +86,10 @@ final class QuestionBankService
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         if ($language !== '*') {
-            $q = $this->db->createQuery()->select('COUNT(*)')->from('#__languages')->where('lang_code = :language')->bind(':language', $language);
+            $q = $this->db->createQuery()
+                ->select('COUNT(*)')
+                ->from('#__languages')
+                ->where('lang_code = :language')->bind(':language', $language);
             if (!(int) $this->db->setQuery($q)->loadResult()) {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
@@ -154,7 +165,10 @@ final class QuestionBankService
         $question = $this->row($id);
         $this->access($actor, 'com_jlms.question.' . $id);
         $revision = (int) $question->current_revision_id;
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_question_revisions')->where('id = :id')->where('question_id = :question')
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_question_revisions')
+            ->where('id = :id')->where('question_id = :question')
             ->bind(':id', $revision, ParameterType::INTEGER)->bind(':question', $id, ParameterType::INTEGER);
         $content = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $options = json_decode($content->options_json, true, 16, JSON_THROW_ON_ERROR)['items'];
@@ -197,7 +211,8 @@ final class QuestionBankService
         }
         $q = $this->db->createQuery()->select(('q.id, q.catid, q.language, q.state, q.revision, r.id AS '
             . 'revision_id, r.kind, r.prompt, c.title AS category_title'))
-            ->from('#__jlms_questions AS q')->innerJoin('#__jlms_question_revisions AS r ON r.id = q.current_revision_id')
+            ->from('#__jlms_questions AS q')
+                ->innerJoin('#__jlms_question_revisions AS r ON r.id = q.current_revision_id')
             ->innerJoin('#__categories AS c ON c.id = q.catid')->order('q.id DESC');
         if ($before > 0) {
             $q->where('q.id < :before')->bind(':before', $before, ParameterType::INTEGER);
@@ -377,15 +392,33 @@ final class QuestionBankService
             $usage = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_question_revisions AS r')
                 ->leftJoin('#__jlms_quiz_questions AS qq ON qq.question_revision_id=r.id')
                 ->leftJoin('#__jlms_attempt_questions AS aq ON aq.question_revision_id=r.id')
-                ->where('r.question_id=:question')->where('(qq.question_revision_id IS NOT NULL OR aq.question_revision_id IS NOT NULL)')
+                ->where('r.question_id=:question')
+                    ->where('(qq.question_revision_id IS NOT NULL OR aq.question_revision_id IS NOT NULL)')
                 ->bind(':question', $id, ParameterType::INTEGER);
             if ((int)$this->db->setQuery($usage)->loadResult() > 0) {
                 throw new \RuntimeException('COM_JLMS_QUESTION_IN_USE', 409);
             }
-            $this->db->setQuery($this->db->createQuery()->update('#__jlms_questions')->set('current_revision_id=NULL')->where('id=' . (int)$id))->execute();
-            $this->db->setQuery($this->db->createQuery()->delete('#__jlms_question_revisions')->where('question_id=' . (int)$id))->execute();
-            $this->db->setQuery($this->db->createQuery()->delete('#__jlms_questions')->where('id=' . (int)$id))->execute();
-            $this->db->setQuery($this->db->createQuery()->delete('#__assets')->where('name=' . $this->db->quote($asset)))->execute();
+            $this->db->setQuery($this
+                ->db
+                ->createQuery()
+                ->update('#__jlms_questions')
+                ->set('current_revision_id=NULL')
+                ->where('id=' . (int)$id))->execute();
+            $this->db->setQuery($this
+                ->db
+                ->createQuery()
+                ->delete('#__jlms_question_revisions')
+                ->where('question_id=' . (int)$id))->execute();
+            $this->db->setQuery($this
+                ->db
+                ->createQuery()
+                ->delete('#__jlms_questions')
+                ->where('id=' . (int)$id))->execute();
+            $this->db->setQuery($this
+                ->db
+                ->createQuery()
+                ->delete('#__assets')
+                ->where('name=' . $this->db->quote($asset)))->execute();
         });
     }
     public function revisionOptions(User $identity, int $selected = 0): array
@@ -396,9 +429,12 @@ final class QuestionBankService
         }
         $key = (int) $actor->id;
         if (!isset($this->optionCache[$key])) {
-            $q = $this->db->createQuery()->select('r.id, r.question_id, r.version_no, r.prompt, c.title AS category_title')
-                ->from('#__jlms_question_revisions AS r')->innerJoin('#__jlms_questions AS q ON q.current_revision_id = r.id')
-                ->innerJoin('#__categories AS c ON c.id = q.catid')->where('q.state = 1 AND c.published = 1')->order('q.id DESC');
+            $q = $this->db->createQuery()
+                ->select('r.id, r.question_id, r.version_no, r.prompt, c.title AS category_title')
+                ->from('#__jlms_question_revisions AS r')
+                    ->innerJoin('#__jlms_questions AS q ON q.current_revision_id = r.id')
+                ->innerJoin('#__categories AS c ON c.id = q.catid')
+                    ->where('q.state = 1 AND c.published = 1')->order('q.id DESC');
             $rows = $this->db->setQuery($q, 0, 200)->loadObjectList();
             $options = [];
             foreach ($rows as $row) {
@@ -410,9 +446,12 @@ final class QuestionBankService
         }
         $rows = $this->optionCache[$key];
         if ($selected > 0 && !isset($rows[$selected])) {
-            $q = $this->db->createQuery()->select('r.id, r.question_id, r.version_no, r.prompt, c.title AS category_title')
+            $q = $this->db->createQuery()
+                ->select('r.id, r.question_id, r.version_no, r.prompt, c.title AS category_title')
                 ->from('#__jlms_question_revisions AS r')->innerJoin('#__jlms_questions AS q ON q.id = r.question_id')
-                ->innerJoin('#__categories AS c ON c.id = q.catid')->where('r.id = :selected')->bind(':selected', $selected, ParameterType::INTEGER);
+                ->innerJoin('#__categories AS c ON c.id = q.catid')
+                    ->where('r.id = :selected')
+                    ->bind(':selected', $selected, ParameterType::INTEGER);
             $row = $this->db->setQuery($q)->loadObject();
             if ($row && $actor->authorise('jlms.quiz.manage', 'com_jlms.question.' . (int) $row->question_id)) {
                 $rows[$selected] = $row;

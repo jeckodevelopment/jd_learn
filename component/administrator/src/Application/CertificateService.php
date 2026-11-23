@@ -308,13 +308,17 @@ final class CertificateService
 
     private function document(int $userId, int $enrollmentId): ?object
     {
-        $query = $this->db->createQuery()->select('d.id AS document_id, d.certificate_id, d.serial, d.status, d.revision, d.pdf_asset_id AS asset_id,
+        $query = $this->db->createQuery()
+            ->select('d.id AS document_id, d.certificate_id, d.serial, d.status, d.revision, d.pdf_asset_id AS asset_id,
                 d.identity_snapshot_json, d.template_snapshot_json, e.user_id, e.id AS enrollment_id')
             ->from('#__jlms_certificates AS c')->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
             ->innerJoin(('#__jlms_certificate_documents AS d ON d.id = c.current_document_id '
                 . 'AND d.certificate_id = c.id'))
-            ->where('e.id = :enrollment')->where('e.user_id = :user')->where('e.completed_at IS NOT NULL')->where('d.revoked_at IS NULL')
-            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':user', $userId, ParameterType::INTEGER);
+            ->where('e.id = :enrollment')
+                ->where('e.user_id = :user')
+                ->where('e.completed_at IS NOT NULL')->where('d.revoked_at IS NULL')
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':user', $userId, ParameterType::INTEGER);
         return $this->db->setQuery($query)->loadObject() ?: null;
     }
 
@@ -358,7 +362,8 @@ final class CertificateService
                     . 'd.certificate_id AND c.current_document_id = d.id'))
                 ->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')->where('d.id = :document')
                 ->where('e.id = :enrollment')->where('e.user_id = :user')->where('e.completed_at IS NOT NULL')
-                ->bind(':document', $documentId, ParameterType::INTEGER)->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':document', $documentId, ParameterType::INTEGER)
+                    ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
                 ->bind(':user', $userId, ParameterType::INTEGER);
             // Keep the original bound placeholders when appending the row lock.
             // Passing a SQL string to the driver here discards the query bindings.

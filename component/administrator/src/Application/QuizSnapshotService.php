@@ -18,7 +18,11 @@ final class QuizSnapshotService
 
     public function definition(int $lesson, int $version): array
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_quizzes')->where('lesson_id = :lesson')->where('course_version_id = :version')
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_quizzes')
+            ->where('lesson_id = :lesson')
+            ->where('course_version_id = :version')
             ->bind(':lesson', $lesson, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER);
         $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         $selection = json_decode($quiz->selection_json, true, 16, JSON_THROW_ON_ERROR);
@@ -35,15 +39,21 @@ final class QuizSnapshotService
             'retry_seconds' => QuestionDefinition::integer($selection['retry_delay_seconds'] ?? null, 0, 604800),'feedback' => $quiz->feedback_policy,
             'assessment' => $selection['assessment'],'mode' => $selection['mode'],'shuffle_questions' => $selection['shuffle_questions'],'shuffle_options' => $selection['shuffle_options']];
         $id = (int)$quiz->id;
-        $budget = $this->db->createQuery()->select('SUM(OCTET_LENGTH(r.prompt)+OCTET_LENGTH(r.options_json)+OCTET_LENGTH(r.grading_json)+OCTET_LENGTH(r.feedback_json))')
-            ->from('#__jlms_quiz_questions AS l')->innerJoin('#__jlms_question_revisions AS r ON r.id=l.question_revision_id')
+        $budget = $this->db->createQuery()
+            ->select('SUM(OCTET_LENGTH(r.prompt)+OCTET_LENGTH(r.options_json)+OCTET_LENGTH(r.grading_json)+OCTET_LENGTH(r.feedback_json))')
+            ->from('#__jlms_quiz_questions AS l')
+                ->innerJoin('#__jlms_question_revisions AS r ON r.id=l.question_revision_id')
             ->where('l.quiz_id = :quiz')->bind(':quiz', $id, ParameterType::INTEGER);
         if ((int)$this->db->setQuery($budget)->loadResult() > 4194304) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         }
-        $q = $this->db->createQuery()->select('r.*, l.points, l.ordering, q.catid, q.language, q.state AS question_state')
-            ->from('#__jlms_quiz_questions AS l')->innerJoin('#__jlms_question_revisions AS r ON r.id=l.question_revision_id')
-            ->innerJoin('#__jlms_questions AS q ON q.id=r.question_id')->where('l.quiz_id = :quiz')->bind(':quiz', $id, ParameterType::INTEGER)->order('l.ordering, r.id');
+        $q = $this->db->createQuery()
+            ->select('r.*, l.points, l.ordering, q.catid, q.language, q.state AS question_state')
+            ->from('#__jlms_quiz_questions AS l')
+                ->innerJoin('#__jlms_question_revisions AS r ON r.id=l.question_revision_id')
+            ->innerJoin('#__jlms_questions AS q ON q.id=r.question_id')
+                ->where('l.quiz_id = :quiz')
+                ->bind(':quiz', $id, ParameterType::INTEGER)->order('l.ordering, r.id');
         $pool = $this->db->setQuery($q, 0, 201)->loadObjectList();
         if (!$pool || count($pool) > 200) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
@@ -94,7 +104,11 @@ final class QuizSnapshotService
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
             $category = (int)$row->catid;
-            $q = $this->db->createQuery()->select('COUNT(*)')->from('#__categories AS c')->where('c.id = :category')->where('c.extension = ' . $this->db->quote('com_jlms.question'))
+            $q = $this->db->createQuery()
+                ->select('COUNT(*)')
+                ->from('#__categories AS c')
+                ->where('c.id = :category')
+                ->where('c.extension = ' . $this->db->quote('com_jlms.question'))
                 ->where(('NOT EXISTS (SELECT 1 FROM #__categories AS p WHERE '
                     . 'p.extension=c.extension AND p.lft<=c.lft AND p.rgt>=c.rgt AND p.published<>1)'))
                 ->bind(':category', $category, ParameterType::INTEGER);

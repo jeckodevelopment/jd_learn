@@ -155,7 +155,8 @@ final class CategoryReassignmentService
         if ($id < 2) {
             throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_INVALID_SOURCE');
         }
-        $query = $this->db->createQuery()->select('id, title, extension, asset_id, created_user_id, checked_out, lft, rgt')
+        $query = $this->db->createQuery()
+            ->select('id, title, extension, asset_id, created_user_id, checked_out, lft, rgt')
             ->from('#__categories')->where('id = :id');
         if (!$allowTrashed) {
             $query->where('published <> -2');

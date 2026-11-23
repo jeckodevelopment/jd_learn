@@ -13,10 +13,12 @@ use Joomla\CMS\Router\Route;
  <div id="jlms-categories-description"><p><?= Text::_('COM_JLMS_CATEGORIES_INTRO') ?></p></div>
  <div id="jlms-categories-list" class="jlms-category-grid">
  <?php foreach ($this->items as $item) : ?>
-  <article id="jlms-category-card-<?= (int) $item->id ?>" class="jlms-card jlms-category-card" data-category-id="<?= (int) $item->id ?>">
+  <article id="jlms-category-card-<?= (int) $item
+      ->id ?>" class="jlms-card jlms-category-card" data-category-id="<?= (int) $item->id ?>">
    <h2 class="jlms-category-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=category&id='
        . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
-   <p class="jlms-category-card__description"><?= $this->escape(\Joomla\String\StringHelper::substr(strip_tags((string) $item->description), 0, 300)) ?></p>
+   <p class="jlms-category-card__description"><?= $this
+       ->escape(\Joomla\String\StringHelper::substr(strip_tags((string) $item->description), 0, 300)) ?></p>
   </article>
  <?php endforeach; ?>
  <?php if (!$this->items) :

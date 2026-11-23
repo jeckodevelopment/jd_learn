@@ -31,7 +31,8 @@ final class EnrollmentRosterService
             $assignment = $this->db->createQuery()->select('COUNT(*)')
                 ->from('#__jlms_course_teachers AS ct')->innerJoin('#__jlms_teachers AS t ON t.id=ct.teacher_id')
                 ->where('ct.course_id=:course')->where('t.user_id=:user')->where('t.state=1')
-                ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':user', (int)$actor->id, ParameterType::INTEGER);
+                ->bind(':course', $courseId, ParameterType::INTEGER)
+                    ->bind(':user', (int)$actor->id, ParameterType::INTEGER);
             $teacher = (int) $this->db->setQuery($assignment)->loadResult() > 0;
         }
         if (!$courseAccess || (!$administrator && !$teacher)) {
@@ -93,7 +94,10 @@ final class EnrollmentRosterService
         }
         if ($version) {
             $q = $this->db->createQuery()->select('id')->from('#__jlms_course_versions')
-                ->where('course_id = :course')->where('id = :version')->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER);
+                ->where('course_id = :course')
+                    ->where('id = :version')
+                    ->bind(':course', $courseId, ParameterType::INTEGER)
+                    ->bind(':version', $version, ParameterType::INTEGER);
             if (!$this->db->setQuery($q)->loadResult()) {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }

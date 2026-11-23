@@ -28,15 +28,21 @@ final class QuizTimeService
             ->from('#__jlms_quizzes AS q')->innerJoin(('#__jlms_lessons AS l ON l.id=q.lesson_id AND '
                 . 'l.course_version_id=q.course_version_id'))
             ->innerJoin('#__jlms_course_versions AS v ON v.id=q.course_version_id')->innerJoin('#__jlms_courses AS c ON c.id=v.course_id')
-            ->where("l.kind = 'quiz' AND v.status = 'published'")->where('c.id = :course')->where('q.lesson_id = :lesson')
+            ->where("l.kind = 'quiz' AND v.status = 'published'")
+                ->where('c.id = :course')->where('q.lesson_id = :lesson')
             ->bind(':course', $course, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
         $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $e = null;
         if ($enrollment) {
             $version = (int)$quiz->course_version_id;
-            $q = $this->db->createQuery()->select('e.*, u.name AS learner_name')->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id=e.user_id')
+            $q = $this->db->createQuery()
+                ->select('e.*, u.name AS learner_name')
+                ->from('#__jlms_enrollments AS e')
+                ->innerJoin('#__users AS u ON u.id=e.user_id')
                 ->where('e.id = :id')->where('e.course_id = :course')->where('e.course_version_id = :version')
-                ->bind(':id', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER);
+                ->bind(':id', $enrollment, ParameterType::INTEGER)
+                    ->bind(':course', $course, ParameterType::INTEGER)
+                    ->bind(':version', $version, ParameterType::INTEGER);
             $e = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         return [$actor,$quiz,$e];
@@ -51,8 +57,12 @@ final class QuizTimeService
     /** Read under the caller's enrollment lock when preparing an attempt. No reason/actor enters the learner DTO. */
     public function allowance(int $enrollment, int $quiz): ?object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_quiz_time_adjustments')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER)->order('revision_no DESC');
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_quiz_time_adjustments')
+            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':quiz', $quiz, ParameterType::INTEGER)->order('revision_no DESC');
         return $this->db->setQuery($q, 0, 1)->loadObject() ?: null;
     }
 
@@ -77,9 +87,14 @@ final class QuizTimeService
         $version = (int)$quiz->course_version_id;
         $quizId = (int)$quiz->id;
         $after = max(0, $after);
-        $q = $this->db->createQuery()->select('e.id,e.status,u.name AS learner_name')->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id=e.user_id')
+        $q = $this->db->createQuery()
+            ->select('e.id,e.status,u.name AS learner_name')
+            ->from('#__jlms_enrollments AS e')
+            ->innerJoin('#__users AS u ON u.id=e.user_id')
             ->where('e.course_id = :course')->where('e.course_version_id = :version')->where('e.id > :after')
-            ->bind(':course', $course, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER)->bind(':after', $after, ParameterType::INTEGER)->order('e.id');
+            ->bind(':course', $course, ParameterType::INTEGER)
+                ->bind(':version', $version, ParameterType::INTEGER)
+                ->bind(':after', $after, ParameterType::INTEGER)->order('e.id');
         $candidates = $this->db->setQuery($q, 0, 21)->loadObjectList();
         $more = count($candidates) > 20;
         $candidates = array_slice($candidates, 0, 20);
@@ -87,11 +102,21 @@ final class QuizTimeService
         $history = [];
         $active = null;
         if ($e) {
-            $q = $this->db->createQuery()->select('id,revision_no,extra_seconds,reason,actor_user_id,created_at')->from('#__jlms_quiz_time_adjustments')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER)->order('revision_no DESC');
+            $q = $this->db->createQuery()
+                ->select('id,revision_no,extra_seconds,reason,actor_user_id,created_at')
+                ->from('#__jlms_quiz_time_adjustments')
+                ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                    ->bind(':quiz', $quizId, ParameterType::INTEGER)->order('revision_no DESC');
             $history = $this->db->setQuery($q, 0, 20)->loadObjectList();
-            $q = $this->db->createQuery()->select('a.id,a.deadline_at,a.started_at,a.rules_snapshot_json')->from('#__jlms_active_attempts AS s')->innerJoin('#__jlms_attempts AS a ON a.id=s.attempt_id')
-                ->where('s.enrollment_id = :enrollment')->where('s.quiz_id = :quiz')->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('a.id,a.deadline_at,a.started_at,a.rules_snapshot_json')
+                ->from('#__jlms_active_attempts AS s')
+                ->innerJoin('#__jlms_attempts AS a ON a.id=s.attempt_id')
+                ->where('s.enrollment_id = :enrollment')
+                    ->where('s.quiz_id = :quiz')
+                    ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                    ->bind(':quiz', $quizId, ParameterType::INTEGER);
             $active = $this->db->setQuery($q)->loadObject();
             if ($active) {
                 $rules = json_decode($active->rules_snapshot_json, true, 16, JSON_THROW_ON_ERROR);
@@ -114,15 +139,24 @@ final class QuizTimeService
         $this->db->transactionStart();
         try {
             // As for learner mutations: lock enrollment before fresh core authorization establishes the read view.
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id = :id')->bind(':id', $enrollment, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_enrollments')
+                ->where('id = :id')
+                ->bind(':id', $enrollment, ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $this->db->setQuery($q)->loadResult();
             [$actor,$quiz] = $this->scope($identity, $course, $lesson, $enrollment);
             $quizId = (int)$quiz->id;
             $seconds = $minutes * 60;
             $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int)$actor->id,'course' => $course,'lesson' => $lesson,'enrollment' => $enrollment,'revision' => $expected,'extra_seconds' => $seconds,'reason' => $reason]));
-            $q = $this->db->createQuery()->select('id,request_hash')->from('#__jlms_quiz_time_adjustments')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')->where('mutation_id = :mutation')
-                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER)->bind(':mutation', $key);
+            $q = $this->db->createQuery()
+                ->select('id,request_hash')
+                ->from('#__jlms_quiz_time_adjustments')
+                ->where('enrollment_id = :enrollment')
+                ->where('quiz_id = :quiz')->where('mutation_id = :mutation')
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                    ->bind(':quiz', $quizId, ParameterType::INTEGER)->bind(':mutation', $key);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $replay = $this->db->setQuery($q)->loadObject();
             if ($replay) {

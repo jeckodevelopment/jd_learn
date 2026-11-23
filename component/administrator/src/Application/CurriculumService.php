@@ -153,7 +153,12 @@ final class CurriculumService
         $columns = $table === 'modules'
             ? ['id', 'course_version_id', 'title', 'ordering', 'revision']
             : ['id', 'course_version_id', 'module_id', 'title', 'kind', 'provider_key', 'media_asset_id', 'required', 'ordering', 'revision', 'checked_out', 'duration_ms', 'params_json'];
-        $q = $this->db->createQuery()->select($this->db->quoteName($columns))->from($this->db->quoteName('#__jlms_' . $table))
+        $q = $this->db->createQuery()
+            ->select($this
+            ->db
+            ->quoteName($columns))
+            ->from($this
+            ->db->quoteName('#__jlms_' . $table))
             ->where($this->db->quoteName($field) . ' = :owner')->bind(':owner', $id, ParameterType::INTEGER)
             ->order($this->db->quoteName('ordering') . ', ' . $this->db->quoteName('id'));
         $rows = $this->db->setQuery($q, 0, $limit)->loadObjectList();
@@ -208,7 +213,9 @@ final class CurriculumService
         $prerequisites = [];
         if ($version) {
             $q = $this->db->createQuery()->select('lesson_id, required_lesson_id')->from('#__jlms_prerequisites')
-                ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('lesson_id, required_lesson_id');
+                ->where('course_version_id = :version')
+                    ->bind(':version', $versionId, ParameterType::INTEGER)
+                    ->order('lesson_id, required_lesson_id');
             $rows = $this->db->setQuery($q, 0, 25001)->loadObjectList();
             if (count($rows) > 25000) {
                 throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
@@ -257,7 +264,9 @@ final class CurriculumService
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $query = $this->db->createQuery()->select('COALESCE(MAX(version_no), 0)')
-                ->from('#__jlms_course_versions')->where('course_id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
+                ->from('#__jlms_course_versions')
+                    ->where('course_id = :course')
+                    ->bind(':course', $courseId, ParameterType::INTEGER);
             $number = (int) $this->db->setQuery($query)->loadResult() + 1;
             if ($course->current_version_id !== null) {
                 $source = $this->row('course_versions', (int) $course->current_version_id);
@@ -783,7 +792,9 @@ final class CurriculumService
             $visit($node);
         }
         $delete = $this->db->createQuery()->delete('#__jlms_prerequisites')->where('lesson_id = :lesson')
-            ->where('course_version_id = :version')->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER);
+            ->where('course_version_id = :version')
+                ->bind(':lesson', $lessonId, ParameterType::INTEGER)
+                ->bind(':version', $versionId, ParameterType::INTEGER);
         $this->db->setQuery($delete)->execute();
         foreach ($requiredLessons as $requiredId) {
             $this->db->insertObject('#__jlms_prerequisites', (object) ['course_version_id' => $versionId,

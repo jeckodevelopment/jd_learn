@@ -28,14 +28,24 @@ final class CourseOperationsService
         $course = $this->roster->course($actor, $courseId);
         $field = self::FIELDS[substr($operation, 0, strrpos($operation, '_'))];
         $target = str_ends_with($operation, '_open') || str_ends_with($operation, '_resume') ? 1 : 0;
-        $q = $this->db->createQuery()->select('id,title,state,revision,' . $field . ' AS current_value')->from('#__jlms_courses')
+        $q = $this->db->createQuery()
+            ->select('id,title,state,revision,' . $field . ' AS current_value')->from('#__jlms_courses')
             ->where('id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
         $course = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
-        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')->where('course_id=:course')->where("status IN ('active','completed')")
+        $q = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_enrollments')
+            ->where('course_id=:course')
+            ->where("status IN ('active','completed')")
             ->bind(':course', $courseId, ParameterType::INTEGER);
         $learners = (int)$this->db->setQuery($q)->loadResult();
-        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attempts AS a')->innerJoin('#__jlms_enrollments AS e ON e.id=a.enrollment_id')
-            ->where('e.course_id=:course')->where("a.status = 'open'")->bind(':course', $courseId, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_attempts AS a')
+            ->innerJoin('#__jlms_enrollments AS e ON e.id=a.enrollment_id')
+            ->where('e.course_id=:course')
+                ->where("a.status = 'open'")
+                ->bind(':course', $courseId, ParameterType::INTEGER);
         $attempts = (int)$this->db->setQuery($q)->loadResult();
         $state = ['course_id' => $courseId,'revision' => (int)$course->revision,'operation' => $operation,'current' => (int)$course->current_value,'target' => $target,'learners' => $learners,'open_attempts' => $attempts];
         $state['hash'] = hash('sha256', QuestionDefinition::canonical($state));
@@ -48,7 +58,11 @@ final class CourseOperationsService
     public function editor(User $actor, int $courseId, string $operation): array
     {
         $item = $this->preview($actor, $courseId, $operation);
-        $q = $this->db->createQuery()->select('revision_no,operation,previous_value,target_value,reason,actor_user_id,created_at')->from('#__jlms_course_operations')->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER)->order('revision_no DESC');
+        $q = $this->db->createQuery()
+            ->select('revision_no,operation,previous_value,target_value,reason,actor_user_id,created_at')
+            ->from('#__jlms_course_operations')
+            ->where('course_id=:course')
+            ->bind(':course', $courseId, ParameterType::INTEGER)->order('revision_no DESC');
         $item['history'] = $this->db->setQuery($q, 0, 20)->loadObjectList();
         return $item;
     }
@@ -66,11 +80,19 @@ final class CourseOperationsService
         }
         $this->db->transactionStart();
         try {
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_courses')->where('id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_courses')
+                ->where('id=:course')
+                ->bind(':course', $courseId, ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $this->db->setQuery($q)->loadResult();
             if (str_starts_with($operation, 'admissions_')) {
-                $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER)->order('id');
+                $q = $this->db->createQuery()
+                    ->select('id')
+                    ->from('#__jlms_editions')
+                    ->where('course_id=:course')
+                    ->bind(':course', $courseId, ParameterType::INTEGER)->order('id');
                 $q->setQuery((string)$q . ' FOR UPDATE');
                 $this->db->setQuery($q)->loadColumn();
             }
@@ -78,7 +100,10 @@ final class CourseOperationsService
             $actor->clearAccessRights();
             $item = $this->preview($actor, $courseId, $operation);
             $p = $item['impact'];
-            $q = $this->db->createQuery()->select('id,actor_user_id,operation,impact_hash,reason')->from('#__jlms_course_operations')->where('mutation_id=:mutation')->bind(':mutation', $mutation);
+            $q = $this->db->createQuery()
+                ->select('id,actor_user_id,operation,impact_hash,reason')
+                ->from('#__jlms_course_operations')
+                ->where('mutation_id=:mutation')->bind(':mutation', $mutation);
             $prior = $this->db->setQuery($q)->loadObject();
             if ($prior) {
                 if ((int)$prior->actor_user_id === (int)$actor->id && $prior->operation === $operation && hash_equals($prior->impact_hash, $impactHash) && hash_equals($prior->reason, $reason)) {
@@ -94,13 +119,29 @@ final class CourseOperationsService
             $target = (int)$p['target'];
             $actorId = (int)$actor->id;
             $now = gmdate('Y-m-d H:i:s.u');
-            $q = $this->db->createQuery()->update('#__jlms_courses')->set($this->db->quoteName($field) . '=:target')->set('revision=revision+1')->set('modified_by=:actor')->set('modified_at=:now')->where('id=:course')->where('revision=:revision')
-                ->bind(':target', $target, ParameterType::INTEGER)->bind(':actor', $actorId, ParameterType::INTEGER)->bind(':now', $now)->bind(':course', $courseId, ParameterType::INTEGER)->bind(':revision', $revision, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->update('#__jlms_courses')
+                ->set($this
+                ->db
+                ->quoteName($field) . '=:target')
+                ->set('revision=revision+1')
+                ->set('modified_by=:actor')
+                ->set('modified_at=:now')
+                ->where('id=:course')->where('revision=:revision')
+                ->bind(':target', $target, ParameterType::INTEGER)
+                    ->bind(':actor', $actorId, ParameterType::INTEGER)
+                    ->bind(':now', $now)
+                    ->bind(':course', $courseId, ParameterType::INTEGER)
+                    ->bind(':revision', $revision, ParameterType::INTEGER);
             $this->db->setQuery($q)->execute();
             if ($this->db->getAffectedRows() !== 1) {
                 throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
             }
-            $q = $this->db->createQuery()->select('COALESCE(MAX(revision_no),0)+1')->from('#__jlms_course_operations')->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('COALESCE(MAX(revision_no),0)+1')
+                ->from('#__jlms_course_operations')
+                ->where('course_id=:course')
+                ->bind(':course', $courseId, ParameterType::INTEGER);
             $sequence = (int)$this->db->setQuery($q)->loadResult();
             $record = (object)['course_id' => $courseId,'revision_no' => $sequence,'operation' => $operation,'previous_value' => (int)$p['current'],'target_value' => $target,'impact_hash' => $impactHash,'reason' => $reason,'actor_user_id' => (int)$actor->id,'mutation_id' => $mutation,'created_at' => $now];
             $this->db->insertObject('#__jlms_course_operations', $record, 'id');

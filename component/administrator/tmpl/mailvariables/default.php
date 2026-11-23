@@ -21,7 +21,9 @@ $mailIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstall
         $displayTitle = $translatedTitle === $titleKey ? $mailId : $translatedTitle;
         ?>
  <details class="card mb-2">
-  <summary class="card-header"><strong><?= $this->escape($displayTitle) ?></strong><span class="text-muted small"> — <code><?= $this->escape($mailId) ?></code></span></summary>
+  <summary class="card-header"><strong><?= $this
+      ->escape($displayTitle) ?></strong><span class="text-muted small"> — <code><?= $this
+      ->escape($mailId) ?></code></span></summary>
   <div class="card-body table-responsive">
    <table class="table table-sm table-striped">
     <caption><?= $this->escape($displayTitle) ?> — <?= $this->escape($mailId) ?></caption>

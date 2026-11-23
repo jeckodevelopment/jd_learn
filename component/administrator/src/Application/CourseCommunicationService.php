@@ -135,7 +135,9 @@ final class CourseCommunicationService
                 ->where("JSON_UNQUOTE(JSON_EXTRACT(scope_json, '$.mutation_id')) = :mutation")
                 ->where("JSON_UNQUOTE(JSON_EXTRACT(scope_json, '$.course_id')) = :scopeCourse")
                 ->where('owner_user_id = :owner')
-                ->bind(':mutation', $mutationId)->bind(':scopeCourse', $scopeCourseId)->bind(':owner', $ownerUserId, ParameterType::INTEGER);
+                ->bind(':mutation', $mutationId)
+                    ->bind(':scopeCourse', $scopeCourseId)
+                    ->bind(':owner', $ownerUserId, ParameterType::INTEGER);
             $previous = $this->db->setQuery($existing)->loadObject();
             if ($previous !== null && !hash_equals((string) $previous->payload_json, $expectedPayload)) {
                 throw new \RuntimeException('COM_JLMS_COMMUNICATION_CONFLICT', 409);
@@ -238,8 +240,17 @@ final class CourseCommunicationService
             }
             $next = $offset + count($slice);
             $done = min((int) $job->progress_total, $next);
-            $update = $this->db->createQuery()->update('#__jlms_jobs')->set('cursor_json=' . $this->db->quote(json_encode(['offset' => $next], JSON_THROW_ON_ERROR)))
-                ->set('progress_done=' . $done)->set('lease_token=NULL')->set('lease_until=NULL')->where('id=' . (int) $job->id)->where('lease_token=' . $this->db->quote($token));
+            $update = $this->db->createQuery()
+                ->update('#__jlms_jobs')
+                ->set('cursor_json=' . $this
+                ->db
+                ->quote(json_encode(['offset' => $next], JSON_THROW_ON_ERROR)))
+                ->set('progress_done=' . $done)
+                    ->set('lease_token=NULL')
+                    ->set('lease_until=NULL')
+                    ->where('id=' . (int) $job
+                    ->id)
+                    ->where('lease_token=' . $this->db->quote($token));
             if ($next >= count($all)) {
                 $update->set("status='succeeded'")->set('payload_json=' . $this->db->quote('{}'))->set('finished_at=UTC_TIMESTAMP(6)');
             } else {
@@ -279,8 +290,14 @@ final class CourseCommunicationService
         if (!$ids) {
             return [];
         }
-        $q = $this->db->createQuery()->select('e.id,u.email')->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id=e.user_id')
-            ->where('e.course_id=:course')->where("e.status='active'")->where('u.block=0')->bind(':course', $courseId, ParameterType::INTEGER)
+        $q = $this->db->createQuery()
+            ->select('e.id,u.email')
+            ->from('#__jlms_enrollments AS e')
+            ->innerJoin('#__users AS u ON u.id=e.user_id')
+            ->where('e.course_id=:course')
+                ->where("e.status='active'")
+                ->where('u.block=0')
+                ->bind(':course', $courseId, ParameterType::INTEGER)
             ->where('e.id IN (' . implode(',', array_map('intval', $ids)) . ')')->order('e.id');
         $valid = [];
         foreach ($this->db->setQuery($q)->loadObjectList() as $row) {
@@ -293,10 +310,14 @@ final class CourseCommunicationService
 
     private function recipient(int $courseId, int $enrollmentId): ?object
     {
-        $q = $this->db->createQuery()->select('u.id,u.name,u.email,u.block,u.params AS user_params,c.title AS course_title')
-            ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id=e.user_id')->innerJoin('#__jlms_courses AS c ON c.id=e.course_id')
+        $q = $this->db->createQuery()
+            ->select('u.id,u.name,u.email,u.block,u.params AS user_params,c.title AS course_title')
+            ->from('#__jlms_enrollments AS e')
+                ->innerJoin('#__users AS u ON u.id=e.user_id')
+                ->innerJoin('#__jlms_courses AS c ON c.id=e.course_id')
             ->where('e.id=:enrollment')->where('e.course_id=:course')->where("e.status='active'")->where('u.block=0')
-            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':course', $courseId, ParameterType::INTEGER);
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':course', $courseId, ParameterType::INTEGER);
         $row = $this->db->setQuery($q)->loadObject();
         if (!$row) {
             return null;

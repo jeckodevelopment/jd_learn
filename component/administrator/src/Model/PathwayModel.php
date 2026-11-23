@@ -37,7 +37,8 @@ final class PathwayModel extends AdminModel
         if ($item && !empty($item->id)) {
             $pathwayId = (int) $item->id;
             $query = $this->getDatabase()->createQuery()->select('course_id, ordering')->from('#__jlms_pathway_courses')
-                ->where('pathway_id = :pathway')->bind(':pathway', $pathwayId, ParameterType::INTEGER)->order('ordering, course_id');
+                ->where('pathway_id = :pathway')
+                    ->bind(':pathway', $pathwayId, ParameterType::INTEGER)->order('ordering, course_id');
             $item->courses = $this->getDatabase()->setQuery($query, 0, 100)->loadAssocList();
             $imageData = json_decode((string) ($item->params_json ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
             if (!is_array($imageData)) {
@@ -248,7 +249,8 @@ final class PathwayModel extends AdminModel
             if ($replaceCourses) {
                 $deletePathwayId = $pathwayId;
                 $db->setQuery($db->createQuery()->delete('#__jlms_pathway_courses')
-                    ->where('pathway_id = :pathway')->bind(':pathway', $deletePathwayId, ParameterType::INTEGER))->execute();
+                    ->where('pathway_id = :pathway')
+                        ->bind(':pathway', $deletePathwayId, ParameterType::INTEGER))->execute();
                 foreach ($courses as $ordering => $courseId) {
                     // SECDEV-03: explicit Joomla SQL binding even for validated
                     // integer IDs and positions. No input-derived query fragments.

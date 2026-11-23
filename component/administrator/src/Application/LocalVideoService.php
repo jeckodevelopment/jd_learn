@@ -22,7 +22,11 @@ final class LocalVideoService
 
     private function row(string $table, int $id, bool $lock = false): object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_' . $table)->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_' . $table)
+            ->where('id = :id')
+            ->bind(':id', $id, ParameterType::INTEGER);
         if ($lock) {
             $q->setQuery((string) $q . ' FOR UPDATE');
         }

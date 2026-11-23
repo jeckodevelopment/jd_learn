@@ -71,7 +71,8 @@ final class VideoProgressService
         $lessonId = (int) $lesson->id;
         $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
             ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
-            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':lesson', $lessonId, ParameterType::INTEGER);
         $q->setQuery((string) $q . ' FOR UPDATE');
         $row = $this->db->setQuery($q)->loadObject();
         if ($row && (int) $row->source_revision !== (int) $lesson->source_revision) {
@@ -177,7 +178,8 @@ final class VideoProgressService
             $this->purgeExpiredSessions($now);
             $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_progress_sessions')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')->where('expires_at > :now')
-                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':now', $date);
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                    ->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':now', $date);
             if ((int) $this->db->setQuery($q)->loadResult() >= 32) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_SESSION_LIMIT', 429);
             }
@@ -212,7 +214,10 @@ final class VideoProgressService
         if (!preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $id)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_progress_sessions')->where('id = :id')->bind(':id', $id);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_progress_sessions')
+            ->where('id = :id')->bind(':id', $id);
         if ($lock) {
             $q->setQuery((string) $q . ' FOR UPDATE');
         }
@@ -339,11 +344,20 @@ final class VideoProgressService
             $progress->revision = (int) $progress->revision + 1;
             $q = $this->db->createQuery()->update('#__jlms_lesson_progress')->set('coverage_json = :coverage')
                 ->set('covered_ms = :covered')->set('resume_ms = :resume')->set('state = :state')->set($progress->completed_at === null ? 'completed_at = NULL' : 'completed_at = :completed')
-                ->set('last_activity_at = :activity')->set('revision = :revision')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
-                ->bind(':coverage', $progress->coverage_json)->bind(':covered', $progress->covered_ms, ParameterType::INTEGER)
+                ->set('last_activity_at = :activity')
+                    ->set('revision = :revision')
+                    ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
+                ->bind(':coverage', $progress
+                    ->coverage_json)
+                    ->bind(':covered', $progress
+                    ->covered_ms, ParameterType::INTEGER)
                 ->bind(':resume', $progress->resume_ms, ParameterType::INTEGER)->bind(':state', $progress->state)
-                ->bind(':activity', $progress->last_activity_at)->bind(':revision', $progress->revision, ParameterType::INTEGER)
-                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
+                ->bind(':activity', $progress
+                    ->last_activity_at)
+                    ->bind(':revision', $progress
+                    ->revision, ParameterType::INTEGER)
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                    ->bind(':lesson', $lessonId, ParameterType::INTEGER);
             if ($progress->completed_at !== null) {
                 $q->bind(':completed', $progress->completed_at);
             }
@@ -360,7 +374,9 @@ final class VideoProgressService
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
             if ($newCourseCompletion) {
                 $courseId = (int) $version->course_id;
-                $q = $this->db->createQuery()->select('c.title, c.language')->from('#__jlms_courses AS c')->where('c.id = :id')
+                $q = $this->db->createQuery()
+                    ->select('c.title, c.language')
+                    ->from('#__jlms_courses AS c')->where('c.id = :id')
                     ->bind(':id', $courseId, ParameterType::INTEGER);
                 $course = $this->db->setQuery($q)->loadObject();
                 $name = trim((string) $actor->name);
