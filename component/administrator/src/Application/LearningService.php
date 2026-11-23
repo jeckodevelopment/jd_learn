@@ -81,7 +81,12 @@ final class LearningService
         $window = CourseSchedule::read($course);
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
         $base = $startedAt ? new \DateTimeImmutable($startedAt, new \DateTimeZone('UTC')) : $now;
-        foreach ([$window['publish_up'], $window['starts_at'], $edition->starts_at, $enrollmentStartsAt] as $candidate) {
+        foreach ([
+            $window['publish_up'],
+            $window['starts_at'],
+            $edition->starts_at,
+            $enrollmentStartsAt,
+        ] as $candidate) {
             if ($candidate) {
                 $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
                 if ($date > $base) {
@@ -107,7 +112,13 @@ final class LearningService
                 }
             }
             $close = null;
-            foreach ([$lesson->publish_down, $window['publish_down'], $window['ends_at'], $edition->ends_at, $enrollmentEndsAt] as $candidate) {
+            foreach ([
+                $lesson->publish_down,
+                $window['publish_down'],
+                $window['ends_at'],
+                $edition->ends_at,
+                $enrollmentEndsAt,
+            ] as $candidate) {
                 if ($candidate) {
                     $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
                     if (!$close || $date < $close) {
@@ -679,7 +690,11 @@ final class LearningService
                     ->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
             $audio = $this->db->setQuery($audioQuery, 0, 2)->loadObjectList();
             if (count($audio) >= 1) {
-                $lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->title, 'mime' => $audio[0]->mime_type];
+                $lesson->audio_attachment = [
+                    'id' => (int) $audio[0]->id,
+                    'title' => $audio[0]->title,
+                    'mime' => $audio[0]->mime_type,
+                ];
             }
         }
         $audioTranscript = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
@@ -736,7 +751,12 @@ final class LearningService
                 $last = $this->lesson((int) $version->id, $lessonId);
                 $this->assertLessonAvailable($last, $enrollment);
             } catch (\RuntimeException $error) {
-                if (!in_array($error->getMessage(), ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LESSON_NOT_YET_AVAILABLE', 'COM_JLMS_LESSON_CLOSED'], true)) {
+                if (!in_array($error->getMessage(), [
+                    'COM_JLMS_RESOURCE_NOT_FOUND',
+                    'COM_JLMS_LEARNING_DENIED',
+                    'COM_JLMS_LESSON_NOT_YET_AVAILABLE',
+                    'COM_JLMS_LESSON_CLOSED',
+                ], true)) {
                     throw $error;
                 }
                 $lessonId = 0;
@@ -784,7 +804,10 @@ final class LearningService
             if (!in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule !== 'manual') {
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
-            $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
+            $this->ledger($actor, 'lesson.complete', $key, [
+                'enrollment_id' => $enrollmentId,
+                'lesson_id' => $lessonId,
+            ], $enrollmentId);
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
