@@ -39,7 +39,13 @@ $service = file_get_contents(__DIR__ . '/../component/administrator/src/Applicat
 $mailQueue = file_get_contents(__DIR__ . '/../component/administrator/src/Infrastructure/MailQueue.php');
 $schema = file_get_contents(__DIR__ . '/../component/administrator/sql/install.mysql.utf8mb4.sql');
 
-mail08Assert(str_contains($controller, "'mutation_id' => \\Jlms\\Component\\Jlms\\Administrator\\Application\\CourseMessageMutation::create()"), 'New preview must persist a fresh mutation');
+mail08Assert(
+    str_contains(
+        $controller,
+        "'mutation_id' => " . '\\Jlms\\Component\\Jlms\\Administrator\\Application\\CourseMessageMutation::create()'
+    ),
+    'New preview must persist a fresh mutation'
+);
 mail08Assert(str_contains($model, "\\CourseMessageMutation::valid("), 'GET must validate persisted mutation');
 mail08Assert(str_contains($model, "\\CourseMessageMutation::create()"), 'Legacy session must be upgraded once');
 mail08Assert(str_contains($model, "'mutation_id'] = " . '$preview' . "['mutation_id']"), 'GET must pass persisted mutation to view');
