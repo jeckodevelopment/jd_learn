@@ -10,8 +10,7 @@ declare(strict_types=1);
  * backwards-compatibility plugin disabled.
  */
 
-function compat6Disabled(array $rows): bool
-{
+$compat6Disabled = static function (array $rows): bool {
     if (count($rows) !== 1) {
         return false;
     }
@@ -19,7 +18,7 @@ function compat6Disabled(array $rows): bool
     return (int) $rows[0]['enabled'] === 0
         && (string) $rows[0]['element'] === 'compat6'
         && (string) $rows[0]['folder'] === 'behaviour';
-}
+};
 
 if (in_array('--self-test', $argv, true)) {
     $fixtures = [
@@ -29,7 +28,7 @@ if (in_array('--self-test', $argv, true)) {
         [false, [['enabled' => 0, 'element' => 'compat', 'folder' => 'behaviour']]],
     ];
     foreach ($fixtures as [$expected, $rows]) {
-        if (compat6Disabled($rows) !== $expected) {
+        if ($compat6Disabled($rows) !== $expected) {
             fwrite(STDERR, "SECDEV-02 compat6 negative fixture failed\n");
             exit(1);
         }
@@ -78,7 +77,7 @@ try {
         . "WHERE type = 'plugin' AND folder = 'behaviour' AND element = 'compat6'"
     );
 
-    if (!$statement || !compat6Disabled($statement->fetchAll())) {
+    if (!$statement || !$compat6Disabled($statement->fetchAll())) {
         throw new RuntimeException('Joomla 6 behaviour/compat6 must exist and be disabled');
     }
 } catch (Throwable $error) {
