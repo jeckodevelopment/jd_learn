@@ -83,29 +83,29 @@ if ($version !== '6.2.0') {
 }
 
 $paths = [];
-$process = proc_open(
-    ['git', '-C', $repository, 'ls-files', '-z', '--', 'component', 'libraries', 'plugins', 'packages'],
-    [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
-    $pipes
-);
 
-if (!is_resource($process)) {
-    throw new RuntimeException('Unable to enumerate tracked distributed PHP');
-}
+foreach (['component', 'libraries', 'plugins', 'packages'] as $folder) {
+    $base = $repository . '/' . $folder;
 
-fclose($pipes[0]);
-$output = stream_get_contents($pipes[1]);
-$errorOutput = stream_get_contents($pipes[2]);
-fclose($pipes[1]);
-fclose($pipes[2]);
+    if (!is_dir($base)) {
+        continue;
+    }
 
-if (proc_close($process) !== 0 || $output === false) {
-    throw new RuntimeException('Git inventory command failed: ' . $errorOutput);
-}
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS)
+    );
 
-foreach (explode("\0", $output) as $path) {
-    if ($path !== '' && str_ends_with($path, '.php')) {
-        $paths[] = $path;
+    foreach ($iterator as $entry) {
+        if (!$entry->isFile() || $entry->getExtension() !== 'php') {
+            continue;
+        }
+
+        $relative = substr($entry->getPathname(), strlen($repository) + 1);
+        if (str_contains($relative, '/vendor/') || str_contains($relative, '/node_modules/')) {
+            continue;
+        }
+
+        $paths[] = str_replace('\\', '/', $relative);
     }
 }
 
