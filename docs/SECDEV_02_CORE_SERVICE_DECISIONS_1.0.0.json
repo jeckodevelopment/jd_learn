@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "requirement": "SECDEV-02",
   "purpose": "Tracciabilità servizi core; non prova l'accettazione ambiente",
   "services": [
@@ -8,161 +8,322 @@
       "service": "Categorie",
       "decision": "native",
       "rationale": "com_categories gestisce tassonomia e ACL; JD Learn conserva solo associazioni ai corsi",
-      "remaining_verification": "Gerarchia, lingua, permessi e riordino end-to-end"
+      "remaining_verification": "Gerarchia, lingua, permessi e riordino end-to-end",
+      "implementation_evidence": [
+        "component/administrator/src/Application/CatalogService.php",
+        "tests/joomla-categories.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-categories.php"
+      ]
     },
     {
       "id": "CORE-02",
       "service": "Utenti",
       "decision": "native",
       "rationale": "com_users gestisce identità, sessioni, MFA e recupero; nessuna gestione parallela delle credenziali",
-      "remaining_verification": "MFA e provider esterni reali"
+      "remaining_verification": "MFA e provider esterni reali",
+      "implementation_evidence": [
+        "component/administrator/src/Application/LearningService.php",
+        "tests/joomla-learning.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-learning.php"
+      ]
     },
     {
       "id": "CORE-03",
       "service": "Gruppi e livelli",
       "decision": "native",
       "rationale": "Joomla gestisce gruppi e viewing access levels; le iscrizioni sono relazioni didattiche, non nuove identità",
-      "remaining_verification": "Rimozione accessi tra tutti i contesti"
+      "remaining_verification": "Rimozione accessi tra tutti i contesti",
+      "implementation_evidence": [
+        "component/administrator/src/Application/LearningService.php",
+        "tests/joomla-learning.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-learning.php"
+      ]
     },
     {
       "id": "CORE-04",
       "service": "ACL",
       "decision": "native_plus_domain",
       "rationale": "Joomla authorise e asset ACL controllano permessi; le regole didattiche per record sono una specializzazione applicativa",
-      "remaining_verification": "Matrice ruoli e protezioni su tutti i record"
+      "remaining_verification": "Matrice ruoli e protezioni su tutti i record",
+      "implementation_evidence": [
+        "component/administrator/src/Application/CourseEditorAccess.php",
+        "tests/joomla-editor-access.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-editor-access.php"
+      ]
     },
     {
       "id": "CORE-05",
       "service": "Layout e override",
       "decision": "native",
       "rationale": "Joomla carica layout e template override; JD Learn espone classi e asset specifici",
-      "remaining_verification": "Override di ogni vista e modulo distribuito"
+      "remaining_verification": "Override di ogni vista e modulo distribuito",
+      "implementation_evidence": [
+        "component/media/css/site.css",
+        "docs/FRONTEND_CSS.md"
+      ],
+      "automated_test_evidence": []
     },
     {
       "id": "CORE-06",
       "service": "Lingue",
       "decision": "native",
       "rationale": "Language e language override Joomla rendono l'interfaccia localizzabile; JD Learn fornisce stringhe IT/EN",
-      "remaining_verification": "Copertura totale stringhe e messaggi"
+      "remaining_verification": "Copertura totale stringhe e messaggi",
+      "implementation_evidence": [
+        "component/administrator/language/it-IT/com_jlms.ini",
+        "component/site/language/en-GB/com_jlms.ini"
+      ],
+      "automated_test_evidence": []
     },
     {
       "id": "CORE-07",
       "service": "Associazioni multilingua",
       "decision": "native",
       "rationale": "Joomla mantiene lingua e associazioni editoriali; i progressi individuali restano distinti",
-      "remaining_verification": "Combinazioni menu, filtri e fallback"
+      "remaining_verification": "Combinazioni menu, filtri e fallback",
+      "implementation_evidence": [
+        "component/administrator/src/Model/CourseModel.php",
+        "tests/joomla-associations.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-associations.php"
+      ]
     },
     {
       "id": "CORE-08",
       "service": "Privacy",
       "decision": "native_plus_domain",
       "rationale": "com_privacy orchestra richieste; il plugin JD Learn fornisce i dati del dominio didattico",
-      "remaining_verification": "Classi dati, export, cancellazione e conservazione su hosting"
+      "remaining_verification": "Classi dati, export, cancellazione e conservazione su hosting",
+      "implementation_evidence": [
+        "plugins/privacy/jdlearn/src/Extension/Jdlearn.php",
+        "tests/install-package.php"
+      ],
+      "automated_test_evidence": [
+        "tests/install-package.php"
+      ]
     },
     {
       "id": "CORE-09",
       "service": "Tag",
       "decision": "native",
       "rationale": "com_tags e le mappe native associano tag ai contenuti, senza tassonomia duplicata",
-      "remaining_verification": "Tutti i contesti e filtri previsti"
+      "remaining_verification": "Tutti i contesti e filtri previsti",
+      "implementation_evidence": [
+        "component/administrator/src/Table/CourseTable.php",
+        "component/administrator/src/Infrastructure/EditorialInstaller.php"
+      ],
+      "automated_test_evidence": []
     },
     {
       "id": "CORE-10",
       "service": "Campi personalizzati",
       "decision": "native",
       "rationale": "com_fields gestisce gruppi e ACL; JD Learn associa contesti e visualizzazione dei valori",
-      "remaining_verification": "ACL docente e lezione, lingua e accesso"
+      "remaining_verification": "ACL docente e lezione, lingua e accesso",
+      "implementation_evidence": [
+        "component/administrator/src/Extension/JlmsComponent.php",
+        "tests/joomla-course-fields.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-course-fields.php"
+      ]
     },
     {
       "id": "CORE-11",
       "service": "Editor e content plugin",
       "decision": "native",
       "rationale": "Joomla configura editor e prepara content plugin; JD Learn valida contenuti didattici e permessi",
-      "remaining_verification": "Eventi plugin e filtro HTML per ogni campo"
+      "remaining_verification": "Eventi plugin e filtro HTML per ogni campo",
+      "implementation_evidence": [
+        "component/administrator/src/Application/CurriculumService.php",
+        "tests/joomla-curriculum.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-curriculum.php"
+      ]
     },
     {
       "id": "CORE-12",
       "service": "Media Manager",
       "decision": "native_plus_domain",
       "rationale": "Media Manager seleziona asset pubblici; storage protetto JD Learn gestisce contenuti riservati",
-      "remaining_verification": "Provider media e assenza di fuga allegati"
+      "remaining_verification": "Provider media e assenza di fuga allegati",
+      "implementation_evidence": [
+        "component/administrator/src/Application/CourseArtwork.php",
+        "tests/joomla-course-presentation.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-course-presentation.php"
+      ]
     },
     {
       "id": "CORE-13",
       "service": "Menu e router",
       "decision": "native",
       "rationale": "Router, menu, moduli e breadcrumb nativi; JD Learn definisce soltanto le viste del componente",
-      "remaining_verification": "URL diretti, breadcrumb e menu multilingua"
+      "remaining_verification": "URL diretti, breadcrumb e menu multilingua",
+      "implementation_evidence": [
+        "component/administrator/src/Application/CatalogService.php",
+        "tests/categories-http.py"
+      ],
+      "automated_test_evidence": [
+        "tests/categories-http.py"
+      ]
     },
     {
       "id": "CORE-14",
       "service": "Smart Search",
       "decision": "native_plus_domain",
       "rationale": "com_finder indicizza contenuti pubblicabili tramite plugin del componente",
-      "remaining_verification": "Invalidazione indice per ACL, stato e lingua"
+      "remaining_verification": "Invalidazione indice per ACL, stato e lingua",
+      "implementation_evidence": [
+        "plugins/finder/jlms/src/Extension/Jlms.php",
+        "tests/install-package.php"
+      ],
+      "automated_test_evidence": [
+        "tests/install-package.php"
+      ]
     },
     {
       "id": "CORE-15",
       "service": "Workflow",
       "decision": "native_plus_domain",
       "rationale": "Workflow Joomla gestisce transizioni editoriali dove previste; la pubblicazione didattica resta separata",
-      "remaining_verification": "Transizioni e autorizzazioni per tutte le entità"
+      "remaining_verification": "Transizioni e autorizzazioni per tutte le entità",
+      "implementation_evidence": [
+        "component/administrator/src/Application/PublicationService.php",
+        "tests/joomla-publication.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-publication.php"
+      ]
     },
     {
       "id": "CORE-16",
       "service": "Content History",
       "decision": "native_plus_domain",
       "rationale": "Storico e checkout Joomla proteggono contenuti editoriali; versioni assegnate sono snapshot didattici",
-      "remaining_verification": "Ripristini concorrenti e non mutazione assegnazioni"
+      "remaining_verification": "Ripristini concorrenti e non mutazione assegnazioni",
+      "implementation_evidence": [
+        "component/administrator/src/Model/CourseModel.php",
+        "tests/joomla-programme-restore.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-programme-restore.php"
+      ]
     },
     {
       "id": "CORE-17",
       "service": "User Actions Log",
       "decision": "native_plus_domain",
       "rationale": "Plugin actionlog Joomla registra attività amministrativa; audit didattico separato evita uso improprio del log core",
-      "remaining_verification": "Completezza eventi e politiche retention"
+      "remaining_verification": "Completezza eventi e politiche retention",
+      "implementation_evidence": [
+        "component/administrator/src/Infrastructure/AssessmentAudit.php",
+        "tests/joomla-enrollment-state.php",
+        "plugins/actionlog/jdlearn/src/Extension/Jdlearn.php",
+        "plugins/actionlog/jdlearn/installer.php",
+        "component/administrator/src/Application/PublicationService.php",
+        "tests/joomla-publication.php",
+        "packages/pkg_jlms.xml"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-enrollment-state.php",
+        "tests/joomla-publication.php"
+      ]
     },
     {
       "id": "CORE-18",
       "service": "Mail Templates",
       "decision": "native_plus_domain",
       "rationale": "Mailer e Mail Templates Joomla gestiscono invii e testi; la coda didattica mantiene retry/idempotenza",
-      "remaining_verification": "SMTP e template multilingua in ambiente"
+      "remaining_verification": "SMTP e template multilingua in ambiente",
+      "implementation_evidence": [
+        "component/administrator/src/Infrastructure/MailTemplateInstaller.php",
+        "tests/joomla-smoke.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-smoke.php"
+      ]
     },
     {
       "id": "CORE-19",
       "service": "Scheduled Tasks",
       "decision": "native_plus_domain",
       "rationale": "Scheduler Joomla attiva task plugin; nessun cron scheduler proprietario obbligatorio",
-      "remaining_verification": "Ripetizioni, errori e notifiche duplicate"
+      "remaining_verification": "Ripetizioni, errori e notifiche duplicate",
+      "implementation_evidence": [
+        "plugins/task/jlms/src/Extension/Jlms.php",
+        "tests/joomla-quiz-attempts.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-quiz-attempts.php"
+      ]
     },
     {
       "id": "CORE-20",
       "service": "Interfaccia admin",
       "decision": "native",
       "rationale": "Form, toolbar, lista, filtri e autorizzazioni Joomla; solo servizi di dominio aggiunti",
-      "remaining_verification": "Batch, errori e recupero input nei percorsi residui"
+      "remaining_verification": "Batch, errori e recupero input nei percorsi residui",
+      "implementation_evidence": [
+        "component/administrator/tmpl/course/edit.php",
+        "tests/joomla-courses-ui.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-courses-ui.php"
+      ]
     },
     {
       "id": "CORE-21",
       "service": "Asset e cache",
       "decision": "native_plus_domain",
       "rationale": "WAM e sessione Joomla; le cache personali devono essere private/no-store",
-      "remaining_verification": "Cache cross-account su tutti gli endpoint"
+      "remaining_verification": "Cache cross-account su tutti gli endpoint",
+      "implementation_evidence": [
+        "component/media/joomla.asset.json",
+        "tests/dashboard-http.py"
+      ],
+      "automated_test_evidence": [
+        "tests/dashboard-http.py"
+      ]
     },
     {
       "id": "CORE-22",
       "service": "Installazione e update",
       "decision": "native",
       "rationale": "Installer, manifest e update server Joomla; migrazioni versionate JD Learn",
-      "remaining_verification": "Aggiornamenti e rollback su ambienti target"
+      "remaining_verification": "Aggiornamenti e rollback su ambienti target",
+      "implementation_evidence": [
+        "component/script.php",
+        "tests/install-package.php"
+      ],
+      "automated_test_evidence": [
+        "tests/install-package.php"
+      ]
     },
     {
       "id": "CORE-23",
       "service": "Plugin ed eventi",
       "decision": "native_plus_domain",
       "rationale": "Event dispatcher e plugin group Joomla; JD Learn definisce eventi e contratti dominio video",
-      "remaining_verification": "Payload degli eventi e compatibilità plugin terzi"
+      "remaining_verification": "Payload degli eventi e compatibilità plugin terzi",
+      "implementation_evidence": [
+        "libraries/jlms/src/Video/VideoProviderRegistry.php",
+        "tests/joomla-smoke.php"
+      ],
+      "automated_test_evidence": [
+        "tests/joomla-smoke.php"
+      ]
     }
   ]
 }
