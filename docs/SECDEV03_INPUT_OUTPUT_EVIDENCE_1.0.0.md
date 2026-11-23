@@ -1,6 +1,6 @@
 # SECDEV-03 — gate input, query e output (1.0.0)
 
-**Stato: verifica incrementale, non chiusura di SECDEV-03 e non penetration test.** La baseline non include un esportatore CSV applicativo (import/export massivo rimandato); il rischio spreadsheet injection sarà riesaminato prima di introdurre un produttore CSV.
+**Stato: perimetro software implementato per 1.0.0, previa CI verde della PR di chiusura; collaudo Joomla/manuale e gate di rilascio separati, NON penetration test.** La baseline non include un esportatore CSV applicativo (import/export massivo rimandato); il rischio spreadsheet injection sarà riesaminato prima di introdurre un produttore CSV.
 
 ## Evidenze verificabili in CI
 
@@ -15,15 +15,17 @@
 
 `tests/secdev03-input-output-gate.py`, eseguito in `tools/check.py`, impedisce di perdere questi test (compresa la prova SQL su database reale con parametri associati) oppure introdurre un produttore CSV in controller, servizi, modelli, template o plugin senza revisione specifica. La possibilità di caricare o scaricare un allegato CSV come file protetto non costituisce un esportatore di dati tabellari generati dall'applicazione; la policy MIME degli allegati è separata. Il controllo non riscrive dati, non accede a segreti e non attribuisce un risultato a endpoint non provati.
 
-## Per chiudere formalmente il requisito
+## Perimetro approvato e separazione fra sviluppo e collaudo
 
-- Ricognizione completa dei controlli server-side e delle query dinamiche su controller, servizi, modelli, plugin e task inclusi nella candidata finale, con findings e correzioni.
-- Test negativi E2E per i principali confini di autorizzazione e mutazione, inclusi payload malevoli su parametri di ricerca, campi HTML/URL e campi riservati.
-- Evidenza distinta di template e override effettivamente installati, configurazioni provider e hosting Joomla reale.
-- Riesame del rischio CSV quando una funzione di esportazione verrà proposta.
-- Registrazione dello stato in `docs/FUNCTIONAL_CRITERIA_1.0.0.json` solo dopo evidenze complete e CI del commit finale.
+SECDEV-03 valuta l'implementazione **del pacchetto JD Learn 1.0.0**: acquisizione e validazione server, campi modificabili, costruzione query, HTML generato e test di regressione. I controlli implementativi fanno riferimento al codice e alle suite seguenti:
 
-Non marcare `SECDEV-03/criterion_01/02/04` come `implemented` sulla base della sola presenza del gate. `criterion_03` resta non completato nella matrice fino alla review trasversale.
+1. `tests/sec-p1-controller-gates.py` verifica l'inventario e le protezioni method/CSRF dei 37 controller; `tests/sec-p1-cross-surface-gate.py` cataloga i 10 plugin, gli eventi e i tre task scheduler; il threat model di riferimento è `docs/SEC_P1_THREAT_MODEL_1.0.0.md`.
+2. `tests/sec-p1-systematic-source-gate.py` scandisce i PHP distribuiti per sink dinamici, deserializzazione, accesso diretto a dati non attendibili e processi/trasporti HTTP fuori allowlist; `tests/secdev07-sast.py` integra Semgrep locale su PHP, JS e Python.
+3. `tests/joomla-publication.php`, `tests/catalog-literal-search.php` e `tests/joomla-pathways.php` dimostrano binding/escaping SQL e rifiuto di identificativi SQL-like su database reali; `tests/joomla-course-presentation.php`, `tests/joomla-teachers.php`, `tests/joomla-pathways.php` e `tests/joomla-curriculum.php` esercitano filtri HTML, whitelist e mass assignment.
+4. `tests/secdev03-input-output-gate.py` impedisce l'introduzione di un produttore di CSV senza mitigazione dedicata. L'**export tabellare CSV applicativo è escluso dal runtime 1.0.0**, pertanto la prova è il rilevamento preventivo dei sink, non una simulazione di un export inesistente.
+5. `tests/secdev03-implementation-coverage.py`, eseguito dal preflight, collega questi controlli a CI, inventaria tutti i sorgenti PHP distribuiti, i controller/plugin e i template e rifiuta il passaggio diretto di `$_GET`/`$_POST`/`$_REQUEST`/`$_COOKIE` a query ed output HTML. Le fixture negative verificano che il controllo stesso non sia inerte.
+
+Questa è una verifica **implementativa software**: non certifica l'assenza assoluta di vulnerabilità, non esegue penetration test e non comprende override di template esterni al pacchetto, server, plugin di terze parti o configurazione dell'hosting. La revisione indipendente, la matrice completa di ruoli/oggetti in un'installazione reale e il collaudo operativo rimangono nelle attività manuali dell'utente e nei gate SEC-P2/SEC-P5; **non sono residui di sviluppo di SECDEV-03**. La chiusura implementativa non modifica `Accettazione Joomla`, che resta `Non eseguita`. Ogni nuova superficie sarà soggetta ai gate antiregressione e a revisione prima del rilascio.
 
 ## Rafforzamento perimetro di controllo (23/11/2026)
 
