@@ -39,7 +39,7 @@ jobs:
               match=pattern.match(initial)
               if not match:
                   continue
-              updated=(match.group(1)+match.group(3)+'\n'+match.group(2)+initial[match.end():])
+              updated=(match.group(1)+match.group(2)+match.group(3).replace('/**','/*',1)+initial[match.end():])
               old=audit(path)
               path.write_text(updated)
               lint=subprocess.run(['php','-l',str(path)],capture_output=True)
