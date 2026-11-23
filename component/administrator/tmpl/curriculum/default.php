@@ -82,8 +82,10 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <?php if (!$version) : ?>
  <p id="jlms-publication-notice" class="alert alert-info"><?= Text::_($this->publicationNotice) ?></p>
  <form method="post" id="jlms-version-form" action="<?= $link('index.php?option=com_jlms') ?>">
-        <?php $hidden(['course_id' => $course->id,'revision' => $course->revision]); ?><input type="hidden" name="task" value="curriculum.createVersion">
-        <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_CREATE_DRAFT_VERSION') ?></button>
+        <?php $hidden(['course_id' => $course->id,'revision' => $course->revision]); ?><input type="hidden"
+  name="task" value="curriculum.createVersion">
+        <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary"
+  type="submit"><?= Text::_('COM_JLMS_CREATE_DRAFT_VERSION') ?></button>
  </form>
  <?php else : ?>
  <div class="jlms-programme-layout"><div class="jlms-programme-main">
@@ -96,7 +98,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
      <?php if (!$this->editable) :
             ?><p class="alert alert-info"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php
      endif; ?>
- <p id="jlms-order-status" role="status" aria-live="polite" data-reload="<?= Text::_('COM_JLMS_PROGRAMME_RELOAD') ?>" data-saving="<?= Text::_('COM_JLMS_PROGRAMME_SAVING') ?>" data-error="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_FAILED') ?>"></p>
+ <p id="jlms-order-status" role="status" aria-live="polite"
+  data-reload="<?= Text::_('COM_JLMS_PROGRAMME_RELOAD') ?>" data-saving="<?= Text::_('COM_JLMS_PROGRAMME_SAVING') ?>" data-error="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_FAILED') ?>"></p>
      <?php if ($this->editable && $this->outline['modules']) :
             ?><p class="small text-muted"><?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?></p><?php
      endif; ?>
@@ -109,7 +112,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
    <div class="jlms-module-content">
             <?php if ($this->editable) :
                 ?><div class="jlms-programme-buttons">
-     <button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button" draggable="true" data-drag-handle="module" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $module->title)) ?>" title="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button>
+     <button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button"
+  draggable="true" data-drag-handle="module" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $module->title)) ?>" title="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button>
      <a class="btn btn-sm btn-secondary" href="<?= $link($view . '&edit_module=' . (int) $module->id) ?>#jlms-module-form"><?= Text::_('COM_JLMS_PROGRAMME_EDIT_MODULE') ?></a>
                 <?php $actions('module', $module, $modulePosition, count($this->outline['modules'])); ?>
     </div>
@@ -121,7 +125,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             <?php foreach ($lessons as $position => $lesson) : ?>
      <li id="jlms-lesson-<?= (int) $lesson->id ?>" data-item-id="<?= (int) $lesson->id ?>">
                 <?php if ($this->editable) :
-                    ?><button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button" draggable="true" data-drag-handle="lesson" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $lesson->title)) ?>" title="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button><?php
+                    ?><button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button"
+  draggable="true" data-drag-handle="lesson" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $lesson->title)) ?>" title="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button><?php
                 endif; ?>
       <div class="jlms-lesson-label">
                 <?php if (($this->editable && ($lesson->kind !== 'quiz' || $this->canQuiz)) || (!$this->editable && $this->canMaterials && $lesson->provider_key === 'html5')) :
@@ -165,9 +170,12 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
    <p><?= Text::_($this->teachingRules['mode'] === 'consultation' ? 'COM_JLMS_TEACHING_MODE_CONSULTATION_HELP' : 'COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
    <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p>
                 <?php if ($this->editable && $this->rulesForm) : ?>
-   <form id="jlms-teaching-rules-form" class="form-validate" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
-                    <?= $this->rulesForm->renderFieldset('details') ?><input type="hidden" name="task" value="curriculum.saveTeachingRules">
-                    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button>
+   <form id="jlms-teaching-rules-form" class="form-validate"
+  method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+                    <?= $this->rulesForm->renderFieldset('details') ?><input type="hidden"
+  name="task" value="curriculum.saveTeachingRules">
+                    <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary"
+  type="submit"><?= Text::_('JSAVE') ?></button>
     <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
    </form>
                 <?php else :
@@ -206,7 +214,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     <button class="btn btn-secondary mb-2" type="button"><?= Text::_('COM_JLMS_VIDEO_DURATION_RETRY') ?></button>
    </section>
             <?php endif; ?>
-            <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('JSAVE') ?></button>
+            <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary"
+  type="submit"><?= Text::_('JSAVE') ?></button>
    <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
   </form>
             <?php if (!$isModule && $this->canMaterials && $this->selectedItem) : ?>
@@ -220,16 +229,20 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
      <p><?= Text::_('COM_JLMS_VIDEO_FILE_NOTICE') ?> <?= $lesson->media_asset_id ? Text::_('COM_JLMS_VIDEO_FILE_ATTACHED') : Text::_('COM_JLMS_VIDEO_FILE_MISSING') ?></p>
             <?php if ($this->editable) : ?>
      <form id="jlms-video-upload-<?= (int) $lesson->id ?>" method="post" enctype="multipart/form-data" action="<?= $link('index.php?option=com_jlms') ?>">
-                <?php $hidden($scope + ['lesson_id' => $lesson->id]); ?><input type="hidden" name="task" value="videofile.upload">
+                <?php $hidden($scope + ['lesson_id' => $lesson->id]); ?><input type="hidden"
+  name="task" value="videofile.upload">
       <label for="jlms-video-input-<?= (int) $lesson->id ?>"><?= Text::_('COM_JLMS_VIDEO_FILE_UPLOAD') ?></label>
       <input id="jlms-video-input-<?= (int) $lesson->id ?>" name="jform[upload]" type="file" accept="video/mp4,.mp4" required>
-                <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('JUPLOAD') ?></button>
+                <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary"
+  type="submit"><?= Text::_('JUPLOAD') ?></button>
      </form>
             <?php endif; ?>
             <?php if ($lesson->media_asset_id) : ?>
      <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
-                <?php $hidden($scope + ['lesson_id' => $lesson->id]); ?><input type="hidden" name="task" value="videofile.scan">
-                <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_VIDEO_FILE_SCAN') ?></button>
+                <?php $hidden($scope + ['lesson_id' => $lesson->id]); ?><input type="hidden"
+  name="task" value="videofile.scan">
+                <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary"
+  type="submit"><?= Text::_('COM_JLMS_VIDEO_FILE_SCAN') ?></button>
      </form>
             <?php endif; ?>
     </section>
@@ -250,12 +263,16 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     ?>
  <section class="jlms-focused-editor" id="jlms-item-action"><h2 class="h3"><?= Text::_($heading) ?>: <?= $this->escape($item->title) ?></h2>
  <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
-            <?php $hidden($scope + ['id' => $item->id,'revision' => $item->revision]); ?><input type="hidden" name="task" value="<?= $kind . '.' . $operation ?>">
+            <?php $hidden($scope + ['id' => $item->id,'revision' => $item->revision]); ?><input type="hidden"
+  name="task" value="<?= $kind . '.' . $operation ?>">
             <?php if ($operation === 'duplicate') :
-                ?><label for="jlms-copy-title"><?= Text::_('COM_JLMS_COPY_TITLE') ?></label><input id="jlms-copy-title" class="form-control" name="jform[title]" maxlength="255" required value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $item->title), 0, 255)) ?>"><?php
+                ?><label for="jlms-copy-title"><?= Text::_('COM_JLMS_COPY_TITLE') ?></label><input id="jlms-copy-title"
+  class="form-control" name="jform[title]" maxlength="255" required
+  value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $item->title), 0, 255)) ?>"><?php
             endif; ?>
             <?php if ($kind === 'lesson' && in_array($operation, ['duplicate','move'], true)) : ?>
-   <label for="jlms-target-module"><?= Text::_('COM_JLMS_COPY_DESTINATION_MODULE') ?></label><select id="jlms-target-module" name="jform[module_id]" class="form-select" required>
+   <label for="jlms-target-module"><?= Text::_('COM_JLMS_COPY_DESTINATION_MODULE') ?></label><select id="jlms-target-module"
+  name="jform[module_id]" class="form-select" required>
                 <?php foreach ($this->outline['modules'] as $destination) :
                     ?><option value="<?= (int) $destination->id ?>"<?= (int) $destination->id === (int) $item->module_id ? ' selected' : '' ?>><?= $this->escape($destination->title) ?></option><?php
                 endforeach; ?>
@@ -267,9 +284,11 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                 <?php $hidden(['direction' => $direction]); ?><p><?= Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></p>
             <?php endif; ?>
             <?php if ($operation === 'delete') :
-                ?><p><?= Text::_($kind === 'module' ? 'COM_JLMS_DELETE_EMPTY_MODULE' : 'COM_JLMS_CONFIRM_DELETE_LESSON') ?></p><label><input type="checkbox" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_CONFIRM_DELETE') ?></label><?php
+                ?><p><?= Text::_($kind === 'module' ? 'COM_JLMS_DELETE_EMPTY_MODULE' : 'COM_JLMS_CONFIRM_DELETE_LESSON') ?></p><label><input type="checkbox"
+  name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_CONFIRM_DELETE') ?></label><?php
             endif; ?>
-  <div class="jlms-programme-buttons"><?= HTMLHelper::_('form.token') ?><button class="btn <?= $operation === 'delete' ? 'btn-danger' : 'btn-primary' ?>" type="submit"><?= Text::_($heading) ?></button><a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a></div>
+  <div class="jlms-programme-buttons"><?= HTMLHelper::_('form.token') ?><button class="btn <?= $operation === 'delete' ? 'btn-danger' : 'btn-primary' ?>" type="submit"><?= Text::_($heading) ?></button><a class="btn btn-secondary"
+  href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a></div>
  </form></section>
      <?php endif; ?>
  </div><aside class="jlms-programme-sidebar" aria-label="<?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?>">
@@ -309,7 +328,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                 ?><option value="<?= (int) $transition->id ?>"><?= $this->escape($transitionDisplay($transition)) ?></option><?php
             endforeach; ?>
   </select>
-            <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
+            <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit"
+  type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
                 ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
             elseif ($transitionAction($this->transitions[0]) === 'review') :
                 ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
@@ -326,7 +346,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <form method="post" id="jlms-edit-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">
             <?php $hidden(['course_id' => $course->id, 'revision' => $course->revision]); ?>
   <input type="hidden" name="task" value="curriculum.createVersion">
-            <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_EDIT_PROGRAMME') ?></button>
+            <?= HTMLHelper::_('form.token') ?><button class="btn btn-primary"
+  type="submit"><?= Text::_('COM_JLMS_EDIT_PROGRAMME') ?></button>
  </form>
      <?php endif; ?>
      <?php if ($this->publicationNotice !== '') :
@@ -334,7 +355,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
      endif; ?>
  </section>
      <?php if ($this->canMaterials) :
-            ?><p><a id="jlms-manage-materials" class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p><?php
+            ?><p><a id="jlms-manage-materials" class="btn btn-secondary"
+  href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p><?php
      endif; ?>
  <details class="jlms-programme-versions"><summary><?= Text::_('COM_JLMS_VERSIONS') ?></summary><nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>"><ul>
      <?php foreach ($this->outline['versions'] as $entry) :
@@ -346,9 +368,13 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <p><?= Text::sprintf('COM_JLMS_PROGRAMME_RESTORE_NOTICE', (int)$version->version_no) ?></p>
   <p><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_KEEP_DRAFTS') ?></p>
   <form method="post" id="jlms-restore-programme-form" action="<?= $link('index.php?option=com_jlms') ?>">
-            <?php $hidden($scope + ['revision' => $course->revision]); ?><input type="hidden" name="task" value="curriculum.restoreVersion">
-   <label for="jlms-restore-confirm"><input type="checkbox" id="jlms-restore-confirm" name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_RESTORE_CONFIRM') ?></label>
-            <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary mt-2" type="submit"><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_ACTION') ?></button>
+            <?php $hidden($scope + ['revision' => $course->revision]); ?><input type="hidden"
+  name="task" value="curriculum.restoreVersion">
+   <label for="jlms-restore-confirm"><input type="checkbox"
+  id="jlms-restore-confirm" name="jform[confirmation]"
+  value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_RESTORE_CONFIRM') ?></label>
+            <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary mt-2"
+  type="submit"><?= Text::_('COM_JLMS_PROGRAMME_RESTORE_ACTION') ?></button>
   </form>
  </details>
      <?php endif; ?>
@@ -356,10 +382,14 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <details id="jlms-duplicate-course"><summary><?= Text::_('COM_JLMS_DUPLICATE_COURSE') ?></summary>
  <p><?= Text::_('COM_JLMS_DUPLICATE_COURSE_NOTICE') ?></p>
  <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
-            <?php $hidden($scope + ['revision' => $course->revision]); ?><input type="hidden" name="task" value="curriculum.duplicateCourse">
+            <?php $hidden($scope + ['revision' => $course->revision]); ?><input type="hidden"
+  name="task" value="curriculum.duplicateCourse">
   <label for="jlms-copy-course-title"><?= Text::_('COM_JLMS_COPY_TITLE') ?></label>
-  <input id="jlms-copy-course-title" class="form-control" name="jform[title]" maxlength="255" required value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $course->title), 0, 255)) ?>">
-            <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?= Text::_('COM_JLMS_DUPLICATE_COURSE') ?></button>
+  <input id="jlms-copy-course-title" class="form-control"
+  name="jform[title]" maxlength="255" required
+  value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $course->title), 0, 255)) ?>">
+            <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary"
+  type="submit"><?= Text::_('COM_JLMS_DUPLICATE_COURSE') ?></button>
  </form></details>
      <?php endif; ?>
      <?php if ($this->editable) : ?>
@@ -382,7 +412,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
 </aside></div>
      <?php if ($this->editable) : ?>
  <form id="jlms-reorder-form" method="post" action="<?= $link('index.php?option=com_jlms') ?>" hidden>
-            <?php $hidden($scope + ['id' => 0,'direction' => 'up','kind' => 'module','module_id' => 0]); ?><input type="hidden" name="task" value="module.reorder"><?= HTMLHelper::_('form.token') ?>
+            <?php $hidden($scope + ['id' => 0,'direction' => 'up','kind' => 'module','module_id' => 0]); ?><input type="hidden"
+  name="task" value="module.reorder"><?= HTMLHelper::_('form.token') ?>
  </form>
      <?php endif; ?>
  <?php endif; ?>
