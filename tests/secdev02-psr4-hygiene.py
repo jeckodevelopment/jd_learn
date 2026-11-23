@@ -116,6 +116,8 @@ def main() -> int:
         return 2
     print(f"SECDEV-02: checked {total} PSR-4-mapped PHP files; "
           f"pre-existing/current findings={sum(current.values())}; new violations={sum(delta.values())}")
+    for (path, code), count in sorted(current.items()):
+        print(f"PHP audit finding: {path}: {code} ({count})")
     for (path, code), count in sorted(delta.items()):
         print(f"New {code}: {path} ({count})", file=sys.stderr)
     return 1 if delta else 0
