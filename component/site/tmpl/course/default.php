@@ -64,7 +64,8 @@ foreach ([1, 2, 3] as $position) {
                                                                   <?php if ($this->enrollmentState['access'] === 'available' && (int) $course->delivery_enabled === 1) : ?>
    <a id="jlms-course-resume" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $this->enrollmentState['id']) ?>"><?= Text::_($this->enrollmentState['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : ($this->enrollmentState['learning_state'] === 'not_started' ? 'COM_JLMS_COURSE_BEGIN' : 'COM_JLMS_DASHBOARD_RESUME')) ?></a>
                                                                   <?php else :
-                                                                        ?><p id="jlms-course-existing-unavailable"><?= Text::_('COM_JLMS_COURSE_EXISTING_UNAVAILABLE') ?></p><?php
+                                                                        ?>
+<p id="jlms-course-existing-unavailable"><?= Text::_('COM_JLMS_COURSE_EXISTING_UNAVAILABLE') ?></p><?php
                                                                   endif; ?>
                                                               <?php elseif ($this->pendingApproval) : ?>
   <p id="jlms-course-approval-pending"><?= Text::_('COM_JLMS_COURSE_APPROVAL_PENDING') ?></p>
@@ -128,7 +129,8 @@ foreach ([1, 2, 3] as $position) {
    <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent((int)$completion['video_threshold_basis_points'])) ?></p>
    <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned'] ? 'COM_JLMS_COURSE_CERTIFICATE_PLANNED' : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
             <?php if ($completion['certificate_planned']) :
-                ?><p class="small" id="jlms-course-certificate-caveat"><?= Text::_('COM_JLMS_COURSE_CERTIFICATE_CONDITIONAL') ?></p><?php
+                ?>
+<p class="small" id="jlms-course-certificate-caveat"><?= Text::_('COM_JLMS_COURSE_CERTIFICATE_CONDITIONAL') ?></p><?php
             endif; ?>
         <?php endif; ?>
  </section>
