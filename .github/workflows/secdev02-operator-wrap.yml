@@ -1,0 +1,40 @@
+name: SECDEV-02 disposable operator wrap
+on:
+  push:
+    branches: [style/secdev02-token-aware-operators]
+    paths: [.github/workflows/secdev02-operator-wrap.yml]
+permissions:
+  contents: write
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+      - name: Install official PSR12 sniffer
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Generate only non-regressing operator wraps
+        run: python3 tools/secdev02-operator-wrap-once.py
+      - name: Check diff and package syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          mapfile -d '' changed < <(git diff --name-only -z --diff-filter=ACM -- '*.php')
+          for file in "${changed[@]}"; do php -l "$file" >/dev/null; done
+          echo "Validated ${#changed[@]} PHP files"
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- '*.php'
+          if git diff --cached --quiet; then echo "No accepted corrections"; exit 0; fi
+          git commit -m "style(SECDEV-02): safely wrap long PHP operators"
+          git push
