@@ -42,8 +42,8 @@ def validate_evidence(reference):
         # Documentation and non-PHP evidence still require an exact anchor.
         if not path.endswith(".php") or len(anchor) < 8:
             raise ValueError(f"Evidence anchor not found: {reference}")
-        token_spacing = re.compile(r"\\s*(=>|===|!==|==|!=|>=|<=|=|,)\\s*")
-        normalize = lambda text: token_spacing.sub(r"\\1", text)
+        token_spacing = re.compile(r"\s*(=>|===|!==|==|!=|>=|<=|=|,)\s*")
+        normalize = lambda text: token_spacing.sub(r"\1", text)
         normalized_anchor = normalize(anchor)
         if not any(normalized_anchor in normalize(line)
                    for line in candidate.read_text(encoding="utf-8").splitlines()):
