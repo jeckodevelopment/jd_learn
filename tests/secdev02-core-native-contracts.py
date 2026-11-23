@@ -68,7 +68,7 @@ def validate(root: Path) -> list[str]:
 
 
 def self_test() -> None:
-    assert ini_keys("A=one\nB=two\nA=three\n; A=comment\n") == {"A": 2, "B": 1}
+    assert ini_keys("AA=one\nBB=two\nAA=three\n; AA=comment\n") == {"AA": 2, "BB": 1}
     assert ini_keys("COM_JLMS=\"JD Learn\"\n# note\n") == {"COM_JLMS": 1}
     assert not ini_keys("only prose\n;ignored=true\n")
 
