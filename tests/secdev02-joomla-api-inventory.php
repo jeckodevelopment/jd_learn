@@ -24,7 +24,8 @@ $value = NativeText::_('TEST');
 $thing = new \Joomla\CMS\User\User();
 $event = new FinderEvent\AfterSaveEvent();
 $thing->get('id');
-(new \\Joomla\\CMS\\User\\User())->get('id');
+(new \Joomla\CMS\User\User())->get('id');
+(new NativeUser())?->get('id');
 PHP;
 
     $found = secdev02JoomlaTokenInventory($source);
