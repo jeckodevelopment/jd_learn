@@ -34,7 +34,8 @@ dashboard=(ROOT/'component/administrator/src/Application/DashboardService.php').
 catalog=dashboard.split('public function catalogStates(',1)[1].split('public function cards(',1)[0]
 assert "SELECT MAX(latest.id) FROM #__jlms_enrollments AS latest" in catalog
 assert 'latest.user_id = e.user_id AND latest.course_id = e.course_id' in catalog
-assert catalog.index("->where('e.id = (SELECT MAX(") < catalog.index("setQuery($query, 0, 50)")
+latest_where = re.search(r"->where\\(\\s*\\(*\\s*'e\\.id = \\(SELECT MAX\\(", catalog)
+assert latest_where is not None and latest_where.start() < catalog.index("setQuery($query, 0, 50)")
 assert (ROOT/'tests/dashboard-catalog-latest-regression.php').is_file()
 
 # DOC-07: every scheduler state gets actionable IT/EN advice, and links
