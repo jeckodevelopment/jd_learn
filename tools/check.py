@@ -1101,7 +1101,7 @@ version_notice = (ROOT/'component/administrator/src/Application/CourseVersionCha
 mail_queue = (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "select('current_version_id, delivery_enabled, state')" in migration_code
 assert "'blocked' => (int)$courseRecord->state !== 1 ? 'COM_JLMS_LEARNING_DENIED'" in migration_code
-assert migration_code.count("if ($plan['blocked']!==null)") >= 2
+assert migration_code.count("if ($plan['blocked'] !== null)") >= 2
 assert "->where('c.state = 1')->where('c.delivery_enabled = 1')" in lesson_notice
 assert "->where('c.state = 1')->where('c.delivery_enabled = 1')" in version_notice
 assert mail_queue.count("->where('c.state = 1')->where('c.delivery_enabled = 1')") >= 2
