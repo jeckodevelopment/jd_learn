@@ -114,7 +114,7 @@ assert "'COM_JLMS_COURSES', 'arrow-left'" in roster_view
 assert "'COM_JLMS_MANUAL_TITLE', 'plus'" in roster_view
 manual_view=(ROOT/'component/administrator/src/View/Manualenrollment/HtmlView.php').read_text()
 manual_template=(ROOT/'component/administrator/tmpl/manualenrollment/default.php').read_text()
-assert "view=enrollments&id=' . (int) $this->item['course']->id" in manual_view
+assert re.search(r"view=enrollments&id='\s*\.\s*\(int\)\s*\$this->item\['course'\]\s*->\s*id", manual_view)
 assert "'COM_JLMS_ENROLLMENTS_TOOLBAR_SHORT', 'arrow-left'" in manual_view
 assert 'jlms-manual-roster' not in manual_template
 assert 'view=enrollments' not in manual_template
