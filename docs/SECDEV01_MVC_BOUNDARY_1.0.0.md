@@ -12,4 +12,3 @@ La separazione fra controller, modelli, servizi e template è parte della qualit
 ## Confini della verifica
 
 Questa attestazione riguarda soltanto i sorgenti distribuiti della 1.0.0, non eventuali override del sito o plugin di terzi. Un controllo statico non certifica l'assenza di ogni comportamento scorretto; gli scenari di ruoli e visualizzazione sul sito reale saranno collaudati **in una fase distinta dall'utente**. Il gate SEC-P1 e la review dei nuovi endpoint restano obbligatori.
-
