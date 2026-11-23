@@ -193,3 +193,10 @@ Nel file `component/administrator/services/provider.php` sono stati normalizzati
 ## Template curriculum: formattazione conservativa PHP/HTML (PR #1002)
 
 Nel template `component/administrator/tmpl/curriculum/default.php` sono state distribuite su più righe le liste di attributi HTML di 27 righe, inserendo solo spazi bianchi prima degli attributi fuori dalle espressioni PHP. La lunghezza eccessiva rilevata con criterio preliminare >120 caratteri passa da **82 a 65 righe**, senza modificare nomi, valori, stringhe di traduzione, attributi, URL o struttura degli elementi. È necessario confermare lint, PHPCS per-regola e test del curriculum via CI prima del merge. Il numero PSR-12 definitivo dipende dalla verifica PHPCS sull'intero repository. SECDEV-02 e verifiche CORE-01–23/API Joomla restano aperti; collaudo manuale separato.
+
+
+## Verifica runtime della patch Joomla 6.2.0 (PR #1003)
+
+Il nuovo gate `tests/secdev02-joomla-native-runtime.php` verifica direttamente sul Joomla 6.2.0 installato dalla CI (con plugin `behaviour/compat6` disabilitato e relativo controllo DB) la risoluzione dei simboli `Joomla\\...` importati dal provider DI e dalla classe di estensione JD Learn. Controlla inoltre i metodi `Factory::getApplication/getContainer`, `ComponentHelper::getParams/filterText` e `PluginHelper::importPlugin`. Un test autonomo con fixture positive e negative blocca la perdita del controllo in CI. Un upgrade di patch Joomla richiede un aggiornamento intenzionale del pin e una nuova verifica.
+
+**Ambito dichiarato:** prova ripetibile della compatibilità di questi import e metodi sulla patch target; non è scansione AST di tutte le invocazioni Joomla, non certifica servizi di terze parti e non conclude automaticamente i quattro criteri SECDEV-02. La CI esistente prosegue nell'esercitare ACL, MVC, categorie, quiz, materiali, cron e pubblicazione; le verifiche residue CORE-01–23 con presenza di ambienti/servizi reali e i collaudi manuali restano distinti. Il debito PSR-12 di 2.654 rilievi non viene dichiarato conforme.
