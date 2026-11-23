@@ -36,7 +36,7 @@ def validate_evidence(reference):
         start = int(line_range[1])
         end = int(line_range[2] or line_range[1])
         current_text = candidate.read_text(encoding="utf-8")
-        if not start <= end <= len(current_text.splitlines()):
+        if not start <= end <= len(current_text.split("\n")):
             # A PSR-12 formatter may remove purely presentational lines.
             # For stale historic ranges, verify that the original referenced
             # source fragment still exists in the current PHP as token-equivalent
