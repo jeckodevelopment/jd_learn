@@ -87,6 +87,7 @@ jobs:
           python3 tests/secdev02-joomla-api-gate.py --self-test
           python3 tests/secdev02-joomla-api-gate.py
           php tests/secdev02-joomla-native-runtime.php --self-test
+          php tests/secdev02-joomla-api-inventory.php --self-test
           python3 tests/secdev02-psr4-hygiene.py --self-test
           python3 tests/secdev02-psr4-hygiene.py --base-ref origin/main
           python3 tests/sec-p2-dependency-gate.py
@@ -242,6 +243,8 @@ jobs:
           php tests/secdev02-compat6-disabled.php .runtime/joomla
       - name: SECDEV-02 verify native Joomla 6.2.0 API with compat6 disabled
         run: php tests/secdev02-joomla-native-runtime.php .runtime/joomla
+      - name: SECDEV-02 verify all distributed PHP Joomla static API symbols and methods
+        run: php tests/secdev02-joomla-api-inventory.php .runtime/joomla
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
