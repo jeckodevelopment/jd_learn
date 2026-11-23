@@ -4,6 +4,7 @@
 A structural check only. Joomla/ACL and cross-template acceptance remain manual.
 """
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 VIEW = (ROOT / "component/site/tmpl/course/default.php").read_text()
@@ -34,12 +35,13 @@ assert "CoursePresentation::fromSnapshot(" not in VIEW  # view model still suppl
 # Public server projection: only identifiers, titles and schedule metadata,
 # no lesson body, attachment URL, provider video details or private quiz.
 outline = SERVICE.split('public function outline(', 1)[1].split('public function publicLessonPreview', 1)[0]
-assert "->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')" in outline
+outline = re.sub(r"""(['"])\s*\.\s*\1""", '', outline)
+assert re.search(r"->select\(\s*\(*\s*'id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days'", outline)
 assert 'LessonAvailability::state(' in outline
 assert "=== 'available'" in outline and "if (!$publishable)" in outline
 assert "catch (\InvalidArgumentException $exception)" in outline
 assert "->select('id, title')" in outline
-assert "->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')" in outline
+assert re.search(r"->select\(\s*\(*\s*'id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days'", outline)
 assert 'l.body' not in outline and "l.video" not in outline
 assert "TeacherProfiles::current(" in outline
 
