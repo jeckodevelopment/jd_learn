@@ -63,10 +63,19 @@ def check() -> None:
     for marker in ("['cover_image'=>['images/cover.png']]", "['cover_alt'=>['hostile']]",
                    "['cover_alt'=>new \\stdClass()]", "invalid artwork leaves persisted pathway metadata"):
         assert marker in pathways, f"SECDEV-03 invalid artwork fixture absent: {marker}"
+    teacher_model = source("component/administrator/src/Model/TeacherModel.php")
+    links = source("component/administrator/src/Application/EditorialLinkSafety.php")
+    teacher_tests = source("tests/joomla-teachers.php")
+    assert "EditorialLinkSafety::containsSensitiveParameters($website)" in teacher_model
+    assert "public static function containsSensitiveParameters(string $url)" in links
+    for payload in ("accessToken=TEST_CREDENTIAL", "clientSecret=TEST_CREDENTIAL",
+                    "api_key=TEST_CREDENTIAL"):
+        assert payload in teacher_tests, f"SECDEV-03 teacher URL negative fixture missing: {payload}"
     # These are real Joomla model/database fixture assertions, not source-only tests.
     ci = source(".github/workflows/ci.yml")
     assert "joomla-course-presentation.php" in ci, "Joomla fixture absent from CI"
     assert "joomla-pathways.php" in ci, "Pathway negative fixture absent from CI"
+    assert "joomla-teachers.php" in ci, "Teacher sensitive URL fixture absent from CI"
     assert "php tests/catalog-literal-search.php" in ci, "SQL literal fixture absent from CI"
     publication = source("tests/joomla-publication.php")
     assert "joomla-publication.php" in ci, "Database-level catalog regression absent from CI"
