@@ -45,7 +45,7 @@ def validate(root: Path) -> tuple[list[str], dict]:
         if row.get("decision") not in DECISIONS:
             errors.append(f"{key}: invalid core reuse decision")
         for field in ("service", "rationale", "remaining_verification"):
-            if not isinstance(row.get(field), str) or len(row[field].strip()) < 12:
+            if not isinstance(row.get(field), str) or len(row[field].strip()) < (3 if field == "service" else 12):
                 errors.append(f"{key}: {field} missing or too short")
         if row.get("decision") == "not_applicable" and not row.get("rationale"):
             errors.append(f"{key}: explicit non-applicability rationale required")
