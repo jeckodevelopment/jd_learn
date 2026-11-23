@@ -151,7 +151,7 @@ for language in ("it-IT", "en-GB"):
 
 # SCR-01/card: pending approvals are scoped to the authenticated owner and
 # currently visible page, and never override an existing enrollment.
-assert "getCardPendingApprovals($this->items, $this->cardEnrollmentStates)" in view
+assert "getCardPendingApprovals($this->items,$this->cardEnrollmentStates)" in re.sub(r"\s+", "", view)
 assert "public function getCardPendingApprovals(array $items, array $enrollmentStates)" in model
 assert "getLearningService()->freshActor($identity)" in model
 assert "request.user_id = :catalogPendingOwner" in model
