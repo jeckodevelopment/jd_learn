@@ -14,7 +14,8 @@ if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [
         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'"));
     unset($fixtureDb);
 }
 
@@ -73,7 +74,8 @@ if ($mode === 'configure') {
     if (array_diff(array_keys($changes), $allowed)) {
         throw new \RuntimeException('Unexpected fixture configuration');
     }
-    $row = $db->setQuery("SELECT extension_id, params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadObject();
+    $row = $db->setQuery(("SELECT extension_id, params FROM #__extensions WHERE "
+        . "type='component' AND element='com_jlms'"))->loadObject();
     $row->params = json_encode(array_replace(json_decode($row->params ?: '{}', true), $changes), JSON_THROW_ON_ERROR);
     $db->updateObject('#__extensions', $row, 'extension_id');
     echo "configured\n";
@@ -159,7 +161,8 @@ if ($mode === 'cleanup') {
         || $expiredRemaining !== 0 || $retainedRemaining !== 1 || is_file($expiredBlob)
             || !is_file($retainedBlob) || $attached < 1
     ) {
-        throw new \RuntimeException('Scheduled cleanup must apply the configured retention window to unreferenced assets.');
+        throw new \RuntimeException(('Scheduled cleanup must apply the configured retention window to '
+            . 'unreferenced assets.'));
     }
     $db->setQuery('DELETE FROM #__jlms_assets WHERE id=' . $retainedId)->execute();
     @unlink($retainedBlob);
@@ -177,7 +180,10 @@ if ($mode === 'hidden') {
 }
 if ($mode === 'inspect') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
-    $rows = $db->setQuery('SELECT a.id, a.title, a.lesson_id, a.preview, a.asset_id, f.status, f.storage_key, f.sha256, f.scan_json FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id=' . (int)$fixture['version_id'] . ' ORDER BY a.id')->loadAssocList();
+    $rows = $db->setQuery(('SELECT a.id, a.title, a.lesson_id, a.preview, a.asset_id, '
+        . 'f.status, f.storage_key, f.sha256, f.scan_json FROM '
+        . '#__jlms_attachments AS a JOIN #__jlms_assets AS f ON '
+        . 'f.id=a.asset_id WHERE a.course_version_id=') . (int)$fixture['version_id'] . ' ORDER BY a.id')->loadAssocList();
     $version = $db->setQuery('SELECT status, revision, structure_hash FROM #__jlms_course_versions WHERE id='
         . (int)$fixture['version_id'])->loadAssoc();
     $foreign = $db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id='
@@ -190,7 +196,8 @@ $learningFixture = json_decode(file_get_contents(dirname($root)
     . '/learning-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $actor = $app->getIdentity();
 $author = $component->getCurriculumService();
-$catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $level = (int)$db->setQuery('SELECT content_access FROM #__jlms_courses WHERE id='
     . (int)$learningFixture['course_id'])->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);

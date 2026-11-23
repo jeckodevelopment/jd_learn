@@ -52,11 +52,16 @@ final class TeacherProfiles
             ->from('#__jlms_teachers AS t')->innerJoin('#__categories AS cat ON cat.id=t.catid')
             ->where('t.state=1')->where('cat.published=1')->where("cat.extension='com_jlms.teacher'")
             ->where('t.access IN (' . implode(',', $levels) . ')')
-            ->where("NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND ancestor.level>0 AND (ancestor.published<>1 OR ancestor.access NOT IN (" . implode(',', $levels) . "))) ")
+            ->where(("NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE "
+                . "ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND "
+                . "ancestor.level>0 AND (ancestor.published<>1 OR ancestor.access NOT IN (") . implode(',', $levels) . "))) ")
             ->order('t.title,t.id');
         if ($language !== '*') {
             $q->where("(t.language='*' OR t.language=:language)")->bind(':language', $language);
-            $q->where("NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND ancestor.level>0 AND ancestor.language<>'*' AND ancestor.language<>:categoryLanguage)")->bind(':categoryLanguage', $language);
+            $q->where(("NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE "
+                . "ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND "
+                . "ancestor.level>0 AND ancestor.language<>'*' AND "
+                . "ancestor.language<>:categoryLanguage)"))->bind(':categoryLanguage', $language);
         }
         if ($only !== null) {
             $q->where('t.id IN (' . implode(',', array_map('intval', $only)) . ')');

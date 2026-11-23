@@ -118,7 +118,8 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
         return;
     }if ($mode === 'retained') {
         durationExpect(json_decode(file_get_contents($fixture
-            . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Measured provenance, frozen lessons and observed-duration progress survive upgrade');
+            . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, ('Measured provenance, frozen lessons and '
+                . 'observed-duration progress survive upgrade'));
         echo json_encode(['video_duration_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
         return;
     }echo json_encode($state, JSON_THROW_ON_ERROR);
@@ -128,7 +129,8 @@ $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
 $settings->set('video_external_policy', 'embed');
 // HTTP requests boot a fresh application: explicitly configure the disposable site,
 // rather than relying only on this CLI process's in-memory Registry.
-$extension = $db->setQuery("SELECT extension_id,params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadObject();
+$extension = $db->setQuery(("SELECT extension_id,params FROM #__extensions WHERE "
+    . "type='component' AND element='com_jlms'"))->loadObject();
 $params = json_decode($extension->params, true, 32, JSON_THROW_ON_ERROR);
 $params['video_external_policy'] = 'embed';
 $extension->params = json_encode($params, JSON_THROW_ON_ERROR);
@@ -224,7 +226,8 @@ durationExpect(!$r['lesson_completed'] && $r['covered_ms'] === 0, 'Minor duratio
 $now += 7200;
 $r = $save(2, [$event(4, 'seeked', 0, 3, false),$event(5, 'play', 0, 4),$event(6, 'position', 7200, 7204)], 8000);
 durationExpect($r['lesson_completed'] && $r['course_completed']
-    && $r['covered_ms'] === 7200, 'Shorter observed duration completes exactly at assigned90percent without rewriting frozen lesson');
+    && $r['covered_ms'] === 7200, ('Shorter observed duration completes exactly at assigned90percent '
+        . 'without rewriting frozen lesson'));
 durationExpect(durationRow('lessons', $lesson) == $frozen, 'Tolerated metadata never rewrites historical source');
 durationDenied(fn()=>$save(3, [$event(7, 'position', 7500, 7504)], 20000), 'COM_JLMS_VIDEO_DURATION_MISMATCH');
 durationExpect($save(2, [$event(4, 'seeked', 0, 3, false),$event(5, 'play', 0, 4),$event(6, 'position', 7200, 7204)], 8000)['replay'], 'Duration-tolerant completion replay is idempotent');

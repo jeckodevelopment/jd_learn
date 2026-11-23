@@ -89,7 +89,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     protected function preprocessForm(\Joomla\CMS\Form\Form $form, $data, $group = 'content')
     {
         if (\Joomla\CMS\Language\Associations::isEnabled()) {
-            $xml = new \SimpleXMLElement('<form><fields name="associations"><fieldset name="item_associations" label="COM_JLMS_ASSOCIATIONS" /></fields></form>');
+            $xml = new \SimpleXMLElement(('<form><fields name="associations"><fieldset '
+                . 'name="item_associations" label="COM_JLMS_ASSOCIATIONS" /></fields></form>'));
             foreach (\Joomla\CMS\Language\LanguageHelper::getContentLanguages(false, false) as $language) {
                 $field = $xml->fields->fieldset->addChild('field');
                 foreach (

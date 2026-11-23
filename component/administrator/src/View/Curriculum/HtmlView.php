@@ -218,7 +218,8 @@ final class HtmlView extends BaseHtmlView
                 throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
             }
             $lessonData['module_id'] = $this->selectedModule;
-            $prerequisiteField = new \SimpleXMLElement('<field name="required_lesson_ids" type="list" label="COM_JLMS_LESSON_PREREQUISITES" multiple="true" size="6" />');
+            $prerequisiteField = new \SimpleXMLElement(('<field name="required_lesson_ids" type="list" '
+                . 'label="COM_JLMS_LESSON_PREREQUISITES" multiple="true" size="6" />'));
             foreach ($this->outline['lessons'] as $candidate) {
                 if ((int) $candidate->id === $editLesson) {
                     continue;

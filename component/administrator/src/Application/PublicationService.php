@@ -100,7 +100,8 @@ final class PublicationService
         foreach ($stageIds as $stageId) {
             $q = $this->db->createQuery()->select('t.id, t.title, t.options, t.from_stage_id')->from('#__workflow_transitions AS t')
                 ->innerJoin('#__workflow_stages AS s ON s.workflow_id = t.workflow_id')
-                ->innerJoin('#__workflow_stages AS dest ON dest.id = t.to_stage_id AND dest.workflow_id = t.workflow_id')
+                ->innerJoin(('#__workflow_stages AS dest ON dest.id = t.to_stage_id AND '
+                    . 'dest.workflow_id = t.workflow_id'))
                 ->innerJoin('#__workflows AS w ON w.id = t.workflow_id')
                 ->where('s.id = :stage')->where('(t.from_stage_id = s.id OR t.from_stage_id = -1)')
                 ->where('t.published = 1 AND s.published = 1 AND dest.published = 1 AND w.published = 1')
@@ -408,7 +409,8 @@ final class PublicationService
         }
         if ($rules['sequence_mode'] === 'sequential') {
             $sequenceQuery = $this->db->createQuery()->select('l.id, l.required')
-                ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
+                ->from('#__jlms_lessons AS l')->innerJoin(('#__jlms_modules AS m ON m.id = l.module_id AND '
+                    . 'm.course_version_id = l.course_version_id'))
                 ->where('l.course_version_id = :sequenceVersion')->bind(':sequenceVersion', $versionId, ParameterType::INTEGER)
                 ->order('m.ordering, m.id, l.ordering, l.id');
             $previousRequired = 0;
@@ -439,7 +441,9 @@ final class PublicationService
         foreach (array_keys($lessonIds) as $node) {
             $visitPrerequisite((int) $node);
         }
-        $q = $this->db->createQuery()->select('a.id, a.lesson_id, a.title, a.description, a.ordering, a.state, a.preview, a.publish_up, a.publish_down, f.id AS asset_id, f.sha256, f.byte_size, f.mime_type, f.status, f.scan_json')
+        $q = $this->db->createQuery()->select(('a.id, a.lesson_id, a.title, a.description, a.ordering, a.state, '
+            . 'a.preview, a.publish_up, a.publish_down, f.id AS asset_id, '
+            . 'f.sha256, f.byte_size, f.mime_type, f.status, f.scan_json'))
             ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('a.ordering, a.id');
         $attachments = $this->db->setQuery($q, 0, 1001)->loadAssocList();

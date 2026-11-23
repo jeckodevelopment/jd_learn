@@ -124,7 +124,8 @@ if (($argv[2] ?? '') === 'retained') {
     echo json_encode(['roster_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
-$before = $db->setQuery('SELECT id,revision,completed_total,completed_at,last_activity_at FROM #__jlms_enrollments ORDER BY id')->loadAssocList();
+$before = $db->setQuery(('SELECT id,revision,completed_total,completed_at,last_activity_at '
+    . 'FROM #__jlms_enrollments ORDER BY id'))->loadAssocList();
 $rows = $read($actor);
 $allIds = array_map(static fn($e)=>(int)$e->id, $rows);
 rosterExpect(count($rows) >= 26, 'course roster includes more than one student');
@@ -361,7 +362,8 @@ try {
 
         $staleRetry = $newStaleMail('retry');
         $mailAudit->reconcile($courseManager, $staleRetry, 'retry', $sensitiveNote, true);
-        $retryRow = $db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email FROM #__jlms_mail_queue WHERE id=' . $staleRetry)->loadObject();
+        $retryRow = $db->setQuery(('SELECT state,reconciliation_note,last_error,recipient_email FROM '
+            . '#__jlms_mail_queue WHERE id=') . $staleRetry)->loadObject();
         rosterExpect(
             $retryRow->state === 'retry' && $retryRow->reconciliation_note === $sensitiveNote
             && $retryRow->last_error === 'Manual reconciliation recorded.'
@@ -486,7 +488,8 @@ try {
     );
 } finally {
     if ($replayJob > 0) {
-        $db->setQuery("DELETE FROM #__action_logs WHERE extension='com_jlms.coursecommunication' AND item_id=" . $replayJob)->execute();
+        $db->setQuery(("DELETE FROM #__action_logs WHERE "
+            . "extension='com_jlms.coursecommunication' AND item_id=") . $replayJob)->execute();
         $db->setQuery('DELETE FROM #__jlms_jobs WHERE id=' . $replayJob . " AND kind='course_communication'")->execute();
     }
 }
@@ -533,6 +536,7 @@ $name = '<img src=x onerror=ROSTER_XSS>';
 $id = (int)$f['owner'];
 $q = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name', $name)->bind(':id', $id, \Joomla\Database\ParameterType::INTEGER);
 $db->setQuery($q)->execute();
-rosterExpect($before === $db->setQuery('SELECT id,revision,completed_total,completed_at,last_activity_at FROM #__jlms_enrollments ORDER BY id')->loadAssocList(), 'roster reads do not mutate learning history');
+rosterExpect($before === $db->setQuery(('SELECT id,revision,completed_total,completed_at,last_activity_at '
+    . 'FROM #__jlms_enrollments ORDER BY id'))->loadAssocList(), 'roster reads do not mutate learning history');
 file_put_contents($path, json_encode(['manager' => (int)$user->id,'group' => $group,'course' => $course,'other_course' => $otherCourse,'version' => $version,'total' => count($rows),'owner' => $f['owner'],'original_name' => $originalName,'completed' => $f['completed'],'suspended' => $f['suspended'],'active' => $f['active'],'foreign_enrollment' => $f['italian']], JSON_THROW_ON_ERROR));
 echo json_encode(['roster_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

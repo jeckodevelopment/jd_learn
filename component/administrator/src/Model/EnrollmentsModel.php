@@ -90,7 +90,8 @@ final class EnrollmentsModel extends ListModel
             . '/components/com_jlms/forms/enrollments.xml', ['control' => 'filter']);
         $options = $this->service()->filterOptions(Factory::getApplication()->getIdentity(), (int) $this
             ->getState('filter.course'));
-        $versionField = new \SimpleXMLElement('<field name="version" type="list" label="COM_JLMS_ROSTER_VERSION_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>');
+        $versionField = new \SimpleXMLElement(('<field name="version" type="list" '
+            . 'label="COM_JLMS_ROSTER_VERSION_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>'));
         $versionField->addChild('option', 'JALL')->addAttribute('value', '0');
         foreach ($options['versions'] as $version) {
             $label = (string) $version->title_snapshot . ' · v' . (int) $version->version_no . ' · '
@@ -98,7 +99,8 @@ final class EnrollmentsModel extends ListModel
             $versionField->addChild('option', htmlspecialchars($label, ENT_XML1))
                 ->addAttribute('value', (string) $version->id);
         }
-        $userField = new \SimpleXMLElement('<field name="user" type="list" label="COM_JLMS_ROSTER_USER_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>');
+        $userField = new \SimpleXMLElement(('<field name="user" type="list" label="COM_JLMS_ROSTER_USER_FILTER" '
+            . 'description="COM_JLMS_ROSTER_ID_HINT"/>'));
         $userField->addChild('option', 'JALL')->addAttribute('value', '0');
         foreach ($options['users'] as $user) {
             $label = (string) $user->name . ' (' . (string) $user->username . ') · #' . (int) $user->id;

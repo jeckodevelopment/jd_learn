@@ -66,7 +66,8 @@ $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $catalog = $component->getCatalogService();
 $actor = $app->getIdentity();
-$catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int) $db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $data = ['id' => 0,'title' => 'Publication fixture','alias' => 'publication-test','catid' => $catid,'language' => '*',
     'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description'
@@ -133,7 +134,8 @@ $hidden = static function () use ($catalog, $guest, $course): bool {
 };
 pubExpect($hidden(), 'draft absent from public direct lookup');
 pubDenied(fn()=>pubTransition(), 'empty structure rejected');
-pubExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__workflow_associations WHERE extension=\'com_jlms.course\' AND item_id=' . $course)->loadResult(), 'failed publish has no workflow side effects');
+pubExpect(!(int)$db->setQuery(('SELECT COUNT(*) FROM #__workflow_associations WHERE '
+    . 'extension=\'com_jlms.course\' AND item_id=') . $course)->loadResult(), 'failed publish has no workflow side effects');
 $module = $authoring->saveModule($actor, pubScope() + ['id' => 0,'title' => 'Published chapter']);
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system', 'fields');
 $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()
@@ -248,9 +250,11 @@ $app->getDispatcher()->addListener('onContentChangeState', $afterVeto);
 pubDenied(fn()=>pubTransition(), 'failed native state callback rolls back publication');
 $app->getDispatcher()->removeListener('onContentChangeState', $afterVeto);
 pubExpect($hidden(), 'failed state callback leaves public course hidden');
-$beforeLog = (int) $db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course)->loadResult();
+$beforeLog = (int) $db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
+    . "extension='com_jlms.course' AND item_id=") . (int) $course)->loadResult();
 pubTransition();
-$publishedLog = $db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.course' AND item_id=" . (int) $course . " ORDER BY id DESC LIMIT 1")->loadResult();
+$publishedLog = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
+    . "extension='com_jlms.course' AND item_id=") . (int) $course . " ORDER BY id DESC LIMIT 1")->loadResult();
 pubExpect(
     (int) $db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.course' AND item_id="
         . (int) $course)->loadResult() === $beforeLog + 1
@@ -289,7 +293,8 @@ $previewCounts = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments W
     ->loadResult();
 $previewAttemptCounts = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts')->loadResult();
 $publicPreview = $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson);
-pubExpect(str_contains((string)$publicPreview->body, 'SECRET_LESSON_BODY'), 'explicitly selected text lesson is available as a public preview despite restricted full-content access');
+pubExpect(str_contains((string)$publicPreview->body, 'SECRET_LESSON_BODY'), ('explicitly selected text lesson is '
+    . 'available as a public preview despite restricted full-content access'));
 pubExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)
     ->loadResult() === $previewCounts
     && (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts')
@@ -401,7 +406,8 @@ pubExpect(
     'new teaching version captures current course fields while preserving the prior snapshot'
 );
 pubExpect(
-    (int)$db->setQuery('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id=' . (int)$learnerEnrollment)->loadResult() === $version,
+    (int)$db->setQuery(('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER '
+        . 'JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id=') . (int)$learnerEnrollment)->loadResult() === $version,
     'existing learner remains assigned to the original teaching version after update publication'
 );
 // CAT-01: bound literal search patterns must preserve visible '%' and '_'

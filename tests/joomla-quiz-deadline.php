@@ -13,10 +13,17 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // rewriting extension settings concurrently can deadlock before the test barrier.
 if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='task' AND element='jlms'))");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR "
+    . "(folder='task' AND element='jlms'))"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE "
+    . "type='plugin' AND folder='user' AND element='joomla'"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE "
+    . "type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') "
+    . "WHERE type='component' AND element='com_jlms'"));
     unset($fixtureDb);
 }
 

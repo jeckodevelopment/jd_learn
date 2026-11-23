@@ -93,7 +93,8 @@ class CoursesModel extends ListModel
             $titleSearch = CatalogSearch::pattern($search);
             $summarySearch = $titleSearch;
             // SQL wildcards in visitor text must be matched literally.
-            $query->where("(c.title LIKE :catalogSearchTitle ESCAPE '!' OR c.summary LIKE :catalogSearchSummary ESCAPE '!')")
+            $query->where(("(c.title LIKE :catalogSearchTitle ESCAPE '!' OR c.summary LIKE "
+                . ":catalogSearchSummary ESCAPE '!')"))
                 ->bind(':catalogSearchTitle', $titleSearch)
                 ->bind(':catalogSearchSummary', $summarySearch);
         }
@@ -104,7 +105,8 @@ class CoursesModel extends ListModel
         }
         $duration = (string) $this->getState('filter.duration');
         if ($duration !== '') {
-            $minutes = "CAST(JSON_UNQUOTE(JSON_EXTRACT(c.params_json, '$.presentation.estimated_minutes')) AS UNSIGNED)";
+            $minutes = ("CAST(JSON_UNQUOTE(JSON_EXTRACT(c.params_json, "
+                . "'$.presentation.estimated_minutes')) AS UNSIGNED)");
             match ($duration) {
                 'under-30' => $query->where("$minutes BETWEEN 1 AND 29"),
                 '30-60' => $query->where("$minutes BETWEEN 30 AND 60"),
@@ -120,13 +122,15 @@ class CoursesModel extends ListModel
         $order = (string) $this->getState('filter.order');
         if ($order === 'editorial') {
             // Positive editorial ranks first, unassigned last; stable tie-break.
-            $position = "COALESCE(CAST(JSON_UNQUOTE(JSON_EXTRACT(c.params_json, '$.catalog_position')) AS UNSIGNED), 0)";
+            $position = ("COALESCE(CAST(JSON_UNQUOTE(JSON_EXTRACT(c.params_json, "
+                . "'$.catalog_position')) AS UNSIGNED), 0)");
             return $query->order("($position = 0) ASC, $position ASC, c.id DESC");
         }
         if ($order === 'duration') {
             // Sort by the immutable PUBLISHED snapshot displayed on each card, not the editable draft.
             // Unknown durations come last, and ID makes pagination deterministic.
-            $minutes = "CAST(JSON_UNQUOTE(JSON_EXTRACT(v.presentation_json, '$.details.estimated_minutes')) AS UNSIGNED)";
+            $minutes = ("CAST(JSON_UNQUOTE(JSON_EXTRACT(v.presentation_json, "
+                . "'$.details.estimated_minutes')) AS UNSIGNED)");
             return $query->order("($minutes IS NULL) ASC, $minutes ASC, c.id ASC");
         }
         if ($order === 'published') {

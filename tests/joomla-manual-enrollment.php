@@ -107,7 +107,8 @@ if (($argv[2] ?? '') === 'retained') {
     manualExpect($e && $e->origin === 'manual' && (int)$e->user_id === $f['learner'] && (int)$e->created_by === $f['manager'], 'manual assignment provenance retained');
     manualExpect($learning->resumeTarget(new \Joomla\CMS\User\User($f['learner']), 'en-GB', (int)$e->id)['lesson_id'] === $f['lesson'], 'manual learner remains able to resume');
     manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id=' . (int)$e->id)->loadResult() === 1, 'single manual receipt retained');
-    manualExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.manualenrollment' AND item_id=" . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
+    manualExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
+        . "extension='com_jlms.manualenrollment' AND item_id=") . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
     echo json_encode(['manual_enrollment_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
@@ -115,7 +116,8 @@ $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), 
 $rf = json_decode(file_get_contents(dirname($root) . '/roster-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $group = (int)$f['group'];
 $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning access'")->loadResult();
-$catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Manual admission fixture','alias' => 'manual-admission-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'explicit','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Manual admission'])) {
     throw new \RuntimeException($model->getError());
@@ -398,15 +400,18 @@ fclose($pipes[2]);
 if (proc_close($worker) !== 0) {
     throw new RuntimeException($error . $result);
 }
-manualExpect($result === 'ok:' . $winner->id, 'Automatic start sees the admission committed while its edition lock was blocked');
+manualExpect($result === 'ok:' . $winner->id, ('Automatic start sees the admission committed while its edition '
+    . 'lock was blocked'));
 manualExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $snapshotUser . ' AND edition_id=' . $edition)->loadResult() === 1, 'Blocked automatic retry retains one enrollment');
 
 manualExpect($learning->start($users['one'], 'en-GB', $course, bin2hex(random_bytes(16))) === $id, 'automatic start reuses manual assignment');
 $update('jlms_courses', $course, ['enrollment_mode' => 'explicit']);
-manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id IS NULL OR course_version_id IS NULL')->loadResult() === 0, 'no incomplete receipt committed');
+manualExpect((int)$db->setQuery(('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE '
+    . 'enrollment_id IS NULL OR course_version_id IS NULL'))->loadResult() === 0, 'no incomplete receipt committed');
 manualExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'admission never changes native group assignments');
 $receipt = (int)$db->setQuery('SELECT id FROM #__jlms_manual_enrollments WHERE enrollment_id=' . $id)->loadResult();
-$log = $db->setQuery("SELECT message FROM #__action_logs WHERE extension='com_jlms.manualenrollment' AND item_id=" . $receipt)->loadResult();
+$log = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
+    . "extension='com_jlms.manualenrollment' AND item_id=") . $receipt)->loadResult();
 $message = json_decode($log, true, 16, JSON_THROW_ON_ERROR);
 manualExpect($message['enrollment_id'] === $id && !str_contains($log, 'PRIVATE_MANUAL_REASON'), 'native audit references internal reason without copying it');
 $projection = json_encode($service->editor($actor, $course, (int)$users['one']->id, 'en-GB'), JSON_THROW_ON_ERROR);

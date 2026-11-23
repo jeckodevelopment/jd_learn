@@ -11,7 +11,8 @@ $db = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_T
 $f = json_decode(file_get_contents(dirname($root) . '/roster-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $mode = $argv[2] ?? '';
 if ($mode === 'snapshot') {
-    echo json_encode($db->query('SELECT id,revision,completed_total,completed_at,last_activity_at FROM joomla_jlms_enrollments ORDER BY id')->fetchAll(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR);
+    echo json_encode($db->query(('SELECT id,revision,completed_total,completed_at,last_activity_at '
+        . 'FROM joomla_jlms_enrollments ORDER BY id'))->fetchAll(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR);
 } elseif (in_array($mode, ['revoke','grant','restore'], true)) {
     $q = $db->prepare('SELECT username FROM joomla_users WHERE id=?');
     $q->execute([$f['manager']]);

@@ -76,7 +76,9 @@ final class CoursesModel extends ListModel
         $db = $this->getDatabase();
         $ids = $this->scope();
         $q = $db->createQuery()->select('a.id,a.title,a.alias,a.catid,a.state,a.revision,a.created_by,a.modified_at,a.language,a.content_access,a.checked_out,a.checked_out_time')
-            ->select('cat.title AS category_title,cat.lft AS category_lft,access_level.title AS access_title,author.name AS author_name,editor.name AS editor,lang.title AS language_title')
+            ->select(('cat.title AS category_title,cat.lft AS '
+                . 'category_lft,access_level.title AS access_title,author.name AS '
+                . 'author_name,editor.name AS editor,lang.title AS language_title'))
             ->from('#__jlms_courses AS a')->leftJoin('#__categories AS cat ON cat.id=a.catid')
             ->leftJoin('#__viewlevels AS access_level ON access_level.id=a.content_access')
             ->leftJoin('#__users AS author ON author.id=a.created_by')
@@ -153,7 +155,8 @@ final class CoursesModel extends ListModel
                     $q->where('a.created_by=:author')->bind(':author', $author, ParameterType::INTEGER);
                 } elseif ($name === 'teacher_id') {
                     $teacher = (int) $value;
-                    $q->where('EXISTS (SELECT 1 FROM #__jlms_course_teachers AS course_teacher WHERE course_teacher.course_id=a.id AND course_teacher.teacher_id=:teacher)')
+                    $q->where(('EXISTS (SELECT 1 FROM #__jlms_course_teachers AS course_teacher '
+                        . 'WHERE course_teacher.course_id=a.id AND course_teacher.teacher_id=:teacher)'))
                         ->bind(':teacher', $teacher, ParameterType::INTEGER);
                 } else {
                     $access = (int) $value;

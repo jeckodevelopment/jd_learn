@@ -24,7 +24,8 @@ final class ManualEnrollmentService
     /** Administrative assignment does not grant viewing rights. Editorial availability is still mandatory. */
     private function assignmentCourse(int $courseId, string $language): object
     {
-        $q = $this->db->createQuery()->select('c.id, c.title, c.catid, c.language, c.content_access, c.current_version_id, c.enrollment_mode, c.admissions_open')
+        $q = $this->db->createQuery()->select(('c.id, c.title, c.catid, c.language, c.content_access, '
+        . 'c.current_version_id, c.enrollment_mode, c.admissions_open'))
             ->from('#__jlms_courses AS c')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.current_version_id AND v.course_id = c.id')
             ->innerJoin('#__categories AS cat ON cat.id = c.catid')
@@ -41,7 +42,9 @@ final class ManualEnrollmentService
         // Missing levels, unpublished ancestors or language mismatches are invalid editorial configuration.
         $ancestor = $this->db->createQuery()->select('1')->from('#__categories AS ancestor')
             ->where('ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.id <> 1')
-            ->where("(ancestor.published <> 1 OR (ancestor.language <> '*' AND ancestor.language <> :ancestorLanguage) OR NOT EXISTS (SELECT 1 FROM #__viewlevels AS av WHERE av.id = ancestor.access))");
+            ->where(("(ancestor.published <> 1 OR (ancestor.language <> '*' AND ancestor.language <> "
+            . ":ancestorLanguage) OR NOT EXISTS (SELECT 1 FROM #__viewlevels AS av WHERE av.id = "
+            . "ancestor.access))"));
         $q->where('NOT EXISTS (' . $ancestor . ')')->bind(':ancestorLanguage', $language);
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
     }
@@ -77,7 +80,8 @@ final class ManualEnrollmentService
             if (\Joomla\CMS\Language\Multilanguage::isEnabled()) {
                 $q = $this->db->createQuery()->select('lang.access')->from('#__languages AS lang')
                     ->where('lang.lang_code = :language')->where('lang.published = 1')->bind(':language', $language)
-                    ->where('(lang.access = 0 OR EXISTS (SELECT 1 FROM #__viewlevels AS validLevel WHERE validLevel.id = lang.access))');
+                    ->where(('(lang.access = 0 OR EXISTS (SELECT 1 FROM #__viewlevels AS validLevel WHERE '
+                    . 'validLevel.id = lang.access))'));
                 if ($this->db->setQuery($q)->loadResult() === null) {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
@@ -195,7 +199,9 @@ final class ManualEnrollmentService
             $actorId = (int) $actor->id;
             // Claim the UUID in the same transaction. No committed receipt may remain without a result.
             $q = $this->db->createQuery();
-            $q->setQuery('INSERT INTO #__jlms_manual_enrollments (actor_user_id,mutation_id,request_hash,claim_token,impact_hash,reason,created_at) VALUES (:actor,:mutation,:hash,:claim,:impact,:reason,:now) ON DUPLICATE KEY UPDATE id=id')
+            $q->setQuery(('INSERT INTO #__jlms_manual_enrollments '
+            . '(actor_user_id,mutation_id,request_hash,claim_token,impact_hash,reason,created_at) '
+            . 'VALUES (:actor,:mutation,:hash,:claim,:impact,:reason,:now) ON DUPLICATE KEY UPDATE id=id'))
                 ->bind(':actor', $actorId, ParameterType::INTEGER)->bind(':mutation', $key)->bind(':hash', $hash)->bind(':claim', $nonce)->bind(':impact', $impact)->bind(':reason', $reason)->bind(':now', $now);
             $this->db->setQuery($q)->execute();
             $q = $this->db->createQuery()->select('id, enrollment_id, request_hash, claim_token')->from('#__jlms_manual_enrollments')->where('mutation_id = :mutation')->bind(':mutation', $key);
@@ -214,7 +220,8 @@ final class ManualEnrollmentService
             $hex = bin2hex(random_bytes(16));
             $subject = substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) . '-a' . substr($hex, 17, 3) . '-' . substr($hex, 20);
             $q = $this->db->createQuery();
-            $q->setQuery('INSERT INTO #__jlms_subjects (subject_key,user_id,created_at) VALUES (:subject,:user,:now) ON DUPLICATE KEY UPDATE user_id=user_id')
+            $q->setQuery(('INSERT INTO #__jlms_subjects (subject_key,user_id,created_at) VALUES '
+            . '(:subject,:user,:now) ON DUPLICATE KEY UPDATE user_id=user_id'))
                 ->bind(':subject', $subject)->bind(':user', $user, ParameterType::INTEGER)->bind(':now', $now);
             $this->db->setQuery($q)->execute();
             $q = $this->db->createQuery()->select('subject_key')->from('#__jlms_subjects')->where('user_id = :user')->bind(':user', $user, ParameterType::INTEGER);

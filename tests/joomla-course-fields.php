@@ -72,7 +72,8 @@ function fieldsExpect(bool $ok, string $message): void
     } $checks++;
 }
 $actor = $app->getIdentity();
-$catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 PluginHelper::importPlugin('system', 'fields');
 $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()
     ->createModel('Field', 'Administrator', ['ignore_request' => true]);

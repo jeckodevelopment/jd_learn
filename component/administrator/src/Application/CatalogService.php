@@ -49,16 +49,24 @@ final class CatalogService
             $assigned = $this->db->createQuery()->select('1')->from('#__jlms_pathway_courses AS catalog_pathway_course')
                 ->where('catalog_pathway_course.course_id = c.id')
                     ->where('catalog_pathway_course.pathway_id = :catalogPathwayId')
-                ->where('EXISTS (SELECT 1 FROM #__jlms_pathways AS visible_pathway INNER JOIN #__categories AS visible_pathway_cat ON visible_pathway_cat.id = visible_pathway.catid'
+                ->where(('EXISTS (SELECT 1 FROM #__jlms_pathways AS visible_pathway INNER '
+                    . 'JOIN #__categories AS visible_pathway_cat ON '
+                    . 'visible_pathway_cat.id = visible_pathway.catid')
                     . ' WHERE visible_pathway.id = catalog_pathway_course.pathway_id AND visible_pathway.state = 1'
                     . ' AND visible_pathway.access IN (' . implode(',', $levels)
                         . ') AND visible_pathway_cat.published = 1'
                     . ' AND visible_pathway_cat.access IN (' . implode(',', $levels) . ')'
-                    . ' AND (visible_pathway.language = :catalogPathwayAll OR visible_pathway.language = :catalogPathwayLanguage)'
-                    . ' AND (visible_pathway_cat.language = :catalogPathwayCatAll OR visible_pathway_cat.language = :catalogPathwayCatLanguage)'
-                    . ' AND NOT EXISTS (SELECT 1 FROM #__categories AS vp_ancestor WHERE vp_ancestor.lft <= visible_pathway_cat.lft AND vp_ancestor.rgt >= visible_pathway_cat.rgt AND vp_ancestor.id <> 1'
-                    . ' AND (vp_ancestor.extension <> :catalogPathwayExtension OR vp_ancestor.published <> 1 OR vp_ancestor.access NOT IN (' . implode(',', $levels) . ')'
-                    . ' OR (vp_ancestor.language <> :catalogPathwayAncestorAll AND vp_ancestor.language <> :catalogPathwayAncestorLanguage))))');
+                    . (' AND (visible_pathway.language = :catalogPathwayAll OR '
+                        . 'visible_pathway.language = :catalogPathwayLanguage)')
+                    . (' AND (visible_pathway_cat.language = :catalogPathwayCatAll OR '
+                        . 'visible_pathway_cat.language = :catalogPathwayCatLanguage)')
+                    . (' AND NOT EXISTS (SELECT 1 FROM #__categories AS vp_ancestor WHERE '
+                        . 'vp_ancestor.lft <= visible_pathway_cat.lft AND vp_ancestor.rgt >= '
+                        . 'visible_pathway_cat.rgt AND vp_ancestor.id <> 1')
+                    . (' AND (vp_ancestor.extension <> :catalogPathwayExtension OR '
+                        . 'vp_ancestor.published <> 1 OR vp_ancestor.access NOT IN (') . implode(',', $levels) . ')'
+                    . (' OR (vp_ancestor.language <> :catalogPathwayAncestorAll AND '
+                        . 'vp_ancestor.language <> :catalogPathwayAncestorLanguage))))'));
             $all = '*';
             $extension = 'com_jlms.pathway';
             $query->where('EXISTS (' . $assigned . ')')->bind(':catalogPathwayId', $pathway, ParameterType::INTEGER)
@@ -118,7 +126,8 @@ final class CatalogService
         $courseTagAlias = 'com_jlms.course';
         $query = $this->courseQuery($actor, $language, $categoryId, false)
             ->clear('select')->select('DISTINCT tag.id, tag.title')
-            ->innerJoin('#__contentitem_tag_map AS tag_map ON tag_map.content_item_id = c.id AND tag_map.type_alias = :courseTagAlias')
+            ->innerJoin(('#__contentitem_tag_map AS tag_map ON tag_map.content_item_id = '
+                . 'c.id AND tag_map.type_alias = :courseTagAlias'))
             ->innerJoin('#__tags AS tag ON tag.id = tag_map.tag_id')
             ->where('tag.published = 1')->whereIn('tag.access', $levels)
             ->order('tag.title, tag.id')
@@ -132,7 +141,12 @@ final class CatalogService
         $actor = new User((int) $identity->id);
         $actor->clearAccessRights();
         $extension = 'com_jlms.course';
-        $q = $this->db->createQuery()->select('c.id, c.title, c.created_by, c.catid, c.state, c.catalog_access, c.content_access, c.language, c.current_version_id, c.admissions_open, c.delivery_enabled, c.publish_up, c.publish_down, cat.lft, cat.rgt, cat.published AS category_published, cat.access AS category_access, cat.language AS category_language')
+        $q = $this->db->createQuery()->select(('c.id, c.title, c.created_by, c.catid, c.state, c.catalog_access, '
+            . 'c.content_access, c.language, c.current_version_id, '
+            . 'c.admissions_open, c.delivery_enabled, c.publish_up, '
+            . 'c.publish_down, cat.lft, cat.rgt, cat.published AS '
+            . 'category_published, cat.access AS category_access, cat.language AS '
+            . 'category_language'))
             ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid AND cat.extension = :extension')
             ->where('c.id = :course')->bind(':course', $courseId, ParameterType::INTEGER)
                 ->bind(':extension', $extension);
@@ -192,7 +206,10 @@ final class CatalogService
         $actor->clearAccessRights();
         $levels = $actor->block ? [0] : array_map('intval', $actor->getAuthorisedViewLevels());
         $levels = $levels ?: [0];
-        $q = $this->db->createQuery()->select('c.id, c.title, c.summary, c.catid, c.catalog_access, c.content_access, c.language, c.current_version_id, c.enrollment_mode, c.admissions_open, c.delivery_enabled, cat.title AS category_title')
+        $q = $this->db->createQuery()->select(('c.id, c.title, c.summary, c.catid, c.catalog_access, '
+            . 'c.content_access, c.language, c.current_version_id, '
+            . 'c.enrollment_mode, c.admissions_open, c.delivery_enabled, '
+            . 'cat.title AS category_title'))
             ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.current_version_id AND v.course_id = c.id')
             ->where('v.status = :status')->where('cat.extension = :extension')
@@ -254,15 +271,18 @@ final class CatalogService
         $levels = $levels ?: [0];
         $extension = 'com_jlms.course';
         $all = '*';
-        $q = $this->db->createQuery()->select('cat.id, cat.parent_id, cat.title, cat.alias, cat.description, cat.language, cat.lft, cat.rgt')
+        $q = $this->db->createQuery()->select(('cat.id, cat.parent_id, cat.title, cat.alias, cat.description, '
+            . 'cat.language, cat.lft, cat.rgt'))
             ->from('#__categories AS cat')->where('cat.id > 1')->where('cat.extension = :categoryExtension')
             ->where('cat.published = 1')->whereIn('cat.access', $levels)
             ->where('(cat.language = :categoryAll OR cat.language = :categoryLanguage)')
             ->bind(':categoryExtension', $extension)->bind(':categoryAll', $all)->bind(':categoryLanguage', $language);
         $ancestor = $this->db->createQuery()->select('1')->from('#__categories AS ancestor')
             ->where('ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.id <> 1')
-            ->where('(ancestor.extension <> :ancestorExtension OR ancestor.published <> 1 OR ancestor.access NOT IN (' . implode(',', $levels) . ')'
-                . ' OR (ancestor.language <> :categoryAncestorAll AND ancestor.language <> :categoryAncestorLanguage))');
+            ->where(('(ancestor.extension <> :ancestorExtension OR ancestor.published <> '
+                . '1 OR ancestor.access NOT IN (') . implode(',', $levels) . ')'
+                . (' OR (ancestor.language <> :categoryAncestorAll AND '
+                    . 'ancestor.language <> :categoryAncestorLanguage))'));
         return $q->where('NOT EXISTS (' . $ancestor . ')')->bind(':ancestorExtension', $extension)
             ->bind(':categoryAncestorAll', $all)->bind(':categoryAncestorLanguage', $language);
     }
@@ -301,7 +321,8 @@ final class CatalogService
             ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)
                 ->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1000)->loadObjectList('id');
-        $q = $this->db->createQuery()->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')->from('#__jlms_lessons')
+        $q = $this->db->createQuery()->select(('id, module_id, title, kind, required, preview, publish_up, '
+            . 'publish_down, release_after_days'))->from('#__jlms_lessons')
             ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)
                 ->order('ordering, id');
         $lessons = $this->db->setQuery($q, 0, 5000)->loadObjectList();
@@ -362,7 +383,8 @@ final class CatalogService
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         $query = $this->db->createQuery()->select('l.id, l.title, l.body, l.publish_up, l.publish_down, l.release_after_days')
-            ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
+            ->from('#__jlms_lessons AS l')->innerJoin(('#__jlms_modules AS m ON m.id = l.module_id AND '
+                . 'm.course_version_id = l.course_version_id'))
             ->where('l.id = :previewLesson')->where('l.course_version_id = :previewVersion')
             ->where('l.kind = :previewKind')->where('l.preview = 1')
             ->bind(':previewLesson', $lessonId, ParameterType::INTEGER)

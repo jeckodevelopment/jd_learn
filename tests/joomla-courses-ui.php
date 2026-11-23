@@ -67,7 +67,8 @@ $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $catalog = $component->getCatalogService();
 $actor = $app->getIdentity();
-$catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int) $db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 
@@ -86,7 +87,8 @@ if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixturePath), true, 32, JSON_THROW_ON_ERROR);
     $rows = $db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN ('
         . implode(',', array_map('intval', $f['courses'])) . ') ORDER BY id')->loadAssocList();
-    listExpect($rows === $f['rows'], 'List and editor navigation preserve course state, version and revision after upgrade');
+    listExpect($rows === $f['rows'], ('List and editor navigation preserve course state, version and '
+        . 'revision after upgrade'));
     echo json_encode(['courses_ui_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit;
 }
@@ -147,7 +149,8 @@ foreach (['Zebra','Alpha','Bravo'] as $name) {
 }
 // Finder tests use an explicitly public, published *disposable* fixture. The
 // ordinary course-editor fixture is not guaranteed to have reached publication.
-$finderCourseOriginal = $db->setQuery('SELECT id, state, current_version_id, publish_up, publish_down, content_access FROM #__jlms_courses WHERE id=' . (int) $ids['Alpha'])->loadObject();
+$finderCourseOriginal = $db->setQuery(('SELECT id, state, current_version_id, publish_up, publish_down, '
+    . 'content_access FROM #__jlms_courses WHERE id=') . (int) $ids['Alpha'])->loadObject();
 $finderVersionOriginal = $db->setQuery('SELECT id, status FROM #__jlms_course_versions WHERE id='
     . (int) $versions['Alpha'])->loadObject();
 $finderPublished = (object) [

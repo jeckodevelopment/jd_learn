@@ -34,6 +34,8 @@ for folder in ("component/site/language", "component/administrator/language"):
 
 helper = (root / "component/site/src/Helper/CatalogOptions.php").read_text()
 model = (root / "component/site/src/Model/CoursesModel.php").read_text()
+# Compare executed constant-string values even when PHP wraps them with concatenation.
+model = re.sub(r"""(['"])\s*\.\s*\1""", "", model)
 view = (root / "component/site/src/View/Courses/HtmlView.php").read_text()
 template = (catalog / "default.php").read_text()
 css = (root / "component/media/css/site.css").read_text()
@@ -137,6 +139,7 @@ assert "->clear('order')->order('e.id DESC')" in dash
 # CAT-01: available-only selection is opt-in, server side, and ignored when
 # filters are disabled. Visibility/ACL remains enforced by CatalogService.
 model = (root / "component/site/src/Model/CoursesModel.php").read_text()
+model = re.sub(r"""(['"])\s*\.\s*\1""", "", model)
 view = (root / "component/site/src/View/Courses/HtmlView.php").read_text()
 layout = (root / "component/site/tmpl/courses/default.php").read_text()
 assert "$filter['available'] ?? ''" in model

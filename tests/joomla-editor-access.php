@@ -65,7 +65,8 @@ $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $catalog = $component->getCatalogService();
 $actor = $app->getIdentity();
-$catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int) $db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 

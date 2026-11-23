@@ -13,9 +13,15 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE "
+    . "type='plugin' AND folder='user' AND element='joomla'"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE "
+    . "type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+    . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') "
+    . "WHERE type='component' AND element='com_jlms'"));
     unset($fixtureDb);
 }
 
@@ -254,7 +260,8 @@ videoExpect($save($b, 1, $batch)['replay'], 'identical batch replay');
 // LCM-01: a pre-existing session cannot bypass archive/withdrawal/trash using
 // an idempotent replay, a fresh sequence or a fresh playback request. Test with
 // deliberately stale open flags: course state must gate access independently.
-$beforeLifecycleProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id=' . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
+$beforeLifecycleProgress = $db->setQuery(('SELECT covered_ms, resume_ms, state, completed_at, revision FROM '
+. '#__jlms_lesson_progress WHERE enrollment_id=') . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
 $beforeLifecycleSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
 foreach ([0, 2, -2] as $inactiveCourseState) {
     videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state'
@@ -263,7 +270,8 @@ foreach ([0, 2, -2] as $inactiveCourseState) {
     videoDenied(fn()=>$save($b, 1, $batch), 404, 'LCM-01 inactive course denies idempotent session replay');
     videoDenied(fn()=>$save($b, 2, $batch), 404, 'LCM-01 inactive course denies new session telemetry');
     videoDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'LCM-01 inactive course denies direct new enrollment');
-    $afterLifecycleProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id=' . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
+    $afterLifecycleProgress = $db->setQuery(('SELECT covered_ms, resume_ms, state, completed_at, revision FROM '
+    . '#__jlms_lesson_progress WHERE enrollment_id=') . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
     $afterLifecycleSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
     videoExpect(
         $afterLifecycleProgress === $beforeLifecycleProgress && $afterLifecycleSession === $beforeLifecycleSession,
@@ -280,7 +288,8 @@ videoExpect($save($b, 1, $batch)['replay'], 'LCM-01 restored fixture retains val
 // Restore only the isolated CI enrollment; all learning history must survive.
 $originalEnrollmentStatus = (string)$db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id='
     . (int)$enrollment)->loadResult();
-$priorProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id=' . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
+$priorProgress = $db->setQuery(('SELECT covered_ms, resume_ms, state, completed_at, revision FROM '
+. '#__jlms_lesson_progress WHERE enrollment_id=') . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
 $priorPlayerSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
 try {
     foreach (['suspended', 'cancelled'] as $revokedStatus) {
@@ -290,7 +299,8 @@ try {
         videoDenied(fn()=>$save($b, 1, $batch), 403, 'revoked enrollment rejects replay of active session: '
             . $revokedStatus);
         videoDenied(fn()=>$save($b, 2, $batch), 403, 'revoked enrollment rejects new telemetry in active session: ' . $revokedStatus);
-        $afterProgress = $db->setQuery('SELECT covered_ms, resume_ms, state, completed_at, revision FROM #__jlms_lesson_progress WHERE enrollment_id=' . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
+        $afterProgress = $db->setQuery(('SELECT covered_ms, resume_ms, state, completed_at, revision FROM '
+        . '#__jlms_lesson_progress WHERE enrollment_id=') . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
         $afterPlayerSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
         videoExpect(
             $afterProgress === $priorProgress && $afterPlayerSession === $priorPlayerSession,

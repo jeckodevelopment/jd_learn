@@ -49,7 +49,9 @@ final class ProtectedMaterialStorage
 
         // Apache/LiteSpeed deny direct HTTP access; encrypted guarded PHP blobs
         // remain confidential even on servers ignoring .htaccess (e.g. Nginx).
-        $this->guard($path . '/.htaccess', "<IfModule mod_authz_core.c>\nRequire all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from all\n</IfModule>\n");
+        $this->guard($path . '/.htaccess', ("<IfModule mod_authz_core.c>\nRequire all "
+            . "denied\n</IfModule>\n<IfModule !mod_authz_core.c>\nDeny from "
+            . "all\n</IfModule>\n"));
         $this->guard($path . '/index.php', "<?php http_response_code(404); exit;\n");
         return $path;
     }

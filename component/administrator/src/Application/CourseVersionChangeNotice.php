@@ -34,10 +34,13 @@ final class CourseVersionChangeNotice
             'u.name AS learner_name, u.email AS learner_email, u.params AS user_params'
         )->from('#__jlms_enrollment_migrations AS m')
             ->innerJoin('#__jlms_enrollments AS source ON source.id = m.source_enrollment_id')
-            ->innerJoin('#__jlms_enrollments AS target ON target.id = m.target_enrollment_id AND target.course_id = source.course_id AND target.user_id = source.user_id')
+            ->innerJoin(('#__jlms_enrollments AS target ON target.id = '
+                . 'm.target_enrollment_id AND target.course_id = source.course_id AND '
+                . 'target.user_id = source.user_id'))
             ->innerJoin('#__jlms_courses AS c ON c.id = target.course_id')
             ->innerJoin('#__users AS u ON u.id = target.user_id')
-            ->leftJoin("#__jlms_mail_queue AS notice ON notice.event_key = SHA2(CONCAT('course.version.changed:', m.id), 256)")
+            ->leftJoin(("#__jlms_mail_queue AS notice ON notice.event_key = "
+                . "SHA2(CONCAT('course.version.changed:', m.id), 256)"))
             ->where('notice.id IS NULL')->where("source.status = 'migrated'")
             ->where("target.status = 'active'")->where('target.completed_at IS NULL')
             ->where('u.block = 0')->where('c.state = 1')->where('c.delivery_enabled = 1')

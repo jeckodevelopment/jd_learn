@@ -20,7 +20,9 @@ if ($mode === 'snapshot') {
     $q = $db->prepare('SELECT COUNT(*) FROM joomla_jlms_enrollment_state_changes WHERE enrollment_id=?');
     $q->execute([$f['http_enrollment']]);
     $count = (int)$q->fetchColumn();
-    $q = $db->prepare("SELECT COUNT(*) FROM joomla_action_logs AS a INNER JOIN joomla_jlms_enrollment_state_changes AS c ON c.id=a.item_id WHERE a.extension='com_jlms.enrollmentstate' AND c.enrollment_id=?");
+    $q = $db->prepare(("SELECT COUNT(*) FROM joomla_action_logs AS a INNER JOIN "
+        . "joomla_jlms_enrollment_state_changes AS c ON c.id=a.item_id WHERE "
+        . "a.extension='com_jlms.enrollmentstate' AND c.enrollment_id=?"));
     $q->execute([$f['http_enrollment']]);
     $audit = (int)$q->fetchColumn();
     echo json_encode(['stable' => $stable,'state' => $state,'history' => $count,'audit' => $audit,'groups'

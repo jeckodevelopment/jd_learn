@@ -23,9 +23,11 @@ final class CertificateService
     public function listForStudent(User $identity): array
     {
         $userId = $this->assertCurrentStudent($identity);
-        $query = $this->db->createQuery()->select('e.id AS enrollment_id, d.serial, d.issued_at, d.status, d.identity_snapshot_json')
+        $query = $this->db->createQuery()->select(('e.id AS enrollment_id, d.serial, d.issued_at, d.status, '
+            . 'd.identity_snapshot_json'))
             ->from('#__jlms_certificates AS c')->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
-            ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
+            ->innerJoin(('#__jlms_certificate_documents AS d ON d.id = c.current_document_id '
+                . 'AND d.certificate_id = c.id'))
             ->where('e.user_id = :user')->where('e.completed_at IS NOT NULL')->where('d.revoked_at IS NULL')
             ->bind(':user', $userId, ParameterType::INTEGER)->order('d.issued_at DESC, d.id DESC');
         $items = [];
@@ -80,7 +82,8 @@ final class CertificateService
             ->innerJoin('#__users AS u ON u.id = e.user_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
-            ->leftJoin('#__jlms_certificates AS cert ON cert.enrollment_id = e.id AND cert.course_version_id = e.course_version_id')
+            ->leftJoin(('#__jlms_certificates AS cert ON cert.enrollment_id = e.id AND '
+                . 'cert.course_version_id = e.course_version_id'))
             ->where('e.completed_at IS NOT NULL')
             ->where('(cert.id IS NULL OR cert.current_document_id IS NULL)')
             ->order('e.completed_at DESC, e.id DESC');
@@ -308,7 +311,8 @@ final class CertificateService
         $query = $this->db->createQuery()->select('d.id AS document_id, d.certificate_id, d.serial, d.status, d.revision, d.pdf_asset_id AS asset_id,
                 d.identity_snapshot_json, d.template_snapshot_json, e.user_id, e.id AS enrollment_id')
             ->from('#__jlms_certificates AS c')->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
-            ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
+            ->innerJoin(('#__jlms_certificate_documents AS d ON d.id = c.current_document_id '
+                . 'AND d.certificate_id = c.id'))
             ->where('e.id = :enrollment')->where('e.user_id = :user')->where('e.completed_at IS NOT NULL')->where('d.revoked_at IS NULL')
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':user', $userId, ParameterType::INTEGER);
         return $this->db->setQuery($query)->loadObject() ?: null;
@@ -350,7 +354,8 @@ final class CertificateService
             $started = true;
             $documentId = (int) $record->document_id;
             $locked = $this->db->createQuery()->select('d.id, d.status, c.id AS certificate_id')
-                ->from('#__jlms_certificate_documents AS d')->innerJoin('#__jlms_certificates AS c ON c.id = d.certificate_id AND c.current_document_id = d.id')
+                ->from('#__jlms_certificate_documents AS d')->innerJoin(('#__jlms_certificates AS c ON c.id = '
+                    . 'd.certificate_id AND c.current_document_id = d.id'))
                 ->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')->where('d.id = :document')
                 ->where('e.id = :enrollment')->where('e.user_id = :user')->where('e.completed_at IS NOT NULL')
                 ->bind(':document', $documentId, ParameterType::INTEGER)->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
@@ -453,7 +458,8 @@ final class CertificateService
         }
         $where = $this->db->createQuery()->from('#__jlms_certificates AS c')
             ->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
-            ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
+            ->innerJoin(('#__jlms_certificate_documents AS d ON d.id = c.current_document_id '
+                . 'AND d.certificate_id = c.id'))
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.course_version_id');
         if ($status === 'revoked') {
             $where->where('d.revoked_at IS NOT NULL');
@@ -462,14 +468,19 @@ final class CertificateService
         }
         if ($search !== '') {
             $needle = '%' . $search . '%';
-            $where->where("(d.serial LIKE :search OR JSON_UNQUOTE(JSON_EXTRACT(d.identity_snapshot_json, '$.name')) LIKE :search OR JSON_UNQUOTE(JSON_EXTRACT(d.identity_snapshot_json, '$.course_title')) LIKE :search)")
+            $where->where(("(d.serial LIKE :search OR "
+                . "JSON_UNQUOTE(JSON_EXTRACT(d.identity_snapshot_json, '$.name')) "
+                . "LIKE :search OR "
+                . "JSON_UNQUOTE(JSON_EXTRACT(d.identity_snapshot_json, "
+                . "'$.course_title')) LIKE :search)"))
                 ->bind(':search', $needle);
         }
         $countQuery = clone $where;
         $countQuery->clear('select')->select('COUNT(*)');
         $total = (int) $this->db->setQuery($countQuery)->loadResult();
         $query = clone $where;
-        $query->clear('select')->select('c.id AS certificate_id, d.id AS document_id, d.serial, d.status, d.issued_at, d.revoked_at, d.identity_snapshot_json')
+        $query->clear('select')->select(('c.id AS certificate_id, d.id AS document_id, d.serial, d.status, '
+            . 'd.issued_at, d.revoked_at, d.identity_snapshot_json'))
             ->order($allowedOrders[$order] . ' ' . $direction)
             ->order('d.id DESC');
         $rows = $this->db->setQuery($query, $offset, $limit)->loadObjectList();
@@ -591,7 +602,8 @@ final class CertificateService
                 ->select('c.current_document_id, d.id, d.revision, d.status, d.revoked_at, d.pdf_asset_id,
                     d.serial, d.identity_snapshot_json, d.template_snapshot_json')
                 ->from('#__jlms_certificates AS c')
-                ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
+                ->innerJoin(('#__jlms_certificate_documents AS d ON d.id = c.current_document_id '
+                    . 'AND d.certificate_id = c.id'))
                 ->where('c.id = :certificate')->bind(':certificate', $certificateId, ParameterType::INTEGER);
             $current = $this->db->setQuery((string) $lock . ' FOR UPDATE')->loadObject();
             if (
@@ -671,9 +683,13 @@ final class CertificateService
 
     private function adminDocument(int $certificateId): ?object
     {
-        $query = $this->db->createQuery()->select('c.id AS certificate_id, c.enrollment_id, d.id AS document_id, d.serial, d.status, d.issued_at, d.revoked_at, d.revocation_reason, d.revision, d.pdf_asset_id AS asset_id, d.identity_snapshot_json, d.template_snapshot_json, e.user_id')
+        $query = $this->db->createQuery()->select(('c.id AS certificate_id, c.enrollment_id, d.id AS document_id, '
+            . 'd.serial, d.status, d.issued_at, d.revoked_at, '
+            . 'd.revocation_reason, d.revision, d.pdf_asset_id AS asset_id, '
+            . 'd.identity_snapshot_json, d.template_snapshot_json, e.user_id'))
             ->from('#__jlms_certificates AS c')->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
-            ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
+            ->innerJoin(('#__jlms_certificate_documents AS d ON d.id = c.current_document_id '
+                . 'AND d.certificate_id = c.id'))
             ->where('c.id = :certificate')->bind(':certificate', $certificateId, ParameterType::INTEGER);
         return $this->db->setQuery($query)->loadObject() ?: null;
     }

@@ -44,7 +44,8 @@ final class PublicationImpact
 
     private function structure(int $version): array
     {
-        $modules = $this->rows('SELECT id,logical_key,title,ordering,SHA2(params_json,256) AS settings FROM #__jlms_modules WHERE course_version_id=:version ORDER BY ordering,id', $version, 1000);
+        $modules = $this->rows(('SELECT id,logical_key,title,ordering,SHA2(params_json,256) AS settings FROM '
+                    . '#__jlms_modules WHERE course_version_id=:version ORDER BY ordering,id'), $version, 1000);
         $moduleKeys = [];
         $result = ['modules' => [], 'lessons' => [], 'quizzes' => [], 'materials' => []];
         foreach ($modules as $row) {
@@ -100,7 +101,10 @@ final class PublicationImpact
             unset($row['id'], $row['lesson_id']);
             $result['quizzes'][$key] = ['title' => $result['lessons'][$key]['title']] + $row;
         }
-        $attachments = $this->rows('SELECT a.lesson_id,a.asset_id,a.title,SHA2(COALESCE(a.description,\'\'),256) AS description_hash,a.ordering,a.state,a.preview,a.publish_up,a.publish_down,f.sha256,f.status FROM #__jlms_attachments AS a INNER JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id=:version ORDER BY a.ordering,a.id', $version, 1000);
+        $attachments = $this->rows(('SELECT a.lesson_id,a.asset_id,a.title,SHA2(COALESCE(a.description,\'\'),256) '
+                    . 'AS description_hash,a.ordering,a.state,a.preview,a.publish_up,a.publish_down,f.sha256,f.status '
+                    . 'FROM #__jlms_attachments AS a INNER JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE '
+                    . 'a.course_version_id=:version ORDER BY a.ordering,a.id'), $version, 1000);
         $occurrences = [];
         foreach ($attachments as $row) {
             $scope = $row['lesson_id'] === null ? 'course' : ($lessonKeys[$row['lesson_id']]

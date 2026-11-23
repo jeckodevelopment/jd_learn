@@ -62,7 +62,8 @@ $factory = $component->getMVCFactory();
 
 $service = $component->getCurriculumService();
 $actor = $app->getIdentity();
-$catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int) $db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $data = ['id' => 0,'title' => 'Curriculum fixture','alias' => 'curriculum-test','catid' => $catid,'language' => '*',
     'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','summary' => 'Fixture','revision' => 1];

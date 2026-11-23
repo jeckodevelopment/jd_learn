@@ -24,7 +24,10 @@ final class EnrollmentStateService
     {
         $actor = $this->learning->freshActor($identity);
         $c = $this->roster->course($actor, $course);
-        $q = $this->db->createQuery()->select('e.*, u.name AS learner_name, u.email AS learner_email, c.title AS course_title, c.language AS course_language, c.params_json AS course_params, c.state AS course_state, c.delivery_enabled AS course_delivery_enabled')
+        $q = $this->db->createQuery()->select(('e.*, u.name AS learner_name, u.email AS learner_email, c.title AS '
+            . 'course_title, c.language AS course_language, c.params_json AS '
+            . 'course_params, c.state AS course_state, c.delivery_enabled AS '
+            . 'course_delivery_enabled'))
             ->from('#__jlms_enrollments AS e')->leftJoin('#__users AS u ON u.id = e.user_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->where('e.id = :enrollment')->where('e.course_id = :course')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
@@ -73,7 +76,8 @@ final class EnrollmentStateService
         if ($target === '') {
             $target = $e->status === 'suspended' ? 'active' : 'suspended';
         }
-        $q = $this->db->createQuery()->select('id, revision_no, previous_status, target_status, reason, actor_user_id, created_at')
+        $q = $this->db->createQuery()->select(('id, revision_no, previous_status, target_status, reason, '
+            . 'actor_user_id, created_at'))
             ->from('#__jlms_enrollment_state_changes')->where('enrollment_id = :enrollment')->bind(':enrollment', $enrollment, ParameterType::INTEGER)->order('revision_no DESC');
         // Never expose the internal enrollment row (subject key etc.) to the view.
         return ['course' => $c, 'enrollment_id' => $enrollment, 'learner_name' => (string) ($e->learner_name ?? ''),

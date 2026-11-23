@@ -310,7 +310,11 @@ final class MailQueue
             $sent++;
         }
 
-        $this->db->setQuery("UPDATE #__jlms_course_announcement_campaigns AS campaign SET state = 'finished' WHERE campaign.state = 'queued' AND NOT EXISTS (SELECT 1 FROM #__jlms_mail_queue AS queued WHERE queued.course_id = campaign.course_id AND queued.template_id = 'com_jlms.course.published' AND queued.state IN ('pending','retry','sending'))")->execute();
+        $this->db->setQuery(("UPDATE #__jlms_course_announcement_campaigns AS campaign SET state "
+            . "= 'finished' WHERE campaign.state = 'queued' AND NOT EXISTS "
+            . "(SELECT 1 FROM #__jlms_mail_queue AS queued WHERE queued.course_id "
+            . "= campaign.course_id AND queued.template_id = "
+            . "'com_jlms.course.published' AND queued.state IN ('pending','retry','sending'))"))->execute();
         return ['sent' => $sent, 'failed' => $failed, 'skipped' => $skipped, 'processed' => count($ids)];
     }
 
@@ -386,10 +390,14 @@ final class MailQueue
                 'target.starts_at, target.ends_at, ed.starts_at AS edition_starts, ed.ends_at AS edition_ends'
             )->from('#__jlms_enrollment_migrations AS m')
                 ->innerJoin('#__jlms_enrollments AS source ON source.id = m.source_enrollment_id')
-                ->innerJoin('#__jlms_enrollments AS target ON target.id = m.target_enrollment_id AND target.user_id = source.user_id AND target.course_id = source.course_id')
-                ->innerJoin('#__jlms_editions AS ed ON ed.id = target.edition_id AND ed.course_version_id = target.course_version_id')
+                ->innerJoin(('#__jlms_enrollments AS target ON target.id = '
+                    . 'm.target_enrollment_id AND target.user_id = source.user_id AND '
+                    . 'target.course_id = source.course_id'))
+                ->innerJoin(('#__jlms_editions AS ed ON ed.id = target.edition_id AND '
+                    . 'ed.course_version_id = target.course_version_id'))
                 ->innerJoin('#__jlms_courses AS c ON c.id = target.course_id')
-                ->innerJoin('#__jlms_course_versions AS v ON v.id = target.course_version_id AND v.course_id = target.course_id')
+                ->innerJoin(('#__jlms_course_versions AS v ON v.id = target.course_version_id '
+                    . 'AND v.course_id = target.course_id'))
                 ->innerJoin('#__users AS u ON u.id = target.user_id')
                 ->where('m.id = :migration')->where('target.id = :target')->where('target.course_id = :course')
                 ->where('target.user_id = :user')->where("source.status = 'migrated'")
@@ -445,11 +453,13 @@ final class MailQueue
             if ($enrollmentId < 1 || $lessonId < 1) {
                 return false;
             }
-            $query = $this->db->createQuery()->select('e.id, e.created_at, e.started_at, e.starts_at, e.ends_at, e.course_version_id, ' .
+            $query = $this->db->createQuery()->select(('e.id, e.created_at, e.started_at, e.starts_at, e.ends_at, '
+                . 'e.course_version_id, ') .
                 'ed.starts_at AS edition_starts, ed.ends_at AS edition_ends, v.published_at, ' .
                 'l.publish_up, l.publish_down, l.release_after_days, c.params_json, c.content_access')
                 ->from('#__jlms_enrollments AS e')
-                ->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id AND ed.course_version_id = e.course_version_id')
+                ->innerJoin(('#__jlms_editions AS ed ON ed.id = e.edition_id AND '
+                    . 'ed.course_version_id = e.course_version_id'))
                 ->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id AND v.course_id = e.course_id')
                 ->innerJoin('#__jlms_lessons AS l ON l.id = :lesson AND l.course_version_id = e.course_version_id')
                 ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')

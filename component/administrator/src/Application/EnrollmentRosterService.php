@@ -98,7 +98,11 @@ final class EnrollmentRosterService
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
         }
-        $q = $this->db->createQuery()->select('e.id, e.course_version_id, e.edition_id, e.status, e.required_total, e.completed_total, e.started_at, e.completed_at, e.last_activity_at, e.starts_at, e.ends_at, u.name AS learner_name, u.username, u.block AS account_blocked, v.version_no, v.title_snapshot, c.current_version_id')
+        $q = $this->db->createQuery()->select(('e.id, e.course_version_id, e.edition_id, e.status, '
+            . 'e.required_total, e.completed_total, e.started_at, e.completed_at, '
+            . 'e.last_activity_at, e.starts_at, e.ends_at, u.name AS '
+            . 'learner_name, u.username, u.block AS account_blocked, '
+            . 'v.version_no, v.title_snapshot, c.current_version_id'))
             ->from('#__jlms_enrollments AS e')
             ->leftJoin('#__users AS u ON u.id = e.user_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
@@ -113,7 +117,8 @@ final class EnrollmentRosterService
         if ($search !== '') {
             // Escape LIKE metacharacters independently of SQL quoting; the value remains bound.
             $pattern = '%' . strtr($search, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
-            $q->where('(u.name LIKE :rosterSearchName ESCAPE \'!\' OR u.username LIKE :rosterSearchUsername ESCAPE \'!\')')
+            $q->where(('(u.name LIKE :rosterSearchName ESCAPE \'!\' OR u.username LIKE '
+                . ':rosterSearchUsername ESCAPE \'!\')'))
                 ->bind(':rosterSearchName', $pattern)->bind(':rosterSearchUsername', $pattern);
         }
         if ($status !== '') {
@@ -122,9 +127,11 @@ final class EnrollmentRosterService
         if ($progress === 'completed') {
             $q->where('e.completed_at IS NOT NULL');
         } elseif ($progress === 'not_started') {
-            $q->where('e.completed_at IS NULL AND e.started_at IS NULL AND e.last_activity_at IS NULL AND e.completed_total = 0');
+            $q->where(('e.completed_at IS NULL AND e.started_at IS NULL AND '
+                . 'e.last_activity_at IS NULL AND e.completed_total = 0'));
         } elseif ($progress === 'in_progress') {
-            $q->where('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0)');
+            $q->where(('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR '
+                . 'e.last_activity_at IS NOT NULL OR e.completed_total > 0)'));
         }
         return $q->order('e.id DESC');
     }

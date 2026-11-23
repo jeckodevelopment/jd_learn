@@ -11,10 +11,13 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Only the parent configures the fixture; workers must not mutate shared plugin settings.
 if (($argv[2] ?? '') !== 'worker') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $plugin = $fixtureDb->query("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetch(\PDO::FETCH_ASSOC);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1, params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+    $plugin = $fixtureDb->query(("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' "
+        . "AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC);
+    $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1, "
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
     register_shutdown_function(static function () use ($fixtureDb, $plugin): void {
-        $statement = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=?, params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+        $statement = $fixtureDb->prepare(("UPDATE joomla_extensions SET enabled=?, params=? WHERE "
+            . "type='plugin' AND folder='system' AND element='languagefilter'"));
         $statement->execute([$plugin['enabled'], $plugin['params']]);
     });
 }
@@ -133,7 +136,8 @@ $language->access = 1;
 if (!$language->store()) {
     throw new \RuntimeException('Content language publication failed');
 }
-$catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$catid = (int) $db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $create = static function (string $name, string $tag) use ($catid, $factory): int {
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
     if (
@@ -150,7 +154,8 @@ $otherEn = $create('association-other-en', 'en-GB');
 $otherIt = $create('association-other-it', 'it-IT');
 $all = $create('association-all', '*');
 assocExpect(assocSave(assocData($en) + ['associations' => ['it-IT' => $it]]), 'translation saved through native AdminModel');
-assocExpect((int) $helper->getAssociations('course', $en)['it-IT']->id === $it, 'native Associations API reads course translation without wrong category-extension join');
+assocExpect((int) $helper->getAssociations('course', $en)['it-IT']->id === $it, ('native Associations API reads '
+    . 'course translation without wrong category-extension join'));
 $item = $factory->createModel('Course', 'Administrator', ['ignore_request' => true])->getItem($en);
 assocExpect((int) $item->associations['it-IT'] === $it, 'native editor loads current associations');
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);

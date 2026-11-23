@@ -9,10 +9,13 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
 }
 $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-$languagePlugin = $fixtureDb->query("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND folder='system' AND element='languagefilter'")->fetchColumn();
-$fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+$languagePlugin = $fixtureDb->query(("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND "
+    . "folder='system' AND element='languagefilter'"))->fetchColumn();
+$fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND "
+    . "folder='system' AND element='languagefilter'"));
 register_shutdown_function(static function () use ($fixtureDb, $languagePlugin): void {
-    $q = $fixtureDb->prepare("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
+    $q = $fixtureDb->prepare(("UPDATE joomla_extensions SET enabled=? WHERE type='plugin' AND "
+        . "folder='system' AND element='languagefilter'"));
     $q->execute([$languagePlugin]);
 });
 
@@ -196,7 +199,9 @@ dashExpect(count($read($owner, 'in_progress')) === 1, 'learning progress filter 
 $foreignLesson = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id <> ' . (int)$base
     ->course_version_id . ' ORDER BY id LIMIT 1')->loadResult();
 $update('jlms_enrollments', $active, ['last_lesson_id' => $foreignLesson]);
-dashExpect($learning->resumeTarget($owner, 'en-GB', $active)['lesson_id'] === $f['lessons'][2], 'cross-version last activity falls back to first required incomplete lesson without disclosing its body');
+dashExpect($learning->resumeTarget($owner, 'en-GB', $active)['lesson_id'] === $f['lessons'][2], ('cross-version last '
+    . 'activity falls back to first required incomplete lesson without '
+    . 'disclosing its body'));
 $update('jlms_enrollments', $active, ['last_lesson_id' => $f['lessons'][1]]);
 dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $suspended), 403, 'suspension cannot be bypassed by resume');
 dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $completed), 403, 'expired completed classroom cannot be reopened by resume');
@@ -275,7 +280,8 @@ $document = (object)['certificate_id' => (int)$certificate->id,'document_no' => 
         => $completedAt,'revision' => 1];
 $db->insertObject('#__jlms_certificate_documents', $document, 'id');
 $update('jlms_certificates', (int)$certificate->id, ['current_document_id' => (int)$document->id]);
-$certDbSnapshot = $db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json FROM #__jlms_certificate_documents WHERE id=' . (int)$document->id)->loadAssoc();
+$certDbSnapshot = $db->setQuery(('SELECT id,serial,issued_at,identity_snapshot_json FROM '
+    . '#__jlms_certificate_documents WHERE id=') . (int)$document->id)->loadAssoc();
 dashExpect($certificates->listForStudent($other) === [], 'foreign learner has no access to another issued certificate');
 dashDenied(fn()=>$certificates->download($other, $completed), 404, 'foreign certificate download denied');
 dashDenied(fn()=>$certificates->download(new \Joomla\CMS\User\User(), $completed), 401, 'anonymous certificate download denied');
@@ -343,7 +349,8 @@ try {
              'certificate availability does not re-enable lessons'
          );
          dashExpect(
-             $db->setQuery('SELECT id,serial,issued_at,identity_snapshot_json FROM #__jlms_certificate_documents WHERE id=' . (int)$document->id)->loadAssoc() === $certDbSnapshot,
+             $db->setQuery(('SELECT id,serial,issued_at,identity_snapshot_json FROM '
+                 . '#__jlms_certificate_documents WHERE id=') . (int)$document->id)->loadAssoc() === $certDbSnapshot,
              'archiving never changes certificate identity, serial, issue date or snapshot'
          );
      } finally {

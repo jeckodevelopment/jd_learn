@@ -93,7 +93,8 @@ if ($mode === 'retained') {
     echo json_encode(['enrollment_migration_retained_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     return;
 }
-$cat = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$cat = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 $model = $component->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
 if (!$model->save(['id' => 0,'title' => 'Enrollment migration fixture','alias' => 'enrollment-migration-fixture','catid' => $cat,'language' => '*','catalog_access' => 1,'content_access' => 1,'enrollment_mode' => 'auto','presentation_description' => '<p>Migration fixture description.</p>','summary' => 'Migration fixture'])) {
     throw new RuntimeException('Migration fixture course could not be saved: ' . $model->getError());
@@ -115,7 +116,8 @@ $now = gmdate('Y-m-d H:i:s');$progress = (object)['enrollment_id' => $enrollment
 $db->insertObject('#__jlms_lesson_progress', $progress);
 $version = (int)$author->createDraft($actor, $course, (int)migrationRow('courses', $course)->revision);
 $outline = $author->outline($actor, $course, $version);
-$targetLesson = (int)$db->setQuery('SELECT t.id FROM #__jlms_lessons AS s INNER JOIN #__jlms_lessons AS t ON t.logical_key=s.logical_key WHERE s.id=' . $lesson . ' AND t.course_version_id=' . $version)->loadResult();
+$targetLesson = (int)$db->setQuery(('SELECT t.id FROM #__jlms_lessons AS s INNER JOIN #__jlms_lessons '
+    . 'AS t ON t.logical_key=s.logical_key WHERE s.id=') . $lesson . ' AND t.course_version_id=' . $version)->loadResult();
 if (!$targetLesson) {
     throw new RuntimeException('Copied version did not preserve the lesson equivalence key.');
 }

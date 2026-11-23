@@ -13,9 +13,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 if (($argv[2] ?? '') !== 'retained') {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'"));
     unset($fixtureDb);
 }
 
@@ -149,10 +152,12 @@ quizExpect($list['total'] === 1 && (int)$list['items'][0]->id === $id, 'question
 $filtered = $bank->adminListing($actor, ['catid' => (string)$category,'published' => '1','language' => '*','search' => 'id:' . $id], 0, 20, 'q.id', 'DESC');
 quizExpect($filtered['total'] === 1 && (int)$filtered['items'][0]->id === $id, 'question bank combines category, state, language and search filters');
 $emptyFilter = $bank->adminListing($actor, ['catid' => (string)$category,'published' => '0','language' => '*'], 0, 20, 'q.id', 'DESC');
-quizExpect($emptyFilter['total'] === 0, 'question bank state filter excludes published questions when drafts are selected');
+quizExpect($emptyFilter['total'] === 0, ('question bank state filter excludes published questions when '
+    . 'drafts are selected'));
 quizReject(fn()=>$bank->save($actor, $question), 409, 'stale question revision rejected');
 quizReject(fn()=>$bank->save(new \Joomla\CMS\User\User(), $question), 401, 'guest bank mutation rejected');
-$otherCategory = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$otherCategory = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
+    . "alias='ci-courses'"))->loadResult();
 quizReject(fn()=>$bank->save($actor, array_replace($question, ['catid' => $otherCategory,'revision' => 2])), 422, 'course category cannot be used as a bank category');
 $multiple = $question;
 $multiple['id'] = 0;
@@ -227,7 +232,8 @@ $publication = $component->getPublicationService();
 $blocked = false;
 $quizId = (int)$db->setQuery('SELECT id FROM #__jlms_quizzes WHERE lesson_id=' . $lesson)->loadResult();
 $selectionBefore = $db->setQuery('SELECT selection_json FROM #__jlms_quizzes WHERE id=' . $quizId)->loadResult();
-$db->setQuery("UPDATE #__jlms_quizzes SET selection_json=JSON_SET(selection_json,'$._schema',99) WHERE id=" . $quizId)->execute();
+$db->setQuery(("UPDATE #__jlms_quizzes SET "
+    . "selection_json=JSON_SET(selection_json,'$._schema',99) WHERE id=") . $quizId)->execute();
 try {
     $publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
 } catch (\RuntimeException $error) {

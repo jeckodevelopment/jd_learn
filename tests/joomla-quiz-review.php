@@ -13,10 +13,16 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // rewriting extension settings concurrently can deadlock before the test barrier.
 if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
     $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
-    $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR (folder='task' AND element='jlms'))");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')");
-    $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'");
+    $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND "
+            . "(folder='jlmsvideo' OR (folder='task' AND element='jlms'))"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+            . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE "
+            . "type='plugin' AND folder='user' AND element='joomla'"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+            . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.playback_enabled',1) "
+            . "WHERE type='plugin' AND folder='jlmsvideo' AND element IN ('youtube','vimeo')"));
+    $fixtureDb->exec(("UPDATE joomla_extensions SET "
+            . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'"));
     unset($fixtureDb);
 }
 
@@ -148,7 +154,8 @@ if (($argv[2] ?? '') === 'retained') {
     $u = new \Joomla\CMS\User\User($t['user_id']);
     $r = $runtime->state($u, 'en-GB', $t['enrollment_id'], $lesson);
     reviewExpect(!$r['course_completed'] && $r['used_attempts'] === 3, 'effective result and attempt consumption survive upgrade');
-    $raw = $db->setQuery('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM #__jlms_attempts WHERE id=' . (int)$t['passed_attempt'])->loadObject();
+    $raw = $db->setQuery(('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM '
+            . '#__jlms_attempts WHERE id=') . (int)$t['passed_attempt'])->loadObject();
     reviewExpect(hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'], 'invalidated original grading evidence survives upgrade');
     reviewExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.quizcancel' AND item_id=" . (int)$t['passed_attempt'])->loadResult() === 1, 'cancellation audit survives upgrade');
     echo json_encode(['quiz_review_upgrade_checks' => $checks,'status' => 'passed']) . PHP_EOL;
@@ -163,7 +170,9 @@ $first = $a['attempt']['id'];
 $saveKey = reviewKey();
 $answers = reviewAnswers($a);
 $runtime->mutate($user, 'en-GB', $enrollment, $lesson, $first, 1, $saveKey, $answers, false);
-$questionEvidence = $db->setQuery('SELECT public_snapshot_json,grading_snapshot_json,answer_json FROM #__jlms_attempt_questions AS q LEFT JOIN #__jlms_attempt_answers AS a ON a.attempt_question_id=q.id WHERE q.attempt_id=' . $first . ' ORDER BY q.id')->loadAssocList();
+$questionEvidence = $db->setQuery(('SELECT public_snapshot_json,grading_snapshot_json,answer_json FROM '
+        . '#__jlms_attempt_questions AS q LEFT JOIN #__jlms_attempt_answers AS a ON '
+        . 'a.attempt_question_id=q.id WHERE q.attempt_id=') . $first . ' ORDER BY q.id')->loadAssocList();
 $preview = $review->editor($actor, $course, $lesson, $enrollment, $first, true);
 $cmd = reviewCommand($preview);
 reviewExpect($preview['impact']['used_after'] === 0 && !$preview['impact']['after_lesson_completed'], 'preview shows refund without credit');
@@ -180,7 +189,9 @@ reviewExpect($review->cancel($actor, ...$cmd) === $first, 'identical cancellatio
 $bad = $cmd;
 $bad[7] = 'Other reason';
 reviewReject(fn()=>$review->cancel($actor, ...$bad), 409, 'changed replay body rejected');
-$evidence = $db->setQuery('SELECT public_snapshot_json,grading_snapshot_json,answer_json FROM #__jlms_attempt_questions AS q LEFT JOIN #__jlms_attempt_answers AS a ON a.attempt_question_id=q.id WHERE q.attempt_id=' . $first . ' ORDER BY q.id')->loadAssocList();
+$evidence = $db->setQuery(('SELECT public_snapshot_json,grading_snapshot_json,answer_json FROM '
+        . '#__jlms_attempt_questions AS q LEFT JOIN #__jlms_attempt_answers AS a ON '
+        . 'a.attempt_question_id=q.id WHERE q.attempt_id=') . $first . ' ORDER BY q.id')->loadAssocList();
 reviewExpect($evidence === $questionEvidence, 'cancellation preserves public/private snapshots and saved answers');
 $r = $runtime->state($user, 'en-GB', $enrollment, $lesson);
 reviewExpect($r['used_attempts'] === 0 && $r['remaining_attempts'] === 3 && $r['attempt']['state'] === 'invalidated' && !$r['feedback_available'] && $r['attempt']['score_points'] === null, 'refunded invalidation has no effective score or answer-key release');
@@ -198,7 +209,8 @@ $stale = reviewCommand($review->editor($actor, $course, $lesson, $enrollment, $s
 $passed = $runtime->mutate($user, 'en-GB', $enrollment, $lesson, $second, 2, reviewKey(), '{}', true);
 reviewExpect($passed['course_completed'], 'saved answers pass before review');
 reviewReject(fn()=>$review->cancel($actor, ...$stale), 409, 'submission invalidates open-attempt preview');
-$raw = $db->setQuery('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM #__jlms_attempts WHERE id=' . $second)->loadObject();
+$raw = $db->setQuery(('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM '
+        . '#__jlms_attempts WHERE id=') . $second)->loadObject();
 $snapshotHash = hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR));
 $now += 61;
 $a = $runtime->start($user, 'en-GB', $enrollment, $lesson, reviewKey());
@@ -212,7 +224,8 @@ reviewExpect($r['course_completed'] && $r['best']['best_attempt_id'] === $third 
 $review->cancel($actor, ...reviewCommand($review->editor($actor, $course, $lesson, $enrollment, $third, true)));
 $r = $runtime->state($user, 'en-GB', $enrollment, $lesson);
 reviewExpect(!$r['course_completed'] && $r['course_percent'] === 0 && $r['best'] === null && $r['used_attempts'] === 1, 'invalidating final valid pass clears effective completion and best');
-$rawAfter = $db->setQuery('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM #__jlms_attempts WHERE id=' . $second)->loadObject();
+$rawAfter = $db->setQuery(('SELECT rules_snapshot_json,score_points,passed,submitted_at FROM '
+        . '#__jlms_attempts WHERE id=') . $second)->loadObject();
 reviewExpect(hash('sha256', json_encode($rawAfter, JSON_THROW_ON_ERROR)) === $snapshotHash, 'raw closed attempt score and submission remain unchanged');
 $old = $runtime->state($user, 'en-GB', $enrollment, $lesson, $second);
 reviewExpect($old['attempt']['passed'] && !$old['attempt']['valid'] && !$old['feedback_available'], 'historical pass is explicitly invalid and never releases correction');
