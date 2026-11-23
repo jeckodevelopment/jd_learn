@@ -679,7 +679,11 @@ final class LearningService
                     ->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
             $audio = $this->db->setQuery($audioQuery, 0, 2)->loadObjectList();
             if (count($audio) >= 1) {
-                $lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->title, 'mime' => $audio[0]->mime_type];
+                $lesson->audio_attachment = [
+                    'id' => (int) $audio[0]->id,
+                    'title' => $audio[0]->title,
+                    'mime' => $audio[0]->mime_type,
+                ];
             }
         }
         $audioTranscript = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
@@ -784,7 +788,10 @@ final class LearningService
             if (!in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule !== 'manual') {
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
-            $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
+            $this->ledger($actor, 'lesson.complete', $key, [
+                'enrollment_id' => $enrollmentId,
+                'lesson_id' => $lessonId,
+            ], $enrollmentId);
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
                 ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)

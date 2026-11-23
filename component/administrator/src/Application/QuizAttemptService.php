@@ -108,7 +108,12 @@ final class QuizAttemptService
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER);
         $q->setQuery((string)$q . ' FOR UPDATE');
         $r = $this->db->setQuery($q)->loadObject();
-        return ['used' => (int)$r->used,'last_no' => (int)$r->last_no,'last_closed' => self::timestamp($r->last_closed),'passed' => (bool)$r->any_passed];
+        return [
+            'used' => (int)$r->used,
+            'last_no' => (int)$r->last_no,
+            'last_closed' => self::timestamp($r->last_closed),
+            'passed' => (bool)$r->any_passed,
+        ];
     }
     private function startLedger(int $actor, string $key, int $enrollment, int $lesson, ?int $result = null): ?int
     {
@@ -161,7 +166,13 @@ final class QuizAttemptService
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $schedule = CourseSchedule::read($course);
-        $dates = [$lesson->publish_down,$enrollment->ends_at,$editionEnd,$schedule['publish_down'],$schedule['ends_at']];
+        $dates = [
+            $lesson->publish_down,
+            $enrollment->ends_at,
+            $editionEnd,
+            $schedule['publish_down'],
+            $schedule['ends_at'],
+        ];
         $limits = [];
         foreach ($dates as $date) {
             if ($date !== null && $date !== '') {
@@ -285,7 +296,10 @@ final class QuizAttemptService
         }
         $allowed = [];
         foreach ($questions as $q) {
-            $allowed[(int)$q->id] = ['kind' => $q->kind,'ids' => json_decode($q->option_ids, true, 16, JSON_THROW_ON_ERROR)];
+            $allowed[(int)$q->id] = [
+                'kind' => $q->kind,
+                'ids' => json_decode($q->option_ids, true, 16, JSON_THROW_ON_ERROR),
+            ];
         }
         $patch = [];
         foreach ($answers as $id => $selected) {
@@ -325,7 +339,11 @@ final class QuizAttemptService
             }
             $rows = $this->answerQuestions($attempt);
             $patch = $this->patch($rows, $json);
-            $hash = hash('sha256', QuestionDefinition::canonical(['operation' => $submit ? 'submit' : 'save','revision' => $revision,'answers' => $patch]));
+            $hash = hash('sha256', QuestionDefinition::canonical([
+                'operation' => $submit ? 'submit' : 'save',
+                'revision' => $revision,
+                'answers' => $patch,
+            ]));
             $q = $this->db->createQuery()
                 ->select('*')
                 ->from('#__jlms_quiz_mutations')
@@ -382,7 +400,13 @@ final class QuizAttemptService
                     $e->revision = $touch->revision;
                 }
             }
-            $mutation = (object)['attempt_id' => $attempt,'mutation_id' => $key,'request_hash' => $hash,'result_revision' => (int)$a->revision,'created_at' => self::date($now)];
+            $mutation = (object) [
+                'attempt_id' => $attempt,
+                'mutation_id' => $key,
+                'request_hash' => $hash,
+                'result_revision' => (int)$a->revision,
+                'created_at' => self::date($now),
+            ];
             $this->db->insertObject('#__jlms_quiz_mutations', $mutation);
             $dto = $this->dto($a, $e, $l, $quiz, $identity, $language, $submit || $a->status !== 'open');
             $dto['replay'] = false;
@@ -418,7 +442,14 @@ final class QuizAttemptService
         $a->passed = (int)$passed;
         $a->submitted_at = self::date($time);
         $a->revision = (int)$a->revision + 1;
-        $update = (object)['id' => (int)$a->id,'status' => $status,'score_points' => $score,'passed' => (int)$passed,'submitted_at' => $a->submitted_at,'revision' => $a->revision];
+        $update = (object) [
+            'id' => (int)$a->id,
+            'status' => $status,
+            'score_points' => $score,
+            'passed' => (int)$passed,
+            'submitted_at' => $a->submitted_at,
+            'revision' => $a->revision,
+        ];
         $this->db->updateObject('#__jlms_attempts', $update, 'id');
         $attempt = (int)$a->id;
         $q = $this->db->createQuery()
@@ -438,7 +469,13 @@ final class QuizAttemptService
         $progress = $this->db->setQuery($q)->loadObject();
         $best = $progress ? json_decode($progress->coverage_json, true, 16, JSON_THROW_ON_ERROR) : null;
         if (!$best || $score * $best['max_points'] >= $best['score_points'] * (int)$a->max_points) {
-            $best = ['_schema' => 1,'kind' => 'quiz','best_attempt_id' => (int)$a->id,'score_points' => $score,'max_points' => (int)$a->max_points];
+            $best = [
+                '_schema' => 1,
+                'kind' => 'quiz',
+                'best_attempt_id' => (int)$a->id,
+                'score_points' => $score,
+                'max_points' => (int)$a->max_points,
+            ];
         }
         $wasCompleted = $progress && $progress->state === 'completed';
         $completed = $wasCompleted || $passed || $rules['assessment'] === 'practice';
@@ -463,7 +500,12 @@ final class QuizAttemptService
             }
             $this->db->setQuery($q)->execute();
         } else {
-            $record = (object)($fields + ['enrollment_id' => $enrollment,'course_version_id' => (int)$a->course_version_id,'lesson_id' => $lesson,'source_revision' => $rules['source_revision']]);
+            $record = (object) ($fields + [
+                'enrollment_id' => $enrollment,
+                'course_version_id' => (int)$a->course_version_id,
+                'lesson_id' => $lesson,
+                'source_revision' => $rules['source_revision'],
+            ]);
             $this->db->insertObject('#__jlms_lesson_progress', $record);
         }
         $total = (int)$e->completed_total + (!$wasCompleted && $completed ? (int)$l->required : 0);
@@ -534,7 +576,15 @@ final class QuizAttemptService
         $history = $this->history($enrollment, $quizId);
         $active = $this->active($enrollment, $quizId);
         $selection = json_decode($quiz->selection_json, true, 16, JSON_THROW_ON_ERROR);
-        $rules = $a ? json_decode($a->rules_snapshot_json, true, 16, JSON_THROW_ON_ERROR) : ['max_attempts' => (int)$quiz->max_attempts,'retry_seconds' => $selection['retry_delay_seconds'],'threshold' => (int)$quiz->pass_basis_points,'time_seconds' => (int)$quiz->time_limit_seconds,'assessment' => $selection['assessment'],'feedback' => $quiz->feedback_policy,'draw_count' => $selection['draw_count']];
+        $rules = $a ? json_decode($a->rules_snapshot_json, true, 16, JSON_THROW_ON_ERROR) : [
+            'max_attempts' => (int)$quiz->max_attempts,
+            'retry_seconds' => $selection['retry_delay_seconds'],
+            'threshold' => (int)$quiz->pass_basis_points,
+            'time_seconds' => (int)$quiz->time_limit_seconds,
+            'assessment' => $selection['assessment'],
+            'feedback' => $quiz->feedback_policy,
+            'draw_count' => $selection['draw_count'],
+        ];
         $nextRules = $this->time->rules(['time_seconds' => (int)$quiz->time_limit_seconds], $enrollment, $quizId);
         if (!$a) {
             $rules = array_replace($rules, $nextRules);
@@ -579,7 +629,12 @@ final class QuizAttemptService
             $closed = $a->status !== 'open';
             $graded = in_array($a->status, ['submitted','expired'], true);
             $feedback = $graded && !$active && ($rules['feedback'] === 'after_submit' || ($rules['feedback'] === 'pass_or_exhausted' && ($history['passed'] || ($remaining !== null && $remaining === 0))));
-            $dto['feedback_available'] = $feedback;$dto['attempt'] = ['id' => (int)$a->id,'number' => (int)$a->attempt_no,'state' => $a->status,'revision' => (int)$a->revision,
+            $dto['feedback_available'] = $feedback;
+            $dto['attempt'] = [
+                'id' => (int)$a->id,
+                'number' => (int)$a->attempt_no,
+                'state' => $a->status,
+                'revision' => (int)$a->revision,
                 'deadline' => self::timestamp($a->deadline_at),'started_at' => self::timestamp($a->started_at),'submitted_at' => self::timestamp($a->submitted_at),
                 'valid' => $a->status !== 'invalidated','counted_for_limit' => (bool)($a->counted_for_limit ?? 1),'score_points' => $a->score_points === null ? null : (int)$a->score_points,'max_points' => (int)$a->max_points,'passed' => $a->passed === null ? null : (bool)$a->passed];
             foreach (($includeQuestions ? $this->questions((int)$a->id) : []) as $row) {
