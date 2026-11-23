@@ -65,8 +65,7 @@ def verify(check_root: Path = ROOT) -> dict[str, int]:
             path = check_root / relative
             if not path.is_file():
                 raise AssertionError(f"SECDEV-03 {family}: missing evidence {relative}")
-            runner = preflight if relative.endswith(".py") else workflow
-            if relative not in runner:
+            if relative not in preflight and relative not in workflow:
                 raise AssertionError(f"SECDEV-03 {family}: not exercised in CI: {relative}")
     # No direct request superglobal may become an SQL query or rendered HTML.
     # Semgrep and the controller inventory supply additional, distinct checks.
