@@ -20,6 +20,16 @@ def source(path: str) -> str:
     return file.read_text(encoding="utf-8")
 
 
+# Conservatively reject new CSV emitters; even matching a quoted source
+# string requires review rather than silently treating a possible sink as safe.
+csv_sink = re.compile(
+    r"\\bfputcsv\\s*\\(|\\bSplFileObject\\s*\\(|"
+    r"header\\s*\\(\\s*['\\\"][^\\n]*(?:text|application)/csv|"
+    r"\\b(?:League\\\\Csv\\\\Writer|CsvWriter)\\b|"
+    r"(?:format|type)\\s*=\\s*['\\\"]?csv", re.I
+)
+
+
 def check() -> None:
     literal = source("component/site/src/Helper/CatalogSearch.php")
     tests = source("tests/catalog-literal-search.php")
@@ -43,22 +53,21 @@ def check() -> None:
         assert payload in publication, f"SQLi database fixture absent: {payload}"
     assert "tests/secdev07-sast.py" in ci, "Dynamic-evaluation SAST absent from CI"
 
-    # The runtime 1.0.0 intentionally ships no CSV export. Do not silently
-    # introduce a CSV/spreadsheet producer without explicit formula escaping.
+    # The release has no application-generated CSV; inspect ALL shipped PHP,
+    # including services, domain classes and models (not just HTTP controllers).
     paths = [
-        *ROOT.glob("component/**/src/Controller/*.php"),
-        *ROOT.glob("component/**/tmpl/**/*.php"),
-        *ROOT.glob("plugins/**/*.php"),
+        path for prefix in ("component", "libraries", "plugins")
+        for path in (ROOT / prefix).rglob("*.php")
     ]
-    csv_sink = re.compile(
-        r"\bfputcsv\s*\(|\bSplFileObject\s*\(|"
-        r"header\s*\(\s*['\"][^\n]*text/csv|"
-        r"(?:format|type)\s*=\s*csv", re.I
-    )
-    violations = [str(p.relative_to(ROOT)) for p in paths if csv_sink.search(p.read_text(encoding="utf-8"))]
+    violations = [
+        str(path.relative_to(ROOT))
+        for path in paths
+        if csv_sink.search(path.read_text(encoding="utf-8"))
+    ]
     assert not violations, (
-        "SECDEV-03: new CSV output requires formula-injection mitigation "
-        "and behavioral regression: " + ", ".join(sorted(violations))
+        "SECDEV-03: newly introduced CSV/spreadsheet output requires "
+        "formula-injection mitigation and behavioral regression: "
+        + ", ".join(sorted(violations))
     )
     print(f"SECDEV-03: SQLi/XSS/mass-assignment evidence linked; "
           f"dynamic evaluation SAST present; {len(paths)} runtime PHP sources "
@@ -66,15 +75,30 @@ def check() -> None:
 
 
 def fixture_test() -> None:
-    regex = re.compile(r"\bfputcsv\s*\(", re.I)
-    assert regex.search("fputcsv($out, $row);")
-    # Conservative source matching flags quoted occurrences for manual review.
-    assert regex.search("$value = 'fputcsv(';")
-    # A formula-prefixed CSV value is NOT harmless, even when correctly quoted.
-    for prefix in ("=", "+", "-", "@"):
+    bad = (
+        "<?php fputcsv($stream, $record);",
+        "<?php $file = new SplFileObject($path, 'w');",
+        "<?php header('Content-Type: text/csv; charset=UTF-8');",
+        "<?php header('Content-Type: application/csv');",
+        "<?php $writer = League\\Csv\\Writer::createFromString();",
+        "<?php $format = 'csv';",
+    )
+    for payload in bad:
+        assert csv_sink.search(payload), "SECDEV-03 did not detect a CSV producer"
+    safe = (
+        "<?php echo htmlspecialchars($title, ENT_QUOTES, 'UTF-8');",
+        "<?php $db->createQuery()->where('id = :id')->bind(':id', $id);",
+        "<?php $file = fopen($path, 'rb');",
+    )
+    for payload in safe:
+        assert not csv_sink.search(payload), "SECDEV-03 rejected an unrelated code path"
+    # This is deliberately a conservative source scanner: a matching quoted
+    # string is reviewed, never silently waived.
+    assert csv_sink.search("<?php $example = 'fputcsv(';")
+    for prefix in ("=", "+", "-", "@", "\\t", "\\r"):
         value = prefix + "SUM(1,1)"
-        assert value[0] in "=+-@", "CSV formula-prefix fixture was lost"
-    print("SECDEV-03 negative fixtures: CSV output and formula prefixes recognized")
+        assert value.startswith(prefix), "CSV formula-prefix fixture was lost"
+    print("SECDEV-03: CSV exporter negative fixtures and benign controls passed")
 
 
 if __name__ == "__main__":
