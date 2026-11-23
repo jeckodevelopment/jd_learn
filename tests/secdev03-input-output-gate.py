@@ -47,6 +47,13 @@ def check() -> None:
                    "'params_json'=>'{", "'created_by'=>999999", "'checked_out'=>999999",
                    "pathway ignores raw params, author identity and checkout fields"):
         assert marker in pathways, f"SECDEV-03 pathway negative fixture absent: {marker}"
+    path_model = source("component/administrator/src/Model/PathwayModel.php")
+    assert "!is_string($imageInput) || !is_string($altInput)" in path_model, (
+        "SECDEV-03: pathway artwork must reject forged input types"
+    )
+    for marker in ("['cover_image'=>['images/cover.png']]", "['cover_alt'=>['hostile']]",
+                   "['cover_alt'=>new \\stdClass()]", "invalid artwork leaves persisted pathway metadata"):
+        assert marker in pathways, f"SECDEV-03 invalid artwork fixture absent: {marker}"
     # These are real Joomla model/database fixture assertions, not source-only tests.
     ci = source(".github/workflows/ci.yml")
     assert "joomla-course-presentation.php" in ci, "Joomla fixture absent from CI"
