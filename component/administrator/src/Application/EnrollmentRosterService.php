@@ -87,7 +87,8 @@ final class EnrollmentRosterService
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         if (
-            !is_string($status) || !in_array($status, ['', 'requested', 'active', 'completed', 'suspended', 'migrated', 'expired', 'cancelled', 'rejected'], true)
+            !is_string($status) || !in_array($status, ['', 'requested', 'active', 'completed',
+                 'suspended', 'migrated', 'expired', 'cancelled', 'rejected'], true)
             || !is_string($progress) || !in_array($progress, ['', 'not_started', 'in_progress', 'completed'], true)
         ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
