@@ -52,3 +52,11 @@ La CI installa **PHP_CodeSniffer 4.0.4**, bloccato a versione esatta, in una dir
 Questa verifica è distinta dai 260 file mappati PSR-4: copre anche installer, template e test PHP. **Se il totale attuale è maggiore di zero, SECDEV-02/criterion_01 resta non verificabile:** il gate di non regressione non deve essere scambiato per una certificazione PSR-12. Il tool è richiesto dalla CI; fallisce chiuso se mancante o se il report JSON non è interpretabile.
 
 Il controllo non determina autonomamente che tutte le API Joomla siano supportate dalla patch installata e non supplisce ai collaudi Joomla in ambiente dell'utente.
+
+## Verifica Joomla 6 senza plugin Backward Compatibility 6
+
+`tests/secdev02-compat6-disabled.php` legge lo stato del plugin `behaviour/compat6` dal database della vera installazione Joomla configurata dalla CI; la verifica è **fail-closed** se il plugin manca, risulta attivo o il database non è interrogabile. La CI controlla la condizione **prima dell'installazione/aggiornamento di JD Learn e dopo l'upgrade**, poi esegue la suite funzionale già presente nella medesima installazione. Sono disponibili fixture negative indipendenti dal database.
+
+Il controllo aumenta la prova che JD Learn **non richiede il plugin Joomla 6 di retrocompatibilità per i flussi coperti dalla CI**. Non prova che ogni possibile integrazione di terze parti, endpoint non esercitato o versione futura della patch sia compatibile. Non richiede alcuna modifica delle impostazioni del sito reale dell'utente.
+
+Riferimento: [Joomla — Compatibility Plugins per 5.4→6.0](https://manual.joomla.org/updates/54-60/compat-plugin/). Su nuove installazioni Joomla 6 il plugin è distribuito ma disabilitato per impostazione predefinita.
