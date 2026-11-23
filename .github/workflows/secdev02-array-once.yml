@@ -1,0 +1,39 @@
+name: SECDEV-02 one-shot array and argument remediation
+on:
+  push:
+    branches:
+      - style/secdev02-array-longline-remediation
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-array-once
+  cancel-in-progress: false
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Install pinned PHP_CodeSniffer
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Run PHP array and argument formatter with rollback
+        run: |
+          python3 tools/secdev02_array_wrap.py --self-test
+          python3 tools/secdev02_array_wrap.py --apply --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs
+          git diff --check
+      - name: Commit accepted edits and remove disposable workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m 'style(SECDEV-02): batch array and argument PHP formatting'
+          fi
+          git rm .github/workflows/secdev02-array-once.yml
+          git commit -m 'chore(SECDEV-02): remove one-shot write workflow'
+          git push origin HEAD:style/secdev02-array-longline-remediation
