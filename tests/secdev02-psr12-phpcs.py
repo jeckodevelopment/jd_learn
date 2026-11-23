@@ -26,7 +26,7 @@ def tracked_php(root: Path) -> list[str]:
             if x and (root / x.decode("utf-8")).is_file()]
 
 
-def signatures(phpcs: Path, root: Path, paths: list[str]) -> Counter[tuple[str, str, str, str]]:
+def signatures(phpcs: Path, root: Path, paths: list[str]) -> Counter[tuple[str, str]]:
     if not paths:
         raise RuntimeError("No PHP sources to audit")
     command = [str(phpcs), "--standard=PSR12", "--report=json",
@@ -40,7 +40,7 @@ def signatures(phpcs: Path, root: Path, paths: list[str]) -> Counter[tuple[str, 
         raise RuntimeError("PHPCS JSON report missing or invalid") from exc
     if process.returncode not in (0, 1, 2, 3):
         raise RuntimeError(f"PHPCS invocation failed with exit {process.returncode}")
-    findings: Counter[tuple[str, str, str, str]] = Counter()
+    findings: Counter[tuple[str, str]] = Counter()
     for filename, details in files.items():
         relative = Path(filename)
         if relative.is_absolute():
@@ -52,10 +52,10 @@ def signatures(phpcs: Path, root: Path, paths: list[str]) -> Counter[tuple[str, 
             row = hit["line"]
             if not isinstance(row, int) or row < 1 or row > len(lines):
                 raise RuntimeError("PHPCS returned invalid source line")
-            # Source + diagnostic + stripped offending line: line-number changes
-            # don't count as regressions, but duplicate violations do.
-            findings[(relative.as_posix(), hit["source"], hit["message"],
-                      lines[row - 1].strip())] += 1
+            # Compare counts for each rule in each file. Auto-fixers rewrite
+            # whitespace/line context; raw message or source-line keys create
+            # false "new" violations even when a file's count decreases.
+            findings[(relative.as_posix(), hit["source"])] += 1
     return findings
 
 
@@ -77,8 +77,7 @@ def diff(current: Counter, old: Counter) -> Counter:
 
 
 def self_test() -> None:
-    a = ("component/site/src/Thing.php", "PSR12.ControlStructures.ControlStructureSpacing",
-         "Expected 1 space", "if ($x) {")
+    a = ("component/site/src/Thing.php", "PSR12.ControlStructures.ControlStructureSpacing")
     original = Counter({a: 1})
     assert not diff(original, original)
     altered = original.copy()
@@ -86,7 +85,7 @@ def self_test() -> None:
     assert diff(altered, original)[a] == 1
     updated = Counter()
     assert not diff(updated, original)
-    new = ("plugins/system/something.php", "PSR12.Files.FileHeader", "Missing header", "<?php")
+    new = ("plugins/system/something.php", "PSR12.Files.FileHeader")
     assert diff(Counter({new: 1}), original)[new] == 1
 
 
@@ -121,7 +120,7 @@ def main() -> int:
     # or hand-picked classes. Only aggregate counts are printed: no source text.
     rules = Counter()
     by_file = Counter()
-    for (filename, rule, _message, _code), count in now.items():
+    for (filename, rule), count in now.items():
         rules[rule] += count
         by_file[filename] += count
     print("SECDEV-02 PHPCS most frequent rule violations:")
@@ -130,7 +129,7 @@ def main() -> int:
     print("SECDEV-02 PHPCS largest source debts:")
     for filename, count in by_file.most_common(20):
         print(f"  {filename}: {count}")
-    for (filename, source, _message, _code), count in sorted(introduced.items())[:40]:
+    for (filename, source), count in sorted(introduced.items())[:40]:
         print(f"New PSR-12 finding: {filename}: {source} x{count}", file=sys.stderr)
     if now:
         print("SECDEV-02 PSR-12 debt remains; this gate does NOT certify full PSR-12 compliance.")
