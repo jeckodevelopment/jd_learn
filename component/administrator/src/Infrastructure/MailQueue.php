@@ -34,7 +34,7 @@ final class MailQueue
             'com_jlms.course.message' => 'communication',
             'com_jlms.course.expiring' => 'expiry',
             'com_jlms.lesson.available' => 'lesson_release',
-            'com_jlms.course.updated' => 'course_update', 
+            'com_jlms.course.updated' => 'course_update',
             default => null,
         };
         if ($courseId < 1 || $event === null || ($recipientUserId ?? 0) < 1 || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
