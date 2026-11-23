@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/** Native pathway authoring, visibility and aggregate-progress integration test. */
+/* Native pathway authoring, visibility and aggregate-progress integration test. */
 
 $root = realpath($argv[1] ?? '');
 $retained = ($argv[2] ?? '') === 'retained';

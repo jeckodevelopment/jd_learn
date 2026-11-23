@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-/** Review workflow integration test; run only on the disposable CI Joomla site. */
+/* Review workflow integration test; run only on the disposable CI Joomla site. */
 
 $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
