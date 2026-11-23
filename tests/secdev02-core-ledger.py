@@ -24,6 +24,8 @@ def validate(root: Path) -> tuple[list[str], dict]:
         register = json.loads((root / CRITERIA).read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         return [f"SECDEV-02 input unavailable or invalid: {exc}"], {}
+    if ledger.get("schema_version") != 2:
+        errors.append("CORE evidence ledger requires schema version 2")
     rows = ledger.get("services")
     requirements = register.get("requirements", {})
     if not isinstance(rows, list):
@@ -53,6 +55,31 @@ def validate(root: Path) -> tuple[list[str], dict]:
         if not isinstance(units, list) or not units:
             errors.append(f"{key}: criteria missing from canonical register")
             continue
+        reviewed = {
+            path for unit in units if unit.get("status") == "implemented"
+            for path in unit.get("evidence", [])
+        }
+        implementation = row.get("implementation_evidence")
+        tests = row.get("automated_test_evidence")
+        if not isinstance(implementation, list) or not implementation:
+            errors.append(f"{key}: implementation evidence must be a nonempty list")
+            implementation = []
+        if not isinstance(tests, list):
+            errors.append(f"{key}: automated test evidence must be a list")
+            tests = []
+        if len(set(implementation)) != len(implementation) or len(set(tests)) != len(tests):
+            errors.append(f"{key}: duplicate evidence paths")
+        if set(implementation) != reviewed:
+            errors.append(f"{key}: evidence ledger differs from implemented canonical criteria")
+        if set(tests) != {p for p in reviewed if p.startswith("tests/")}:
+            errors.append(f"{key}: automated test evidence differs from reviewed tests")
+        for item in [*implementation, *tests]:
+            if not isinstance(item, str) or item.startswith("/") or ".." in Path(item).parts:
+                errors.append(f"{key}: unsafe implementation evidence path")
+            elif not (root / item).is_file():
+                errors.append(f"{key}: implementation evidence file not found: {item}")
+        if not any(not p.startswith("tests/") for p in implementation):
+            errors.append(f"{key}: missing source-level implementation evidence")
         for unit in units:
             status = unit.get("status")
             if status not in STATES:
@@ -94,9 +121,16 @@ def self_test() -> None:
                           for i in range(1, 5)]
         }}
         (root / "docs/evidence.txt").write_text("proof", encoding="utf-8")
-        (root / LEDGER).write_text(json.dumps({"services": rows}), encoding="utf-8")
+        for row in rows:
+            row["implementation_evidence"] = ["docs/evidence.txt"]
+            row["automated_test_evidence"] = []
+        (root / LEDGER).write_text(json.dumps({"schema_version": 2, "services": rows}), encoding="utf-8")
         (root / CRITERIA).write_text(json.dumps(register), encoding="utf-8")
         assert validate(root)[0] == [], validate(root)
+        rows[0]["implementation_evidence"] = ["docs/unknown.txt"]
+        (root / LEDGER).write_text(json.dumps({"schema_version": 2, "services": rows}), encoding="utf-8")
+        assert any("evidence ledger differs" in item for item in validate(root)[0])
+        rows[0]["implementation_evidence"] = ["docs/evidence.txt"]
         rows.pop()
         (root / LEDGER).write_text(json.dumps({"services": rows}), encoding="utf-8")
         assert any("CORE-23" in s for s in validate(root)[0])
