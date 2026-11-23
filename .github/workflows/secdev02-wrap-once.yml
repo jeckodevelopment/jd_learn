@@ -22,6 +22,7 @@ jobs:
         run: |
           mkdir -p .runtime/secdev02-phpcs
           composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts squizlabs/php_codesniffer:4.0.4
+      # Unsupported token rewrites are skipped without modification.
       - name: Wrap only token-preserving PSR12-improving files
         run: python3 tools/secdev02-wrap-one-shot.py
       - name: Verify PHP and diff
