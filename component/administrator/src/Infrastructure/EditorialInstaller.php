@@ -11,7 +11,8 @@ final class EditorialInstaller
 {
     public static function install(DatabaseInterface $db): void
     {
-        $query = $db->createQuery()->select('id')->from('#__categories')->where("extension='com_jlms.teacher' AND alias='jd-learn-teachers'");
+        $query = $db->createQuery()->select('id')->from('#__categories')
+            ->where("extension='com_jlms.teacher' AND alias='jd-learn-teachers'");
         if (!$db->setQuery($query)->loadResult()) {
             $category = new \Joomla\CMS\Table\Category($db);
             $category->setLocation(1, 'last-child');
@@ -30,7 +31,8 @@ final class EditorialInstaller
                 $record->type_alias = 'com_jlms.' . $type;
                 $record->rules = '{}';
                 $record->router = '';
-                $record->content_history_options = json_encode(['formFile' => 'administrator/components/com_jlms/forms/' . $type . '.xml',
+                $record->content_history_options = json_encode(['formFile'
+                    => 'administrator/components/com_jlms/forms/' . $type . '.xml',
                     'hideFields' => ['asset_id', 'checked_out', 'checked_out_time'],
                     'ignoreChanges' => ['revision', 'modified_by', 'modified_at', 'checked_out',
                         'checked_out_time']], JSON_THROW_ON_ERROR);

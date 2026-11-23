@@ -59,10 +59,12 @@ $readLifecycleSnapshot = static function (int $pathId, int $courseId) use ($db):
 
 
 if (($argv[2] ?? '') === 'acl-state') {
-    $acl = json_decode((string)file_get_contents(dirname($root) . '/pathway-acl-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
+    $acl = json_decode((string)file_get_contents(dirname($root)
+        . '/pathway-acl-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
     $states = [];
     foreach (['allowed','denied'] as $key) {
-        $states[$key] = (int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . (int)$acl[$key])->loadResult();
+        $states[$key] = (int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . (int)$acl[$key])
+            ->loadResult();
     }
     echo json_encode($states, JSON_THROW_ON_ERROR) . PHP_EOL;
     return;
@@ -78,7 +80,8 @@ if ($retained) {
         'LCM-05 persisted pathway state, access metadata and ordered associations survive package upgrade'
     );
 
-    $rows = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$path . ' ORDER BY ordering')->loadColumn();
+    $rows = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$path
+        . ' ORDER BY ordering')->loadColumn();
     $check(array_map('intval', $rows) === [(int)$data['course'],(int)$data['hidden_course']], 'ordered course associations retained through package update');
     $student = new Joomla\CMS\User\User((int)$data['student']);
     $detail = $service->detail($student, 'en-GB', (int)$path);
@@ -91,11 +94,13 @@ if ($retained) {
     return;
 }
 
-$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
+$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()
+    ->createModel('Category', 'Administrator', ['ignore_request' => true]);
 $categoryModel->setState('category.extension', 'com_jlms.pathway');
 $categoryModel->setState('category.component', 'com_jlms');
 $categoryModel->setState('category.section', 'pathway');
-$category = ['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.pathway','title' => 'CI pathway category','alias' => 'ci-pathway-category',
+$category = ['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.pathway','title'
+    => 'CI pathway category','alias' => 'ci-pathway-category',
     'published' => 1,'language' => '*','access' => 1,'description' => ''];
 if (!$categoryModel->save($category)) {
     throw new RuntimeException('Native pathway category creation failed: ' . $categoryModel->getError());
@@ -113,7 +118,8 @@ $payload = ['id' => 0,'revision' => 1,'title' => 'CI learning pathway','alias' =
     'catid' => $categoryId,'access' => 1,'language' => '*','state' => 1,
     'courses' => [['course_id' => $courseId,'ordering' => 10]],
     'params_json' => '{"injected":true}','created_by' => 999999,'checked_out' => 999999];
-$check((bool)$pathModel->save($payload), 'native pathway model saves pathway and course order: ' . $pathModel->getError());
+$check((bool)$pathModel->save($payload), 'native pathway model saves pathway and course order: ' . $pathModel
+    ->getError());
 $pathwayId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='ci-learning-pathway'")->loadResult();
 $securityRow = $db->setQuery('SELECT description,params_json,created_by,checked_out FROM #__jlms_pathways WHERE id=' . (int)$pathwayId)->loadObject();
 $check(
@@ -129,7 +135,8 @@ $check(
 );
 // SECDEV-03: malformed types must fail without changing persisted authoring
 // fields, checkout, revision or the existing course association.
-$beforeInvalid = $db->setQuery('SELECT revision,params_json,description FROM #__jlms_pathways WHERE id=' . (int)$pathwayId)->loadAssoc();
+$beforeInvalid = $db->setQuery('SELECT revision,params_json,description FROM #__jlms_pathways WHERE id='
+    . (int)$pathwayId)->loadAssoc();
 foreach (
     [
     ['cover_image' => ['images/cover.png']],
@@ -143,12 +150,15 @@ foreach (
         'SECDEV-03: pathway refuses malformed artwork input'
     );
     $check(
-        $db->setQuery('SELECT revision,params_json,description FROM #__jlms_pathways WHERE id=' . (int)$pathwayId)->loadAssoc() === $beforeInvalid,
+        $db->setQuery('SELECT revision,params_json,description FROM #__jlms_pathways WHERE id='
+            . (int)$pathwayId)->loadAssoc() === $beforeInvalid,
         'SECDEV-03: invalid artwork leaves persisted pathway metadata and revision unchanged'
     );
 }
-$stored = $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$pathwayId)->loadObject();
-$check($pathwayId > 0 && (int)$stored->course_id === $courseId && (int)$stored->ordering === 0, 'native authoring normalizes and persists ordering');
+$stored = $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='
+    . (int)$pathwayId)->loadObject();
+$check($pathwayId > 0 && (int)$stored->course_id === $courseId && (int)$stored
+    ->ordering === 0, 'native authoring normalizes and persists ordering');
 // SECDEV-03: submitted association IDs are literal integer identifiers,
 // never SQL syntax; rejected updates may not modify the existing links.
 $beforeAssociationInjection = $db->setQuery(
@@ -161,7 +171,8 @@ foreach (["1 OR 1=1 --", "1; DROP TABLE courses; --", "1 UNION SELECT 1"] as $sq
     ]), 'SECDEV-03: reject SQL-like course association identifier');
     $check(
         $db->setQuery(
-            'SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$pathwayId . ' ORDER BY ordering'
+            'SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$pathwayId
+                . ' ORDER BY ordering'
         )->loadAssocList() === $beforeAssociationInjection,
         'SECDEV-03: rejected association input preserves persisted links'
     );
@@ -175,17 +186,21 @@ $hiddenCourseId = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias
 if (!$hiddenCourseId) {
     throw new RuntimeException('Draft course fixture missing.');
 }
-$check((bool)$pathModel->save(['id' => $pathwayId,'revision' => 1,'title' => 'CI learning pathway','alias' => 'ci-learning-pathway',
+$check((bool)$pathModel->save(['id' => $pathwayId,'revision' => 1,'title' => 'CI learning pathway','alias'
+    => 'ci-learning-pathway',
     'description' => '<p>Pathway summary</p>','catid' => $categoryId,'access' => 1,'language' => '*','state' => 1,
-    'courses' => [['course_id' => $courseId,'ordering' => 10],['course_id' => $hiddenCourseId,'ordering' => 20]]]), 'second course association saves');
+    'courses' => [['course_id' => $courseId,'ordering' => 10],['course_id' => $hiddenCourseId,'ordering'
+        => 20]]]), 'second course association saves');
 $detail = $service->detail($operator, 'en-GB', $pathwayId);
 $check(count($detail['courses']) === 2 && $detail['courses'][0]['id'] === $courseId, 'visible course is first in its authored order');
 $check($detail['courses'][1]['id'] === null && $detail['courses'][1]['title'] === '', 'draft course becomes an unidentified placeholder');
 
 // LCM-05: a published course with disabled delivery remains catalog-visible but
 // must not be presented as a usable classroom inside a learning pathway.
-$initialDelivery = (int)$db->setQuery('SELECT delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$courseId)->loadResult();
-$initialEnrollments = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . (int)$courseId)->loadResult();
+$initialDelivery = (int)$db->setQuery('SELECT delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$courseId)
+    ->loadResult();
+$initialEnrollments = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='
+    . (int)$courseId)->loadResult();
 try {
     $db->setQuery('UPDATE #__jlms_courses SET delivery_enabled=0 WHERE id=' . (int)$courseId)->execute();
     $suspendedPathway = $service->detail($operator, 'en-GB', $pathwayId);
@@ -197,11 +212,13 @@ try {
         'published but delivery-suspended course retains catalog and learning status without promising access'
     );
     $check(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . (int)$courseId)->loadResult() === $initialEnrollments,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . (int)$courseId)
+            ->loadResult() === $initialEnrollments,
         'delivery suspension is read-only for pathway enrollment history'
     );
 } finally {
-    $db->setQuery('UPDATE #__jlms_courses SET delivery_enabled=' . (int)$initialDelivery . ' WHERE id=' . (int)$courseId)->execute();
+    $db->setQuery('UPDATE #__jlms_courses SET delivery_enabled=' . (int)$initialDelivery . ' WHERE id='
+        . (int)$courseId)->execute();
 }
 $deliveryRestored = $service->detail($operator, 'en-GB', $pathwayId);
 $check($deliveryRestored['courses'][0]['access'] === 'available', 'restored delivery returns pathway course to its previous availability');
@@ -214,18 +231,23 @@ $guestDetail = $service->detail($guest, 'en-GB', $pathwayId);
 $check(count($guestDetail['courses']) === 2 && $guestDetail['courses'][0]['access'] === 'restricted', 'catalog-visible but content-restricted course is labeled restricted');
 $check($guestDetail['courses'][1]['id'] === null && $guestDetail['courses'][1]['title'] === '', 'guest cannot identify the draft course');
 $check($guestDetail['progress'] === null && $guestDetail['has_unavailable_courses'] === true, 'guest has no personal percentage while unavailable course contributes zero internally');
-$before = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$operator->id . ' AND course_id=' . (int)$courseId)->loadResult();
+$before = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$operator->id
+    . ' AND course_id=' . (int)$courseId)->loadResult();
 $again = $service->detail($guest, 'en-GB', $pathwayId);
-$after = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$operator->id . ' AND course_id=' . (int)$courseId)->loadResult();
+$after = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$operator->id
+    . ' AND course_id=' . (int)$courseId)->loadResult();
 $check($before === $after, 'reading a pathway never changes enrollment or access');
-$rejected = ['id' => 0,'revision' => 1,'title' => 'Rejected pathway','alias' => 'rejected-ci-pathway','description' => '','catid' => $categoryId,
-    'access' => 1,'language' => '*','state' => 1,'courses' => [['course_id' => $courseId,'ordering' => 0],['course_id' => $courseId,'ordering' => 1]]];
+$rejected = ['id' => 0,'revision' => 1,'title' => 'Rejected pathway','alias'
+    => 'rejected-ci-pathway','description' => '','catid' => $categoryId,
+    'access' => 1,'language' => '*','state' => 1,'courses' => [['course_id' => $courseId,'ordering'
+        => 0],['course_id' => $courseId,'ordering' => 1]]];
 $check(!$pathModel->save($rejected), 'duplicate course association is rejected');
 $check(
     !(int)$db->setQuery("SELECT COUNT(*) FROM #__assets WHERE name LIKE 'com_jlms.pathway.tmp.%'")->loadResult(),
     'failed pathway save removes its prepared Joomla asset'
 );
-$emptyPayload = ['id' => 0,'revision' => 1,'title' => 'Empty CI pathway','alias' => 'empty-ci-pathway','description' => '','catid' => $categoryId,
+$emptyPayload = ['id' => 0,'revision' => 1,'title' => 'Empty CI pathway','alias'
+    => 'empty-ci-pathway','description' => '','catid' => $categoryId,
     'access' => 1,'language' => '*','state' => 1,'courses' => []];
 $check((bool)$pathModel->save($emptyPayload), 'empty pathway can be authored: ' . $pathModel->getError());
 $emptyId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='empty-ci-pathway'")->loadResult();
@@ -246,7 +268,8 @@ $check(
 );
 $assertSiblingUnchanged = static function (string $phase) use ($db, $check, $siblingId, $courseId): void {
     $row = $db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . (int)$siblingId)->loadResult();
-    $links = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$siblingId)->loadColumn();
+    $links = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$siblingId)
+        ->loadColumn();
     $check(
         (int)$row === 1 && array_map('intval', $links) === [$courseId],
         'LCM-03 shared-course pathway stays published and linked after ' . $phase
@@ -259,7 +282,8 @@ $assertSiblingUnchanged = static function (string $phase) use ($db, $check, $sib
 $check($pathModel->save(array_replace($emptyPayload, [
     'title' => 'ACL allowed CI pathway','alias' => 'acl-allowed-ci-pathway'
 ])), 'LCM-05 dedicated ACL pathway created');
-$aclAllowedId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='acl-allowed-ci-pathway'")->loadResult();
+$aclAllowedId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='acl-allowed-ci-pathway'")
+    ->loadResult();
 $check($aclAllowedId > 0, 'dedicated ACL pathway persisted');
 
 $delegateGroupModel = $app->bootComponent('com_users')->getMVCFactory()
@@ -334,10 +358,13 @@ $pathwayCourses = [['course_id' => $courseId,'ordering' => 10],['course_id' => $
 $pathwayBase = ['id' => $pathwayId,'title' => 'CI learning pathway','alias' => 'ci-learning-pathway',
     'description' => '<p>Pathway summary</p>','catid' => $categoryId,'access' => 1,'language' => '*',
     'courses' => $pathwayCourses];
-$beforeRelations = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn();
-$enrollmentsBeforeArchive = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult();
+$beforeRelations = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId
+    . ' ORDER BY ordering')->loadColumn();
+$enrollmentsBeforeArchive = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='
+    . $courseId)->loadResult();
 // LCM-05: a pathway lifecycle change must not mutate its constituent courses.
-$courseStatesBefore = $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList();
+$courseStatesBefore = $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ','
+    . $hiddenCourseId . ') ORDER BY id')->loadAssocList();
 $unsafePathway = array_replace($pathwayBase, [
     'description' => '<p>Safe <strong>pathway</strong> <script>alert(1)</script><iframe src="https://example.invalid"></iframe><a href="javascript:alert(2)" onclick="alert(3)">read</a></p>',
     'revision' => 2, 'state' => 2,
@@ -346,7 +373,8 @@ $check(
     (bool)$pathModel->save($unsafePathway),
     'archiving a published pathway succeeds: ' . $pathModel->getError()
 );
-$savedPathwayHtml = (string)$db->setQuery('SELECT description FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$savedPathwayHtml = (string)$db->setQuery('SELECT description FROM #__jlms_pathways WHERE id=' . $pathwayId)
+    ->loadResult();
 $check(
     str_contains($savedPathwayHtml, '<strong>pathway</strong>')
     && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', $savedPathwayHtml),
@@ -372,15 +400,18 @@ try {
 }
 $check($archiveGuestDenied, 'archived pathway direct detail also denies anonymous visitors');
 $check(
-    $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
+    $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId
+        . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
     'archiving a pathway never changes the states of its constituent courses'
 );
 $check(
-    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
+    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId
+        . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
     'archiving preserves pathway course associations'
 );
 $check(
-    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $enrollmentsBeforeArchive,
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)
+        ->loadResult() === $enrollmentsBeforeArchive,
     'archiving a pathway does not change course enrollments'
 );
 $check(
@@ -428,15 +459,18 @@ try {
 }
 $check($trashGuestDenied, 'trashed pathway direct detail also denies anonymous visitors');
 $check(
-    $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
+    $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId
+        . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
     'trashing a pathway never changes the states of its constituent courses'
 );
 $check(
-    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
+    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId
+        . ' ORDER BY ordering')->loadColumn() === $beforeRelations,
     'trash retains every course association in order'
 );
 $check(
-    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $enrollmentsBeforeArchive,
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)
+        ->loadResult() === $enrollmentsBeforeArchive,
     'trash does not alter course enrolments'
 );
 $check(
@@ -464,11 +498,15 @@ $check(
     'republished pathway preserves all associations'
 );
 // LCM-03: multi-row operations must commit together and preserve relationships.
-$beforeBulkCourses = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn();
-$beforeBulkEnrollments = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult();
-$check($pathModel->changeStates([$pathwayId, $emptyId], -2), 'bulk trash of two pathways succeeds: ' . $pathModel->getError());
+$beforeBulkCourses = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id='
+    . $pathwayId . ' ORDER BY ordering')->loadColumn();
+$beforeBulkEnrollments = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id='
+    . $courseId)->loadResult();
+$check($pathModel->changeStates([$pathwayId, $emptyId], -2), 'bulk trash of two pathways succeeds: '
+    . $pathModel->getError());
 $check(
-    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId . ') AND state=-2')->loadResult() === 2,
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId
+        . ') AND state=-2')->loadResult() === 2,
     'both selected pathways are trashed'
 );
 $check(
@@ -482,7 +520,8 @@ $check(
 $check(!$pathModel->changeStates([$pathwayId, $pathwayId], 0), 'duplicate identifiers denied');
 $check(!$pathModel->changeStates([$pathwayId], 1), 'bulk action cannot publish directly from trash');
 // LCM-03: native checkout of one record must roll back the complete bulk action.
-$otherEditor = (int)$db->setQuery('SELECT id FROM #__users WHERE id <> ' . (int)$operator->id . ' ORDER BY id LIMIT 1')->loadResult();
+$otherEditor = (int)$db->setQuery('SELECT id FROM #__users WHERE id <> ' . (int)$operator->id
+    . ' ORDER BY id LIMIT 1')->loadResult();
 $check($otherEditor > 0, 'a second Joomla identity exists for checkout isolation');
 $db->setQuery('UPDATE #__jlms_pathways SET checked_out=' . $otherEditor . ' WHERE id=' . $emptyId)->execute();
 $lockedRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
@@ -492,7 +531,8 @@ $check(
 );
 $check(
     (int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === -2
-    && (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === $lockedRevision,
+    && (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)
+        ->loadResult() === $lockedRevision,
     'checkout-denied bulk transition rolls back previous rows and revisions'
 );
 $check(!$pathModel->purgeEmpty($emptyId), 'purge rejects a checked-out empty pathway');
@@ -507,15 +547,18 @@ $check(
 );
 $db->setQuery('UPDATE #__jlms_pathways SET checked_out=NULL WHERE id=' . $emptyId)->execute();
 $check(
-    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId . ') AND state=0')->loadResult() === 2,
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId
+        . ') AND state=0')->loadResult() === 2,
     'restoration leaves both pathways unpublished'
 );
 $check(
-    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeBulkCourses,
+    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId
+        . ' ORDER BY ordering')->loadColumn() === $beforeBulkCourses,
     'bulk actions preserve pathway course links'
 );
 $check(
-    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $beforeBulkEnrollments,
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)
+        ->loadResult() === $beforeBulkEnrollments,
     'bulk actions preserve historical enrollments'
 );
 $check($pathModel->changeStates([$pathwayId, $emptyId], 1), 'explicit mass publication after restore succeeds');
@@ -523,7 +566,8 @@ $check($pathModel->changeStates([$pathwayId, $emptyId], 1), 'explicit mass publi
 $check($pathModel->changeStates([$pathwayId, $emptyId], -2), 'prepare both pathways for protected purge');
 $check(!$pathModel->purgeEmpty($pathwayId), 'pathway with associated courses cannot be deleted');
 $check(
-    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId)->loadResult() === 2,
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId)
+        ->loadResult() === 2,
     'blocked permanent deletion leaves pathway courses intact'
 );
 // LCM-05: direct model mutations must enforce server-side permissions even
@@ -538,11 +582,13 @@ $check(
     'anonymous actor cannot permanently delete a trashed empty pathway'
 );
 $check(
-    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId . ') AND state=-2')->loadResult() === 2,
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_pathways WHERE id IN (' . $pathwayId . ',' . $emptyId
+        . ') AND state=-2')->loadResult() === 2,
     'denied mutation leaves both trashed pathway records unchanged'
 );
 $check(
-    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $beforeBulkCourses,
+    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId
+        . ' ORDER BY ordering')->loadColumn() === $beforeBulkCourses,
     'unauthorised lifecycle requests preserve course associations'
 );
 $pathModel->setCurrentUser($operator);
@@ -592,11 +638,13 @@ $check(
     'empty trashed pathway is removed'
 );
 $check(
-    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)->loadResult() === $beforeBulkEnrollments,
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $courseId)
+        ->loadResult() === $beforeBulkEnrollments,
     'protected purge leaves course enrollments untouched'
 );
 $check(
-    $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
+    $db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId
+        . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
     'permanent deletion of an empty pathway leaves constituent course states untouched'
 );
 $check(
@@ -604,15 +652,18 @@ $check(
     'the populated pathway is restored for retention testing'
 );
 // LCM-03: direct editorial saves must respect native Joomla checkout, not just bulk lifecycle tasks.
-$editorBefore = $db->setQuery('SELECT title,state,revision,checked_out FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadAssoc();
-$editorCoursesBefore = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn();
+$editorBefore = $db->setQuery('SELECT title,state,revision,checked_out FROM #__jlms_pathways WHERE id='
+    . $pathwayId)->loadAssoc();
+$editorCoursesBefore = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id='
+    . $pathwayId . ' ORDER BY ordering')->loadColumn();
 $db->setQuery('UPDATE #__jlms_pathways SET checked_out=' . $otherEditor . ' WHERE id=' . $pathwayId)->execute();
 $lockedEditorial = array_replace($pathwayBase, [
     'revision' => (int)$editorBefore['revision'], 'state' => 1,
     'title' => 'Unauthorized editorial rewrite', 'courses' => [],
 ]);
 $check(!$pathModel->save($lockedEditorial), 'direct pathway save rejects checkout held by another editor');
-$editorAfterDenied = $db->setQuery('SELECT title,state,revision,checked_out FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadAssoc();
+$editorAfterDenied = $db->setQuery('SELECT title,state,revision,checked_out FROM #__jlms_pathways WHERE id='
+    . $pathwayId)->loadAssoc();
 $check(
     $editorAfterDenied['title'] === $editorBefore['title']
     && $editorAfterDenied['state'] === $editorBefore['state']
@@ -621,7 +672,8 @@ $check(
     'denied editorial save leaves pathway fields, revision and checkout owner unchanged'
 );
 $check(
-    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $editorCoursesBefore,
+    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId
+        . ' ORDER BY ordering')->loadColumn() === $editorCoursesBefore,
     'denied editorial save preserves ordered course associations'
 );
 $db->setQuery('UPDATE #__jlms_pathways SET checked_out=' . (int)$operator->id . ' WHERE id=' . $pathwayId)->execute();
@@ -633,7 +685,8 @@ $check(
 );
 $db->setQuery('UPDATE #__jlms_pathways SET checked_out=NULL WHERE id=' . $pathwayId)->execute();
 $check(
-    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId . ' ORDER BY ordering')->loadColumn() === $editorCoursesBefore,
+    $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . $pathwayId
+        . ' ORDER BY ordering')->loadColumn() === $editorCoursesBefore,
     'authorized editor save preserves pathway course order'
 );
 // LCM-03: an editorial patch without the courses key must not clear the
@@ -665,5 +718,7 @@ $check(
     'restored links retain original course order'
 );
 file_put_contents($lifecycleSnapshotFile, json_encode($readLifecycleSnapshot($pathwayId, $courseId), JSON_THROW_ON_ERROR));
-file_put_contents($fixture, json_encode(['pathway' => $pathwayId,'course' => $courseId,'hidden_course' => $hiddenCourseId,'student' => (int)$operator->id], JSON_THROW_ON_ERROR));
-echo json_encode(['pathway_checks' => 14,'status' => 'passed','pathway_id' => $pathwayId,'student_enrollment' => $student], JSON_THROW_ON_ERROR) . PHP_EOL;
+file_put_contents($fixture, json_encode(['pathway' => $pathwayId,'course' => $courseId,'hidden_course'
+    => $hiddenCourseId,'student' => (int)$operator->id], JSON_THROW_ON_ERROR));
+echo json_encode(['pathway_checks' => 14,'status' => 'passed','pathway_id' => $pathwayId,'student_enrollment'
+    => $student], JSON_THROW_ON_ERROR) . PHP_EOL;

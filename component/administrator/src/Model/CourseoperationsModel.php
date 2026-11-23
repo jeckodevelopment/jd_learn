@@ -23,7 +23,8 @@ final class CourseoperationsModel extends FormModel
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         try {
-            return $app->bootComponent('com_jlms')->getCourseOperationsService()->editor($app->getIdentity(), CurriculumService::id($app->getInput()->get('id', 0, 'raw')), $raw);
+            return $app->bootComponent('com_jlms')->getCourseOperationsService()->editor($app
+                ->getIdentity(), CurriculumService::id($app->getInput()->get('id', 0, 'raw')), $raw);
         } catch (\InvalidArgumentException) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }

@@ -47,10 +47,12 @@ final class CatalogService
         if ($pathwayId > 0) {
             $pathway = $pathwayId;
             $assigned = $this->db->createQuery()->select('1')->from('#__jlms_pathway_courses AS catalog_pathway_course')
-                ->where('catalog_pathway_course.course_id = c.id')->where('catalog_pathway_course.pathway_id = :catalogPathwayId')
+                ->where('catalog_pathway_course.course_id = c.id')
+                    ->where('catalog_pathway_course.pathway_id = :catalogPathwayId')
                 ->where('EXISTS (SELECT 1 FROM #__jlms_pathways AS visible_pathway INNER JOIN #__categories AS visible_pathway_cat ON visible_pathway_cat.id = visible_pathway.catid'
                     . ' WHERE visible_pathway.id = catalog_pathway_course.pathway_id AND visible_pathway.state = 1'
-                    . ' AND visible_pathway.access IN (' . implode(',', $levels) . ') AND visible_pathway_cat.published = 1'
+                    . ' AND visible_pathway.access IN (' . implode(',', $levels)
+                        . ') AND visible_pathway_cat.published = 1'
                     . ' AND visible_pathway_cat.access IN (' . implode(',', $levels) . ')'
                     . ' AND (visible_pathway.language = :catalogPathwayAll OR visible_pathway.language = :catalogPathwayLanguage)'
                     . ' AND (visible_pathway_cat.language = :catalogPathwayCatAll OR visible_pathway_cat.language = :catalogPathwayCatLanguage)'
@@ -62,7 +64,8 @@ final class CatalogService
             $query->where('EXISTS (' . $assigned . ')')->bind(':catalogPathwayId', $pathway, ParameterType::INTEGER)
                 ->bind(':catalogPathwayAll', $all)->bind(':catalogPathwayLanguage', $language)
                 ->bind(':catalogPathwayCatAll', $all)->bind(':catalogPathwayCatLanguage', $language)
-                ->bind(':catalogPathwayExtension', $extension)->bind(':catalogPathwayAncestorAll', $all)->bind(':catalogPathwayAncestorLanguage', $language);
+                ->bind(':catalogPathwayExtension', $extension)->bind(':catalogPathwayAncestorAll', $all)
+                    ->bind(':catalogPathwayAncestorLanguage', $language);
         } elseif ($pathwayId < 0) {
             $query->where('1 = 0');
         }
@@ -86,7 +89,8 @@ final class CatalogService
     /** Published teacher choices attached to courses visible in this catalog scope. */
     public function publicTeachers(User $actor, string $language, int $categoryId = 0): array
     {
-        $query = $this->query($actor, $language, $categoryId)->clear('select')->select('DISTINCT catalog_teacher.teacher_id')
+        $query = $this->query($actor, $language, $categoryId)->clear('select')
+            ->select('DISTINCT catalog_teacher.teacher_id')
             ->innerJoin('#__jlms_course_teachers AS catalog_teacher ON catalog_teacher.course_id = c.id');
         $ids = array_map('intval', $this->db->setQuery($query, 0, 2001)->loadColumn());
         if (count($ids) > 2000) {
@@ -98,7 +102,8 @@ final class CatalogService
     /** Visible pathways related to one or more courses in this catalog scope. */
     public function publicPathwayIds(User $actor, string $language, int $categoryId = 0): array
     {
-        $query = $this->query($actor, $language, $categoryId)->clear('select')->select('DISTINCT catalog_pathway_course.pathway_id')
+        $query = $this->query($actor, $language, $categoryId)->clear('select')
+            ->select('DISTINCT catalog_pathway_course.pathway_id')
             ->innerJoin('#__jlms_pathway_courses AS catalog_pathway_course ON catalog_pathway_course.course_id = c.id');
         return array_map('intval', $this->db->setQuery($query, 0, 2001)->loadColumn());
     }
@@ -129,7 +134,8 @@ final class CatalogService
         $extension = 'com_jlms.course';
         $q = $this->db->createQuery()->select('c.id, c.title, c.created_by, c.catid, c.state, c.catalog_access, c.content_access, c.language, c.current_version_id, c.admissions_open, c.delivery_enabled, c.publish_up, c.publish_down, cat.lft, cat.rgt, cat.published AS category_published, cat.access AS category_access, cat.language AS category_language')
             ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid AND cat.extension = :extension')
-            ->where('c.id = :course')->bind(':course', $courseId, ParameterType::INTEGER)->bind(':extension', $extension);
+            ->where('c.id = :course')->bind(':course', $courseId, ParameterType::INTEGER)
+                ->bind(':extension', $extension);
         $course = $this->db->setQuery($q)->loadObject() ?: throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         $asset = 'com_jlms.course.' . (int) $course->id;
         $own = (int) $course->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset);
@@ -139,7 +145,8 @@ final class CatalogService
         ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
-        $available = $this->db->setQuery($this->db->createQuery()->select('id, title')->from('#__viewlevels')->order('ordering, id'))->loadObjectList();
+        $available = $this->db->setQuery($this->db->createQuery()->select('id, title')->from('#__viewlevels')
+            ->order('ordering, id'))->loadObjectList();
         $availableIds = array_map(static fn (object $row): int => (int) $row->id, $available);
         $selected = array_values(array_intersect($availableIds, array_unique(array_map('intval', $requestedLevels))));
         if (!$selected) {
@@ -202,7 +209,8 @@ final class CatalogService
         $status = 'published';
         $extension = 'com_jlms.course';
         $all = '*';
-        $q->bind(':status', $status)->bind(':extension', $extension)->bind(':allLanguage', $all)->bind(':language', $language);
+        $q->bind(':status', $status)->bind(':extension', $extension)->bind(':allLanguage', $all)
+            ->bind(':language', $language);
         if (!$forEnrolledLearner) {
             $now = gmdate('Y-m-d H:i:s');
             $q->bind(':nowUp', $now)->bind(':nowDown', $now);
@@ -230,7 +238,8 @@ final class CatalogService
     /** An enrolled learner may outlive promotional windows, not withdrawal/archive/trash or ACL. */
     public function enrolledCourse(User $actor, string $language, int $id): object
     {
-        $q = $this->courseQuery($actor, $language, 0, true)->where('c.id = :course')->bind(':course', $id, ParameterType::INTEGER);
+        $q = $this->courseQuery($actor, $language, 0, true)->where('c.id = :course')
+            ->bind(':course', $id, ParameterType::INTEGER);
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
@@ -260,7 +269,8 @@ final class CatalogService
 
     public function category(User $actor, string $language, int $id): object
     {
-        $q = $this->categoryQuery($actor, $language)->where('cat.id = :categoryId')->bind(':categoryId', $id, ParameterType::INTEGER);
+        $q = $this->categoryQuery($actor, $language)->where('cat.id = :categoryId')
+            ->bind(':categoryId', $id, ParameterType::INTEGER);
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
@@ -270,7 +280,8 @@ final class CatalogService
         $left = (int) $category->lft;
         $right = (int) $category->rgt;
         $q = $this->categoryQuery($actor, $language)->where('cat.lft <= :pathLeft')->where('cat.rgt >= :pathRight')
-            ->bind(':pathLeft', $left, ParameterType::INTEGER)->bind(':pathRight', $right, ParameterType::INTEGER)->order('cat.lft');
+            ->bind(':pathLeft', $left, ParameterType::INTEGER)
+                ->bind(':pathRight', $right, ParameterType::INTEGER)->order('cat.lft');
         $items = $this->db->setQuery($q, 0, 101)->loadObjectList();
         if (count($items) > 100) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
@@ -284,12 +295,15 @@ final class CatalogService
         $version = (int) $course->current_version_id;
         $rulesQuery = $this->db->createQuery()->select('rules_json')->from('#__jlms_course_versions')
             ->where('id = :previewVersion')->bind(':previewVersion', $version, ParameterType::INTEGER);
-        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $this->db->setQuery($rulesQuery)->loadResult());
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $this->db
+            ->setQuery($rulesQuery)->loadResult());
         $q = $this->db->createQuery()->select('id, title')->from('#__jlms_modules')
-            ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
+            ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)
+                ->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1000)->loadObjectList('id');
         $q = $this->db->createQuery()->select('id, module_id, title, kind, required, preview, publish_up, publish_down, release_after_days')->from('#__jlms_lessons')
-            ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
+            ->where('course_version_id = :version')->bind(':version', $version, ParameterType::INTEGER)
+                ->order('ordering, id');
         $lessons = $this->db->setQuery($q, 0, 5000)->loadObjectList();
         $grouped = [];
         foreach ($lessons as $lesson) {
@@ -319,12 +333,20 @@ final class CatalogService
         $teachers = TeacherProfiles::current($this->db, $actor, $language, $id);
         $q = $this->db->createQuery()->select('e.status,e.starts_at,e.ends_at')->from('#__jlms_editions AS e')
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
-            ->where('e.course_id=:windowCourse')->where('e.course_version_id=:windowVersion')->where("e.code=CONCAT('default-v',v.version_no)")
-            ->bind(':windowCourse', $id, ParameterType::INTEGER)->bind(':windowVersion', $version, ParameterType::INTEGER);
+            ->where('e.course_id=:windowCourse')->where('e.course_version_id=:windowVersion')
+                ->where("e.code=CONCAT('default-v',v.version_no)")
+            ->bind(':windowCourse', $id, ParameterType::INTEGER)
+                ->bind(':windowVersion', $version, ParameterType::INTEGER);
         $edition = $this->db->setQuery($q)->loadObject();
-        $startWindow = $edition && $edition->status === 'open' && CourseSchedule::within($edition->starts_at, $edition->ends_at);
-        $completion = ['mode' => $rules['mode'], 'policy' => $rules['completion_policy'], 'certificate_planned' => $rules['mode'] === 'learning' && $rules['certificate_enabled'], 'video_threshold_basis_points' => $rules['video_threshold_basis_points'], 'sequence_mode' => $rules['sequence_mode']];
-        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'completion' => $completion, 'public_previews' => $rules['public_previews'], 'presentation' => $presentation, 'teachers' => $teachers, 'calendar' => $calendar, 'start_window_open' => $startWindow];
+        $startWindow = $edition && $edition->status === 'open' && CourseSchedule::within($edition
+            ->starts_at, $edition->ends_at);
+        $completion = ['mode' => $rules['mode'], 'policy' => $rules['completion_policy'], 'certificate_planned'
+            => $rules['mode'] === 'learning' && $rules['certificate_enabled'], 'video_threshold_basis_points'
+                => $rules['video_threshold_basis_points'], 'sequence_mode' => $rules['sequence_mode']];
+        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'completion'
+            => $completion, 'public_previews' => $rules['public_previews'], 'presentation'
+                => $presentation, 'teachers' => $teachers, 'calendar' => $calendar, 'start_window_open'
+                    => $startWindow];
     }
 
     /** Return only an explicitly previewable text lesson from the current public course version. */
@@ -334,7 +356,8 @@ final class CatalogService
         $versionId = (int) $course->current_version_id;
         $rulesQuery = $this->db->createQuery()->select('rules_json')->from('#__jlms_course_versions')
             ->where('id = :previewVersion')->bind(':previewVersion', $versionId, ParameterType::INTEGER);
-        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $this->db->setQuery($rulesQuery)->loadResult());
+        $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $this->db
+            ->setQuery($rulesQuery)->loadResult());
         if (!$rules['public_previews']) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
@@ -342,7 +365,8 @@ final class CatalogService
             ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')
             ->where('l.id = :previewLesson')->where('l.course_version_id = :previewVersion')
             ->where('l.kind = :previewKind')->where('l.preview = 1')
-            ->bind(':previewLesson', $lessonId, ParameterType::INTEGER)->bind(':previewVersion', $versionId, ParameterType::INTEGER);
+            ->bind(':previewLesson', $lessonId, ParameterType::INTEGER)
+                ->bind(':previewVersion', $versionId, ParameterType::INTEGER);
         $previewKind = 'text';
         $query
             ->bind(':previewKind', $previewKind);

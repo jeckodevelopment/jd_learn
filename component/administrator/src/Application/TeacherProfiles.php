@@ -73,7 +73,8 @@ final class TeacherProfiles
         if (!is_array($input) || count($input) > 50) {
             throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
         }
-        $available = self::available($db, $actor, $language, array_map(static fn ($id): int => is_scalar($id) ? (int) $id : 0, $input));
+        $available = self::available($db, $actor, $language, array_map(static fn ($id): int
+            => is_scalar($id) ? (int) $id : 0, $input));
         $ids = [];
         foreach ($input as $value) {
             if ($value === '') {
@@ -93,7 +94,9 @@ final class TeacherProfiles
 
     public static function selected(DatabaseInterface $db, int $course): array
     {
-        $q = $db->createQuery()->select('teacher_id')->from('#__jlms_course_teachers')->where('course_id=:course')->bind(':course', $course, ParameterType::INTEGER)->order('ordering,teacher_id');
+        $q = $db->createQuery()->select('teacher_id')->from('#__jlms_course_teachers')
+            ->where('course_id=:course')->bind(':course', $course, ParameterType::INTEGER)
+                ->order('ordering,teacher_id');
         return array_map('intval', $db->setQuery($q, 0, 51)->loadColumn());
     }
 
@@ -108,7 +111,8 @@ final class TeacherProfiles
             $row = $rows[$id];
             $params = json_decode($row->params_json, true, 16, JSON_THROW_ON_ERROR);
             $profiles[] = ['id' => $id, 'title' => $row->title, 'bio' => $row->bio, 'image' => $row->image,
-                'image_alt' => $params['image_alt'] ?? '', 'image_decorative' => (bool) ($params['image_decorative'] ?? false),
+                'image_alt' => $params['image_alt'] ?? '', 'image_decorative'
+                    => (bool) ($params['image_decorative'] ?? false),
                 'website' => $params['website'] ?? ''];
         }
         return $profiles;
@@ -127,12 +131,17 @@ final class TeacherProfiles
             $row = $available[$id];
             $params = json_decode($row->params_json, true, 16, JSON_THROW_ON_ERROR);
             CourseArtwork::validateLocal((string) $row->image);
-            $q = $db->createQuery()->select('ancestor.access,ancestor.language')->from('#__categories AS ancestor')->innerJoin('#__categories AS cat ON cat.id=:category')
-                ->where('ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND ancestor.level>0')->bind(':category', $row->catid, ParameterType::INTEGER);
+            $q = $db->createQuery()->select('ancestor.access,ancestor.language')
+                ->from('#__categories AS ancestor')->innerJoin('#__categories AS cat ON cat.id=:category')
+                ->where('ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND ancestor.level>0')
+                    ->bind(':category', $row->catid, ParameterType::INTEGER);
             $categories = $db->setQuery($q)->loadAssocList();
-            $profiles[] = ['id' => $id, 'title' => (string) $row->title, 'bio' => (string) $row->bio, 'image' => (string) $row->image,
-                'image_alt' => (string) ($params['image_alt'] ?? ''), 'image_decorative' => (bool) ($params['image_decorative'] ?? false),
-                'website' => (string) ($params['website'] ?? ''), 'access' => (int) $row->access, 'language' => (string) $row->language,
+            $profiles[] = ['id' => $id, 'title' => (string) $row->title, 'bio' => (string) $row->bio, 'image'
+                => (string) $row->image,
+                'image_alt' => (string) ($params['image_alt'] ?? ''), 'image_decorative'
+                    => (bool) ($params['image_decorative'] ?? false),
+                'website' => (string) ($params['website'] ?? ''), 'access' => (int) $row->access, 'language'
+                    => (string) $row->language,
                 'category_access' => array_map('intval', array_column($categories, 'access')), 'category_language' => array_column($categories, 'language')];
         }
         $data = json_decode($presentation, true, 32, JSON_THROW_ON_ERROR);
@@ -157,13 +166,15 @@ final class TeacherProfiles
                 return [];
             }
         }
-        $current = self::available($db, $actor, $language, array_map(static fn (array $profile): int => (int) $profile['id'], $snapshots));
+        $current = self::available($db, $actor, $language, array_map(static fn (array $profile): int
+            => (int) $profile['id'], $snapshots));
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
         $result = [];
         foreach ($snapshots as $profile) {
             if (
                 !isset($current[$profile['id']]) || !in_array($profile['access'], $levels, true)
-                || array_diff($profile['category_access'], $levels) || array_diff($profile['category_language'], ['*',$language])
+                || array_diff($profile['category_access'], $levels)
+                    || array_diff($profile['category_language'], ['*',$language])
                 || !in_array($profile['language'], ['*', $language], true)
             ) {
                 continue;

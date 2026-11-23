@@ -50,10 +50,13 @@ final class CourseassociationField extends ListField
         foreach ($items as $item) {
             $asset = 'com_jlms.course.' . (int) $item->id;
             if (
-                !$actor->guest && !$actor->block && (!$item->checked_out || (int) $item->checked_out === (int) $actor->id)
-                && ($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset)))
+                !$actor->guest && !$actor->block && (!$item->checked_out || (int) $item
+                    ->checked_out === (int) $actor->id)
+                && ($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id
+                    && $actor->authorise('core.edit.own', $asset)))
             ) {
-                $options[] = HTMLHelper::_('select.option', (int) $item->id, $item->title . ' (#' . (int) $item->id . ')');
+                $options[] = HTMLHelper::_('select.option', (int) $item->id, $item->title . ' (#' . (int) $item
+                    ->id . ')');
             }
         }
         return array_merge(parent::getOptions(), $options);

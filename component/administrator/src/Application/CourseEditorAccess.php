@@ -31,7 +31,8 @@ final class CourseEditorAccess
         if ($category === null && $actor->authorise('core.create', 'com_jlms')) {
             return true;
         }
-        $q = $db->createQuery()->select('id')->from('#__categories')->where("extension='com_jlms.course' AND published<>-2");
+        $q = $db->createQuery()->select('id')->from('#__categories')
+            ->where("extension='com_jlms.course' AND published<>-2");
         if ($category !== null) {
             $q->where('id=:category')->bind(':category', $category, ParameterType::INTEGER);
         }
@@ -48,7 +49,8 @@ final class CourseEditorAccess
         $after = 0;
         // Scan metadata in bounded batches. Permission tests stay native, including record denies.
         do {
-            $q = $db->createQuery()->select('id,created_by')->from('#__jlms_courses')->where('id>:after')->bind(':after', $after, ParameterType::INTEGER)->order('id');
+            $q = $db->createQuery()->select('id,created_by')->from('#__jlms_courses')->where('id>:after')
+                ->bind(':after', $after, ParameterType::INTEGER)->order('id');
             $rows = $db->setQuery($q, 0, 500)->loadObjectList();
             foreach ($rows as $course) {
                 $after = (int)$course->id;

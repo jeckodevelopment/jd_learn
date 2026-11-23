@@ -320,7 +320,8 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
 
     public function filterTransitions(array $transitions, int $pk): array
     {
-        $allowed = array_column($this->publicationService->transitions(\Joomla\CMS\Factory::getApplication()->getIdentity(), $pk), 'id');
+        $allowed = array_column($this->publicationService->transitions(\Joomla\CMS\Factory::getApplication()
+            ->getIdentity(), $pk), 'id');
         return array_values(array_filter($transitions, static fn ($t): bool => in_array($t->id, $allowed)));
     }
 

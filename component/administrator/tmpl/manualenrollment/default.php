@@ -29,7 +29,8 @@ $i = $this->item;
         <?php if ($p['blocked'] !== null) :
             ?><p id="jlms-manual-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
             <?php if ($p['existing_id']) :
-                ?><p id="jlms-manual-existing">#<?= (int) $p['existing_id'] ?> · <?= $this->escape($p['existing_status']) ?></p><?php
+                ?><p id="jlms-manual-existing">#<?= (int) $p['existing_id'] ?> · <?= $this
+                    ->escape($p['existing_status']) ?></p><?php
             endif; ?>
         <?php else :
             ?><form id="jlms-manual-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">

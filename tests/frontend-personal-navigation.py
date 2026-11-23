@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """FE-06: optional per-menu Joomla personal navigation, with scoped accessible markup."""
 from pathlib import Path
+import re
 from xml.etree import ElementTree
 root = Path(__file__).resolve().parents[1]
 site = root / "component/site"
@@ -11,7 +12,8 @@ assert "($menuQuery['view'] ?? '') === $currentView" in nav
 assert "getParams()->get('show_personal_navigation', '0')" in nav
 assert "=== '1'" in nav
 assert "aria-label=" in nav and 'aria-current="page"' in nav
-assert "Route::_('index.php?option=com_jlms&view=' . $view)" in nav
+assert "Route::_('index.php?option=com_jlms&view='" in nav
+assert "Route::_('index.php?option=com_jlms&view='.$view)" in re.sub(r"\s+", "", nav)
 assert "if ($view === $currentView)" in nav and "else" in nav
 assert nav.count("=> 'COM_JLMS_") == 4
 for view in ("dashboard", "mycourses", "mycertificates", "preferences"):

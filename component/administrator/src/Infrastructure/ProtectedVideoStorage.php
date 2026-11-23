@@ -39,7 +39,8 @@ final class ProtectedVideoStorage
 
     public function limit(): int
     {
-        $limits = [VideoFilePolicy::MAX_BYTES, max(1, min(250, (int) $this->config()->get('video_max_mib', 250))) * 1048576];
+        $limits = [VideoFilePolicy::MAX_BYTES, max(1, min(250, (int) $this->config()
+            ->get('video_max_mib', 250))) * 1048576];
         foreach (['upload_max_filesize', 'post_max_size'] as $key) {
             $value = trim((string) ini_get($key));
             $factor = match (strtolower(substr($value, -1))) {
@@ -59,7 +60,8 @@ final class ProtectedVideoStorage
             throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
         $root = $this->root();
-        $meta = VideoFilePolicy::inspect($source, $name, $this->limit(), (string) $this->config()->get('video_ffprobe_path', ''));
+        $meta = VideoFilePolicy::inspect($source, $name, $this->limit(), (string) $this->config()
+            ->get('video_ffprobe_path', ''));
         $key = bin2hex(random_bytes(32)) . '.blob';
         $path = $root . DIRECTORY_SEPARATOR . $key;
         $input = @fopen($source, 'rb');

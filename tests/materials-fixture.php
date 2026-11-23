@@ -51,7 +51,8 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)
+    ->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -93,13 +94,17 @@ if ($mode === 'denied') {
 }
 if ($mode === 'retained') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
-    $course = $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . (int) $fixture['course_id'])->loadObject();
-    $count = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id=' . (int) $course->current_version_id)->loadResult();
+    $course = $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='
+        . (int) $fixture['course_id'])->loadObject();
+    $count = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id='
+        . (int) $course->current_version_id)->loadResult();
     if ($count < 2) {
         throw new \RuntimeException('Package update lost materials');
     }
-    $firstId = (int)$db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id=' . (int)$course->current_version_id . ' ORDER BY id LIMIT 1')->loadResult();
-    $download = $component->getMaterialService()->adminDownload($app->getIdentity(), (int)$fixture['course_id'], (int)$course->current_version_id, $firstId);
+    $firstId = (int)$db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id=' . (int)$course
+        ->current_version_id . ' ORDER BY id LIMIT 1')->loadResult();
+    $download = $component->getMaterialService()->adminDownload($app
+        ->getIdentity(), (int)$fixture['course_id'], (int)$course->current_version_id, $firstId);
     fclose($download['handle']);
     echo json_encode(['materials_upgrade' => 'passed','attachments' => $count], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit(0);
@@ -119,8 +124,10 @@ if ($mode === 'cleanup') {
             throw new \RuntimeException('Could not create private cleanup fixture.');
         }
         chmod($blob, 0600);
-        $asset = (object)['storage' => 'local','storage_key' => $key,'sha256' => hash_file('sha256', $blob),'byte_size' => filesize($blob),
-            'mime_type' => 'text/plain','original_name' => 'orphan.txt','asset_revision' => 1,'status' => 'ready','scan_json' => '{}',
+        $asset = (object)['storage' => 'local','storage_key' => $key,'sha256'
+            => hash_file('sha256', $blob),'byte_size' => filesize($blob),
+            'mime_type' => 'text/plain','original_name' => 'orphan.txt','asset_revision' => 1,'status'
+                => 'ready','scan_json' => '{}',
             'created_by' => $userId,'created_at' => gmdate('Y-m-d H:i:s', time() - ($ageHours * 3600)),'modified_by' => $userId,'modified_at' => $now];
         $db->insertObject('#__jlms_assets', $asset, 'id');
         return [(int)$asset->id,$blob];
@@ -133,16 +140,21 @@ if ($mode === 'cleanup') {
     if ($option === null) {
         throw new \RuntimeException('Native scheduler does not expose the material cleanup routine.');
     }
-    $record = (object)['id' => 0,'type' => 'jlms.materials.cleanup','params' => '{"limit":100}','taskOption' => $option];
+    $record = (object)['id' => 0,'type' => 'jlms.materials.cleanup','params' => '{"limit":100}','taskOption'
+        => $option];
     $task = new \Joomla\Component\Scheduler\Administrator\Task\Task($record);
-    $event = new \Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent('onExecuteTask', ['subject' => $task,'params' => (object)['limit' => 100]]);
+    $event = new \Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent('onExecuteTask', ['subject'
+        => $task,'params' => (object)['limit' => 100]]);
     $app->getDispatcher()->dispatch('onExecuteTask', $event);
     $expiredRemaining = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id=' . $expiredId)->loadResult();
-    $retainedRemaining = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id=' . $retainedId)->loadResult();
-    $attached = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id=' . (int)$fixture['version_id'])->loadResult();
+    $retainedRemaining = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_assets WHERE id=' . $retainedId)
+        ->loadResult();
+    $attached = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id='
+        . (int)$fixture['version_id'])->loadResult();
     if (
         ($event->getResultSnapshot()['status'] ?? null) !== \Joomla\Component\Scheduler\Administrator\Task\Status::OK
-        || $expiredRemaining !== 0 || $retainedRemaining !== 1 || is_file($expiredBlob) || !is_file($retainedBlob) || $attached < 1
+        || $expiredRemaining !== 0 || $retainedRemaining !== 1 || is_file($expiredBlob)
+            || !is_file($retainedBlob) || $attached < 1
     ) {
         throw new \RuntimeException('Scheduled cleanup must apply the configured retention window to unreferenced assets.');
     }
@@ -163,29 +175,38 @@ if ($mode === 'hidden') {
 if ($mode === 'inspect') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     $rows = $db->setQuery('SELECT a.id, a.title, a.lesson_id, a.preview, a.asset_id, f.status, f.storage_key, f.sha256, f.scan_json FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f ON f.id=a.asset_id WHERE a.course_version_id=' . (int)$fixture['version_id'] . ' ORDER BY a.id')->loadAssocList();
-    $version = $db->setQuery('SELECT status, revision, structure_hash FROM #__jlms_course_versions WHERE id=' . (int)$fixture['version_id'])->loadAssoc();
-    $foreign = $db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id=' . (int)$fixture['foreign_version_id'])->loadAssocList();
-    echo json_encode(['files' => $rows,'version' => $version,'foreign_files' => $foreign], JSON_THROW_ON_ERROR) . PHP_EOL;
+    $version = $db->setQuery('SELECT status, revision, structure_hash FROM #__jlms_course_versions WHERE id='
+        . (int)$fixture['version_id'])->loadAssoc();
+    $foreign = $db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id='
+        . (int)$fixture['foreign_version_id'])->loadAssocList();
+    echo json_encode(['files' => $rows,'version' => $version,'foreign_files' => $foreign], JSON_THROW_ON_ERROR)
+        . PHP_EOL;
     exit(0);
 }
-$learningFixture = json_decode(file_get_contents(dirname($root) . '/learning-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
+$learningFixture = json_decode(file_get_contents(dirname($root)
+    . '/learning-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $actor = $app->getIdentity();
 $author = $component->getCurriculumService();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
-$level = (int)$db->setQuery('SELECT content_access FROM #__jlms_courses WHERE id=' . (int)$learningFixture['course_id'])->loadResult();
+$level = (int)$db->setQuery('SELECT content_access FROM #__jlms_courses WHERE id='
+    . (int)$learningFixture['course_id'])->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $fixture = [];
 foreach (['materials-fixture','materials-foreign'] as $alias) {
     if (
-        !$model->save(['id' => 0,'revision' => 1,'title' => $alias,'alias' => $alias,'catid' => $catid,'language' => '*',
-        'catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Protected materials fixture'])
+        !$model->save(['id' => 0,'revision' => 1,'title' => $alias,'alias' => $alias,'catid'
+            => $catid,'language' => '*',
+        'catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description'
+            => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Protected materials fixture'])
     ) {
         throw new \RuntimeException($model->getError());
     }
     $courseId = (int)$model->getState('course.id');
     $versionId = $author->createDraft($actor, $courseId, 1);
-    $module = $author->saveModule($actor, ['course_id' => $courseId,'version_id' => $versionId,'expected_version_revision' => 1,'id' => 0,'title' => 'Materials chapter']);
-    $lesson = $author->saveLesson($actor, ['course_id' => $courseId,'version_id' => $versionId,'expected_version_revision' => 2,'id' => 0,'module_id' => $module,
+    $module = $author->saveModule($actor, ['course_id' => $courseId,'version_id'
+        => $versionId,'expected_version_revision' => 1,'id' => 0,'title' => 'Materials chapter']);
+    $lesson = $author->saveLesson($actor, ['course_id' => $courseId,'version_id'
+        => $versionId,'expected_version_revision' => 2,'id' => 0,'module_id' => $module,
         'title' => 'Materials text','kind' => 'text','required' => '1','body' => '<p>PROTECTED_MATERIAL_LESSON</p>']);
     $component->getMaterialService()->administration($actor, $courseId, $versionId);
     if ($alias === 'materials-fixture') {

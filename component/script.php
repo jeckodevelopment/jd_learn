@@ -83,7 +83,8 @@ final class Com_JlmsInstallerScript
                 }
             }
         }
-        $query = $db->createQuery()->select('COUNT(*)')->from('#__action_logs_extensions')->where("extension = 'com_jlms'");
+        $query = $db->createQuery()->select('COUNT(*)')->from('#__action_logs_extensions')
+            ->where("extension = 'com_jlms'");
         if (!(int)$db->setQuery($query)->loadResult()) {
             $entry = (object)['extension' => 'com_jlms'];
             $db->insertObject('#__action_logs_extensions', $entry);

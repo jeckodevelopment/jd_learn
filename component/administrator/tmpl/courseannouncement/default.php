@@ -11,7 +11,8 @@ use Joomla\CMS\Router\Route;
 $courseId = (int) $this->preview['course_id'];
 ?>
 <div class="container-fluid">
- <h1><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_TITLE') ?>: <?= htmlspecialchars((string) $this->preview['course_title'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></h1>
+ <h1><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_TITLE') ?>: <?= htmlspecialchars((string) $this
+     ->preview['course_title'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></h1>
  <?php if (empty($this->preview['eligible'])) : ?>
   <div class="alert alert-warning" role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_NOT_ELIGIBLE') ?></div>
  <?php else : ?>
@@ -27,7 +28,8 @@ $courseId = (int) $this->preview['course_id'];
   </section>
   <details class="mb-3">
    <summary><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_TEXT') ?></summary>
-   <pre class="p-3 border"><?= htmlspecialchars((string) $this->preview['body_text'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></pre>
+   <pre class="p-3 border"><?= htmlspecialchars((string) $this
+       ->preview['body_text'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></pre>
   </details>
      <?php if (!empty($this->preview['already_notified'])) : ?>
    <div class="alert alert-success" role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED') ?></div>

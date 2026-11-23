@@ -38,10 +38,12 @@ final class AssociationsHelper extends AssociationExtensionHelper
             return null;
         }
         if ($typeName === 'course.category') {
-            $table = new \Joomla\CMS\Table\Category(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class));
+            $table = new \Joomla\CMS\Table\Category(Factory::getContainer()
+                ->get(\Joomla\Database\DatabaseInterface::class));
             return $table->load((int) $id) && $table->extension === 'com_jlms.course' ? $table : null;
         }
-        $table = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()->createTable('Course', 'Administrator');
+        $table = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()
+            ->createTable('Course', 'Administrator');
         return $table->load((int) $id) ? $table : null;
     }
 
@@ -52,13 +54,17 @@ final class AssociationsHelper extends AssociationExtensionHelper
         $actor->clearAccessRights();
         if ($typeName === 'course.category') {
             $asset = 'com_jlms.course.category.' . (int) $id;
-            return $item && !$actor->guest && !$actor->block && (!$item->checked_out || (int) $item->checked_out === (int) $actor->id)
-                && ($actor->authorise('core.edit', $asset) || ((int) $item->created_user_id === (int) $actor->id && $actor->authorise('core.edit.own', $asset)));
+            return $item && !$actor->guest && !$actor->block && (!$item->checked_out || (int) $item
+                ->checked_out === (int) $actor->id)
+                && ($actor->authorise('core.edit', $asset) || ((int) $item->created_user_id === (int) $actor
+                    ->id && $actor->authorise('core.edit.own', $asset)));
         }
         $asset = 'com_jlms.course.' . (int) $id;
-        return $item && !$actor->guest && !$actor->block && (int) $item->state === 0 && $item->current_version_id === null
+        return $item && !$actor->guest && !$actor->block && (int) $item->state === 0 && $item
+            ->current_version_id === null
             && (!$item->checked_out || (int) $item->checked_out === (int) $actor->id)
-            && ($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset)));
+            && ($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id
+                && $actor->authorise('core.edit.own', $asset)));
     }
 
     public function getType($typeName = '')
@@ -83,6 +89,7 @@ final class AssociationsHelper extends AssociationExtensionHelper
             $support['state'] = $support['acl'] = $support['checkout'] = $support['level'] = true;
             $tables = ['a' => '#__categories'];
         }
-        return ['fields' => $fields, 'support' => $support, 'tables' => $tables, 'joins' => [], 'title' => $typeName === 'course' ? 'course' : ($typeName === 'course.category' ? 'category' : '')];
+        return ['fields' => $fields, 'support' => $support, 'tables' => $tables, 'joins' => [], 'title'
+            => $typeName === 'course' ? 'course' : ($typeName === 'course.category' ? 'category' : '')];
     }
 }

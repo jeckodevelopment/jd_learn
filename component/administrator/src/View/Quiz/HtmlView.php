@@ -25,7 +25,8 @@ final class HtmlView extends BaseHtmlView
             && $actor->authorise('jlms.assessment.correct', $asset);
         $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />');
         foreach ($this->item['modules'] as $module) {
-            $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))->addAttribute('value', (string)$module->id);
+            $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))
+                ->addAttribute('value', (string)$module->id);
         }
         if (empty($this->item['data']['lesson_id'])) {
             $selected = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('module_id');

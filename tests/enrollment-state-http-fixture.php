@@ -22,7 +22,9 @@ if ($mode === 'snapshot') {
     $q = $db->prepare("SELECT COUNT(*) FROM joomla_action_logs AS a INNER JOIN joomla_jlms_enrollment_state_changes AS c ON c.id=a.item_id WHERE a.extension='com_jlms.enrollmentstate' AND c.enrollment_id=?");
     $q->execute([$f['http_enrollment']]);
     $audit = (int)$q->fetchColumn();
-    echo json_encode(['stable' => $stable,'state' => $state,'history' => $count,'audit' => $audit,'groups' => $db->query('SELECT user_id,group_id FROM joomla_user_usergroup_map ORDER BY user_id,group_id')->fetchAll(\PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR);
+    echo json_encode(['stable' => $stable,'state' => $state,'history' => $count,'audit' => $audit,'groups'
+        => $db->query('SELECT user_id,group_id FROM joomla_user_usergroup_map ORDER BY user_id,group_id')
+            ->fetchAll(\PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR);
 } elseif (in_array($mode, ['revoke','grant','block','unblock'], true)) {
     $q = $db->prepare('SELECT username FROM joomla_users WHERE id=?');
     $q->execute([$f['manager']]);

@@ -18,6 +18,7 @@ final class VideoDuration
     }
     public static function compatible(int $reference, int $observed): bool
     {
-        return self::valid($reference) && self::valid($observed) && abs($reference - $observed) <= self::tolerance($reference);
+        return self::valid($reference) && self::valid($observed)
+            && abs($reference - $observed) <= self::tolerance($reference);
     }
 }

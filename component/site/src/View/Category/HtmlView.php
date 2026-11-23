@@ -80,7 +80,8 @@ final class HtmlView extends BaseHtmlView
         }
         $app = Factory::getApplication();
         if ($this->showSubcategories) {
-            $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);
+            $model = $app->bootComponent('com_jlms')->getMVCFactory()
+                ->createModel('Categories', 'Site', ['ignore_request' => true]);
             $model->setState('filter.parent_id', (int) $this->category->id);
             $model->setState('list.limit', 20);
             $model->setState('list.start', max(0, $app->getInput()->getInt('subcategories_limitstart', 0)));

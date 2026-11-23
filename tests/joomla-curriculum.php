@@ -109,33 +109,45 @@ curriculumExpect($service->createDraft($actor, $course, 1) === $version, 'repeat
 $stale = scopeInput();
 $module = $service->saveModule($actor, scopeInput() + ['id' => 0,'title' => 'First module','status' => 'published']);
 $second = $service->saveModule($actor, scopeInput() + ['id' => 0,'title' => 'Second module']);
-curriculumDenied(fn () => $service->saveModule($actor, $stale + ['id' => $module,'revision' => 1,'title' => 'Stale overwrite']), 'stale aggregate revision rejected');
+curriculumDenied(fn () => $service->saveModule($actor, $stale + ['id' => $module,'revision' => 1,'title'
+    => 'Stale overwrite']), 'stale aggregate revision rejected');
 $anonymous = new \Joomla\CMS\User\User();
 curriculumDenied(fn () => $service->outline($anonymous, $course), 'anonymous cannot read draft');
-curriculumDenied(fn () => $service->saveModule($anonymous, scopeInput() + ['id' => 0,'title' => 'No access']), 'anonymous cannot mutate draft');
-$service->saveTeachingRules($actor, scopeInput() + ['mode' => 'learning','sequence_mode' => 'free','video_threshold' => '90','public_previews' => '1']);
-$firstLesson = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Text introduction',
-    'kind' => 'text','required' => '1','body' => '<p>First lesson</p>','preview' => 1,'public_preview' => '1','completion_rule' => 'forged','release_after_days' => '2']);
+curriculumDenied(fn () => $service->saveModule($anonymous, scopeInput() + ['id' => 0,'title'
+    => 'No access']), 'anonymous cannot mutate draft');
+$service->saveTeachingRules($actor, scopeInput() + ['mode' => 'learning','sequence_mode'
+    => 'free','video_threshold' => '90','public_previews' => '1']);
+$firstLesson = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
+    => 'Text introduction',
+    'kind' => 'text','required' => '1','body' => '<p>First lesson</p>','preview' => 1,'public_preview'
+        => '1','completion_rule' => 'forged','release_after_days' => '2']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $firstLesson)->loadObject();
-curriculumExpect($row->completion_rule === 'manual' && (int)$row->preview === 1, 'explicit text preview is saved while derived completion rules ignore mass assignment');
+curriculumExpect($row->completion_rule === 'manual' && (int)$row
+    ->preview === 1, 'explicit text preview is saved while derived completion rules ignore mass assignment');
 curriculumExpect((int)$row->release_after_days === 2, 'relative lesson release is validated and persisted');
 curriculumExpect($row->body === \Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'), 'body uses the native Joomla content filter');
-$video = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Video draft','kind' => 'video',
+$video = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
+    => 'Video draft','kind' => 'video',
     'required' => '0','body' => '','provider_key' => 'youtube','source_reference' => 'https://youtu.be/dQw4w9WgXcQ']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $video)->loadObject();
 $source = json_decode($row->source_json, true, 32, JSON_THROW_ON_ERROR);
-curriculumExpect($source['reference'] === 'dQw4w9WgXcQ' && $row->completion_rule === 'video_coverage' && (int)$row->required === 0, 'video normalised and optional flag retained');
+curriculumExpect($source['reference'] === 'dQw4w9WgXcQ' && $row->completion_rule === 'video_coverage'
+    && (int)$row->required === 0, 'video normalised and optional flag retained');
 $videoPreviewRejected = false;
 try {
-    $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Video preview','kind' => 'video',
-        'required' => '0','body' => '','public_preview' => '1','provider_key' => 'youtube','source_reference' => 'https://youtu.be/dQw4w9WgXcQ']);
+    $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
+        => 'Video preview','kind' => 'video',
+        'required' => '0','body' => '','public_preview' => '1','provider_key' => 'youtube','source_reference'
+            => 'https://youtu.be/dQw4w9WgXcQ']);
 } catch (\DomainException $error) {
     $videoPreviewRejected = $error->getMessage() === 'COM_JLMS_INVALID_INPUT';
 }
 curriculumExpect($videoPreviewRejected, 'public preview is limited to text lessons');
 $before = versionRevision();
-curriculumDenied(fn () => $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Invalid video','kind' => 'video',
-    'required' => '1','body' => '','provider_key' => 'youtube','source_reference' => 'https://127.0.0.1/private']), 'unsafe source rejected');
+curriculumDenied(fn () => $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
+    => 'Invalid video','kind' => 'video',
+    'required' => '1','body' => '','provider_key' => 'youtube','source_reference'
+        => 'https://127.0.0.1/private']), 'unsafe source rejected');
 curriculumExpect(versionRevision() === $before, 'failed validation does not mutate aggregate');
 $service->reorder($actor, 'module', scopeInput() + ['id' => $second,'direction' => 'up']);
 $outline = $service->outline($actor, $course, $version);
@@ -143,13 +155,18 @@ curriculumExpect((int)$outline['modules'][0]->id === $second, 'module ordering p
 $service->reorder($actor, 'lesson', scopeInput() + ['id' => $video,'direction' => 'up']);
 $outline = $service->outline($actor, $course, $version);
 curriculumExpect((int)$outline['lessons'][0]->id === $video, 'lesson ordering persisted');
-$document = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Document lesson','kind' => 'document','required' => '1','body' => '<p>Read the attached document</p>']);
+$document = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
+    => 'Document lesson','kind' => 'document','required' => '1','body' => '<p>Read the attached document</p>']);
 $documentRow = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $document)->loadObject();
-curriculumExpect($documentRow->kind === 'document' && $documentRow->completion_rule === 'manual' && $documentRow->provider_key === null, 'document lessons use manual completion and no video source');
-curriculumDenied(fn () => $service->deleteItem($actor, 'module', scopeInput() + ['id' => $module,'revision' => recordRevision('modules', $module),'confirmation' => '1']), 'non-empty module cannot be removed');
-$service->saveModule($actor, scopeInput() + ['id' => $second,'revision' => recordRevision('modules', $second),'title' => 'Updated module']);
+curriculumExpect($documentRow->kind === 'document' && $documentRow->completion_rule === 'manual' && $documentRow
+    ->provider_key === null, 'document lessons use manual completion and no video source');
+curriculumDenied(fn () => $service->deleteItem($actor, 'module', scopeInput() + ['id' => $module,'revision'
+    => recordRevision('modules', $module),'confirmation' => '1']), 'non-empty module cannot be removed');
+$service->saveModule($actor, scopeInput() + ['id' => $second,'revision'
+    => recordRevision('modules', $second),'title' => 'Updated module']);
 $secondRevision = recordRevision('modules', $second);
-curriculumDenied(fn () => $service->saveModule($actor, scopeInput() + ['id' => $second,'revision' => $secondRevision - 1,'title' => 'Old module revision']), 'stale item revision rejected');
+curriculumDenied(fn () => $service->saveModule($actor, scopeInput() + ['id' => $second,'revision'
+    => $secondRevision - 1,'title' => 'Old module revision']), 'stale item revision rejected');
 // Cross-parent IDs must fail even for an actor who can manage both courses.
 $data['alias'] = 'curriculum-foreign';
 $data['title'] = 'Foreign course';
@@ -164,18 +181,26 @@ curriculumDenied(fn () => $service->saveLesson($actor, scopeInput() + ['id' => 0
     'title' => 'Wrong parent','kind' => 'text','required' => '1','body' => 'not allowed']), 'foreign module rejected');
 curriculumDenied(fn () => $service->outline($actor, $course, $foreignVersion), 'foreign teaching version is not disclosed through another course');
 $db->setQuery("UPDATE #__jlms_course_versions SET status='published' WHERE id=" . $version)->execute();
-curriculumDenied(fn () => $service->saveModule($actor, scopeInput() + ['id' => $module,'revision' => recordRevision('modules', $module),'title' => 'Change published history']), 'published teaching history immutable');
+curriculumDenied(fn () => $service->saveModule($actor, scopeInput() + ['id' => $module,'revision'
+    => recordRevision('modules', $module),'title' => 'Change published history']), 'published teaching history immutable');
 $db->setQuery("UPDATE #__jlms_course_versions SET status='draft' WHERE id=" . $version)->execute();
-$service->deleteItem($actor, 'lesson', scopeInput() + ['id' => $firstLesson,'revision' => recordRevision('lessons', $firstLesson),'confirmation' => '1']);
-curriculumExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lessons WHERE id=' . $firstLesson)->loadResult(), 'draft lesson deleted');
-$service->deleteItem($actor, 'module', scopeInput() + ['id' => $second,'revision' => recordRevision('modules', $second),'confirmation' => '1']);
-curriculumExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_modules WHERE id=' . $second)->loadResult(), 'empty draft module deleted');
+$service->deleteItem($actor, 'lesson', scopeInput() + ['id' => $firstLesson,'revision'
+    => recordRevision('lessons', $firstLesson),'confirmation' => '1']);
+curriculumExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lessons WHERE id=' . $firstLesson)
+    ->loadResult(), 'draft lesson deleted');
+$service->deleteItem($actor, 'module', scopeInput() + ['id' => $second,'revision'
+    => recordRevision('modules', $second),'confirmation' => '1']);
+curriculumExpect(!(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_modules WHERE id=' . $second)
+    ->loadResult(), 'empty draft module deleted');
 $app->getInput()->set('id', $course);
 $app->getInput()->set('version_id', null);
 $curriculumModel = $factory->createModel('Curriculum', 'Administrator', ['ignore_request' => true]);
-curriculumExpect((int)$curriculumModel->getOutline()['version']->id === $version, 'latest draft resolves when version_id is omitted');
-curriculumExpect((bool)$curriculumModel->getForm([], false) && (bool)$curriculumModel->getLessonForm(), 'native curriculum forms load');
+curriculumExpect((int)$curriculumModel->getOutline()['version']
+    ->id === $version, 'latest draft resolves when version_id is omitted');
+curriculumExpect((bool)$curriculumModel->getForm([], false) && (bool)$curriculumModel
+    ->getLessonForm(), 'native curriculum forms load');
 $outline = $service->outline($actor, $course, $version);
 curriculumExpect(count($outline['modules']) === 1 && count($outline['lessons']) === 2, 'final outline remains coherent with the document lesson');
 // Rendering is tested over HTTP, where Joomla initialises its document and toolbar.
-echo json_encode(['curriculum_checks' => $checks,'status' => 'passed','course_id' => $course,'version_id' => $version], JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode(['curriculum_checks' => $checks,'status' => 'passed','course_id' => $course,'version_id'
+    => $version], JSON_THROW_ON_ERROR) . PHP_EOL;

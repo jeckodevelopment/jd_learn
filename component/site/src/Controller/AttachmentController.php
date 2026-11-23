@@ -40,15 +40,18 @@ final class AttachmentController extends BaseController
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $component = $this->app->bootComponent('com_jlms');
-            $course = $component->getCatalogService()->course($this->app->getIdentity(), $this->app->getLanguage()->getTag(), $courseId);
-            $file = $component->getMaterialService()->publicPreviewDownload($courseId, (int) $course->current_version_id, $attachmentId);
+            $course = $component->getCatalogService()->course($this->app->getIdentity(), $this->app
+                ->getLanguage()->getTag(), $courseId);
+            $file = $component->getMaterialService()->publicPreviewDownload($courseId, (int) $course
+                ->current_version_id, $attachmentId);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
-            Log::add('Public preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Public preview material delivery failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
@@ -75,14 +78,16 @@ final class AttachmentController extends BaseController
             $language = $this->app->getLanguage()->getTag();
             $course = $component->getCatalogService()->course($identity, $language, $ids[0]);
             $component->getCatalogService()->publicLessonPreview($identity, $language, $ids[0], $ids[1]);
-            $file = $component->getMaterialService()->publicLessonPreviewDownload($ids[0], (int) $course->current_version_id, $ids[1], $ids[2]);
+            $file = $component->getMaterialService()->publicLessonPreviewDownload($ids[0], (int) $course
+                ->current_version_id, $ids[1], $ids[2]);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
-            Log::add('Public lesson preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Public lesson preview material delivery failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
@@ -102,7 +107,8 @@ final class AttachmentController extends BaseController
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             }
-            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->previewDownload($this->app->getIdentity(), ...$ids);
+            $file = $this->app->bootComponent('com_jlms')->getMaterialService()->previewDownload($this->app
+                ->getIdentity(), ...$ids);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_RESOURCE_NOT_FOUND',
@@ -111,7 +117,8 @@ final class AttachmentController extends BaseController
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
-            Log::add('Editorial preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Editorial preview material delivery failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }
@@ -189,7 +196,8 @@ final class AttachmentController extends BaseController
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
-            Log::add('Inline material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
+            Log::add('Inline material delivery failed; correlation='
+                . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

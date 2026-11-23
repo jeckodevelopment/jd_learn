@@ -15,8 +15,11 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         $this->profile = $this->get('Profile');
         $app = \Joomla\CMS\Factory::getApplication();
         if ($app->getIdentity()->id) {
-            $item = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Teacher', 'Administrator', ['ignore_request' => true])->getItem((int) $this->profile->id);
-            $this->canEditProfile = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($app->getIdentity(), $item);
+            $item = $app->bootComponent('com_jlms')->getMVCFactory()
+                ->createModel('Teacher', 'Administrator', ['ignore_request' => true])->getItem((int) $this
+                    ->profile->id);
+            $this->canEditProfile = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($app
+                ->getIdentity(), $item);
         }
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');

@@ -43,7 +43,8 @@ foreach ($p['target_lessons'] as $lesson) {
   <p><?= Text::sprintf('COM_JLMS_MIGRATION_TRANSFER_COUNT', count($p['transfers'])) ?></p>
   <?php if ($p['transfers']) :
         ?><ul><?php foreach ($p['transfers'] as $row) :
-    ?><li><?= $this->escape($row['source_title']) ?> → <?= $this->escape($row['target_title']) ?> (<?= Text::_('COM_JLMS_MIGRATION_COMPLETED_ONLY') ?>)</li><?php
+    ?><li><?= $this->escape($row['source_title']) ?> → <?= $this
+        ->escape($row['target_title']) ?> (<?= Text::_('COM_JLMS_MIGRATION_COMPLETED_ONLY') ?>)</li><?php
         endforeach; ?></ul><?php
   endif; ?>
   <?php if ($p['unmapped']) :
@@ -64,5 +65,6 @@ foreach ($p['target_lessons'] as $lesson) {
    </form>
   <?php endif; ?>
  </section>
- <a href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id=' . (int)$i['course_id']) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a>
+ <a href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id='
+     . (int)$i['course_id']) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a>
 </section>

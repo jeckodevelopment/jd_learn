@@ -77,7 +77,8 @@ final class TeachersModel extends ListModel
             ->leftJoin('(' . (string) $courseCounts . ') AS teacher_courses ON teacher_courses.teacher_id = a.id');
         if (!$fresh->authorise('jlms.teachers.manage', 'com_jlms')) {
             $id = (int) $fresh->id;
-            $query->where('(a.created_by = :actor OR a.user_id = :linked)')->bind(':actor', $id, ParameterType::INTEGER)->bind(':linked', $id, ParameterType::INTEGER);
+            $query->where('(a.created_by = :actor OR a.user_id = :linked)')
+                ->bind(':actor', $id, ParameterType::INTEGER)->bind(':linked', $id, ParameterType::INTEGER);
         }
         foreach (self::FILTERS as $name) {
             $value = trim((string) $this->getState('filter.' . $name, ''));
@@ -97,7 +98,8 @@ final class TeachersModel extends ListModel
                     $query->where('a.id = :search_id')->bind(':search_id', $id, ParameterType::INTEGER);
                 } else {
                     $search = '%' . $db->escape($value, true) . '%';
-                    $query->where('(a.title LIKE :title OR a.alias LIKE :alias)')->bind(':title', $search)->bind(':alias', $search);
+                    $query->where('(a.title LIKE :title OR a.alias LIKE :alias)')->bind(':title', $search)
+                        ->bind(':alias', $search);
                 }
             } elseif ($name === 'published') {
                 if (!in_array($value, ['-2', '0', '1'], true)) {

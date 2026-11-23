@@ -12,7 +12,8 @@ final class PathwaysModel extends ListModel
     protected function populateState($ordering = 'p.title', $direction = 'ASC')
     {
         parent::populateState($ordering, $direction);
-        $filter = (string) \Joomla\CMS\Factory::getApplication()->getInput()->get('filter_pathway_state', 'active', 'cmd');
+        $filter = (string) \Joomla\CMS\Factory::getApplication()->getInput()
+            ->get('filter_pathway_state', 'active', 'cmd');
         $this->setState('filter.pathway_state', $filter === 'trashed' ? 'trashed' : 'active');
         $this->setState('list.limit', max(1, min(100, (int) $this->state->get('list.limit', 20))));
     }

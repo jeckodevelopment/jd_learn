@@ -76,7 +76,8 @@ $installer->setDatabase($db);
 try {
     $ok = $installer->install($package['extractdir']);
     if (!$ok) {
-        throw new \RuntimeException('Native package installation failed: ' . json_encode($app->getMessageQueue(), JSON_THROW_ON_ERROR));
+        throw new \RuntimeException('Native package installation failed: ' . json_encode($app
+            ->getMessageQueue(), JSON_THROW_ON_ERROR));
     }
     $privacyPlugin = $db->setQuery("SELECT enabled FROM #__extensions WHERE type='plugin' AND folder='privacy' AND element='jdlearn'")->loadResult();
     if ($privacyPlugin === null || (int) $privacyPlugin !== 1) {

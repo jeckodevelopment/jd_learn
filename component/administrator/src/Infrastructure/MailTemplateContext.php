@@ -24,12 +24,14 @@ final class MailTemplateContext
         $description = is_string($presentation['description'] ?? null) ? $presentation['description'] : '';
         $description = html_entity_decode(strip_tags($description), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $description = trim(preg_replace('/\s+/u', ' ', $description) ?? '');
-        $minutes = filter_var($presentation['estimated_minutes'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $minutes = filter_var($presentation['estimated_minutes'] ?? null, FILTER_VALIDATE_INT, ['options'
+            => ['min_range' => 1]]);
         $start = self::dateValue($calendar['starts_at'] ?? null);
         $mailFrom = (string) Factory::getConfig()->get('mailfrom', '');
         $contact = filter_var($mailFrom, FILTER_VALIDATE_EMAIL) ? $mailFrom : '';
 
-        $enrollmentId = filter_var($data['ENROLLMENT_ID'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        $enrollmentId = filter_var($data['ENROLLMENT_ID'] ?? null, FILTER_VALIDATE_INT, ['options'
+            => ['min_range' => 1]]);
         $lessonId = filter_var($data['LESSON_ID'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $lessonUrl = ($enrollmentId && $lessonId)
             ? Uri::root() . 'index.php?option=com_jlms&view=classroom&id=' . $enrollmentId . '&lesson_id=' . $lessonId

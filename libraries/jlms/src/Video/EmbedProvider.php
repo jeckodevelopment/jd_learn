@@ -37,6 +37,7 @@ abstract class EmbedProvider extends AbstractFoundationProvider
         if (isset($normal->options['privacy_hash'])) {
             $options['privacy_hash'] = $normal->options['privacy_hash'];
         }
-        return new PlaybackDescriptor($this->key(), $source->revision, $this->getFrontendAdapterAsset(), $options, $this->getCapabilities($source));
+        return new PlaybackDescriptor($this->key(), $source->revision, $this
+            ->getFrontendAdapterAsset(), $options, $this->getCapabilities($source));
     }
 }

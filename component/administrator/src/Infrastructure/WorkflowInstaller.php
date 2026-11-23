@@ -46,14 +46,17 @@ final class WorkflowInstaller
             if (!$workflow) {
                 $workflow = $save('Workflow', ['title' => 'JD Learn', 'extension' => $extension,
                     'published' => 1, 'default' => 1, 'description' => 'JD Learn publication', 'ordering' => 0]);
-                $draft = $save('Stage', ['workflow_id' => $workflow, 'title' => 'COM_JLMS_DRAFT', 'published' => 1, 'default' => 1, 'ordering' => 0]);
-                $published = $save('Stage', ['workflow_id' => $workflow, 'title' => 'JPUBLISHED', 'published' => 1, 'default' => 0, 'ordering' => 1]);
+                $draft = $save('Stage', ['workflow_id' => $workflow, 'title' => 'COM_JLMS_DRAFT', 'published'
+                    => 1, 'default' => 1, 'ordering' => 0]);
+                $published = $save('Stage', ['workflow_id' => $workflow, 'title' => 'JPUBLISHED', 'published'
+                    => 1, 'default' => 0, 'ordering' => 1]);
                 self::ensureTransition($db, $workflow, 'JPUBLISH', $draft, $published, 'publish', 1, $save);
                 self::ensureTransition($db, $workflow, 'JUNPUBLISH', $published, $draft, 'unpublish', 0, $save);
             }
             $review = self::stageId($db, $workflow, 'COM_JLMS_IN_REVIEW');
             if (!$review) {
-                $review = $save('Stage', ['workflow_id' => $workflow, 'title' => 'COM_JLMS_IN_REVIEW', 'published' => 1, 'default' => 0, 'ordering' => 2]);
+                $review = $save('Stage', ['workflow_id' => $workflow, 'title'
+                    => 'COM_JLMS_IN_REVIEW', 'published' => 1, 'default' => 0, 'ordering' => 2]);
             }
             self::ensureTransition($db, $workflow, 'COM_JLMS_SUBMIT_REVIEW_DRAFT', $draft, $review, 'review', 0, $save);
             self::ensureTransition($db, $workflow, 'COM_JLMS_SUBMIT_REVIEW_UPDATE', $published, $review, 'review', 1, $save);
@@ -62,7 +65,8 @@ final class WorkflowInstaller
             self::ensureTransition($db, $workflow, 'COM_JLMS_APPROVE_REVIEW', $review, $published, 'publish', 1, $save);
             $archived = self::stageId($db, $workflow, 'JARCHIVED');
             if (!$archived) {
-                $archived = $save('Stage', ['workflow_id' => $workflow, 'title' => 'JARCHIVED', 'published' => 1, 'default' => 0, 'ordering' => 3]);
+                $archived = $save('Stage', ['workflow_id' => $workflow, 'title' => 'JARCHIVED', 'published'
+                    => 1, 'default' => 0, 'ordering' => 3]);
             }
             self::ensureTransition($db, $workflow, 'COM_JLMS_ARCHIVE_COURSE', $published, $archived, 'archive', 2, $save);
             self::ensureTransition($db, $workflow, 'COM_JLMS_RESTORE_COURSE', $archived, $published, 'restore', 1, $save);

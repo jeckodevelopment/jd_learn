@@ -157,7 +157,8 @@ final class ConfigurationDiagnostics
         };
         $scannerEnabled = (string) ($params['material_scan_required'] ?? '0') === '1';
         $scannerPath = $params['material_clamd_socket'] ?? '';
-        $scannerConfigured = is_string($scannerPath) && str_starts_with($scannerPath, '/') && !str_contains($scannerPath, chr(0));
+        $scannerConfigured = is_string($scannerPath) && str_starts_with($scannerPath, '/')
+            && !str_contains($scannerPath, chr(0));
         if ($scannerEnabled) {
             $checks[] = [
                 'kind' => 'setting',

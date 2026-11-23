@@ -33,15 +33,19 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
     protected function expireQuizzes(ExecuteTaskEvent $event): int
     {
         $params = $event->getArgument('params');
-        $result = $this->getApplication()->bootComponent('com_jlms')->getQuizAttemptService()->expireDue((int)($params->limit ?? 100));
-        $this->logTask('Quiz expiry: closed=' . $result['closed'] . '; failed=' . $result['failed'] . '; more=' . (int)$result['has_more']);
+        $result = $this->getApplication()->bootComponent('com_jlms')->getQuizAttemptService()
+            ->expireDue((int)($params->limit ?? 100));
+        $this->logTask('Quiz expiry: closed=' . $result['closed'] . '; failed=' . $result['failed'] . '; more='
+            . (int)$result['has_more']);
         return $result['failed'] ? Status::KNOCKOUT : Status::OK;
     }
     protected function cleanupMaterials(ExecuteTaskEvent $event): int
     {
         $params = $event->getArgument('params');
-        $result = $this->getApplication()->bootComponent('com_jlms')->getMaterialService()->purgeOrphaned((int)($params->limit ?? 100));
-        $this->logTask('Material cleanup: deleted=' . $result['deleted'] . '; failed=' . $result['failed'] . '; more=' . (int)$result['has_more']);
+        $result = $this->getApplication()->bootComponent('com_jlms')->getMaterialService()
+            ->purgeOrphaned((int)($params->limit ?? 100));
+        $this->logTask('Material cleanup: deleted=' . $result['deleted'] . '; failed=' . $result['failed']
+            . '; more=' . (int)$result['has_more']);
         return $result['failed'] ? Status::KNOCKOUT : Status::OK;
     }
     protected function dispatchMail(ExecuteTaskEvent $event): int
@@ -54,9 +58,19 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
         $lessons = (new \Jlms\Component\Jlms\Administrator\Application\LessonReleaseNotice($db))->enqueueDue();
         $updates = (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionChangeNotice($db))->enqueueDue();
         $managers = (new \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice($db))->enqueueDue();
-        $communication = $app->bootComponent('com_jlms')->getCourseCommunicationService()->process((int)($params->limit ?? 25));
-        $result = (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))->dispatch((int)($params->limit ?? 25));
-        $this->logTask('Course expiry reminders: queued=' . $expiry['queued'] . '; failed=' . $expiry['failed'] . '; processed=' . $expiry['processed'] . '; lesson releases: queued=' . $lessons['queued'] . '; failed=' . $lessons['failed'] . '; processed=' . $lessons['processed'] . '; course version updates: queued=' . $updates['queued'] . '; failed=' . $updates['failed'] . '; processed=' . $updates['processed'] . '; approval managers: queued=' . $managers['queued'] . '; failed=' . $managers['failed'] . '; processed=' . $managers['processed'] . '; communications: queued=' . $communication['queued'] . '; failed=' . $communication['failed'] . '; mail queue: sent=' . $result['sent'] . '; failed=' . $result['failed'] . '; processed=' . $result['processed']);
-        return ($result['failed'] || $communication['failed'] || $expiry['failed'] || $lessons['failed'] || $updates['failed'] || $managers['failed']) ? Status::KNOCKOUT : Status::OK;
+        $communication = $app->bootComponent('com_jlms')->getCourseCommunicationService()->process((int)($params
+            ->limit ?? 25));
+        $result = (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))->dispatch((int)($params
+            ->limit ?? 25));
+        $this->logTask('Course expiry reminders: queued=' . $expiry['queued'] . '; failed=' . $expiry['failed']
+            . '; processed=' . $expiry['processed'] . '; lesson releases: queued=' . $lessons['queued']
+                . '; failed=' . $lessons['failed'] . '; processed=' . $lessons['processed']
+                    . '; course version updates: queued=' . $updates['queued'] . '; failed='
+                        . $updates['failed'] . '; processed=' . $updates['processed']
+                            . '; approval managers: queued=' . $managers['queued'] . '; failed='
+                                . $managers['failed'] . '; processed=' . $managers['processed']
+                                    . '; communications: queued=' . $communication['queued'] . '; failed=' . $communication['failed'] . '; mail queue: sent=' . $result['sent'] . '; failed=' . $result['failed'] . '; processed=' . $result['processed']);
+        return ($result['failed'] || $communication['failed'] || $expiry['failed'] || $lessons['failed']
+            || $updates['failed'] || $managers['failed']) ? Status::KNOCKOUT : Status::OK;
     }
 }

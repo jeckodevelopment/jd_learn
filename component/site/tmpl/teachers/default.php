@@ -22,10 +22,12 @@ use Joomla\CMS\Uri\Uri;
         ?>
   <article class="jlms-card jlms-course-card jlms-teacher-card">
         <?php if ($validImage) : ?>
-   <div class="jlms-teacher-card__cover"><img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $image)))) ?>" alt="<?= !empty($params['image_decorative']) ? '' : $this->escape((string) ($params['image_alt'] ?? '')) ?>" loading="lazy" decoding="async"></div>
+   <div class="jlms-teacher-card__cover"><img src="<?= $this->escape(Uri::root()
+       . implode('/', array_map('rawurlencode', explode('/', $image)))) ?>" alt="<?= !empty($params['image_decorative']) ? '' : $this->escape((string) ($params['image_alt'] ?? '')) ?>" loading="lazy" decoding="async"></div>
         <?php endif; ?>
    <div class="jlms-teacher-card__content">
-    <h2 class="jlms-teacher-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher->id) ?>"><?= $this->escape($teacher->title) ?></a></h2>
+    <h2 class="jlms-teacher-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id='
+        . (int) $teacher->id) ?>"><?= $this->escape($teacher->title) ?></a></h2>
         <?php if ($summary !== '') :
             ?><p class="jlms-teacher-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr(strip_tags($summary), 0, 300)) ?></p><?php
         endif; ?>
@@ -36,5 +38,6 @@ use Joomla\CMS\Uri\Uri;
         ?><p id="jlms-teachers-empty"><?= Text::_('COM_JLMS_TEACHERS_EMPTY') ?></p><?php
  endif; ?>
  </div>
- <nav id="jlms-teachers-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
+ <nav id="jlms-teachers-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination
+     ->getPagesLinks() ?></nav>
 </section>

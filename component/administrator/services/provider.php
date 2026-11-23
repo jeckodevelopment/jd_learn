@@ -33,7 +33,8 @@ return new class () implements ServiceProviderInterface {
         $container->registerServiceProvider(new ComponentDispatcherFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new \Joomla\CMS\Extension\Service\Provider\RouterFactory('\\Jlms\\Component\\Jlms'));
         $container->registerServiceProvider(new CategoryFactory('\\Jlms\\Component\\Jlms'));
-        $container->set(MailQueueAuditService::class, static fn (Container $c): MailQueueAuditService => new MailQueueAuditService($c->get(DatabaseInterface::class)));
+        $container->set(MailQueueAuditService::class, static fn (Container $c): MailQueueAuditService
+            => new MailQueueAuditService($c->get(DatabaseInterface::class)));
         $container->set(CurriculumService::class, static function (Container $container): CurriculumService {
             $registry = null;
             return new CurriculumService(
@@ -61,7 +62,9 @@ return new class () implements ServiceProviderInterface {
         $container->set(\Jlms\Component\Jlms\Administrator\Application\VideoProgressService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(CurriculumService::class), static fn (): int => (int) floor(microtime(true) * 1000), $c->get(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage::class, static fn () => new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage(static fn () => ComponentHelper::getParams('com_jlms')));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\LocalVideoService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedVideoStorage::class), static function (): bool {
-            return PluginHelper::isEnabled('jlmsvideo', 'html5') && (int) (new \Joomla\Registry\Registry(PluginHelper::getPlugin('jlmsvideo', 'html5')->params ?? '{}'))->get('playback_enabled', 0) === 1;
+            return PluginHelper::isEnabled('jlmsvideo', 'html5')
+                && (int) (new \Joomla\Registry\Registry(PluginHelper::getPlugin('jlmsvideo', 'html5')->params
+                    ?? '{}'))->get('playback_enabled', 0) === 1;
         }));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\QuestionBankService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\QuestionBankService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), static fn (string $html): string => ComponentHelper::filterText($html), static fn () => Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()->createTable('Question', 'Administrator')));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class)));
@@ -81,7 +84,8 @@ return new class () implements ServiceProviderInterface {
         $container->set(\Jlms\Component\Jlms\Administrator\Application\QuizAttemptService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService::class), static fn (): int => time(), $c->get(\Jlms\Component\Jlms\Administrator\Application\QuizTimeService::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\DashboardService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\DashboardService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class)));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\PathwayService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\PathwayService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class)));
-        $container->set(PublicationService::class, static fn (Container $c): PublicationService => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
+        $container->set(PublicationService::class, static fn (Container $c): PublicationService
+            => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
         $container->set(\Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService::class, static fn (Container $c) => new \Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService($c->get(DatabaseInterface::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService::class), $c->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class), static function (\Joomla\CMS\User\User $actor, array $message) use ($c): void {
             (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'enrollmentapproval');
@@ -109,23 +113,29 @@ return new class () implements ServiceProviderInterface {
             $component->setAssociationExtension(new \Jlms\Component\Jlms\Administrator\Helper\AssociationsHelper());
             $component->setMVCFactory($container->get(MVCFactoryInterface::class));
             $component->setCurriculumService($container->get(CurriculumService::class));
-            $component->setCategoryReassignmentService($container->get(\Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService::class));
+            $component->setCategoryReassignmentService($container
+                ->get(\Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService::class));
             $component->setPublicationService($container->get(PublicationService::class));
             $component->setCatalogService($container->get(\Jlms\Component\Jlms\Administrator\Application\CatalogService::class));
             $component->setDashboardService($container->get(\Jlms\Component\Jlms\Administrator\Application\DashboardService::class));
             $component->setPathwayService($container->get(\Jlms\Component\Jlms\Administrator\Application\PathwayService::class));
             $component->setManualEnrollmentService($container->get(\Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService::class));
             $component->setEnrollmentStateService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService::class));
-            $component->setEnrollmentMigrationService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService::class));
+            $component->setEnrollmentMigrationService($container
+                ->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService::class));
             $component->setCourseOperationsService($container->get(\Jlms\Component\Jlms\Administrator\Application\CourseOperationsService::class));
             $component->setEnrollmentRosterService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService::class));
-            $component->setEnrollmentApprovalService($container->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService::class));
-            $component->setCourseCommunicationService($container->get(\Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService::class));
+            $component->setEnrollmentApprovalService($container
+                ->get(\Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService::class));
+            $component->setCourseCommunicationService($container
+                ->get(\Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService::class));
             $component->setLearningService($container->get(\Jlms\Component\Jlms\Administrator\Application\LearningService::class));
             $component->setMaterialService($container->get(\Jlms\Component\Jlms\Administrator\Application\MaterialService::class));
             $component->setCertificateService($container->get(\Jlms\Component\Jlms\Administrator\Application\CertificateService::class));
-            $component->setCourseAnnouncementConsent($container->get(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent::class));
-            $component->setCourseAnnouncementService($container->get(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService::class));
+            $component->setCourseAnnouncementConsent($container
+                ->get(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent::class));
+            $component->setCourseAnnouncementService($container
+                ->get(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService::class));
             $component->setVideoProgressService($container->get(\Jlms\Component\Jlms\Administrator\Application\VideoProgressService::class));
             $component->setLocalVideoService($container->get(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService::class));
             $component->setQuestionBankService($container->get(\Jlms\Component\Jlms\Administrator\Application\QuestionBankService::class));

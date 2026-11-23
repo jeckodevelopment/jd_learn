@@ -17,7 +17,8 @@ final class CategoryModel extends CoursesModel
     public function getCategory(): object
     {
         $app = Factory::getApplication();
-        return $app->bootComponent('com_jlms')->getCatalogService()->category($app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id'));
+        return $app->bootComponent('com_jlms')->getCatalogService()->category($app->getIdentity(), $app
+            ->getLanguage()->getTag(), (int) $this->getState('filter.category_id'));
     }
 
     protected function getListQuery()

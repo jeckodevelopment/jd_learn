@@ -21,10 +21,13 @@ final class TeacherTable extends Table
     public function check()
     {
         $this->title = trim((string) $this->title);
-        $this->alias = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe((string) ($this->alias ?: $this->title));
+        $this->alias = \Joomla\CMS\Application\ApplicationHelper::stringURLSafe((string) ($this->alias ?: $this
+            ->title));
         if (
-            $this->title === '' || mb_strlen($this->title) > 255 || preg_match('//u', $this->title) !== 1 || $this->alias === '' || strlen($this->alias) > 180
-            || strlen((string) $this->bio) > 65535 || preg_match('//u', (string) $this->bio) !== 1 || !in_array((int) $this->state, [-2, 0, 1], true)
+            $this->title === '' || mb_strlen($this->title) > 255 || preg_match('//u', $this->title) !== 1
+                || $this->alias === '' || strlen($this->alias) > 180
+            || strlen((string) $this->bio) > 65535 || preg_match('//u', (string) $this->bio) !== 1
+                || !in_array((int) $this->state, [-2, 0, 1], true)
         ) {
             $this->setError('COM_JLMS_TEACHER_INVALID');
             return false;
@@ -33,18 +36,22 @@ final class TeacherTable extends Table
         $catid = (int) $this->catid;
         $access = (int) $this->access;
         $language = (string) $this->language;
-        $q = $db->createQuery()->select('id')->from('#__categories')->where("extension='com_jlms.teacher' AND published<>-2")->where('id=:id')->bind(':id', $catid, ParameterType::INTEGER);
+        $q = $db->createQuery()->select('id')->from('#__categories')
+            ->where("extension='com_jlms.teacher' AND published<>-2")->where('id=:id')
+                ->bind(':id', $catid, ParameterType::INTEGER);
         if (!$db->setQuery($q)->loadResult()) {
             $this->setError('COM_JLMS_TEACHER_INVALID');
             return false;
         }
-        $q = $db->createQuery()->select('id')->from('#__viewlevels')->where('id=:id')->bind(':id', $access, ParameterType::INTEGER);
+        $q = $db->createQuery()->select('id')->from('#__viewlevels')->where('id=:id')
+            ->bind(':id', $access, ParameterType::INTEGER);
         if (!$db->setQuery($q)->loadResult()) {
             $this->setError('COM_JLMS_INVALID_ACCESS');
             return false;
         }
         if ($language !== '*') {
-            $q = $db->createQuery()->select('lang_id')->from('#__languages')->where('lang_code=:language')->bind(':language', $language);
+            $q = $db->createQuery()->select('lang_id')->from('#__languages')->where('lang_code=:language')
+                ->bind(':language', $language);
             if (!$db->setQuery($q)->loadResult()) {
                 $this->setError('COM_JLMS_TEACHER_INVALID');
                 return false;
@@ -68,11 +75,13 @@ final class TeacherTable extends Table
         $this->modified_by = $actor;
         $asset = new \Joomla\CMS\Table\Asset($this->getDatabase());
         $stable = $this->id && $asset->loadByName($this->_getAssetName())
-            && (int) $asset->id === (int) $this->asset_id && (int) $asset->parent_id === (int) $this->_getAssetParentId() && $this->_rules === null;
+            && (int) $asset->id === (int) $this->asset_id && (int) $asset->parent_id === (int) $this
+                ->_getAssetParentId() && $this->_rules === null;
         $tracking = $this->_trackAssets;
         if ($stable) {
             $this->_trackAssets = false;
-            $title = (object) ['id' => (int) $asset->id, 'title' => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)];
+            $title = (object) ['id' => (int) $asset->id, 'title'
+                => \Joomla\String\StringHelper::substr((string) $this->title, 0, 100)];
             $this->getDatabase()->updateObject('#__assets', $title, 'id');
         }
         try {
@@ -92,7 +101,8 @@ final class TeacherTable extends Table
     protected function _getAssetParentId(?Table $table = null, $id = null)
     {
         $catid = (int) $this->catid;
-        $q = $this->getDatabase()->createQuery()->select('asset_id')->from('#__categories')->where('id=:id')->bind(':id', $catid, ParameterType::INTEGER);
+        $q = $this->getDatabase()->createQuery()->select('asset_id')->from('#__categories')->where('id=:id')
+            ->bind(':id', $catid, ParameterType::INTEGER);
         return (int) $this->getDatabase()->setQuery($q)->loadResult() ?: parent::_getAssetParentId($table, $id);
     }
 }

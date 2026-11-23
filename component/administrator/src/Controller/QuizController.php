@@ -45,7 +45,8 @@ final class QuizController extends BaseController
                     throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
                 }
                 $lesson = $service->save($this->app->getIdentity(), $data);
-                $target = 'index.php?option=com_jlms&view=quiz&id=' . (int)$data['course_id'] . '&version_id=' . (int)$data['version_id'] . '&lesson_id=' . $lesson;
+                $target = 'index.php?option=com_jlms&view=quiz&id=' . (int)$data['course_id'] . '&version_id='
+                    . (int)$data['version_id'] . '&lesson_id=' . $lesson;
             }
             $this->setMessage(Text::_('COM_JLMS_QUIZ_SAVED'));
             $this->setRedirect(Route::link('administrator', $target, false));

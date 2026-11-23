@@ -96,11 +96,13 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 $db->quoteName('p.course_version_id'), $db->quoteName('p.lesson_id'),
                 $db->quoteName('p.source_revision'), $db->quoteName('p.covered_ms'),
                 $db->quoteName('p.resume_ms'), $db->quoteName('p.state'),
-                $db->quoteName('p.coverage_json'), $db->quoteName('p.completed_at'), $db->quoteName('p.last_activity_at'),
+                $db->quoteName('p.coverage_json'), $db->quoteName('p.completed_at'), $db
+                    ->quoteName('p.last_activity_at'),
                 $db->quoteName('e.course_id'), $db->quoteName('e.edition_id'),
             ])
             ->from($db->quoteName('#__jlms_lesson_progress', 'p'))
-            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('p.enrollment_id'))
+            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = '
+                . $db->quoteName('p.enrollment_id'))
             ->where($db->quoteName('e.user_id') . ' = :userId')
             ->bind(':userId', $user->id);
         foreach ($db->setQuery($progressQuery)->loadObjectList() as $progress) {
@@ -115,7 +117,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 $db->quoteName('a.started_at'), $db->quoteName('a.submitted_at'),
             ])
             ->from($db->quoteName('#__jlms_attempts', 'a'))
-            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('a.enrollment_id'))
+            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = '
+                . $db->quoteName('a.enrollment_id'))
             ->where($db->quoteName('e.user_id') . ' = :userId')
             ->bind(':userId', $user->id);
         foreach ($db->setQuery($attemptQuery)->loadObjectList() as $attempt) {
@@ -128,9 +131,12 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 $db->quoteName('aq.display_order'), $db->quoteName('ans.answer_json'), $db->quoteName('ans.saved_at'),
             ])
             ->from($db->quoteName('#__jlms_attempt_answers', 'ans'))
-            ->innerJoin($db->quoteName('#__jlms_attempt_questions', 'aq') . ' ON ' . $db->quoteName('aq.id') . ' = ' . $db->quoteName('ans.attempt_question_id'))
-            ->innerJoin($db->quoteName('#__jlms_attempts', 'a') . ' ON ' . $db->quoteName('a.id') . ' = ' . $db->quoteName('aq.attempt_id'))
-            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('a.enrollment_id'))
+            ->innerJoin($db->quoteName('#__jlms_attempt_questions', 'aq') . ' ON ' . $db->quoteName('aq.id')
+                . ' = ' . $db->quoteName('ans.attempt_question_id'))
+            ->innerJoin($db->quoteName('#__jlms_attempts', 'a') . ' ON ' . $db->quoteName('a.id') . ' = ' . $db
+                ->quoteName('aq.attempt_id'))
+            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = '
+                . $db->quoteName('a.enrollment_id'))
             ->where($db->quoteName('e.user_id') . ' = :userId')
             ->bind(':userId', $user->id);
         foreach ($db->setQuery($answerQuery)->loadObjectList() as $answer) {
@@ -144,8 +150,10 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 $db->quoteName('d.issued_at', 'document_issued_at'), $db->quoteName('e.course_id'),
             ])
             ->from($db->quoteName('#__jlms_certificates', 'c'))
-            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('c.enrollment_id'))
-            ->leftJoin($db->quoteName('#__jlms_certificate_documents', 'd') . ' ON ' . $db->quoteName('d.certificate_id') . ' = ' . $db->quoteName('c.id'))
+            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = '
+                . $db->quoteName('c.enrollment_id'))
+            ->leftJoin($db->quoteName('#__jlms_certificate_documents', 'd') . ' ON ' . $db
+                ->quoteName('d.certificate_id') . ' = ' . $db->quoteName('c.id'))
             ->where($db->quoteName('e.user_id') . ' = :userId')
             ->bind(':userId', $user->id);
         foreach ($db->setQuery($certificateQuery)->loadObjectList() as $certificate) {
@@ -153,7 +161,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         }
 
         $consentQuery = $db->createQuery()->select(['state', 'origin', 'policy_version', 'requested_at', 'confirmed_at', 'revoked_at'])
-            ->from($db->quoteName('#__jlms_mail_consents'))->where($db->quoteName('user_id') . ' = :userId')->bind(':userId', $user->id);
+            ->from($db->quoteName('#__jlms_mail_consents'))->where($db->quoteName('user_id') . ' = :userId')
+                ->bind(':userId', $user->id);
         foreach ($db->setQuery($consentQuery)->loadObjectList() as $consent) {
             $consentDomain->addItem($this->createItemFromArray((array) $consent));
         }
@@ -250,7 +259,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 ->where($db->quoteName('ans.attempt_question_id') . ' IN (' .
                     $db->createQuery()->select($db->quoteName('aq.id'))
                         ->from($db->quoteName('#__jlms_attempt_questions', 'aq'))
-                        ->innerJoin($db->quoteName('#__jlms_attempts', 'a') . ' ON ' . $db->quoteName('a.id') . ' = ' . $db->quoteName('aq.attempt_id'))
+                        ->innerJoin($db->quoteName('#__jlms_attempts', 'a') . ' ON ' . $db->quoteName('a.id')
+                            . ' = ' . $db->quoteName('aq.attempt_id'))
                         ->where($db->quoteName('a.enrollment_id') . ' IN (' . $enrollments . ')') . ')');
             $db->setQuery($answerQuery)->execute();
 
@@ -258,7 +268,8 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 ->set($db->quoteName('user_id') . ' = NULL')
                 ->set($db->quoteName('decided_by') . ' = NULL')
                 ->set($db->quoteName('reason') . ' = NULL')
-                ->where('(' . $db->quoteName('user_id') . ' = ' . $userId . ' OR ' . $db->quoteName('decided_by') . ' = ' . $userId . ')'))->execute();
+                ->where('(' . $db->quoteName('user_id') . ' = ' . $userId . ' OR ' . $db
+                    ->quoteName('decided_by') . ' = ' . $userId . ')'))->execute();
             $db->setQuery($db->createQuery()->update($db->quoteName('#__jlms_manual_enrollments'))
                 ->set($db->quoteName('actor_user_id') . ' = NULL')
                 ->where($db->quoteName('actor_user_id') . ' = ' . $userId))->execute();
@@ -343,8 +354,10 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         $query = $db->createQuery()
             ->select('COUNT(*)')
             ->from($db->quoteName('#__jlms_certificate_documents', 'd'))
-            ->innerJoin($db->quoteName('#__jlms_certificates', 'c') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('d.certificate_id'))
-            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = ' . $db->quoteName('c.enrollment_id'))
+            ->innerJoin($db->quoteName('#__jlms_certificates', 'c') . ' ON ' . $db->quoteName('c.id') . ' = '
+                . $db->quoteName('d.certificate_id'))
+            ->innerJoin($db->quoteName('#__jlms_enrollments', 'e') . ' ON ' . $db->quoteName('e.id') . ' = '
+                . $db->quoteName('c.enrollment_id'))
             ->where($db->quoteName('e.user_id') . ' = :userId')
             ->bind(':userId', $userId);
         $documents = (int) $db->setQuery($query)->loadResult();

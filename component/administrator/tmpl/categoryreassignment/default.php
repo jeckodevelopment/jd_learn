@@ -18,7 +18,9 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
   <select class="form-select" id="category_id" name="category_id" required>
    <option value=""><?= Text::_('JOPTION_SELECT_CATEGORY') ?></option>
    <?php foreach ($this->categories as $category) : ?>
-    <option value="<?= (int) $category->id ?>" <?= (int) $category->id === $categoryId ? 'selected' : '' ?>><?= $this->escape($category->title . ' (' . $category->extension . ')' . ((int) $category->published === -2 ? ' — ' . Text::_('JTRASHED') : '')) ?></option>
+    <option value="<?= (int) $category->id ?>" <?= (int) $category
+        ->id === $categoryId ? 'selected' : '' ?>><?= $this->escape($category->title . ' (' . $category
+            ->extension . ')' . ((int) $category->published === -2 ? ' — ' . Text::_('JTRASHED') : '')) ?></option>
    <?php endforeach; ?>
   </select>
   <button type="submit" class="btn btn-primary mt-2"><?= Text::_('JAPPLY') ?></button>
@@ -32,7 +34,8 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
     <thead><tr><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_REFERENCE') ?></th><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_COUNT') ?></th><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_TARGET') ?></th></tr></thead>
     <tbody>
         <?php foreach ($this->inspection['references'] as $key => $count) : ?>
-     <tr><th scope="row"><?= Text::_($key === 'questions' ? 'COM_JLMS_QUESTION_BANK' : 'COM_JLMS_' . strtoupper($key)) ?></th><td><?= (int) $count ?></td><td>
+     <tr><th scope="row"><?= Text::_($key === 'questions' ? 'COM_JLMS_QUESTION_BANK' : 'COM_JLMS_'
+         . strtoupper($key)) ?></th><td><?= (int) $count ?></td><td>
             <?php if ($count > 0) : ?>
        <select class="form-select" name="destination[<?= $this->escape($key) ?>]" required>
         <option value=""><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_CHOOSE_TARGET') ?></option>

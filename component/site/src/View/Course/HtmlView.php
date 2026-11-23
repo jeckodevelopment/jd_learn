@@ -33,7 +33,8 @@ final class HtmlView extends BaseHtmlView
                 $actor = new \Joomla\CMS\User\User();
             }
         }
-        $this->hasContentAccess = (bool) $actor->id && !$actor->block && in_array((int) $this->item['course']->content_access, array_map('intval', $actor->getAuthorisedViewLevels()), true);
+        $this->hasContentAccess = (bool) $actor->id && !$actor->block && in_array((int) $this->item['course']
+            ->content_access, array_map('intval', $actor->getAuthorisedViewLevels()), true);
         if ($this->hasContentAccess) {
             $courseId = (int) $this->item['course']->id;
             $states = Factory::getApplication()->bootComponent('com_jlms')->getDashboardService()
@@ -65,7 +66,8 @@ final class HtmlView extends BaseHtmlView
             $this->getDocument()->setMetaData('robots', 'noindex, nofollow');
             Factory::getApplication()->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         }
-        PublicBreadcrumbHelper::addDetail('course', (int) $this->item['course']->id, (string) $this->item['course']->title);
+        PublicBreadcrumbHelper::addDetail('course', (int) $this->item['course']->id, (string) $this
+            ->item['course']->title);
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         parent::display($tpl);
     }

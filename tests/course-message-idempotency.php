@@ -50,7 +50,8 @@ mail08Assert(
 );
 mail08Assert(str_contains($model, "\\CourseMessageMutation::valid("), 'GET must validate persisted mutation');
 mail08Assert(str_contains($model, "\\CourseMessageMutation::create()"), 'Legacy session must be upgraded once');
-mail08Assert(str_contains($model, "'mutation_id'] = " . '$preview' . "['mutation_id']"), 'GET must pass persisted mutation to view');
+mail08Assert(str_contains($model, "'mutation_id'] = " . '$preview'
+    . "['mutation_id']"), 'GET must pass persisted mutation to view');
 mail08Assert(str_contains($view, '$mutation = $preview' . "['mutation_id'] ?? '';"), 'View must read, never mint, the id');
 mail08Assert(!str_contains($view, 'random_bytes('), 'GET must not mint mutations');
 mail08Assert(str_contains($service, 'CourseMessageMutation::testEventKey('), 'Test send must use deterministic event key');

@@ -52,7 +52,8 @@ final class CertificatePdf
         $content .= self::center($english ? 'for completing' : 'per aver completato', 306, 13, [0.32, 0.34, 0.36]);
         $content .= self::center($course, 268, 20, [0.16, 0.19, 0.22], true, 62);
         $content .= self::center(($english ? 'Completed on ' : 'Completato il ') . $date, 190, 13, [0.25, 0.28, 0.30]);
-        $content .= self::center(($english ? 'Certificate code: ' : 'Codice attestato: ') . $serial, 145, 10, [0.38, 0.40, 0.42]);
+        $content .= self::center(($english ? 'Certificate code: ' : 'Codice attestato: ')
+            . $serial, 145, 10, [0.38, 0.40, 0.42]);
         $content .= self::center($footer, 57, 10, [0.38, 0.40, 0.42], false, 100);
 
         $objects = [];
@@ -80,7 +81,8 @@ final class CertificatePdf
         for ($i = 1; $i <= count($objects); $i++) {
             $pdf .= sprintf('%010d 00000 n ', $offsets[$i]) . "\n";
         }
-        return $pdf . 'trailer' . "\n<< /Size " . (count($objects) + 1) . " /Root 1 0 R >>\nstartxref\n" . $xref . "\n%%EOF\n";
+        return $pdf . 'trailer' . "\n<< /Size " . (count($objects) + 1) . " /Root 1 0 R >>\nstartxref\n"
+            . $xref . "\n%%EOF\n";
     }
 
     private static function date(string $value, bool $english): string

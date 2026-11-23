@@ -9,7 +9,8 @@ HTMLHelper::_('behavior.formvalidator');
  <h1><?= Text::_('COM_JLMS_TEACHER_EDIT_PROFILE') ?></h1>
  <?= $this->form->renderFieldset('details') ?>
  <?php foreach ($this->form->getFieldsets('com_fields') as $fieldset) : ?>
-  <fieldset><legend><?= $this->escape(Text::_($fieldset->label)) ?></legend><?= $this->form->renderFieldset($fieldset->name) ?></fieldset>
+  <fieldset><legend><?= $this->escape(Text::_($fieldset->label)) ?></legend><?= $this->form
+      ->renderFieldset($fieldset->name) ?></fieldset>
  <?php endforeach; ?>
  <input type="hidden" name="task" value="teacher.save">
  <?= HTMLHelper::_('form.token') ?>

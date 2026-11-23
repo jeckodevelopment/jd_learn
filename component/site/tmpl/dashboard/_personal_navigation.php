@@ -33,7 +33,8 @@ if ($enabled) :
         <?php if ($view === $currentView) : ?>
     <span class="jlms-personal-navigation__current" aria-current="page"><?= Text::_($languageKey) ?></span>
         <?php else : ?>
-    <a class="jlms-personal-navigation__link" href="<?= Route::_('index.php?option=com_jlms&view=' . $view) ?>"><?= Text::_($languageKey) ?></a>
+    <a class="jlms-personal-navigation__link" href="<?= Route::_('index.php?option=com_jlms&view='
+        . $view) ?>"><?= Text::_($languageKey) ?></a>
         <?php endif; ?>
   </li>
     <?php endforeach; ?>

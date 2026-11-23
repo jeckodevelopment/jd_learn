@@ -71,7 +71,8 @@ final class CourseVersionCopy
     public function item(User $actor, string $kind, object $source, int $version, string $title, int $destinationModule = 0): int
     {
         $modules = $kind === 'module' ? [(array) $source] : [];
-        $lessons = $kind === 'module' ? $this->rows('lessons', 'module_id', (int) $source->id, 5000) : [(array) $source];
+        $lessons = $kind === 'module' ? $this->rows('lessons', 'module_id', (int) $source
+            ->id, 5000) : [(array) $source];
         return $this->nodes($actor, $version, $version, $modules, $lessons, true, false, $title, $destinationModule);
     }
 
@@ -110,8 +111,10 @@ final class CourseVersionCopy
         $this->capacity('lessons', $target, count($lessonRows), 5000);
         $sourceCourse = $this->course($sourceVersion);
         $targetCourse = $this->course($target);
-        $materialsAllowed = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $sourceCourse) && $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $targetCourse);
-        $quizAllowed = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . $sourceCourse) && $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . $targetCourse);
+        $materialsAllowed = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $sourceCourse)
+            && $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $targetCourse);
+        $quizAllowed = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . $sourceCourse) && $actor
+            ->authorise('jlms.quiz.manage', 'com_jlms.course.' . $targetCourse);
         $modules = [];
         $lessons = [];
         $first = 0;
@@ -192,7 +195,8 @@ final class CourseVersionCopy
             if (!isset($lessons[$edge['lesson_id']])) {
                 continue;
             }
-            $required = $lessons[$edge['required_lesson_id']] ?? ($target === $sourceVersion ? (int) $edge['required_lesson_id'] : 0);
+            $required = $lessons[$edge['required_lesson_id']]
+                ?? ($target === $sourceVersion ? (int) $edge['required_lesson_id'] : 0);
             if (!$required) {
                 throw new \DomainException('COM_JLMS_INVALID_INPUT');
             }

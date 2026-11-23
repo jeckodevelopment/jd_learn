@@ -21,6 +21,7 @@ final class CoursefiltercategoryField extends \Joomla\CMS\Form\Field\CategoryFie
             $q = $db->createQuery()->select('DISTINCT catid')->from('#__jlms_courses')->whereIn('id', $ids);
             $categories = array_map('intval', $db->setQuery($q)->loadColumn());
         }
-        return array_values(array_filter(parent::getOptions(), static fn($option): bool => (string) $option->value === '' || in_array((int) $option->value, $categories, true)));
+        return array_values(array_filter(parent::getOptions(), static fn($option): bool => (string) $option
+            ->value === '' || in_array((int) $option->value, $categories, true)));
     }
 }

@@ -92,7 +92,8 @@ final class CourseVersionChangeNotice
                         'USER_FULLNAME' => $name,
                         'USER_FULLNAME_HTML' => htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                         'COURSE_TITLE' => (string) $row->course_title,
-                        'COURSE_TITLE_HTML' => htmlspecialchars((string) $row->course_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                        'COURSE_TITLE_HTML' => htmlspecialchars((string) $row
+                            ->course_title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
                         'DASHBOARD_URL' => Uri::root() . 'index.php?option=com_jlms&view=dashboard',
                         'SITE_NAME' => $site,
                         'SITE_NAME_HTML' => htmlspecialchars($site, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),

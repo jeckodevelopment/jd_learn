@@ -26,7 +26,8 @@ final class HtmlView extends BaseHtmlView
         $this->getDocument()->getToolbar()
             ->linkButton('back-to-course', 'COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_BACK')
             ->icon('icon-arrow-left')
-            ->url(Route::link('administrator', 'index.php?option=com_jlms&view=course&layout=edit&id=' . (int) $this->preview['course_id']));
+            ->url(Route::link('administrator', 'index.php?option=com_jlms&view=course&layout=edit&id='
+                . (int) $this->preview['course_id']));
         ToolbarHelper::help('courseannouncement', true);
         parent::display($tpl);
     }

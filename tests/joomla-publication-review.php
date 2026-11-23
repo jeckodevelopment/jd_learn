@@ -66,17 +66,22 @@ if (
 $cat = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $component->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $alias = 'review-' . bin2hex(random_bytes(6));
-$data = ['id' => 0,'title' => 'Review workflow test','alias' => $alias,'catid' => $cat,'language' => '*','catalog_access' => 1,'content_access' => 2,
-    'enrollment_mode' => 'auto','summary' => 'Review test summary','presentation_description' => '<p>Review test course description.</p>','revision' => 1];
+$data = ['id' => 0,'title' => 'Review workflow test','alias' => $alias,'catid' => $cat,'language'
+    => '*','catalog_access' => 1,'content_access' => 2,
+    'enrollment_mode' => 'auto','summary' => 'Review test summary','presentation_description'
+        => '<p>Review test course description.</p>','revision' => 1];
 if (!$model->save($data)) {
     throw new RuntimeException('Review fixture failed: ' . $model->getError());
 }
 $course = (int)$model->getState('course.id');
-$rev = static fn(string $table, int $id): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . (int)$id)->loadResult();
+$rev = static fn(string $table, int $id): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_' . $table
+    . ' WHERE id=' . (int)$id)->loadResult();
 $version = $authoring->createDraft($actor, $course, $rev('courses', $course));
-$scope = static fn(int $version): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev('course_versions', $version)];
+$scope = static fn(int $version): array=>['course_id' => $course,'version_id'
+    => $version,'expected_version_revision' => $rev('course_versions', $version)];
 $module = $authoring->saveModule($actor, $scope($version) + ['id' => 0,'title' => 'Review module']);
-$authoring->saveLesson($actor, $scope($version) + ['id' => 0,'module_id' => $module,'title' => 'Review lesson','kind' => 'text','required' => '1','body' => '<p>Review lesson body.</p>']);
+$authoring->saveLesson($actor, $scope($version) + ['id' => 0,'module_id' => $module,'title'
+    => 'Review lesson','kind' => 'text','required' => '1','body' => '<p>Review lesson body.</p>']);
 $checks = 0;
 $expect = static function (bool $ok, string $message) use (&$checks): void {
     if (!$ok) {
@@ -102,13 +107,16 @@ $stage = static function () use ($db, $workflow, $course): string {
     if (!$association) {
         return '';
     }
-    return (string)$db->setQuery('SELECT title FROM #__workflow_stages WHERE id=' . (int)$association->stage_id)->loadResult();
+    return (string)$db->setQuery('SELECT title FROM #__workflow_stages WHERE id=' . (int)$association->stage_id)
+        ->loadResult();
 };
 $review = $choice('review', 0);
 $transition($review, $version);
 $row = $db->setQuery('SELECT state,current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadObject();
-$expect((int)$row->state === 0 && $row->current_version_id === null && $stage() === 'COM_JLMS_IN_REVIEW', 'new draft enters native review without becoming public');
-$expect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft', 'review does not freeze the candidate');
+$expect((int)$row->state === 0 && $row->current_version_id === null
+    && $stage() === 'COM_JLMS_IN_REVIEW', 'new draft enters native review without becoming public');
+$expect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)
+    ->loadResult() === 'draft', 'review does not freeze the candidate');
 try {
     $authoring->saveModule($actor, $scope($version) + ['id' => 0,'title' => 'Should be locked']);
     throw new RuntimeException('Reviewer state allowed edits');
@@ -137,7 +145,8 @@ $finderLifecycleWitness = static function ($event) use (&$finderLifecycle, $db, 
     if ($event->getContext() !== 'com_jlms.course' || (int)$event->getItem()->id !== (int)$course) {
         return;
     }
-    $snapshot = $db->setQuery('SELECT state,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$course)->loadAssoc();
+    $snapshot = $db->setQuery('SELECT state,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id='
+        . (int)$course)->loadAssoc();
     $snapshot['event_state'] = (int)$event->getItem()->state;
     $finderLifecycle[] = $snapshot;
 };
@@ -145,8 +154,11 @@ $app->getDispatcher()->addListener('onFinderAfterSave', $finderLifecycleWitness)
 $transition($archive, $version);
 $row = $db->setQuery('SELECT state,current_version_id,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id=' . $course)->loadObject();
 $expect((int)$row->admissions_open === 0 && (int)$row->delivery_enabled === 0, 'archive closes both admissions and lesson delivery in one transition');
-$expect((int)$row->state === 2 && (int)$row->current_version_id === $version && $stage() === 'JARCHIVED', 'archive hides discovery without changing the live version');
-$expect($finderLifecycle !== [] && (int)end($finderLifecycle)['state'] === 2 && (int)end($finderLifecycle)['event_state'] === 2 && (int)end($finderLifecycle)['admissions_open'] === 0 && (int)end($finderLifecycle)['delivery_enabled'] === 0, 'archive publishes committed Finder refresh with gates closed');
+$expect((int)$row->state === 2 && (int)$row->current_version_id === $version
+    && $stage() === 'JARCHIVED', 'archive hides discovery without changing the live version');
+$expect($finderLifecycle !== [] && (int)end($finderLifecycle)['state'] === 2
+    && (int)end($finderLifecycle)['event_state'] === 2 && (int)end($finderLifecycle)['admissions_open'] === 0
+        && (int)end($finderLifecycle)['delivery_enabled'] === 0, 'archive publishes committed Finder refresh with gates closed');
 try {
     $component->getCatalogService()->course($guest, 'en-GB', $course);
     throw new RuntimeException('Archived course remained in the public catalog');
@@ -173,8 +185,11 @@ $row = $db->setQuery('SELECT state,current_version_id,admissions_open,delivery_e
 $expect((int)$row->admissions_open === 0 && (int)$row->delivery_enabled === 0, 'restore never automatically reopens admissions or delivery');
 // LearningService::enrolledCourse denies suspended delivery with HTTP 403;
 // the dedicated learning fixture exercises that user-facing contract.
-$expect((int)$row->state === 1 && (int)$row->current_version_id === $version && $stage() === 'JPUBLISHED', 'restore republishes the same immutable version');
-$expect($finderLifecycle !== [] && (int)end($finderLifecycle)['state'] === 1 && (int)end($finderLifecycle)['event_state'] === 1 && (int)end($finderLifecycle)['admissions_open'] === 0 && (int)end($finderLifecycle)['delivery_enabled'] === 0, 'restore publishes committed Finder refresh while both gates remain closed');
+$expect((int)$row->state === 1 && (int)$row->current_version_id === $version
+    && $stage() === 'JPUBLISHED', 'restore republishes the same immutable version');
+$expect($finderLifecycle !== [] && (int)end($finderLifecycle)['state'] === 1
+    && (int)end($finderLifecycle)['event_state'] === 1 && (int)end($finderLifecycle)['admissions_open'] === 0
+        && (int)end($finderLifecycle)['delivery_enabled'] === 0, 'restore publishes committed Finder refresh while both gates remain closed');
 $app->getDispatcher()->removeListener('onFinderAfterSave', $finderLifecycleWitness);
 $beforeAccess = $db->setQuery('SELECT state,current_version_id,catalog_access,content_access FROM #__jlms_courses WHERE id=' . $course)->loadAssoc();
 $publicAccess = $component->getCatalogService()->accessPreview($actor, $course, 'en-GB', [1]);
@@ -193,12 +208,15 @@ $draft = $authoring->createDraft($actor, $course, $rev('courses', $course));
 $activeVersion = $draft;
 $draftScope = $scope($draft);
 $draftModule = $authoring->saveModule($actor, $draftScope + ['id' => 0,'title' => 'Updated module']);
-$authoring->saveLesson($actor, $scope($draft) + ['id' => 0,'module_id' => $draftModule,'title' => 'Updated lesson','kind' => 'text','required' => '1','body' => '<p>Updated content.</p>']);
+$authoring->saveLesson($actor, $scope($draft) + ['id' => 0,'module_id' => $draftModule,'title'
+    => 'Updated lesson','kind' => 'text','required' => '1','body' => '<p>Updated content.</p>']);
 $transition($choice('review', 1), $draft);
 $row = $db->setQuery('SELECT state,current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadObject();
-$expect((int)$row->state === 1 && (int)$row->current_version_id === $current && $stage() === 'COM_JLMS_IN_REVIEW', 'reviewing an update preserves the currently published course');
+$expect((int)$row->state === 1 && (int)$row->current_version_id === $current
+    && $stage() === 'COM_JLMS_IN_REVIEW', 'reviewing an update preserves the currently published course');
 $guest = new \Joomla\CMS\User\User();
-$expect((int)$component->getCatalogService()->course($guest, 'en-GB', $course)->id === $course, 'learners retain access to the live version during editorial review');
+$expect((int)$component->getCatalogService()->course($guest, 'en-GB', $course)
+    ->id === $course, 'learners retain access to the live version during editorial review');
 try {
     $authoring->saveModule($actor, $draftScope + ['id' => 0,'title' => 'Should stay locked']);
     throw new RuntimeException('Update review allowed edits');
@@ -207,11 +225,13 @@ try {
 }
 $transition($choice('return', 1), $draft);
 $expect(
-    $stage() === 'JPUBLISHED' && (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $current,
+    $stage() === 'JPUBLISHED' && (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id='
+        . $course)->loadResult() === $current,
     'returning an update preserves the live version and published course state'
 );
 $finalModule = $authoring->saveModule($actor, $scope($draft) + ['id' => 0,'title' => 'Final update module']);
-$authoring->saveLesson($actor, $scope($draft) + ['id' => 0,'module_id' => $finalModule,'title' => 'Final update lesson','kind' => 'text','required' => '1','body' => '<p>Final update content.</p>']);
+$authoring->saveLesson($actor, $scope($draft) + ['id' => 0,'module_id' => $finalModule,'title'
+    => 'Final update lesson','kind' => 'text','required' => '1','body' => '<p>Final update content.</p>']);
 $transition($choice('review', 1), $draft);
 $approval = $choice('publish', 1);
 $impact = $publication->updateImpact($actor, $course, $draft, (int)$approval->id);

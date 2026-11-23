@@ -35,7 +35,8 @@ final class SchemaInstaller
                 }
                 preg_match_all('/^  `([^`]+)` ([A-Z]+(?:\(\d+\))?(?: UNSIGNED)?) (NOT NULL|NULL)/m', $statement, $types, PREG_SET_ORDER);
                 foreach ($types as $column) {
-                    $normalise = static fn (string $type): string => strtolower((string) preg_replace('/(tinyint|smallint|mediumint|bigint|int)\(\d+\)/i', '$1', $type));
+                    $normalise = static fn (string $type): string
+                        => strtolower((string) preg_replace('/(tinyint|smallint|mediumint|bigint|int)\(\d+\)/i', '$1', $type));
                     $actual = $metadata[$column[1]];
                     if (
                         $normalise($actual->Type) !== $normalise($column[2])
@@ -56,7 +57,8 @@ final class SchemaInstaller
                     preg_match_all('/`([^`]+)`/', $index[4], $fields);
                     $actual = $keys[$name] ?? [];
                     ksort($actual);
-                    $expectedNonUnique = $index[1] === 'PRIMARY KEY' || str_starts_with($index[1], 'UNIQUE KEY') ? 0 : 1;
+                    $expectedNonUnique = $index[1] === 'PRIMARY KEY'
+                        || str_starts_with($index[1], 'UNIQUE KEY') ? 0 : 1;
                     if (array_values($actual) !== $fields[1] || ($nonUnique[$name] ?? null) !== $expectedNonUnique) {
                         throw new \RuntimeException('COM_JLMS_SCHEMA_MISMATCH');
                     }

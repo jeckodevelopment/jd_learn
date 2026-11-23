@@ -28,7 +28,8 @@ final class EnrollmentsModel extends ListModel
     public function getCourse(): object
     {
         try {
-            return $this->service()->course(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course'));
+            return $this->service()->course(Factory::getApplication()->getIdentity(), (int) $this
+                ->getState('filter.course'));
         } catch (\Throwable $error) {
             $this->fail($error);
         }
@@ -36,12 +37,14 @@ final class EnrollmentsModel extends ListModel
 
     protected function getListQuery()
     {
-        return $this->service()->query(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course'), $this->getState('filter.roster', []));
+        return $this->service()->query(Factory::getApplication()->getIdentity(), (int) $this
+            ->getState('filter.course'), $this->getState('filter.roster', []));
     }
 
     protected function getStoreId($id = '')
     {
-        return parent::getStoreId($id . ':' . (int) Factory::getApplication()->getIdentity()->id . ':' . $this->getState('filter.course') . ':' . json_encode($this->getState('filter.roster', [])));
+        return parent::getStoreId($id . ':' . (int) Factory::getApplication()->getIdentity()->id . ':' . $this
+            ->getState('filter.course') . ':' . json_encode($this->getState('filter.roster', [])));
     }
 
     public function getItems()
@@ -83,19 +86,24 @@ final class EnrollmentsModel extends ListModel
 
     public function getRosterForm(): Form
     {
-        $form = Form::getInstance('com_jlms.enrollments.filters', JPATH_ADMINISTRATOR . '/components/com_jlms/forms/enrollments.xml', ['control' => 'filter']);
-        $options = $this->service()->filterOptions(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course'));
+        $form = Form::getInstance('com_jlms.enrollments.filters', JPATH_ADMINISTRATOR
+            . '/components/com_jlms/forms/enrollments.xml', ['control' => 'filter']);
+        $options = $this->service()->filterOptions(Factory::getApplication()->getIdentity(), (int) $this
+            ->getState('filter.course'));
         $versionField = new \SimpleXMLElement('<field name="version" type="list" label="COM_JLMS_ROSTER_VERSION_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>');
         $versionField->addChild('option', 'JALL')->addAttribute('value', '0');
         foreach ($options['versions'] as $version) {
-            $label = (string) $version->title_snapshot . ' · v' . (int) $version->version_no . ' · ' . (string) $version->status . ' · #' . (int) $version->id;
-            $versionField->addChild('option', htmlspecialchars($label, ENT_XML1))->addAttribute('value', (string) $version->id);
+            $label = (string) $version->title_snapshot . ' · v' . (int) $version->version_no . ' · '
+                . (string) $version->status . ' · #' . (int) $version->id;
+            $versionField->addChild('option', htmlspecialchars($label, ENT_XML1))
+                ->addAttribute('value', (string) $version->id);
         }
         $userField = new \SimpleXMLElement('<field name="user" type="list" label="COM_JLMS_ROSTER_USER_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>');
         $userField->addChild('option', 'JALL')->addAttribute('value', '0');
         foreach ($options['users'] as $user) {
             $label = (string) $user->name . ' (' . (string) $user->username . ') · #' . (int) $user->id;
-            $userField->addChild('option', htmlspecialchars($label, ENT_XML1))->addAttribute('value', (string) $user->id);
+            $userField->addChild('option', htmlspecialchars($label, ENT_XML1))
+                ->addAttribute('value', (string) $user->id);
         }
         $form->setField($versionField, null, true, 'filters');
         $form->setField($userField, null, true, 'filters');

@@ -37,9 +37,12 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
        <div class="small text-body-secondary"><?= Text::_('COM_JLMS_REVISION') ?>: <?= (int) $item->revision ?></div>
       </th>
       <td class="d-none d-md-table-cell"><?= $this->escape($item->author_name ?? Text::_('JNONE')) ?></td>
-      <td class="d-none d-md-table-cell"><?= $item->language === '*' ? Text::_('JALL') : $this->escape($item->language_title ?? $item->language) ?></td>
-      <td class="text-center btns itemnumber"><a class="btn <?= (int) $item->course_count > 0 ? 'btn-success' : 'btn-secondary' ?>" href="<?= Route::_('index.php?option=com_jlms&view=courses&filter[teacher_id]=' . (int) $item->id) ?>" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_TEACHER_COURSE_COUNT_FOR', $item->title, (int) $item->course_count)) ?>"><?= (int) $item->course_count ?></a></td>
-      <td class="d-none d-lg-table-cell"><?= $item->modified_at ? HTMLHelper::_('date', $item->modified_at, Text::_('DATE_FORMAT_LC4')) : '' ?></td>
+      <td class="d-none d-md-table-cell"><?= $item->language === '*' ? Text::_('JALL') : $this->escape($item
+          ->language_title ?? $item->language) ?></td>
+      <td class="text-center btns itemnumber"><a class="btn <?= (int) $item
+          ->course_count > 0 ? 'btn-success' : 'btn-secondary' ?>" href="<?= Route::_('index.php?option=com_jlms&view=courses&filter[teacher_id]=' . (int) $item->id) ?>" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_TEACHER_COURSE_COUNT_FOR', $item->title, (int) $item->course_count)) ?>"><?= (int) $item->course_count ?></a></td>
+      <td class="d-none d-lg-table-cell"><?= $item->modified_at ? HTMLHelper::_('date', $item
+          ->modified_at, Text::_('DATE_FORMAT_LC4')) : '' ?></td>
       <td class="d-none d-lg-table-cell"><?= (int) $item->id ?></td>
      </tr>
        <?php endforeach; ?>

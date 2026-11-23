@@ -49,7 +49,8 @@ final class HtmlView extends BaseHtmlView
             $this->items = $this->get('Items');
             $this->cardTeachers = $this->getModel()->getCardTeachers($this->items);
             $this->cardEnrollmentStates = $this->getModel()->getCardEnrollmentStates($this->items);
-            $this->cardPendingApprovals = $this->getModel()->getCardPendingApprovals($this->items, $this->cardEnrollmentStates);
+            $this->cardPendingApprovals = $this->getModel()->getCardPendingApprovals($this->items, $this
+                ->cardEnrollmentStates);
             $this->pagination = $this->get('Pagination');
             $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
             $this->categoryChoice = $this->getModel()->getCategoryChoice();
