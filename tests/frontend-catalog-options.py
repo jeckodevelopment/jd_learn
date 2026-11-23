@@ -56,7 +56,8 @@ assert "catalog_show_category" in helper
 assert "filter.category_choice" in model
 assert "['editorial','recent','title','duration','published']" in re.sub(r"\s+", "", model)
 assert "['editorial', 'recent', 'title', 'duration', 'published']" in helper
-assert "v.presentation_json, '$.details.estimated_minutes'" in model
+assert "JSON_EXTRACT(v.presentation_json, " in model
+assert "'$.details.estimated_minutes')) AS UNSIGNED)" in model
 assert "($minutes IS NULL) ASC, $minutes ASC, c.id ASC" in model
 assert 'value="duration"' in template
 for fieldset in (menu, component):
