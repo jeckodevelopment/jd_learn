@@ -32,3 +32,7 @@ Il gate non si limita più ai controller, ai template e ai plugin: esamina tutti
 ## Regressione modello Percorso (23/11/2026)
 
 Il test Joomla disposable sui percorsi include contenuto ostile nella descrizione e campi protetti extra nel payload di creazione. Dopo il salvataggio viene letta la riga realmente persistita in MySQL/MariaDB e vengono verificate sia la rimozione dei vettori HTML attivi sia l'impossibilità di sovrascrivere JSON grezzo, autore e checkout. La verifica riguarda il modello percorso ed è separata dai controlli E2E sulla release candidate (SEC-P5).
+
+## Validazione rigorosa degli artwork dei percorsi (23/11/2026)
+
+Rilevata la conversione implicita a stringa di input `cover_image` e `cover_alt` nel modello amministrativo dei percorsi: un array, un oggetto o un valore UTF-8 invalido non deve essere salvato come metadato editoriale. Il modello ora controlla esplicitamente che entrambi i valori siano stringhe e che il testo alternativo sia UTF-8 valido prima della normalizzazione. `tests/joomla-pathways.php` esegue casi negativi sul modello reale e verifica, dopo ciascun rifiuto, la conservazione di revisione, JSON e descrizione persistiti. Il gate SECDEV-03 mantiene la prova obbligatoria. L'intervento è limitato alla superficie Percorsi; non sostituisce l'audit di tutti i form.
