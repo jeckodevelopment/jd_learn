@@ -1,0 +1,52 @@
+name: SECDEV-02 one-shot structural PHPCBF
+on:
+  push:
+    branches: [style/secdev02-psr12-mass-structures]
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-structural-phpcbf
+  cancel-in-progress: false
+jobs:
+  format:
+    if: github.repository == 'jeckodevelopment/jd_learn' && !contains(github.event.head_commit.message, '[skip ci]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Pin real PHP_CodeSniffer
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Rewrite mechanical structure layout across tracked PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git ls-files -z -- '*.php' | xargs -0 -r .runtime/secdev02-phpcs/vendor/bin/phpcbf \
+            --standard=PSR12 \
+            --sniffs=Generic.Formatting.DisallowMultipleStatements,Squiz.WhiteSpace.ScopeClosingBrace,Squiz.ControlStructures.ControlSignature \
+            --no-cache --report=summary || code=$?
+          if [ "${code:-0}" -gt 2 ]; then
+            echo "PHPCBF error ${code}"
+            exit 1
+          fi
+          git diff --check
+          changed="$(git diff --name-only -- '*.php' | wc -l)"
+          echo "Changed PHP files: $changed"
+          test "$changed" -gt 0
+          git diff --name-only -z -- '*.php' | xargs -0 -r -n1 php -l > /tmp/secdev02-lint.log
+          echo "PHP lint passed for all changed files"
+          git diff --stat | tail -n 20
+      - name: Commit only normalized PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "style/secdev02-psr12-mass-structures"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.php'
+          git commit -m "style(SECDEV-02): bulk PSR-12 structural formatting [skip ci]"
+          git push origin "HEAD:refs/heads/style/secdev02-psr12-mass-structures"
