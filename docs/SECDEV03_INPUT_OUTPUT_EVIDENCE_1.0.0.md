@@ -10,9 +10,9 @@
 | Stored XSS / output HTML | Presentazione corso su modello Joomla e HTML filtrato, script, iframe, immagini e attributi attivi | `tests/joomla-course-presentation.php` in CI Joomla disposable | Non copre tutte le viste e tutti gli override/template |
 | Mass assignment | Il modello Corso ignora `params_json`, `current_version_id` e stato di pubblicazione arbitrari | `tests/joomla-course-presentation.php` in CI | Occorre audit delle altre mutazioni |
 | Esecuzione dinamica | Scansione locale Semgrep con fixture negative PHP/JS/Python | `tests/secdev07-sast.py`, `security/secdev07-semgrep.yml`, CI standard | Regole statiche selezionate, non analisi esaustiva |
-| Formule CSV | Nessun produttore CSV applicativo nel sottoinsieme runtime verificato; tripwire se introdotto | `tests/secdev03-input-output-gate.py` | Non sostituisce test di escaping quando la funzionalità sarà prevista |
+| Formule CSV | Scansione di tutti i file PHP distribuiti in componente, librerie e plugin; tripwire su nuovi produttori CSV e fixture negative | `tests/secdev03-input-output-gate.py` | Non sostituisce test di escaping quando la funzionalità sarà prevista |
 
-`tests/secdev03-input-output-gate.py`, eseguito in `tools/check.py`, impedisce di perdere questi test (compresa la prova SQL su database reale con parametri associati) oppure introdurre un produttore CSV nelle superfici individuate senza revisione specifica. La possibilità di caricare o scaricare un allegato CSV come file protetto non costituisce un esportatore di dati tabellari generati dall'applicazione; la policy MIME degli allegati è separata. Il controllo non riscrive dati, non accede a segreti e non attribuisce un risultato a endpoint non provati.
+`tests/secdev03-input-output-gate.py`, eseguito in `tools/check.py`, impedisce di perdere questi test (compresa la prova SQL su database reale con parametri associati) oppure introdurre un produttore CSV in controller, servizi, modelli, template o plugin senza revisione specifica. La possibilità di caricare o scaricare un allegato CSV come file protetto non costituisce un esportatore di dati tabellari generati dall'applicazione; la policy MIME degli allegati è separata. Il controllo non riscrive dati, non accede a segreti e non attribuisce un risultato a endpoint non provati.
 
 ## Per chiudere formalmente il requisito
 
@@ -23,3 +23,7 @@
 - Registrazione dello stato in `docs/FUNCTIONAL_CRITERIA_1.0.0.json` solo dopo evidenze complete e CI del commit finale.
 
 Non marcare `SECDEV-03/criterion_01/02/04` come `implemented` sulla base della sola presenza del gate. `criterion_03` resta non completato nella matrice fino alla review trasversale.
+
+## Rafforzamento perimetro di controllo (23/11/2026)
+
+Il gate non si limita più ai controller, ai template e ai plugin: esamina tutti i file PHP distribuiti sotto `component/`, `libraries/` e `plugins/`, compresi servizi applicativi, modelli e classi di dominio. I casi negativi del controllo comprendono `fputcsv`, `SplFileObject`, risposte HTTP `text/csv` o `application/csv` e writer CSV; sono presenti controlli benigni che non devono fallire. Il controllo è volutamente conservativo e richiede analisi umana degli eventuali falsi positivi. Le chiamate indirette, implementazioni JavaScript e il contenuto prodotto non sono analizzati semanticamente: queste limitazioni restano aperte ai gate SECDEV-03 e SEC-P5.
