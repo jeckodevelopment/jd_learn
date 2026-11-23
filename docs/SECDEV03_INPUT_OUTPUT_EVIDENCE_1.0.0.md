@@ -40,3 +40,7 @@ Rilevata la conversione implicita a stringa di input `cover_image` e `cover_alt`
 ## Binding SQL delle associazioni Percorso–Corso (23/11/2026)
 
 Individuato un inserimento in `#__jlms_pathway_courses` che concatenava tre interi previamente normalizzati. Per aderire pienamente alla policy SECDEV-03 sui dati in input, l'operazione usa ora parametri SQL `pathwayId`, `courseId` e `position` con tipo intero attraverso il query builder Joomla. La suite `tests/joomla-pathways.php` verifica gli inserimenti ordinati nel database e rifiuta identificativi di corso simili a SQL con conservazione delle associazioni già persistite. `tests/secdev03-input-output-gate.py` controlla che il binding non venga rimosso. Questa verifica non costituisce audit completo di tutte le query del repository.
+
+## URL pubbliche dei docenti: parametri riservati (23/11/2026)
+
+Il form Docente già rifiutava scheme non HTTP(S) e userinfo nell'URL `website`, ma non bloccava token o segreti trasmessi tramite query o fragment. Il modello adesso riutilizza il rilevatore di parametri sensibili di `EditorialLinkSafety`, già applicato ai collegamenti HTML editoriali. I test di integrazione `tests/joomla-teachers.php` tentano URL con `accessToken`, `clientSecret` e `api_key`, verificando il rifiuto e l'immutabilità della revisione; un URL pubblico innocuo resta valido. Questo è un intervento puntuale sulla superficie Docenti, non un audit generale di tutte le uscite HTML o delle fonti esterne.
