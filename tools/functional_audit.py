@@ -37,7 +37,17 @@ def validate_evidence(reference):
         if not start <= end <= len(candidate.read_text(encoding="utf-8").splitlines()):
             raise ValueError(f"Invalid evidence line range: {reference}")
     elif anchor not in candidate.read_text(encoding="utf-8"):
-        raise ValueError(f"Evidence anchor not found: {reference}")
+        # PHPCBF may add whitespace around PHP operators and argument commas.
+        # Preserve evidence anchors when only that token-level formatting changes.
+        # Documentation and non-PHP evidence still require an exact anchor.
+        if not path.endswith(".php") or len(anchor) < 8:
+            raise ValueError(f"Evidence anchor not found: {reference}")
+        token_spacing = re.compile(r"\\s*(=>|===|!==|==|!=|>=|<=|=|,)\\s*")
+        normalize = lambda text: token_spacing.sub(r"\\1", text)
+        normalized_anchor = normalize(anchor)
+        if not any(normalized_anchor in normalize(line)
+                   for line in candidate.read_text(encoding="utf-8").splitlines()):
+            raise ValueError(f"Evidence anchor not found: {reference}")
     return path
 
 
