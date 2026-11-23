@@ -6,13 +6,13 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Editor\Editor;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-$preview=$this->item['preview']??null;
-$subject=$preview['subject']??'';
-$body=$preview['body']??'';
-$template=$this->item['template'];
-$selected=$preview['enrollment_ids']??array_map(static fn($row)=>(int)$row->enrollment_id,$this->item['recipients']);
+$preview = $this->item['preview'] ?? null;
+$subject = $preview['subject'] ?? '';
+$body = $preview['body'] ?? '';
+$template = $this->item['template'];
+$selected = $preview['enrollment_ids'] ?? array_map(static fn($row)=>(int)$row->enrollment_id, $this->item['recipients']);
 // The idempotency key belongs to the saved preview, never the GET request.
-$mutation=$preview['mutation_id']??'';
+$mutation = $preview['mutation_id'] ?? '';
 ?>
 <section id="jlms-course-communication">
  <h1><?= Text::_('COM_JLMS_COMMUNICATION_TITLE') ?>: <?= $this->escape($this->item['course']->title) ?></h1>
@@ -26,7 +26,7 @@ $mutation=$preview['mutation_id']??'';
     <input id="jlms-template-subject" name="jform[template][subject]" type="text" maxlength="300" required class="form-control mb-3" value="<?= $this->escape($template['subject']) ?>">
     <label class="form-label" for="jlms-template-htmlbody"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_HTML') ?></label>
     <?php
-    $editorName=(string) Factory::getApplication()->getIdentity()->getParam('editor', Factory::getApplication()->get('editor'));
+    $editorName = (string) Factory::getApplication()->getIdentity()->getParam('editor', Factory::getApplication()->get('editor'));
     echo Editor::getInstance($editorName)->display('jform[template][htmlbody]', (string) $template['htmlbody'], '100%', '260', '60', '10', false, 'jlms-template-htmlbody');
     ?>
     <p class="small text-muted mt-2"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_TAGS') ?> <code><?= $this->escape(implode(', ', \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::tags())) ?></code></p>
@@ -34,8 +34,8 @@ $mutation=$preview['mutation_id']??'';
   </div>
   <fieldset class="mt-3 mb-3"><legend><?= Text::_('COM_JLMS_COMMUNICATION_RECIPIENTS') ?></legend>
   <?php if (!$this->item['recipients']) : ?><p><?= Text::_('COM_JLMS_COMMUNICATION_NO_RECIPIENTS') ?></p><?php endif; ?>
-  <?php foreach ($this->item['recipients'] as $person) : $id=(int)$person->enrollment_id; ?>
-   <label class="form-check"><input type="checkbox" name="jform[enrollment_ids][]" value="<?= $id ?>" <?= in_array($id,$selected,true)?'checked':'' ?>> <?= $this->escape($person->name) ?> (<?= $this->escape($person->username) ?>) · #<?= $id ?></label>
+  <?php foreach ($this->item['recipients'] as $person) : $id = (int)$person->enrollment_id; ?>
+   <label class="form-check"><input type="checkbox" name="jform[enrollment_ids][]" value="<?= $id ?>" <?= in_array($id, $selected, true) ? 'checked' : '' ?>> <?= $this->escape($person->name) ?> (<?= $this->escape($person->username) ?>) · #<?= $id ?></label>
   <?php endforeach; ?>
   </fieldset>
   <?= HTMLHelper::_('form.token') ?>
@@ -51,7 +51,7 @@ $mutation=$preview['mutation_id']??'';
     <p><?= nl2br($this->escape($preview['rendered']['body'])) ?></p>
    <?php endif; ?>
    <p class="small text-muted"><?= Text::_('COM_JLMS_COMMUNICATION_PREVIEW_SAMPLE') ?></p>
-   <p><?= Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT',$preview['count']) ?></p>
+   <p><?= Text::sprintf('COM_JLMS_COMMUNICATION_PREVIEW_COUNT', $preview['count']) ?></p>
    <form class="mb-3" method="post" action="<?= Route::_('index.php?option=com_jlms&task=coursemessage.test') ?>">
     <input type="hidden" name="jform[course_id]" value="<?= (int)$this->item['course']->id ?>"><input type="hidden" name="jform[mutation_id]" value="<?= $this->escape($mutation) ?>"><?= HTMLHelper::_('form.token') ?>
     <?php foreach (['subject','htmlbody'] as $field) : ?><textarea hidden name="jform[template][<?= $field ?>]"><?= $this->escape($preview['template'][$field]) ?></textarea><?php endforeach; ?>

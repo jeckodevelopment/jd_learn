@@ -17,7 +17,7 @@ final class CurriculumModel extends FormModel
 
     public function getRulesForm()
     {
-        return $this->loadForm('com_jlms.curriculum_rules', 'curriculum_rules', ['control'=>'jform', 'load_data'=>false]);
+        return $this->loadForm('com_jlms.curriculum_rules', 'curriculum_rules', ['control' => 'jform', 'load_data' => false]);
     }
 
     public function getLessonForm()

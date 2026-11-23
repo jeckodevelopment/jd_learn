@@ -16,7 +16,7 @@ final class ManualenrollmentModel extends FormModel
     }
     public function getSelectionForm(): Form
     {
-        return Form::getInstance('com_jlms.manualselection', JPATH_ADMINISTRATOR.'/components/com_jlms/forms/manualselection.xml', ['control' => 'filter']);
+        return Form::getInstance('com_jlms.manualselection', JPATH_ADMINISTRATOR . '/components/com_jlms/forms/manualselection.xml', ['control' => 'filter']);
     }
     public function getItem(): array
     {

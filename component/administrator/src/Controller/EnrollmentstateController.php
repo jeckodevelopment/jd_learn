@@ -32,14 +32,14 @@ final class EnrollmentstateController extends BaseController
             $this->app->bootComponent('com_jlms')->getEnrollmentStateService()->apply($this->app->getIdentity(), $course, $enrollment,
                 CurriculumService::id($raw['enrollment_revision']), $raw['target_status'], $raw['reason'], $raw['mutation_id'], $raw['impact_hash'], true);
             $this->setMessage(Text::_('COM_JLMS_ENROLLMENT_STATE_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollmentstate&id='.$course.'&enrollment_id='.$enrollment, false));
+            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollmentstate&id=' . $course . '&enrollment_id=' . $enrollment, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage(); $code = (int) $error->getCode();
             if ($error instanceof \InvalidArgumentException) { $key = 'COM_JLMS_INVALID_INPUT'; $code = 400; }
             if (in_array($code, [400,401,403,404,409,413,422,503], true) && in_array($key, ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED','COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_ENROLLMENT_STATE_BLOCKED','COM_JLMS_ENROLLMENT_STATE_REASON','COM_JLMS_ENROLLMENT_STATE_CONFLICT','COM_JLMS_ENROLLMENT_STATE_AUDIT_FAILED'], true)) {
                 throw new \RuntimeException(Text::_($key), $code);
             }
-            \Joomla\CMS\Log\Log::add('Enrollment state change failed; correlation='.bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+            \Joomla\CMS\Log\Log::add('Enrollment state change failed; correlation=' . bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

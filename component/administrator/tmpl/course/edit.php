@@ -13,7 +13,7 @@ $id = (int) $this->item->id;
   <?php if (!$id) : ?><p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_SAVE_FIRST') ?></p><?php endif; ?>
  </section>
  <?php if ($this->readOnly) : ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_COURSE_CHECKED_OUT') ?></p><?php endif; ?>
- <?= HTMLHelper::_('uitab.startTabSet', 'jlms-course-tabs', ['active'=>'jlms-course-general']) ?>
+ <?= HTMLHelper::_('uitab.startTabSet', 'jlms-course-tabs', ['active' => 'jlms-course-general']) ?>
  <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-general', Text::_('COM_JLMS_COURSE')) ?>
  <div id="jlms-course-editor-layout" class="row">
   <div class="col-lg-9">
@@ -97,7 +97,7 @@ $id = (int) $this->item->id;
  <?php endif; ?>
  <section id="jlms-course-permissions"><h2 class="h4"><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS') ?></h2>
   <details id="jlms-course-effective-rights"><summary><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS_HELP') ?></summary><dl>
-  <?php foreach ($this->editorRights as $label=>$allowed) : ?><dt><?= Text::_($label) ?></dt><dd><?= Text::_($allowed ? 'JYES' : 'JNO') ?></dd><?php endforeach; ?></dl>
+  <?php foreach ($this->editorRights as $label => $allowed) : ?><dt><?= Text::_($label) ?></dt><dd><?= Text::_($allowed ? 'JYES' : 'JNO') ?></dd><?php endforeach; ?></dl>
   <?php if ($this->canConfigure) : ?><a id="jlms-course-options-link" href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('JOPTIONS') ?></a><?php endif; ?>
   </details>
   <?php if ($this->canManageCourseRules) : ?>

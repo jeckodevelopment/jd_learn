@@ -44,7 +44,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $item = parent::getItem($pk);
         if ($item) {
-            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item, $this->siteTimezone()) as $key=>$value) { $item->$key=$value; }
+            foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item, $this->siteTimezone()) as $key => $value) { $item->$key = $value; }
             // Keep the editor on Joomla's global option for a new course; the site IANA zone
             // is still used above to interpret/display dates and is persisted on save.
             if (empty($item->id)) { $item->calendar_timezone = ''; }
@@ -59,7 +59,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
             $item->certificate_enabled = json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['certificate_enabled'] ?? 'inherit';
             $item->catalog_position = (int) (json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['catalog_position'] ?? 0);
-            $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(),(int) $item->id);
+            $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(), (int) $item->id);
             $item->tags = new \Joomla\CMS\Helper\TagsHelper();
             $item->tags->getTagIds((int) $item->id, 'com_jlms.course');
             $item->associations = [];
@@ -244,7 +244,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $this->associationWrite = false;
         $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'catalog_position', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_manager_request', 'mail_course_update', 'mail_lesson_release', 'mail_teacher_assignment', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) { $allowed[] = 'presentation_' . $field; }
-        $allowed=array_merge($allowed,\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
+        $allowed = array_merge($allowed, \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
         $data = array_intersect_key($data, array_flip($allowed));
         $id = (int) ($data['id'] ?? 0);
         $expected = (int) ($data['revision'] ?? 0);
@@ -257,7 +257,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
             $user = new \Joomla\CMS\User\User((int) $this->getCurrentUser()->id);
             $user->clearAccessRights();
-            if ($user->guest || $user->block || !$user->authorise('core.manage','com_jlms')) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
+            if ($user->guest || $user->block || !$user->authorise('core.manage', 'com_jlms')) { throw new \DomainException('JERROR_ALERTNOAUTHOR'); }
             $this->setCurrentUser($user);
             $copySource = $this->copySource($user);
             if ($copySource !== null && !array_key_exists('tags', $data)) {
@@ -281,7 +281,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 if (!$canEdit) {
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
-                if ($record->checked_out && (int)$record->checked_out!==(int)$user->id) { throw new \DomainException('COM_JLMS_COURSE_CHECKED_OUT'); }
+                if ($record->checked_out && (int)$record->checked_out !== (int)$user->id) { throw new \DomainException('COM_JLMS_COURSE_CHECKED_OUT'); }
                 if ((int) $record->revision !== $expected) {
                     throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                 }
@@ -308,9 +308,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $teachers = null;
             $previousTeacherIds = $id ? \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id) : [];
             if (array_key_exists('teacher_ids', $data)) {
-                $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db,$user,(string) ($data['language'] ?? $record->language ?? '*'),$data['teacher_ids']);
+                $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db, $user, (string) ($data['language'] ?? $record->language ?? '*'), $data['teacher_ids']);
                 if (!$id && $teachers) { throw new \DomainException('COM_JLMS_TEACHER_SAVE_FIRST'); }
-                if ($teachers === \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db,$id)) { $teachers = null; }
+                if ($teachers === \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id)) { $teachers = null; }
                 elseif ($id) { $this->associationWrite = true; } // Native asset must stay stable for atomic relation writes.
                 unset($data['teacher_ids']);
             }
@@ -330,9 +330,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             unset($data['certificate_enabled']);
             if ($certificatePreferences !== null) { $data['params_json'] = $certificatePreferences; }
             if (($data['calendar_timezone'] ?? null) === '') { $data['calendar_timezone'] = $this->siteTimezone(); }
-            $calendar=\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data,$record ?? (object) [],$data['params_json'] ?? $record->params_json ?? '{}',$this->siteTimezone());
+            $calendar = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data, $record ?? (object) [], $data['params_json'] ?? $record->params_json ?? '{}', $this->siteTimezone());
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) { unset($data[$field]); }
-            $data=array_replace($data,$calendar);
+            $data = array_replace($data, $calendar);
             // Editorial position is course-level, independent of the teaching snapshot.
             if (array_key_exists('catalog_position', $data)) {
                 $position = $data['catalog_position'];
@@ -360,9 +360,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 throw new \DomainException(in_array($error, $validationErrors, true) ? $error : 'COM_JLMS_SAVE_FAILED');
             }
             if ($teachers !== null) {
-                $q = $db->createQuery()->delete('#__jlms_course_teachers')->where('course_id=:course')->bind(':course',$id,ParameterType::INTEGER); $db->setQuery($q)->execute();
+                $q = $db->createQuery()->delete('#__jlms_course_teachers')->where('course_id=:course')->bind(':course', $id, ParameterType::INTEGER); $db->setQuery($q)->execute();
                 foreach ($teachers as $ordering => $teacher) {
-                    $relation = (object) ['course_id'=>$id,'teacher_id'=>$teacher,'ordering'=>$ordering]; $db->insertObject('#__jlms_course_teachers',$relation);
+                    $relation = (object) ['course_id' => $id,'teacher_id' => $teacher,'ordering' => $ordering]; $db->insertObject('#__jlms_course_teachers', $relation);
                 }
                 // Queue inside the same transaction: no notice on failed edits or unchanged assignments.
                 (new \Jlms\Component\Jlms\Administrator\Application\TeacherAssignmentNotice($db))

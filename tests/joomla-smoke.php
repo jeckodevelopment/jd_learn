@@ -251,7 +251,7 @@ if ($renderedSubject !== 'Corso: Avviso') {
     throw new \RuntimeException('Course email subject preview differs from Joomla template replacement.');
 }
 $untrusted = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
-    ['subject'=>'{COURSE_TITLE}', 'body'=>'{COURSE_TITLE}', 'htmlbody'=>'<p>{USER_FULLNAME_HTML}</p><script>alert(1)</script>'],
+    ['subject' => '{COURSE_TITLE}', 'body' => '{COURSE_TITLE}', 'htmlbody' => '<p>{USER_FULLNAME_HTML}</p><script>alert(1)</script>'],
     $sampleVars
 );
 if (str_contains($untrusted['htmlbody'], '<script')) {
@@ -326,7 +326,7 @@ if (str_contains($dangerousPlain, 'alert') || !str_contains($dangerousPlain, 'Me
 }
 try {
     \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
-        ['subject'=>'{MESSAGE_SUBJECT}', 'body'=>'Testo', 'htmlbody'=>'<p>Testo</p>'], $sampleVars
+        ['subject' => '{MESSAGE_SUBJECT}', 'body' => 'Testo', 'htmlbody' => '<p>Testo</p>'], $sampleVars
     );
     throw new \RuntimeException('Recursive legacy composer slot should not be accepted.');
 } catch (\RuntimeException $legacy) {
@@ -842,18 +842,18 @@ $lessonTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.lesson.av
 if (!$lessonTemplate || !str_contains((string) $lessonTemplate->subject, '{LESSON_TITLE}')) {
     throw new \RuntimeException('Lesson release Mail Template not registered in Joomla.');
 }
-$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request'=>true]);
-if (!$categoryModel->save(['id'=>0,'parent_id'=>1,'extension'=>'com_jlms.course','title'=>'CI Courses','alias'=>'ci-courses','published'=>1,'language'=>'*','access'=>1])) {
+$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
+if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'CI Courses','alias' => 'ci-courses','published' => 1,'language' => '*','access' => 1])) {
     throw new \RuntimeException('Native Joomla category save failed: ' . $categoryModel->getError());
 }
 $catid = (int) $categoryModel->getState('category.id');
-$model = $factory->createModel('Course','Administrator',['ignore_request'=>true]);
+$model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $form = $model->getForm([], false);
 if (!$form) {
     throw new \RuntimeException('Joomla course form failed to load.');
 }
-$data=['id'=>0,'title'=>'Test course','alias'=>'test-course','catid'=>$catid,'language'=>'*','catalog_access'=>1,'content_access'=>2,'enrollment_mode'=>'auto','summary'=>'Summary','revision'=>1];
-if (!$model->save($data + ['state'=>1,'asset_id'=>999999,'current_version_id'=>999999])) {
+$data = ['id' => 0,'title' => 'Test course','alias' => 'test-course','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','summary' => 'Summary','revision' => 1];
+if (!$model->save($data + ['state' => 1,'asset_id' => 999999,'current_version_id' => 999999])) {
     throw new \RuntimeException('Native draft save failed: ' . $model->getError());
 }
 $id = (int) $model->getState('course.id');
@@ -872,7 +872,7 @@ $actual = (int) $db->setQuery('SELECT parent_id FROM #__assets WHERE id=' . (int
 if ($parent !== $actual) {
     throw new \RuntimeException('Course asset does not inherit native category ACL.');
 }
-$data['id']=$id;$data['title']='Updated course';
+$data['id'] = $id;$data['title'] = 'Updated course';
 if (!$model->save($data)) {
     throw new \RuntimeException('Draft update failed: ' . $model->getError());
 }
@@ -893,18 +893,18 @@ if (!$consentField || (string) $consentField->getAttribute('default') !== '0') {
 // Enable providers only inside the disposable fixture to exercise Joomla's real plugin boot/dispatcher.
 PluginHelper::importPlugin('jlmsvideo');
 $registry = new VideoProviderRegistry();
-$app->getDispatcher()->dispatch(RegisterVideoProvidersEvent::NAME,new RegisterVideoProvidersEvent($registry));
-$keys=array_map(static fn ($x): string => $x->key,$registry->descriptors());sort($keys);
-if ($keys!==['cloudflarestream','html5','vimeo','youtube']) {
+$app->getDispatcher()->dispatch(RegisterVideoProvidersEvent::NAME, new RegisterVideoProvidersEvent($registry));
+$keys = array_map(static fn ($x): string => $x->key, $registry->descriptors());sort($keys);
+if ($keys !== ['cloudflarestream','html5','vimeo','youtube']) {
     throw new \RuntimeException('Four video providers were not registered by Joomla.');
 }
 // Instantiate all concrete MVC classes so incompatible inheritance signatures fail in CI.
 foreach (['Dashboard','Courses','Course','Mailconsentrevoke'] as $view) {
-    $factory->createView($view,'Administrator','Html');
+    $factory->createView($view, 'Administrator', 'Html');
 }
-$factory->createView('Courses','Site','Html');
-$categoryService=$component->getCategory([], 'course');
+$factory->createView('Courses', 'Site', 'Html');
+$categoryService = $component->getCategory([], 'course');
 if (!$categoryService) {
     throw new \RuntimeException('Native category service failed.');
 }
-echo json_encode(['admin_menu_install_checks'=>1,'joomla'=>JVERSION,'status'=>'passed','native_course_id'=>$id,'providers'=>$keys,'draft_revision_conflict'=>'denied','mass_assignment'=>'denied'],JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode(['admin_menu_install_checks' => 1,'joomla' => JVERSION,'status' => 'passed','native_course_id' => $id,'providers' => $keys,'draft_revision_conflict' => 'denied','mass_assignment' => 'denied'], JSON_THROW_ON_ERROR) . PHP_EOL;

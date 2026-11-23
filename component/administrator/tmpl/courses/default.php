@@ -14,7 +14,7 @@ $direction = $this->escape($this->state->get('list.direction', 'DESC'));
 <form action="<?= Route::_('index.php?option=com_jlms&view=courses') ?>" method="post" id="adminForm" name="adminForm">
  <div id="j-main-container" class="j-main-container">
   <section id="jlms-admin-courses" aria-label="<?= Text::_('COM_JLMS_COURSES') ?>">
-   <?= LayoutHelper::render('joomla.searchtools.default', ['view'=>$this]) ?>
+   <?= LayoutHelper::render('joomla.searchtools.default', ['view' => $this]) ?>
    <?php if (!$this->items) : ?>
     <p id="jlms-courses-empty" class="alert alert-info"><?= Text::_('JGLOBAL_NO_MATCHING_RESULTS') ?></p>
    <?php else : ?>
@@ -32,7 +32,7 @@ $direction = $this->escape($this->state->get('list.direction', 'DESC'));
      <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $direction, $order) ?></th>
     </tr></thead>
     <tbody>
-    <?php foreach ($this->items as $i=>$item) :
+    <?php foreach ($this->items as $i => $item) :
       $programme = Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int) $item->id);
     ?>
      <tr class="row<?= $i % 2 ?> jlms-admin-course" data-course-id="<?= (int) $item->id ?>">

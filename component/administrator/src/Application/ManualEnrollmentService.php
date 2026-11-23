@@ -151,7 +151,7 @@ final class ManualEnrollmentService
             if (!$receipt || !hash_equals($receipt->request_hash, $hash)) { throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409); }
             if ($receipt->enrollment_id !== null) { $this->db->transactionCommit(); return (int) $receipt->enrollment_id; }
             if (!hash_equals($receipt->claim_token, $nonce) || $p['blocked'] !== null || !hash_equals($p['hash'], $impact)) { throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409); }
-            $hex = bin2hex(random_bytes(16)); $subject = substr($hex,0,8).'-'.substr($hex,8,4).'-4'.substr($hex,13,3).'-a'.substr($hex,17,3).'-'.substr($hex,20);
+            $hex = bin2hex(random_bytes(16)); $subject = substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) . '-a' . substr($hex, 17, 3) . '-' . substr($hex, 20);
             $q = $this->db->createQuery();
             $q->setQuery('INSERT INTO #__jlms_subjects (subject_key,user_id,created_at) VALUES (:subject,:user,:now) ON DUPLICATE KEY UPDATE user_id=user_id')
                 ->bind(':subject', $subject)->bind(':user', $user, ParameterType::INTEGER)->bind(':now', $now); $this->db->setQuery($q)->execute();

@@ -221,7 +221,7 @@ final class HtmlView extends BaseHtmlView
                         'public_preview' => (int) $lesson->preview,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
-                        'video_threshold_percent'=>$lessonThreshold, 'duration_mode'=>'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
+                        'video_threshold_percent' => $lessonThreshold, 'duration_mode' => 'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
                         'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0',
                         'required_lesson_ids' => $this->outline['prerequisites'][(int) $lesson->id] ?? [],
                         'publish_up' => LessonAvailability::editor($lesson->publish_up, CourseSchedule::read($course)['timezone']),
@@ -275,13 +275,13 @@ final class HtmlView extends BaseHtmlView
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
                     $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','video_threshold_percent','audio_transcript','video_transcript','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days','public_preview']));
-                    if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title'=>true])); }
+                    if ($this->editorMode === 'module') { $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title' => true])); }
                     else { $lessonData = array_replace($lessonData, $safe); }
                 }
             }
             if ($this->editorMode === 'rules' && $this->teachingRules !== null) {
                 $this->rulesForm = $this->get('RulesForm');
-                $data = $common + ['mode'=>$this->teachingRules['mode'], 'sequence_mode'=>$this->teachingRules['sequence_mode'], 'video_threshold'=>\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points']), 'public_previews'=>$this->teachingRules['public_previews'] ? 1 : 0];
+                $data = $common + ['mode' => $this->teachingRules['mode'], 'sequence_mode' => $this->teachingRules['sequence_mode'], 'video_threshold' => \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points']), 'public_previews' => $this->teachingRules['public_previews'] ? 1 : 0];
                 $key = 'com_jlms.curriculum.' . (int)$course->id . '.' . (int)$version->id . '.rules';
                 $saved = $app->getUserState($key, []); $app->setUserState($key, null);
                 if (is_array($saved)) {
@@ -295,20 +295,20 @@ final class HtmlView extends BaseHtmlView
             if ($this->editorMode === 'lesson') {
                 $this->getDocument()->getWebAssetManager()->useScript('com_jlms.videoMetadata');
                 $this->getDocument()->addScriptOptions('com_jlms.videoMetadata', [
-                    'url'=>\Joomla\CMS\Router\Route::link('administrator', 'index.php?option=com_jlms&task=lesson.metadata&format=json', false),
-                    'policy'=>\Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
-                    'labels'=>array_map(static fn($key):string=>Text::_($key), [
-                        'detected'=>'COM_JLMS_VIDEO_DURATION_DETECTED','loading'=>'COM_JLMS_VIDEO_DURATION_LOADING','play'=>'COM_JLMS_VIDEO_DURATION_PLAY',
-                        'failed'=>'COM_JLMS_VIDEO_METADATA_FAILED','consent'=>'COM_JLMS_VIDEO_DURATION_CONSENT','manual'=>'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
-                        'local'=>'COM_JLMS_VIDEO_DURATION_LOCAL','source'=>'COM_JLMS_VIDEO_DURATION_SOURCE',
-                        'youtube_csp'=>'COM_JLMS_VIDEO_YOUTUBE_CSP','youtube_sdk'=>'COM_JLMS_VIDEO_YOUTUBE_SDK',
-                        'youtube_referrer'=>'COM_JLMS_VIDEO_YOUTUBE_REFERRER','youtube_embed'=>'COM_JLMS_VIDEO_YOUTUBE_EMBED',
-                        'youtube_timeout'=>'COM_JLMS_VIDEO_YOUTUBE_TIMEOUT',
-                        'server_unavailable'=>'COM_JLMS_VIDEO_METADATA_SERVER_UNAVAILABLE',
-                        'network_error'=>'COM_JLMS_VIDEO_METADATA_NETWORK_ERROR',
-                        'response_error'=>'COM_JLMS_VIDEO_METADATA_RESPONSE_ERROR',
-                        'adapter_error'=>'COM_JLMS_VIDEO_METADATA_ADAPTER_ERROR',
-                        'player_error'=>'COM_JLMS_VIDEO_METADATA_PLAYER_ERROR'])]);
+                    'url' => \Joomla\CMS\Router\Route::link('administrator', 'index.php?option=com_jlms&task=lesson.metadata&format=json', false),
+                    'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
+                    'labels' => array_map(static fn($key):string=>Text::_($key), [
+                        'detected' => 'COM_JLMS_VIDEO_DURATION_DETECTED','loading' => 'COM_JLMS_VIDEO_DURATION_LOADING','play' => 'COM_JLMS_VIDEO_DURATION_PLAY',
+                        'failed' => 'COM_JLMS_VIDEO_METADATA_FAILED','consent' => 'COM_JLMS_VIDEO_DURATION_CONSENT','manual' => 'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
+                        'local' => 'COM_JLMS_VIDEO_DURATION_LOCAL','source' => 'COM_JLMS_VIDEO_DURATION_SOURCE',
+                        'youtube_csp' => 'COM_JLMS_VIDEO_YOUTUBE_CSP','youtube_sdk' => 'COM_JLMS_VIDEO_YOUTUBE_SDK',
+                        'youtube_referrer' => 'COM_JLMS_VIDEO_YOUTUBE_REFERRER','youtube_embed' => 'COM_JLMS_VIDEO_YOUTUBE_EMBED',
+                        'youtube_timeout' => 'COM_JLMS_VIDEO_YOUTUBE_TIMEOUT',
+                        'server_unavailable' => 'COM_JLMS_VIDEO_METADATA_SERVER_UNAVAILABLE',
+                        'network_error' => 'COM_JLMS_VIDEO_METADATA_NETWORK_ERROR',
+                        'response_error' => 'COM_JLMS_VIDEO_METADATA_RESPONSE_ERROR',
+                        'adapter_error' => 'COM_JLMS_VIDEO_METADATA_ADAPTER_ERROR',
+                        'player_error' => 'COM_JLMS_VIDEO_METADATA_PLAYER_ERROR'])]);
             }
             $this->moduleForm->bind($moduleData);
             $this->lessonForm->bind($lessonData);

@@ -295,14 +295,14 @@ final class CatalogService
         $presentation = CoursePresentation::fromSnapshot($snapshot);
         $calendar = CourseSchedule::fromSnapshot($snapshot);
         $teachers = TeacherProfiles::current($this->db, $actor, $language, $id);
-        $q=$this->db->createQuery()->select('e.status,e.starts_at,e.ends_at')->from('#__jlms_editions AS e')
+        $q = $this->db->createQuery()->select('e.status,e.starts_at,e.ends_at')->from('#__jlms_editions AS e')
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
             ->where('e.course_id=:windowCourse')->where('e.course_version_id=:windowVersion')->where("e.code=CONCAT('default-v',v.version_no)")
-            ->bind(':windowCourse',$id,ParameterType::INTEGER)->bind(':windowVersion',$version,ParameterType::INTEGER);
-        $edition=$this->db->setQuery($q)->loadObject();
-        $startWindow=$edition && $edition->status==='open' && CourseSchedule::within($edition->starts_at,$edition->ends_at);
-        $completion = ['mode'=>$rules['mode'], 'policy'=>$rules['completion_policy'], 'certificate_planned'=>$rules['mode']==='learning' && $rules['certificate_enabled'], 'video_threshold_basis_points'=>$rules['video_threshold_basis_points'], 'sequence_mode'=>$rules['sequence_mode']];
-        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'completion'=>$completion, 'public_previews' => $rules['public_previews'], 'presentation' => $presentation, 'teachers' => $teachers, 'calendar'=>$calendar, 'start_window_open'=>$startWindow];
+            ->bind(':windowCourse', $id, ParameterType::INTEGER)->bind(':windowVersion', $version, ParameterType::INTEGER);
+        $edition = $this->db->setQuery($q)->loadObject();
+        $startWindow = $edition && $edition->status === 'open' && CourseSchedule::within($edition->starts_at, $edition->ends_at);
+        $completion = ['mode' => $rules['mode'], 'policy' => $rules['completion_policy'], 'certificate_planned' => $rules['mode'] === 'learning' && $rules['certificate_enabled'], 'video_threshold_basis_points' => $rules['video_threshold_basis_points'], 'sequence_mode' => $rules['sequence_mode']];
+        return ['course' => $course, 'modules' => $modules, 'lessons' => $grouped, 'completion' => $completion, 'public_previews' => $rules['public_previews'], 'presentation' => $presentation, 'teachers' => $teachers, 'calendar' => $calendar, 'start_window_open' => $startWindow];
     }
 
     /** Return only an explicitly previewable text lesson from the current public course version. */

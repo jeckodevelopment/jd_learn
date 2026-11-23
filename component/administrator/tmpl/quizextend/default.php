@@ -3,7 +3,7 @@
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
-HTMLHelper::_('behavior.formvalidator');$i=$this->item;$p=$i['impact'];
+HTMLHelper::_('behavior.formvalidator');$i = $this->item;$p = $i['impact'];
 ?>
 <section id="jlms-quiz-extend"><h1><?= Text::_('COM_JLMS_QUIZ_EXTEND_TITLE') ?></h1>
  <h2><?= $this->escape($i['quiz']->course_title) ?> · <?= $this->escape($i['quiz']->lesson_title) ?></h2>
@@ -16,9 +16,9 @@ HTMLHelper::_('behavior.formvalidator');$i=$this->item;$p=$i['impact'];
  <label for="jlms-quiz-extend-minutes"><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?></label><input id="jlms-quiz-extend-minutes" type="number" name="minutes" min="1" max="1440" step="1" value="<?= (int)$i['minutes'] ?>" required>
  <button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?></button></form>
  <section id="jlms-quiz-extend-impact"><h3><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?></h3>
- <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?>: <?= $p['previous_deadline']===null?'—':$this->escape(gmdate('Y-m-d H:i:s',$p['previous_deadline'])) ?> → <?= $p['new_deadline']===null?'—':$this->escape(gmdate('Y-m-d H:i:s',$p['new_deadline'])) ?> UTC</p>
+ <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?>: <?= $p['previous_deadline'] === null ? '—' : $this->escape(gmdate('Y-m-d H:i:s', $p['previous_deadline'])) ?> → <?= $p['new_deadline'] === null ? '—' : $this->escape(gmdate('Y-m-d H:i:s', $p['new_deadline'])) ?> UTC</p>
  <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?>: <?= (int)$i['minutes'] ?> · <?= Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?>: <?= (int)$p['effective_seconds'] ?> s</p>
- <?php if($p['blocked']!==null): ?><p id="jlms-quiz-extend-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
+ <?php if($p['blocked'] !== null): ?><p id="jlms-quiz-extend-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
  <?php else: ?><form id="jlms-quiz-extend-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
  <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="quizextend.apply"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_QUIZ_EXTEND_APPLY') ?></button></form><?php endif; ?>
  </section>

@@ -185,9 +185,9 @@ final class PublicationService
         $rules['certificate_enabled'] = $rules['mode'] === 'learning'
             && CertificatePreferences::enabled($globalCertificates, (string) ($course->params_json ?? '{}'));
         // Prerequisite edges are a supported learner rule; validate the graph before freezing it.
-        $orphan=$this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
+        $orphan = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
             ->leftJoin('#__jlms_lessons AS l ON l.id=q.lesson_id AND l.course_version_id=q.course_version_id')
-            ->where('q.course_version_id = :version')->where("(l.id IS NULL OR l.kind <> 'quiz')")->bind(':version',$versionId,ParameterType::INTEGER);
+            ->where('q.course_version_id = :version')->where("(l.id IS NULL OR l.kind <> 'quiz')")->bind(':version', $versionId, ParameterType::INTEGER);
         if((int)$this->db->setQuery($orphan)->loadResult())throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         $q = $this->db->createQuery()->select('id, logical_key, title, ordering, params_json')->from('#__jlms_modules')
             ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('ordering, id');
@@ -385,8 +385,8 @@ final class PublicationService
             'structure_hash' => $hash, 'rules_json' => json_encode($rules, JSON_THROW_ON_ERROR), 'published_at' => $now,
             'revision' => (int) $version->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
         $this->db->updateObject('#__jlms_course_versions', $update, 'id');
-        $calendar=CourseSchedule::read($course);
-        $edition = (object) ['starts_at'=>$calendar['starts_at'],'ends_at'=>$calendar['ends_at'],'course_id' => (int) $course->id, 'course_version_id' => $versionId,
+        $calendar = CourseSchedule::read($course);
+        $edition = (object) ['starts_at' => $calendar['starts_at'],'ends_at' => $calendar['ends_at'],'course_id' => (int) $course->id, 'course_version_id' => $versionId,
             'title' => $course->title, 'code' => 'default-v' . (int) $version->version_no, 'status' => 'open',
             'revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
             'created_at' => $now, 'modified_at' => $now];

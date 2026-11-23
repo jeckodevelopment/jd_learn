@@ -42,8 +42,8 @@ class CurriculumController extends BaseController
                         if ($ticket === '' && !isset($input['publication_confirmation'])) {
                             if ((int)$impact['course']->revision !== CurriculumService::id($input['revision'] ?? null)
                                 || (int)$impact['version']->revision !== CurriculumService::id($input['expected_version_revision'] ?? null)) { throw new \DomainException('COM_JLMS_REVISION_CONFLICT'); }
-                            $this->app->setUserState($key, ['actor'=>(int)$actor->id, 'transition'=>$transition, 'expires'=>time()+900,
-                                'ticket'=>bin2hex(random_bytes(32)), 'fingerprint'=>$impact['fingerprint']]);
+                            $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' => $transition, 'expires' => time() + 900,
+                                'ticket' => bin2hex(random_bytes(32)), 'fingerprint' => $impact['fingerprint']]);
                             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=publicationreview&id=' . $courseId . '&version_id=' . $versionId, false));
                             return;
                         }
@@ -121,7 +121,7 @@ class CurriculumController extends BaseController
         $target = $courseId ? 'index.php?option=com_jlms&view=curriculum&id=' . $courseId . '&version_id=' . $versionId
             : 'index.php?option=com_jlms&view=courses';
         if ($operation === 'rules' && $courseId && $versionId) {
-            $this->app->setUserState('com_jlms.curriculum.' . $courseId . '.' . $versionId . '.rules', $failed ? ['video_threshold'=>$input['video_threshold'] ?? ''] : null);
+            $this->app->setUserState('com_jlms.curriculum.' . $courseId . '.' . $versionId . '.rules', $failed ? ['video_threshold' => $input['video_threshold'] ?? ''] : null);
             $target .= '&edit_rules=1#jlms-teaching-rules';
         }
         if ($failed && $operation === 'save' && $courseId && $versionId) {

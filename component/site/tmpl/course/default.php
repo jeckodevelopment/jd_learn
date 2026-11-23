@@ -80,23 +80,23 @@ foreach ([1, 2, 3] as $position) {
  <div id="jlms-course-supplemental" class="jlms-course-supplemental">
  <?php if (!empty($this->item['teachers'])) : ?><section id="jlms-course-teachers"><h2><?= Text::_('COM_JLMS_TEACHERS') ?></h2>
  <?php foreach ($this->item['teachers'] as $teacher) : ?><article id="jlms-course-teacher-<?= (int) $teacher['id'] ?>" class="jlms-course-teacher"><h3><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?= $this->escape($teacher['title']) ?></a></h3>
- <?php if ($teacher['image'] !== '') : ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/',array_map('rawurlencode',explode('/',$teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php endif; ?>
+ <?php if ($teacher['image'] !== '') : ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php endif; ?>
  <p><?= nl2br($this->escape($teacher['bio'])) ?></p><?php if ($teacher['website'] !== '') : ?><a href="<?= $this->escape($teacher['website']) ?>" rel="noopener noreferrer"><?= Text::_('COM_JLMS_TEACHER_WEBSITE') ?></a><?php endif; ?></article><?php endforeach; ?></section><?php endif; ?>
- <?php if (!empty($this->item['calendar'])) : $calendar=$this->item['calendar']; ?>
+ <?php if (!empty($this->item['calendar'])) : $calendar = $this->item['calendar']; ?>
  <section id="jlms-course-calendar"><h2><?= Text::_('COM_JLMS_CALENDAR') ?></h2><p><?= Text::_('COM_JLMS_CALENDAR_ZONE') ?>: <?= $this->escape($calendar['timezone']) ?></p><dl>
- <?php foreach (['publish_up'=>'COM_JLMS_CALENDAR_PUBLISH_UP','publish_down'=>'COM_JLMS_CALENDAR_PUBLISH_DOWN','starts_at'=>'COM_JLMS_CALENDAR_START','ends_at'=>'COM_JLMS_CALENDAR_END'] as $key=>$label) : if ($calendar[$key]===null) { continue; } ?>
- <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::display($calendar[$key],$calendar['timezone'],true)) ?></dd><?php endforeach; ?></dl>
+ <?php foreach (['publish_up' => 'COM_JLMS_CALENDAR_PUBLISH_UP','publish_down' => 'COM_JLMS_CALENDAR_PUBLISH_DOWN','starts_at' => 'COM_JLMS_CALENDAR_START','ends_at' => 'COM_JLMS_CALENDAR_END'] as $key => $label) : if ($calendar[$key] === null) { continue; } ?>
+ <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::display($calendar[$key], $calendar['timezone'], true)) ?></dd><?php endforeach; ?></dl>
  <p><?= Text::_('COM_JLMS_CALENDAR_POLICY') ?></p></section><?php endif; ?>
- <?php if (!empty($this->item['completion'])) : $completion=$this->item['completion']; ?>
+ <?php if (!empty($this->item['completion'])) : $completion = $this->item['completion']; ?>
  <section id="jlms-course-completion" aria-labelledby="jlms-course-completion-title">
   <h2 id="jlms-course-completion-title"><?= Text::_('COM_JLMS_COURSE_COMPLETION_TITLE') ?></h2>
-  <?php if ($completion['mode']==='consultation') : ?>
+  <?php if ($completion['mode'] === 'consultation') : ?>
    <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE') ?></p>
   <?php else : ?>
    <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_COURSE_COMPLETION_ALL_REQUIRED') ?></p>
-   <p id="jlms-course-completion-sequence"><?= Text::_($completion['sequence_mode']==='sequential'?'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL':'COM_JLMS_COURSE_COMPLETION_FREE') ?></p>
+   <p id="jlms-course-completion-sequence"><?= Text::_($completion['sequence_mode'] === 'sequential' ? 'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL' : 'COM_JLMS_COURSE_COMPLETION_FREE') ?></p>
    <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent((int)$completion['video_threshold_basis_points'])) ?></p>
-   <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned']?'COM_JLMS_COURSE_CERTIFICATE_PLANNED':'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
+   <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned'] ? 'COM_JLMS_COURSE_CERTIFICATE_PLANNED' : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
    <?php if ($completion['certificate_planned']) : ?><p class="small" id="jlms-course-certificate-caveat"><?= Text::_('COM_JLMS_COURSE_CERTIFICATE_CONDITIONAL') ?></p><?php endif; ?>
   <?php endif; ?>
  </section>

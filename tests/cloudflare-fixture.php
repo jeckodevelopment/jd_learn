@@ -22,7 +22,7 @@ function cloudflareFixture(): array
         if ($method === 'POST') {
             $request = json_decode($body, true, 16, JSON_THROW_ON_ERROR);
             $header = ['alg' => $state->tokenMode === 'none' ? 'none' : 'RS256', 'kid' => 'fixture'];
-            $claims = ['sub' => $state->tokenMode === 'foreign' ? str_repeat('c',32) : $uid,
+            $claims = ['sub' => $state->tokenMode === 'foreign' ? str_repeat('c', 32) : $uid,
                 'exp' => $request['exp'] + ($state->tokenMode === 'long' ? 100 : 0)];
             if ($state->tokenMode === 'download') { $claims['downloadable'] = true; }
             $encode = static fn (array $data): string => rtrim(strtr(base64_encode(json_encode($data, JSON_THROW_ON_ERROR)), '+/', '-_'), '=');
