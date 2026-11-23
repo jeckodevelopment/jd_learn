@@ -212,11 +212,14 @@ function secdev02JoomlaTokenInventory(string $source): array
         }
 
         $classToken = $tokens[$j] ?? null;
-        if (!is_array($classToken) || !in_array(
-            $classToken[0],
-            [T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED, T_STRING],
-            true
-        )) {
+        if (
+            !is_array($classToken)
+            || !in_array(
+                $classToken[0],
+                [T_NAME_FULLY_QUALIFIED, T_NAME_QUALIFIED, T_STRING],
+                true
+            )
+        ) {
             continue;
         }
 
@@ -261,11 +264,14 @@ function secdev02JoomlaTokenInventory(string $source): array
                 $j++;
             }
         }
-        if (!is_array($tokens[$j] ?? null) || !in_array(
-            $tokens[$j][0],
-            [T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR],
-            true
-        )) {
+        if (
+            !is_array($tokens[$j] ?? null)
+            || !in_array(
+                $tokens[$j][0],
+                [T_OBJECT_OPERATOR, T_NULLSAFE_OBJECT_OPERATOR],
+                true
+            )
+        ) {
             continue;
         }
         $j++;
