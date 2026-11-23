@@ -1184,6 +1184,9 @@ runpy.run_path(str(ROOT/'tests/frontend-dom-runtime.py'), run_name='__main__')
 # DOC-04: versioned technical contracts and reproducible operations.
 runpy.run_path(str(ROOT/'tests/doc04-technical-reference.py'), run_name='__main__')
 
+# SECDEV-01: enforce thin Joomla template boundary against database and ACL decisions.
+runpy.run_path(str(ROOT/'tests/secdev01-mvc-boundary.py'), run_name='__main__')
+
 # SECDEV-03: cross-surface input/output evidence and CSV formula-risk tripwire.
 runpy.run_path(str(ROOT/'tests/secdev03-input-output-gate.py'), run_name='__main__')
 # SECDEV-03: fail-closed 1.0.0 software inventory, regression families and taint sinks.

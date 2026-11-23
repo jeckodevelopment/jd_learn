@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 \defined('_JEXEC') or die;
-use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -11,7 +10,6 @@ use Joomla\CMS\Layout\LayoutHelper;
 $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScript('multiselect');
 $order = $this->escape($this->state->get('list.ordering', 'a.id'));
 $direction = $this->escape($this->state->get('list.direction', 'DESC'));
-$actor = Factory::getApplication()->getIdentity();
 ?>
 <form action="<?= Route::_('index.php?option=com_jlms&view=courses') ?>" method="post" id="adminForm" name="adminForm">
  <div id="j-main-container" class="j-main-container">
@@ -46,10 +44,10 @@ $actor = Factory::getApplication()->getIdentity();
        <div class="small text-body-secondary"><?= Text::_('JFIELD_ALIAS_LABEL') ?>: <?= $this->escape($item->alias) ?></div>
        <div class="small mt-1 jlms-admin-course-actions">
         <a href="<?= $programme ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
-        <?php if ($actor->authorise('jlms.enrollments.manage', 'com_jlms.course.' . (int) $item->id)) : ?>
+        <?php if (($this->courseActions[(int) $item->id]['enrollments'] ?? false)) : ?>
          <span aria-hidden="true"> · </span><a href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a>
         <?php endif; ?>
-        <?php if ((int) $item->state === -2 && $actor->authorise('core.delete', 'com_jlms.course.' . (int) $item->id)) : ?>
+        <?php if (($this->courseActions[(int) $item->id]['purge'] ?? false)) : ?>
          <span aria-hidden="true"> · </span><a href="<?= Route::_('index.php?option=com_jlms&view=courses&layout=purgepreview&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_PURGE_PREVIEW') ?></a>
         <?php endif; ?>
        </div>

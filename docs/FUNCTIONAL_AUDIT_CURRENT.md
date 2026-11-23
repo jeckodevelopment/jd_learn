@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **500**.
+- Implementati: **501**.
 - Mancanti con lacuna accertata: **14**.
-- Esaminati con esito non verificabile: **243**.
+- Esaminati con esito non verificabile: **242**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -776,10 +776,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
 - `HTTP-06/criterion_01` — Contratti HTTP core verificati con test positivi e negativi. Il repository contiene codice e prove per flussi specifici collegati a contratti http core verificati con test positivi e negativi, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
   - [docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25](../docs/specifications/Servizi_endpoint_LMS_Joomla_1.0.md#L1-L25)
-  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-- `SECDEV-01/criterion_03` — Controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica. Il repository contiene codice e prove per flussi specifici collegati a controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
-  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
   - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
 - `SECDEV-02/criterion_01` — Applicare la matrice CORE-01–23 e le best practices Joomla/PHP, PSR-12, namespace e contratti tipizzati/documentati. Il repository contiene codice e prove per flussi specifici collegati a applicare la matrice core-01–23 e le best practices joomla/php, psr-12, namespace e contratti tipizzati/documentati, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
@@ -1796,6 +1792,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `SECDEV-01/criterion_02` — servizi applicativi condivisi tramite dependency injection. Il container registra servizi di pubblicazione, didattica, quiz e storage con dipendenze iniettate. Il componente espone le istanze condivise ai controller.
   - [component/administrator/services/provider.php#QuestionBankService::class](../component/administrator/services/provider.php)
   - [component/administrator/services/provider.php#PublicationService::class](../component/administrator/services/provider.php)
+- `SECDEV-01/criterion_03` — Controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica. Nel package 1.0.0 le verifiche per record precedentemente eseguite in tre template sono state spostate alle HtmlView Joomla. I template distribuiti sono ora verificati dal gate SECDEV-01 per query, accessi al DB, permessi e mutazioni transazionali. L'inventario fail-closed dei controller/task del gate SEC-P1 limita le superfici di dispatch; le transizioni didattiche continuano a essere delegate a servizi applicativi. I collaudi ambientali degli override e della matrice ruoli restano un asse indipendente.
+  - [component/administrator/src/View/Courses/HtmlView.php#public array $courseActions](../component/administrator/src/View/Courses/HtmlView.php)
+  - [component/administrator/src/View/Curriculum/HtmlView.php#public bool $canUploadLocalVideo](../component/administrator/src/View/Curriculum/HtmlView.php)
+  - [component/administrator/src/View/Quiz/HtmlView.php#public bool $canManageQuizTime](../component/administrator/src/View/Quiz/HtmlView.php)
+  - [tests/secdev01-mvc-boundary.py#def check() -> tuple[int, int]:](../tests/secdev01-mvc-boundary.py)
+  - [tests/sec-p1-controller-gates.py#def check_dispatch_inventory(](../tests/sec-p1-controller-gates.py)
+  - [docs/SECDEV01_MVC_BOUNDARY_1.0.0.md#Evidenze software](../docs/SECDEV01_MVC_BOUNDARY_1.0.0.md)
 - `SECDEV-01/criterion_04` — Nessun motore MVC o bootstrap parallelo. I percorsi site e backend passano dal dispatcher Joomla e dalle relative factory, senza un bootstrap applicativo parallelo nel pacchetto.
   - [component/administrator/services/provider.php#ComponentDispatcherFactory](../component/administrator/services/provider.php)
   - [component/administrator/services/provider.php#setMVCFactory](../component/administrator/services/provider.php)

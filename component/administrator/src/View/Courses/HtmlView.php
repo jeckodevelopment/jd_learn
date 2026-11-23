@@ -17,6 +17,7 @@ final class HtmlView extends BaseHtmlView
     public $filterForm;
     public $activeFilters;
     public $purgeImpact;
+    public array $courseActions = [];
 
     public function display($tpl = null)
     {
@@ -32,6 +33,14 @@ final class HtmlView extends BaseHtmlView
             return;
         }
         $this->items = $this->get('Items');
+        // Per-record actions are authorized in the view, never in the template.
+        foreach ($this->items as $item) {
+            $asset = 'com_jlms.course.' . (int) $item->id;
+            $this->courseActions[(int) $item->id] = [
+                'enrollments' => $actor->authorise('jlms.enrollments.manage', $asset),
+                'purge' => (int) $item->state === -2 && $actor->authorise('core.delete', $asset),
+            ];
+        }
         $this->pagination = $this->get('Pagination');
         $this->state = $this->get('State');
         $this->filterForm = $this->get('FilterForm');

@@ -9675,18 +9675,24 @@
       {
         "id": "criterion_03",
         "label": "Controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/services/provider.php",
-          "docs/MANUAL_ENROLLMENT.md",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "component/administrator/src/View/Courses/HtmlView.php",
+          "component/administrator/src/View/Curriculum/HtmlView.php",
+          "component/administrator/src/View/Quiz/HtmlView.php",
+          "tests/secdev01-mvc-boundary.py",
+          "tests/sec-p1-controller-gates.py",
+          "docs/SECDEV01_MVC_BOUNDARY_1.0.0.md"
         ],
         "review": {
-          "reason": "Il repository contiene codice e prove per flussi specifici collegati a controller sottili, modelli per dati/form e layout privi di query e logica autorizzativa/didattica, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "reason": "Nel package 1.0.0 le verifiche per record precedentemente eseguite in tre template sono state spostate alle HtmlView Joomla. I template distribuiti sono ora verificati dal gate SECDEV-01 per query, accessi al DB, permessi e mutazioni transazionali. L'inventario fail-closed dei controller/task del gate SEC-P1 limita le superfici di dispatch; le transizioni didattiche continuano a essere delegate a servizi applicativi. I collaudi ambientali degli override e della matrice ruoli restano un asse indipendente.",
           "references": [
-            "component/administrator/services/provider.php#L1-L25",
-            "docs/MANUAL_ENROLLMENT.md#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+            "component/administrator/src/View/Courses/HtmlView.php#public array $courseActions",
+            "component/administrator/src/View/Curriculum/HtmlView.php#public bool $canUploadLocalVideo",
+            "component/administrator/src/View/Quiz/HtmlView.php#public bool $canManageQuizTime",
+            "tests/secdev01-mvc-boundary.py#def check() -> tuple[int, int]:",
+            "tests/sec-p1-controller-gates.py#def check_dispatch_inventory(",
+            "docs/SECDEV01_MVC_BOUNDARY_1.0.0.md#Evidenze software"
           ]
         }
       },
