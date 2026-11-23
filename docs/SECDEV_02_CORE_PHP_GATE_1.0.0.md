@@ -149,3 +149,11 @@ La classe `component/administrator/src/Extension/JlmsComponent.php` dichiarava i
 L'intervento è mirato ai tre rilievi del gruppo `PSR12.Traits.UseDeclaration` (due `NotGrouped` e uno `UseAfterBrace`), con baseline precedente di 3.548 rilievi; il residuo atteso è **3.545**, da confermare con il gate PHPCS 4.0.4 e la suite Joomla CI. I hook `_getAsset*` e `$_supportNullValue` delle Table native **non vengono rinominati**, perché devono essere verificati rispetto alle API core prima di eventuali cambiamenti.
 
 SECDEV-02 rimane aperto, come i criteri CORE non ancora verificabili. La verifica su installazioni Joomla reali rimane un collaudo separato.
+
+## Mass remediaton di stringhe PHP lunghe (dopo PR #995)
+
+La pipeline di formattazione monouso [run 45237660792](https://github.com/jeckodevelopment/jd_learn/actions/runs/45237660792) ha scandito tutti i file PHP versionati con righe oltre 120 caratteri e cercato stringhe costanti `T_CONSTANT_ENCAPSED_STRING` divisibili in più segmenti nei soli punti corrispondenti a spazi ASCII. Ogni riscrittura usa la concatenazione di stringhe tra parentesi, con verifica della **ricostruzione byte-per-byte del contenuto letterale** originario. Stringhe interpolate, multilinea, senza punti sicuri di divisione e codici fuori dai letterali non sono stati modificati.
+
+Sono state valutate quattro varianti di lunghezza per file, con rollback se `php -l` falliva, PHPCS PSR12 4.0.4 introduceva una regola aggiuntiva oppure il numero di rilievi non diminuiva. L'esecuzione ha accettato **82 file PHP e rimosso 326 rilievi** (tra cui servizi Learning, Material, Certificate, Catalog, Mail Templates e test d'integrazione). Il diff ha superato i controlli sintattici sui file modificati. Gli strumenti e il workflow temporanei sono stati rimossi prima della PR.
+
+Baseline precedente: **3.545**. Nuovo residuo atteso: **3.219**, da confermare con il gate PHPCS integrale e la suite Joomla CI in PR. Il batch non dichiara la piena conformità PSR-12 e non sostituisce il collaudo manuale separato. Restano aperti il debito non corretto, l'audit completo delle API e i criteri CORE non verificabili.
