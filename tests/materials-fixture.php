@@ -11,7 +11,8 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [
+        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     $fixtureDb->exec("UPDATE joomla_extensions SET params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'");
     unset($fixtureDb);
@@ -82,7 +83,8 @@ $fixturePath = dirname($root) . '/materials-fixture.json';
 if ($mode === 'denied') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     try {
-        $component->getMaterialService()->administration(new \Joomla\CMS\User\User((int)$fixture['http_user_id']), (int)$fixture['course_id'], (int)$fixture['version_id']);
+        $component->getMaterialService()->administration(new \Joomla\CMS\User\User((int)$fixture[
+            'http_user_id']), (int)$fixture['course_id'], (int)$fixture['version_id']);
     } catch (\RuntimeException $error) {
         if ($error->getCode() === 403) {
             echo 'material ACL passed';
@@ -128,7 +130,8 @@ if ($mode === 'cleanup') {
             => hash_file('sha256', $blob),'byte_size' => filesize($blob),
             'mime_type' => 'text/plain','original_name' => 'orphan.txt','asset_revision' => 1,'status'
                 => 'ready','scan_json' => '{}',
-            'created_by' => $userId,'created_at' => gmdate('Y-m-d H:i:s', time() - ($ageHours * 3600)),'modified_by' => $userId,'modified_at' => $now];
+            'created_by' => $userId,'created_at' => gmdate('Y-m-d H:i:s', time() - (
+                $ageHours * 3600)),'modified_by' => $userId,'modified_at' => $now];
         $db->insertObject('#__jlms_assets', $asset, 'id');
         return [(int)$asset->id,$blob];
     };

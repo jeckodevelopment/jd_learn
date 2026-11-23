@@ -14,9 +14,12 @@ final class CertificatePdf
     public static function render(array $identity, array $template, ?string $logoFile = null): string
     {
         $english = str_starts_with(strtolower((string) ($identity['language'] ?? 'it')), 'en');
-        $heading = trim((string) ($template['heading'] ?? '')) ?: ($english ? 'Certificate of completion' : 'Attestato di completamento');
-        $subheading = trim((string) ($template['subheading'] ?? '')) ?: ($english ? 'has successfully completed the course' : 'ha completato il corso');
-        $footer = trim((string) ($template['footer'] ?? '')) ?: ($english ? 'Issued by JD Learn' : 'Rilasciato da JD Learn');
+        $heading = trim((string) ($template['heading'] ?? '')) ?: (
+            $english ? 'Certificate of completion' : 'Attestato di completamento');
+        $subheading = trim((string) ($template['subheading'] ?? '')) ?: (
+            $english ? 'has successfully completed the course' : 'ha completato il corso');
+        $footer = trim((string) ($template['footer'] ?? '')) ?: (
+            $english ? 'Issued by JD Learn' : 'Rilasciato da JD Learn');
         $name = trim((string) ($identity['name'] ?? ''));
         $course = trim((string) ($identity['course_title'] ?? ''));
         $serial = trim((string) ($identity['serial'] ?? ''));
@@ -117,12 +120,14 @@ final class CertificatePdf
 
     private static function drawBox(float $x, float $y, float $width, float $height, array $color, float $line): string
     {
-        return sprintf("%.4F %.4F %.4F RG %.2F w %.2F %.2F %.2F %.2F re S\n", ...[...$color, $line, $x, $y, $width, $height]);
+        return sprintf("%.4F %.4F %.4F RG %.2F w %.2F %.2F %.2F %.2F re S\n", ...[
+            ...$color, $line, $x, $y, $width, $height]);
     }
 
     private static function drawLine(float $x, float $y, float $width, array $color, float $line): string
     {
-        return sprintf("%.4F %.4F %.4F RG %.2F w %.2F %.2F m %.2F %.2F l S\n", ...[...$color, $line, $x, $y, $width, $y]);
+        return sprintf("%.4F %.4F %.4F RG %.2F w %.2F %.2F m %.2F %.2F l S\n", ...[
+            ...$color, $line, $x, $y, $width, $y]);
     }
 
     private static function center(string $value, float $y, float $size, array $color, bool $bold = false, int $wrap = 0): string

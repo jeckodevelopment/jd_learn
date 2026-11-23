@@ -148,7 +148,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
             <?php elseif (
             (string) $row->state === 'failed' && (int) $row->attempts < 5
             && $row->diagnostic_key === 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE'
-            && in_array((string) $row->template_id, ['com_jlms.enrollment.confirmed', 'com_jlms.course.completed'], true)
+            && in_array((string) $row->template_id, ['com_jlms.enrollment.confirmed',
+            'com_jlms.course.completed'], true)
 ) : ?>
        <details>
         <summary><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY_TEMPLATE_ONLY') ?></summary>

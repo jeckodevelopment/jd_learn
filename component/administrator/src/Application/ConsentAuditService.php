@@ -50,7 +50,8 @@ final class ConsentAuditService
                 'user_id' => (int) $record->user_id,
                 'state' => in_array($record->state, ['pending', 'confirmed', 'revoked'], true) ? $record
                     ->state : 'unknown',
-                'origin' => in_array($record->origin, ['dashboard', 'registration', 'enrollment'], true) ? $record->origin : 'unknown',
+                'origin' => in_array($record->origin, [
+                    'dashboard', 'registration', 'enrollment'], true) ? $record->origin : 'unknown',
                 'policy_version' => (string) $record->policy_version,
                 'requested_at' => (string) $record->requested_at,
                 'confirmed_at' => $record->confirmed_at === null ? null : (string) $record->confirmed_at,

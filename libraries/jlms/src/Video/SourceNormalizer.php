@@ -103,7 +103,8 @@ final class SourceNormalizer
         };
         if (
             !$valid || (isset($options['privacy_hash'])
-            && (!is_string($options['privacy_hash']) || !preg_match('/^[A-Za-z0-9_-]{1,256}$/D', $options['privacy_hash'])))
+            && (!is_string($options['privacy_hash']) || !preg_match('/^[A-Za-z0-9_-]{1,256}$/D', $options[
+                'privacy_hash'])))
         ) {
             throw new \InvalidArgumentException('SOURCE_INVALID');
         }

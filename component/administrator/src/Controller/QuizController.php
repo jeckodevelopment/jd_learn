@@ -36,7 +36,8 @@ final class QuizController extends BaseController
                 }
                 $course = CurriculumService::id($data['course_id'] ?? null);
                 $version = CurriculumService::id($data['version_id'] ?? null);
-                $service->delete($this->app->getIdentity(), $course, $version, CurriculumService::id($data['lesson_id'] ?? null), CurriculumService::id($data['expected_version_revision'] ?? null));
+                $service->delete($this->app->getIdentity(), $course, $version, CurriculumService::id($data[
+                    'lesson_id'] ?? null), CurriculumService::id($data['expected_version_revision'] ?? null));
                 $target = 'index.php?option=com_jlms&view=curriculum&id=' . $course . '&version_id=' . $version;
             } else {
                 $form = $this->getModel('Quiz', 'Administrator', ['ignore_request' => true])->getForm();

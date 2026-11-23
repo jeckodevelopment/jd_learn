@@ -44,7 +44,8 @@ class EnrollmentController extends BaseController
                 $lessonId = CurriculumService::id($data['lesson_id'] ?? null);
                 $service->complete($this->app->getIdentity(), $language, $id, $lessonId, $key);
             } else {
-                $id = $service->start($this->app->getIdentity(), $language, CurriculumService::id($data['course_id'] ?? null), $key);
+                $id = $service->start($this->app->getIdentity(), $language, CurriculumService::id($data[
+                    'course_id'] ?? null), $key);
                 if (($data['course_announcement_consent'] ?? null) === '1') {
                     $user = $this->app->getIdentity();
                     $consentService = $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent();
@@ -71,7 +72,8 @@ class EnrollmentController extends BaseController
                 'COM_JLMS_ENROLLMENT_MODE_PENDING', 'COM_JLMS_EDITION_FULL', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];
             if (in_array($error->getMessage(), $known, true)) {
                 $code = $error->getCode();
-                throw new \RuntimeException(Text::_($error->getMessage()), in_array($code, [400, 401, 403, 404, 409], true) ? $code : 400);
+                throw new \RuntimeException(Text::_($error->getMessage()), in_array($code, [
+                    400, 401, 403, 404, 409], true) ? $code : 400);
             }
             Log::add('Learning mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
@@ -109,7 +111,8 @@ class EnrollmentController extends BaseController
                 'COM_JLMS_COURSE_ADMISSIONS_CLOSED', 'JERROR_LAYOUT_PAGE_NOT_FOUND'];
             if (in_array($error->getMessage(), $known, true)) {
                 $code = (int) $error->getCode();
-                throw new \RuntimeException(Text::_($error->getMessage()), in_array($code, [400, 401, 403, 404, 409], true) ? $code : 400);
+                throw new \RuntimeException(Text::_($error->getMessage()), in_array($code, [
+                    400, 401, 403, 404, 409], true) ? $code : 400);
             }
             Log::add('Enrollment request failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);

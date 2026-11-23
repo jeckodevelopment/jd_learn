@@ -39,7 +39,8 @@ final class EditorialInstaller
             }
             if ($type === 'course') {
                 $record->table = json_encode([
-                    'special' => ['type' => $table, 'prefix' => 'Jlms\\Component\\Jlms\\Administrator\\Table', 'key' => 'id'],
+                    'special' => ['type' => $table, 'prefix' => 'Jlms\\Component\\Jlms\\Administrator\\Table',
+                    'key' => 'id'],
                     'common' => ['dbtable' => '#__ucm_content', 'key' => 'ucm_id', 'type' => 'Corecontent',
                         'prefix' => 'Joomla\\CMS\\Table\\', 'config' => 'array()'],
                 ], JSON_THROW_ON_ERROR);

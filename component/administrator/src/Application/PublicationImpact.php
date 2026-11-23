@@ -214,7 +214,8 @@ final class PublicationImpact
         }
         // Enrollment counts are informational at preview time; admissions do not invalidate a programme review.
         $fingerprint = self::hash([$id,(int)$course->revision,(int)$source->id,(int)$source
-            ->revision,(int)$draft->id,(int)$draft->revision,$transition,$actor,$before,$after,$rulesBefore,$rulesAfter,$draft->fields_snapshot_json]);
+            ->revision,(int)$draft->id,(int)$draft->revision,$transition,$actor,$before,$after,$rulesBefore,
+            $rulesAfter,$draft->fields_snapshot_json]);
         return ['course' => $course, 'version' => $draft, 'source' => $source, 'transition_id' => $transition,
             'changes' => $diff, 'video_threshold_change' => $thresholdChange, 'rules_changed'
                 => $rulesBefore !== $rulesAfter, 'enrollments' => $enrollments, 'fingerprint' => $fingerprint];

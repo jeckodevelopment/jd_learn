@@ -138,9 +138,11 @@ final class Jlms extends Adapter implements SubscriberInterface
         $all = '*';
         $extension = 'com_jlms.course';
         $query->select($db->quoteName([
-                'a.id', 'a.title', 'a.summary', 'a.state', 'a.language', 'a.catid', 'a.catalog_access', 'a.content_access',
+                'a.id', 'a.title', 'a.summary', 'a.state', 'a.language', 'a.catid', 'a.catalog_access',
+                'a.content_access',
                 'a.current_version_id', 'a.publish_up', 'a.publish_down', 'cat.title', 'cat.lft', 'cat.rgt',
-            ], ['id', 'title', 'summary', 'state', 'language', 'catid', 'catalog_access', 'content_access', 'current_version_id', 'publish_up', 'publish_down', 'category_title', 'category_lft', 'category_rgt']))
+            ], ['id', 'title', 'summary', 'state', 'language', 'catid', 'catalog_access', 'content_access',
+            'current_version_id', 'publish_up', 'publish_down', 'category_title', 'category_lft', 'category_rgt']))
             ->from($db->quoteName($this->table, 'a'))
             ->innerJoin($db->quoteName('#__categories', 'cat') . ' ON cat.id = a.catid AND cat.extension = '
                 . $db->quote($extension))

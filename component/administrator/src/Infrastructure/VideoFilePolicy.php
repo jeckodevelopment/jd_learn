@@ -29,7 +29,8 @@ final class VideoFilePolicy
         $pipes = [];
         $process = @proc_open(
             [$binary, '-v', 'error', '-protocol_whitelist', 'file', '-enable_drefs', '0', '-use_absolute_path', '0',
-            '-f', 'mov', '-i', $path, '-show_entries', 'format=duration,format_name:stream=codec_type,codec_name,width,height,pix_fmt', '-of', 'json'],
+            '-f', 'mov', '-i', $path, '-show_entries',
+            'format=duration,format_name:stream=codec_type,codec_name,width,height,pix_fmt', '-of', 'json'],
             [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes,
             null,

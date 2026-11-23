@@ -42,7 +42,8 @@ final class CoursepreviewController extends BaseController
                 default => 503,
             };
             $message = Text::_($key === 'JINVALID_TOKEN' ? 'JINVALID_TOKEN' : ($code === 403 ? 'JERROR_ALERTNOAUTHOR'
-                : ($code === 404 ? 'COM_JLMS_RESOURCE_NOT_FOUND' : ($code === 405 ? 'COM_JLMS_METHOD_NOT_ALLOWED' : 'COM_JLMS_VIDEO_UNAVAILABLE'))));
+                : ($code === 404 ? 'COM_JLMS_RESOURCE_NOT_FOUND' : (
+                    $code === 405 ? 'COM_JLMS_METHOD_NOT_ALLOWED' : 'COM_JLMS_VIDEO_UNAVAILABLE'))));
         }
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);

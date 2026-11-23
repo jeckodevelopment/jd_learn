@@ -34,7 +34,8 @@ class CoursesModel extends ListModel
         $this->setState('filter.search', is_string($search) ? trim(mb_substr($search, 0, 100)) : '');
         $defaultOrder = CatalogOptions::get('catalog_default_order');
         $order = CatalogOptions::enabled('catalog_show_order') ? ($filter['order'] ?? $defaultOrder) : $defaultOrder;
-        $this->setState('filter.order', is_string($order) && in_array($order, ['editorial', 'recent', 'title', 'duration', 'published'], true) ? $order : $defaultOrder);
+        $this->setState('filter.order', is_string($order) && in_array($order, [
+            'editorial', 'recent', 'title', 'duration', 'published'], true) ? $order : $defaultOrder);
         $tagId = $filter['tag_id'] ?? 0;
         $this->setState('filter.tag_id', max(0, is_scalar($tagId) ? (int) $tagId : 0));
         $difficulty = $filter['difficulty'] ?? '';
@@ -47,7 +48,8 @@ class CoursesModel extends ListModel
         // A promotional listing remains visible unless the visitor opts in.
         $this->setState('filter.available', $available === '1' ? '1' : '');
         $layout = $filter['layout'] ?? 'grid';
-        $this->setState('filter.layout', is_string($layout) && in_array($layout, ['grid', 'list'], true) ? $layout : 'grid');
+        $this->setState('filter.layout', is_string($layout) && in_array($layout, [
+            'grid', 'list'], true) ? $layout : 'grid');
         $this->setState('filter.teacher_id', max(0, is_scalar($filter['teacher_id']
             ?? 0) ? (int) ($filter['teacher_id'] ?? 0) : 0));
         $this->setState('filter.pathway_id', max(0, is_scalar($filter['pathway_id']
