@@ -5,8 +5,8 @@
   "ci_run": 43768526287,
   "counts": {
     "Stato implementazione": {
-      "Completata": 43,
-      "Parziale": 180,
+      "Completata": 44,
+      "Parziale": 179,
       "Non iniziata": 26
     },
     "Perimetro 1.0.0": {
@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 63.06,
-    "development_evidence_floor_percent": 63.06,
+    "percent": 63.53,
+    "development_evidence_floor_percent": 63.53,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -126,11 +126,11 @@
         "label": "Privacy, sicurezza e compatibilità",
         "requirements": 51,
         "weight_percent": 23.83,
-        "development_evidence_floor_percent": 47.32,
+        "development_evidence_floor_percent": 49.28,
         "manual_acceptance_coverage_percent": 0,
         "manual_fully_accepted_percent": 0,
-        "missing_criteria": 5,
-        "unverifiable_criteria": 100,
+        "missing_criteria": 4,
+        "unverifiable_criteria": 97,
         "unassessed_criteria": 0
       },
       {
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 63.06
+        "percent": 63.53
       },
       {
         "id": "manual_acceptance",
@@ -178,7 +178,7 @@
       "status": "historical; do not display as current progress"
     }
   },
-  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata. Conferma utente positiva PR #421 sulle sole toolbar #406/#408; accettazione parziale UI-02 e MAIL-11, senza estensione a SMTP o requisiti completi. Conferma manuale utente del 15/11/2026 su PR #418 (issue #411): rimossi H1 duplicati dalle viste Audit coda email, Variabili modelli email e Gestione dipendenze categorie; accettazione parziale MAIL-10 e CAT-01, senza attestare i requisiti completi. Requisiti LCM-01–LCM-05 formalizzati il 15/11/2026 (solo documentazione), non implementati né accettati; stima implementativa invariata. Collaudo utente 17/11/2026 PR #566: attestato preesistente con logo PNG scaricabile, errore 503 risolto; accettazione parziale CERT-03/CERT-05/CERT-08. Restano non attestati stato DB ready, seriale e snapshot invariati, ACL/HEAD, altri formati e backup/ripristino. PR #575: LCM-03 passa da Non iniziata a Parziale per archiviazione dei percorsi e ripristino conservativo in bozza; cestinazione/eliminazione condizionata e collaudo reale pendenti. Stima macroaree invariata fino a riconciliazione ponderata. PR #578: LCM-04 da Non iniziata a Parziale (cestinazione e ripristino docenti, ACL, cronologia conservata); eliminazione condizionata e collaudo reale rinviati. La stima ponderata per macroarea non cambia automaticamente. Aggiornamento LCM-05 PR #581 e #582: test Joomla disposable CI verde, stato Parziale, accettazione manuale Non eseguita. Conteggi riconciliati al 17/11/2026; stima delle macroaree invariata senza una nuova ponderazione integrale. PR #613: LCM-02 passa a Parziale grazie al filtro e badge archiviati; cestino e ripristino restano da implementare. La stima macroarea legacy non è una percentuale di implementazione verificata. LCM-01: PR #617 conferma correzione del ripristino archivio (0.60.1) con chiusura e mancata riapertura dei gate; resta parziale e senza accettazione manuale. PBASE-02: recalculated across all 214 in-scope requirements after verifying four bundled local provider specifications; historical estimates retained separately.",
+  "note": "Ricognizione degli addenda approvati MAIL-01–10, DOC-01–10 e gate SEC-P1–P5; PR recenti collegate dove verificato. Le classificazioni dei nuovi criteri sono prudenti e richiedono prove puntuali, nessuna accettazione Joomla attribuita; media macroaree invariata. Conferma utente positiva PR #421 sulle sole toolbar #406/#408; accettazione parziale UI-02 e MAIL-11, senza estensione a SMTP o requisiti completi. Conferma manuale utente del 15/11/2026 su PR #418 (issue #411): rimossi H1 duplicati dalle viste Audit coda email, Variabili modelli email e Gestione dipendenze categorie; accettazione parziale MAIL-10 e CAT-01, senza attestare i requisiti completi. Requisiti LCM-01–LCM-05 formalizzati il 15/11/2026 (solo documentazione), non implementati né accettati; stima implementativa invariata. Collaudo utente 17/11/2026 PR #566: attestato preesistente con logo PNG scaricabile, errore 503 risolto; accettazione parziale CERT-03/CERT-05/CERT-08. Restano non attestati stato DB ready, seriale e snapshot invariati, ACL/HEAD, altri formati e backup/ripristino. PR #575: LCM-03 passa da Non iniziata a Parziale per archiviazione dei percorsi e ripristino conservativo in bozza; cestinazione/eliminazione condizionata e collaudo reale pendenti. Stima macroaree invariata fino a riconciliazione ponderata. PR #578: LCM-04 da Non iniziata a Parziale (cestinazione e ripristino docenti, ACL, cronologia conservata); eliminazione condizionata e collaudo reale rinviati. La stima ponderata per macroarea non cambia automaticamente. Aggiornamento LCM-05 PR #581 e #582: test Joomla disposable CI verde, stato Parziale, accettazione manuale Non eseguita. Conteggi riconciliati al 17/11/2026; stima delle macroaree invariata senza una nuova ponderazione integrale. PR #613: LCM-02 passa a Parziale grazie al filtro e badge archiviati; cestino e ripristino restano da implementare. La stima macroarea legacy non è una percentuale di implementazione verificata. LCM-01: PR #617 conferma correzione del ripristino archivio (0.60.1) con chiusura e mancata riapertura dei gate; resta parziale e senza accettazione manuale. PBASE-02: recalculated across all 214 in-scope requirements after verifying four bundled local provider specifications; historical estimates retained separately. Software SECDEV-03 4/4 implemented in PR #975, accettazione Joomla invariata e separata.",
   "updated_at": "2026-11-20",
   "imp_09_mail_c": {
     "pull_request": 313,
