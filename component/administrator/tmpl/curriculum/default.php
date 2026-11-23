@@ -19,7 +19,8 @@ $transitionLabel = static fn (object $transition): string => Text::_(match ($tra
     'JUNPUBLISH' => 'COM_JLMS_UNPUBLISH_ACTION',
     default => $transition->title,
 });
-$transitionAction = static fn (object $transition): string => (string) (new Registry($transition->options))->get('jlms_action', '');
+$transitionAction = static fn (object $transition): string =>
+    (string) (new Registry($transition->options))->get('jlms_action', '');
 $transitionDisplay = static function (object $transition) use ($transitionLabel, $transitionAction): string {
     return Text::_(match ($transitionAction($transition)) {
         'review' => 'COM_JLMS_SUBMIT_REVIEW',
@@ -31,16 +32,29 @@ $transitionDisplay = static function (object $transition) use ($transitionLabel,
             : ($transition->title === 'JUNPUBLISH' ? 'COM_JLMS_UNPUBLISH_ACTION' : $transition->title),
     });
 };
-$scope = $version ? ['course_id' => $course->id, 'version_id' => $version->id, 'expected_version_revision' => $version->revision] : [];
+$scope = $version ? [
+    'course_id' => $course->id,
+    'version_id' => $version->id,
+    'expected_version_revision' => $version->revision,
+] : [];
 $hidden = static function (array $fields): void {
     foreach ($fields as $name => $value) {
-        echo '<input type="hidden" name="jform[' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ']" value="' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '">';
+        echo '<input type="hidden" name="jform['
+            . htmlspecialchars($name, ENT_QUOTES, 'UTF-8')
+            . ']" value="'
+            . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8')
+            . '">';
     }
 };
 $view = $base . ($version ? '&version_id=' . (int) $version->id : '');
-$actionUrl = static fn (string $action, int $id): string => $link($view . '&item_action=' . $action . '&item_id=' . $id) . '#jlms-item-action';
+$actionUrl = static fn (string $action, int $id): string =>
+    $link($view . '&item_action=' . $action . '&item_id=' . $id) . '#jlms-item-action';
 $lessonUrl = static fn (object $lesson): string => $lesson->kind === 'quiz'
-    ? $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id)
+    ? $link(
+        'index.php?option=com_jlms&view=quiz&id=' . (int) $course->id
+        . '&version_id=' . (int) $version->id
+        . '&lesson_id=' . (int) $lesson->id
+    )
     : $link($view . '&edit_lesson=' . (int) $lesson->id) . '#jlms-lesson-form';
 $actions = function (string $kind, object $item, int $position, int $total) use ($actionUrl): void {
     ?><details class="jlms-item-menu"><summary><?= Text::_('COM_JLMS_PROGRAMME_ACTIONS') ?><span class="visually-hidden">: <?= $this->escape($item->title) ?></span></summary><ul>
@@ -224,9 +238,14 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             $item = $this->selectedItem;
             $action = $this->itemAction;
             $kind = str_ends_with($action, '_module') ? 'module' : 'lesson';
-            $operation = str_starts_with($action, 'copy_') ? 'duplicate' : (str_starts_with($action, 'delete_') ? 'delete' : (str_starts_with($action, 'order_') ? 'reorder' : 'move'));
+            $operation = str_starts_with($action, 'copy_') ? 'duplicate'
+                : (str_starts_with($action, 'delete_') ? 'delete'
+                    : (str_starts_with($action, 'order_') ? 'reorder' : 'move'));
             $heading = match ($operation) {
-                'duplicate' => $kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON', 'delete'=>'JACTION_DELETE', 'reorder'=>'COM_JLMS_PROGRAMME_REORDER', default=>'COM_JLMS_PROGRAMME_MOVE_LESSON'
+                'duplicate' => $kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON',
+                'delete' => 'JACTION_DELETE',
+                'reorder' => 'COM_JLMS_PROGRAMME_REORDER',
+                default => 'COM_JLMS_PROGRAMME_MOVE_LESSON'
             };
     ?>
  <section class="jlms-focused-editor" id="jlms-item-action"><h2 class="h3"><?= Text::_($heading) ?>: <?= $this->escape($item->title) ?></h2>
