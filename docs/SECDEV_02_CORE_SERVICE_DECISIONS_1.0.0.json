@@ -67,9 +67,12 @@
       "remaining_verification": "Override di ogni vista e modulo distribuito",
       "implementation_evidence": [
         "component/media/css/site.css",
-        "docs/FRONTEND_CSS.md"
+        "docs/FRONTEND_CSS.md",
+        "tests/secdev02-core-native-contracts.py"
       ],
-      "automated_test_evidence": []
+      "automated_test_evidence": [
+        "tests/secdev02-core-native-contracts.py"
+      ]
     },
     {
       "id": "CORE-06",
@@ -79,9 +82,12 @@
       "remaining_verification": "Copertura totale stringhe e messaggi",
       "implementation_evidence": [
         "component/administrator/language/it-IT/com_jlms.ini",
-        "component/site/language/en-GB/com_jlms.ini"
+        "component/site/language/en-GB/com_jlms.ini",
+        "tests/secdev02-core-native-contracts.py"
       ],
-      "automated_test_evidence": []
+      "automated_test_evidence": [
+        "tests/secdev02-core-native-contracts.py"
+      ]
     },
     {
       "id": "CORE-07",
@@ -119,9 +125,12 @@
       "remaining_verification": "Tutti i contesti e filtri previsti",
       "implementation_evidence": [
         "component/administrator/src/Table/CourseTable.php",
-        "component/administrator/src/Infrastructure/EditorialInstaller.php"
+        "component/administrator/src/Infrastructure/EditorialInstaller.php",
+        "tests/secdev02-core-native-contracts.py"
       ],
-      "automated_test_evidence": []
+      "automated_test_evidence": [
+        "tests/secdev02-core-native-contracts.py"
+      ]
     },
     {
       "id": "CORE-10",
