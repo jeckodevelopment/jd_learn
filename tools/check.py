@@ -209,7 +209,7 @@ assert '->authorised' not in communication.lower() and 'getEnrollmentRosterServi
 assert "'com_jlms.course.message' => 'communication'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "'com_jlms.course.message'" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 assert 'getCourseCommunicationService()->process' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
-assert "checkToken('post',false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
+assert "checkToken('post', false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
 # Catch undefined component/plugin translation keys, including INI keys assembled in ACL metadata.
 keys=set()
 for p in ROOT.rglob('*.ini'):
@@ -635,7 +635,7 @@ assert '->authorised' not in communication.lower() and 'getEnrollmentRosterServi
 assert "'com_jlms.course.message' => 'communication'" in (ROOT/'component/administrator/src/Infrastructure/MailQueue.php').read_text()
 assert "'com_jlms.course.message'" in (ROOT/'component/administrator/src/Infrastructure/MailTemplateInstaller.php').read_text()
 assert 'getCourseCommunicationService()->process' in (ROOT/'plugins/task/jlms/src/Extension/Jlms.php').read_text()
-assert "checkToken('post',false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
+assert "checkToken('post', false)" in (ROOT/'component/administrator/src/Controller/CoursemessageController.php').read_text()
 # Catch undefined component/plugin translation keys, including INI keys assembled in ACL metadata.
 keys=set()
 for p in ROOT.rglob('*.ini'):
