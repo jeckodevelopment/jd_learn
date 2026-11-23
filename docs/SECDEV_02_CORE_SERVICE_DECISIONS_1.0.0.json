@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "requirement": "SECDEV-02",
+  "purpose": "Tracciabilità servizi core; non prova l'accettazione ambiente",
+  "services": [
+    {
+      "id": "CORE-01",
+      "service": "Categorie",
+      "decision": "native",
+      "rationale": "com_categories gestisce tassonomia e ACL; JD Learn conserva solo associazioni ai corsi",
+      "remaining_verification": "Gerarchia, lingua, permessi e riordino end-to-end"
+    },
+    {
+      "id": "CORE-02",
+      "service": "Utenti",
+      "decision": "native",
+      "rationale": "com_users gestisce identità, sessioni, MFA e recupero; nessuna gestione parallela delle credenziali",
+      "remaining_verification": "MFA e provider esterni reali"
+    },
+    {
+      "id": "CORE-03",
+      "service": "Gruppi e livelli",
+      "decision": "native",
+      "rationale": "Joomla gestisce gruppi e viewing access levels; le iscrizioni sono relazioni didattiche, non nuove identità",
+      "remaining_verification": "Rimozione accessi tra tutti i contesti"
+    },
+    {
+      "id": "CORE-04",
+      "service": "ACL",
+      "decision": "native_plus_domain",
+      "rationale": "Joomla authorise e asset ACL controllano permessi; le regole didattiche per record sono una specializzazione applicativa",
+      "remaining_verification": "Matrice ruoli e protezioni su tutti i record"
+    },
+    {
+      "id": "CORE-05",
+      "service": "Layout e override",
+      "decision": "native",
+      "rationale": "Joomla carica layout e template override; JD Learn espone classi e asset specifici",
+      "remaining_verification": "Override di ogni vista e modulo distribuito"
+    },
+    {
+      "id": "CORE-06",
+      "service": "Lingue",
+      "decision": "native",
+      "rationale": "Language e language override Joomla rendono l'interfaccia localizzabile; JD Learn fornisce stringhe IT/EN",
+      "remaining_verification": "Copertura totale stringhe e messaggi"
+    },
+    {
+      "id": "CORE-07",
+      "service": "Associazioni multilingua",
+      "decision": "native",
+      "rationale": "Joomla mantiene lingua e associazioni editoriali; i progressi individuali restano distinti",
+      "remaining_verification": "Combinazioni menu, filtri e fallback"
+    },
+    {
+      "id": "CORE-08",
+      "service": "Privacy",
+      "decision": "native_plus_domain",
+      "rationale": "com_privacy orchestra richieste; il plugin JD Learn fornisce i dati del dominio didattico",
+      "remaining_verification": "Classi dati, export, cancellazione e conservazione su hosting"
+    },
+    {
+      "id": "CORE-09",
+      "service": "Tag",
+      "decision": "native",
+      "rationale": "com_tags e le mappe native associano tag ai contenuti, senza tassonomia duplicata",
+      "remaining_verification": "Tutti i contesti e filtri previsti"
+    },
+    {
+      "id": "CORE-10",
+      "service": "Campi personalizzati",
+      "decision": "native",
+      "rationale": "com_fields gestisce gruppi e ACL; JD Learn associa contesti e visualizzazione dei valori",
+      "remaining_verification": "ACL docente e lezione, lingua e accesso"
+    },
+    {
+      "id": "CORE-11",
+      "service": "Editor e content plugin",
+      "decision": "native",
+      "rationale": "Joomla configura editor e prepara content plugin; JD Learn valida contenuti didattici e permessi",
+      "remaining_verification": "Eventi plugin e filtro HTML per ogni campo"
+    },
+    {
+      "id": "CORE-12",
+      "service": "Media Manager",
+      "decision": "native_plus_domain",
+      "rationale": "Media Manager seleziona asset pubblici; storage protetto JD Learn gestisce contenuti riservati",
+      "remaining_verification": "Provider media e assenza di fuga allegati"
+    },
+    {
+      "id": "CORE-13",
+      "service": "Menu e router",
+      "decision": "native",
+      "rationale": "Router, menu, moduli e breadcrumb nativi; JD Learn definisce soltanto le viste del componente",
+      "remaining_verification": "URL diretti, breadcrumb e menu multilingua"
+    },
+    {
+      "id": "CORE-14",
+      "service": "Smart Search",
+      "decision": "native_plus_domain",
+      "rationale": "com_finder indicizza contenuti pubblicabili tramite plugin del componente",
+      "remaining_verification": "Invalidazione indice per ACL, stato e lingua"
+    },
+    {
+      "id": "CORE-15",
+      "service": "Workflow",
+      "decision": "native_plus_domain",
+      "rationale": "Workflow Joomla gestisce transizioni editoriali dove previste; la pubblicazione didattica resta separata",
+      "remaining_verification": "Transizioni e autorizzazioni per tutte le entità"
+    },
+    {
+      "id": "CORE-16",
+      "service": "Content History",
+      "decision": "native_plus_domain",
+      "rationale": "Storico e checkout Joomla proteggono contenuti editoriali; versioni assegnate sono snapshot didattici",
+      "remaining_verification": "Ripristini concorrenti e non mutazione assegnazioni"
+    },
+    {
+      "id": "CORE-17",
+      "service": "User Actions Log",
+      "decision": "native_plus_domain",
+      "rationale": "Plugin actionlog Joomla registra attività amministrativa; audit didattico separato evita uso improprio del log core",
+      "remaining_verification": "Completezza eventi e politiche retention"
+    },
+    {
+      "id": "CORE-18",
+      "service": "Mail Templates",
+      "decision": "native_plus_domain",
+      "rationale": "Mailer e Mail Templates Joomla gestiscono invii e testi; la coda didattica mantiene retry/idempotenza",
+      "remaining_verification": "SMTP e template multilingua in ambiente"
+    },
+    {
+      "id": "CORE-19",
+      "service": "Scheduled Tasks",
+      "decision": "native_plus_domain",
+      "rationale": "Scheduler Joomla attiva task plugin; nessun cron scheduler proprietario obbligatorio",
+      "remaining_verification": "Ripetizioni, errori e notifiche duplicate"
+    },
+    {
+      "id": "CORE-20",
+      "service": "Interfaccia admin",
+      "decision": "native",
+      "rationale": "Form, toolbar, lista, filtri e autorizzazioni Joomla; solo servizi di dominio aggiunti",
+      "remaining_verification": "Batch, errori e recupero input nei percorsi residui"
+    },
+    {
+      "id": "CORE-21",
+      "service": "Asset e cache",
+      "decision": "native_plus_domain",
+      "rationale": "WAM e sessione Joomla; le cache personali devono essere private/no-store",
+      "remaining_verification": "Cache cross-account su tutti gli endpoint"
+    },
+    {
+      "id": "CORE-22",
+      "service": "Installazione e update",
+      "decision": "native",
+      "rationale": "Installer, manifest e update server Joomla; migrazioni versionate JD Learn",
+      "remaining_verification": "Aggiornamenti e rollback su ambienti target"
+    },
+    {
+      "id": "CORE-23",
+      "service": "Plugin ed eventi",
+      "decision": "native_plus_domain",
+      "rationale": "Event dispatcher e plugin group Joomla; JD Learn definisce eventi e contratti dominio video",
+      "remaining_verification": "Payload degli eventi e compatibilità plugin terzi"
+    }
+  ]
+}
