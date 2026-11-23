@@ -11,19 +11,9 @@
 
 declare(strict_types=1);
 
-function secdev02NativeImports(string $source): array
-{
-    $classes = [];
-    foreach (token_get_all($source) as $token) {
-        if (!is_array($token) || $token[0] !== T_STRING || $token[1] !== 'use') {
-            continue;
-        }
-        // This function is intentionally not a PHP source parser: use only
-        // top-level import declarations on independently validated files.
-    }
-
-    // Anchored to complete import declarations, so ordinary prose, PHP
-    // expression strings and comments are never matched.
+$secdev02NativeImports = static function (string $source): array {
+    // Only anchored, complete top-level Joomla import declarations qualify.
+    // A source-level review and the installed runtime exercise this inventory.
     preg_match_all(
         '/^use[ \t]+(Joomla\\\\(?:CMS|Component|Database|DI|Registry|Session)\\\\[A-Za-z_][A-Za-z0-9_\\\\]*)[ \t]*;/m',
         $source,
@@ -31,9 +21,9 @@ function secdev02NativeImports(string $source): array
     );
 
     return array_values(array_unique($matches[1]));
-}
+};
 
-function secdev02MissingApis(
+$secdev02MissingApis = static function (
     array $names,
     array $methods,
     callable $hasClass,
@@ -56,7 +46,7 @@ function secdev02MissingApis(
     }
 
     return $errors;
-}
+};
 
 if (in_array('--self-test', $argv, true)) {
     $testSource = <<<'PHP'
@@ -66,10 +56,9 @@ use Joomla\Database\DatabaseInterface;
 // use Joomla\CMS\AbsentClass;
 echo 'use Joomla\CMS\FakeClass;';
 PHP;
-    if (secdev02NativeImports($testSource) !== [
-        'Joomla\CMS\Factory',
-        'Joomla\Database\DatabaseInterface',
-    ]) {
+    $expectedImports = ['Joomla\CMS\Factory', 'Joomla\Database\DatabaseInterface'];
+
+    if ($secdev02NativeImports($testSource) !== $expectedImports) {
         throw new RuntimeException('Native import parser produced incorrect results');
     }
 
@@ -77,16 +66,18 @@ PHP;
     $method = static fn (string $class, string $name): bool =>
         $class === 'Joomla\CMS\Factory' && $name === 'getContainer';
 
-    if (secdev02MissingApis(['Joomla\CMS\Factory'], [['Joomla\CMS\Factory', 'getContainer']], $resolver, $method)) {
+    if ($secdev02MissingApis(['Joomla\CMS\Factory'], [['Joomla\CMS\Factory', 'getContainer']], $resolver, $method)) {
         throw new RuntimeException('Valid Joomla symbols were rejected');
     }
 
-    if (count(secdev02MissingApis(
+    $missing = $secdev02MissingApis(
         ['Joomla\CMS\RemovedClass'],
         [['Joomla\CMS\Factory', 'removedMethod']],
         $resolver,
         $method
-    )) !== 2) {
+    );
+
+    if (count($missing) !== 2) {
         throw new RuntimeException('Removed Joomla symbols were not detected');
     }
 
@@ -97,8 +88,11 @@ PHP;
 $root = realpath($argv[1] ?? '');
 $repo = realpath(__DIR__ . '/..');
 
-if ($root === false || $repo === false || getenv('JLMS_TEST_DISPOSABLE') !== '1'
-    || !is_file($root . '/administrator/includes/framework.php')) {
+$validRuntime = $root !== false && $repo !== false
+    && getenv('JLMS_TEST_DISPOSABLE') === '1'
+    && is_file($root . '/administrator/includes/framework.php');
+
+if (!$validRuntime) {
     fwrite(STDERR, "SECDEV-02 requires an installed disposable Joomla runtime\n");
     exit(2);
 }
@@ -138,7 +132,7 @@ foreach ($files as $file) {
         throw new RuntimeException('Native contract source file missing: ' . $file);
     }
 
-    $imports = array_merge($imports, secdev02NativeImports($source));
+    $imports = array_merge($imports, $secdev02NativeImports($source));
 }
 
 $imports = array_values(array_unique($imports));
@@ -158,7 +152,7 @@ $apiMethods = [
 $exists = static fn (string $name): bool =>
     class_exists($name) || interface_exists($name) || trait_exists($name) || enum_exists($name);
 
-$errors = secdev02MissingApis(
+$errors = $secdev02MissingApis(
     $imports,
     $apiMethods,
     $exists,
