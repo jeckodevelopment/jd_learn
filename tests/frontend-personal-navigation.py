@@ -13,7 +13,7 @@ assert "getParams()->get('show_personal_navigation', '0')" in nav
 assert "=== '1'" in nav
 assert "aria-label=" in nav and 'aria-current="page"' in nav
 assert "Route::_('index.php?option=com_jlms&view='" in nav
-assert re.search(r"Route::_\\('index\\.php\\?option=com_jlms&view='\\s*\\.\\s*\\$view\\)", nav)
+assert "Route::_('index.php?option=com_jlms&view='.$view)" in re.sub(r"\s+", "", nav)
 assert "if ($view === $currentView)" in nav and "else" in nav
 assert nav.count("=> 'COM_JLMS_") == 4
 for view in ("dashboard", "mycourses", "mycertificates", "preferences"):
