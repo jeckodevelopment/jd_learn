@@ -108,6 +108,20 @@ $check(!str_contains((string)$securityRow->params_json, 'injected')
     && (int)$securityRow->created_by===(int)$app->getIdentity()->id
     && (int)$securityRow->checked_out!==999999,
     'SECDEV-03: pathway ignores raw params, author identity and checkout fields');
+// SECDEV-03: malformed types must fail without changing persisted authoring
+// fields, checkout, revision or the existing course association.
+$beforeInvalid = $db->setQuery('SELECT revision,params_json,description FROM #__jlms_pathways WHERE id='.(int)$pathwayId)->loadAssoc();
+foreach ([
+    ['cover_image'=>['images/cover.png']],
+    ['cover_alt'=>['hostile']],
+    ['cover_alt'=>new \stdClass()],
+    ['cover_alt'=>"\xC3\x28"],
+] as $invalidArtwork) {
+    $check(!$pathModel->save(['id'=>$pathwayId,'revision'=>1] + $invalidArtwork),
+        'SECDEV-03: pathway refuses malformed artwork input');
+    $check($db->setQuery('SELECT revision,params_json,description FROM #__jlms_pathways WHERE id='.(int)$pathwayId)->loadAssoc()===$beforeInvalid,
+        'SECDEV-03: invalid artwork leaves persisted pathway metadata and revision unchanged');
+}
 $stored = $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='.(int)$pathwayId)->loadObject();
 $check($pathwayId>0 && (int)$stored->course_id===$courseId && (int)$stored->ordering===0,'native authoring normalizes and persists ordering');
 $operator = $app->getIdentity();
