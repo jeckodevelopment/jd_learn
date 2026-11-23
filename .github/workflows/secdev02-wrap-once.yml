@@ -1,0 +1,44 @@
+name: SECDEV-02 one-shot token-safe PHP long lines
+on:
+  push:
+    branches:
+      - style/secdev02-long-lines-token-safe
+    paths:
+      - .github/workflows/secdev02-wrap-once.yml
+permissions:
+  contents: write
+jobs:
+  wrap:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+      - name: Install pinned PHPCS
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts squizlabs/php_codesniffer:4.0.4
+      - name: Wrap only token-preserving PSR12-improving files
+        run: python3 tools/secdev02-wrap-one-shot.py
+      - name: Verify PHP and diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          mapfile -d '' changed < <(git diff --name-only -z --diff-filter=ACM -- '*.php')
+          for file in "${changed[@]}"; do php -l "$file" >/dev/null; done
+          echo "Verified ${#changed[@]} changed PHP files"
+      - name: Commit scoped safe changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u -- '*.php'
+          if git diff --cached --quiet; then echo "No safe changes"; exit 0; fi
+          git commit -m "style(SECDEV-02): token-safe PHPCS-approved PHP line wrapping"
+          git push
