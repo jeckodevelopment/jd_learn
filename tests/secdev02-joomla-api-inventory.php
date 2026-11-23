@@ -1,0 +1,181 @@
+<?php
+
+/**
+ * SECDEV-02 full distributed-PHP Joomla API inventory on target Joomla 6.2.0.
+ *
+ * This validates every statically named Joomla class and Class::method()
+ * reference visible in PHP tokens. Dynamic instance calls need flow-sensitive
+ * type analysis; their count is reported explicitly, never silently certified.
+ */
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/fixtures/secdev02-joomla-api-inventory-functions.php';
+
+if (in_array('--self-test', $argv, true)) {
+    $source = <<<'PHP'
+<?php
+use Joomla\CMS\Factory;
+use Joomla\CMS\Language\Text as NativeText;
+$container = Factory::getContainer();
+$value = NativeText::_('TEST');
+$thing = new \Joomla\CMS\User\User();
+$thing->get('id');
+PHP;
+
+    $found = secdev02JoomlaTokenInventory($source);
+
+    if (!in_array('Joomla\CMS\Factory', $found['classes'], true)
+        || !in_array('Joomla\CMS\User\User', $found['classes'], true)
+        || !in_array('Joomla\CMS\Language\Text', $found['classes'], true)
+        || count($found['static_methods']) !== 2
+        || $found['object_call_sites'] !== 1) {
+        throw new RuntimeException('Joomla static inventory fixture mismatch');
+    }
+
+    $failures = secdev02JoomlaAuditFailures(
+        [
+            'classes' => ['Joomla\CMS\Missing'],
+            'static_methods' => [['Joomla\CMS\Factory', 'removed']],
+            'unsupported_imports' => [],
+        ],
+        static fn (string $className): bool => $className === 'Joomla\CMS\Factory',
+        static fn (string $className, string $method): bool => false
+    );
+
+    if (count($failures) !== 2) {
+        throw new RuntimeException('Joomla removed API negative fixture failed');
+    }
+
+    echo "SECDEV-02 complete static Joomla PHP API inventory fixtures: OK\n";
+    exit(0);
+}
+
+$root = realpath($argv[1] ?? '');
+$repository = realpath(__DIR__ . '/..');
+
+if ($root === false || $repository === false || getenv('JLMS_TEST_DISPOSABLE') !== '1'
+    || !is_file($root . '/administrator/includes/framework.php')) {
+    throw new RuntimeException('Disposable installed Joomla CI runtime required');
+}
+
+$_SERVER['HTTP_HOST'] = 'localhost';
+$_SERVER['SERVER_NAME'] = 'localhost';
+$_SERVER['SERVER_PORT'] = '80';
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
+$_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
+$_SERVER['PHP_SELF'] = '/administrator/index.php';
+$_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
+
+require __DIR__ . '/fixtures/secdev02-joomla-bootstrap-constants.php';
+require $root . '/administrator/includes/defines.php';
+require $root . '/administrator/includes/framework.php';
+
+$version = (new \Joomla\CMS\Version())->getShortVersion();
+
+if ($version !== '6.2.0') {
+    throw new RuntimeException('Joomla patch target differs from pinned 6.2.0');
+}
+
+$paths = [];
+$process = proc_open(
+    ['git', '-C', $repository, 'ls-files', '-z', '--', 'component', 'libraries', 'plugins', 'packages'],
+    [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
+    $pipes
+);
+
+if (!is_resource($process)) {
+    throw new RuntimeException('Unable to enumerate tracked distributed PHP');
+}
+
+fclose($pipes[0]);
+$output = stream_get_contents($pipes[1]);
+$errorOutput = stream_get_contents($pipes[2]);
+fclose($pipes[1]);
+fclose($pipes[2]);
+
+if (proc_close($process) !== 0 || $output === false) {
+    throw new RuntimeException('Git inventory command failed: ' . $errorOutput);
+}
+
+foreach (explode("\0", $output) as $path) {
+    if ($path !== '' && str_ends_with($path, '.php')) {
+        $paths[] = $path;
+    }
+}
+
+sort($paths);
+
+if (count($paths) < 250) {
+    throw new RuntimeException('Distributed source inventory unexpectedly incomplete');
+}
+
+$symbols = [];
+$methods = [];
+$invalidImports = [];
+$objectCallSites = 0;
+$dynamicStaticSites = 0;
+$covered = 0;
+
+foreach ($paths as $path) {
+    $source = file_get_contents($repository . '/' . $path);
+    if ($source === false) {
+        throw new RuntimeException('Tracked PHP file disappeared: ' . $path);
+    }
+
+    $inventory = secdev02JoomlaTokenInventory($source);
+    $covered++;
+
+    foreach ($inventory['classes'] as $name) {
+        $symbols[$name] = true;
+    }
+
+    foreach ($inventory['static_methods'] as [$className, $method]) {
+        $methods[$className . '::' . $method] = [$className, $method];
+    }
+
+    foreach ($inventory['unsupported_imports'] as $item) {
+        $invalidImports[] = $path . ': ' . $item;
+    }
+
+    $objectCallSites += $inventory['object_call_sites'];
+    $dynamicStaticSites += $inventory['dynamic_static_sites'];
+}
+
+ksort($symbols);
+ksort($methods);
+$results = [
+    'classes' => array_keys($symbols),
+    'static_methods' => array_values($methods),
+    'unsupported_imports' => $invalidImports,
+];
+
+$exists = static fn (string $name): bool =>
+    class_exists($name) || interface_exists($name) || trait_exists($name) || enum_exists($name);
+
+$failures = secdev02JoomlaAuditFailures(
+    $results,
+    $exists,
+    static fn (string $className, string $method): bool => method_exists($className, $method)
+);
+
+foreach ($failures as $failure) {
+    fwrite(STDERR, 'SECDEV-02 Joomla API: ' . $failure . "\n");
+}
+
+$report = [
+    'joomla_version' => $version,
+    'compat6' => 'disabled (paired DB gate)',
+    'php_files' => $covered,
+    'unique_joomla_symbols' => count($symbols),
+    'unique_static_method_calls' => count($methods),
+    'unresolved_object_method_sites' => $objectCallSites,
+    'unresolved_dynamic_static_sites' => $dynamicStaticSites,
+    'failures' => count($failures),
+];
+
+echo 'SECDEV-02 Joomla distributed API inventory: '
+    . json_encode($report, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES) . "\n";
+
+exit($failures ? 1 : 0);
