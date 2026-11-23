@@ -17,9 +17,11 @@ if (in_array('--self-test', $argv, true)) {
 <?php
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text as NativeText;
+use Joomla\CMS\Event\Finder as FinderEvent;
 $container = Factory::getContainer();
 $value = NativeText::_('TEST');
 $thing = new \Joomla\CMS\User\User();
+$event = new FinderEvent\AfterSaveEvent();
 $thing->get('id');
 PHP;
 
@@ -29,6 +31,8 @@ PHP;
         !in_array('Joomla\CMS\Factory', $found['classes'], true)
         || !in_array('Joomla\CMS\User\User', $found['classes'], true)
         || !in_array('Joomla\CMS\Language\Text', $found['classes'], true)
+        || !in_array('Joomla\CMS\Event\Finder\AfterSaveEvent', $found['classes'], true)
+        || in_array('Joomla\CMS\Event\Finder', $found['classes'], true)
         || count($found['static_methods']) !== 2
         || $found['object_call_sites'] !== 1
     ) {
@@ -75,6 +79,12 @@ $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
 require __DIR__ . '/fixtures/secdev02-joomla-bootstrap-constants.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
+
+// Joomla component classes are registered through its native extension map.
+$container = \Joomla\CMS\Factory::getContainer();
+$app = $container->get(\Joomla\CMS\Application\AdministratorApplication::class);
+\Joomla\CMS\Factory::$application = $app;
+$app->createExtensionNamespaceMap();
 
 $version = (new \Joomla\CMS\Version())->getShortVersion();
 
