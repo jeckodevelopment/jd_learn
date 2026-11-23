@@ -11,6 +11,11 @@ use Joomla\CMS\Categories\CategoryServiceTrait;
 
 final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\FieldsServiceInterface, \Joomla\CMS\Association\AssociationServiceInterface, CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
 {
+    use CategoryServiceTrait;
+    use \Joomla\CMS\Association\AssociationServiceTrait;
+    use \Joomla\CMS\Component\Router\RouterServiceTrait;
+    use \Joomla\CMS\Workflow\WorkflowServiceTrait;
+
     public function validateSection($section, $item = null)
     {
         return in_array($section, ['teacher', 'course', 'lesson', 'pathway'], true) ? $section : null;
@@ -123,8 +128,6 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->manualEnrollmentService;
     }
 
-    use CategoryServiceTrait;
-    use \Joomla\CMS\Association\AssociationServiceTrait;
 
     private \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $quizDeadlineService;
     public function setQuizDeadlineService(\Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $service): void
@@ -269,7 +272,6 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->learningService;
     }
 
-    use \Joomla\CMS\Component\Router\RouterServiceTrait;
 
     private \Jlms\Component\Jlms\Administrator\Application\CatalogService $catalogService;
 
@@ -283,7 +285,6 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->catalogService;
     }
 
-    use \Joomla\CMS\Workflow\WorkflowServiceTrait;
 
     protected $supportedFunctionality = ['core.state' => ['com_jlms.course']];
     private \Jlms\Component\Jlms\Administrator\Application\PublicationService $publicationService;

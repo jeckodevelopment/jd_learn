@@ -141,3 +141,11 @@ Dopo la PR #993, l'inventario ufficiale indicava **3.591 rilievi**, dei quali 3.
 La remediation massiva (run [45208674693](https://github.com/jeckodevelopment/jd_learn/actions/runs/45208674693)) ha modificato **43 file di test, eliminando 43 rilievi**. Ogni file è stato confrontato con PHPCS ufficiale PSR12 e accettato solo se il lint passava, non apparivano nuove violazioni per regola e il numero totale diminuiva. Il workflow temporaneo non è incluso nella PR. **Residuo atteso: 3.548 rilievi (3.463 righe lunghe e 85 altre violazioni)**, da confermare con CI sulla PR.
 
 Gli altri rilievi strutturali comprendono soprattutto 59 casi `PSR1.Files.SideEffects.FoundWithSymbols` nei test eseguibili e in bootstrap/plugin Joomla, oltre a metodi legacy con underscore e dichiarazioni di classi multiple. Non vanno corretti con spostamenti ciechi che potrebbero compromettere i contratti di avvio o i nomi delle API. **SECDEV-02 resta aperto** per il debito residuo e l'audit CORE/API completo.
+
+## Core Joomla trait placement (successivo alla PR #994)
+
+La classe `component/administrator/src/Extension/JlmsComponent.php` dichiarava i quattro trait nativi Joomla in punti diversi del corpo, dopo metodi e proprietà: `CategoryServiceTrait`, `AssociationServiceTrait`, `RouterServiceTrait`, `WorkflowServiceTrait`. I quattro import sono stati raggruppati all'inizio del corpo della classe, mantenendo **identici trait, nomi, precedenza e implementazioni dei metodi**, senza modificare contratti o servizi.
+
+L'intervento è mirato ai tre rilievi del gruppo `PSR12.Traits.UseDeclaration` (due `NotGrouped` e uno `UseAfterBrace`), con baseline precedente di 3.548 rilievi; il residuo atteso è **3.545**, da confermare con il gate PHPCS 4.0.4 e la suite Joomla CI. I hook `_getAsset*` e `$_supportNullValue` delle Table native **non vengono rinominati**, perché devono essere verificati rispetto alle API core prima di eventuali cambiamenti.
+
+SECDEV-02 rimane aperto, come i criteri CORE non ancora verificabili. La verifica su installazioni Joomla reali rimane un collaudo separato.
