@@ -21,7 +21,8 @@ try {
         throw $error;
     }
 }
-$source = file_get_contents(dirname(__DIR__) . '/component/administrator/src/Application/EnrollmentMigrationService.php');
+$source = file_get_contents(dirname(__DIR__)
+    . '/component/administrator/src/Application/EnrollmentMigrationService.php');
 $load = strpos($source, '$savedEquivalences = $this->db->setQuery($q, 0, 1001)->loadObjectList();');
 $guard = strpos($source, 'self::requireCompleteSavedEquivalences(count($savedEquivalences));');
 $use = strpos($source, 'foreach ($savedEquivalences as $eq)');

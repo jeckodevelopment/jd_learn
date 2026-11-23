@@ -67,10 +67,12 @@ use Joomla\CMS\Router\Route;
         ?><th scope="col"><?= Text::_($key) ?></th><?php
              endforeach; ?></tr></thead>
   <tbody><?php foreach ($this->items as $item) :
-        $state = $item->completed_at !== null ? 'completed' : (($item->started_at !== null || $item->last_activity_at !== null || (int) $item->completed_total > 0) ? 'in_progress' : 'not_started');
+        $state = $item->completed_at !== null ? 'completed' : (($item->started_at !== null || $item
+            ->last_activity_at !== null || (int) $item->completed_total > 0) ? 'in_progress' : 'not_started');
         $total = (int) $item->required_total;
         $done = (int) $item->completed_total;
-        $percent = $total > 0 && $done >= 0 && $done <= $total ? min($item->completed_at !== null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
+        $percent = $total > 0 && $done >= 0 && $done <= $total ? min($item
+            ->completed_at !== null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
         ?><tr id="jlms-roster-enrollment-<?= (int) $item->id ?>" data-enrollment-id="<?= (int) $item->id ?>">
     <th scope="row"><?= $this->escape($item->learner_name ?? Text::_('COM_JLMS_ROSTER_ANONYMIZED')) ?><?php if ($item->username !== null) :
         ?> (<?= $this->escape($item->username) ?>)<?php
