@@ -4,6 +4,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import sys
+import re
 
 root = Path(__file__).resolve().parents[1]
 privacy = (root / "plugins/privacy/jdlearn/src/Extension/Jdlearn.php").read_text()
@@ -32,7 +33,7 @@ assert "->set($db->quoteName('user_id') . ' = NULL')" in remove
 dependency_guard = privacy.split("private function hasRemovalDependencies(", 1)[1]
 for immutable in ("#__jlms_certificate_audit", "#__jlms_version_equivalences", "#__jlms_course_announcement_campaigns"):
     assert immutable in dependency_guard, immutable
-assert dependency_guard.index("foreach ([") < dependency_guard.index("return $documents > 0"), "Immutable actor guard must precede final decision"
+assert re.search(r"foreach\s*\(\s*\[", dependency_guard).start() < dependency_guard.index("return $documents > 0"), "Immutable actor guard must precede final decision"
 
 export = privacy.split("public function onPrivacyExportRequest(", 1)[1].split("public function onPrivacyCanRemoveData(", 1)[0]
 mail = export.split("$mailQuery = $db->createQuery()", 1)[1].split("foreach ($db->setQuery($mailQuery)", 1)[0]
