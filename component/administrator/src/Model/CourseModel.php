@@ -112,7 +112,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $db = $this->getDatabase();
         $context = $this->associationsContext;
-        $query = $db->createQuery()->select('c.*, a.' . $db->quoteName('key') . ' AS association_key')->from('#__associations AS a')
+        $query = $db->createQuery()
+            ->select('c.*, a.' . $db
+            ->quoteName('key') . ' AS association_key')->from('#__associations AS a')
             ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.' . $db->quoteName('key') . ' AND b.context = a.context')
             ->innerJoin('#__jlms_courses AS c ON c.id = b.id')
             ->where('a.id = :id')->where('a.context = :context')
@@ -166,7 +168,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $ids = array_unique(array_merge(array_values($targets), array_map(static fn ($m): int => (int) $m->id, $members)));
         sort($ids, SORT_NUMERIC);
         foreach ($ids as $target) {
-            $query = $db->createQuery()->select('*')->from('#__jlms_courses')->where('id = :id')->bind(':id', $target, ParameterType::INTEGER);
+            $query = $db->createQuery()
+                ->select('*')
+                ->from('#__jlms_courses')
+                ->where('id = :id')
+                ->bind(':id', $target, ParameterType::INTEGER);
             $query->setQuery((string) $query . ' FOR UPDATE');
             $item = $db->setQuery($query)->loadObject();
             $asset = 'com_jlms.course.' . $target;
@@ -270,7 +276,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $db = $this->getDatabase();
         $id = $this->copyPlan['course'];
         $version = $this->copyPlan['version'];
-        $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
+        $q = $db->createQuery()->select('*')
+            ->from('#__jlms_courses')
+            ->where('id=:id')
+            ->bind(':id', $id, ParameterType::INTEGER);
         $q->setQuery((string) $q . ' FOR UPDATE');
         $source = $db->setQuery($q)->loadObject();
         if (
@@ -282,7 +291,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         if ((int) $source->revision !== $this->copyPlan['revision']) {
             throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
-        $q = $db->createQuery()->select('*')->from('#__jlms_course_versions')->where('id=:id')->bind(':id', $version, ParameterType::INTEGER);
+        $q = $db->createQuery()->select('*')
+            ->from('#__jlms_course_versions')
+            ->where('id=:id')
+            ->bind(':id', $version, ParameterType::INTEGER);
         $q->setQuery((string) $q . ' FOR UPDATE');
         $programme = $db->setQuery($q)->loadObject();
         if (!$programme || (int) $programme->course_id !== $id) {
@@ -461,7 +473,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 throw new \DomainException(in_array($error, $validationErrors, true) ? $error : 'COM_JLMS_SAVE_FAILED');
             }
             if ($teachers !== null) {
-                $q = $db->createQuery()->delete('#__jlms_course_teachers')->where('course_id=:course')->bind(':course', $id, ParameterType::INTEGER);
+                $q = $db->createQuery()
+                    ->delete('#__jlms_course_teachers')
+                    ->where('course_id=:course')
+                    ->bind(':course', $id, ParameterType::INTEGER);
                 $db->setQuery($q)->execute();
                 foreach ($teachers as $ordering => $teacher) {
                     $relation = (object) ['course_id' => $id,'teacher_id' => $teacher,'ordering' => $ordering];

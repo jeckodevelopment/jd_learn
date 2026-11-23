@@ -21,8 +21,14 @@ final class QuizDeadlineService
     }
     private function attempt(int $id, int $enrollment, int $quiz, bool $lock = false): object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_attempts')->where('id = :id')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-            ->bind(':id', $id, ParameterType::INTEGER)->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_attempts')
+            ->where('id = :id')
+            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+            ->bind(':id', $id, ParameterType::INTEGER)
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':quiz', $quiz, ParameterType::INTEGER);
         if ($lock) {
             $q->setQuery((string)$q . ' FOR UPDATE');
         }
@@ -30,7 +36,11 @@ final class QuizDeadlineService
     }
     private function latest(int $attempt): ?object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_quiz_deadline_extensions')->where('attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER)->order('revision_no DESC');
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_quiz_deadline_extensions')
+            ->where('attempt_id = :attempt')
+            ->bind(':attempt', $attempt, ParameterType::INTEGER)->order('revision_no DESC');
         return $this->db->setQuery($q, 0, 1)->loadObject() ?: null;
     }
     private function plan(object $e, object $a, int $minutes): array
@@ -71,8 +81,11 @@ final class QuizDeadlineService
     {
         [, $quiz,$e] = $this->time->managementContext($actor, $course, $lesson, $enrollment);
         $a = $this->attempt($attempt, $enrollment, (int)$quiz->id);
-        $q = $this->db->createQuery()->select('revision_no,previous_deadline,new_deadline,added_seconds,actor_user_id,reason,created_at')->from('#__jlms_quiz_deadline_extensions')
-            ->where('attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER)->order('revision_no DESC');
+        $q = $this->db->createQuery()
+            ->select('revision_no,previous_deadline,new_deadline,added_seconds,actor_user_id,reason,created_at')
+            ->from('#__jlms_quiz_deadline_extensions')
+            ->where('attempt_id = :attempt')
+                ->bind(':attempt', $attempt, ParameterType::INTEGER)->order('revision_no DESC');
         return ['course_id' => $course,'lesson_id' => $lesson,'quiz' => $quiz,'enrollment' => $e,'attempt' => $a,'minutes' => $minutes,'impact' => $this->plan($e, $a, $minutes),'history' => $this->db->setQuery($q, 0, 20)->loadObjectList()];
     }
     public function extend(User $identity, int $course, int $lesson, int $enrollment, int $attempt, int $enrollmentRevision, int $attemptRevision, int $minutes, string $reason, string $key, string $impactHash, bool $confirmed): int
@@ -87,13 +100,20 @@ final class QuizDeadlineService
         $this->time->managementContext($identity, $course, $lesson, $enrollment);
         $this->db->transactionStart();
         try {
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id = :id')->bind(':id', $enrollment, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_enrollments')
+                ->where('id = :id')
+                ->bind(':id', $enrollment, ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $this->db->setQuery($q)->loadResult();
             [$actor,$quiz,$e] = $this->time->managementContext($identity, $course, $lesson, $enrollment);
             $a = $this->attempt($attempt, $enrollment, (int)$quiz->id, true);
             $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int)$actor->id,'course' => $course,'lesson' => $lesson,'enrollment' => $enrollment,'attempt' => $attempt,'enrollment_revision' => $enrollmentRevision,'attempt_revision' => $attemptRevision,'minutes' => $minutes,'reason' => $reason,'impact' => $impactHash]));
-            $q = $this->db->createQuery()->select('id,request_hash')->from('#__jlms_quiz_deadline_extensions')->where('attempt_id = :attempt')->where('mutation_id = :mutation')
+            $q = $this->db->createQuery()
+                ->select('id,request_hash')
+                ->from('#__jlms_quiz_deadline_extensions')
+                ->where('attempt_id = :attempt')->where('mutation_id = :mutation')
                 ->bind(':attempt', $attempt, ParameterType::INTEGER)->bind(':mutation', $key);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $old = $this->db->setQuery($q)->loadObject();

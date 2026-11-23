@@ -98,7 +98,9 @@ final class PublicationService
         $extension = 'com_jlms.course';
         $transitions = [];
         foreach ($stageIds as $stageId) {
-            $q = $this->db->createQuery()->select('t.id, t.title, t.options, t.from_stage_id')->from('#__workflow_transitions AS t')
+            $q = $this->db->createQuery()
+                ->select('t.id, t.title, t.options, t.from_stage_id')
+                ->from('#__workflow_transitions AS t')
                 ->innerJoin('#__workflow_stages AS s ON s.workflow_id = t.workflow_id')
                 ->innerJoin(('#__workflow_stages AS dest ON dest.id = t.to_stage_id AND '
                     . 'dest.workflow_id = t.workflow_id'))
@@ -218,12 +220,15 @@ final class PublicationService
         // Prerequisite edges are a supported learner rule; validate the graph before freezing it.
         $orphan = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_quizzes AS q')
             ->leftJoin('#__jlms_lessons AS l ON l.id=q.lesson_id AND l.course_version_id=q.course_version_id')
-            ->where('q.course_version_id = :version')->where("(l.id IS NULL OR l.kind <> 'quiz')")->bind(':version', $versionId, ParameterType::INTEGER);
+            ->where('q.course_version_id = :version')
+                ->where("(l.id IS NULL OR l.kind <> 'quiz')")
+                ->bind(':version', $versionId, ParameterType::INTEGER);
         if ((int)$this->db->setQuery($orphan)->loadResult()) {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         $q = $this->db->createQuery()->select('id, logical_key, title, ordering, params_json')->from('#__jlms_modules')
-            ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('ordering, id');
+            ->where('course_version_id = :version')
+                ->bind(':version', $versionId, ParameterType::INTEGER)->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1001)->loadAssocList();
         if (!$modules || count($modules) > 1000) {
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
@@ -237,7 +242,8 @@ final class PublicationService
         do {
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lessons')
                 ->where('course_version_id = :version')->where('id > :after')
-                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':after', $lastId, ParameterType::INTEGER)->order('id');
+                ->bind(':version', $versionId, ParameterType::INTEGER)
+                    ->bind(':after', $lastId, ParameterType::INTEGER)->order('id');
             $batch = $this->db->setQuery($q, 0, 16)->loadObjectList();
             foreach ($batch as $lesson) {
                 if (count($lessons) >= 5000 || !array_key_exists($lesson->module_id, $moduleIds)) {
@@ -307,7 +313,9 @@ final class PublicationService
                         ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')->where('a.course_version_id = :version')
                         ->where('a.lesson_id = :lesson')->where('a.state = 1')->where('a.preview = 0')
                         ->where("f.status = 'ready'")->where("f.mime_type IN ('audio/mpeg', 'audio/ogg')")
-                        ->bind(':version', (int) $version->id, ParameterType::INTEGER)->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
+                        ->bind(':version', (int) $version
+                            ->id, ParameterType::INTEGER)
+                            ->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
                     if ((int) $this->db->setQuery($materialQuery)->loadResult() < 1) {
                         throw new \DomainException('COM_JLMS_AUDIO_MATERIAL_REQUIRED');
                     }
@@ -390,7 +398,9 @@ final class PublicationService
         $prerequisiteMap = [];
         $lessonIds = array_fill_keys(array_map(static fn(array $row): int => (int) $row['id'], $lessons), true);
         $edgeQuery = $this->db->createQuery()->select('lesson_id, required_lesson_id')->from('#__jlms_prerequisites')
-            ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('lesson_id, required_lesson_id');
+            ->where('course_version_id = :version')
+                ->bind(':version', $versionId, ParameterType::INTEGER)
+                ->order('lesson_id, required_lesson_id');
         $edges = $this->db->setQuery($edgeQuery, 0, 25001)->loadObjectList();
         if (count($edges) > 25000) {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
@@ -411,7 +421,8 @@ final class PublicationService
             $sequenceQuery = $this->db->createQuery()->select('l.id, l.required')
                 ->from('#__jlms_lessons AS l')->innerJoin(('#__jlms_modules AS m ON m.id = l.module_id AND '
                     . 'm.course_version_id = l.course_version_id'))
-                ->where('l.course_version_id = :sequenceVersion')->bind(':sequenceVersion', $versionId, ParameterType::INTEGER)
+                ->where('l.course_version_id = :sequenceVersion')
+                    ->bind(':sequenceVersion', $versionId, ParameterType::INTEGER)
                 ->order('m.ordering, m.id, l.ordering, l.id');
             $previousRequired = 0;
             foreach ($this->db->setQuery($sequenceQuery, 0, 5001)->loadObjectList() as $lesson) {
@@ -445,7 +456,8 @@ final class PublicationService
             . 'a.preview, a.publish_up, a.publish_down, f.id AS asset_id, '
             . 'f.sha256, f.byte_size, f.mime_type, f.status, f.scan_json'))
             ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
-            ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('a.ordering, a.id');
+            ->where('a.course_version_id = :version')
+                ->bind(':version', $versionId, ParameterType::INTEGER)->order('a.ordering, a.id');
         $attachments = $this->db->setQuery($q, 0, 1001)->loadAssocList();
         if (count($attachments) > 1000) {
             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
@@ -557,7 +569,10 @@ final class PublicationService
         if ($version->status === 'draft' && $preAction === 'publish') {
             $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
             $q = $this->db->createQuery()->select('id, source_json, source_revision')->from('#__jlms_lessons')
-                ->where('course_version_id = :version')->where($this->db->quoteName('provider_key') . ' = ' . $this->db->quote('cloudflarestream'))
+                ->where('course_version_id = :version')
+                    ->where($this
+                    ->db
+                    ->quoteName('provider_key') . ' = ' . $this->db->quote('cloudflarestream'))
                 ->bind(':version', $versionId, ParameterType::INTEGER)->order('id');
             $remoteLessons = $rules['mode'] === 'consultation' ? [] : $this->db->setQuery($q, 0, 101)->loadObjectList();
             if (count($remoteLessons) > 100) {

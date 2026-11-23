@@ -147,7 +147,8 @@ final class CatalogService
             . 'c.publish_down, cat.lft, cat.rgt, cat.published AS '
             . 'category_published, cat.access AS category_access, cat.language AS '
             . 'category_language'))
-            ->from('#__jlms_courses AS c')->innerJoin('#__categories AS cat ON cat.id = c.catid AND cat.extension = :extension')
+            ->from('#__jlms_courses AS c')
+                ->innerJoin('#__categories AS cat ON cat.id = c.catid AND cat.extension = :extension')
             ->where('c.id = :course')->bind(':course', $courseId, ParameterType::INTEGER)
                 ->bind(':extension', $extension);
         $course = $this->db->setQuery($q)->loadObject() ?: throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
@@ -382,7 +383,8 @@ final class CatalogService
         if (!$rules['public_previews']) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
-        $query = $this->db->createQuery()->select('l.id, l.title, l.body, l.publish_up, l.publish_down, l.release_after_days')
+        $query = $this->db->createQuery()
+            ->select('l.id, l.title, l.body, l.publish_up, l.publish_down, l.release_after_days')
             ->from('#__jlms_lessons AS l')->innerJoin(('#__jlms_modules AS m ON m.id = l.module_id AND '
                 . 'm.course_version_id = l.course_version_id'))
             ->where('l.id = :previewLesson')->where('l.course_version_id = :previewVersion')

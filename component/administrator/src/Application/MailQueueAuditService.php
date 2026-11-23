@@ -60,7 +60,10 @@ final class MailQueueAuditService
         $start = max(0, $start);
         $limit = max(10, min(100, $limit));
         [$where, $bind] = $this->filters($state, $template);
-        $count = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue AS q')->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
+        $count = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_mail_queue AS q')
+            ->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
         foreach ($where as $condition) {
             $count->where($condition);
         }

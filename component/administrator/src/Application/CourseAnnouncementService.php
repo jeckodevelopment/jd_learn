@@ -30,7 +30,8 @@ final class CourseAnnouncementService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
 
-        $q = $this->db->createQuery()->select('id,created_by,state,title,summary,language,current_version_id,content_access,params_json')
+        $q = $this->db->createQuery()
+            ->select('id,created_by,state,title,summary,language,current_version_id,content_access,params_json')
             ->from('#__jlms_courses')->where('id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
         $course = $this->db->setQuery($q)->loadObject();
         if (!$course) {

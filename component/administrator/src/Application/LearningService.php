@@ -358,7 +358,9 @@ final class LearningService
             self::window($edition);
             $editionId = (int) $edition->id;
             $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('subject_key = :subject')
-                ->where('edition_id = :edition')->bind(':subject', $subject)->bind(':edition', $editionId, ParameterType::INTEGER);
+                ->where('edition_id = :edition')
+                    ->bind(':subject', $subject)
+                    ->bind(':edition', $editionId, ParameterType::INTEGER);
             $id = (int) $this->db->setQuery($q)->loadResult();
             if ($id) {
                 $this->authorisedEnrollment($actor, $language, $id, true);
@@ -367,14 +369,21 @@ final class LearningService
                     throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409);
                 }
                 if ($edition->capacity !== null) {
-                    $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')->where('edition_id = :edition')
+                    $q = $this->db->createQuery()
+                        ->select('COUNT(*)')
+                        ->from('#__jlms_enrollments')->where('edition_id = :edition')
                         ->where("status <> 'cancelled'")->bind(':edition', $editionId, ParameterType::INTEGER);
                     if ((int) $this->db->setQuery($q)->loadResult() >= (int) $edition->capacity) {
                         throw new \RuntimeException('COM_JLMS_EDITION_FULL', 409);
                     }
                 }
-                $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')->where('course_version_id = :version')
-                    ->where($this->db->quoteName('required') . ' = 1')->bind(':version', $versionId, ParameterType::INTEGER);
+                $q = $this->db->createQuery()
+                    ->select('COUNT(*)')
+                    ->from('#__jlms_lessons')
+                    ->where('course_version_id = :version')
+                    ->where($this->db
+                        ->quoteName('required') . ' = 1')
+                        ->bind(':version', $versionId, ParameterType::INTEGER);
                 $total = (int) $this->db->setQuery($q)->loadResult();
                 if ($total < 1 && $mode !== 'consultation') {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
@@ -461,7 +470,8 @@ final class LearningService
             ->leftJoin(('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id '
                 . 'AND p.enrollment_id = :enrollment'))
             ->where('r.lesson_id = :lesson')->where("(p.state IS NULL OR p.state <> 'completed')")
-            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':lesson', $lessonId, ParameterType::INTEGER);
         $explicit = $this->db->setQuery($q, 0, 1)->loadObject();
         if ($explicit) {
             return $explicit;
@@ -487,7 +497,8 @@ final class LearningService
                 . "(required.ordering = target.ordering AND required.id < target.id))))))"))
             ->where("(p.state IS NULL OR p.state <> 'completed')")
             ->bind(':sequenceEnrollment', $enrollmentId, ParameterType::INTEGER)
-            ->bind(':sequenceTarget', $lessonId, ParameterType::INTEGER)->bind(':sequenceVersion', $versionId, ParameterType::INTEGER)
+            ->bind(':sequenceTarget', $lessonId, ParameterType::INTEGER)
+                ->bind(':sequenceVersion', $versionId, ParameterType::INTEGER)
             ->order('requiredModule.ordering DESC, requiredModule.id DESC, required.ordering DESC, required.id DESC');
         return $this->db->setQuery($sequence, 0, 1)->loadObject() ?: null;
     }
@@ -582,13 +593,15 @@ final class LearningService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $blockers = [];
-        $blockerQuery = $this->db->createQuery()->select('r.lesson_id, required.id AS required_id, required.title AS required_title')
+        $blockerQuery = $this->db->createQuery()
+            ->select('r.lesson_id, required.id AS required_id, required.title AS required_title')
             ->from('#__jlms_prerequisites AS r')->innerJoin(('#__jlms_lessons AS required ON required.id = '
                 . 'r.required_lesson_id AND required.course_version_id = r.course_version_id'))
             ->leftJoin(('#__jlms_lesson_progress AS p ON p.lesson_id = r.required_lesson_id '
                 . 'AND p.enrollment_id = :blockerEnrollment'))
             ->where('r.course_version_id = :blockerVersion')->where("(p.state IS NULL OR p.state <> 'completed')")
-            ->bind(':blockerEnrollment', $enrollmentId, ParameterType::INTEGER)->bind(':blockerVersion', $versionId, ParameterType::INTEGER)
+            ->bind(':blockerEnrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':blockerVersion', $versionId, ParameterType::INTEGER)
             ->order('r.lesson_id, required.ordering, required.id');
         foreach ($this->db->setQuery($blockerQuery, 0, 25001)->loadObjectList() as $blocker) {
             $blockers[(int) $blocker->lesson_id] ??= $blocker;
@@ -650,13 +663,20 @@ final class LearningService
                 ->bind(':resumeLesson', (int) $lesson->id, ParameterType::INTEGER);
             $lesson->resume_ms = (int) ($this->db->setQuery($resumeQuery)->loadResult() ?: 0);
             $availableAt = gmdate('Y-m-d H:i:s.u');
-            $audioQuery = $this->db->createQuery()->select('a.id, a.title, f.mime_type')->from('#__jlms_attachments AS a')
-                ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')
-                ->where('a.state = 1')->where('a.preview = 0')->where("f.status = 'ready'")->where("f.mime_type IN ('audio/mpeg', 'audio/ogg')")
+            $audioQuery = $this->db
+                ->createQuery()
+                ->select('a.id, a.title, f.mime_type')->from('#__jlms_attachments AS a')
+                ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
+                    ->where('a.course_version_id = :version')->where('a.lesson_id = :lesson')
+                ->where('a.state = 1')
+                    ->where('a.preview = 0')
+                    ->where("f.status = 'ready'")
+                    ->where("f.mime_type IN ('audio/mpeg', 'audio/ogg')")
                 ->where(('(a.publish_up IS NULL OR a.publish_up <= :audioUp) AND '
                     . '(a.publish_down IS NULL OR a.publish_down > :audioDown)'))
                 ->bind(':audioUp', $availableAt)->bind(':audioDown', $availableAt)->order('a.ordering, a.id')
-                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
+                ->bind(':version', $versionId, ParameterType::INTEGER)
+                    ->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
             $audio = $this->db->setQuery($audioQuery, 0, 2)->loadObjectList();
             if (count($audio) >= 1) {
                 $lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->title, 'mime' => $audio[0]->mime_type];
@@ -697,8 +717,10 @@ final class LearningService
         $actor = $this->freshActor($identity);
         $owner = (int) $actor->id;
         $q = $this->db->createQuery()->select('c.language')->from('#__jlms_enrollments AS e')
-            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->where('e.id = :enrollment')->where('e.user_id = :owner')
-            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':owner', $owner, ParameterType::INTEGER);
+            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
+                ->where('e.id = :enrollment')->where('e.user_id = :owner')
+            ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                ->bind(':owner', $owner, ParameterType::INTEGER);
         $language = $this->db->setQuery($q)->loadResult();
         if ($language === null) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
@@ -765,7 +787,8 @@ final class LearningService
             $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
-                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
+                ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
+                    ->bind(':lesson', $lessonId, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE');
             $existing = $this->db->setQuery($q)->loadObject();
             if ($existing && $existing->state === 'completed') {
@@ -802,7 +825,11 @@ final class LearningService
 
     private function queueCourseCompletion(User $actor, int $enrollmentId, int $courseId, string $language, string $completedAt): void
     {
-        $q = $this->db->createQuery()->select('title')->from('#__jlms_courses')->where('id = :id')->bind(':id', $courseId, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('title')
+            ->from('#__jlms_courses')
+            ->where('id = :id')
+            ->bind(':id', $courseId, ParameterType::INTEGER);
         $course = (string) $this->db->setQuery($q)->loadResult();
         $name = trim((string) $actor->name);
         (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(

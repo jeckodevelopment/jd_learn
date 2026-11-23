@@ -17,8 +17,14 @@ final class QuizReviewService
     }
     private function attempt(int $id, int $enrollment, int $quiz, bool $lock = false): object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_attempts')->where('id = :id')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
-            ->bind(':id', $id, ParameterType::INTEGER)->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_attempts')
+            ->where('id = :id')
+            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+            ->bind(':id', $id, ParameterType::INTEGER)
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':quiz', $quiz, ParameterType::INTEGER);
         if ($lock) {
             $q->setQuery((string)$q . ' FOR UPDATE');
         }
@@ -26,8 +32,12 @@ final class QuizReviewService
     }
     private function progress(int $enrollment, int $lesson): ?object
     {
-        $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('*')
+            ->from('#__jlms_lesson_progress')
+            ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':lesson', $lesson, ParameterType::INTEGER);
         return $this->db->setQuery($q)->loadObject() ?: null;
     }
     private function plan(object $e, object $quiz, object $a, bool $refund): array
@@ -35,18 +45,35 @@ final class QuizReviewService
         $enrollment = (int)$e->id;
         $quizId = (int)$quiz->id;
         $lesson = (int)$quiz->lesson_id;
-        $q = $this->db->createQuery()->select('id,required,source_revision')->from('#__jlms_lessons')->where('id = :lesson')->bind(':lesson', $lesson, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('id,required,source_revision')
+            ->from('#__jlms_lessons')
+            ->where('id = :lesson')
+            ->bind(':lesson', $lesson, ParameterType::INTEGER);
         $l = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
-        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attempts')->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
+        $q = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_attempts')
+            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER);
         $count = (int)$this->db->setQuery($q)->loadResult();
         if ($count > 10000) {
             throw new \RuntimeException('COM_JLMS_QUIZ_REVIEW_LIMIT', 409);
         }
-        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_certificates')->where('enrollment_id = :enrollment')->bind(':enrollment', $enrollment, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_certificates')
+            ->where('enrollment_id = :enrollment')
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER);
         $certificates = (int)$this->db->setQuery($q)->loadResult();
-        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_assessment_revisions AS r')->innerJoin('#__jlms_attempts AS a ON a.id=r.attempt_id')
-            ->where('a.enrollment_id = :enrollment')->where('a.quiz_id = :quiz')->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_assessment_revisions AS r')
+            ->innerJoin('#__jlms_attempts AS a ON a.id=r.attempt_id')
+            ->where('a.enrollment_id = :enrollment')
+                ->where('a.quiz_id = :quiz')
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':quiz', $quizId, ParameterType::INTEGER);
         $corrections = (int)$this->db->setQuery($q)->loadResult();
         $best = null;
         $completedAt = null;
@@ -54,9 +81,12 @@ final class QuizReviewService
         $last = 0;
         $after = 0;
         do {
-            $q = $this->db->createQuery()->select('id,status,attempt_no,counted_for_limit,score_points,max_points,passed,submitted_at,rules_snapshot_json')->from('#__jlms_attempts')
+            $q = $this->db->createQuery()
+                ->select('id,status,attempt_no,counted_for_limit,score_points,max_points,passed,submitted_at,rules_snapshot_json')->from('#__jlms_attempts')
                 ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')->where('id > :after')
-                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quizId, ParameterType::INTEGER)->bind(':after', $after, ParameterType::INTEGER)->order('id');
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                    ->bind(':quiz', $quizId, ParameterType::INTEGER)
+                    ->bind(':after', $after, ParameterType::INTEGER)->order('id');
             $rows = $this->db->setQuery($q, 0, 100)->loadObjectList();
             foreach ($rows as $row) {
                 $after = (int)$row->id;
@@ -82,10 +112,15 @@ final class QuizReviewService
             }
         } while (count($rows) === 100);
         $p = $this->progress($enrollment, $lesson);
-        $q = $this->db->createQuery()->select('COUNT(*) AS completed, MAX(p.completed_at) AS latest')->from('#__jlms_lesson_progress AS p')
+        $q = $this->db->createQuery()
+            ->select('COUNT(*) AS completed, MAX(p.completed_at) AS latest')
+            ->from('#__jlms_lesson_progress AS p')
             ->innerJoin('#__jlms_lessons AS l ON l.id=p.lesson_id AND l.course_version_id=p.course_version_id')
-            ->where('p.enrollment_id = :enrollment')->where('l.required = 1')->where("p.state = 'completed'")->where('l.id <> :lesson')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
+            ->where('p.enrollment_id = :enrollment')
+                ->where('l.required = 1')
+                ->where("p.state = 'completed'")->where('l.id <> :lesson')
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':lesson', $lesson, ParameterType::INTEGER);
         $others = $this->db->setQuery($q)->loadObject();
         $total = (int)$others->completed + ($completedAt !== null ? (int)$l->required : 0);
         if ($total > (int)$e->required_total) {
@@ -118,8 +153,12 @@ final class QuizReviewService
             return $base;
         }
         $quiz = (int)$base['quiz']->id;
-        $q = $this->db->createQuery()->select('id,attempt_no,status,score_points,max_points,passed,counted_for_limit,revision,invalidation_reason,invalidated_by,invalidated_at')->from('#__jlms_attempts')
-            ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':quiz', $quiz, ParameterType::INTEGER)->order('id DESC');
+        $q = $this->db->createQuery()
+            ->select('id,attempt_no,status,score_points,max_points,passed,counted_for_limit,revision,invalidation_reason,invalidated_by,invalidated_at')->from('#__jlms_attempts')
+            ->where('enrollment_id = :enrollment')
+                ->where('quiz_id = :quiz')
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':quiz', $quiz, ParameterType::INTEGER)->order('id DESC');
         if ($before > 0) {
             $q->where('id < :before')->bind(':before', $before, ParameterType::INTEGER);
         }
@@ -146,14 +185,21 @@ final class QuizReviewService
         $this->time->managementContext($identity, $course, $lesson, $enrollment);
         $this->db->transactionStart();
         try {
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id = :id')->bind(':id', $enrollment, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_enrollments')
+                ->where('id = :id')
+                ->bind(':id', $enrollment, ParameterType::INTEGER);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $this->db->setQuery($q)->loadResult();
             [$actor,$quiz,$e] = $this->time->managementContext($identity, $course, $lesson, $enrollment);
             $a = $this->attempt($attempt, $enrollment, (int)$quiz->id, true);
             $scope = hash('sha256', (int)$actor->id . ':quiz.cancel:' . $key);
             $hash = hash('sha256', QuestionDefinition::canonical(['course' => $course,'lesson' => $lesson,'enrollment' => $enrollment,'attempt' => $attempt,'enrollment_revision' => $enrollmentRevision,'attempt_revision' => $attemptRevision,'refund' => $refund,'reason' => $reason,'impact' => $impactHash]));
-            $q = $this->db->createQuery()->select('request_hash,result_id')->from('#__jlms_idempotency')->where('scope_hash = :scope')->bind(':scope', $scope);
+            $q = $this->db->createQuery()
+                ->select('request_hash,result_id')
+                ->from('#__jlms_idempotency')
+                ->where('scope_hash = :scope')->bind(':scope', $scope);
             $q->setQuery((string)$q . ' FOR UPDATE');
             $old = $this->db->setQuery($q)->loadObject();
             if ($old) {
@@ -176,15 +222,27 @@ final class QuizReviewService
             $now = gmdate('Y-m-d H:i:s');$update = (object)['id' => $attempt,'status' => 'invalidated','counted_for_limit' => $refund ? 0 : 1,'invalidation_reason' => $reason,
                 'invalidated_by' => (int)$actor->id,'invalidated_at' => $now,'revision' => (int)$a->revision + 1];
             $this->db->updateObject('#__jlms_attempts', $update, 'id');
-            $q = $this->db->createQuery()->delete('#__jlms_active_attempts')->where('attempt_id = :attempt')->bind(':attempt', $attempt, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->delete('#__jlms_active_attempts')
+                ->where('attempt_id = :attempt')
+                ->bind(':attempt', $attempt, ParameterType::INTEGER);
             $this->db->setQuery($q)->execute();
             $completed = $impact['after_lesson_completed_at'];
             $coverage = QuestionDefinition::canonical($impact['after_best'] ?? []);
             if ($progress) {
-                $q = $this->db->createQuery()->update('#__jlms_lesson_progress')->set('coverage_json = :coverage')->set('state = :state')->set('last_activity_at = :now')->set('revision = revision + 1')
-                    ->set($completed === null ? 'completed_at = NULL' : 'completed_at = :completed')->where('enrollment_id = :enrollment')->where('lesson_id = :lesson');
+                $q = $this->db->createQuery()
+                    ->update('#__jlms_lesson_progress')
+                    ->set('coverage_json = :coverage')
+                    ->set('state = :state')
+                    ->set('last_activity_at = :now')->set('revision = revision + 1')
+                    ->set($completed === null ? 'completed_at = NULL' : 'completed_at = :completed')
+                        ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson');
                 $state = $completed === null ? 'started' : 'completed';
-                $q->bind(':coverage', $coverage)->bind(':state', $state)->bind(':now', $now)->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
+                $q->bind(':coverage', $coverage)
+                    ->bind(':state', $state)
+                    ->bind(':now', $now)
+                    ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                    ->bind(':lesson', $lesson, ParameterType::INTEGER);
                 if ($completed !== null) {
                     $q->bind(':completed', $completed);
                 }

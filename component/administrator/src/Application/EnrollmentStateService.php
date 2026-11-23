@@ -29,8 +29,10 @@ final class EnrollmentStateService
             . 'course_params, c.state AS course_state, c.delivery_enabled AS '
             . 'course_delivery_enabled'))
             ->from('#__jlms_enrollments AS e')->leftJoin('#__users AS u ON u.id = e.user_id')
-            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->where('e.id = :enrollment')->where('e.course_id = :course')
-            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
+            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
+                ->where('e.id = :enrollment')->where('e.course_id = :course')
+            ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
+                ->bind(':course', $course, ParameterType::INTEGER);
         $e = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         return [$actor, $c, $e];
     }
@@ -38,7 +40,8 @@ final class EnrollmentStateService
     private function latest(int $enrollment): ?object
     {
         $q = $this->db->createQuery()->select('revision_no')->from('#__jlms_enrollment_state_changes')
-            ->where('enrollment_id = :enrollment')->bind(':enrollment', $enrollment, ParameterType::INTEGER)->order('revision_no DESC');
+            ->where('enrollment_id = :enrollment')
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->order('revision_no DESC');
         return $this->db->setQuery($q, 0, 1)->loadObject() ?: null;
     }
 
@@ -51,7 +54,9 @@ final class EnrollmentStateService
         // All quiz writers acquire the enrollment lock first, so this projection is stable during apply.
         $q = $this->db->createQuery()->select('a.id, a.revision, a.deadline_at')->from('#__jlms_active_attempts AS s')
             ->innerJoin('#__jlms_attempts AS a ON a.id = s.attempt_id AND a.enrollment_id = s.enrollment_id')
-            ->where('s.enrollment_id = :enrollment')->where("a.status = 'open'")->bind(':enrollment', $id, ParameterType::INTEGER)->order('a.id');
+            ->where('s.enrollment_id = :enrollment')
+                ->where("a.status = 'open'")
+                ->bind(':enrollment', $id, ParameterType::INTEGER)->order('a.id');
         $attempts = $this->db->setQuery($q, 0, 1001)->loadAssocList();
         $last = $this->latest($id);
         $revision = $last ? (int) $last->revision_no : 0;
@@ -78,7 +83,9 @@ final class EnrollmentStateService
         }
         $q = $this->db->createQuery()->select(('id, revision_no, previous_status, target_status, reason, '
             . 'actor_user_id, created_at'))
-            ->from('#__jlms_enrollment_state_changes')->where('enrollment_id = :enrollment')->bind(':enrollment', $enrollment, ParameterType::INTEGER)->order('revision_no DESC');
+            ->from('#__jlms_enrollment_state_changes')
+                ->where('enrollment_id = :enrollment')
+                ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->order('revision_no DESC');
         // Never expose the internal enrollment row (subject key etc.) to the view.
         return ['course' => $c, 'enrollment_id' => $enrollment, 'learner_name' => (string) ($e->learner_name ?? ''),
             'impact' => $this->plan($e, $target), 'history' => $this->db->setQuery($q, 0, 20)->loadObjectList()];
@@ -117,7 +124,10 @@ final class EnrollmentStateService
             if (!$this->db->setQuery($courseLock)->loadResult()) {
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')->where('id = :id')->where('course_id = :course')
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_enrollments')
+                ->where('id = :id')->where('course_id = :course')
                 ->bind(':id', $enrollment, ParameterType::INTEGER)->bind(':course', $course, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE');
             if (!$this->db->setQuery($q)->loadResult()) {
@@ -127,7 +137,9 @@ final class EnrollmentStateService
             $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int) $actor->id, 'course' => $course, 'enrollment' => $enrollment,
                 'revision' => $expected, 'target' => $target, 'reason' => $reason, 'impact' => $impactHash]));
             $q = $this->db->createQuery()->select('id, request_hash')->from('#__jlms_enrollment_state_changes')
-                ->where('enrollment_id = :enrollment')->where('mutation_id = :mutation')->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':mutation', $key);
+                ->where('enrollment_id = :enrollment')
+                    ->where('mutation_id = :mutation')
+                    ->bind(':enrollment', $enrollment, ParameterType::INTEGER)->bind(':mutation', $key);
             $old = $this->db->setQuery($q)->loadObject();
             if ($old) {
                 if (!hash_equals($old->request_hash, $hash)) {

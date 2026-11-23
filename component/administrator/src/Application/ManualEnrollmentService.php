@@ -34,7 +34,8 @@ final class ManualEnrollmentService
             ->where('c.id = :course')->where('c.state = 1')->where("v.status = 'published'")
             ->where("cat.extension = 'com_jlms.course' AND cat.published = 1")
             ->where("(c.language = '*' OR c.language = :language)")
-            ->where('(c.publish_up IS NULL OR c.publish_up <= :nowUp)')->where('(c.publish_down IS NULL OR c.publish_down > :nowDown)')
+            ->where('(c.publish_up IS NULL OR c.publish_up <= :nowUp)')
+                ->where('(c.publish_down IS NULL OR c.publish_down > :nowDown)')
             ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':language', $language);
         $now = gmdate('Y-m-d H:i:s');
         $q->bind(':nowUp', $now)->bind(':nowDown', $now);
@@ -114,9 +115,11 @@ final class ManualEnrollmentService
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $code = 'default-v' . (int) $version->version_no;
-        $q = $this->db->createQuery()->select('id, revision, starts_at, ends_at, status, capacity')->from('#__jlms_editions')
+        $q = $this->db->createQuery()
+            ->select('id, revision, starts_at, ends_at, status, capacity')->from('#__jlms_editions')
             ->where('course_id = :course')->where('course_version_id = :version')->where('code = :code')
-            ->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER)->bind(':code', $code);
+            ->bind(':course', $courseId, ParameterType::INTEGER)
+                ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':code', $code);
         $edition = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $now = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s.u');
         if ($edition->status !== 'open' || ($edition->starts_at !== null && $edition->starts_at > $now) || ($edition->ends_at !== null && $edition->ends_at <= $now)) {
@@ -130,12 +133,27 @@ final class ManualEnrollmentService
             $edition->starts_at,
             $edition->ends_at
         );
-        $q = $this->db->createQuery()->select('id, status')->from('#__jlms_enrollments')->where('user_id = :user')->where('edition_id = :edition')
+        $q = $this->db->createQuery()
+            ->select('id, status')
+            ->from('#__jlms_enrollments')
+            ->where('user_id = :user')->where('edition_id = :edition')
             ->bind(':user', $userId, ParameterType::INTEGER)->bind(':edition', $editionId, ParameterType::INTEGER);
         $existing = $this->db->setQuery($q)->loadObject();
-        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')->where('edition_id = :edition')->where("status <> 'cancelled'")->bind(':edition', $editionId, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_enrollments')
+            ->where('edition_id = :edition')
+            ->where("status <> 'cancelled'")
+            ->bind(':edition', $editionId, ParameterType::INTEGER);
         $used = (int) $this->db->setQuery($q)->loadResult();
-        $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')->where('course_version_id = :version')->where($this->db->quoteName('required') . ' = 1')->bind(':version', $versionId, ParameterType::INTEGER);
+        $q = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__jlms_lessons')
+            ->where('course_version_id = :version')
+            ->where($this
+            ->db
+            ->quoteName('required') . ' = 1')
+            ->bind(':version', $versionId, ParameterType::INTEGER);
         $total = (int) $this->db->setQuery($q)->loadResult();
         if ($total < 1 && $rules['mode'] !== 'consultation') {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
@@ -161,7 +179,11 @@ final class ManualEnrollmentService
         $receipt = null;
         if ($p['existing_id']) {
             $id = $p['existing_id'];
-            $q = $this->db->createQuery()->select('id, reason, actor_user_id, created_at')->from('#__jlms_manual_enrollments')->where('enrollment_id = :id')->bind(':id', $id, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id, reason, actor_user_id, created_at')
+                ->from('#__jlms_manual_enrollments')
+                ->where('enrollment_id = :id')
+                ->bind(':id', $id, ParameterType::INTEGER);
             $receipt = $this->db->setQuery($q)->loadObject();
         }
         return ['course' => (object) ['id' => (int) $c->id, 'title' => $c->title], 'learner_name' => $learner->name,
@@ -182,7 +204,11 @@ final class ManualEnrollmentService
         $this->db->transactionStart();
         try {
             // Same serialization point as automatic start, before fresh authorization establishes a read view.
-            $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('id = :id')->bind(':id', $edition, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('id')
+                ->from('#__jlms_editions')
+                ->where('id = :id')
+                ->bind(':id', $edition, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE');
             $this->db->setQuery($q)->loadResult();
             [$actor, $learner, $courseRecord, $p] = $this->context($identity, $course, $user, $language, $preassignment);
@@ -202,9 +228,17 @@ final class ManualEnrollmentService
             $q->setQuery(('INSERT INTO #__jlms_manual_enrollments '
             . '(actor_user_id,mutation_id,request_hash,claim_token,impact_hash,reason,created_at) '
             . 'VALUES (:actor,:mutation,:hash,:claim,:impact,:reason,:now) ON DUPLICATE KEY UPDATE id=id'))
-                ->bind(':actor', $actorId, ParameterType::INTEGER)->bind(':mutation', $key)->bind(':hash', $hash)->bind(':claim', $nonce)->bind(':impact', $impact)->bind(':reason', $reason)->bind(':now', $now);
+                ->bind(':actor', $actorId, ParameterType::INTEGER)
+                    ->bind(':mutation', $key)
+                    ->bind(':hash', $hash)
+                    ->bind(':claim', $nonce)
+                    ->bind(':impact', $impact)
+                    ->bind(':reason', $reason)->bind(':now', $now);
             $this->db->setQuery($q)->execute();
-            $q = $this->db->createQuery()->select('id, enrollment_id, request_hash, claim_token')->from('#__jlms_manual_enrollments')->where('mutation_id = :mutation')->bind(':mutation', $key);
+            $q = $this->db->createQuery()
+                ->select('id, enrollment_id, request_hash, claim_token')
+                ->from('#__jlms_manual_enrollments')
+                ->where('mutation_id = :mutation')->bind(':mutation', $key);
             $q->setQuery((string) $q . ' FOR UPDATE');
             $receipt = $this->db->setQuery($q)->loadObject();
             if (!$receipt || !hash_equals($receipt->request_hash, $hash)) {
@@ -224,7 +258,11 @@ final class ManualEnrollmentService
             . '(:subject,:user,:now) ON DUPLICATE KEY UPDATE user_id=user_id'))
                 ->bind(':subject', $subject)->bind(':user', $user, ParameterType::INTEGER)->bind(':now', $now);
             $this->db->setQuery($q)->execute();
-            $q = $this->db->createQuery()->select('subject_key')->from('#__jlms_subjects')->where('user_id = :user')->bind(':user', $user, ParameterType::INTEGER);
+            $q = $this->db->createQuery()
+                ->select('subject_key')
+                ->from('#__jlms_subjects')
+                ->where('user_id = :user')
+                ->bind(':user', $user, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE');
             $subject = (string) $this->db->setQuery($q)->loadResult();
             $record = (object) ['user_id' => $user, 'subject_key' => $subject, 'course_id' => $course, 'course_version_id' => $p['version_id'], 'edition_id' => $edition,
