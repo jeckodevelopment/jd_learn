@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace Joomla\CMS\Router {
     final class Route {
         public static function _(string $url, bool $xhtml = true): string {
-            if ($xhtml) { throw new \RuntimeException('Canonical route must not be XHTML-encoded'); }
+            if ($xhtml) {
+                throw new \RuntimeException('Canonical route must not be XHTML-encoded');
+            }
             return '/it/corsi/42:' . rawurlencode('prova');
         }
     }
 }
 namespace Joomla\CMS\Uri {
     final class Uri {
-        public static function root(): string { return 'https://example.test/'; }
+        public static function root(): string { return 'https://example.test/';
+        }
     }
 }
 namespace {
@@ -23,9 +26,12 @@ namespace {
         public string $description = '';
         public array $head = [];
         public array $meta = [];
-        public function setTitle(string $value): void { $this->title = $value; }
-        public function setDescription(string $value): void { $this->description = $value; }
-        public function addHeadLink(string $url, string $type): void { $this->head[$type] = $url; }
+        public function setTitle(string $value): void { $this->title = $value;
+        }
+        public function setDescription(string $value): void { $this->description = $value;
+        }
+        public function addHeadLink(string $url, string $type): void { $this->head[$type] = $url;
+        }
         public function setMetaData(string $key, string $value, string $type = 'name'): void {
             $this->meta[$type . ':' . $key] = $value;
         }

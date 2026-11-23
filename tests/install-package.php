@@ -64,7 +64,9 @@ $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($u
 // Same native Installer API used by Joomla's CLI command, with its diagnostic queue preserved.
 $packagePath = realpath($argv[2] ?? '');
 $expectDisabledPlugin = ($argv[3] ?? '') === 'disabled-upgrade';
-if (!$packagePath || !str_ends_with($packagePath, '.zip')) { throw new \RuntimeException('Package ZIP required.'); }
+if (!$packagePath || !str_ends_with($packagePath, '.zip')) {
+    throw new \RuntimeException('Package ZIP required.');
+}
 if ($expectDisabledPlugin) {
     $db->setQuery("UPDATE #__extensions SET enabled=0 WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->execute();
 }

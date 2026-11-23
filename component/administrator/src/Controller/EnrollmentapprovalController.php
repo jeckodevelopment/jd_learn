@@ -14,7 +14,9 @@ final class EnrollmentapprovalController extends BaseController
 {
     public function execute($task)
     {
-        if (strtolower($task) !== 'decide') { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (strtolower($task) !== 'decide') {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
         return parent::execute($task);
     }
 
@@ -33,9 +35,13 @@ final class EnrollmentapprovalController extends BaseController
             }
             $raw = $this->input->post->get('jform', [], 'array');
             foreach (['course_id','request_id','revision','decision','reason','confirmation'] as $field) {
-                if (!is_string($raw[$field] ?? null)) { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+                if (!is_string($raw[$field] ?? null)) {
+                    throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                }
             }
-            if ($raw['confirmation'] !== '1') { throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400); }
+            if ($raw['confirmation'] !== '1') {
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            }
             $courseId = CurriculumService::id($raw['course_id']);
             $requestId = CurriculumService::id($raw['request_id']);
             $revision = CurriculumService::id($raw['revision']);
@@ -48,7 +54,10 @@ final class EnrollmentapprovalController extends BaseController
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = (int) $error->getCode();
-            if ($error instanceof \InvalidArgumentException) { $key = 'COM_JLMS_INVALID_INPUT'; $code = 400; }
+            if ($error instanceof \InvalidArgumentException) {
+                $key = 'COM_JLMS_INVALID_INPUT';
+                $code = 400;
+            }
             $known = ['COM_JLMS_INVALID_INPUT', 'COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED',
                 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_ENROLLMENT_APPROVAL_REASON',
                 'COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 'COM_JLMS_ENROLLMENT_APPROVAL_AUDIT_FAILED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_EDITION_FULL'];

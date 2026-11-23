@@ -34,10 +34,18 @@ final class CoursePresentation
                 continue;
             }
             if ($field === 'estimated_minutes') {
-                if ($value === '' || $value === null) { $result[$field] = null; continue; }
-                if (!is_int($value) && !is_string($value)) { throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID'); }
-                try { $result[$field] = DecimalId::parse((string) $value); }
-                catch (\InvalidArgumentException) { throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID'); }
+                if ($value === '' || $value === null) {
+                    $result[$field] = null;
+                    continue;
+                }
+                if (!is_int($value) && !is_string($value)) {
+                    throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+                }
+                try {
+                    $result[$field] = DecimalId::parse((string) $value);
+                } catch (\InvalidArgumentException) {
+                    throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+                }
                 continue;
             }
             if (!is_string($value) || preg_match('//u', $value) !== 1
@@ -54,20 +62,28 @@ final class CoursePresentation
                 throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
             }
             $result[$field] = $field === 'description' ? self::html($value) : trim($value);
-            if ($field === 'image') { $result[$field] = CourseArtwork::path($value); }
+            if ($field === 'image') {
+                $result[$field] = CourseArtwork::path($value);
+            }
         }
         if ($result['image'] !== '' && !$result['image_decorative'] && $result['image_alt'] === '') {
             throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_ALT_REQUIRED');
         }
-        if ($result['image_decorative']) { $result['image_alt'] = ''; }
+        if ($result['image_decorative']) {
+            $result['image_alt'] = '';
+        }
         return $result;
     }
 
     public static function details(?string $params): ?array
     {
         $data = json_decode($params ?: '{}', true, 32, JSON_THROW_ON_ERROR);
-        if (!is_array($data)) { throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID'); }
-        if (!array_key_exists('presentation', $data)) { return null; }
+        if (!is_array($data)) {
+            throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+        }
+        if (!array_key_exists('presentation', $data)) {
+            return null;
+        }
         if (!is_array($data['presentation']) || ($data['presentation']['_schema'] ?? null) !== 1) {
             throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
         }
@@ -81,9 +97,14 @@ final class CoursePresentation
         $changed = false;
         foreach (self::FIELDS as $field) {
             $name = 'presentation_' . $field;
-            if (array_key_exists($name, $input)) { $values[$field] = $input[$name]; $changed = true; }
+            if (array_key_exists($name, $input)) {
+                $values[$field] = $input[$name];
+                $changed = true;
+            }
         }
-        if (!$changed) { return null; }
+        if (!$changed) {
+            return null;
+        }
         // Validate types and lengths before invoking Joomla's actor-specific HTML policy.
         $values = self::normalise($values);
         $values['description'] = self::html($filterHtml($values['description']));
@@ -112,7 +133,9 @@ final class CoursePresentation
             $snapshot['details'] = $details;
         }
         $calendar = CourseSchedule::snapshot($course);
-        if ($calendar !== null) { $snapshot['calendar'] = $calendar; }
+        if ($calendar !== null) {
+            $snapshot['calendar'] = $calendar;
+        }
         return json_encode($snapshot, JSON_THROW_ON_ERROR);
     }
 
@@ -122,7 +145,9 @@ final class CoursePresentation
         if (!is_array($snapshot) || ($snapshot['_schema'] ?? null) !== 1) {
             throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
         }
-        if (!array_key_exists('details', $snapshot)) { return []; }
+        if (!array_key_exists('details', $snapshot)) {
+            return [];
+        }
         if (!is_array($snapshot['details']) || ($snapshot['details']['_schema'] ?? null) !== 1) {
             throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
         }

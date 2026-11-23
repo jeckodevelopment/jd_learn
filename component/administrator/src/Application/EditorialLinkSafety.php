@@ -15,7 +15,9 @@ final class EditorialLinkSafety
     public static function containsSensitiveParameters(string $url): bool
     {
         $parts = parse_url($url);
-        if ($parts === false) { return true; }
+        if ($parts === false) {
+            return true;
+        }
         foreach (['query', 'fragment'] as $field) {
             parse_str(ltrim((string) ($parts[$field] ?? ''), '#?'), $parameters);
             foreach (array_keys($parameters) as $key) {

@@ -11,7 +11,8 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 final class CourseOperationsService
 {
     private const FIELDS = ['admissions' => 'admissions_open', 'delivery' => 'delivery_enabled'];
-    public function __construct(private readonly DatabaseInterface $db, private readonly EnrollmentRosterService $roster, private readonly \Closure $audit) {}
+    public function __construct(private readonly DatabaseInterface $db, private readonly EnrollmentRosterService $roster, private readonly \Closure $audit) {
+    }
 
     private function preview(User $actor, int $courseId, string $operation): array
     {
@@ -43,7 +44,8 @@ final class CourseOperationsService
     {
         $item = $this->preview($actor, $courseId, $operation);
         $q = $this->db->createQuery()->select('revision_no,operation,previous_value,target_value,reason,actor_user_id,created_at')->from('#__jlms_course_operations')->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER)->order('revision_no DESC');
-        $item['history'] = $this->db->setQuery($q, 0, 20)->loadObjectList(); return $item;
+        $item['history'] = $this->db->setQuery($q, 0, 20)->loadObjectList();
+        return $item;
     }
 
     public function apply(User $actor, int $courseId, string $operation, int $revision, string $reason, string $mutation, string $impactHash): void
@@ -56,24 +58,35 @@ final class CourseOperationsService
         $this->db->transactionStart();
         try {
             $q = $this->db->createQuery()->select('id')->from('#__jlms_courses')->where('id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
-            $q->setQuery((string)$q . ' FOR UPDATE'); $this->db->setQuery($q)->loadResult();
+            $q->setQuery((string)$q . ' FOR UPDATE');
+            $this->db->setQuery($q)->loadResult();
             if (str_starts_with($operation, 'admissions_')) {
                 $q = $this->db->createQuery()->select('id')->from('#__jlms_editions')->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER)->order('id');
-                $q->setQuery((string)$q . ' FOR UPDATE'); $this->db->setQuery($q)->loadColumn();
+                $q->setQuery((string)$q . ' FOR UPDATE');
+                $this->db->setQuery($q)->loadColumn();
             }
-            $actor = new User((int)$actor->id); $actor->clearAccessRights();
-            $item = $this->preview($actor, $courseId, $operation); $p = $item['impact'];
+            $actor = new User((int)$actor->id);
+            $actor->clearAccessRights();
+            $item = $this->preview($actor, $courseId, $operation);
+            $p = $item['impact'];
             $q = $this->db->createQuery()->select('id,actor_user_id,operation,impact_hash,reason')->from('#__jlms_course_operations')->where('mutation_id=:mutation')->bind(':mutation', $mutation);
             $prior = $this->db->setQuery($q)->loadObject();
             if ($prior) {
-                if ((int)$prior->actor_user_id === (int)$actor->id && $prior->operation === $operation && hash_equals($prior->impact_hash, $impactHash) && hash_equals($prior->reason, $reason)) { $this->db->transactionCommit(); return; }
+                if ((int)$prior->actor_user_id === (int)$actor->id && $prior->operation === $operation && hash_equals($prior->impact_hash, $impactHash) && hash_equals($prior->reason, $reason)) {
+                    $this->db->transactionCommit();
+                    return;
+                }
                 throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
             }
             if ($p['blocked'] || $p['revision'] !== $revision || !hash_equals($p['hash'], $impactHash)) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
-            $field = self::FIELDS[substr($operation, 0, strrpos($operation, '_'))]; $target = (int)$p['target']; $actorId = (int)$actor->id; $now = gmdate('Y-m-d H:i:s.u');
+            $field = self::FIELDS[substr($operation, 0, strrpos($operation, '_'))];
+            $target = (int)$p['target'];
+            $actorId = (int)$actor->id;
+            $now = gmdate('Y-m-d H:i:s.u');
             $q = $this->db->createQuery()->update('#__jlms_courses')->set($this->db->quoteName($field) . '=:target')->set('revision=revision+1')->set('modified_by=:actor')->set('modified_at=:now')->where('id=:course')->where('revision=:revision')
                 ->bind(':target', $target, ParameterType::INTEGER)->bind(':actor', $actorId, ParameterType::INTEGER)->bind(':now', $now)->bind(':course', $courseId, ParameterType::INTEGER)->bind(':revision', $revision, ParameterType::INTEGER);
-            $this->db->setQuery($q)->execute(); if ($this->db->getAffectedRows() !== 1) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
+            $this->db->setQuery($q)->execute();
+            if ($this->db->getAffectedRows() !== 1) throw new \RuntimeException('COM_JLMS_COURSE_OPERATION_CONFLICT', 409);
             $q = $this->db->createQuery()->select('COALESCE(MAX(revision_no),0)+1')->from('#__jlms_course_operations')->where('course_id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
             $sequence = (int)$this->db->setQuery($q)->loadResult();
             $record = (object)['course_id' => $courseId,'revision_no' => $sequence,'operation' => $operation,'previous_value' => (int)$p['current'],'target_value' => $target,'impact_hash' => $impactHash,'reason' => $reason,'actor_user_id' => (int)$actor->id,'mutation_id' => $mutation,'created_at' => $now];
@@ -81,6 +94,9 @@ final class CourseOperationsService
             ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,'course_id' => $courseId,'operation' => $operation,
                 'previous_value' => (int)$p['current'],'target_value' => $target,'reason_reference' => (int)$record->id,'correlation_id' => bin2hex(random_bytes(16))]);
             $this->db->transactionCommit();
-        } catch (\Throwable $e) { $this->db->transactionRollback(); throw $e; }
+        } catch (\Throwable $e) {
+            $this->db->transactionRollback();
+            throw $e;
+        }
     }
 }

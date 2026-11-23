@@ -13,7 +13,8 @@ use Joomla\CMS\Log\Log;
 /** Creates one immutable certificate issuance record for a persisted course completion. */
 final class CertificateIssuer
 {
-    public function __construct(private readonly DatabaseInterface $db) {}
+    public function __construct(private readonly DatabaseInterface $db) {
+    }
 
     public function issueForCompletedEnrollment(int $enrollmentId, int $courseVersionId, string $completedAt, bool $explicitAdminRecovery = false): bool
     {
@@ -24,10 +25,14 @@ final class CertificateIssuer
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':version', $courseVersionId, ParameterType::INTEGER)
             ->bind(':completed', $completedAt);
         $row = $this->db->setQuery($q)->loadObject();
-        if (!$row) { return false; }
+        if (!$row) {
+            return false;
+        }
         $rules = json_decode((string) $row->rules_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
-            || (!$explicitAdminRecovery && ($rules['certificate_enabled'] ?? false) !== true)) { return false; }
+            || (!$explicitAdminRecovery && ($rules['certificate_enabled'] ?? false) !== true)) {
+            return false;
+        }
         $params = ComponentHelper::getParams('com_jlms');
         if (!CertificatePreferences::enabled((bool) $params->get('certificate_enabled', 0), (string) $row->params_json)) {
             return false;
@@ -36,18 +41,26 @@ final class CertificateIssuer
         $existing = $this->db->createQuery()->select('id')->from('#__jlms_certificates')
             ->where('enrollment_id = :enrollment')->where('course_version_id = :version')
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':version', $courseVersionId, ParameterType::INTEGER);
-        if ((int) $this->db->setQuery($existing)->loadResult() > 0) { return false; }
+        if ((int) $this->db->setQuery($existing)->loadResult() > 0) {
+            return false;
+        }
 
         $template = $this->db->createQuery()->select('id, template_json, hash')->from('#__jlms_certificate_templates')
             ->where('state = 1')->order('id ASC');
         $templateRow = $this->db->setQuery($template)->loadObject();
-        if (!$templateRow) { return false; }
+        if (!$templateRow) {
+            return false;
+        }
 
         $templateSnapshot = json_decode((string) $templateRow->template_json, true, 32, JSON_THROW_ON_ERROR);
-        if (!is_array($templateSnapshot)) { return false; }
+        if (!is_array($templateSnapshot)) {
+            return false;
+        }
         foreach (['certificate_heading' => 'heading', 'certificate_subheading' => 'subheading', 'certificate_footer' => 'footer'] as $setting => $key) {
             $value = trim((string) $params->get($setting, ''));
-            if ($value !== '') { $templateSnapshot[$key] = mb_substr($value, 0, 255); }
+            if ($value !== '') {
+                $templateSnapshot[$key] = mb_substr($value, 0, 255);
+            }
         }
         $accent = (string) $params->get('certificate_accent_color', '#315A70');
         $templateSnapshot['accent_color'] = preg_match('/\\A#?[a-f0-9]{6}\\z/iD', $accent) ? $accent : '#315A70';

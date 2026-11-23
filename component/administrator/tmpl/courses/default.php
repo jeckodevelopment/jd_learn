@@ -32,22 +32,26 @@ $direction = $this->escape($this->state->get('list.direction', 'DESC'));
      <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $direction, $order) ?></th>
     </tr></thead>
     <tbody>
-    <?php foreach ($this->items as $i => $item) :
-      $programme = Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int) $item->id);
-    ?>
+       <?php foreach ($this->items as $i => $item) :
+            $programme = Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int) $item->id);
+            ?>
      <tr class="row<?= $i % 2 ?> jlms-admin-course" data-course-id="<?= (int) $item->id ?>">
       <td class="text-center"><?= HTMLHelper::_('grid.id', $i, $item->id, false, 'cid', 'cb', $item->title) ?></td>
-      <td><a class="badge <?= (int) $item->state === 1 ? 'bg-success' : 'bg-secondary' ?> text-decoration-none" href="<?= $programme ?>#jlms-publication-status" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_COURSES_PUBLICATION_FOR', $item->title)) ?>"><?= Text::_(match ((int) $item->state) { 1 => 'JPUBLISHED', 2 => 'JARCHIVED', -2 => 'JTRASHED', default => 'JUNPUBLISHED' }) ?></a></td>
+      <td><a class="badge <?= (int) $item->state === 1 ? 'bg-success' : 'bg-secondary' ?> text-decoration-none" href="<?= $programme ?>#jlms-publication-status" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_COURSES_PUBLICATION_FOR', $item->title)) ?>"><?= Text::_(match ((int) $item->state) {
+            1 => 'JPUBLISHED', 2 => 'JARCHIVED', -2 => 'JTRASHED', default => 'JUNPUBLISHED'
+                          }) ?></a></td>
       <th scope="row" class="has-context">
-       <?php if ($item->checked_out) : ?><?= HTMLHelper::_('jgrid.checkedout', $i, $item->editor ?? Text::_('JNONE'), $item->checked_out_time, 'courses.', false) ?><?php endif; ?>
+            <?php if ($item->checked_out) :
+                ?><?= HTMLHelper::_('jgrid.checkedout', $i, $item->editor ?? Text::_('JNONE'), $item->checked_out_time, 'courses.', false) ?><?php
+       endif; ?>
        <a class="jlms-admin-course-title" href="<?= Route::_('index.php?option=com_jlms&task=course.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
        <div class="small text-body-secondary"><?= Text::_('JFIELD_ALIAS_LABEL') ?>: <?= $this->escape($item->alias) ?></div>
        <div class="small mt-1 jlms-admin-course-actions">
         <a href="<?= $programme ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
-        <?php if (($this->courseActions[(int) $item->id]['enrollments'] ?? false)) : ?>
+            <?php if (($this->courseActions[(int) $item->id]['enrollments'] ?? false)) : ?>
          <span aria-hidden="true"> · </span><a href="<?= Route::_('index.php?option=com_jlms&view=enrollments&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?></a>
         <?php endif; ?>
-        <?php if (($this->courseActions[(int) $item->id]['purge'] ?? false)) : ?>
+            <?php if (($this->courseActions[(int) $item->id]['purge'] ?? false)) : ?>
          <span aria-hidden="true"> · </span><a href="<?= Route::_('index.php?option=com_jlms&view=courses&layout=purgepreview&id=' . (int) $item->id) ?>"><?= Text::_('COM_JLMS_PURGE_PREVIEW') ?></a>
         <?php endif; ?>
        </div>

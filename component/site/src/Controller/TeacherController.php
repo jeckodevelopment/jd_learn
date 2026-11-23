@@ -9,14 +9,17 @@ final class TeacherController extends \Joomla\CMS\MVC\Controller\FormController
     protected $view_list = 'teacher';
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['edit', 'save', 'apply', 'cancel'], true)) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!in_array(strtolower($task), ['edit', 'save', 'apply', 'cancel'], true)) {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
         return parent::execute($task);
     }
     public function getModel($name = 'Teacheredit', $prefix = 'Site', $config = ['ignore_request' => true])
     {
         return parent::getModel($name, $prefix, $config);
     }
-    protected function allowAdd($data = []) { return false; }
+    protected function allowAdd($data = []) { return false;
+    }
     protected function allowEdit($data = [], $key = 'id')
     {
         $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id);

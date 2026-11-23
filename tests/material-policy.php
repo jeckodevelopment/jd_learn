@@ -5,11 +5,24 @@ declare(strict_types=1);
 require dirname(__DIR__) . '/component/administrator/src/Infrastructure/MaterialFilePolicy.php';
 use Jlms\Component\Jlms\Administrator\Infrastructure\MaterialFilePolicy;
 $root = dirname(__DIR__) . '/.runtime/material-policy';
-if (!is_dir($root)) { mkdir($root, 0700, true); }
+if (!is_dir($root)) {
+    mkdir($root, 0700, true);
+}
 $checks = 0;
-function materialExpect(bool $ok, string $message): void { global $checks; if (!$ok) { throw new \RuntimeException($message); } $checks++; }
+function materialExpect(bool $ok, string $message): void { global $checks;
+    if (!$ok) {
+        throw new \RuntimeException($message);
+
+    } $checks++;
+}
 function materialReject(callable $call, string $message): void {
-    try { $call(); } catch (\RuntimeException $error) { materialExpect(true, $message); return; }
+    try {
+        $call();
+
+    } catch (\RuntimeException $error) {
+        materialExpect(true, $message);
+        return;
+    }
     throw new \RuntimeException($message);
 }
 foreach (['../evil.pdf', 'bad.php.pdf', 'bad.html', "bad\0.pdf", 'bad\\name.pdf', '.hidden.txt',
@@ -27,8 +40,12 @@ materialExpect(MaterialFilePolicy::inspect($root . '/pdf', 'manuale.pdf')['mime_
 file_put_contents($root . '/html', '<html><script>alert(1)</script></html>');
 materialReject(fn () => MaterialFilePolicy::inspect($root . '/html', 'disguised.txt'), 'Active MIME rejected');
 function materialZip(string $path, array $files): void {
-    $zip = new \ZipArchive();$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-    foreach ($files as $name => $content) { $zip->addFromString($name, $content); }$zip->close();
+    $zip = new \ZipArchive();
+    $zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+    foreach ($files as $name => $content) {
+        $zip->addFromString($name, $content);
+
+    }$zip->close();
 }
 materialZip($root . '/safe.zip', ['notes.txt' => 'Course notes']);
 materialExpect(MaterialFilePolicy::inspect($root . '/safe.zip', 'notes.zip')['mime_type'] === 'application/zip', 'ZIP accepted without extraction');

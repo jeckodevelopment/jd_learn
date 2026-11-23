@@ -37,7 +37,9 @@ final class PathwayModel extends AdminModel
                 ->where('pathway_id = :pathway')->bind(':pathway', $pathwayId, ParameterType::INTEGER)->order('ordering, course_id');
             $item->courses = $this->getDatabase()->setQuery($query, 0, 100)->loadAssocList();
             $imageData = json_decode((string) ($item->params_json ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
-            if (!is_array($imageData)) { throw new \RuntimeException('COM_JLMS_PATHWAY_INVALID'); }
+            if (!is_array($imageData)) {
+                throw new \RuntimeException('COM_JLMS_PATHWAY_INVALID');
+            }
             $item->cover_image = (string) ($imageData['cover_image'] ?? '');
             $item->cover_alt = (string) ($imageData['cover_alt'] ?? '');
             $item->cover_decorative = !empty($imageData['cover_decorative']) ? '1' : '0';
@@ -169,7 +171,9 @@ final class PathwayModel extends AdminModel
             $data['state'] = (int) ($data['state'] ?? $record->state ?? 0);
             // Optional public artwork is stored in existing pathway params; never trust raw params_json.
             $artwork = json_decode((string) ($record->params_json ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
-            if (!is_array($artwork)) { throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID'); }
+            if (!is_array($artwork)) {
+                throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+            }
             // SECDEV-03: a forged array/object must not be silently cast to
             // "Array" or accepted as editorial artwork metadata.
             $imageInput = $data['cover_image'] ?? ($artwork['cover_image'] ?? '');

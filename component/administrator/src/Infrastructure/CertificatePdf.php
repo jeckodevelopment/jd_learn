@@ -72,7 +72,9 @@ final class CertificatePdf
         }
         $xref = strlen($pdf);
         $pdf .= "xref\n0 " . (count($objects) + 1) . "\n0000000000 65535 f \n";
-        for ($i = 1; $i <= count($objects); $i++) { $pdf .= sprintf('%010d 00000 n ', $offsets[$i]) . "\n"; }
+        for ($i = 1; $i <= count($objects); $i++) {
+            $pdf .= sprintf('%010d 00000 n ', $offsets[$i]) . "\n";
+        }
         return $pdf . 'trailer' . "\n<< /Size " . (count($objects) + 1) . " /Root 1 0 R >>\nstartxref\n" . $xref . "\n%%EOF\n";
     }
 
@@ -99,7 +101,9 @@ final class CertificatePdf
 
     private static function color(string $hex): array
     {
-        if (preg_match('/\A#?([a-f0-9]{6})\z/iD', $hex, $matches) !== 1) { $matches[1] = '315A70'; }
+        if (preg_match('/\A#?([a-f0-9]{6})\z/iD', $hex, $matches) !== 1) {
+            $matches[1] = '315A70';
+        }
         return [hexdec(substr($matches[1], 0, 2)) / 255, hexdec(substr($matches[1], 2, 2)) / 255,
             hexdec(substr($matches[1], 4, 2)) / 255];
     }
@@ -117,7 +121,9 @@ final class CertificatePdf
     private static function center(string $value, float $y, float $size, array $color, bool $bold = false, int $wrap = 0): string
     {
         $encoded = self::encode($value);
-        if ($wrap > 0 && strlen($encoded) > $wrap) { $encoded = wordwrap($encoded, $wrap, "\n", true); }
+        if ($wrap > 0 && strlen($encoded) > $wrap) {
+            $encoded = wordwrap($encoded, $wrap, "\n", true);
+        }
         $lines = explode("\n", $encoded);
         $output = '';
         foreach ($lines as $index => $line) {
@@ -133,7 +139,9 @@ final class CertificatePdf
     {
         $value = trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $value) ?? '');
         $encoded = iconv('UTF-8', 'Windows-1252//TRANSLIT', $value);
-        if ($encoded === false) { throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503); }
+        if ($encoded === false) {
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+        }
         return $encoded;
     }
 

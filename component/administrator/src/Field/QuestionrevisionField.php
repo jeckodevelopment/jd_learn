@@ -10,8 +10,9 @@ final class QuestionrevisionField extends ListField
     protected $type = 'Questionrevision';
     protected function getOptions()
     {
-        $app = Factory::getApplication();$options = parent::getOptions();
-        foreach($app->bootComponent('com_jlms')->getQuestionBankService()->revisionOptions($app->getIdentity(), (int)$this->value)as$row){
+        $app = Factory::getApplication();
+        $options = parent::getOptions();
+        foreach ($app->bootComponent('com_jlms')->getQuestionBankService()->revisionOptions($app->getIdentity(), (int)$this->value)as$row) {
             $options[] = HTMLHelper::_('select.option', (string)$row['id'], $row['label']);
         }
         return $options;

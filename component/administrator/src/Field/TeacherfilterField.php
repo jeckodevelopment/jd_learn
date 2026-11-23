@@ -24,7 +24,9 @@ final class TeacherfilterField extends ListField
         $actor = CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         $courseIds = CourseEditorAccess::editableIds($db, $actor);
         $options = [HTMLHelper::_('select.option', '', 'COM_JLMS_TEACHER_FILTER_SELECT')];
-        if (!$courseIds) { return array_merge(parent::getOptions(), $options); }
+        if (!$courseIds) {
+            return array_merge(parent::getOptions(), $options);
+        }
 
         $query = $db->createQuery()->select('DISTINCT teacher_id')->from('#__jlms_course_teachers')
             ->whereIn('course_id', $courseIds)->order('teacher_id');

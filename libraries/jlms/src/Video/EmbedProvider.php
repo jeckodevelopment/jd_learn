@@ -32,7 +32,9 @@ abstract class EmbedProvider extends AbstractFoundationProvider
         $normal = $this->normaliseSource(new SourceInput($source->reference, $source->options));
         $options = ['reference' => $normal->reference, 'locale' => $context->locale, 'autoplay' => false,
             'controls' => true, 'privacy_enhanced' => true];
-        if (isset($normal->options['privacy_hash'])) { $options['privacy_hash'] = $normal->options['privacy_hash']; }
+        if (isset($normal->options['privacy_hash'])) {
+            $options['privacy_hash'] = $normal->options['privacy_hash'];
+        }
         return new PlaybackDescriptor($this->key(), $source->revision, $this->getFrontendAdapterAsset(), $options, $this->getCapabilities($source));
     }
 }

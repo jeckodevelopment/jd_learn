@@ -28,13 +28,15 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
  <?php if ($this->mailScheduler) : ?>
  <div class="small mb-3" role="status">
   <strong><?= Text::_('COM_JLMS_MAIL_SCHEDULER_STATUS') ?>:</strong>
-  <?= $this->escape(Text::_($schedulerStateLabels[$this->mailScheduler['state']] ?? 'COM_JLMS_MAIL_SCHEDULER_STATE_MISSING')) ?>
-  <?php if ($this->mailScheduler['interval'] !== null) : ?>
+        <?= $this->escape(Text::_($schedulerStateLabels[$this->mailScheduler['state']] ?? 'COM_JLMS_MAIL_SCHEDULER_STATE_MISSING')) ?>
+        <?php if ($this->mailScheduler['interval'] !== null) : ?>
    · <?= Text::sprintf('COM_JLMS_MAIL_SCHEDULER_INTERVAL', $this->mailScheduler['interval']) ?>
   <?php endif; ?>
   · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_LAST') ?>:
-  <?= $this->escape((string) ($this->mailScheduler['last_execution'] ?: Text::_('JNEVER'))) ?>
-  <?php if ($this->mailScheduler['duplicates']) : ?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php endif; ?>
+        <?= $this->escape((string) ($this->mailScheduler['last_execution'] ?: Text::_('JNEVER'))) ?>
+        <?php if ($this->mailScheduler['duplicates']) :
+            ?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php
+  endif; ?>
   <a href="<?= Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE') ?></a>
  </div>
  <?php endif; ?>
@@ -79,17 +81,23 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
     <th scope="col"><?= Text::_('COM_JLMS_MAIL_QUEUE_ACTIONS') ?></th>
    </tr></thead>
    <tbody>
-   <?php foreach ($data['rows'] as $row) : ?>
+     <?php foreach ($data['rows'] as $row) : ?>
     <tr id="jlms-mail-queue-<?= (int) $row->id ?>">
      <td><?= (int) $row->id ?></td>
      <td><code><?= $this->escape($row->template_id) ?></code></td>
-     <td><?php if ($row->course_id) : ?><?= $this->escape((string) ($row->course_title ?: '#' . $row->course_id)) ?><?php else : ?>—<?php endif; ?></td>
+     <td><?php if ($row->course_id) :
+            ?><?= $this->escape((string) ($row->course_title ?: '#' . $row->course_id)) ?><?php
+         else :
+                ?>—<?php
+         endif; ?></td>
      <td><?= $row->recipient_masked !== '' ? '<code>' . $this->escape($row->recipient_masked) . '</code>' : '—' ?></td>
      <td><?= Text::_($stateKeys[(string) $row->state] ?? 'COM_JLMS_MAIL_QUEUE_STATE_PENDING') ?>
-      <?php if ((int) $row->is_stale_sending === 1) : ?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php endif; ?>
-      <?php if ($row->diagnostic_key !== null && in_array((string) $row->state, ['retry', 'failed'], true)) : ?>
+            <?php if ((int) $row->is_stale_sending === 1) :
+                ?><div class="text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_STALE') ?></div><?php
+      endif; ?>
+            <?php if ($row->diagnostic_key !== null && in_array((string) $row->state, ['retry', 'failed'], true)) : ?>
        <div class="small text-muted"><?= $this->escape(Text::_($row->diagnostic_key)) ?></div>
-       <?php if ($row->diagnostic_missing_template) : ?>
+                <?php if ($row->diagnostic_missing_template) : ?>
         <div class="small text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_TEMPLATE_NOT_FOUND') ?></div>
        <?php elseif ($row->diagnostic_tokens !== []) : ?>
         <div class="small text-warning"><?= Text::_('COM_JLMS_MAIL_QUEUE_UNRESOLVED_TOKENS') ?>: <?= $this->escape(implode(', ', $row->diagnostic_tokens)) ?></div>
@@ -99,7 +107,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
      <td><?= (int) $row->attempts ?></td>
      <td><?= $this->escape((string) $row->created_at) ?></td>
      <td>
-      <?php if ((int) $row->is_stale_sending === 1) : ?>
+            <?php if ((int) $row->is_stale_sending === 1) : ?>
        <details>
         <summary><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE') ?></summary>
         <div class="card card-body mt-2">
@@ -111,9 +119,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
           <textarea class="form-control mb-2" id="jlms-mail-queue-sent-note-<?= (int) $row->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
           <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-sent-confirm-<?= (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-sent-confirm-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_SENT_CONFIRM') ?></label></div>
           <button class="btn btn-success" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_MARK_SENT') ?></button>
-          <?= HTMLHelper::_('form.token') ?>
+                <?= HTMLHelper::_('form.token') ?>
          </form>
-         <?php if ((int) $row->attempts < 5) : ?>
+                <?php if ((int) $row->attempts < 5) : ?>
          <form method="post" action="<?= Route::_('index.php?option=com_jlms&task=mailqueue.reconcile') ?>">
           <input type="hidden" name="jform[id]" value="<?= (int) $row->id ?>">
           <input type="hidden" name="jform[action]" value="retry">
@@ -121,7 +129,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
           <textarea class="form-control mb-2" id="jlms-mail-queue-retry-note-<?= (int) $row->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
           <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-retry-confirm-<?= (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-retry-confirm-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
           <button class="btn btn-warning" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY') ?></button>
-          <?= Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
+                    <?= Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
          </form>
          <?php endif; ?>
         </div>
@@ -148,7 +156,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
        <div><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILED') ?>: <?= Text::_($actionKeys[(string) $row->reconciliation_action] ?? 'COM_JLMS_MAIL_QUEUE_ACTION_SENT') ?></div>
        <small><?= $this->escape((string) $row->reconciliation_at) ?></small>
        <div><?= $this->escape((string) $row->reconciliation_note) ?></div>
-      <?php else : ?>—<?php endif; ?>
+      <?php else :
+            ?>—<?php
+      endif; ?>
      </td>
     </tr>
    <?php endforeach; ?>
@@ -158,8 +168,12 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
  <?php endif; ?>
  <nav aria-label="<?= $this->escape(Text::_('COM_JLMS_MAIL_QUEUE_PAGINATION')) ?>">
   <ul class="pagination">
-   <?php if ($start > 0) : ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . max(0, $start - $limit) . $filterQuery) ?>"><?= Text::_('JPREV') ?></a></li><?php endif; ?>
-   <?php if ($start + $limit < (int) $data['total']) : ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . ($start + $limit) . $filterQuery) ?>"><?= Text::_('JNEXT') ?></a></li><?php endif; ?>
+   <?php if ($start > 0) :
+        ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . max(0, $start - $limit) . $filterQuery) ?>"><?= Text::_('JPREV') ?></a></li><?php
+   endif; ?>
+   <?php if ($start + $limit < (int) $data['total']) :
+        ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . ($start + $limit) . $filterQuery) ?>"><?= Text::_('JNEXT') ?></a></li><?php
+   endif; ?>
   </ul>
  </nav>
  <details id="jlms-consent-audit" class="mt-4">
@@ -190,7 +204,7 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
       <th scope="col"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_REVOKED') ?></th>
      </tr></thead>
      <tbody>
-     <?php foreach ($this->consentData['rows'] as $consent) : ?>
+        <?php foreach ($this->consentData['rows'] as $consent) : ?>
       <tr>
        <td><?= (int) $consent['user_id'] ?></td>
        <td><?= $this->escape($consent['state']) ?></td>
@@ -208,14 +222,18 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    <p class="alert alert-secondary"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_EMPTY') ?></p>
   <?php endif; ?>
   <?php
-   $consentStart = (int) $this->consentData['start'];
-   $consentLimit = (int) $this->consentData['limit'];
-   $consentBase = 'index.php?option=com_jlms&view=mailqueue&consent_user_id=' . (int) $this->consentData['user_id'] . '&consentstart=';
-  ?>
+    $consentStart = (int) $this->consentData['start'];
+    $consentLimit = (int) $this->consentData['limit'];
+    $consentBase = 'index.php?option=com_jlms&view=mailqueue&consent_user_id=' . (int) $this->consentData['user_id'] . '&consentstart=';
+    ?>
   <nav aria-label="<?= $this->escape(Text::_('COM_JLMS_PRIVACY_CONSENTS_TITLE')) ?>">
    <ul class="pagination">
-    <?php if ($consentStart > 0) : ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . max(0, $consentStart - $consentLimit)) ?>"><?= Text::_('JPREV') ?></a></li><?php endif; ?>
-    <?php if ($consentStart + $consentLimit < (int) $this->consentData['total']) : ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . ($consentStart + $consentLimit)) ?>"><?= Text::_('JNEXT') ?></a></li><?php endif; ?>
+    <?php if ($consentStart > 0) :
+        ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . max(0, $consentStart - $consentLimit)) ?>"><?= Text::_('JPREV') ?></a></li><?php
+    endif; ?>
+    <?php if ($consentStart + $consentLimit < (int) $this->consentData['total']) :
+        ?><li class="page-item"><a class="page-link" href="<?= Route::_($consentBase . ($consentStart + $consentLimit)) ?>"><?= Text::_('JNEXT') ?></a></li><?php
+    endif; ?>
    </ul>
   </nav>
  </details>

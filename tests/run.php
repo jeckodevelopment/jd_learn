@@ -561,7 +561,8 @@ $created = 0;
 $registry->register($descriptor, static function () use (&$created) {
     $created++;
     return new class () extends AbstractFoundationProvider {
-        protected function key(): string { return 'example'; }
+        protected function key(): string { return 'example';
+        }
     };
 });
 expect($created === 0, 'registration is lazy');

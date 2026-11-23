@@ -14,8 +14,13 @@ final class MaterialDownload
         $handle = $file['handle'];
         try {
             $method = strtoupper($app->getInput()->getMethod());
-            if (!in_array($method, ['GET', 'HEAD'], true)) { throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405); }
-            $size = $file['size']; $start = 0; $end = $size - 1; $status = 200;
+            if (!in_array($method, ['GET', 'HEAD'], true)) {
+                throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+            }
+            $size = $file['size'];
+            $start = 0;
+            $end = $size - 1;
+            $status = 200;
             $range = $app->getInput()->server->getString('HTTP_RANGE', '');
             $ifRange = $app->getInput()->server->getString('HTTP_IF_RANGE', '');
             if ($method === 'GET' && $range !== '' && ($ifRange === '' || $ifRange === $file['etag'])) {
@@ -24,10 +29,14 @@ final class MaterialDownload
                     throw new \RuntimeException('COM_JLMS_RANGE_INVALID', 416);
                 }
                 if ($parts[1] === '') {
-                    $suffix = (int) $parts[2]; $start = max(0, $size - $suffix);
-                    if ($suffix < 1) { $start = $size; }
+                    $suffix = (int) $parts[2];
+                    $start = max(0, $size - $suffix);
+                    if ($suffix < 1) {
+                        $start = $size;
+                    }
                 } else {
-                    $start = (int) $parts[1]; $end = $parts[2] === '' ? $size - 1 : min($size - 1, (int) $parts[2]);
+                    $start = (int) $parts[1];
+                    $end = $parts[2] === '' ? $size - 1 : min($size - 1, (int) $parts[2]);
                 }
                 if ($start >= $size || $end < $start) {
                     $app->setHeader('Content-Range', 'bytes */' . $size, true);
@@ -46,15 +55,21 @@ final class MaterialDownload
             $app->setHeader('X-Content-Type-Options', 'nosniff', true);
             $app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
             $app->setHeader('Cache-Control', 'private, no-store', true);
-            if ($status === 206) { $app->setHeader('Content-Range', 'bytes ' . $start . '-' . $end . '/' . $size, true); }
+            if ($status === 206) {
+                $app->setHeader('Content-Range', 'bytes ' . $start . '-' . $end . '/' . $size, true);
+            }
             $app->getSession()->close();
             $app->sendHeaders();
             if ($method !== 'HEAD') {
-                fseek($handle, $start); $remaining = $end - $start + 1;
+                fseek($handle, $start);
+                $remaining = $end - $start + 1;
                 while ($remaining > 0 && !connection_aborted()) {
                     $chunk = fread($handle, min(65536, $remaining));
-                    if ($chunk === false || $chunk === '') { break; }
-                    echo $chunk; $remaining -= strlen($chunk);
+                    if ($chunk === false || $chunk === '') {
+                        break;
+                    }
+                    echo $chunk;
+                    $remaining -= strlen($chunk);
                 }
             }
         } finally {

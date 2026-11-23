@@ -6,7 +6,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 ?>
 <section id="jlms-dashboard" class="jlms-dashboard jlms-learner-overview">
- <?php $currentView = 'dashboard'; require __DIR__ . '/../dashboard/_personal_navigation.php'; ?>
+ <?php $currentView = 'dashboard';
+    require __DIR__ . '/../dashboard/_personal_navigation.php'; ?>
  <header id="jlms-dashboard-header">
   <h1><?= Text::_('COM_JLMS_MY_TRAINING') ?></h1>
   <p><?= Text::_('COM_JLMS_MY_TRAINING_INTRO') ?></p>
@@ -32,11 +33,11 @@ use Joomla\CMS\Router\Route;
   </section>
  </div>
  <?php if ($this->summary['latest'] !== null) : ?>
-  <?php $recent = $this->summary['latest']; ?>
+        <?php $recent = $this->summary['latest']; ?>
   <section id="jlms-dashboard-latest" class="jlms-dashboard-group" aria-labelledby="jlms-dashboard-latest-title">
    <h2 id="jlms-dashboard-latest-title"><?= Text::_('COM_JLMS_MY_TRAINING_CONTINUE') ?></h2>
    <p><?= $this->escape($recent['title'] !== '' ? $recent['title'] : Text::_('COM_JLMS_DASHBOARD_HISTORICAL_COURSE')) ?></p>
-   <?php if ($recent['percent'] !== null) : ?>
+        <?php if ($recent['percent'] !== null) : ?>
     <p><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $recent['percent'] ?>%</p>
    <?php endif; ?>
    <a id="jlms-dashboard-resume" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $recent['id']) ?>"><?= Text::_('COM_JLMS_DASHBOARD_RESUME') ?></a>

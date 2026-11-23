@@ -9,9 +9,14 @@ final class TeachingRules
 {
     public static function decode(string $json): array
     {
-        try { $rules = json_decode($json, true, 32, JSON_THROW_ON_ERROR); }
-        catch (\JsonException) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
-        if (!is_array($rules)) { throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED'); }
+        try {
+            $rules = json_decode($json, true, 32, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+        }
+        if (!is_array($rules)) {
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+        }
         $threshold = $rules['video_threshold_basis_points'] ?? 9000;
         $mode = $rules['mode'] ?? 'learning';
         $completionPolicy = $rules['completion_policy'] ?? '';
@@ -38,7 +43,9 @@ final class TeachingRules
             throw new \DomainException('COM_JLMS_TEACHING_THRESHOLD_INVALID');
         }
         $result = (int)$parts[1] * 100 + (int)str_pad($parts[2] ?? '', 2, '0');
-        if ($result < 1 || $result > 10000) { throw new \DomainException('COM_JLMS_TEACHING_THRESHOLD_INVALID'); }
+        if ($result < 1 || $result > 10000) {
+            throw new \DomainException('COM_JLMS_TEACHING_THRESHOLD_INVALID');
+        }
         return $result;
     }
 

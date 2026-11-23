@@ -30,7 +30,9 @@ final class WorkflowInstaller
         if ($workflow) {
             $draft = self::stageId($db, $workflow, 'COM_JLMS_DRAFT');
             $published = self::stageId($db, $workflow, 'JPUBLISHED');
-            if (!$draft || !$published) { return; }
+            if (!$draft || !$published) {
+                return;
+            }
         } else {
             $existing = $db->createQuery()->select('id')->from($db->quoteName('#__workflows'))
                 ->where('extension = :extension')->bind(':extension', $extension);
@@ -89,7 +91,9 @@ final class WorkflowInstaller
         foreach ($db->setQuery($query)->loadObjectList() as $transition) {
             $options = json_decode((string) $transition->options, true);
             if (is_array($options) && ($options['jlms_action'] ?? null) === $action
-                && (int) ($options['publishing'] ?? -1) === $publishing) { return; }
+                && (int) ($options['publishing'] ?? -1) === $publishing) {
+                return;
+            }
         }
         $save('Transition', ['workflow_id' => $workflow, 'title' => $title, 'published' => 1,
             'from_stage_id' => $from, 'to_stage_id' => $to, 'ordering' => 10,

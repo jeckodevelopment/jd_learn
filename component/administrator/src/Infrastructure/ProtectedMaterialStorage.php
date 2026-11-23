@@ -27,11 +27,15 @@ final class ProtectedMaterialStorage
     private function managedRoot(): string
     {
         $siteRoot = realpath(JPATH_ROOT);
-        if ($siteRoot === false) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        if ($siteRoot === false) {
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
         $path = $siteRoot;
         foreach (['media', 'com_jlms', 'private'] as $part) {
             $path .= DIRECTORY_SEPARATOR . $part;
-            if (is_link($path)) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+            if (is_link($path)) {
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
             if (!is_dir($path) && (!@mkdir($path, $part === 'private' ? 0700 : 0755) && !is_dir($path))) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
@@ -39,7 +43,9 @@ final class ProtectedMaterialStorage
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         }
-        if (!is_writable($path)) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        if (!is_writable($path)) {
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
 
         // Apache/LiteSpeed deny direct HTTP access; encrypted guarded PHP blobs
         // remain confidential even on servers ignoring .htaccess (e.g. Nginx).
@@ -50,7 +56,9 @@ final class ProtectedMaterialStorage
 
     private function guard(string $path, string $content): void
     {
-        if (is_link($path)) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        if (is_link($path)) {
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
         if (!is_file($path)) {
             $handle = @fopen($path, 'xb');
             if ($handle !== false) {
@@ -58,7 +66,9 @@ final class ProtectedMaterialStorage
                     if (@fwrite($handle, $content) !== strlen($content) || !@chmod($path, 0600)) {
                         throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                     }
-                } finally { fclose($handle); }
+                } finally {
+                    fclose($handle);
+                }
             }
         }
         if (!is_file($path) || !hash_equals(hash('sha256', $content), hash_file('sha256', $path))) {
@@ -84,13 +94,17 @@ final class ProtectedMaterialStorage
 
     public function root(): string
     {
-        if ($this->managed()) { return $this->managedRoot(); }
+        if ($this->managed()) {
+            return $this->managedRoot();
+        }
 
         // Existing external private roots remain supported for advanced hosting
         // setups and pre-existing .blob assets; no implicit relocation.
         $configured = trim((string) $this->config()->get('material_storage_root', ''));
         $absolute = self::isAbsolutePath($configured);
-        if (!$absolute) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        if (!$absolute) {
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
         $root = realpath($configured);
         if ($root === false || !is_dir($root) || !is_writable($root) || is_link($configured)) {
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
@@ -108,7 +122,9 @@ final class ProtectedMaterialStorage
     {
         $parse = static function (string $value): int {
             $value = trim($value);
-            $factor = match (strtolower(substr($value, -1))) { 'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1 };
+            $factor = match (strtolower(substr($value, -1))) {
+                'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
+            };
             return (int) ((float) $value * $factor);
         };
         $limits = [MaterialFilePolicy::MAX_BYTES, max(1, min(20, (int) $this->config()->get('material_max_mib', 20))) * 1048576];
@@ -137,12 +153,18 @@ final class ProtectedMaterialStorage
         $input = @fopen($source, 'rb');
         $output = @fopen($path, 'xb');
         if (!$input || !$output) {
-            if (is_resource($input)) { fclose($input); }
-            if (is_resource($output)) { fclose($output); }
+            if (is_resource($input)) {
+                fclose($input);
+            }
+            if (is_resource($output)) {
+                fclose($output);
+            }
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         try {
-            if (!@chmod($path, 0600)) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+            if (!@chmod($path, 0600)) {
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            }
             if ($managed) {
                 // GCM authenticates the bytes and hides private content even if a
                 // reverse proxy misserves a PHP file as a static download.
@@ -166,9 +188,13 @@ final class ProtectedMaterialStorage
                 }
             }
         } catch (\Throwable $error) {
-            fclose($input); fclose($output); @unlink($path); throw $error;
+            fclose($input);
+            fclose($output);
+            @unlink($path);
+            throw $error;
         }
-        fclose($input); fclose($output);
+        fclose($input);
+        fclose($output);
         if (!$managed && !hash_equals($metadata['sha256'], hash_file('sha256', $path))) {
             @unlink($path);
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
@@ -207,7 +233,9 @@ final class ProtectedMaterialStorage
             $payload = self::GUARDED_HEADER . $nonce . $tag . $encrypted;
         }
         $file = @fopen($path, 'xb');
-        if ($file === false) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        if ($file === false) {
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
         try {
             if (!@chmod($path, 0600)) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
@@ -246,11 +274,15 @@ final class ProtectedMaterialStorage
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $path = $this->root() . DIRECTORY_SEPARATOR . $asset->storage_key;
-        if (is_link($path) || !is_file($path)) { throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503); }
+        if (is_link($path) || !is_file($path)) {
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+        }
         $handle = @fopen($path, 'rb');
         $stat = $handle ? fstat($handle) : false;
         if (!$stat || ($stat['mode'] & 0170000) !== 0100000) {
-            if (is_resource($handle)) { fclose($handle); }
+            if (is_resource($handle)) {
+                fclose($handle);
+            }
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         if ($managed) {
@@ -272,12 +304,16 @@ final class ProtectedMaterialStorage
                 }
                 $decoded = fopen('php://temp/maxmemory:1048576', 'w+b');
                 if ($decoded === false || fwrite($decoded, $plain) !== strlen($plain)) {
-                    if (is_resource($decoded)) { fclose($decoded); }
+                    if (is_resource($decoded)) {
+                        fclose($decoded);
+                    }
                     throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                 }
                 rewind($decoded);
                 return $decoded;
-            } finally { fclose($handle); }
+            } finally {
+                fclose($handle);
+            }
         }
         if ($stat['size'] !== (int) $asset->byte_size) {
             fclose($handle);
@@ -300,9 +336,13 @@ final class ProtectedMaterialStorage
             || preg_match('/\\A[a-f0-9]{64}\\.(?:blob|php)\\z/D', (string) ($asset->storage_key ?? '')) !== 1) {
             return false;
         }
-        if (str_ends_with($asset->storage_key, '.php') && !$this->managed()) { return false; }
+        if (str_ends_with($asset->storage_key, '.php') && !$this->managed()) {
+            return false;
+        }
         $path = $this->root() . DIRECTORY_SEPARATOR . $asset->storage_key;
-        if (is_link($path)) { return false; }
+        if (is_link($path)) {
+            return false;
+        }
         return !file_exists($path) || (is_file($path) && @unlink($path));
     }
 
@@ -328,9 +368,13 @@ final class ProtectedMaterialStorage
         $deadline = microtime(true) + 8;
         $write = static function ($handle, string $data) use ($deadline): void {
             while ($data !== '') {
-                if (microtime(true) > $deadline) { throw new \RuntimeException('Scanner unavailable'); }
+                if (microtime(true) > $deadline) {
+                    throw new \RuntimeException('Scanner unavailable');
+                }
                 $n = fwrite($handle, $data);
-                if (!$n) { throw new \RuntimeException('Scanner unavailable'); }
+                if (!$n) {
+                    throw new \RuntimeException('Scanner unavailable');
+                }
                 $data = substr($data, $n);
             }
         };
@@ -338,8 +382,12 @@ final class ProtectedMaterialStorage
             $write($stream, "zINSTREAM\0");
             while (!feof($input)) {
                 $chunk = fread($input, 65536);
-                if ($chunk === false) { throw new \RuntimeException('Scanner unavailable'); }
-                if ($chunk !== '') { $write($stream, pack('N', strlen($chunk)) . $chunk); }
+                if ($chunk === false) {
+                    throw new \RuntimeException('Scanner unavailable');
+                }
+                if ($chunk !== '') {
+                    $write($stream, pack('N', strlen($chunk)) . $chunk);
+                }
             }
             $write($stream, pack('N', 0));
             $reply = stream_get_line($stream, 1024, "\0");
@@ -347,7 +395,8 @@ final class ProtectedMaterialStorage
         } catch (\Throwable $error) {
             $result = 'unavailable';
         } finally {
-            fclose($input); fclose($stream);
+            fclose($input);
+            fclose($stream);
         }
         return ['status' => $result === 'clean' ? 'ready' : ($result === 'infected' ? 'rejected' : 'quarantine'),
             'scan_json' => json_encode(['engine' => 'clamd', 'result' => $result], JSON_THROW_ON_ERROR)];

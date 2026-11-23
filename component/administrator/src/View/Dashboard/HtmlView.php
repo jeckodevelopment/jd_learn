@@ -62,7 +62,7 @@ final class HtmlView extends BaseHtmlView
                 $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_CERTIFICATES', 'fas fa-certificate', 'index.php?option=com_jlms&view=certificates');
             }
             if ($actor->authorise('jlms.audit.view', 'com_jlms')) {
-    $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
+                $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
             }
         }
         if ($actor->authorise('core.manage', 'com_mails') && $actor->authorise('core.edit', 'com_mails')) {
@@ -83,7 +83,9 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder', 'index.php?option=com_jlms&view=categoryreassignment');
         }
-        if ($actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms')) { ToolbarHelper::preferences('com_jlms'); }
+        if ($actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms')) {
+            ToolbarHelper::preferences('com_jlms');
+        }
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         // A non-manager must not inspect plugin readiness or invoke provider
         // registration hooks simply by opening the administrative dashboard.
@@ -91,18 +93,18 @@ final class HtmlView extends BaseHtmlView
         if ($this->canViewProviders) {
         // Diagnostic reads local metadata only: arbitrary video plugin hooks
         // must never run merely to inspect configuration.
-        $extensions = $db->getQuery(true)
+            $extensions = $db->getQuery(true)
             ->select($db->quoteName(['element', 'name', 'enabled', 'params']))
             ->from($db->quoteName('#__extensions'))
             ->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
             ->where($db->quoteName('folder') . ' = ' . $db->quote('jlmsvideo'))
             ->where($db->quoteName('client_id') . ' = 0');
-        $extensionMap = $db->setQuery($extensions)->loadObjectList('element');
-        $componentVideoParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
-        $this->providers = DashboardProviderStatus::inspectLocal($extensionMap, [
+            $extensionMap = $db->setQuery($extensions)->loadObjectList('element');
+            $componentVideoParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+            $this->providers = DashboardProviderStatus::inspectLocal($extensionMap, [
             'video_storage_root' => $componentVideoParams->get('video_storage_root', ''),
             'video_delivery_mode' => $componentVideoParams->get('video_delivery_mode', 'disabled'),
-        ]);
+            ]);
         }
         $this->canManageScheduler = $actor->authorise('core.manage', 'com_scheduler');
         if ($actor->authorise('core.manage', 'com_jlms')) {

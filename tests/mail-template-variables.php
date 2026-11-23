@@ -92,8 +92,12 @@ if ($contextSource === false || $queueSource === false
 }
 foreach (['com_jlms.lesson.available', 'com_jlms.teacher.assigned', 'com_jlms.course.published'] as $templateId) {
     $scopedTags = array_intersect($contextTags, ['COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'CONTACT_EMAIL']);
-    if ($templateId === 'com_jlms.lesson.available') { $scopedTags = array_merge($scopedTags, ['LESSON_DESCRIPTION', 'LESSON_URL']); }
-    if ($templateId === 'com_jlms.teacher.assigned') { $scopedTags[] = 'TEACHER_NAME'; }
+    if ($templateId === 'com_jlms.lesson.available') {
+        $scopedTags = array_merge($scopedTags, ['LESSON_DESCRIPTION', 'LESSON_URL']);
+    }
+    if ($templateId === 'com_jlms.teacher.assigned') {
+        $scopedTags[] = 'TEACHER_NAME';
+    }
     foreach ($scopedTags as $tag) {
         if (!in_array($tag, $definitions[$templateId][2], true)) {
             throw new RuntimeException('Approved context tag missing from ' . $templateId . ': ' . $tag);
@@ -101,7 +105,9 @@ foreach (['com_jlms.lesson.available', 'com_jlms.teacher.assigned', 'com_jlms.co
     }
 }
 $registeredTags = [];
-foreach ($definitions as $definition) { $registeredTags = array_merge($registeredTags, $definition[2]); }
+foreach ($definitions as $definition) {
+    $registeredTags = array_merge($registeredTags, $definition[2]);
+}
 if (in_array('USER_FIRSTNAME', $registeredTags, true)) {
     throw new RuntimeException('USER_FIRSTNAME must not be registered without a reliable name source.');
 }

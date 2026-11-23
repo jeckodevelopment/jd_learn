@@ -12,7 +12,9 @@ final class CourseModel extends ItemModel
     /** Read-only pending approval state of the current learner, never the course roster. */
     public function hasPendingApproval(int $courseId, int $userId): bool
     {
-        if ($courseId < 1 || $userId < 1) { return false; }
+        if ($courseId < 1 || $userId < 1) {
+            return false;
+        }
         $query = $this->getDatabase()->createQuery()
             ->select('1')->from('#__jlms_enrollment_requests AS request')
             ->innerJoin('#__jlms_editions AS edition ON edition.id = request.edition_id')

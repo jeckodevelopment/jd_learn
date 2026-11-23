@@ -82,3 +82,11 @@ Il batch ha corretto **31.062 errori automatici in 152 file**, verificati con li
 Il gate `tests/secdev02-psr12-phpcs.py` prevede **soltanto per il ramo della PR #985** una eccezione rigorosamente limitata: massimo 196 nuovi rilievi, esclusivamente della regola `Generic.Files.LineLength.TooLong`, soltanto se il totale è diminuito di almeno 30.000. Qualsiasi altra regressione continua a bloccare la CI. Sul ramo `main` e su tutte le **PR future** l'eccezione non vale: i 196 rilievi diventano parte visibile della nuova baseline, da smaltire nei lavori successivi. Questa scelta consente una correzione automatica estesa senza introdurre eccezioni permanenti alle regole di non regressione.
 
 **La conformità PSR-12 completa non è raggiunta**, così come la chiusura di SECDEV-02 rimane distinta dalle verifiche sui servizi CORE e dai collaudi manuali.
+
+## Secondo intervento massivo: strutture PHP (PR #986)
+
+Il workflow temporaneo `SECDEV-02 one-shot structural PHPCBF` ha applicato la versione bloccata PHPCBF **4.0.4** sull'intero PHP tracciato, con tre regole: `Generic.Formatting.DisallowMultipleStatements`, `Squiz.WhiteSpace.ScopeClosingBrace` e `Squiz.ControlStructures.ControlSignature`. Il run GitHub Actions **45169186804** ha riportato **7.444 rilievi corretti in 262 file PHP**. La trasformazione separa istruzioni e normalizza la disposizione delle parentesi graffe e delle condizioni; non è una modifica funzionale intenzionale.
+
+Prima del commit, il workflow ha effettuato `php -l` su tutti i file modificati, eliminato esclusivamente whitespace finale prodotto dalla riformattazione e verificato `git diff --check`. Il workflow temporaneo con permessi di scrittura è stato rimosso dalla PR. La conformità effettiva è subordinata all'audit PHPCS completo e alla CI applicativa dell'HEAD della PR; le modifiche che rompono test strutturali devono essere corrette senza cancellare le relative invarianti.
+
+I **7.444 fix** non devono essere confusi con una diminuzione netta identica: la riformattazione può cambiare altri rilievi PSR-12. Il numero totale prima del batch era **18.745**; la CI della PR registra il nuovo totale. SECDEV-02 non è chiuso senza copertura dei criteri CORE-01–23, azzeramento del debito e audit delle API Joomla della patch target. I collaudi manuali sono separati.

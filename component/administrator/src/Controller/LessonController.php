@@ -16,18 +16,26 @@ final class LessonController extends CurriculumController
 
     public function metadata(): void
     {
-        $data = null; $code = 200; $message = '';
+        $data = null;
+        $code = 200;
+        $message = '';
         try {
-            if (strtoupper($this->input->getMethod()) !== 'POST') { throw new \DomainException('COM_JLMS_METHOD_NOT_ALLOWED'); }
-            if (!$this->checkToken('post', false)) { throw new \DomainException('JINVALID_TOKEN'); }
+            if (strtoupper($this->input->getMethod()) !== 'POST') {
+                throw new \DomainException('COM_JLMS_METHOD_NOT_ALLOWED');
+            }
+            if (!$this->checkToken('post', false)) {
+                throw new \DomainException('JINVALID_TOKEN');
+            }
             $input = $this->input->post->get('jform', [], 'array');
             $data = $this->app->bootComponent('com_jlms')->getCurriculumService()->authoringMetadata($this->app->getIdentity(), $input);
             $plans = $this->app->getUserState('com_jlms.video.duration', []);
             $plans = array_filter(is_array($plans) ? $plans : [], static fn($p): bool=>is_array($p) && ($p['expires'] ?? 0) >= time());
-            $plans = array_slice($plans, -7, null, true); $ticket = bin2hex(random_bytes(32));
+            $plans = array_slice($plans, -7, null, true);
+            $ticket = bin2hex(random_bytes(32));
             $plans[$ticket] = ['fingerprint' => $data['fingerprint'],'duration_ms' => $data['duration_ms'],'origin' => $data['origin'],'expires' => time() + 900];
             $this->app->setUserState('com_jlms.video.duration', $plans);
-            unset($data['fingerprint']); $data['ticket'] = $ticket;
+            unset($data['fingerprint']);
+            $data['ticket'] = $ticket;
             $data['adapter_url'] = is_string($data['provider'] ?? null)
                 && preg_match('/\\A[a-z][a-z0-9_]{1,63}\\z/D', $data['provider'])
                 ? \Joomla\CMS\Uri\Uri::root(true) . '/media/plg_jlmsvideo_' . $data['provider'] . '/js/player.js' : null;
@@ -43,15 +51,19 @@ final class LessonController extends CurriculumController
             $message = \Joomla\CMS\Language\Text::_($code === 503 ? 'COM_JLMS_VIDEO_METADATA_FAILED' : ($key === 'SOURCE_INVALID' ? 'COM_JLMS_SOURCE_INVALID' : $key));
             $data = null;
         }
-        $this->app->setHeader('status', (string)$code, true); http_response_code($code);
+        $this->app->setHeader('status', (string)$code, true);
+        http_response_code($code);
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
-        echo new \Joomla\CMS\Response\JsonResponse($data, $message, $code !== 200, true); $this->app->close();
+        echo new \Joomla\CMS\Response\JsonResponse($data, $message, $code !== 200, true);
+        $this->app->close();
     }
 
-    public function move(): void { $this->perform('move', 'lesson'); }
+    public function move(): void { $this->perform('move', 'lesson');
+    }
 
-    public function duplicate(): void { $this->perform('duplicate', 'lesson'); }
+    public function duplicate(): void { $this->perform('duplicate', 'lesson');
+    }
 
     public function save(): void
     {

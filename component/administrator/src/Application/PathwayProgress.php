@@ -22,9 +22,13 @@ final class PathwayProgress
      */
     public static function hasCompleteBasis(array $courses): bool
     {
-        if ($courses === []) { return false; }
+        if ($courses === []) {
+            return false;
+        }
         foreach ($courses as $course) {
-            if (($course['progress_basis'] ?? false) !== true) { return false; }
+            if (($course['progress_basis'] ?? false) !== true) {
+                return false;
+            }
         }
         return true;
     }
@@ -41,7 +45,9 @@ final class PathwayProgress
 
         foreach ($courses as $course) {
             if (($course['progress_applicable'] ?? true) === false) {
-                if (($course['access'] ?? 'unavailable') !== 'available') { $unavailable = true; }
+                if (($course['access'] ?? 'unavailable') !== 'available') {
+                    $unavailable = true;
+                }
                 continue;
             }
             if (($course['access'] ?? 'unavailable') !== 'available') {

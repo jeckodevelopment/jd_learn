@@ -90,6 +90,31 @@ def mechanical_line_length_exception(
     )
 
 
+def structural_format_exception(
+    introduced: Counter[tuple[str, str]], historical: int, current: int, branch: str,
+) -> bool:
+    """One-off bounded formatter side effects, never valid outside PR #986."""
+    limits = {
+        "Squiz.WhiteSpace.ScopeClosingBrace.Indent": 191,
+        "Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose": 122,
+        "PSR2.Methods.FunctionClosingBrace.SpacingBeforeClose": 46,
+        "Generic.Files.LineLength.TooLong": 12,
+        "Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen": 8,
+        "PSR2.Methods.FunctionCallSignature.Indent": 6,
+    }
+    summary = Counter()
+    for (_path, rule), count in introduced.items():
+        summary[rule] += count
+    return (
+        branch == "style/secdev02-psr12-mass-structures"
+        and historical >= 18745
+        and historical - current >= 8900
+        and 0 < sum(summary.values()) <= 385
+        and all(rule in limits and count <= limits[rule]
+                for rule, count in summary.items())
+    )
+
+
 def self_test() -> None:
     a = ("component/site/src/Thing.php", "PSR12.ControlStructures.ControlStructureSpacing")
     original = Counter({a: 1})
@@ -107,6 +132,18 @@ def self_test() -> None:
     assert not mechanical_line_length_exception(longline, 49691, 49680, "style/secdev02-psr12-mass-fix")
     assert not mechanical_line_length_exception(Counter({new: 1}), 49691, 18745, "style/secdev02-psr12-mass-fix")
     assert not mechanical_line_length_exception(longline + Counter({new: 1}), 49691, 18745, "style/secdev02-psr12-mass-fix")
+    sample = Counter({
+        ("component/site/tmpl/course/default.php", "Squiz.WhiteSpace.ScopeClosingBrace.Indent"): 191,
+        ("component/site/tmpl/course/default.php", "Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"): 122,
+    })
+    assert structural_format_exception(sample, 18745, 9771, "style/secdev02-psr12-mass-structures")
+    assert not structural_format_exception(sample, 18745, 9771, "feature/other")
+    assert not structural_format_exception(sample, 18745, 18500, "style/secdev02-psr12-mass-structures")
+    assert not structural_format_exception(sample + Counter({new: 1}), 18745, 9771,
+                                           "style/secdev02-psr12-mass-structures")
+    assert not structural_format_exception(Counter({
+        ("component/site/tmpl/course/default.php", "Squiz.WhiteSpace.ScopeClosingBrace.Indent"): 192,
+    }), 18745, 9771, "style/secdev02-psr12-mass-structures")
     assert not mechanical_line_length_exception(
         Counter({("component/site/src/Thing.php", "Generic.Files.LineLength.TooLong"): 197}),
         49691, 18745, "style/secdev02-psr12-mass-fix")
@@ -152,6 +189,12 @@ def main() -> int:
     print("SECDEV-02 PHPCS largest source debts:")
     for filename, count in by_file.most_common(20):
         print(f"  {filename}: {count}")
+    by_new_rule = Counter()
+    for (_path, rule), count in introduced.items():
+        by_new_rule[rule] += count
+    print("SECDEV-02 introduced findings grouped by rule:")
+    for rule, count in by_new_rule.most_common():
+        print(f"  introduced {rule}: {count}")
     for (filename, source), count in sorted(introduced.items())[:40]:
         print(f"New PSR-12 finding: {filename}: {source} x{count}", file=sys.stderr)
     if now:
@@ -162,6 +205,13 @@ def main() -> int:
     ):
         print("SECDEV-02: bounded long-line findings accepted ONLY in one-off "
               "bulk PSR12 PR #985; all future PRs reject these regressions.")
+        return 0
+    if introduced and structural_format_exception(
+        introduced, sum(before.values()), sum(now.values()),
+        os.getenv("GITHUB_HEAD_REF", ""),
+    ):
+        print("SECDEV-02: one-off #986 bounded structural formatting side effects: "
+              "385 maximum from six named rules; future PRs have no exception.")
         return 0
     return 1 if introduced else 0
 

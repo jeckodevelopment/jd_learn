@@ -323,7 +323,7 @@ for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
     for locale in ('it-IT','en-GB'):
         assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
 assert "foreach ($this->shortcutGroups as $groupKey => $shortcuts)" in dashboard_template
-assert "if (!$shortcuts) { continue; }" in dashboard_template
+assert re.search(r"if \(!\$shortcuts\)\s*\{\s*continue;\s*\}", dashboard_template)
 assert "core.manage', 'com_mails'" in dashboard_view and "core.edit', 'com_mails'" in dashboard_view
 assert "option=com_mails&view=templates&filter[extension]=com_jlms" in dashboard_view
 assert dashboard_view.index("'COM_JLMS_COURSES'") < dashboard_view.index("'COM_JLMS_CERTIFICATES'")
@@ -495,7 +495,7 @@ for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
     for locale in ('it-IT','en-GB'):
         assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
 assert "foreach ($this->shortcutGroups as $groupKey => $shortcuts)" in dashboard_template
-assert "if (!$shortcuts) { continue; }" in dashboard_template
+assert re.search(r"if \(!\$shortcuts\)\s*\{\s*continue;\s*\}", dashboard_template)
 assert "core.manage', 'com_mails'" in dashboard_view and "core.edit', 'com_mails'" in dashboard_view
 assert "option=com_mails&view=templates&filter[extension]=com_jlms" in dashboard_view
 assert dashboard_view.index("'COM_JLMS_COURSES'") < dashboard_view.index("'COM_JLMS_CERTIFICATES'")
@@ -748,7 +748,7 @@ for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
     for locale in ('it-IT','en-GB'):
         assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
 assert "foreach ($this->shortcutGroups as $groupKey => $shortcuts)" in dashboard_template
-assert "if (!$shortcuts) { continue; }" in dashboard_template
+assert re.search(r"if \(!\$shortcuts\)\s*\{\s*continue;\s*\}", dashboard_template)
 assert "core.manage', 'com_mails'" in dashboard_view and "core.edit', 'com_mails'" in dashboard_view
 assert "option=com_mails&view=templates&filter[extension]=com_jlms" in dashboard_view
 assert dashboard_view.index("'COM_JLMS_COURSES'") < dashboard_view.index("'COM_JLMS_CERTIFICATES'")
@@ -894,7 +894,7 @@ for group in ('DIDACTICS','PEOPLE','COMMUNICATION','CONFIGURATION'):
     for locale in ('it-IT','en-GB'):
         assert marker+'="' in (ROOT/f'component/administrator/language/{locale}/com_jlms.ini').read_text()
 assert "foreach ($this->shortcutGroups as $groupKey => $shortcuts)" in dashboard_template
-assert "if (!$shortcuts) { continue; }" in dashboard_template
+assert re.search(r"if \(!\$shortcuts\)\s*\{\s*continue;\s*\}", dashboard_template)
 assert "core.manage', 'com_mails'" in dashboard_view and "core.edit', 'com_mails'" in dashboard_view
 assert "option=com_mails&view=templates&filter[extension]=com_jlms" in dashboard_view
 assert dashboard_view.index("'COM_JLMS_COURSES'") < dashboard_view.index("'COM_JLMS_CERTIFICATES'")

@@ -50,11 +50,16 @@ final class PathwayController extends FormController
             . ($target === 0 ? '&filter_pathway_state=trashed' : ''), false));
     }
 
-    public function trash(): void { $this->transition(-2); }
-    public function restore(): void { $this->transition(0); }
-    public function archive(): void { $this->transition(2); }
-    public function publish(): void { $this->transition(1); }
-    public function unpublish(): void { $this->transition(0); }
+    public function trash(): void { $this->transition(-2);
+    }
+    public function restore(): void { $this->transition(0);
+    }
+    public function archive(): void { $this->transition(2);
+    }
+    public function publish(): void { $this->transition(1);
+    }
+    public function unpublish(): void { $this->transition(0);
+    }
 
     /** Destructive action: exactly one selected, trashed, empty pathway. */
     public function purge(): void

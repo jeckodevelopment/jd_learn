@@ -16,7 +16,9 @@ final class CourseController extends FormController
         if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme', 'programmerules', 'trash', 'restore', 'purge'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
-        if (in_array(strtolower($task), ['programme', 'programmerules'], true)) { $this->registerTask($task, 'save'); }
+        if (in_array(strtolower($task), ['programme', 'programmerules'], true)) {
+            $this->registerTask($task, 'save');
+        }
         return parent::execute($task);
     }
 
@@ -52,8 +54,10 @@ final class CourseController extends FormController
             . ($target === 0 ? '&filter[published]=-2' : ''), false));
     }
 
-    public function trash(): void { $this->lifecycle(-2); }
-    public function restore(): void { $this->lifecycle(0); }
+    public function trash(): void { $this->lifecycle(-2);
+    }
+    public function restore(): void { $this->lifecycle(0);
+    }
 
     /** Destructive operation: exactly one trashed, unreferenced course. */
     public function purge(): void
@@ -73,7 +77,9 @@ final class CourseController extends FormController
             throw new \RuntimeException('COM_JLMS_PURGE_PREVIEW_REQUIRED', 422);
         }
         $expectedRevision = $this->input->post->getInt('expected_revision', 0);
-        if ($expectedRevision < 1) { throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409); }
+        if ($expectedRevision < 1) {
+            throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
+        }
         $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
             ->createModel('Course', 'Administrator', ['ignore_request' => true]);
         if (!$model->purgeEmpty((int) $raw[0], $expectedRevision)) {
@@ -92,7 +98,9 @@ final class CourseController extends FormController
                 $item = $model->getItem($id);
                 $version = $this->app->bootComponent('com_jlms')->getCurriculumService()->createDraft($actor, $id, (int) $item->revision);
                 $url = 'index.php?option=com_jlms&view=curriculum&id=' . $id . '&version_id=' . $version;
-                if (strtolower($this->getTask()) === 'programmerules') { $url .= '&edit_rules=1#jlms-teaching-rules'; }
+                if (strtolower($this->getTask()) === 'programmerules') {
+                    $url .= '&edit_rules=1#jlms-teaching-rules';
+                }
             } catch (\Throwable) {
                 // The editorial save has succeeded; keep it and explain a failed programme preparation.
                 $this->setMessage(\Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_PROGRAMME_SAVED_WARNING'), 'warning');

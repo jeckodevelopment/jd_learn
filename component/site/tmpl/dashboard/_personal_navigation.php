@@ -23,12 +23,12 @@ $enabled = isset($personalViews[$currentView])
     && $matchingMenu
     && (string) $active->getParams()->get('show_personal_navigation', '0') === '1';
 if ($enabled) :
-?>
+    ?>
 <nav id="jlms-personal-navigation" class="jlms-personal-navigation" aria-label="<?= Text::_('COM_JLMS_PERSONAL_NAV_LABEL') ?>">
  <ul class="jlms-personal-navigation__list">
- <?php foreach ($personalViews as $view => $languageKey) : ?>
+    <?php foreach ($personalViews as $view => $languageKey) : ?>
   <li class="jlms-personal-navigation__item">
-   <?php if ($view === $currentView) : ?>
+        <?php if ($view === $currentView) : ?>
     <span class="jlms-personal-navigation__current" aria-current="page"><?= Text::_($languageKey) ?></span>
    <?php else : ?>
     <a class="jlms-personal-navigation__link" href="<?= Route::_('index.php?option=com_jlms&view=' . $view) ?>"><?= Text::_($languageKey) ?></a>

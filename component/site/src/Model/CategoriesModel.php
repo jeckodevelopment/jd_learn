@@ -21,7 +21,9 @@ final class CategoriesModel extends ListModel
     public function getParent(): ?object
     {
         $id = (int) $this->getState('filter.parent_id', 0);
-        if (!$id) { return null; }
+        if (!$id) {
+            return null;
+        }
         $app = Factory::getApplication();
         return $app->bootComponent('com_jlms')->getCatalogService()->category($app->getIdentity(), $app->getLanguage()->getTag(), $id);
     }

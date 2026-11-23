@@ -7,7 +7,9 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\CertificatePdf;
 
 function assertPdf(bool $ok, string $message): void
 {
-    if (!$ok) { throw new RuntimeException($message); }
+    if (!$ok) {
+        throw new RuntimeException($message);
+    }
 }
 
 $identity = [
@@ -36,7 +38,9 @@ try {
     $writers = ['png' => 'imagepng', 'jpg' => 'imagejpeg', 'gif' => 'imagegif',
         'webp' => 'imagewebp', 'avif' => 'imageavif'];
     foreach ($writers as $ext => $writer) {
-        if (!function_exists($writer)) { continue; }
+        if (!function_exists($writer)) {
+            continue;
+        }
         $path = $dir . '/logo.' . $ext;
         assertPdf($writer($im, $path), 'Cannot write ' . $ext);
         $paths[] = $path;
@@ -56,7 +60,9 @@ try {
         assertPdf($e->getMessage() === 'COM_JLMS_CERTIFICATE_RENDER_FAILED', 'Wrong invalid image error');
     }
 } finally {
-    foreach (glob($dir . '/*') ?: [] as $file) { unlink($file); }
+    foreach (glob($dir . '/*') ?: [] as $file) {
+        unlink($file);
+    }
     rmdir($dir);
 }
 echo "Certificate raster logo PDF tests passed\n";

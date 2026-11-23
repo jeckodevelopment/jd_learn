@@ -35,7 +35,9 @@ final class HtmlView extends BaseHtmlView
         $this->selectedScope = (int) $this->item['scope'];
         $selectedLesson = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('lesson_id');
         if ($selectedLesson) {
-            if (!in_array($selectedLesson, array_map(static fn($lesson): int => (int) $lesson->id, $this->item['lessons']), true)) { throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404); }
+            if (!in_array($selectedLesson, array_map(static fn($lesson): int => (int) $lesson->id, $this->item['lessons']), true)) {
+                throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
+            }
             $data['lesson_id'] = $selectedLesson;
         }
         $replaceId = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('replace_id', 0);
@@ -51,7 +53,9 @@ final class HtmlView extends BaseHtmlView
                     $this->form->setFieldAttribute('lesson_id', 'disabled', 'true');
                 }
             }
-            if (!$this->replacement) {throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);}
+            if (!$this->replacement) {
+                throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
+            }
         }
         foreach ($this->item['files']['items'] as $file) {
             $file->publish_up_editor = \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_up, $this->item['schedule_timezone']);

@@ -24,7 +24,9 @@ final class TeacherModel extends ListModel
         $id = $app->getInput()->getInt('id');
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $rows = TeacherProfiles::available($db, $app->getIdentity(), $app->getLanguage()->getTag(), [$id], true);
-        if (!isset($rows[$id])) { throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404); }
+        if (!isset($rows[$id])) {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        }
         $profile = $rows[$id];
         $profile->fields = FieldsHelper::getFields('com_jlms.teacher', $profile, true);
         return $profile;
