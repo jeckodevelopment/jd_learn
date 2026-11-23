@@ -216,3 +216,10 @@ Il gate `tests/secdev02-joomla-api-inventory.php` aggiunge l'inventario delle ch
 Questo è soltanto un sottoinsieme delle chiamate su istanza. Il contatore delle chiamate a oggetti è deliberatamente mantenuto **comprensivo** anche delle chiamate dirette: non viene sottratto il numero di firme uniche dal numero di siti di chiamata, perché sarebbero unità diverse. Il report espone separatamente `verified_direct_instance_method_calls` e `object_method_sites_needing_flow_analysis`; quest'ultimo è un limite superiore di siti non risolti, non la quantità certificata come incompatibile. Restano da analizzare i tipi di variabili, le interfacce e le factory/DI, le chiamate virtuali/magic e le eventuali risoluzioni dinamiche. Non è quindi autorizzata la chiusura del criterio né di SECDEV-02 sulla sola base di questa estensione.
 
 **Comportamenti da testare:** rilevamento di `(new \\Joomla\\CMS\\User\\User())->get('id')`, fallimento della fixture con metodo inesistente, assenza di falsi positivi sui normali oggetti non tipizzati, gate Joomla 6.2.0 e suite CI completa verdi.
+
+
+## Riduzione mirata delle righe HTML nei template PHP (PR di consolidamento)
+
+Sono state riformattate **17 righe di attributi HTML** superiori a 120 caratteri: 14 nel curriculum amministrativo e 3 nella scheda pubblica del corso. Le modifiche si limitano all'inserimento di spazi bianchi **tra attributi HTML**, senza cambiare valori, chiamate PHP, tag, URL, classi CSS o condizioni. Non vengono spezzate stringhe PHP, espressioni o valori degli attributi. La riduzione PSR-12 definitiva deve essere confermata dall'audit PHPCS in CI; il residuo precedente è 2.654 e non viene dichiarato azzerato.
+
+**Comportamenti da testare:** invarianti dei form e token CSRF, controlli di pubblicazione e gestione lezioni nel curriculum, presentazione del corso e consenso nel frontend, parsing HTML/browser, lint PHP, test integrati e PHPCS senza violazioni introdotte. I collaudi manuali dell'utente restano separati; SECDEV-02 continua a richiedere gli altri criteri CORE/API e PSR-12.

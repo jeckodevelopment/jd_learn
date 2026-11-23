@@ -60,7 +60,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     </ul></details><?php
 };
 ?>
-<section id="jlms-admin-curriculum" data-editor-mode="<?= $this->escape($this->editorMode) ?>" data-revision="<?= $version ? (int) $version->revision : 0 ?>">
+<section id="jlms-admin-curriculum"
+    data-editor-mode="<?= $this->escape($this->editorMode) ?>"
+    data-revision="<?= $version ? (int) $version->revision : 0 ?>">
  <header class="jlms-programme-header">
   <h1><?= $this->escape($course->title) ?></h1>
   <p><?= Text::_('COM_JLMS_PROGRAMME_INTRO') ?></p>
@@ -79,7 +81,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             ?><p class="alert alert-info"><?= Text::_('COM_JLMS_WORKING_REVISION_NOTICE') ?></p><?php
      endif; ?>
      <?php if ($this->inReview) :
-            ?><p class="alert alert-info" id="jlms-version-in-review"><?= Text::_('COM_JLMS_VERSION_IN_REVIEW') ?></p><?php
+            ?><p class="alert alert-info"
+    id="jlms-version-in-review"><?= Text::_('COM_JLMS_VERSION_IN_REVIEW') ?></p><?php
      endif; ?>
      <?php if (!$this->editable) :
             ?><p class="alert alert-info"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php
@@ -92,7 +95,10 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <div id="jlms-admin-course-outline" data-sort-kind="module" data-module-id="0">
      <?php foreach ($this->outline['modules'] as $modulePosition => $module) :
             $lessons = $this->lessonsByModule[(int) $module->id] ?? []; ?>
- <section id="jlms-module-<?= (int) $module->id ?>" class="jlms-admin-module" data-item-id="<?= (int) $module->id ?>" data-module-id="<?= (int) $module->id ?>">
+ <section id="jlms-module-<?= (int) $module->id ?>"
+    class="jlms-admin-module"
+    data-item-id="<?= (int) $module->id ?>"
+    data-module-id="<?= (int) $module->id ?>">
   <details<?= (!$modulePosition || $this->selectedModule === (int) $module->id || ($this->editorMode === 'module' && (int) $this->moduleForm->getValue('id') === (int) $module->id)) ? ' open' : '' ?>>
    <summary><span class="jlms-module-title"><?= $this->escape($module->title) ?></span><span class="badge bg-secondary"><?= count($lessons) ?> <?= Text::_('COM_JLMS_PROGRAMME_LESSONS') ?></span></summary>
    <div class="jlms-module-content">
@@ -116,7 +122,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                 endif; ?>
       <div class="jlms-lesson-label">
                 <?php if (($this->editable && ($lesson->kind !== 'quiz' || $this->canQuiz)) || (!$this->editable && $this->canMaterials && $lesson->provider_key === 'html5')) :
-                    ?><a class="jlms-lesson-title" href="<?= $lessonUrl($lesson) ?>"><?= $this->escape($lesson->title) ?></a><?php
+                    ?><a class="jlms-lesson-title"
+    href="<?= $lessonUrl($lesson) ?>"><?= $this->escape($lesson->title) ?></a><?php
                 else :
                     ?><strong><?= $this->escape($lesson->title) ?></strong><?php
                 endif; ?>
@@ -148,7 +155,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             ?><p class="alert alert-info"><?= Text::_('COM_JLMS_CREATE_MODULE_FIRST') ?></p><?php
      endif; ?>
      <?php if ($version && ($this->editable ? $this->editorMode === 'rules' : \Joomla\CMS\Factory::getApplication()->getInput()->getBool('edit_rules'))) : ?>
- <section id="jlms-teaching-rules" class="<?= $this->editable && $this->rulesForm ? 'jlms-focused-editor' : '' ?>" aria-labelledby="jlms-teaching-rules-heading">
+ <section id="jlms-teaching-rules"
+    class="<?= $this->editable && $this->rulesForm ? 'jlms-focused-editor' : '' ?>"
+    aria-labelledby="jlms-teaching-rules-heading">
   <h2 id="jlms-teaching-rules-heading" class="h3"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></h2>
             <?php if ($this->teachingRules === null) :
                 ?><p class="alert alert-warning"><?= Text::_('COM_JLMS_PUBLICATION_UNSUPPORTED') ?></p>
@@ -174,7 +183,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             $isModule = $this->editorMode === 'module';
             $form = $isModule ? $this->moduleForm : $this->lessonForm; ?>
  <section class="jlms-focused-editor" aria-labelledby="jlms-editor-heading">
-  <h2 id="jlms-editor-heading" class="h3"><?= Text::_($isModule ? 'COM_JLMS_MODULE_EDITOR' : 'COM_JLMS_LESSON_EDITOR') ?></h2>
+  <h2 id="jlms-editor-heading"
+    class="h3"><?= Text::_($isModule ? 'COM_JLMS_MODULE_EDITOR' : 'COM_JLMS_LESSON_EDITOR') ?></h2>
             <?php if (!$isModule) :
                 ?><p><?= Text::_('COM_JLMS_MODULE') ?>: <strong><?php foreach ($this->outline['modules'] as $m) {
     if ((int) $m->id === $this->selectedModule) {
@@ -182,7 +192,10 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     }
                 } ?></strong></p><?php
             endif; ?>
-  <form id="jlms-<?= $isModule ? 'module' : 'lesson' ?>-form" class="form-validate" method="post" action="<?= $link('index.php?option=com_jlms') ?>">
+  <form id="jlms-<?= $isModule ? 'module' : 'lesson' ?>-form"
+    class="form-validate"
+    method="post"
+    action="<?= $link('index.php?option=com_jlms') ?>">
             <?= $form->renderFieldset('details') ?>
             <?php if (!$isModule && ($fieldsets = $form->getFieldsets('com_fields'))) : ?>
     <fieldset id="jlms-lesson-fields">
@@ -196,7 +209,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             <?php if (!$isModule) :
                 ?><section id="jlms-video-metadata" hidden aria-label="<?= Text::_('COM_JLMS_VIDEO_DURATION_AUTO') ?>">
     <p role="status" aria-live="polite"></p>
-    <div id="jlms-video-metadata-preview" data-preview data-title="<?= Text::_('COM_JLMS_VIDEO_DURATION_PREVIEW') ?>" class="ratio ratio-16x9" hidden></div>
+    <div id="jlms-video-metadata-preview" data-preview data-title="<?= Text::_('COM_JLMS_VIDEO_DURATION_PREVIEW') ?>"
+    class="ratio ratio-16x9" hidden></div>
     <button class="btn btn-secondary mb-2" type="button"><?= Text::_('COM_JLMS_VIDEO_DURATION_RETRY') ?></button>
    </section>
             <?php endif; ?>
@@ -214,11 +228,17 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     <section id="jlms-video-file-<?= (int) $lesson->id ?>" class="jlms-video-file">
      <p><?= Text::_('COM_JLMS_VIDEO_FILE_NOTICE') ?> <?= $lesson->media_asset_id ? Text::_('COM_JLMS_VIDEO_FILE_ATTACHED') : Text::_('COM_JLMS_VIDEO_FILE_MISSING') ?></p>
             <?php if ($this->editable) : ?>
-     <form id="jlms-video-upload-<?= (int) $lesson->id ?>" method="post" enctype="multipart/form-data" action="<?= $link('index.php?option=com_jlms') ?>">
+     <form id="jlms-video-upload-<?= (int) $lesson->id ?>"
+    method="post"
+    enctype="multipart/form-data"
+    action="<?= $link('index.php?option=com_jlms') ?>">
                 <?php $hidden($scope + ['lesson_id' => $lesson->id]); ?><input type="hidden"
   name="task" value="videofile.upload">
       <label for="jlms-video-input-<?= (int) $lesson->id ?>"><?= Text::_('COM_JLMS_VIDEO_FILE_UPLOAD') ?></label>
-      <input id="jlms-video-input-<?= (int) $lesson->id ?>" name="jform[upload]" type="file" accept="video/mp4,.mp4" required>
+      <input id="jlms-video-input-<?= (int) $lesson->id ?>"
+    name="jform[upload]"
+    type="file"
+    accept="video/mp4,.mp4" required>
                 <?= HTMLHelper::_('form.token') ?><button class="btn btn-secondary"
   type="submit"><?= Text::_('JUPLOAD') ?></button>
      </form>
@@ -242,7 +262,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                 'duplicate' => $kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON', 'delete'=>'JACTION_DELETE', 'reorder'=>'COM_JLMS_PROGRAMME_REORDER', default=>'COM_JLMS_PROGRAMME_MOVE_LESSON'
             };
     ?>
- <section class="jlms-focused-editor" id="jlms-item-action"><h2 class="h3"><?= Text::_($heading) ?>: <?= $this->escape($item->title) ?></h2>
+ <section class="jlms-focused-editor"
+    id="jlms-item-action"><h2 class="h3"><?= Text::_($heading) ?>: <?= $this->escape($item->title) ?></h2>
  <form method="post" action="<?= $link('index.php?option=com_jlms') ?>">
             <?php $hidden($scope + ['id' => $item->id,'revision' => $item->revision]); ?><input type="hidden"
   name="task" value="<?= $kind . '.' . $operation ?>">
@@ -281,16 +302,19 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  <section id="jlms-publication-readiness" aria-labelledby="jlms-publication-readiness-heading">
   <h3 id="jlms-publication-readiness-heading" class="h5"><?= Text::_('COM_JLMS_READINESS_HEADING') ?></h3>
             <?php if ($this->publicationReadiness['blockers']) : ?>
-   <div class="alert alert-danger" id="jlms-publication-blockers"><h4 class="h6"><?= Text::_('COM_JLMS_READINESS_BLOCKERS') ?></h4><ul>
+   <div class="alert alert-danger"
+    id="jlms-publication-blockers"><h4 class="h6"><?= Text::_('COM_JLMS_READINESS_BLOCKERS') ?></h4><ul>
                 <?php foreach ($this->publicationReadiness['blockers'] as $message) :
                     ?><li data-readiness-code="<?= $this->escape($message) ?>"><?= Text::_($message) ?></li><?php
                 endforeach; ?>
    </ul></div>
             <?php else :
-                ?><p class="alert alert-success" id="jlms-publication-blockers"><?= Text::_('COM_JLMS_READINESS_STRUCTURE_OK') ?></p><?php
+                ?><p class="alert alert-success"
+    id="jlms-publication-blockers"><?= Text::_('COM_JLMS_READINESS_STRUCTURE_OK') ?></p><?php
             endif; ?>
             <?php if ($this->publicationReadiness['warnings']) : ?>
-   <div class="alert alert-warning" id="jlms-publication-warnings"><h4 class="h6"><?= Text::_('COM_JLMS_READINESS_WARNINGS') ?></h4><ul>
+   <div class="alert alert-warning"
+    id="jlms-publication-warnings"><h4 class="h6"><?= Text::_('COM_JLMS_READINESS_WARNINGS') ?></h4><ul>
                 <?php foreach ($this->publicationReadiness['warnings'] as $message) :
                     ?><li data-readiness-code="<?= $this->escape($message) ?>"><?= Text::_($message) ?></li><?php
                 endforeach; ?>

@@ -74,7 +74,9 @@ foreach ([1, 2, 3] as $position) {
    <input type="hidden" name="task" value="enrollment.start">
    <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
-   <label class="jlms-course-consent"><input type="checkbox" name="jform[course_announcement_consent]" value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
+   <label class="jlms-course-consent"><input type="checkbox"
+    name="jform[course_announcement_consent]"
+    value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
                                                                   <?php // COM_JLMS_START_RESUME was the former shared label; new enrollment uses a distinct CTA. ?>
                                                                   <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
   </form>
@@ -102,7 +104,8 @@ foreach ([1, 2, 3] as $position) {
                 ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php
             endif; ?>
  <p><?= nl2br($this->escape($teacher['bio'])) ?></p><?php if ($teacher['website'] !== '') :
-        ?><a href="<?= $this->escape($teacher['website']) ?>" rel="noopener noreferrer"><?= Text::_('COM_JLMS_TEACHER_WEBSITE') ?></a><?php
+        ?><a href="<?= $this->escape($teacher['website']) ?>"
+    rel="noopener noreferrer"><?= Text::_('COM_JLMS_TEACHER_WEBSITE') ?></a><?php
     endif; ?></article><?php
         endforeach; ?></section><?php
  endif; ?>
@@ -171,5 +174,6 @@ endif; ?>
  </div>
 
  </div>
- <a id="jlms-course-back" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
+ <a id="jlms-course-back"
+    href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
 </article>
