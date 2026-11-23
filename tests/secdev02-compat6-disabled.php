@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * SECDEV-02: fail if Joomla 6 integration tests accidentally enable compat6.
  *
@@ -9,6 +7,8 @@ declare(strict_types=1);
  * integration tests between these checkpoints exercise Joomla APIs with the
  * backwards-compatibility plugin disabled.
  */
+
+declare(strict_types=1);
 
 $compat6Disabled = static function (array $rows): bool {
     if (count($rows) !== 1) {
