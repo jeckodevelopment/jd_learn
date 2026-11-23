@@ -17,6 +17,7 @@ function secdev02JoomlaTokenInventory(string $source): array
     $aliases = [];
     $classes = [];
     $methods = [];
+    $namespaceBases = [];
     $objectCalls = 0;
     $dynamicStaticCalls = 0;
     $unresolvedImports = [];
@@ -131,6 +132,13 @@ function secdev02JoomlaTokenInventory(string $source): array
 
         if ($kind === T_STRING) {
             $className = $aliases[strtolower($name)] ?? '';
+        } elseif ($kind === T_NAME_QUALIFIED && !str_starts_with($className, 'Joomla\\')) {
+            $parts = explode('\\', $className, 2);
+            $base = $aliases[strtolower($parts[0])] ?? null;
+            if ($base !== null && isset($parts[1])) {
+                $className = $base . '\\' . $parts[1];
+                $namespaceBases[$base] = true;
+            }
         }
 
         if (!str_starts_with($className, 'Joomla\\')) {
@@ -187,6 +195,11 @@ function secdev02JoomlaTokenInventory(string $source): array
         if (($tokens[$k] ?? null) === '(') {
             $methods[$className . '::' . $method] = [$className, $method];
         }
+    }
+
+    // An import used as a namespace prefix is not itself a class.
+    foreach (array_keys($namespaceBases) as $base) {
+        unset($classes[$base]);
     }
 
     return [
