@@ -188,3 +188,8 @@ Baseline su main prima del batch **2.962**; residuo **atteso 2.691**, da conferm
 ## Nomi importati nel provider DI Joomla (PR #1001)
 
 Nel file `component/administrator/services/provider.php` sono stati normalizzati 33 riferimenti a classi pienamente qualificate attraverso import `use` espliciti, lasciando invariati identificativi dei servizi, argomenti, factory e wiring DI. Il conteggio preliminare delle righe oltre 120 caratteri passa da **48 a 28** nel file, senza rimuovere soppressioni PHPCS né modificare il core Joomla. Il risultato PHPCS integrale e le prove runtime devono essere verificati in CI della PR; non va scambiato con l'accettazione completa di SECDEV-02. I criteri CORE-01–23 e l'audit API Joomla restano da completare laddove non verificati; collaudi manuali separati.
+
+
+## Template curriculum: formattazione conservativa PHP/HTML (PR #1002)
+
+Nel template `component/administrator/tmpl/curriculum/default.php` sono state distribuite su più righe le liste di attributi HTML di 27 righe, inserendo solo spazi bianchi prima degli attributi fuori dalle espressioni PHP. La lunghezza eccessiva rilevata con criterio preliminare >120 caratteri passa da **82 a 65 righe**, senza modificare nomi, valori, stringhe di traduzione, attributi, URL o struttura degli elementi. È necessario confermare lint, PHPCS per-regola e test del curriculum via CI prima del merge. Il numero PSR-12 definitivo dipende dalla verifica PHPCS sull'intero repository. SECDEV-02 e verifiche CORE-01–23/API Joomla restano aperti; collaudo manuale separato.
