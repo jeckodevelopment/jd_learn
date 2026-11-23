@@ -151,8 +151,16 @@ $secP1BeforeHistory = $count();
 $secP1BeforeEnrollment = $stable($enrollment);
 try {
     $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $userId)->execute();
-    stateDenied(fn() => $service->editor($actor, $course, $enrollment, 'suspended'), 403, 'blocked stale actor cannot read state editor');
-    stateDenied(fn() => $service->apply($actor, ...$secP1Command), 403, 'blocked stale actor cannot apply state transition');
+    stateDenied(
+        fn() => $service->editor($actor, $course, $enrollment, 'suspended'),
+        403,
+        'blocked stale actor cannot read state editor'
+    );
+    stateDenied(
+        fn() => $service->apply($actor, ...$secP1Command),
+        403,
+        'blocked stale actor cannot apply state transition'
+    );
     stateExpect(
         $count() === $secP1BeforeHistory && $stable($enrollment) === $secP1BeforeEnrollment,
         'blocked state operations preserve history and enrollment'
@@ -180,20 +188,48 @@ if (($argv[2] ?? '') === 'cancellation') {
     $cancelPlayer = $seedPlayerSession($cancelEnrollment, (int)$f['lesson']);
     stateExpect($playerSessionExists($cancelPlayer), 'cancelled fixture starts with a persistent player session');
     $cancelPreview = $service->editor($actor, $course, $cancelEnrollment, 'cancelled');
-    stateExpect($cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled', 'valid cancellation preview');
+    stateExpect(
+        $cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled',
+        'valid cancellation preview'
+    );
     $cancelCommand = stateCommand($cancelPreview);
     $cancelRecord = $service->apply($actor, ...$cancelCommand);
-    stateExpect($service->apply($actor, ...$cancelCommand) === $cancelRecord, 'replayed cancellation does not duplicate event');
-    stateExpect((string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled', 'cancellation persisted');
-    stateExpect($cancelBefore === $stable($cancelEnrollment), 'cancellation preserves prior learning and assignment data');
-    stateExpect(!$playerSessionExists($cancelPlayer), 'cancellation invalidates player session without erasing learning history');
-    stateDenied(fn()=>$learning->resumeTarget($cancelUser, 'en-GB', $cancelEnrollment), 403, 'cancelled enrollment denies classroom');
-    stateExpect($service->editor($actor, $course, $cancelEnrollment, 'active')['impact']['blocked'] !== null, 'cancelled enrollment cannot be reactivated');
-    stateExpect($service->editor($actor, $course, $cancelEnrollment, 'cancelled')['impact']['blocked'] !== null, 'cancelled enrollment cannot be cancelled twice');
+    stateExpect(
+        $service->apply($actor, ...$cancelCommand) === $cancelRecord,
+        'replayed cancellation does not duplicate event'
+    );
+    stateExpect(
+        (string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled',
+        'cancellation persisted'
+    );
+    stateExpect(
+        $cancelBefore === $stable($cancelEnrollment),
+        'cancellation preserves prior learning and assignment data'
+    );
+    stateExpect(
+        !$playerSessionExists($cancelPlayer),
+        'cancellation invalidates player session without erasing learning history'
+    );
+    stateDenied(
+        fn()=>$learning->resumeTarget($cancelUser, 'en-GB', $cancelEnrollment),
+        403,
+        'cancelled enrollment denies classroom'
+    );
+    stateExpect(
+        $service->editor($actor, $course, $cancelEnrollment, 'active')['impact']['blocked'] !== null,
+        'cancelled enrollment cannot be reactivated'
+    );
+    stateExpect(
+        $service->editor($actor, $course, $cancelEnrollment, 'cancelled')['impact']['blocked'] !== null,
+        'cancelled enrollment cannot be cancelled twice'
+    );
     $cancelQ = $db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue')
     ->where("template_id = 'com_jlms.enrollment.cancelled'")
     ->where('event_key = ' . $db->quote(hash('sha256', 'enrollment.state:' . $cancelRecord)));
-    stateExpect((int) $db->setQuery($cancelQ)->loadResult() === 1, 'cancellation queues exactly one learner notification');
+    stateExpect(
+        (int) $db->setQuery($cancelQ)->loadResult() === 1,
+        'cancellation queues exactly one learner notification'
+    );
     $completionPreview = $service->editor($actor, $course, (int)$f['completed'], 'cancelled');
     stateExpect($completionPreview['impact']['blocked'] !== null, 'completed enrollment cannot be cancelled');
 
@@ -208,10 +244,20 @@ $i = $service->editor($manager, $course, $enrollment, 'suspended');
 $command = stateCommand($i);
 $event = $service->apply($manager, ...$command);
 stateExpect(!$playerSessionExists($suspendedPlayer), 'suspension invalidates persistent player session');
-stateExpect($service->editor($actor, $course, $enrollment)['impact']['previous_status'] === 'suspended', 'authorized suspension persisted');
-stateExpect($service->apply($manager, ...$command) === $event && $count() === 1, 'same transport retry creates one event');
+stateExpect(
+    $service->editor($actor, $course, $enrollment)['impact']['previous_status'] === 'suspended',
+    'authorized suspension persisted'
+);
+stateExpect(
+    $service->apply($manager, ...$command) === $event && $count() === 1,
+    'same transport retry creates one event'
+);
 stateDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $enrollment), 403, 'suspension denies classroom resume');
-stateDenied(fn()=>$learning->complete($owner, 'en-GB', $enrollment, $f['lesson'], bin2hex(random_bytes(16))), 403, 'suspension denies new learning writes');
+stateDenied(
+    fn()=>$learning->complete($owner, 'en-GB', $enrollment, $f['lesson'], bin2hex(random_bytes(16))),
+    403,
+    'suspension denies new learning writes'
+);
 // Reactivation of an individual enrollment cannot pre-arm an archived or suspended course.
 $courseBefore = $db->setQuery('SELECT state,delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$course)->loadAssoc();
 $historyBefore = $count();
@@ -219,8 +265,15 @@ try {
     foreach ([['state' => 2,'delivery_enabled' => 0],['state' => 0,'delivery_enabled' => 1],['state' => 1,'delivery_enabled' => 0],['state' => -2,'delivery_enabled' => 0]] as $blockedCourse) {
         $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$blockedCourse['state'] . ', delivery_enabled=' . (int)$blockedCourse['delivery_enabled'] . ' WHERE id=' . (int)$course)->execute();
         $blocked = $service->editor($actor, $course, $enrollment, 'active');
-        stateExpect($blocked['impact']['blocked'] !== null, 'individual reactivation gated by course state and delivery');
-        stateDenied(fn()=>$service->apply($actor, ...stateCommand($blocked)), 409, 'direct reactivation rejected for inactive course');
+        stateExpect(
+            $blocked['impact']['blocked'] !== null,
+            'individual reactivation gated by course state and delivery'
+        );
+        stateDenied(
+            fn()=>$service->apply($actor, ...stateCommand($blocked)),
+            409,
+            'direct reactivation rejected for inactive course'
+        );
         stateExpect($count() === $historyBefore, 'blocked individual reactivation does not create history');
     }
 } finally {
@@ -235,10 +288,19 @@ $broken = new \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateServ
     throw new \RuntimeException('COM_JLMS_ENROLLMENT_STATE_AUDIT_FAILED', 503);
 });
 stateDenied(fn()=>$broken->apply($actor, ...$reactivate), 503, 'audit outage is a failed operation');
-stateExpect($count() === 1 && $service->editor($actor, $course, $enrollment)['impact']['previous_status'] === 'suspended', 'audit failure rolls back state and event');
+stateExpect(
+    $count() === 1 && $service->editor($actor, $course, $enrollment)['impact']['previous_status'] === 'suspended',
+    'audit failure rolls back state and event'
+);
 $service->apply($actor, ...$reactivate);
-stateExpect($learning->resumeTarget($owner, 'en-GB', $enrollment)['lesson_id'] === $f['lesson'], 'reactivation resumes same learning history');
-stateExpect($service->apply($manager, ...$command) === $event && $service->editor($actor, $course, $enrollment)['impact']['previous_status'] === 'active', 'late replay does not reapply historical suspension');
+stateExpect(
+    $learning->resumeTarget($owner, 'en-GB', $enrollment)['lesson_id'] === $f['lesson'],
+    'reactivation resumes same learning history'
+);
+stateExpect(
+    $service->apply($manager, ...$command) === $event && $service->editor($actor, $course, $enrollment)['impact']['previous_status'] === 'active',
+    'late replay does not reapply historical suspension'
+);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$manager->id, (int)$rf['group']);
 try {
     stateDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked rights deny even historical replay');
@@ -246,8 +308,16 @@ try {
     \Joomla\CMS\User\UserHelper::addUserToGroup((int)$manager->id, (int)$rf['group']);
 }
 stateDenied(fn()=>$service->editor($owner, $course, $enrollment), 403, 'student cannot manage pedagogical state');
-stateDenied(fn()=>$service->editor(new \Joomla\CMS\User\User(), $course, $enrollment), 401, 'anonymous state access denied');
-stateDenied(fn()=>$service->editor($manager, (int)$rf['other_course'], $f['italian']), 403, 'course-specific management scope');
+stateDenied(
+    fn()=>$service->editor(new \Joomla\CMS\User\User(), $course, $enrollment),
+    401,
+    'anonymous state access denied'
+);
+stateDenied(
+    fn()=>$service->editor($manager, (int)$rf['other_course'], $f['italian']),
+    403,
+    'course-specific management scope'
+);
 stateDenied(fn()=>$service->editor($actor, $course, $f['italian']), 404, 'foreign enrollment cannot cross course');
 $i = $service->editor($actor, $course, $enrollment, 'suspended');
 $base = stateCommand($i);
@@ -262,12 +332,20 @@ $legacyBefore = $stable((int)$f['completed']);
 $service->apply($actor, ...stateCommand($legacy));
 $service->apply($actor, ...stateCommand($service->editor($actor, $course, (int)$f['completed'], 'active')));
 stateExpect($stable((int)$f['completed']) === $legacyBefore, 'completed history and expired window preserved');
-stateDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', (int)$f['completed']), 403, 'reactivation does not extend expired window');
+stateDenied(
+    fn()=>$learning->resumeTarget($owner, 'en-GB', (int)$f['completed']),
+    403,
+    'reactivation does not extend expired window'
+);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$owner->id, (int)$f['group']);
 try {
     $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'suspended')));
     $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'active')));
-    stateDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $enrollment), 403, 'reactivation does not grant missing entitlement');
+    stateDenied(
+        fn()=>$learning->resumeTarget($owner, 'en-GB', $enrollment),
+        403,
+        'reactivation does not grant missing entitlement'
+    );
 } finally {
     \Joomla\CMS\User\UserHelper::addUserToGroup((int)$owner->id, (int)$f['group']);
 }
@@ -310,15 +388,24 @@ foreach ([false,true] as $different) {
         $results[] = $out;
     }
     stateExpect($count() === $startCount + 1, 'parallel requests write one state transition');
-    stateExpect($different ? (count(array_filter($results, static fn($v)=>$v === 'conflict')) === 1) : ($results[0] === $results[1] && str_starts_with($results[0], 'ok:')), 'parallel CAS and retry outcomes');
+    stateExpect(
+        $different ? (count(array_filter($results, static fn($v)=>$v === 'conflict')) === 1) : ($results[0] === $results[1] && str_starts_with($results[0], 'ok:')),
+        'parallel CAS and retry outcomes'
+    );
     $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'active')));
 }
 stateExpect($before === $stable($enrollment), 'all state changes preserve learning history and assignment');
-stateExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'state changes never assign native groups');
+stateExpect(
+    $groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(),
+    'state changes never assign native groups'
+);
 $log = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
     . "extension='com_jlms.enrollmentstate' AND item_id=") . $event)->loadResult();
 $message = json_decode($log, true, 16, JSON_THROW_ON_ERROR);
-stateExpect($message['previous_status'] === 'active' && $message['target_status'] === 'suspended' && $message['reason_reference'] === $event && !str_contains($log, 'PRIVATE_STATE_REASON'), 'native audit uses minimal before/after and reason reference');
+stateExpect(
+    $message['previous_status'] === 'active' && $message['target_status'] === 'suspended' && $message['reason_reference'] === $event && !str_contains($log, 'PRIVATE_STATE_REASON'),
+    'native audit uses minimal before/after and reason reference'
+);
 // A fresh learner/quiz isolates runtime suspension checks from historical fixtures.
 $qf = json_decode(file_get_contents(dirname($root) . '/quiz-attempts-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $user = new \Joomla\CMS\User\User();
@@ -344,9 +431,21 @@ $quizCourseBefore = $db->setQuery('SELECT state, admissions_open, delivery_enabl
 try {
     foreach ([0, 2, -2] as $inactiveQuizState) {
         $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$inactiveQuizState . ', admissions_open=1, delivery_enabled=1 WHERE id=' . (int)$qf['course_id'])->execute();
-        stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 1, stateKey(), $answers, false), 404, 'LCM-01 inactive course denies quiz replay');
-        stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, false), 404, 'LCM-01 inactive course denies quiz save');
-        stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, true), 404, 'LCM-01 inactive course denies quiz submit');
+        stateDenied(
+            fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 1, stateKey(), $answers, false),
+            404,
+            'LCM-01 inactive course denies quiz replay'
+        );
+        stateDenied(
+            fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, false),
+            404,
+            'LCM-01 inactive course denies quiz save'
+        );
+        stateDenied(
+            fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, true),
+            404,
+            'LCM-01 inactive course denies quiz submit'
+        );
         stateExpect(
             $quizBefore === $db->setQuery(('SELECT status,revision,rules_snapshot_json,deadline_at FROM '
                 . '#__jlms_attempts WHERE id=') . $aid)->loadAssoc()
@@ -361,10 +460,22 @@ try {
 }
 $qi = $service->editor($actor, $qf['course_id'], $qe, 'suspended');
 stateExpect($qi['impact']['open_attempts'] === 1, 'preview reports an open quiz');
-stateDenied(fn()=>$service->apply($actor, ...stateCommand($service->editor($actor, $qf['course_id'], $qe, 'cancelled'))), 409, 'cannot cancel enrollment during an open quiz');
+stateDenied(
+    fn()=>$service->apply($actor, ...stateCommand($service->editor($actor, $qf['course_id'], $qe, 'cancelled'))),
+    409,
+    'cannot cancel enrollment during an open quiz'
+);
 $service->apply($actor, ...stateCommand($qi));
-stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, false), 403, 'suspension denies quiz save');
-stateDenied(fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, true), 403, 'suspension denies quiz submit');
+stateDenied(
+    fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, false),
+    403,
+    'suspension denies quiz save'
+);
+stateDenied(
+    fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 2, stateKey(), $answers, true),
+    403,
+    'suspension denies quiz submit'
+);
 $service->apply($actor, ...stateCommand($service->editor($actor, $qf['course_id'], $qe, 'active')));
 stateExpect($quizBefore === $db->setQuery(('SELECT status,revision,rules_snapshot_json,deadline_at FROM '
     . '#__jlms_attempts WHERE id=') . $aid)->loadAssoc(), 'reactivation never resets quiz status revision snapshot or deadline');
@@ -390,11 +501,27 @@ $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode='approval' WHERE id=" 
 try {
     $requestId = $learning->requestApproval($requestUser, 'en-GB', $course, stateKey());
     stateExpect($requestId > 0, 'approval request persisted');
-    stateExpect($requestId === $learning->requestApproval($requestUser, 'en-GB', $course, stateKey()), 'request replay reuses pending record');
-    stateExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=' . $requestId . " AND status='pending'")->loadResult() === 1, 'request remains pending');
-    stateExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$requestUser->id . ' AND course_id=' . $course)->loadResult() === 0, 'request grants no learning access');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.requested:' . $requestId) . "'")->loadResult() === 1, 'request notifies once');
-    stateDenied(fn()=>$learning->start($requestUser, 'en-GB', $course, stateKey()), 409, 'approval is not bypassed by automatic start');
+    stateExpect(
+        $requestId === $learning->requestApproval($requestUser, 'en-GB', $course, stateKey()),
+        'request replay reuses pending record'
+    );
+    stateExpect(
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=' . $requestId . " AND status='pending'")->loadResult() === 1,
+        'request remains pending'
+    );
+    stateExpect(
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$requestUser->id . ' AND course_id=' . $course)->loadResult() === 0,
+        'request grants no learning access'
+    );
+    stateExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.requested:' . $requestId) . "'")->loadResult() === 1,
+        'request notifies once'
+    );
+    stateDenied(
+        fn()=>$learning->start($requestUser, 'en-GB', $course, stateKey()),
+        409,
+        'approval is not bypassed by automatic start'
+    );
 } finally {
     $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode=" . $db->quote($modeBefore) . " WHERE id=" . $course)->execute();
 }
@@ -403,15 +530,26 @@ $approval = $component->getEnrollmentApprovalService();
 $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode='approval' WHERE id=" . $course)->execute();
 try {
     $pending = $approval->pending($actor, $course);
-    stateExpect(count(array_filter($pending, fn($r)=>(int)$r->id === $requestId)) === 1, 'course manager sees pending request');
+    stateExpect(
+        count(array_filter($pending, fn($r)=>(int)$r->id === $requestId)) === 1,
+        'course manager sees pending request'
+    );
     // SEC-P1 batch: neither pending-request metadata nor decision mutations
     // remain accessible after an account block in another session.
     $approvalBlockBefore = (int)$db->setQuery('SELECT block FROM #__users WHERE id=' . $userId)->loadResult();
     $approvalQueueBefore = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_mail_queue')->loadResult();
     try {
         $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $userId)->execute();
-        stateDenied(fn()=>$approval->pending($actor, $course), 403, 'blocked stale operator cannot read approval requests');
-        stateDenied(fn()=>$approval->decide($actor, $course, $requestId, 1, 'approved', 'Blocked request'), 403, 'blocked stale operator cannot approve enrollment');
+        stateDenied(
+            fn()=>$approval->pending($actor, $course),
+            403,
+            'blocked stale operator cannot read approval requests'
+        );
+        stateDenied(
+            fn()=>$approval->decide($actor, $course, $requestId, 1, 'approved', 'Blocked request'),
+            403,
+            'blocked stale operator cannot approve enrollment'
+        );
         stateExpect(
             (string)$db->setQuery('SELECT status FROM #__jlms_enrollment_requests WHERE id=' . $requestId)->loadResult() === 'pending',
             'blocked approval leaves request pending'
@@ -427,13 +565,30 @@ try {
         count(array_filter($approval->pending($actor, $course), fn($r)=>(int)$r->id === $requestId)) === 1,
         'approval list restored after account unblock'
     );
-    stateDenied(fn()=>$approval->decide($requestUser, $course, $requestId, 1, 'approved', ''), 403, 'learner cannot self-approve');
+    stateDenied(
+        fn()=>$approval->decide($requestUser, $course, $requestId, 1, 'approved', ''),
+        403,
+        'learner cannot self-approve'
+    );
     $enrollmentApproved = $approval->decide($actor, $course, $requestId, 1, 'approved', 'CI-only approval reason');
     stateExpect($enrollmentApproved > 0, 'approved request creates enrollment');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=" . $enrollmentApproved . " AND status='active' AND origin='approval'")->loadResult() === 1, 'approved admission active exactly once');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" . $requestId . " AND status='approved' AND revision=2")->loadResult() === 1, 'approved state persisted');
-    stateDenied(fn()=>$approval->decide($actor, $course, $requestId, 1, 'approved', ''), 409, 'repeat decision must conflict');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.decision:' . $requestId) . "'")->loadResult() === 1, 'single approval notification');
+    stateExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=" . $enrollmentApproved . " AND status='active' AND origin='approval'")->loadResult() === 1,
+        'approved admission active exactly once'
+    );
+    stateExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" . $requestId . " AND status='approved' AND revision=2")->loadResult() === 1,
+        'approved state persisted'
+    );
+    stateDenied(
+        fn()=>$approval->decide($actor, $course, $requestId, 1, 'approved', ''),
+        409,
+        'repeat decision must conflict'
+    );
+    stateExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.decision:' . $requestId) . "'")->loadResult() === 1,
+        'single approval notification'
+    );
 
     $rejectedUser = new \Joomla\CMS\User\User();
     $rejectedData = ['name' => 'CI Rejected Applicant','username' => 'cimailfrejected','email' => 'cimailfrejected@example.invalid',
@@ -444,10 +599,22 @@ try {
     }
     $rejectedUser = new \Joomla\CMS\User\User((int)$rejectedUser->id);
     $rejectRequestId = $learning->requestApproval($rejectedUser, 'en-GB', $course, stateKey());
-    stateExpect($approval->decide($actor, $course, $rejectRequestId, 1, 'rejected', 'CI-only private reason') === 0, 'rejected request has no enrollment ID');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=" . (int)$rejectedUser->id . " AND course_id=" . $course)->loadResult() === 0, 'rejection never grants classroom access');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" . $rejectRequestId . " AND status='rejected'")->loadResult() === 1, 'rejection audit state saved');
-    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.decision:' . $rejectRequestId) . "'")->loadResult() === 1, 'single rejection email queued');
+    stateExpect(
+        $approval->decide($actor, $course, $rejectRequestId, 1, 'rejected', 'CI-only private reason') === 0,
+        'rejected request has no enrollment ID'
+    );
+    stateExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=" . (int)$rejectedUser->id . " AND course_id=" . $course)->loadResult() === 0,
+        'rejection never grants classroom access'
+    );
+    stateExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" . $rejectRequestId . " AND status='rejected'")->loadResult() === 1,
+        'rejection audit state saved'
+    );
+    stateExpect(
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.decision:' . $rejectRequestId) . "'")->loadResult() === 1,
+        'single rejection email queued'
+    );
     // The approval fixture is not part of the pre-existing roster retention baseline.
     // Remove only its CI-created enrollment so the subsequent upgrade checks can
     // compare the original roster snapshot without unrelated test pollution.
@@ -460,6 +627,9 @@ try {
     $db->setQuery("UPDATE #__jlms_courses SET enrollment_mode=" . $db->quote($modeBefore) . " WHERE id=" . $course)->execute();
 }
 $serialized = json_encode($service->editor($actor, $course, $enrollment), JSON_THROW_ON_ERROR);
-stateExpect(!str_contains($serialized, 'subject_key') && !str_contains($serialized, 'rules_json'), 'editor excludes internal subject and grading data');
+stateExpect(
+    !str_contains($serialized, 'subject_key') && !str_contains($serialized, 'rules_json'),
+    'editor excludes internal subject and grading data'
+);
 file_put_contents($path, json_encode(['course' => $course,'enrollment' => $enrollment,'owner' => $f['owner'],'lesson' => $f['lesson'],'first_event' => $event,'history_count' => $count(),'stable' => $stable($enrollment),'manager' => $rf['manager'],'manager_group' => $rf['group'],'http_enrollment' => $f['other_enrollment'],'cancelled' => $f['cancelled'],'foreign_enrollment' => $f['italian'],'other_course' => $rf['other_course']], JSON_THROW_ON_ERROR));
 echo json_encode(['enrollment_state_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
