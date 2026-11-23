@@ -1,0 +1,36 @@
+name: SECDEV-02 temporary template PHPCS diagnostic
+on:
+  push:
+    branches:
+      - style/secdev02-curriculum-template-lines
+permissions:
+  contents: write
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Install PHPCS and report exact added issue positions
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          .runtime/secdev02-phpcs/vendor/bin/phpcs --standard=PSR12 --report=json component/administrator/tmpl/curriculum/default.php > /tmp/template-phpcs.json || :
+          python3 - <<'PY'
+          import json
+          with open('/tmp/template-phpcs.json') as f:
+              data=json.load(f)
+          for file in data['files'].values():
+              for m in file['messages']:
+                  if m['source'] in ('Generic.WhiteSpace.ScopeIndent.IncorrectExact','Squiz.WhiteSpace.ScopeClosingBrace.Indent'):
+                      print('SECDEV-02 EXACT:',m['line'],m['column'],m['source'],m['message'])
+          PY
+      - name: Remove disposable workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/secdev02-template-diagnostic-once.yml
+          git commit -m 'chore(SECDEV-02): remove temporary PHPCS diagnostic'
+          git push origin HEAD:style/secdev02-curriculum-template-lines
