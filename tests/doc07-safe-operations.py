@@ -159,7 +159,7 @@ assert "array_slice($courseOptions, 0, 500)" in view
 assert "array_slice($menuOptions, 0, 500)" in view
 assert "$coursesComplete = count($courseOptions) <= 500;" in view
 assert "$menusComplete = count($menuOptions) <= 500;" in view
-assert "$coursesComplete, $menusComplete" in view
+assert re.search(r"\$coursesComplete\s*,\s*\$menusComplete", view) is not None
 # Unrelated Joomla component menu links must not consume the 500-row limit.
 assert "index.php?option=com_jlms&view=courses&%" in view
 assert "index.php?option=com_jlms&view=category&%" in view
