@@ -54,7 +54,7 @@ assert 'name="filter[category_id]"' in template
 assert "COM_JLMS_CATALOG_ALL_CATEGORIES" in template
 assert "catalog_show_category" in helper
 assert "filter.category_choice" in model
-assert "['editorial', 'recent', 'title', 'duration', 'published']" in model
+assert "['editorial','recent','title','duration','published']" in re.sub(r"\\s+", "", model)
 assert "['editorial', 'recent', 'title', 'duration', 'published']" in helper
 assert "v.presentation_json, '$.details.estimated_minutes'" in model
 assert "($minutes IS NULL) ASC, $minutes ASC, c.id ASC" in model
