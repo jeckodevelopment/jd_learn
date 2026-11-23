@@ -183,3 +183,8 @@ Dopo la PR #998 il debito PHPCS PSR-12 atteso è 2.975 rilievi, ancora da confer
 Il job [45262539964](https://github.com/jeckodevelopment/jd_learn/actions/runs/45262539964) ha trasformato le chiamate a funzioni di asserzione e verifica negativa dei test PHP più lunghi in invocazioni multilinea PSR-12: **9 file accettati, 271 rilievi rimossi, nessun file respinto**. Ogni cambiamento è stato sottoposto a lint PHP, verifica dell'identità dei token significativi con `token_get_all`, e PHPCS PSR12 4.0.4 senza incremento di nessuna regola per file. Il workflow di scrittura è stato rimosso dal ramo prima della PR; lo script con rollback è disponibile in `tools/secdev02_assertion_wrap.py`.
 
 Baseline su main prima del batch **2.962**; residuo **atteso 2.691**, da confermare nella CI della PR. La riformattazione delle asserzioni non completa l'audit CORE-01–23 e non certifica la compatibilità di ogni API Joomla; SECDEV-02 rimane aperto e i collaudi Joomla manuali restano separati.
+
+
+## Nomi importati nel provider DI Joomla (PR #1001)
+
+Nel file `component/administrator/services/provider.php` sono stati normalizzati 33 riferimenti a classi pienamente qualificate attraverso import `use` espliciti, lasciando invariati identificativi dei servizi, argomenti, factory e wiring DI. Il conteggio preliminare delle righe oltre 120 caratteri passa da **48 a 28** nel file, senza rimuovere soppressioni PHPCS né modificare il core Joomla. Il risultato PHPCS integrale e le prove runtime devono essere verificati in CI della PR; non va scambiato con l'accettazione completa di SECDEV-02. I criteri CORE-01–23 e l'audit API Joomla restano da completare laddove non verificati; collaudi manuali separati.
