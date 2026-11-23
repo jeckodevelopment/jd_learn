@@ -48,6 +48,15 @@ def check() -> None:
                    "pathway ignores raw params, author identity and checkout fields"):
         assert marker in pathways, f"SECDEV-03 pathway negative fixture absent: {marker}"
     path_model = source("component/administrator/src/Model/PathwayModel.php")
+    assert "->values(':pathwayId, :courseId, :position')" in path_model
+    for param in (":pathwayId", ":courseId", ":position"):
+        assert f"->bind('{param}'," in path_model, (
+            "SECDEV-03: pathway course association values must be bound SQL parameters"
+        )
+    assert "->values(implode(', ', [$pathwayId, $courseId, $ordering]))" not in path_model
+    for payload in ("1 OR 1=1 --", "1; DROP TABLE courses; --", "1 UNION SELECT 1"):
+        assert payload in pathways, "SECDEV-03: missing negative course association ID fixture"
+
     assert "!is_string($imageInput) || !is_string($altInput)" in path_model, (
         "SECDEV-03: pathway artwork must reject forged input types"
     )

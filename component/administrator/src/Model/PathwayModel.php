@@ -227,9 +227,14 @@ final class PathwayModel extends AdminModel
                 $db->setQuery($db->createQuery()->delete('#__jlms_pathway_courses')
                     ->where('pathway_id = :pathway')->bind(':pathway', $deletePathwayId, ParameterType::INTEGER))->execute();
                 foreach ($courses as $ordering => $courseId) {
+                    // SECDEV-03: explicit Joomla SQL binding even for validated
+                    // integer IDs and positions. No input-derived query fragments.
                     $db->setQuery($db->createQuery()->insert('#__jlms_pathway_courses')
                         ->columns(['pathway_id', 'course_id', 'ordering'])
-                        ->values(implode(', ', [$pathwayId, $courseId, $ordering])))->execute();
+                        ->values(':pathwayId, :courseId, :position')
+                        ->bind(':pathwayId', $pathwayId, ParameterType::INTEGER)
+                        ->bind(':courseId', $courseId, ParameterType::INTEGER)
+                        ->bind(':position', $ordering, ParameterType::INTEGER))->execute();
                 }
             }
 
