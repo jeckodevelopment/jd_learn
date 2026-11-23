@@ -1,0 +1,35 @@
+name: SECDEV-02 one-shot audit PHPCS formatter
+on:
+  push:
+    branches:
+      - test/secdev02-all-joomla-api-inventory
+permissions:
+  contents: write
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install pinned PHP CodeSniffer
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Format only new scanner and runtime audit
+        run: |
+          .runtime/secdev02-phpcs/vendor/bin/phpcbf --standard=PSR12 tests/fixtures/secdev02-joomla-api-inventory-functions.php tests/secdev02-joomla-api-inventory.php || :
+          git diff --check
+          php -l tests/fixtures/secdev02-joomla-api-inventory-functions.php
+          php -l tests/secdev02-joomla-api-inventory.php
+      - name: Commit only accepted fixes and remove write workflow
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m 'style(SECDEV-02): autoformat static Joomla API inventory with PSR-12'
+          fi
+          git rm .github/workflows/secdev02-api-phpcbf-once.yml
+          git commit -m 'chore(SECDEV-02): remove one-shot formatter'
+          git push origin HEAD:test/secdev02-all-joomla-api-inventory
