@@ -72,7 +72,8 @@ final class CourseArtwork
         }
         $image = @getimagesize($file);
         $mime = ['png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
-            'gif' => 'image/gif', 'webp' => 'image/webp', 'avif' => 'image/avif'][strtolower(pathinfo($path, PATHINFO_EXTENSION))];
+            'gif' => 'image/gif', 'webp' => 'image/webp',
+                'avif' => 'image/avif'][strtolower(pathinfo($path, PATHINFO_EXTENSION))];
         if (
             !$image || ($image['mime'] ?? '') !== $mime || $image[0] < 1 || $image[1] < 1
             || $image[0] > 20000 || $image[1] > 20000 || $image[0] * $image[1] > 40000000

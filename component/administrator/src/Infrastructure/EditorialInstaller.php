@@ -16,7 +16,8 @@ final class EditorialInstaller
             $category = new \Joomla\CMS\Table\Category($db);
             $category->setLocation(1, 'last-child');
             $category->bind(['title' => 'JD Learn', 'alias' => 'jd-learn-teachers', 'extension' => 'com_jlms.teacher',
-                'published' => 1, 'access' => 1, 'language' => '*', 'params' => '{}', 'metadata' => '{}', 'description' => '']);
+                'published' => 1, 'access' => 1, 'language' => '*', 'params' => '{}', 'metadata' => '{}',
+                    'description' => '']);
             if (!$category->check() || !$category->store()) {
                 throw new \RuntimeException('JD Learn teacher setup failed');
             }
@@ -31,7 +32,8 @@ final class EditorialInstaller
                 $record->router = '';
                 $record->content_history_options = json_encode(['formFile' => 'administrator/components/com_jlms/forms/' . $type . '.xml',
                     'hideFields' => ['asset_id', 'checked_out', 'checked_out_time'],
-                    'ignoreChanges' => ['revision', 'modified_by', 'modified_at', 'checked_out', 'checked_out_time']], JSON_THROW_ON_ERROR);
+                    'ignoreChanges' => ['revision', 'modified_by', 'modified_at', 'checked_out',
+                        'checked_out_time']], JSON_THROW_ON_ERROR);
             }
             if ($type === 'course') {
                 $record->table = json_encode([
@@ -41,8 +43,10 @@ final class EditorialInstaller
                 ], JSON_THROW_ON_ERROR);
                 $record->field_mappings = json_encode(['common' => [
                     'core_content_item_id' => 'id', 'core_title' => 'title', 'core_state' => 'state',
-                    'core_alias' => 'alias', 'core_created_user_id' => 'created_by', 'core_created_time' => 'created_at',
-                    'core_modified_user_id' => 'modified_by', 'core_modified_time' => 'modified_at', 'core_body' => 'summary',
+                    'core_alias' => 'alias', 'core_created_user_id' => 'created_by',
+                        'core_created_time' => 'created_at',
+                    'core_modified_user_id' => 'modified_by', 'core_modified_time' => 'modified_at',
+                        'core_body' => 'summary',
                     'core_access' => 'content_access', 'core_language' => 'language', 'core_params' => 'params_json',
                     'core_metadata' => 'metadata_json', 'core_catid' => 'catid', 'core_images' => 'image',
                     'core_publish_up' => 'publish_up', 'core_publish_down' => 'publish_down',

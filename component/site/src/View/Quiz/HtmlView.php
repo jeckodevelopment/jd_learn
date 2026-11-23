@@ -29,8 +29,10 @@ final class HtmlView extends BaseHtmlView
             $labels[$key] = Text::_(implode('_', ['COM','JLMS','QUIZ','WARNING',strtoupper($key)]));
         }
         $labels['extended'] = Text::_('COM_JLMS_QUIZ_EXTEND_UPDATED');
-        $doc->addScriptOptions('com_jlms.quiz', ['enrollment' => $this->item['enrollment_id'],'lesson' => $this->item['lesson_id'],
-            'attempt' => $this->item['attempt'],'server_now' => $this->item['server_now'],'token' => \Joomla\CMS\Session\Session::getFormToken(),'urls' => $urls,'labels' => $labels]);
+        $doc->addScriptOptions('com_jlms.quiz', ['enrollment' => $this->item['enrollment_id'],
+            'lesson' => $this->item['lesson_id'],
+            'attempt' => $this->item['attempt'],'server_now' => $this->item['server_now'],
+                'token' => \Joomla\CMS\Session\Session::getFormToken(),'urls' => $urls,'labels' => $labels]);
         $doc->getWebAssetManager()->useStyle('com_jlms.site')->useScript('com_jlms.quiz');
         parent::display($tpl);
     }

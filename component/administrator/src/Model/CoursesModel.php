@@ -11,8 +11,10 @@ use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 
 final class CoursesModel extends ListModel
 {
-    private const ORDERS = ['a.id','a.title','a.state','category_title','access_title','author_name','a.language','a.modified_at'];
-    private const FILTERS = ['search','published','category_id','access','author_id','teacher_id','language','checked_out'];
+    private const ORDERS = ['a.id','a.title','a.state','category_title','access_title','author_name',
+        'a.language','a.modified_at'];
+    private const FILTERS = ['search','published','category_id','access','author_id','teacher_id',
+        'language','checked_out'];
 
     public function __construct($config = [], $factory = null)
     {
@@ -34,7 +36,8 @@ final class CoursesModel extends ListModel
             $input->set('filter', $filters);
         }
         if ($input->get('list', null, 'array') !== null) {
-            $list = array_intersect_key($input->get('list', [], 'array'), array_flip(['fullordering','ordering','direction','limit']));
+            $list = array_intersect_key($input->get('list', [], 'array'), array_flip(['fullordering',
+                'ordering','direction','limit']));
             foreach ($list as $key => &$value) {
                 if (!is_scalar($value)) {
                     $value = $key === 'limit' ? 20 : ($key === 'fullordering' ? 'a.id DESC' : '');

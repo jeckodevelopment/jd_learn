@@ -11,7 +11,8 @@ final class MaterialsModel extends FormModel
 {
     public function getForm($data = [], $loadData = true)
     {
-        return $this->loadForm('com_jlms.material_upload', 'material_upload', ['control' => 'jform', 'load_data' => false]);
+        return $this->loadForm('com_jlms.material_upload', 'material_upload', ['control' => 'jform',
+            'load_data' => false]);
     }
 
     public function getItem()

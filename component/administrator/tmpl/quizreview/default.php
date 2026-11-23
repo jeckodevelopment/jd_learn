@@ -22,7 +22,8 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
  <table id="jlms-quiz-review-attempts" class="table"><thead><tr><th><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?></th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></th><th><?= Text::_('COM_JLMS_QUIZ_REVIEW_COUNTED') ?></th></tr></thead><tbody>
         <?php foreach ($i['attempts'] as $a) :
             ?><tr><td><a href="<?= Route::_($enr . '&attempt_id=' . (int)$a->id) ?>">#<?= (int)$a->attempt_no ?></a></td><td><?= Text::_(match ($a->status) {
-            'open'=>'COM_JLMS_QUIZ_STATUS_OPEN','submitted'=>'COM_JLMS_QUIZ_STATUS_SUBMITTED','expired'=>'COM_JLMS_QUIZ_STATUS_EXPIRED',default=>'COM_JLMS_QUIZ_CANCELLED'
+            'open'=>'COM_JLMS_QUIZ_STATUS_OPEN','submitted'=>'COM_JLMS_QUIZ_STATUS_SUBMITTED',
+                'expired'=>'COM_JLMS_QUIZ_STATUS_EXPIRED',default=>'COM_JLMS_QUIZ_CANCELLED'
             }) ?></td><td><?= $a->score_points === null ? '—' : (int)$a->score_points ?>/<?= (int)$a->max_points ?></td><td><?= Text::_((int)$a->counted_for_limit ? 'JYES' : 'JNO') ?></td></tr><?php
         endforeach; ?></tbody></table>
         <?php if ($i['more_attempts']) :
