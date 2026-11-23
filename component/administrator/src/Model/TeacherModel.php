@@ -95,7 +95,9 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             $website = trim($params['website'] ?? '');
             if (strlen($website) > 2048 || ($website !== '' && (!filter_var($website, FILTER_VALIDATE_URL)
                 || !in_array(strtolower((string) parse_url($website, PHP_URL_SCHEME)), ['http', 'https'], true)
-                || parse_url($website, PHP_URL_USER) !== null || parse_url($website, PHP_URL_PASS) !== null || preg_match('/[\x00-\x20\x7f]/', $website)))) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
+                || parse_url($website, PHP_URL_USER) !== null || parse_url($website, PHP_URL_PASS) !== null
+                || \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::containsSensitiveParameters($website)
+                || preg_match('/[\x00-\x20\x7f]/', $website)))) { throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID'); }
             $params['website'] = $website; $data['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
             if (array_key_exists('user_id', $data)) {
                 if ($data['user_id'] === '' || $data['user_id'] === null || $data['user_id'] === '0' || $data['user_id'] === 0) { $data['user_id'] = null; }
