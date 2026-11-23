@@ -1,0 +1,57 @@
+name: SECDEV-02 controlled bulk PSR-12 formatting
+on:
+  push:
+    branches: [style/secdev02-psr12-mass-fix]
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-bulk-psr12
+  cancel-in-progress: false
+jobs:
+  format:
+    if: github.repository == 'jeckodevelopment/jd_learn' && !contains(github.event.head_commit.message, '[skip ci]')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Setup PHP_CodeSniffer 4.0.4
+        run: |
+          php -v
+          composer --version
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Fix selected PSR-12 whitespace rules throughout tracked PHP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git ls-files -z -- '*.php' | xargs -0 -r .runtime/secdev02-phpcs/vendor/bin/phpcbf \
+            --standard=PSR12 \
+            --sniffs=PSR12.Operators.OperatorSpacing,Generic.Functions.FunctionCallArgumentSpacing \
+            --no-cache --report=summary || status=$?
+          if [ "${status:-0}" -gt 2 ]; then
+            echo "phpcbf failed with exit ${status}"
+            exit 1
+          fi
+          git diff --check
+          changed="$(git diff --name-only -- '*.php' | wc -l)"
+          echo "Changed tracked PHP sources: $changed"
+          if [ "$changed" -eq 0 ]; then
+            echo "No source changes produced"
+            exit 1
+          fi
+          git diff --name-only -z -- '*.php' | xargs -0 -r -n1 php -l >/tmp/secdev02-php-lint.log
+          echo "All modified PHP sources passed php -l"
+          git diff --stat | tail -n 30
+      - name: Commit bulk formatting on the dedicated branch only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "style/secdev02-psr12-mass-fix"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- '*.php'
+          git commit -m "style(SECDEV-02): bulk PSR-12 whitespace remediation [skip ci]"
+          git push origin "HEAD:refs/heads/style/secdev02-psr12-mass-fix"
