@@ -44,3 +44,11 @@ Questo è un **sottoinsieme delle convenzioni PSR-12**, non la verifica completa
 ## Eliminazione del debito del controllo PHP (PR #981)
 
 È stata rimossa l'ultima violazione di whitespace identificata nel file `component/administrator/src/Infrastructure/MailQueue.php`. Il gate ora esige **zero** finding sui 260 file mappati dal Composer e stampa per file le anomalie rilevate. Il controllo non equivale comunque a una verifica completa PSR-12 tramite PHPCS, che rimane distinta.
+
+## Audit PSR-12 con PHP_CodeSniffer (PR di audit)
+
+La CI installa **PHP_CodeSniffer 4.0.4**, bloccato a versione esatta, in una directory di lavoro temporanea `.runtime/secdev02-phpcs` (non distribuita nel pacchetto Joomla). Il comando `tests/secdev02-psr12-phpcs.py` esegue lo standard ufficiale **PSR12** su **tutti i file PHP tracciati** e ripete la stessa scansione su uno snapshot verificato del ramo base. Il confronto usa percorso, tipo di violazione, messaggio e linea significativa, evitando falsi positivi per semplice traslazione delle righe. Ogni violazione nuova, inclusi duplicati e nuovi file, blocca la CI; le anomalie preesistenti sono conteggiate esplicitamente e devono essere rimosse prima di dichiarare completa conformità.
+
+Questa verifica è distinta dai 260 file mappati PSR-4: copre anche installer, template e test PHP. **Se il totale attuale è maggiore di zero, SECDEV-02/criterion_01 resta non verificabile:** il gate di non regressione non deve essere scambiato per una certificazione PSR-12. Il tool è richiesto dalla CI; fallisce chiuso se mancante o se il report JSON non è interpretabile.
+
+Il controllo non determina autonomamente che tutte le API Joomla siano supportate dalla patch installata e non supplisce ai collaudi Joomla in ambiente dell'utente.
