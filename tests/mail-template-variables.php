@@ -464,7 +464,7 @@ if (
     !str_contains($auditSource, 'MailTemplatePlaceholderValidator::unresolved(')
     || !str_contains($auditSource, 'unset($row->template_data, $row->language);')
     || !str_contains($auditView, 'diagnostic_tokens')
-    || !str_contains($auditView, '$this->escape(implode(')
+    || !str_contains(preg_replace('/\\s+/', '', $auditView), '$this->escape(implode(')
 ) {
     throw new RuntimeException('Safe mail queue placeholder diagnostics not integrated.');
 }
