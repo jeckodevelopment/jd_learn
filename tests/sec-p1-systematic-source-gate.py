@@ -34,7 +34,7 @@ assert network_paths == {"plugins/jlmsvideo/cloudflarestream/src/Extension/Cloud
     "New remote HTTP sink requires explicit review", sorted(network_paths)
 )
 video_process = (ROOT / next(iter(process_paths))).read_text(encoding="utf-8")
-assert "proc_open([$binary," in video_process and "'-protocol_whitelist', 'file'" in video_process
+assert re.search(r"proc_open\s*\(\s*\[\s*\$binary\s*,", video_process) and "'-protocol_whitelist', 'file'" in video_process
 assert "is_link($binary)" in video_process and "'bypass_shell' => true" in video_process, (
     "Video probing must remain array-argument, local-only, non-shell execution"
 )
