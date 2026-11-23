@@ -72,10 +72,10 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
 function teacherExpect(bool $ok,string $message):void { global $checks;
-if (!$ok) {
-throw new RuntimeException($message);
+    if (!$ok) {
+        throw new RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 $teacherListTemplate = file_get_contents(dirname(__DIR__) . '/component/administrator/tmpl/teachers/default.php');
 teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "HTMLHelper::_('jgrid.published'") && str_contains($teacherListTemplate, "'teachers.'"), 'Teacher state uses Joomla status icons without enabling inline state changes');
@@ -88,7 +88,7 @@ if (($argv[2] ?? '') === 'retained') {
     teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] === 'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection is unchanged');
     teacherExpect(TeacherProfiles::selected($db, (int)$f['course']) === $f['ids'], 'Assigned teacher relations survive upgrade');
     echo json_encode(['teacher_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-exit;
+    exit;
 }
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
 teacherExpect($categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.teacher','title' => 'CI Teachers','alias' => 'ci-teachers','published' => 1,'language' => '*','access' => 1]), 'Native teacher category created');
@@ -153,7 +153,7 @@ $directory = $factory->createModel('Teachers', 'Administrator', ['ignore_request
 $directory->setCurrentUser($actor);
  $teacherRows = $directory->getItems();
 if (!is_array($teacherRows)) {
-throw new RuntimeException('Teacher directory listing failed: ' . (string) $directory->getError());
+    throw new RuntimeException('Teacher directory listing failed: ' . (string) $directory->getError());
 }
 $publicRow = array_values(array_filter($teacherRows, static fn($row):bool=>(int)$row->id === $public));
 teacherExpect(count($publicRow) === 1 && (int)$publicRow[0]->course_count === 1, 'Teacher list reports the number of assigned courses in the current editable course scope');
@@ -169,8 +169,8 @@ unset($courseData['teacher_ids']);
 teacherExpect($courseModel->save($courseData), 'Legacy client can save without teacher field');
 teacherExpect(TeacherProfiles::selected($db, $course) === [$public,$private], 'Omitted teacher field preserves assignment');
 foreach ([[999999],[$public,$public],['1 OR 1=1'],[['bad']]] as $bad) {
- teacherExpect(!$courseModel->save(array_replace($courseData, ['revision' => 3,'teacher_ids' => $bad])), 'Invalid teacher assignment denied');
- teacherExpect(TeacherProfiles::selected($db, $course) === [$public,$private] && (int)$courseModel->getItem($course)->revision === 3, 'Denied assignment preserves course and relations');
+    teacherExpect(!$courseModel->save(array_replace($courseData, ['revision' => 3,'teacher_ids' => $bad])), 'Invalid teacher assignment denied');
+    teacherExpect(TeacherProfiles::selected($db, $course) === [$public,$private] && (int)$courseModel->getItem($course)->revision === 3, 'Denied assignment preserves course and relations');
 }
 $edit = array_replace($teacherBase, ['id' => $public]);
 foreach ([['website' => 'javascript:alert(1)'],['website' => 'https://user:pass@example.invalid/'],
@@ -178,8 +178,8 @@ foreach ([['website' => 'javascript:alert(1)'],['website' => 'https://user:pass@
     ['website' => 'https://example.invalid/path#clientSecret=TEST_CREDENTIAL'],
     ['website' => 'https://example.invalid/?api_key=TEST_CREDENTIAL'],
     ['website' => ['https://example.invalid/']],['state' => '-1'],['image_alt' => ['array']],['access' => ['array']],['user_id' => 99999999],['bio' => str_repeat('a', 65536)]] as $bad) {
- teacherExpect(!$teacherModel->save(array_replace($edit, $bad)), 'Invalid teacher profile rejected');
- teacherExpect((int)$teacherModel->getItem($public)->revision === 1, 'Invalid profile retains revision');
+    teacherExpect(!$teacherModel->save(array_replace($edit, $bad)), 'Invalid teacher profile rejected');
+    teacherExpect((int)$teacherModel->getItem($public)->revision === 1, 'Invalid profile retains revision');
 }
 $teacherModel->setCurrentUser(new \Joomla\CMS\User\User());
 teacherExpect(!$teacherModel->save($edit), 'Guest cannot manage teachers');
@@ -191,10 +191,10 @@ $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $version,
 $withdrawn = (object)['id' => $public,'state' => 0];
 $db->updateObject('#__jlms_teachers', $withdrawn, 'id');
 try {
-$publication->transition($actor, $course, $version, (int)$courseModel->getItem($course)->revision, $rev(), (int)$publication->transitions($actor, $course)[0]->id);
-throw new RuntimeException('Withdrawn teacher accepted for publication');
+    $publication->transition($actor, $course, $version, (int)$courseModel->getItem($course)->revision, $rev(), (int)$publication->transitions($actor, $course)[0]->id);
+    throw new RuntimeException('Withdrawn teacher accepted for publication');
 } catch (InvalidArgumentException) {
-$checks++;
+    $checks++;
 }
 $withdrawn->state = 1;
 $db->updateObject('#__jlms_teachers', $withdrawn, 'id');
@@ -228,7 +228,7 @@ teacherExpect(count($catalog->outline($guest, 'en-GB', $course)['teachers']) ===
 $learner = new \Joomla\CMS\User\User();
 $learnerData = ['name' => 'CI teacher viewer','username' => 'citeacherviewer','email' => 'citeacherviewer@example.invalid','password' => 'Ci-only-Teacher-Viewer-2026','password2' => 'Ci-only-Teacher-Viewer-2026','groups' => [1,2],'block' => 0,'activation' => ''];
 if (!$learner->bind($learnerData) || !$learner->save()) {
-throw new RuntimeException('Viewer fixture failed');
+    throw new RuntimeException('Viewer fixture failed');
 }
 $learner = new \Joomla\CMS\User\User((int)$learner->id);
 $learner->getAuthorisedViewLevels();
@@ -242,11 +242,11 @@ teacherExpect(is_array($filtered) && count($filtered) === 1 && (int)$filtered[0]
 $directory = $factory->createModel('Teachers', 'Administrator', ['ignore_request' => true]);
 $directory->setCurrentUser($learner);
 try {
-$items = $directory->getItems();
-teacherExpect($items === false && $directory->getError() !== null, 'Native list model rejects unauthorised directory reads');
+    $items = $directory->getItems();
+    teacherExpect($items === false && $directory->getError() !== null, 'Native list model rejects unauthorised directory reads');
 
 } catch (RuntimeException $denied) {
-teacherExpect($denied->getCode() === 403, 'Authenticated viewer cannot read administrative teacher directory');
+    teacherExpect($denied->getCode() === 403, 'Authenticated viewer cannot read administrative teacher directory');
 }
 $teacherModel->setCurrentUser($learner);
 teacherExpect(!$teacherModel->save(array_replace($edit, ['revision' => 5])), 'Authenticated viewer lacks teacher management permission');

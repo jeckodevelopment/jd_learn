@@ -56,11 +56,11 @@ class CoursesModel extends ListModel
         $component = $app->bootComponent('com_jlms');
         $teacherId = (int) $this->getState('filter.teacher_id');
         if ($teacherId && !isset($this->getTeachers()[$teacherId])) {
-$teacherId = -1;
+            $teacherId = -1;
         }
         $pathwayId = (int) $this->getState('filter.pathway_id');
         if ($pathwayId && !isset($this->getPathways()[$pathwayId])) {
-$pathwayId = -1;
+            $pathwayId = -1;
         }
         $query = $component->getCatalogService()->query($app->getIdentity(), $app->getLanguage()->getTag(),
             (int) $this->getState('filter.category_id'), (int) $this->getState('filter.tag_id'), $teacherId, $pathwayId);
@@ -159,7 +159,7 @@ $pathwayId = -1;
         $app = Factory::getApplication();
         $identity = $app->getIdentity();
         if (!(int) $identity->id || $identity->guest || $identity->block || !$items) {
-return [];
+            return [];
         }
         $ids = array_map(static fn (object $item): int => (int) $item->id, $items);
         return $app->bootComponent('com_jlms')->getDashboardService()->catalogStates(
@@ -176,12 +176,12 @@ return [];
     public function getCardPendingApprovals(array $items, array $enrollmentStates): array
     {
         if (!$items) {
-return [];
+            return [];
         }
         $app = Factory::getApplication();
         $identity = $app->getIdentity();
         if (!(int) $identity->id || $identity->guest) {
-return [];
+            return [];
         }
         // Re-check the persisted Joomla account, rather than trusting an old
         // session after the account is blocked or removed.
@@ -202,10 +202,10 @@ return [];
         }
         $courseIds = array_values(array_unique($courseIds));
         if (!$courseIds) {
-return [];
+            return [];
         }
         if (count($courseIds) > 50) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $query = $this->getDatabase()->createQuery()
             ->select('DISTINCT edition.course_id')
@@ -302,12 +302,12 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
     public function getPathways(): array
     {
         $app = Factory::getApplication();
-$component = $app->bootComponent('com_jlms');
+        $component = $app->bootComponent('com_jlms');
         $ids = $component->getCatalogService()->publicPathwayIds(
             $app->getIdentity(), $app->getLanguage()->getTag(), (int) $this->getState('filter.category_id')
         );
         if (!$ids) {
-return [];
+            return [];
         }
         $query = $component->getPathwayService()->query($app->getIdentity(), $app->getLanguage()->getTag());
         $query->whereIn('p.id', $ids);

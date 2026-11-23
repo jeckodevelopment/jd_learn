@@ -114,10 +114,10 @@ final class CourseTable extends Table implements TaggableTableInterface
             && str_starts_with((string) $asset->name, 'com_jlms.copy.')
             && (int) $asset->parent_id === (int) $this->_getAssetParentId();
         if ($this->preparedAsset && !$prepared) {
-throw new \DomainException('COM_JLMS_SAVE_FAILED');
+            throw new \DomainException('COM_JLMS_SAVE_FAILED');
         }
         if ($prepared) {
-$this->asset_id = $this->preparedAsset;
+            $this->asset_id = $this->preparedAsset;
         }
         if ($this->stableAssetRequired && !$stable) {
             throw new \DomainException('COM_JLMS_ASSOCIATION_SAVE_SEPARATELY');

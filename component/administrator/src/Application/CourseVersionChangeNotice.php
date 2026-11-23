@@ -51,7 +51,7 @@ final class CourseVersionChangeNotice
         $changes = new PublicationImpact($this->db);
         $cache = [];
         $queued = 0;
-$failed = 0;
+        $failed = 0;
         $queue = new MailQueue($this->db);
         foreach ($rows as $row) {
             try {
@@ -71,7 +71,7 @@ $failed = 0;
                     ? $userParams['language'] : '';
                 $language = $language ?: (string) $row->course_language;
                 if (!preg_match('/^[a-z]{2}-[A-Z]{2}$/D', $language)) {
-$language = 'en-GB';
+                    $language = 'en-GB';
                 }
                 $name = trim((string) $row->learner_name);
                 $site = (string) Factory::getApplication()->get('sitename');

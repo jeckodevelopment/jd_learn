@@ -57,7 +57,7 @@ final class EnrollmentApprovalService
             ->bind(':request', $requestId, ParameterType::INTEGER)->bind(':course', $courseId, ParameterType::INTEGER);
         $editionId = (int) $this->db->setQuery($q)->loadResult();
         if (!$editionId) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
 
         $this->db->transactionStart();
@@ -78,7 +78,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             $q->setQuery((string) $q . ' FOR UPDATE');
             $request = $this->db->setQuery($q)->loadObject();
             if (!$request) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+                throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
             if ($request->status !== 'pending' || (int) $request->revision !== $revision) {
                 throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
@@ -92,7 +92,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 ->where('id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
             $course = $this->db->setQuery($q)->loadObject();
             if (!$course) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+                throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
             if ($decision === 'approved') {
                 if ($course->enrollment_mode !== 'approval' || (int) $course->state !== 1
@@ -122,7 +122,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                     ->where('edition_id = :edition')->where('subject_key = :subject')
                     ->bind(':edition', $editionId, ParameterType::INTEGER)->bind(':subject', $subjectKey);
                 if ($this->db->setQuery($q)->loadResult()) {
-throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
+                    throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
                 }
                 $versionId = (int) $edition->course_version_id;
                 $q = $this->db->createQuery()->select('rules_json')->from('#__jlms_course_versions')
@@ -130,7 +130,7 @@ throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
                     ->bind(':version', $versionId, ParameterType::INTEGER);
                 $rulesJson = $this->db->setQuery($q)->loadResult();
                 if (!is_string($rulesJson)) {
-throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
+                    throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
                 }
                 $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($rulesJson);
                 $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_lessons')
@@ -138,7 +138,7 @@ throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
                     ->bind(':version', $versionId, ParameterType::INTEGER);
                 $total = (int) $this->db->setQuery($q)->loadResult();
                 if ($total < 1 && $rules['mode'] !== 'consultation') {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+                    throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
                 $this->learning->assertEnrollmentScheduleReachable($courseId, (int) $edition->course_version_id, $editionId, $edition->starts_at, $edition->ends_at);
                 $enrollment = (object) [

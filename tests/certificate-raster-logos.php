@@ -8,7 +8,7 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\CertificatePdf;
 function assertPdf(bool $ok, string $message): void
 {
     if (!$ok) {
-throw new RuntimeException($message);
+        throw new RuntimeException($message);
     }
 }
 
@@ -39,7 +39,7 @@ try {
         'webp' => 'imagewebp', 'avif' => 'imageavif'];
     foreach ($writers as $ext => $writer) {
         if (!function_exists($writer)) {
-continue;
+            continue;
         }
         $path = $dir . '/logo.' . $ext;
         assertPdf($writer($im, $path), 'Cannot write ' . $ext);
@@ -61,7 +61,7 @@ continue;
     }
 } finally {
     foreach (glob($dir . '/*') ?: [] as $file) {
-unlink($file);
+        unlink($file);
     }
     rmdir($dir);
 }

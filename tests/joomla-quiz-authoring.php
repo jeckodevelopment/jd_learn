@@ -74,28 +74,28 @@ $authoring = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
 function quizExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new \RuntimeException($message);
-$checks++;
+    if (!$ok)throw new \RuntimeException($message);
+    $checks++;
 }
 function quizReject(callable $work,int $code,string $message):void{try {
-$work();
+        $work();
 
 } catch (\RuntimeException $error) {
-quizExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-return;
+    quizExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+    return;
 
 }throw new \RuntimeException($message);
 }
 $fixturePath = dirname($root) . '/quiz-authoring-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
- $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
- $q = $bank->editor($actor, $f['question_id']);
-quizExpect($q['revision'] >= 2, 'question history survives upgrade');
- $config = $quizzes->editor($actor, $f['course_id'], $f['version_id'], $f['lesson_id']);
- quizExpect((int)$config['data']['questions'][0]['revision_id'] === $f['first_revision'], 'quiz keeps pinned revision after upgrade');
- quizExpect($db->setQuery('SELECT content_hash FROM #__jlms_question_revisions WHERE id=' . $f['first_revision'])->loadResult() === $f['first_hash'], 'original question content is immutable after upgrade');
- echo json_encode(['quiz_authoring_upgrade' => 'passed','checks' => $checks], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit(0);
+    $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
+    $q = $bank->editor($actor, $f['question_id']);
+    quizExpect($q['revision'] >= 2, 'question history survives upgrade');
+    $config = $quizzes->editor($actor, $f['course_id'], $f['version_id'], $f['lesson_id']);
+    quizExpect((int)$config['data']['questions'][0]['revision_id'] === $f['first_revision'], 'quiz keeps pinned revision after upgrade');
+    quizExpect($db->setQuery('SELECT content_hash FROM #__jlms_question_revisions WHERE id=' . $f['first_revision'])->loadResult() === $f['first_hash'], 'original question content is immutable after upgrade');
+    echo json_encode(['quiz_authoring_upgrade' => 'passed','checks' => $checks], JSON_THROW_ON_ERROR) . PHP_EOL;
+    exit(0);
 }
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
 if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.question','title' => 'CI Question bank','alias' => 'ci-questions','published' => 1,'language' => '*','access' => 1]))throw new \RuntimeException($categoryModel->getError());
@@ -213,10 +213,10 @@ $quizId = (int)$db->setQuery('SELECT id FROM #__jlms_quizzes WHERE lesson_id=' .
 $selectionBefore = $db->setQuery('SELECT selection_json FROM #__jlms_quizzes WHERE id=' . $quizId)->loadResult();
 $db->setQuery("UPDATE #__jlms_quizzes SET selection_json=JSON_SET(selection_json,'$._schema',99) WHERE id=" . $quizId)->execute();
 try {
-$publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
+    $publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
 
 } catch (\RuntimeException $error) {
-$blocked = $error->getMessage() === 'COM_JLMS_QUIZ_INVALID';
+    $blocked = $error->getMessage() === 'COM_JLMS_QUIZ_INVALID';
 }
 $db->setQuery('UPDATE #__jlms_quizzes SET selection_json=' . $db->quote($selectionBefore) . ' WHERE id=' . $quizId)->execute();
 quizExpect($blocked && $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft', 'invalid quiz publication fails atomically');

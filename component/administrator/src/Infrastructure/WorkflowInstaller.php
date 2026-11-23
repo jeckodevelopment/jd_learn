@@ -31,7 +31,7 @@ final class WorkflowInstaller
             $draft = self::stageId($db, $workflow, 'COM_JLMS_DRAFT');
             $published = self::stageId($db, $workflow, 'JPUBLISHED');
             if (!$draft || !$published) {
-return;
+                return;
             }
         } else {
             $existing = $db->createQuery()->select('id')->from($db->quoteName('#__workflows'))
@@ -92,7 +92,7 @@ return;
             $options = json_decode((string) $transition->options, true);
             if (is_array($options) && ($options['jlms_action'] ?? null) === $action
                 && (int) ($options['publishing'] ?? -1) === $publishing) {
-return;
+                return;
             }
         }
         $save('Transition', ['workflow_id' => $workflow, 'title' => $title, 'published' => 1,

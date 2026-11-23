@@ -5,17 +5,17 @@ require dirname(__DIR__) . '/component/administrator/src/Application/CourseSched
 use Jlms\Component\Jlms\Administrator\Application\CourseSchedule as Schedule;
 $checks = 0;
 function calendarCheck(bool $ok,string $message):void { global $checks;
-if (!$ok) {
-throw new RuntimeException($message);
+    if (!$ok) {
+        throw new RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 function calendarReject(callable $call,string $message):void { try {
-$call();
+        $call();
 
 } catch (InvalidArgumentException) {
-calendarCheck(true, $message);
-return;
+    calendarCheck(true, $message);
+    return;
 
 } throw new RuntimeException($message);
 }
@@ -26,15 +26,15 @@ calendarReject(fn()=>Schedule::toUtc('2027-10-31 02:30:00', 'Europe/Rome'), 'DST
 calendarCheck(Schedule::display('2027-10-31 00:30:00', 'Europe/Rome', true) === '2027-10-31 02:30:00 +02:00', 'First autumn instant is explicit');
 calendarCheck(Schedule::display('2027-10-31 01:30:00', 'Europe/Rome', true) === '2027-10-31 02:30:00 +01:00', 'Second autumn instant is explicit');
 foreach (['2027-02-30 10:00:00','2027-01-01','2027-01-01 24:00:00','2027-01-01 12:00:00+02:00','0000-00-00 00:00:00','2027-01-01 12:00:00 trailing',['bad'],true] as $value) {
-calendarReject(fn()=>Schedule::toUtc($value, 'UTC'), 'Malformed dates not normalised');
+    calendarReject(fn()=>Schedule::toUtc($value, 'UTC'), 'Malformed dates not normalised');
 }
 calendarReject(fn()=>Schedule::toUtc('2030-01-01 00:00:00', 'Not/A_Zone'), 'Unknown zone rejected');
 $oldZone = date_default_timezone_get();
 date_default_timezone_set('America/Los_Angeles');
 try {
-calendarCheck(Schedule::toUtc('2030-01-15 10:00:00', 'Europe/Rome') === '2030-01-15 09:00:00', 'Host timezone does not affect conversion');
+    calendarCheck(Schedule::toUtc('2030-01-15 10:00:00', 'Europe/Rome') === '2030-01-15 09:00:00', 'Host timezone does not affect conversion');
 } finally {
-date_default_timezone_set($oldZone);
+    date_default_timezone_set($oldZone);
 }
 $course = (object)['publish_up' => '2030-01-15 09:00:00.123456','publish_down' => null,'params_json' => '{"other":"retain","calendar":{"_schema":1,"timezone":"Europe/Rome","starts_at":"2030-01-15 09:00:00","ends_at":null}}'];
 $merged = Schedule::merge(['calendar_timezone' => 'Europe/Rome','calendar_publish_up' => '2030-01-15 10:00:00'], $course, $course->params_json, 'UTC');

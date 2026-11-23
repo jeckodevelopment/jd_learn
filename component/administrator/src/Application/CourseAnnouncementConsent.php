@@ -20,13 +20,13 @@ final class CourseAnnouncementConsent
     public function state(int $userId): string
     {
         if ($userId < 1) {
-return 'none';
+            return 'none';
         }
         $query = $this->db->createQuery()->select(['state', 'token_expires_at'])->from('#__jlms_mail_consents')
             ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
         $record = $this->db->setQuery($query)->loadObject();
         if (!$record) {
-return 'none';
+            return 'none';
         }
         if ($record->state === 'pending' && (!$record->token_expires_at || strtotime((string) $record->token_expires_at . ' UTC') < time())) {
             return 'none';
@@ -65,7 +65,7 @@ return 'none';
         $email = $recipient['email'];
         $name = $recipient['name'];
         if ($this->state($userId) === 'confirmed') {
-return;
+            return;
         }
 
         $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
@@ -96,14 +96,14 @@ return;
         $mail->addTemplateData(['USER_FULLNAME' => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'), 'CONFIRM_URL' => $url, 'SITE_NAME' => htmlspecialchars(\Joomla\CMS\Factory::getApplication()->get('sitename'), ENT_QUOTES, 'UTF-8')]);
         $mail->addUnsafeTags(['USER_FULLNAME', 'CONFIRM_URL', 'SITE_NAME']);
         if (!$mail->send()) {
-throw new \RuntimeException('COM_JLMS_MAIL_CONSENT_DELIVERY_FAILED');
+            throw new \RuntimeException('COM_JLMS_MAIL_CONSENT_DELIVERY_FAILED');
         }
     }
 
     public function confirm(string $token): bool
     {
         if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) {
-return false;
+            return false;
         }
         $tokenHash = hash('sha256', $token);
         $q = $this->db->createQuery()->update('#__jlms_mail_consents')->set("state = 'confirmed'")
@@ -121,13 +121,13 @@ return false;
     public function createUnsubscribeUrl(int $userId): ?string
     {
         if ($userId < 1) {
-return null;
+            return null;
         }
         $q = $this->db->createQuery()->select(['state', 'confirmed_at'])->from('#__jlms_mail_consents')
             ->where('user_id = :user')->bind(':user', $userId, ParameterType::INTEGER);
         $consent = $this->db->setQuery($q)->loadObject();
         if (!$consent || $consent->state !== 'confirmed' || !$consent->confirmed_at) {
-return null;
+            return null;
         }
 
         // Remove expired tokens for this user before adding another campaign link.
@@ -158,7 +158,7 @@ return null;
     public function revokeByToken(string $token): bool
     {
         if (!preg_match('/^[A-Za-z0-9_-]{40,50}$/', $token)) {
-return false;
+            return false;
         }
         $tokenHash = hash('sha256', $token);
         $this->db->transactionStart();
@@ -200,7 +200,7 @@ return false;
     public function revoke(int $userId): void
     {
         if ($userId < 1) {
-throw new \InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED');
+            throw new \InvalidArgumentException('COM_JLMS_LOGIN_REQUIRED');
         }
         $this->db->transactionStart();
         try {

@@ -69,20 +69,20 @@ $factory = $component->getMVCFactory();
 
 $checks = 0;
 function timeExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new \RuntimeException($message);
-$checks++;
+    if (!$ok)throw new \RuntimeException($message);
+    $checks++;
 }
 function timeReject(callable $work,int $code,string $message):void{try {
-$work();
+        $work();
 
 } catch (\RuntimeException $error) {
-timeExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-return;
+    timeExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+    return;
 
 }throw new \RuntimeException($message);
 }
 function timeKey():string{$s = bin2hex(random_bytes(16));
-return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
+    return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
 }
 $actor = $app->getIdentity();
 $learning = $component->getLearningService();
@@ -97,13 +97,13 @@ $runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService
 }, $time);
 if (($argv[2] ?? '') === 'retained') {
     $t = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
-$e = $time->editor($actor, $course, $lesson, $t['enrollment_id']);
+    $e = $time->editor($actor, $course, $lesson, $t['enrollment_id']);
     timeExpect((int)$e['current']->revision_no === $t['last_revision'] && (int)$e['current']->extra_seconds === 180, 'allowance revisions survive repeat upgrade');
     $snapshot = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . (int)$t['attempt_id'])->loadObject();
     timeExpect(hash('sha256', json_encode($snapshot, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'], 'attempt rule snapshot and deadline survive upgrade');
     timeExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.quiztime' AND item_id=" . (int)$t['first_adjustment'])->loadResult() === 1, 'native audit survives upgrade');
     echo json_encode(['quiz_time_upgrade_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-exit(0);
+    exit(0);
 }
 $old = json_decode(file_get_contents(dirname($root) . '/legacy-time-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $oldUser = new \Joomla\CMS\User\User($old['user_id']);

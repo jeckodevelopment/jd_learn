@@ -11,18 +11,18 @@ use Jlms\Contracts\Video\MetadataContext;
 
 $checks = 0;
 function cfExpect(bool $value, string $message): void { global $checks;
-if (!$value) {
-throw new \RuntimeException($message);
+    if (!$value) {
+        throw new \RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 function cfDenied(callable $work, string $key): void {
     try {
-$work();
+        $work();
 
     } catch (\RuntimeException $error) {
-cfExpect($error->getMessage() === $key, $key . ': received ' . $error->getMessage());
-return;
+        cfExpect($error->getMessage() === $key, $key . ': received ' . $error->getMessage());
+        return;
     }
     throw new \RuntimeException('Expected: ' . $key);
 }
@@ -57,7 +57,7 @@ cfDenied(fn()=>$p->fetchMetadata($source, $metadataContext), 'COM_JLMS_VIDEO_ORI
 $state->origins = ['school.example'];
 foreach ([401 => 'COM_JLMS_VIDEO_CREDENTIAL_REJECTED',404 => 'COM_JLMS_VIDEO_REMOTE_NOT_FOUND',429 => 'COM_JLMS_VIDEO_PROVIDER_BUSY',302 => 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE',500 => 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE'] as $status => $key) {
     $state->status = $status;
-cfDenied(fn()=>$p->fetchMetadata($source, $metadataContext), $key);
+    cfDenied(fn()=>$p->fetchMetadata($source, $metadataContext), $key);
 }
 $state->status = 200;
 $grant = $p->createPlaybackDescriptor($source, $context);
@@ -67,8 +67,8 @@ $request = end($state->calls);
 cfExpect($request['url'] === 'https://api.cloudflare.com/client/v4/accounts/' . str_repeat('a', 32) . '/stream/' . str_repeat('b', 32) . '/token', 'fixed API account/video path');
 cfExpect(json_decode($request['body'], true)['downloadable'] === false, 'downloads disabled');
 foreach (['none','foreign','long','download'] as $mode) {
-$state->tokenMode = $mode;
-cfDenied(fn()=>$p->createPlaybackDescriptor($source, $context), 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE');
+    $state->tokenMode = $mode;
+    cfDenied(fn()=>$p->createPlaybackDescriptor($source, $context), 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE');
 }
 $state->tokenMode = 'valid';
 $deadline = $now->modify('+25 seconds');

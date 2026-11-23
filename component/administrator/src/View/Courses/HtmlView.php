@@ -64,7 +64,7 @@ final class HtmlView extends BaseHtmlView
             }
         }
         if ($actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms')) {
-ToolbarHelper::preferences('com_jlms');
+            ToolbarHelper::preferences('com_jlms');
         }
         ToolbarHelper::help('courses', true);
         parent::display($tpl);

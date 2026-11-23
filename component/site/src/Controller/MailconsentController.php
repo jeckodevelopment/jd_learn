@@ -28,7 +28,7 @@ final class MailconsentController extends BaseController
         }
         $user = $this->app->getIdentity();
         if (!$user || $user->guest) {
-throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401);
+            throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401);
         }
         if ($this->input->post->getInt('consent') !== 1) {
             $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_CHECKBOX_REQUIRED'), 'warning');
@@ -84,7 +84,7 @@ throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401);
         }
         $user = $this->app->getIdentity();
         if (!$user || $user->guest) {
-throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401);
+            throw new \RuntimeException(Text::_('COM_JLMS_LOGIN_REQUIRED'), 401);
         }
         $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->revoke((int) $user->id);
         $this->app->enqueueMessage(Text::_('COM_JLMS_MAIL_CONSENT_REVOKED'), 'message');

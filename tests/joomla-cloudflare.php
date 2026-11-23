@@ -74,18 +74,18 @@ use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Jlms\Component\Jlms\Administrator\Application\VideoProgressService;
 $checks = 0;
 function streamExpect(bool $value,string $message): void {global $checks;
-if (!$value)throw new \RuntimeException($message);
-$checks++;
+    if (!$value)throw new \RuntimeException($message);
+    $checks++;
 }
 function streamDenied(callable $work,string $key): void {
- try {
-$work();
+    try {
+        $work();
 
- } catch (\RuntimeException $e) {
-streamExpect($e->getMessage() === $key, $key . ': ' . $e->getMessage());
-return;
+    } catch (\RuntimeException $e) {
+        streamExpect($e->getMessage() === $key, $key . ': ' . $e->getMessage());
+        return;
 
- }throw new \RuntimeException('Expected ' . $key);
+    }throw new \RuntimeException('Expected ' . $key);
 }
 [$config,$secrets,$transport,$remote] = cloudflareFixture();
 $provider = new Provider($config, $secrets, $transport);
@@ -117,12 +117,12 @@ streamExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=
 $remote->protected = true;
 // Verify that provider HTTP work does not hold course/enrollment row locks: another connection can lock them.
 $remote->callback = static function(string $method)use($course):void{
- $pdo = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
- $pdo->exec('SET innodb_lock_wait_timeout=1');
-$pdo->beginTransaction();
- $pdo->query('SELECT id FROM joomla_jlms_courses WHERE id=' . $course . ' FOR UPDATE');
- $pdo->query('SELECT id FROM joomla_jlms_enrollments WHERE course_id=' . $course . ' FOR UPDATE');
-$pdo->rollBack();
+    $pdo = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $pdo->exec('SET innodb_lock_wait_timeout=1');
+    $pdo->beginTransaction();
+    $pdo->query('SELECT id FROM joomla_jlms_courses WHERE id=' . $course . ' FOR UPDATE');
+    $pdo->query('SELECT id FROM joomla_jlms_enrollments WHERE course_id=' . $course . ' FOR UPDATE');
+    $pdo->rollBack();
 };
 $publish();
 streamExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'published', 'verified provider permits publication');
@@ -155,14 +155,14 @@ streamExpect($renewed['expires_at'] > $grant['expires_at'] && $renewed['source_r
 streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_VIDEO_CONFLICT');
 $now += 41000;
 $remote->callback = static function(string $method)use($student,$group):void{
- if ($method === 'POST')\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
+    if ($method === 'POST')\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
 };
 streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_LEARNING_DENIED');
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);
 $remote->callback = null;
 // Access revoked while the remote API was running must not deliver an initial token either.
 $remote->callback = static function(string $method)use($student,$group):void{
- if ($method === 'POST')\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
+    if ($method === 'POST')\Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
 };
 streamDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 'COM_JLMS_LEARNING_DENIED');
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);

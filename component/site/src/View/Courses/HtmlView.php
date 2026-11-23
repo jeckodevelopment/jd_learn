@@ -22,7 +22,7 @@ final class HtmlView extends BaseHtmlView
     public string $order = 'recent';
     public int $tagId = 0;
     public array $tags = [];
-public string $difficulty = '';
+    public string $difficulty = '';
     public string $duration = '';
     public string $available = '';
     public string $layout = 'grid';
@@ -46,27 +46,27 @@ public string $difficulty = '';
         $this->showCover = CatalogOptions::enabled('catalog_show_cover');
         $this->showSummary = CatalogOptions::enabled('catalog_show_summary');
         try {
-        $this->items = $this->get('Items');
-        $this->cardTeachers = $this->getModel()->getCardTeachers($this->items);
-        $this->cardEnrollmentStates = $this->getModel()->getCardEnrollmentStates($this->items);
-        $this->cardPendingApprovals = $this->getModel()->getCardPendingApprovals($this->items, $this->cardEnrollmentStates);
-        $this->pagination = $this->get('Pagination');
-        $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
-        $this->categoryChoice = $this->getModel()->getCategoryChoice();
-        $this->categories = $this->showCategory ? $this->getModel()->getCategories() : [];
-        $this->search = $this->getModel()->getSearch();
-        $this->order = $this->getModel()->getOrder();
-        $this->tagId = $this->getModel()->getTagId();
-        $this->tags = $this->showFilters ? $this->getModel()->getTags() : [];
-$this->difficulty = $this->getModel()->getDifficulty();
-        $this->duration = $this->getModel()->getDuration();
-        $this->available = $this->getModel()->getAvailable();
-        $this->layout = $this->getModel()->getLayout();
-        $this->teacherId = $this->getModel()->getTeacherId();
-        $this->pathwayId = $this->getModel()->getPathwayId();
+            $this->items = $this->get('Items');
+            $this->cardTeachers = $this->getModel()->getCardTeachers($this->items);
+            $this->cardEnrollmentStates = $this->getModel()->getCardEnrollmentStates($this->items);
+            $this->cardPendingApprovals = $this->getModel()->getCardPendingApprovals($this->items, $this->cardEnrollmentStates);
+            $this->pagination = $this->get('Pagination');
+            $this->categoryId = (int) $this->getModel()->getState('filter.category_id');
+            $this->categoryChoice = $this->getModel()->getCategoryChoice();
+            $this->categories = $this->showCategory ? $this->getModel()->getCategories() : [];
+            $this->search = $this->getModel()->getSearch();
+            $this->order = $this->getModel()->getOrder();
+            $this->tagId = $this->getModel()->getTagId();
+            $this->tags = $this->showFilters ? $this->getModel()->getTags() : [];
+            $this->difficulty = $this->getModel()->getDifficulty();
+            $this->duration = $this->getModel()->getDuration();
+            $this->available = $this->getModel()->getAvailable();
+            $this->layout = $this->getModel()->getLayout();
+            $this->teacherId = $this->getModel()->getTeacherId();
+            $this->pathwayId = $this->getModel()->getPathwayId();
         // Register public, server-normalized filters explicitly: Joomla's
         // pagination links otherwise discard request query parameters.
-        $paginationFilters = [
+            $paginationFilters = [
             'search' => $this->search,
             'order' => $this->showOrder ? $this->order : '',
             'tag_id' => $this->tagId,
@@ -76,18 +76,18 @@ $this->difficulty = $this->getModel()->getDifficulty();
             'layout' => $this->layout,
             'teacher_id' => $this->teacherId,
             'pathway_id' => $this->pathwayId,
-        ];
-        $paginationFilters['category_id'] = $this->showCategory ? $this->categoryChoice : 0;
-        CatalogPagination::apply($this->pagination, $paginationFilters, $this->showFilters, $this->categoryId);
-        $this->teachers = $this->showFilters ? $this->getModel()->getTeachers() : [];
-        $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
-        if ($this->get('Errors')) {
-            throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
-        }
+            ];
+            $paginationFilters['category_id'] = $this->showCategory ? $this->categoryChoice : 0;
+            CatalogPagination::apply($this->pagination, $paginationFilters, $this->showFilters, $this->categoryId);
+            $this->teachers = $this->showFilters ? $this->getModel()->getTeachers() : [];
+            $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
+            if ($this->get('Errors')) {
+                throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
+            }
         } catch (\Throwable $error) {
             // Access denials and unknown routes must never become a public result.
             if (in_array((int) $error->getCode(), [401, 403, 404], true)) {
-throw $error;
+                throw $error;
             }
             // Fail closed: discard all partially loaded owner and course data.
             $this->loadFailed = true;

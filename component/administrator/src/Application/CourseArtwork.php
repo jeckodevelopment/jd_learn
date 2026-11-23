@@ -12,7 +12,7 @@ final class CourseArtwork
     public static function path(string $value): string
     {
         if ($value === '') {
-return '';
+            return '';
         }
         $marker = strpos($value, '#');
         if ($marker !== false && !str_starts_with(substr($value, $marker), '#joomlaImage://')) {
@@ -24,7 +24,7 @@ return '';
         }
         $parts = explode('/', $path);
         if (count($parts) < 2 || count($parts) > 32) {
-throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_INVALID');
+            throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_INVALID');
         }
         foreach ($parts as $part) {
             if (!preg_match('/^[\p{L}\p{N}_][\p{L}\p{N}_. -]*$/uD', $part) || str_ends_with($part, '.')) {
@@ -41,7 +41,7 @@ throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_INVALID');
     public static function validateLocal(string $path): void
     {
         if ($path === '') {
-return;
+            return;
         }
         $path = self::path($path);
         $parts = explode('/', $path);
@@ -55,18 +55,18 @@ return;
         for ($i = 1; $i <= count($parts); $i++) {
             $directory = implode('/', array_slice($parts, 0, $i));
             if (!MediaHelper::isValidLocalDirectory($directory)) {
-continue;
+                continue;
             }
             $root = realpath(JPATH_ROOT . '/' . $directory);
             if ($root && str_starts_with($root, $base . DIRECTORY_SEPARATOR)
                 && str_starts_with($file, $root . DIRECTORY_SEPARATOR)) {
-$allowed = true;
-break;
+                $allowed = true;
+                break;
             }
         }
         $bytes = filesize($file);
         if (!$allowed || $bytes === false || $bytes > 10485760) {
-throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_INVALID');
+            throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_INVALID');
         }
         $image = @getimagesize($file);
         $mime = ['png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',

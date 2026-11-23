@@ -23,11 +23,11 @@ final class PathwayProgress
     public static function hasCompleteBasis(array $courses): bool
     {
         if ($courses === []) {
-return false;
+            return false;
         }
         foreach ($courses as $course) {
             if (($course['progress_basis'] ?? false) !== true) {
-return false;
+                return false;
             }
         }
         return true;
@@ -46,7 +46,7 @@ return false;
         foreach ($courses as $course) {
             if (($course['progress_applicable'] ?? true) === false) {
                 if (($course['access'] ?? 'unavailable') !== 'available') {
-$unavailable = true;
+                    $unavailable = true;
                 }
                 continue;
             }

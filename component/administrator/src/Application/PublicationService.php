@@ -40,7 +40,7 @@ final class PublicationService
     {
         // Preserve the service's DomainException contract for denied publication.
         $actor = new User((int)$identity->id);
-$actor->clearAccessRights();
+        $actor->clearAccessRights();
         return $actor;
     }
 
@@ -79,7 +79,7 @@ $actor->clearAccessRights();
         if ($versionId) {
             $version = $this->row('course_versions', $versionId);
             if ((int) $version->course_id !== $courseId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
         }
         $defaultStage = (int) $workflow->getDefaultStageByCategory((int) $course->catid);
@@ -117,20 +117,20 @@ throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             $state = $options->get('publishing');
             $action = (string) $options->get('jlms_action', (string) $state === '1' ? 'publish' : 'unpublish');
             if (!in_array((string) $state, ['0', '1', '2'], true)) {
-return false;
+                return false;
             }
             if ($version?->status === 'draft') {
                 if ($action === 'review' && (int) $state !== $currentState) {
-return false;
+                    return false;
                 }
                 if ($action === 'return' && ((int) $transition->jlms_source_stage_id !== $reviewStage || (int) $state !== $returnState)) {
-return false;
+                    return false;
                 }
                 if ($action === 'publish' && (int) $state !== 1) {
-return false;
+                    return false;
                 }
                 if (!in_array($action, ['review', 'return', 'publish'], true)) {
-return false;
+                    return false;
                 }
             } elseif ($version && ($version->status !== 'published' || (int) $version->id !== $currentVersionId)) {
                 return false;
@@ -174,31 +174,31 @@ return false;
     {
         $actor = $this->fresh($identity);
         $course = $this->row('courses', $courseId);
-$this->authorise($actor, $course);
+        $this->authorise($actor, $course);
         $version = $this->row('course_versions', $versionId);
         if ((int)$version->course_id !== $courseId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+            throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
         $selected = null;
         foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) {
-if ((int)$candidate->id === $transitionId) {
-$selected = $candidate;
-}
+            if ((int)$candidate->id === $transitionId) {
+                $selected = $candidate;
+            }
         }
         if (!$selected) {
-throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
+            throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
         }
         $options = new Registry($selected->options);
         $action = (string) $options->get('jlms_action', (string) $options->get('publishing') === '1' ? 'publish' : 'unpublish');
         if ($version->status !== 'draft' || $course->current_version_id === null || $action !== 'publish') {
-return null;
+            return null;
         }
         if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+            throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         $source = $this->row('course_versions', (int)$course->current_version_id);
         if ((int)$source->course_id !== $courseId || $source->status !== 'published' || (int)$source->id === $versionId) {
-throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
+            throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
         }
         return (new PublicationImpact($this->db))->build($course, $source, $version, $transitionId, (int)$actor->id);
     }
@@ -257,7 +257,7 @@ throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
                 $quizHash = null;
                 if ($lesson->kind === 'quiz') {
                     if ($rules['mode'] === 'consultation') {
-throw new \DomainException('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED');
+                        throw new \DomainException('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED');
                     }
                     $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze($actor, $course, $lesson);
                 } elseif ($lesson->kind === 'text') {
@@ -282,7 +282,7 @@ throw new \DomainException('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED');
                 } elseif ($lesson->kind === 'audio') {
                     if ($lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
                         || $lesson->media_asset_id !== null || $lesson->duration_ms !== null) {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                        throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                     $materialQuery = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_attachments AS a')
                         ->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')->where('a.course_version_id = :version')
@@ -290,7 +290,7 @@ throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                         ->where("f.status = 'ready'")->where("f.mime_type IN ('audio/mpeg', 'audio/ogg')")
                         ->bind(':version', (int) $version->id, ParameterType::INTEGER)->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
                     if ((int) $this->db->setQuery($materialQuery)->loadResult() < 1) {
-throw new \DomainException('COM_JLMS_AUDIO_MATERIAL_REQUIRED');
+                        throw new \DomainException('COM_JLMS_AUDIO_MATERIAL_REQUIRED');
                     }
                 } elseif ($lesson->kind === 'video') {
                     $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
@@ -311,7 +311,7 @@ throw new \DomainException('COM_JLMS_AUDIO_MATERIAL_REQUIRED');
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
                     }
                     if ($lesson->provider_key === 'html5') {
-$this->app->bootComponent('com_jlms')->getLocalVideoService()->assertReady($lesson);
+                        $this->app->bootComponent('com_jlms')->getLocalVideoService()->assertReady($lesson);
                     }
                     if ($lesson->provider_key === 'cloudflarestream') {
                         $proof = $remoteChecks[(int) $lesson->id] ?? null;
@@ -331,12 +331,12 @@ $this->app->bootComponent('com_jlms')->getLocalVideoService()->assertReady($less
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                 } else {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                    throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
                 $moduleIds[$lesson->module_id]++;
                 $required += (int) $lesson->required;
                 if ((int) $lesson->required === 1 && (int) ($lesson->release_after_days ?? 0) === 0) {
-$initialRequired++;
+                    $initialRequired++;
                 }
                 $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
                     'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
@@ -366,15 +366,15 @@ $initialRequired++;
             ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('lesson_id, required_lesson_id');
         $edges = $this->db->setQuery($edgeQuery, 0, 25001)->loadObjectList();
         if (count($edges) > 25000) {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         if ($rules['mode'] === 'consultation' && $edges) {
-throw new \DomainException('COM_JLMS_CONSULTATION_PREREQUISITES_UNSUPPORTED');
+            throw new \DomainException('COM_JLMS_CONSULTATION_PREREQUISITES_UNSUPPORTED');
         }
         foreach ($edges as $edge) {
             if (!isset($lessonIds[(int) $edge->lesson_id]) || !isset($lessonIds[(int) $edge->required_lesson_id])
                 || (int) $edge->lesson_id === (int) $edge->required_lesson_id) {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
             }
             $prerequisiteMap[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
         }
@@ -390,33 +390,33 @@ throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     $prerequisiteMap[$lessonId][] = $previousRequired;
                 }
                 if ((int) $lesson->required === 1) {
-$previousRequired = $lessonId;
+                    $previousRequired = $lessonId;
                 }
             }
         }
         $graphState = [];
         $visitPrerequisite = function (int $node) use (&$visitPrerequisite, &$graphState, $prerequisiteMap): void {
             if (($graphState[$node] ?? 0) === 1) {
-throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE');
+                throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE');
             }
             if (($graphState[$node] ?? 0) === 2) {
-return;
+                return;
             }
             $graphState[$node] = 1;
             foreach ($prerequisiteMap[$node] ?? [] as $parent) {
-$visitPrerequisite((int) $parent);
+                $visitPrerequisite((int) $parent);
             }
             $graphState[$node] = 2;
         };
         foreach (array_keys($lessonIds) as $node) {
-$visitPrerequisite((int) $node);
+            $visitPrerequisite((int) $node);
         }
         $q = $this->db->createQuery()->select('a.id, a.lesson_id, a.title, a.description, a.ordering, a.state, a.preview, a.publish_up, a.publish_down, f.id AS asset_id, f.sha256, f.byte_size, f.mime_type, f.status, f.scan_json')
             ->from('#__jlms_attachments AS a')->innerJoin('#__jlms_assets AS f ON f.id = a.asset_id')
             ->where('a.course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('a.ordering, a.id');
         $attachments = $this->db->setQuery($q, 0, 1001)->loadAssocList();
         if (count($attachments) > 1000) {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         foreach ($attachments as $attachment) {
             $scan = json_decode($attachment['scan_json'] ?? '{}', true);
@@ -465,11 +465,11 @@ throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         $fields = [];
         $rows = $this->db->setQuery($q, 0, 1001)->loadObjectList();
         if (count($rows) > 1000) {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         foreach ($rows as $row) {
             if (!in_array((int) $row->access, array_map('intval', $actor->getAuthorisedViewLevels()), true)) {
-continue;
+                continue;
             }
             $fields[$row->name] ??= ['label' => (string) $row->title, 'type' => (string) $row->type,
                 'access' => (int) $row->access, 'values' => []];
@@ -491,30 +491,30 @@ continue;
         $version = $this->row('course_versions', $versionId);
         if ((int) $version->course_id !== $courseId || (int) $version->revision !== $versionRevision
             || (int) $course->revision !== $courseRevision) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+            throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         if ($version->status === 'draft' && $course->current_version_id !== null && $expectedImpact === null) {
             // Only actual publication requires impact confirmation. Sending a
             // version to review does not affect the live course or learners.
             $selected = null;
             foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) {
-if ((int) $candidate->id === $transitionId) {
-$selected = $candidate;
-}
+                if ((int) $candidate->id === $transitionId) {
+                    $selected = $candidate;
+                }
             }
             $action = $selected ? (string) (new Registry($selected->options))->get('jlms_action', '') : '';
             if ($action !== 'review' && $action !== 'return') {
-throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
+                throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
             }
         }
         $preselected = null;
         foreach ($this->transitions($actor, $courseId, $versionId) as $candidate) {
-if ((int) $candidate->id === $transitionId) {
-$preselected = $candidate;
-}
+            if ((int) $candidate->id === $transitionId) {
+                $preselected = $candidate;
+            }
         }
         if (!$preselected) {
-throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
+            throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
         }
         $preOptions = new Registry($preselected->options);
         $preAction = (string) $preOptions->get('jlms_action', (string) $preOptions->get('publishing') === '1' ? 'publish' : 'unpublish');
@@ -525,7 +525,7 @@ throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
                 ->bind(':version', $versionId, ParameterType::INTEGER)->order('id');
             $remoteLessons = $rules['mode'] === 'consultation' ? [] : $this->db->setQuery($q, 0, 101)->loadObjectList();
             if (count($remoteLessons) > 100) {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+                throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
             }
             foreach ($remoteLessons as $lesson) {
                 $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
@@ -564,21 +564,21 @@ throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
             $action = (string) $options->get('jlms_action', $state === 1 ? 'publish' : 'unpublish');
             if ($version->status === 'draft' && $action === 'review') {
                 if ($state !== (int) $course->state || $expectedImpact !== null) {
-throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
+                    throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
                 }
             } elseif ($version->status === 'draft' && $action === 'return') {
                 $returnState = $course->current_version_id === null ? 0 : 1;
                 if ($state !== $returnState || $expectedImpact !== null) {
-throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
+                    throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
                 }
             } elseif ($version->status === 'draft' && $action === 'publish' && $state === 1) {
                 if ($course->current_version_id !== null) {
                     if ($expectedImpact === null) {
-throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
+                        throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
                     }
                     $impact = $this->updateImpact($actor, $courseId, $versionId, $transitionId);
                     if (!$impact || !hash_equals($impact['fingerprint'], $expectedImpact)) {
-throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_STALE');
+                        throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_STALE');
                     }
                 }
                 $this->validateAndFreeze($course, $version, $actor, $remoteChecks);
@@ -612,7 +612,7 @@ throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_STALE');
             $update = (object) ['id' => $courseId,
                 'revision' => (int) $course->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
             if ($version->status === 'draft' && $action === 'publish') {
-$update->current_version_id = $versionId;
+                $update->current_version_id = $versionId;
             }
             if ($action === 'archive') {
                 $update->admissions_open = 0;

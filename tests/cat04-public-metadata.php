@@ -6,7 +6,7 @@ namespace Joomla\CMS\Router {
     final class Route {
         public static function _(string $url, bool $xhtml = true): string {
             if ($xhtml) {
-throw new \RuntimeException('Canonical route must not be XHTML-encoded');
+                throw new \RuntimeException('Canonical route must not be XHTML-encoded');
             }
             return '/it/corsi/42:' . rawurlencode('prova');
         }

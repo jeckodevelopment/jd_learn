@@ -23,29 +23,29 @@ final class LessonController extends EnrollmentController
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         try {
             if (strtoupper($this->input->getMethod()) !== 'POST') {
-throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+                throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
             }
             if ((int) $this->input->server->get('CONTENT_LENGTH', 0, 'UINT') > 4096) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
             }
             if (!$this->checkToken('post', false)) {
-throw new \RuntimeException('JINVALID_TOKEN', 403);
+                throw new \RuntimeException('JINVALID_TOKEN', 403);
             }
             $enrollmentId = CurriculumService::id($this->input->post->get('enrollment_id', null, 'RAW'));
             $lessonId = CurriculumService::id($this->input->post->get('lesson_id', null, 'RAW'));
             $key = $this->input->post->get('idempotency_key', null, 'RAW');
             if (!is_string($key)) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $state = $this->app->bootComponent('com_jlms')->getLearningService()->beginLesson(
                 $this->app->getIdentity(), $this->app->getLanguage()->getTag(), $enrollmentId, $lessonId, $key);
             echo new JsonResponse(['state' => $state], null, false, true);
         } catch (\Throwable $error) {
             $code = (int) $error->getCode();
-$key = $error->getMessage();
+            $key = $error->getMessage();
             if ($error instanceof \InvalidArgumentException) {
-$key = 'COM_JLMS_INVALID_INPUT';
-$code = 400;
+                $key = 'COM_JLMS_INVALID_INPUT';
+                $code = 400;
             }
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_RESOURCE_NOT_FOUND',
                 'COM_JLMS_LESSON_NOT_YET_AVAILABLE', 'COM_JLMS_LESSON_CLOSED', 'COM_JLMS_PREREQUISITES_INCOMPLETE',
@@ -53,7 +53,7 @@ $code = 400;
             if (!in_array($key, $known, true) || !in_array($code, [400, 401, 403, 404, 405, 409, 413], true)) {
                 Log::add('Lesson start failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
                 $key = 'COM_JLMS_SAVE_FAILED';
-$code = 500;
+                $code = 500;
             }
             $this->app->setHeader('status', (string) $code, true);
             http_response_code($code);

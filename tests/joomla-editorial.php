@@ -75,7 +75,7 @@ $checks = 0;
 function editorialExpect(bool $condition, string $message): void {
     global $checks;
     if (!$condition) {
-throw new RuntimeException($message);
+        throw new RuntimeException($message);
     }
     $checks++;
 }
@@ -108,7 +108,7 @@ editorialExpect(count($transitions) > 0, 'Working copy has a native publication 
 $review = null;
 foreach ($transitions as $transition) {
     if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'review') {
-$review = $transition;
+        $review = $transition;
     }
 }
 editorialExpect($review !== null, 'Working copy can enter native review');
@@ -119,7 +119,7 @@ $transitions = $publication->transitions($actor, $course, $draft);
 $approval = null;
 foreach ($transitions as $transition) {
     if ((new \Joomla\Registry\Registry($transition->options))->get('jlms_action') === 'publish') {
-$approval = $transition;
+        $approval = $transition;
     }
 }
 editorialExpect($approval !== null, 'Reviewer has an explicit approval transition');
@@ -158,8 +158,8 @@ $targetHistory = null;
 foreach ($db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course . "' ORDER BY version_id DESC")->loadObjectList() as $candidate) {
     $snapshot = json_decode($candidate->version_data, true, 64, JSON_THROW_ON_ERROR);
     if (($snapshot['com_fields']['history-reference'] ?? null) === 'HISTORY_FIELD_ORIGINAL') {
-$targetHistory = $candidate;
-break;
+        $targetHistory = $candidate;
+        break;
     }
 }
 editorialExpect($targetHistory !== null, 'Native course history captures the field value with its editorial revision');
@@ -182,7 +182,7 @@ foreach (['html5-fixture','materials-fixture'] as $alias) {
     $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('alias=:alias')->bind(':alias', $alias);
     $source = $db->setQuery($q)->loadObject();
     if (!$source || !$source->current_version_id) {
-continue;
+        continue;
     }
     $new = $authoring->createDraft($actor, (int)$source->id, (int)$source->revision);
     $oldAttachments = $db->setQuery('SELECT asset_id,title FROM #__jlms_attachments WHERE course_version_id=' . (int)$source->current_version_id . ' ORDER BY ordering,id')->loadAssocList();

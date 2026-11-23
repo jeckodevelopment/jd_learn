@@ -72,26 +72,26 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 use Jlms\Component\Jlms\Administrator\Application\CourseSchedule as Schedule;
 $checks = 0;
 function scheduleExpect(bool $ok,string $message):void { global $checks;
-if (!$ok)throw new RuntimeException($message);
-$checks++;
+    if (!$ok)throw new RuntimeException($message);
+    $checks++;
 }
 function scheduleDenied(callable $call,int $code,string $message):void { try {
-$call();
+        $call();
 
 } catch (RuntimeException $e) {
-scheduleExpect($e->getCode() === $code, $message);
-return;
+    scheduleExpect($e->getCode() === $code, $message);
+    return;
 
 }throw new RuntimeException($message);
 }
 $fixture = dirname($root) . '/calendar-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
- $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
- scheduleExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen calendar survives reinstall');
- scheduleExpect($db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' . (int)$f['edition'])->loadAssoc() === $f['window'], 'Edition window survives reinstall');
- scheduleExpect($catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int)$f['course'])['calendar']['timezone'] === 'Europe/Rome', 'Calendar zone survives reinstall');
- echo json_encode(['calendar_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-exit;
+    $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
+    scheduleExpect($db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen calendar survives reinstall');
+    scheduleExpect($db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' . (int)$f['edition'])->loadAssoc() === $f['window'], 'Edition window survives reinstall');
+    scheduleExpect($catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int)$f['course'])['calendar']['timezone'] === 'Europe/Rome', 'Calendar zone survives reinstall');
+    echo json_encode(['calendar_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
+    exit;
 }
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $siteConfig = $app->getConfig();
@@ -117,9 +117,9 @@ scheduleExpect($model->save($edit), 'Legacy client can save without calendar fie
 $before = $model->getItem($course);
 scheduleExpect($before->calendar_starts_at === $values['calendar_starts_at'], 'Old client retains calendar');
 foreach ([['calendar_timezone' => ['UTC']],['calendar_timezone' => 'bad/zone'],['calendar_starts_at' => '2027-03-28 02:30:00'],['calendar_starts_at' => '2027-10-31 02:30:00'],['calendar_ends_at' => '1999-01-01 00:00:00'],['calendar_publish_down' => '1999-01-01 00:00:00'],['calendar_starts_at' => '2001-02-30 12:00:00'],['calendar_ends_at' => ['bad']]] as $invalid) {
- scheduleExpect(!$model->save(array_replace($edit, $values, ['revision' => 2], $invalid)), 'Invalid calendar rejected');
- $after = $model->getItem($course);
-scheduleExpect((int)$after->revision === 2 && $after->params_json === $before->params_json && $after->publish_up === $before->publish_up, 'Invalid calendar preserves revision and stored values');
+    scheduleExpect(!$model->save(array_replace($edit, $values, ['revision' => 2], $invalid)), 'Invalid calendar rejected');
+    $after = $model->getItem($course);
+    scheduleExpect((int)$after->revision === 2 && $after->params_json === $before->params_json && $after->publish_up === $before->publish_up, 'Invalid calendar preserves revision and stored values');
 }
 $version = $authoring->createDraft($actor, $course, 2);
 $rev = static fn():int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
@@ -143,29 +143,29 @@ $key = bin2hex(random_bytes(16));
 $enrollment = $learning->start($learner, 'en-GB', $course, $key);
 $history = $db->setQuery('SELECT revision,completed_total,completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadAssoc();
 foreach ([['2099-01-01 00:00:00',null],[null,'2000-01-01 00:00:00']] as [$start,$end]) {
- $change = (object)['id' => $edition,'starts_at' => $start,'ends_at' => $end];
-$db->updateObject('#__jlms_editions', $change, 'id', true);
- scheduleExpect(!$catalog->outline($learner, 'en-GB', $course)['start_window_open'], 'Current edition window disables start action');
- scheduleDenied(fn()=>$learning->start($learner, 'en-GB', $course, $key), 403, 'Automatic replay rechecks the window');
- scheduleDenied(fn()=>$learning->classroom($learner, 'en-GB', $enrollment, $lesson), 403, 'Classroom denies future/closed window');
- scheduleDenied(fn()=>$learning->complete($learner, 'en-GB', $enrollment, $lesson, bin2hex(random_bytes(16))), 403, 'Completion denies a stale form outside the window');
- scheduleDenied(fn()=>$component->getManualEnrollmentService()->editor($actor, $course, (int)$learner->id, 'en-GB'), 403, 'Manual admission rechecks the window');
- scheduleExpect($history === $db->setQuery('SELECT revision,completed_total,completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadAssoc(), 'Window rejection preserves learning history');
+    $change = (object)['id' => $edition,'starts_at' => $start,'ends_at' => $end];
+    $db->updateObject('#__jlms_editions', $change, 'id', true);
+    scheduleExpect(!$catalog->outline($learner, 'en-GB', $course)['start_window_open'], 'Current edition window disables start action');
+    scheduleDenied(fn()=>$learning->start($learner, 'en-GB', $course, $key), 403, 'Automatic replay rechecks the window');
+    scheduleDenied(fn()=>$learning->classroom($learner, 'en-GB', $enrollment, $lesson), 403, 'Classroom denies future/closed window');
+    scheduleDenied(fn()=>$learning->complete($learner, 'en-GB', $enrollment, $lesson, bin2hex(random_bytes(16))), 403, 'Completion denies a stale form outside the window');
+    scheduleDenied(fn()=>$component->getManualEnrollmentService()->editor($actor, $course, (int)$learner->id, 'en-GB'), 403, 'Manual admission rechecks the window');
+    scheduleExpect($history === $db->setQuery('SELECT revision,completed_total,completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadAssoc(), 'Window rejection preserves learning history');
 }
 $restore = (object)(['id' => $edition] + $window);
 $db->updateObject('#__jlms_editions', $restore, 'id', true);
 foreach ([['publish_up','2099-01-01 00:00:00'],['publish_down','1999-01-01 00:00:00']] as [$field,$value]) {
- $current = $db->setQuery('SELECT ' . $field . ' FROM #__jlms_courses WHERE id=' . $course)->loadResult();
-$change = (object)['id' => $course,$field => $value];
-$db->updateObject('#__jlms_courses', $change, 'id', true);
- scheduleDenied(fn()=>$catalog->outline($learner, 'en-GB', $course), 404, 'Publication window gates direct course access');
- $change->$field = $current;
-$db->updateObject('#__jlms_courses', $change, 'id', true);
+    $current = $db->setQuery('SELECT ' . $field . ' FROM #__jlms_courses WHERE id=' . $course)->loadResult();
+    $change = (object)['id' => $course,$field => $value];
+    $db->updateObject('#__jlms_courses', $change, 'id', true);
+    scheduleDenied(fn()=>$catalog->outline($learner, 'en-GB', $course), 404, 'Publication window gates direct course access');
+    $change->$field = $current;
+    $db->updateObject('#__jlms_courses', $change, 'id', true);
 }
 scheduleExpect($model->save(array_replace($edit, ['revision' => (int)$model->getItem($course)->revision,'calendar_ends_at' => '2097-01-01 00:00:00'])), 'Current course calendar can be updated with a native history revision');
 foreach ([0,1] as $state) {
- $publication->transition($actor, $course, $version, (int)$model->getItem($course)->revision, $rev(), (int)$publication->transitions($actor, $course)[0]->id);
- scheduleExpect($snapshot === $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() && $window === $db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' . $edition)->loadAssoc(), 'Withdrawal/republication preserves snapshot and edition window');
+    $publication->transition($actor, $course, $version, (int)$model->getItem($course)->revision, $rev(), (int)$publication->transitions($actor, $course)[0]->id);
+    scheduleExpect($snapshot === $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() && $window === $db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' . $edition)->loadAssoc(), 'Withdrawal/republication preserves snapshot and edition window');
 }
 $legacy = json_decode(file_get_contents(dirname($root) . '/legacy-time-fixture.json'), true, 32, JSON_THROW_ON_ERROR);
 scheduleExpect(Schedule::fromSnapshot($legacy['presentation_before_upgrade']['presentation_json']) === null, 'Legacy snapshots need no calendar backfill');

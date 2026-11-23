@@ -58,50 +58,50 @@ $service = $component->getManualEnrollmentService();
 $learning = $component->getLearningService();
 $checks = 0;
 function manualExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new \RuntimeException($message);
-$checks++;
+    if (!$ok)throw new \RuntimeException($message);
+    $checks++;
 }
 function manualDenied(callable $fn,int $code,string $message):void{try {
-$fn();
+        $fn();
 
 } catch (\RuntimeException $e) {
-manualExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-return;
+    manualExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
+    return;
 
 }throw new \RuntimeException($message);
 }
 function manualKey():string{$k = bin2hex(random_bytes(16));
-return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3) . '-' . substr($k, 20);
+    return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3) . '-' . substr($k, 20);
 }
 function manualCommand(array $i):array{$p = $i['impact'];
-return [$p['course_id'],$p['user_id'],$p['language'],'PRIVATE_MANUAL_REASON',manualKey(),$p['hash'],true];
+    return [$p['course_id'],$p['user_id'],$p['language'],'PRIVATE_MANUAL_REASON',manualKey(),$p['hash'],true];
 }
 $path = dirname($root) . '/manual-enrollment-fixture.json';
 if (($argv[2] ?? '') === 'worker') {
- echo "ready\n";
-fflush(STDOUT);
-fgets(STDIN);
-$race = json_decode(file_get_contents(dirname($root) . '/manual-enrollment-race.json'), true, 16, JSON_THROW_ON_ERROR);
-$command = $race['commands'][(int)($argv[4] ?? 0)];
- try {
-$id = ($argv[3] ?? '') === 'auto' ? $learning->start(new \Joomla\CMS\User\User($command[1]), 'en-GB', $command[0], bin2hex(random_bytes(16))) : $service->apply($actor, ...$command);
-echo 'ok:' . $id . "\n";
+    echo "ready\n";
+    fflush(STDOUT);
+    fgets(STDIN);
+    $race = json_decode(file_get_contents(dirname($root) . '/manual-enrollment-race.json'), true, 16, JSON_THROW_ON_ERROR);
+    $command = $race['commands'][(int)($argv[4] ?? 0)];
+    try {
+        $id = ($argv[3] ?? '') === 'auto' ? $learning->start(new \Joomla\CMS\User\User($command[1]), 'en-GB', $command[0], bin2hex(random_bytes(16))) : $service->apply($actor, ...$command);
+        echo 'ok:' . $id . "\n";
 
- } catch (\RuntimeException $e) {
-if ($e->getCode() !== 409)throw $e;
-echo "conflict\n";
+    } catch (\RuntimeException $e) {
+        if ($e->getCode() !== 409)throw $e;
+        echo "conflict\n";
 
- }exit;
+    }exit;
 }
 if (($argv[2] ?? '') === 'retained') {
- $f = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
-$e = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE id=' . (int)$f['enrollment'])->loadObject();
- manualExpect($e && $e->origin === 'manual' && (int)$e->user_id === $f['learner'] && (int)$e->created_by === $f['manager'], 'manual assignment provenance retained');
- manualExpect($learning->resumeTarget(new \Joomla\CMS\User\User($f['learner']), 'en-GB', (int)$e->id)['lesson_id'] === $f['lesson'], 'manual learner remains able to resume');
- manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id=' . (int)$e->id)->loadResult() === 1, 'single manual receipt retained');
- manualExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.manualenrollment' AND item_id=" . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
- echo json_encode(['manual_enrollment_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit;
+    $f = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
+    $e = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE id=' . (int)$f['enrollment'])->loadObject();
+    manualExpect($e && $e->origin === 'manual' && (int)$e->user_id === $f['learner'] && (int)$e->created_by === $f['manager'], 'manual assignment provenance retained');
+    manualExpect($learning->resumeTarget(new \Joomla\CMS\User\User($f['learner']), 'en-GB', (int)$e->id)['lesson_id'] === $f['lesson'], 'manual learner remains able to resume');
+    manualExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id=' . (int)$e->id)->loadResult() === 1, 'single manual receipt retained');
+    manualExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.manualenrollment' AND item_id=" . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
+    echo json_encode(['manual_enrollment_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+    exit;
 }
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $rf = json_decode(file_get_contents(dirname($root) . '/roster-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
@@ -120,10 +120,10 @@ $pub = $component->getPublicationService();
 $pub->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$pub->transitions($actor, $course)[0]->id);
 $users = [];
 foreach (['one','failure','race','capacity1','capacity2','automatic','snapshot','http','denied']as$name) {
-$u = new \Joomla\CMS\User\User();
-$data = ['name' => 'CI Manual ' . $name,'username' => 'cimanual' . $name,'email' => 'cimanual' . $name . '@example.invalid','password' => 'Ci-only-Manual-Password-2026','password2' => 'Ci-only-Manual-Password-2026','groups' => $name === 'denied' ? [2] : [2,$group],'block' => 0,'activation' => ''];
-if (!$u->bind($data) || !$u->save())throw new \RuntimeException($u->getError());
-$users[$name] = new \Joomla\CMS\User\User((int)$u->id);
+    $u = new \Joomla\CMS\User\User();
+    $data = ['name' => 'CI Manual ' . $name,'username' => 'cimanual' . $name,'email' => 'cimanual' . $name . '@example.invalid','password' => 'Ci-only-Manual-Password-2026','password2' => 'Ci-only-Manual-Password-2026','groups' => $name === 'denied' ? [2] : [2,$group],'block' => 0,'activation' => ''];
+    if (!$u->bind($data) || !$u->save())throw new \RuntimeException($u->getError());
+    $users[$name] = new \Joomla\CMS\User\User((int)$u->id);
 }
 $manager = new \Joomla\CMS\User\User((int)$rf['manager']);
 $asset = new \Joomla\CMS\Table\Asset($db);
@@ -196,9 +196,9 @@ manualDenied(fn()=>$service->editor($manager, $course, 2147483647, 'en-GB'), 404
 manualDenied(fn()=>$service->editor($manager, $course, (int)$users['one']->id, 'zz-ZZ'), 400, 'uninstalled language rejected');
 $command = manualCommand($i);
 foreach ([[6,false,400],[3,'',422],[3,'<script>',422],[5,str_repeat('0', 64),409]]as[$index,$value,$code]) {
-$bad = $command;
-$bad[$index] = $value;
-manualDenied(fn()=>$service->apply($manager, ...$bad), $code, 'invalid manual command rejected');
+    $bad = $command;
+    $bad[$index] = $value;
+    manualDenied(fn()=>$service->apply($manager, ...$bad), $code, 'invalid manual command rejected');
 }
 manualExpect($counts() === $before, 'invalid confirmations and stale preview have no writes');
 $id = $service->apply($manager, ...$command);
@@ -220,28 +220,28 @@ manualDenied(fn()=>$service->apply($manager, ...$changed), 409, 'same UUID diffe
 manualExpect($service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['blocked'] === 'COM_JLMS_MANUAL_EXISTS', 'existing assignment blocks distinct creation');
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$manager->id, (int)$rf['group']);
 try {
-manualDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked operator cannot replay');
+    manualDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked operator cannot replay');
 
 } finally {
-\Joomla\CMS\User\UserHelper::addUserToGroup((int)$manager->id, (int)$rf['group']);
+    \Joomla\CMS\User\UserHelper::addUserToGroup((int)$manager->id, (int)$rf['group']);
 }
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$users['one']->id, $group);
 try {
-manualDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked learner cannot replay admission');
+    manualDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked learner cannot replay admission');
 
 } finally {
-\Joomla\CMS\User\UserHelper::addUserToGroup((int)$users['one']->id, $group);
+    \Joomla\CMS\User\UserHelper::addUserToGroup((int)$users['one']->id, $group);
 }
 $update = static function(string $table,int $id,array $fields)use($db):void{$o = (object)(['id' => $id] + $fields);
-$db->updateObject('#__' . $table, $o, 'id', true);
+    $db->updateObject('#__' . $table, $o, 'id', true);
 
 };
 $update('users', (int)$users['failure']->id, ['block' => 1]);
 try {
-manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 403, 'blocked account rejected');
+    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 403, 'blocked account rejected');
 
 } finally {
-$update('users', (int)$users['failure']->id, ['block' => 0]);
+    $update('users', (int)$users['failure']->id, ['block' => 0]);
 }
 $broken = new \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService($db, $learning, $component->getCatalogService(), $component->getEnrollmentRosterService(), static function():void{throw new \RuntimeException('COM_JLMS_MANUAL_AUDIT_FAILED', 503);
 
@@ -252,24 +252,24 @@ manualDenied(fn()=>$broken->apply($actor, ...$fail), 503, 'audit failure is not 
 manualExpect($counts() === $beforeFailure, 'audit failure rolls back subject enrollment and receipt');
 $update('jlms_courses', $course, ['enrollment_mode' => 'approval']);
 try {
-manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 409, 'approval flow cannot be bypassed');
+    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 409, 'approval flow cannot be bypassed');
 
 } finally {
-$update('jlms_courses', $course, ['enrollment_mode' => 'explicit']);
+    $update('jlms_courses', $course, ['enrollment_mode' => 'explicit']);
 }
 $update('jlms_courses', $course, ['state' => 0]);
 try {
-manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 404, 'unpublished course rejected');
+    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 404, 'unpublished course rejected');
 
 } finally {
-$update('jlms_courses', $course, ['state' => 1]);
+    $update('jlms_courses', $course, ['state' => 1]);
 }
 $update('jlms_editions', $edition, ['ends_at' => '2000-01-01 00:00:00']);
 try {
-manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 403, 'expired default edition rejected');
+    manualDenied(fn()=>$service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'), 403, 'expired default edition rejected');
 
 } finally {
-$update('jlms_editions', $edition, ['ends_at' => null]);
+    $update('jlms_editions', $edition, ['ends_at' => null]);
 }
 $state = $component->getEnrollmentStateService();
 $si = $state->editor($actor, $course, $id, 'suspended');
@@ -278,35 +278,35 @@ manualExpect($service->apply($manager, ...$command) === $id && $service->editor(
 $si = $state->editor($actor, $course, $id, 'active');
 $state->apply($actor, $course, $id, $si['impact']['enrollment_revision'], 'active', 'Fixture reactivation', manualKey(), $si['impact']['hash'], true);
 $runRace = static function(array $commands,array $modes)use($db,$root,$edition,$course):array{file_put_contents(dirname($root) . '/manual-enrollment-race.json', json_encode(['commands' => $commands], JSON_THROW_ON_ERROR));
-$workers = [];
- foreach ($modes as$index => $mode) {
-$pipes = [];
-$proc = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode,(string)$index], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-if (!is_resource($proc))throw new \RuntimeException('Worker failed');
-$workers[] = [$proc,$pipes];
- }
- foreach ($workers as[$proc,$pipes]) {
-stream_set_timeout($pipes[1], 30);
-if (trim((string)fgets($pipes[1])) !== 'ready')throw new \RuntimeException('Worker bootstrap failed');
- }
- $db->transactionStart();
-$db->setQuery('SELECT id FROM #__jlms_editions WHERE id=' . $edition . ' FOR UPDATE')->loadResult();
-foreach ($workers as[$proc,$pipes]) {
-fwrite($pipes[0], "go\n");
-fclose($pipes[0]);
+    $workers = [];
+    foreach ($modes as$index => $mode) {
+        $pipes = [];
+        $proc = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode,(string)$index], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+        if (!is_resource($proc))throw new \RuntimeException('Worker failed');
+        $workers[] = [$proc,$pipes];
+    }
+    foreach ($workers as[$proc,$pipes]) {
+        stream_set_timeout($pipes[1], 30);
+        if (trim((string)fgets($pipes[1])) !== 'ready')throw new \RuntimeException('Worker bootstrap failed');
+    }
+    $db->transactionStart();
+    $db->setQuery('SELECT id FROM #__jlms_editions WHERE id=' . $edition . ' FOR UPDATE')->loadResult();
+    foreach ($workers as[$proc,$pipes]) {
+        fwrite($pipes[0], "go\n");
+        fclose($pipes[0]);
 
-}usleep(200000);
-$db->transactionCommit();
-$result = [];
- foreach ($workers as[$proc,$pipes]) {
-$out = trim(stream_get_contents($pipes[1]));
-$err = stream_get_contents($pipes[2]);
-fclose($pipes[1]);
-fclose($pipes[2]);
-if (proc_close($proc) !== 0)throw new \RuntimeException($err . $out);
-$result[] = $out;
+    }usleep(200000);
+    $db->transactionCommit();
+    $result = [];
+    foreach ($workers as[$proc,$pipes]) {
+        $out = trim(stream_get_contents($pipes[1]));
+        $err = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($proc) !== 0)throw new \RuntimeException($err . $out);
+        $result[] = $out;
 
- }return$result;
+    }return$result;
 
 };
 $race = manualCommand($service->editor($actor, $course, (int)$users['race']->id, 'en-GB'));
@@ -336,27 +336,27 @@ file_put_contents(dirname($root) . '/manual-enrollment-race.json', json_encode([
 $pipes = [];
 $worker = proc_open([PHP_BINARY, __FILE__, $root, 'worker', 'auto', '0'], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
 if (!is_resource($worker)) {
-throw new RuntimeException('Snapshot worker failed');
+    throw new RuntimeException('Snapshot worker failed');
 }
 stream_set_timeout($pipes[1], 30);
 if (trim((string) fgets($pipes[1])) !== 'ready') {
-throw new RuntimeException('Snapshot worker bootstrap failed');
+    throw new RuntimeException('Snapshot worker bootstrap failed');
 }
 $db->transactionStart();
 try {
     $db->setQuery('SELECT id FROM #__jlms_editions WHERE id=' . $edition . ' FOR UPDATE')->loadResult();
     fwrite($pipes[0], "go\n");
-fclose($pipes[0]);
+    fclose($pipes[0]);
     $waiting = false;
     for ($poll = 0; $poll < 100; $poll++) {
         foreach ($db->setQuery('SHOW FULL PROCESSLIST')->loadAssocList() as $process) {
             if (str_contains((string) $process['Info'], 'jlms_editions') && str_contains((string) $process['Info'], 'FOR UPDATE')) {
-$waiting = true;
-break;
+                $waiting = true;
+                break;
             }
         }
         if ($waiting) {
-break;
+            break;
         }
         usleep(50000);
     }
@@ -369,7 +369,7 @@ break;
     $db->transactionCommit();
 } catch (Throwable $error) {
     $db->transactionRollback();
-proc_terminate($worker);
+    proc_terminate($worker);
     throw $error;
 }
 $result = trim(stream_get_contents($pipes[1]));
@@ -377,7 +377,7 @@ $error = stream_get_contents($pipes[2]);
 fclose($pipes[1]);
 fclose($pipes[2]);
 if (proc_close($worker) !== 0) {
-throw new RuntimeException($error . $result);
+    throw new RuntimeException($error . $result);
 }
 manualExpect($result === 'ok:' . $winner->id, 'Automatic start sees the admission committed while its edition lock was blocked');
 manualExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $snapshotUser . ' AND edition_id=' . $edition)->loadResult() === 1, 'Blocked automatic retry retains one enrollment');

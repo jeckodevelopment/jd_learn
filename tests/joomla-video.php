@@ -103,16 +103,16 @@ if (isset($cloudflareFields['signing_key_ref']) || isset($cloudflareFields['sign
 }
 $checks = 0;
 function videoExpect(bool $value,string $message): void { global $checks;
-if (!$value) throw new \RuntimeException($message);
-$checks++;
+    if (!$value) throw new \RuntimeException($message);
+    $checks++;
 }
 function videoDenied(callable $work,int $code,string $message): void {
     try {
-$work();
+        $work();
 
     } catch (\RuntimeException $error) {
-videoExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-return;
+        videoExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+        return;
     }
     throw new \RuntimeException($message);
 }
@@ -156,7 +156,7 @@ if (($argv[2] ?? '') === 'retained') {
     $view = $learning->classroom($student, 'en-GB', $fixture['enrollment_id'], $fixture['lesson_id']);
     videoExpect($view['percent'] === 100 && $view['completed_at'] !== null, 'video completion survives upgrade');
     echo json_encode(['video_upgrade' => 'passed']) . PHP_EOL;
-exit(0);
+    exit(0);
 }
 $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning access'")->loadResult();
 $group = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learning entitlement'")->loadResult();
@@ -202,10 +202,10 @@ videoExpect($view['lesson']->kind === 'video' && !isset($view['lesson']->source_
 // LCM-01: withdrawal, archive and trash stop existing video access without
 // deleting progress. A promotional end date alone is not a teaching deadline.
 foreach ([0,2,-2] as $blockedState) {
- videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $blockedState,'publish_down' => '2000-01-01 00:00:00']);
- videoDenied(fn()=>$learning->videoContext($student, 'en-GB', $enrollment, $lesson), 404, 'inactive course rejects direct video context');
- videoDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 404, 'inactive course rejects video playback');
- videoDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'inactive course rejects a new learner');
+    videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $blockedState,'publish_down' => '2000-01-01 00:00:00']);
+    videoDenied(fn()=>$learning->videoContext($student, 'en-GB', $enrollment, $lesson), 404, 'inactive course rejects direct video context');
+    videoDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 404, 'inactive course rejects video playback');
+    videoDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'inactive course rejects a new learner');
 }
 videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state' => 1,'publish_down' => '2000-01-01 00:00:00']);
 [, , , $availableVideo] = $learning->videoContext($student, 'en-GB', $enrollment, $lesson);

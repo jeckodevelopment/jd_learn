@@ -6,24 +6,24 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 use Jlms\Component\Jlms\Administrator\Domain\QuizScorer;
 $checks = 0;
 function qExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new \RuntimeException($message);
-$checks++;
+    if (!$ok)throw new \RuntimeException($message);
+    $checks++;
 }
 function qReject(callable $work,string $message):void{try {
-$work();
+        $work();
 
 } catch (\RuntimeException $e) {
-qExpect(in_array($e->getCode(), [400,422], true), $message);
-return;
+    qExpect(in_array($e->getCode(), [400,422], true), $message);
+    return;
 
 }throw new \RuntimeException($message);
 }
 function qReason(callable $work,string $reason):void{try {
-$work();
+        $work();
 
 } catch (\RuntimeException $e) {
-qExpect($e->getMessage() === $reason, 'specific validation reason: ' . $reason);
-return;
+    qExpect($e->getMessage() === $reason, 'specific validation reason: ' . $reason);
+    return;
 
 }throw new \RuntimeException('Expected validation reason: ' . $reason);
 }
@@ -62,7 +62,7 @@ qExpect(QuestionDefinition::normalise($tf, $filter)['kind'] === 'true_false', 't
 $tf['options'][] = ['label' => 'Third','correct' => '0'];
 qReject(fn()=>QuestionDefinition::normalise($tf, $filter), 'true false has exactly two options');
 foreach (['0','-1','1.5','1e2','10001']as$bad) {
-qReject(fn()=>QuestionDefinition::normalise(array_replace($input, ['default_points' => $bad]), $filter), 'invalid points: ' . $bad);
+    qReject(fn()=>QuestionDefinition::normalise(array_replace($input, ['default_points' => $bad]), $filter), 'invalid points: ' . $bad);
 }
 $bad = $input;
 $bad['options'][0]['option_id'] = '../../a';

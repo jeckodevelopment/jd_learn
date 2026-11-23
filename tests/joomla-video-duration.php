@@ -67,7 +67,7 @@ require __DIR__ . '/cloudflare-fixture.php';
 [$config,$secrets,$transport,$remote] = cloudflareFixture();
 $registry = new VideoProviderRegistry();
 foreach ([new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
-$registry->register($provider->getDescriptor(), static fn()=>$provider);
+    $registry->register($provider->getDescriptor(), static fn()=>$provider);
 }
 $authoring = new \Jlms\Component\Jlms\Administrator\Application\CurriculumService($db, static fn(string $body):string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), static fn()=>$registry);
 $component->setCurriculumService($authoring);
@@ -76,42 +76,42 @@ $publication = $component->getPublicationService();
 $learning = $component->getLearningService();
 $checks = 0;
 function durationExpect(bool $ok,string $message):void{global $checks;
-if (!$ok)throw new RuntimeException($message);
-$checks++;
+    if (!$ok)throw new RuntimeException($message);
+    $checks++;
 }
 function durationDenied(callable $work,string $key):void{try {
-$work();
+        $work();
 
 } catch (\Throwable $e) {
-durationExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
-return;
+    durationExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
+    return;
 
 }throw new RuntimeException('Expected ' . $key);
 }
 function durationRow(string $table,int $id):object{global $db;
-return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
+    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
 function durationState(int $course):array{global $db;
-$versions = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList();
-$ids = implode(',', array_column($versions, 'id'));
-return ['course' => (array)durationRow('courses', $course),'versions' => $versions,'lessons' => $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id IN (' . $ids . ') ORDER BY id')->loadAssocList(),'enrollments' => $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(),'progress' => $db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
+    $versions = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList();
+    $ids = implode(',', array_column($versions, 'id'));
+    return ['course' => (array)durationRow('courses', $course),'versions' => $versions,'lessons' => $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id IN (' . $ids . ') ORDER BY id')->loadAssocList(),'enrollments' => $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(),'progress' => $db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
 }
 $fixture = dirname($root) . '/video-duration-fixture.json';
 $mode = $argv[2] ?? '';
 if (in_array($mode, ['state','checkpoint','retained'], true)) {
-$f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
-$state = durationState($f['course']);
-if ($mode === 'checkpoint') {
-file_put_contents($fixture . '.snapshot', json_encode($state, JSON_THROW_ON_ERROR));
-return;
+    $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
+    $state = durationState($f['course']);
+    if ($mode === 'checkpoint') {
+        file_put_contents($fixture . '.snapshot', json_encode($state, JSON_THROW_ON_ERROR));
+        return;
 
-}if ($mode === 'retained') {
-durationExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Measured provenance, frozen lessons and observed-duration progress survive upgrade');
-echo json_encode(['video_duration_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-return;
+    }if ($mode === 'retained') {
+        durationExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Measured provenance, frozen lessons and observed-duration progress survive upgrade');
+        echo json_encode(['video_duration_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
+        return;
 
-}echo json_encode($state, JSON_THROW_ON_ERROR);
-return;
+    }echo json_encode($state, JSON_THROW_ON_ERROR);
+    return;
 }
 $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
 $settings->set('video_external_policy', 'embed');
@@ -159,8 +159,8 @@ durationDenied(fn()=>$authoring->authoringMetadata(new \Joomla\CMS\User\User(0),
 durationExpect(count($remote->calls) === $calls, 'Remote API is not contacted before author authorization');
 $previousRevision = (int)durationRow('course_versions', $version)->revision;
 $remote->callback = static function()use($db,$version,$previousRevision,$remote):void{$remote->callback = null;
-$changed = (object)['id' => $version,'revision' => $previousRevision + 1];
-$db->updateObject('#__jlms_course_versions', $changed, 'id');
+    $changed = (object)['id' => $version,'revision' => $previousRevision + 1];
+    $db->updateObject('#__jlms_course_versions', $changed, 'id');
 
 };
 durationDenied(fn()=>$authoring->authoringMetadata($actor, $stream), 'COM_JLMS_REVISION_CONFLICT');
@@ -171,8 +171,8 @@ durationExpect($api['duration_ms'] === 10000 && $api['origin'] === 'provider_api
 $streamId = $authoring->saveLesson($actor, $stream, ['fingerprint' => $api['fingerprint'],'duration_ms' => $api['duration_ms'],'origin' => $api['origin']]);
 durationExpect(json_decode(durationRow('lessons', $streamId)->params_json, true)['video_duration_origin'] === 'provider_api', 'Server API provenance retained');
 $publish = static function(int $id)use($publication,$actor,$course):void{$t = (int)$publication->transitions($actor, $course, $id)[0]->id;
-$impact = $publication->updateImpact($actor, $course, $id, $t);
-$publication->transition($actor, $course, $id, (int)durationRow('courses', $course)->revision, (int)durationRow('course_versions', $id)->revision, $t, $impact['fingerprint'] ?? null);
+    $impact = $publication->updateImpact($actor, $course, $id, $t);
+    $publication->transition($actor, $course, $id, (int)durationRow('courses', $course)->revision, (int)durationRow('course_versions', $id)->revision, $t, $impact['fingerprint'] ?? null);
 
 };
 $publish($version);

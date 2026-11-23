@@ -22,7 +22,7 @@ return new class implements InstallerScriptInterface {
     public function postflight(string $type, InstallerAdapter $adapter): bool
     {
         if ($type !== 'install') {
-return true;
+            return true;
         }
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $query = $db->createQuery()->update($db->quoteName('#__extensions'))

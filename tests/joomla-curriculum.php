@@ -75,17 +75,17 @@ $checks = 0;
 function curriculumExpect(bool $ok, string $message): void {
     global $checks;
     if (!$ok) {
-throw new \RuntimeException($message);
+        throw new \RuntimeException($message);
     }
     $checks++;
 }
 function curriculumDenied(callable $call, string $message): void {
     try {
-$call();
+        $call();
 
     } catch (\DomainException | \InvalidArgumentException $expected) {
-curriculumExpect(true, $message);
-return;
+        curriculumExpect(true, $message);
+        return;
     }
     throw new \RuntimeException($message);
 }
@@ -126,7 +126,7 @@ try {
     $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title' => 'Video preview','kind' => 'video',
         'required' => '0','body' => '','public_preview' => '1','provider_key' => 'youtube','source_reference' => 'https://youtu.be/dQw4w9WgXcQ']);
 } catch (\DomainException $error) {
-$videoPreviewRejected = $error->getMessage() === 'COM_JLMS_INVALID_INPUT';
+    $videoPreviewRejected = $error->getMessage() === 'COM_JLMS_INVALID_INPUT';
 }
 curriculumExpect($videoPreviewRejected, 'public preview is limited to text lessons');
 $before = versionRevision();
@@ -150,7 +150,7 @@ curriculumDenied(fn () => $service->saveModule($actor, scopeInput() + ['id' => $
 $data['alias'] = 'curriculum-foreign';
 $data['title'] = 'Foreign course';
 if (!$model->save($data)) {
-throw new \RuntimeException('Foreign fixture failed');
+    throw new \RuntimeException('Foreign fixture failed');
 }
 $foreignCourse = (int)$model->getState('course.id');
 $foreignVersion = $service->createDraft($actor, $foreignCourse, 1);

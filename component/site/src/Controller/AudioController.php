@@ -16,7 +16,7 @@ final class AudioController extends BaseController
     public function execute($task)
     {
         if (strtolower($task) !== 'save') {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
@@ -27,13 +27,13 @@ throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         try {
             if (strtoupper($this->input->getMethod()) !== 'POST') {
-throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+                throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
             }
             if ((int) $this->input->server->get('CONTENT_LENGTH', 0, 'UINT') > 4096) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
             }
             if (!$this->checkToken('post', false)) {
-throw new \RuntimeException('JINVALID_TOKEN', 403);
+                throw new \RuntimeException('JINVALID_TOKEN', 403);
             }
             $enrollment = CurriculumService::id($this->input->post->get('enrollment_id', null, 'RAW'));
             $lesson = CurriculumService::id($this->input->post->get('lesson_id', null, 'RAW'));
@@ -43,16 +43,16 @@ throw new \RuntimeException('JINVALID_TOKEN', 403);
             echo new JsonResponse(['resume_ms' => $saved], null, false, true);
         } catch (\Throwable $error) {
             $code = (int) $error->getCode();
-$key = $error->getMessage();
+            $key = $error->getMessage();
             if ($error instanceof \InvalidArgumentException) {
-$key = 'COM_JLMS_INVALID_INPUT';
-$code = 400;
+                $key = 'COM_JLMS_INVALID_INPUT';
+                $code = 400;
             }
             if (!in_array($code, [400, 401, 403, 404, 405, 409, 413], true)
                 || (!preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) && $key !== 'JINVALID_TOKEN')) {
                 Log::add('Audio progress save failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
                 $key = 'COM_JLMS_SAVE_FAILED';
-$code = 500;
+                $code = 500;
             }
             $this->app->setHeader('status', (string) $code, true);
             http_response_code($code);

@@ -67,32 +67,32 @@ $authoring = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
 function impactExpect(bool $ok,string $message): void { global $checks;
-if (!$ok) {
-throw new RuntimeException($message);
+    if (!$ok) {
+        throw new RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 function impactDenied(callable $work,string $message): void { try {
-$work();
+        $work();
 
 } catch (\DomainException $e) {
-impactExpect($e->getMessage() === $message, 'Expected ' . $message . ', got ' . $e->getMessage());
-return;
+    impactExpect($e->getMessage() === $message, 'Expected ' . $message . ', got ' . $e->getMessage());
+    return;
 
 } throw new RuntimeException('Expected rejection: ' . $message);
 }
 function impactRow(string $table,int $id): object { global $db;
-return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
+    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
 function impactLearning(): array { global $db;
-return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
+    return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
 }
 $mode = $argv[2] ?? '';
 $fixture = dirname($root) . '/publication-impact-fixture.json';
 if ($mode === 'state') {
- $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
- echo json_encode(['course' => (array)impactRow('courses', $f['course']),'version' => (array)impactRow('course_versions', $f['version']),'learning' => impactLearning()], JSON_THROW_ON_ERROR);
-return;
+    $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
+    echo json_encode(['course' => (array)impactRow('courses', $f['course']),'version' => (array)impactRow('course_versions', $f['version']),'learning' => impactLearning()], JSON_THROW_ON_ERROR);
+    return;
 }
 $source = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();
 $record = impactRow('courses', $source);
@@ -124,7 +124,7 @@ $transition = (int)$findTransition('publish')->id;
 $review = static fn(): array => $service->updateImpact($actor, $course, $draft, $transition);
 $initial = $review();
 foreach (['modules','lessons','quizzes','materials'] as $kind) {
-impactExpect($initial['changes'][$kind]['added'] === 0 && $initial['changes'][$kind]['changed'] === 0 && $initial['changes'][$kind]['removed'] === 0, 'Unchanged working copy has no false changes for ' . $kind);
+    impactExpect($initial['changes'][$kind]['added'] === 0 && $initial['changes'][$kind]['changed'] === 0 && $initial['changes'][$kind]['removed'] === 0, 'Unchanged working copy has no false changes for ' . $kind);
 }
 impactExpect(!$initial['rules_changed'], 'Equivalent teaching rules remain unchanged');
 impactExpect((int)$initial['enrollments'][0]['total'] === 1, 'Review counts existing assignments without learner identities');

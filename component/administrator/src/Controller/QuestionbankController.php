@@ -15,17 +15,17 @@ final class QuestionbankController extends BaseController
     public function execute($task)
     {
         if (!in_array(strtolower($task), ['save','checkout','checkin','duplicate','delete','trash','restore'], true)) {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
     private function perform(string $action): void
     {
         if (strtoupper($this->input->getMethod()) !== 'POST') {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         if (!$this->checkToken('post', false)) {
-throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
         }
         $formValidationMessage = null;
         try {
@@ -34,7 +34,7 @@ throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
             $service = $this->app->bootComponent('com_jlms')->getQuestionBankService();
             if ($action === 'save') {
                 $form = $model->getForm();
-$data = $form->filter($data);
+                $data = $form->filter($data);
                 if (!$form->validate($data)) {
                     $messages = [];
                     foreach ($form->getErrors() as $formError) {
@@ -44,30 +44,30 @@ $data = $form->filter($data);
                     }
                     $formValidationMessage = Text::_('COM_JLMS_QUESTION_FORM_INVALID');
                     if ($messages) {
-$formValidationMessage .= ' ' . implode(' ', array_unique($messages));
+                        $formValidationMessage .= ' ' . implode(' ', array_unique($messages));
                     }
                     throw new \RuntimeException('COM_JLMS_QUESTION_FORM_INVALID', 422);
                 }
                 $id = $service->save($this->app->getIdentity(), $data);
             } else {
-$id = CurriculumService::id($data['id'] ?? null);
-$service->lock($this->app->getIdentity(), $id, $action === 'checkin');
+                $id = CurriculumService::id($data['id'] ?? null);
+                $service->lock($this->app->getIdentity(), $id, $action === 'checkin');
             }
             $this->setMessage(Text::_('COM_JLMS_QUESTION_SAVED'));
             $target = 'index.php?option=com_jlms&view=question&id=' . $id;
             $this->setRedirect(Route::link('administrator', $target, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage();
-$code = (int) $error->getCode();
+            $code = (int) $error->getCode();
             if ($formValidationMessage !== null && $code === 422) {
-throw new \RuntimeException($formValidationMessage, 422);
+                throw new \RuntimeException($formValidationMessage, 422);
             }
             if ($error instanceof \InvalidArgumentException) {
-$key = 'COM_JLMS_INVALID_INPUT';
-$code = 400;
+                $key = 'COM_JLMS_INVALID_INPUT';
+                $code = 400;
             }
             if (in_array($code, [400,401,403,404,409,422], true) && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {
-throw new \RuntimeException(Text::_($key), $code);
+                throw new \RuntimeException(Text::_($key), $code);
             }
             Log::add('Question mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
@@ -83,10 +83,10 @@ throw new \RuntimeException(Text::_($key), $code);
     private function mutate(string $action): void
     {
         if (strtoupper($this->input->getMethod()) !== 'POST') {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         if (!$this->checkToken('post', false)) {
-throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
         }
         try {
             $id = CurriculumService::id($this->input->post->get('id', null, 'raw'));
@@ -106,13 +106,13 @@ throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
             }
         } catch (\Throwable $error) {
             $key = $error->getMessage();
-$code = (int)$error->getCode();
+            $code = (int)$error->getCode();
             if ($error instanceof \InvalidArgumentException) {
-$key = 'COM_JLMS_INVALID_INPUT';
-$code = 400;
+                $key = 'COM_JLMS_INVALID_INPUT';
+                $code = 400;
             }
             if (in_array($code, [400,401,403,404,409,422], true) && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {
-throw new \RuntimeException(Text::_($key), $code);
+                throw new \RuntimeException(Text::_($key), $code);
             }
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }

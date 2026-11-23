@@ -26,12 +26,12 @@ final class CertificateIssuer
             ->bind(':completed', $completedAt);
         $row = $this->db->setQuery($q)->loadObject();
         if (!$row) {
-return false;
+            return false;
         }
         $rules = json_decode((string) $row->rules_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($rules) || ($rules['mode'] ?? 'learning') !== 'learning'
             || (!$explicitAdminRecovery && ($rules['certificate_enabled'] ?? false) !== true)) {
-return false;
+            return false;
         }
         $params = ComponentHelper::getParams('com_jlms');
         if (!CertificatePreferences::enabled((bool) $params->get('certificate_enabled', 0), (string) $row->params_json)) {
@@ -42,24 +42,24 @@ return false;
             ->where('enrollment_id = :enrollment')->where('course_version_id = :version')
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':version', $courseVersionId, ParameterType::INTEGER);
         if ((int) $this->db->setQuery($existing)->loadResult() > 0) {
-return false;
+            return false;
         }
 
         $template = $this->db->createQuery()->select('id, template_json, hash')->from('#__jlms_certificate_templates')
             ->where('state = 1')->order('id ASC');
         $templateRow = $this->db->setQuery($template)->loadObject();
         if (!$templateRow) {
-return false;
+            return false;
         }
 
         $templateSnapshot = json_decode((string) $templateRow->template_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($templateSnapshot)) {
-return false;
+            return false;
         }
         foreach (['certificate_heading' => 'heading', 'certificate_subheading' => 'subheading', 'certificate_footer' => 'footer'] as $setting => $key) {
             $value = trim((string) $params->get($setting, ''));
             if ($value !== '') {
-$templateSnapshot[$key] = mb_substr($value, 0, 255);
+                $templateSnapshot[$key] = mb_substr($value, 0, 255);
             }
         }
         $accent = (string) $params->get('certificate_accent_color', '#315A70');

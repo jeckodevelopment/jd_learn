@@ -70,24 +70,24 @@ $factory = $component->getMVCFactory();
 
 $checks = 0;
 function attemptExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new \RuntimeException($message);
-$checks++;
+    if (!$ok)throw new \RuntimeException($message);
+    $checks++;
 }
 function attemptReject(callable $call,int $code,string $message):void{try {
-$call();
+        $call();
 
 } catch (\RuntimeException $error) {
-attemptExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-return;
+    attemptExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
+    return;
 
 }throw new \RuntimeException($message);
 }
 function attemptKey():string{$s = bin2hex(random_bytes(16));
-return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
+    return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
 }
 function attemptAnswers(array $dto,bool $correct=true):string{
     $a = [];
-foreach ($dto['questions']as$q)$a[$q['id']] = $correct ? ($q['kind'] === 'multiple' ? ['first','second'] : ['first']) : [];
+    foreach ($dto['questions']as$q)$a[$q['id']] = $correct ? ($q['kind'] === 'multiple' ? ['first','second'] : ['first']) : [];
     return json_encode($a, JSON_THROW_ON_ERROR);
 }
 $learning = $component->getLearningService();
@@ -104,22 +104,22 @@ $service = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService
 $fixturePath = dirname($root) . '/quiz-attempts-fixture.json';
 if (($argv[2] ?? '') === 'worker') {
     echo "ready\n";
-fflush(STDOUT);
-fgets(STDIN);
+    fflush(STDOUT);
+    fgets(STDIN);
     $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     $workerUser = new \Joomla\CMS\User\User($f['concurrent_user']);
-$r = $service->start($workerUser, 'en-GB', $f['concurrent_enrollment'], $f['lesson_id'], attemptKey());
-echo $r['attempt']['id'] . PHP_EOL;
-exit(0);
+    $r = $service->start($workerUser, 'en-GB', $f['concurrent_enrollment'], $f['lesson_id'], attemptKey());
+    echo $r['attempt']['id'] . PHP_EOL;
+    exit(0);
 }
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
-$r = $service->state($student, 'en-GB', $f['enrollment_id'], $f['lesson_id']);
+    $r = $service->state($student, 'en-GB', $f['enrollment_id'], $f['lesson_id']);
     attemptExpect($r['course_completed'] && $r['best']['score_points'] === $r['best']['max_points'], 'quiz completion and best score survive upgrade');
     attemptExpect(hash('sha256', json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' . (int)$f['passed_attempt'] . ' ORDER BY id')->loadAssocList(), JSON_THROW_ON_ERROR)) === $f['snapshot_hash'], 'public and private attempt snapshots and grades survive upgrade');
     attemptExpect((int)$db->setQuery("SELECT enabled FROM #__extensions WHERE folder='task' AND element='jlms'")->loadResult() === 1, 'task plugin enablement survives upgrade');
     echo json_encode(['quiz_runtime_upgrade' => 'passed','checks' => $checks]) . PHP_EOL;
-exit(0);
+    exit(0);
 }
 $bank = json_decode(file_get_contents(dirname($root) . '/quiz-authoring-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning access'")->loadResult();
@@ -228,7 +228,7 @@ try {
     attemptExpect($db->setQuery('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=' . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList() === $beforeRevokeAnswers,
         'previously saved answers survive access revocation');
 } finally {
-\Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);
+    \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);
 }
 attemptExpect($service->state($student, 'en-GB', $enrollment, $lesson)['questions'][0]['selected'] !== [],
     'restoring the entitlement restores saved answers in the active quiz');
@@ -329,20 +329,20 @@ $f['snapshot_hash'] = $snapshotHash;
 file_put_contents($fixturePath, json_encode($f, JSON_THROW_ON_ERROR));
 $workers = [];
 for ($i = 0;$i < 2;$i++) {
-$pipes = [];
-$process = proc_open([PHP_BINARY,__FILE__,$root,'worker'], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-if (!is_resource($process))throw new \RuntimeException('Worker not started');
-$workers[] = [$process,$pipes];
+    $pipes = [];
+    $process = proc_open([PHP_BINARY,__FILE__,$root,'worker'], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+    if (!is_resource($process))throw new \RuntimeException('Worker not started');
+    $workers[] = [$process,$pipes];
 }
 foreach ($workers as[$process,$pipes]) {
     stream_set_timeout($pipes[1], 30);
     $ready = trim((string)fgets($pipes[1]));
     if ($ready !== 'ready') {
         stream_set_blocking($pipes[1], false);
-stream_set_blocking($pipes[2], false);
+        stream_set_blocking($pipes[2], false);
         $detail = $ready . ' ' . stream_get_contents($pipes[1]) . ' ' . stream_get_contents($pipes[2]);
         foreach ($workers as[$child,$channels]) {
-proc_terminate($child);
+            proc_terminate($child);
         }
         throw new \RuntimeException('Worker barrier failed: ' . $detail);
     }
@@ -350,19 +350,19 @@ proc_terminate($child);
 $db->transactionStart();
 $db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id=' . $concurrentEnrollment . ' FOR UPDATE')->loadResult();
 foreach ($workers as[$process,$pipes]) {
-fwrite($pipes[0], "go\n");
-fclose($pipes[0]);
+    fwrite($pipes[0], "go\n");
+    fclose($pipes[0]);
 }
 usleep(200000);
 $db->transactionCommit();
 $ids = [];
 foreach ($workers as[$process,$pipes]) {
-$out = trim(stream_get_contents($pipes[1]));
-$err = stream_get_contents($pipes[2]);
-fclose($pipes[1]);
-fclose($pipes[2]);
-if (proc_close($process) !== 0)throw new \RuntimeException('Worker failure ' . $err . $out);
-$ids[] = $out;
+    $out = trim(stream_get_contents($pipes[1]));
+    $err = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    if (proc_close($process) !== 0)throw new \RuntimeException('Worker failure ' . $err . $out);
+    $ids[] = $out;
 }
 attemptExpect($ids[0] === $ids[1] && (int)$ids[0] > 0, 'concurrent starts allocate one attempt');
 attemptExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id=' . $concurrentEnrollment)->loadResult() === 1, 'one unique active slot after concurrent starts');

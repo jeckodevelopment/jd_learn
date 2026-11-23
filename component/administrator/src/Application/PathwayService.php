@@ -129,7 +129,7 @@ final class PathwayService
             // LCM-05: catalog visibility does not imply classroom availability.
             // Keep restricted content hidden; expose a suspended course only as unavailable.
             if ($access === 'available' && (int) $course->delivery_enabled !== 1) {
-$access = 'unavailable';
+                $access = 'unavailable';
             }
             $deliverySuspended = $access === 'unavailable' && (int) $course->delivery_enabled !== 1;
             $percent = 0;
@@ -140,9 +140,9 @@ $access = 'unavailable';
                 $done = (int) $enrollment->completed_total;
                 $required = (int) $enrollment->required_total;
                 try {
-$rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $enrollment->rules_json);
+                    $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $enrollment->rules_json);
                 } catch (\DomainException) {
-$rules = null;
+                    $rules = null;
                 }
                 $state = $enrollment->completed_at !== null
                     ? 'completed'

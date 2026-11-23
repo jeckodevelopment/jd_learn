@@ -61,7 +61,7 @@ final class Jlms extends Adapter implements SubscriberInterface
     {
         if ($event->getContext() === 'com_jlms.course') {
             foreach ($event->getPks() as $id) {
-$this->refreshCourse((int) $id);
+                $this->refreshCourse((int) $id);
             }
         } elseif ($event->getContext() === 'com_categories.category') {
             $ids = array_map('intval', $event->getPks());
@@ -70,7 +70,7 @@ $this->refreshCourse((int) $id);
                 $q = $db->createQuery()->select('COUNT(*)')->from($db->quoteName('#__categories'))
                     ->where('id IN (' . implode(',', $ids) . ')')->where('extension = ' . $db->quote('com_jlms.course'));
                 if ((int) $db->setQuery($q)->loadResult() > 0) {
-$this->reindexAllCourses();
+                    $this->reindexAllCourses();
                 }
             }
         } elseif ($event->getContext() === 'com_plugins.plugin' && (int) $event->getValue() === 0) {
@@ -82,7 +82,7 @@ $this->reindexAllCourses();
     private function refreshCourse(int $id): void
     {
         if ($id < 1) {
-return;
+            return;
         }
         $query = $this->getListQuery()->where('a.id = ' . $id);
         $visible = (bool) $this->getDatabase()->setQuery($query, 0, 1)->loadResult();
@@ -99,14 +99,14 @@ return;
     {
         $q = $this->getDatabase()->createQuery()->select('a.id')->from($this->getDatabase()->quoteName($this->table, 'a'));
         foreach ($this->getDatabase()->setQuery($q)->loadColumn() as $id) {
-$this->refreshCourse((int) $id);
+            $this->refreshCourse((int) $id);
         }
     }
 
     protected function index(Result $item): void
     {
         if (!ComponentHelper::isEnabled($this->extension)) {
-return;
+            return;
         }
         $item->url = $this->getUrl($item->id, $this->extension, $this->layout);
         $item->route = $item->url;
@@ -115,7 +115,7 @@ return;
         $item->addTaxonomy('Type', $this->type_title);
         $item->addTaxonomy('Category', (string) $item->category_title);
         if ($item->language !== '*') {
-$item->addTaxonomy('Language', (string) $item->language);
+            $item->addTaxonomy('Language', (string) $item->language);
         }
         $this->indexer->index($item);
     }

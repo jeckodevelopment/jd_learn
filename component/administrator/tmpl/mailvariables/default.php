@@ -15,11 +15,11 @@ $mailIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstall
  <p><?= $this->escape(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_INTRO')) ?></p>
  <p class="alert alert-info"><?= $this->escape(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_WARNING')) ?></p>
  <?php foreach ($mailIds as $mailId) : ?>
- <?php
- $titleKey = 'COM_' . 'JLMS_MAIL_' . strtoupper(str_replace(['com_jlms.', '.'], ['', '_'], $mailId)) . '_TITLE';
- $translatedTitle = Text::_($titleKey);
- $displayTitle = $translatedTitle === $titleKey ? $mailId : $translatedTitle;
- ?>
+        <?php
+        $titleKey = 'COM_' . 'JLMS_MAIL_' . strtoupper(str_replace(['com_jlms.', '.'], ['', '_'], $mailId)) . '_TITLE';
+        $translatedTitle = Text::_($titleKey);
+        $displayTitle = $translatedTitle === $titleKey ? $mailId : $translatedTitle;
+        ?>
  <details class="card mb-2">
   <summary class="card-header"><strong><?= $this->escape($displayTitle) ?></strong><span class="text-muted small"> — <code><?= $this->escape($mailId) ?></code></span></summary>
   <div class="card-body table-responsive">
@@ -31,7 +31,7 @@ $mailIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstall
      <th scope="col"><?= $this->escape(Text::_('COM_JLMS_MAIL_VARIABLE_GUIDE_DESCRIPTION')) ?></th>
     </tr></thead>
     <tbody>
-     <?php foreach ($mailCatalog::forTemplate($mailId, $mailLanguage) as $name => $details) : ?>
+        <?php foreach ($mailCatalog::forTemplate($mailId, $mailLanguage) as $name => $details) : ?>
      <tr>
       <td><code><?= $this->escape('{' . $name . '}') ?></code></td>
       <td><?= $this->escape($details['type']) ?></td>

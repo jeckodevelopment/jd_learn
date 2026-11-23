@@ -18,7 +18,7 @@ final class EnrollmentRosterService
     {
         $actor = $this->learning->freshActor($identity);
         if ($courseId < 1) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $q = $this->db->createQuery()->select('id, title')->from('#__jlms_courses')
             ->where('id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
@@ -34,7 +34,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             $teacher = (int) $this->db->setQuery($assignment)->loadResult() > 0;
         }
         if (!$courseAccess || (!$administrator && !$teacher)) {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         return $course;
     }
@@ -59,12 +59,12 @@ throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
     private function optionalId(mixed $value): int
     {
         if ($value === 0 || $value === '0' || $value === '') {
-return 0;
+            return 0;
         }
         try {
-return CurriculumService::id($value);
+            return CurriculumService::id($value);
         } catch (\InvalidArgumentException) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
     }
 
@@ -77,7 +77,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         $status = $filters['status'] ?? '';
         $progress = $filters['progress'] ?? '';
         if (!is_string($search)) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $search = trim($search);
         $searchLength = preg_match_all('/./us', $search);
@@ -92,7 +92,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             $q = $this->db->createQuery()->select('id')->from('#__jlms_course_versions')
                 ->where('course_id = :course')->where('id = :version')->bind(':course', $courseId, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER);
             if (!$this->db->setQuery($q)->loadResult()) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+                throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
         }
         $q = $this->db->createQuery()->select('e.id, e.course_version_id, e.edition_id, e.status, e.required_total, e.completed_total, e.started_at, e.completed_at, e.last_activity_at, e.starts_at, e.ends_at, u.name AS learner_name, u.username, u.block AS account_blocked, v.version_no, v.title_snapshot, c.current_version_id')
@@ -102,10 +102,10 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             ->leftJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id AND v.course_id = e.course_id')
             ->where('e.course_id = :rosterCourse')->bind(':rosterCourse', $courseId, ParameterType::INTEGER);
         if ($version) {
-$q->where('e.course_version_id = :rosterVersion')->bind(':rosterVersion', $version, ParameterType::INTEGER);
+            $q->where('e.course_version_id = :rosterVersion')->bind(':rosterVersion', $version, ParameterType::INTEGER);
         }
         if ($userId) {
-$q->where('e.user_id = :rosterUser')->bind(':rosterUser', $userId, ParameterType::INTEGER);
+            $q->where('e.user_id = :rosterUser')->bind(':rosterUser', $userId, ParameterType::INTEGER);
         }
         if ($search !== '') {
             // Escape LIKE metacharacters independently of SQL quoting; the value remains bound.
@@ -114,14 +114,14 @@ $q->where('e.user_id = :rosterUser')->bind(':rosterUser', $userId, ParameterType
                 ->bind(':rosterSearchName', $pattern)->bind(':rosterSearchUsername', $pattern);
         }
         if ($status !== '') {
-$q->where('e.status = :rosterStatus')->bind(':rosterStatus', $status);
+            $q->where('e.status = :rosterStatus')->bind(':rosterStatus', $status);
         }
         if ($progress === 'completed') {
-$q->where('e.completed_at IS NOT NULL');
+            $q->where('e.completed_at IS NOT NULL');
         } elseif ($progress === 'not_started') {
-$q->where('e.completed_at IS NULL AND e.started_at IS NULL AND e.last_activity_at IS NULL AND e.completed_total = 0');
+            $q->where('e.completed_at IS NULL AND e.started_at IS NULL AND e.last_activity_at IS NULL AND e.completed_total = 0');
         } elseif ($progress === 'in_progress') {
-$q->where('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0)');
+            $q->where('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0)');
         }
         return $q->order('e.id DESC');
     }

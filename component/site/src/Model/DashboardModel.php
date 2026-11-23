@@ -31,7 +31,7 @@ class DashboardModel extends ListModel
         try {
             return $app->bootComponent('com_jlms')->getDashboardService()->query($app->getIdentity(), (string) $this->getState('filter.progress', 'all'));
         } catch (\Throwable $error) {
-$this->fail($error);
+            $this->fail($error);
         }
     }
 
@@ -43,11 +43,11 @@ $this->fail($error);
             $actor = $component->getLearningService()->freshActor($app->getIdentity());
             $rows = parent::getItems();
             if (!is_array($rows)) {
-throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
             }
             return $component->getDashboardService()->cards($actor, $app->getLanguage()->getTag(), $rows);
         } catch (\Throwable $error) {
-$this->fail($error);
+            $this->fail($error);
         }
     }
 
@@ -58,11 +58,11 @@ $this->fail($error);
             $app->bootComponent('com_jlms')->getLearningService()->freshActor($app->getIdentity());
             $total = parent::getTotal();
             if ($total === false) {
-throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
             }
             return $total;
         } catch (\Throwable $error) {
-$this->fail($error);
+            $this->fail($error);
         }
     }
 

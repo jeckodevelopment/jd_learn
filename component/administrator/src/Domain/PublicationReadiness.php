@@ -48,7 +48,7 @@ final class PublicationReadiness
             $moduleCounts[$moduleId]++;
             $required += (int) $lesson->required;
             if ((int) $lesson->required === 1 && (int) ($lesson->release_after_days ?? 0) === 0) {
-$initialRequired++;
+                $initialRequired++;
             }
 
             if (!LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)
@@ -58,7 +58,7 @@ $initialRequired++;
                 $warnings[] = 'COM_JLMS_READINESS_LESSON_SCHEDULED';
             }
             if ((int) ($lesson->release_after_days ?? 0) > 0) {
-$warnings[] = 'COM_JLMS_READINESS_LESSON_DRIP';
+                $warnings[] = 'COM_JLMS_READINESS_LESSON_DRIP';
             }
             if ((int) ($lesson->required ?? 0) === 1 && LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)) {
                 $courseWindow = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::read($course);
@@ -100,7 +100,7 @@ $warnings[] = 'COM_JLMS_READINESS_LESSON_DRIP';
                     }
                 }
                 if (!$linked) {
-$blockers[] = 'COM_JLMS_DOCUMENT_MATERIAL_REQUIRED';
+                    $blockers[] = 'COM_JLMS_DOCUMENT_MATERIAL_REQUIRED';
                 }
             } elseif (($lesson->kind ?? '') === 'audio') {
                 $linked = false;
@@ -108,12 +108,12 @@ $blockers[] = 'COM_JLMS_DOCUMENT_MATERIAL_REQUIRED';
                     if ((int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
                         && in_array(($attachment->mime_type ?? ''), ['audio/mpeg', 'audio/ogg'], true)
                         && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0) {
-$linked = true;
-break;
+                        $linked = true;
+                        break;
                     }
                 }
                 if (!$linked) {
-$blockers[] = 'COM_JLMS_AUDIO_MATERIAL_REQUIRED';
+                    $blockers[] = 'COM_JLMS_AUDIO_MATERIAL_REQUIRED';
                 }
             } elseif (($lesson->kind ?? '') === 'video') {
                 // The administrator preflight uses the same local capability
@@ -173,10 +173,10 @@ $blockers[] = 'COM_JLMS_AUDIO_MATERIAL_REQUIRED';
         }
         if ($consultation) {
             foreach ($lessons as $lesson) {
-if (($lesson->kind ?? '') === 'quiz') {
-$blockers[] = 'COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED';
-break;
-}
+                if (($lesson->kind ?? '') === 'quiz') {
+                    $blockers[] = 'COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED';
+                    break;
+                }
             }
         }
 

@@ -28,7 +28,7 @@ final class HtmlView extends BaseHtmlView
     public string $order = 'recent';
     public int $tagId = 0;
     public array $tags = [];
-public string $difficulty = '';
+    public string $difficulty = '';
     public string $duration = '';
     public string $available = '';
     public string $layout = 'grid';
@@ -51,7 +51,7 @@ public string $difficulty = '';
         $this->order = $this->getModel()->getOrder();
         $this->tagId = $this->getModel()->getTagId();
         $this->tags = $this->showFilters ? $this->getModel()->getTags() : [];
-$this->difficulty = $this->getModel()->getDifficulty();
+        $this->difficulty = $this->getModel()->getDifficulty();
         $this->duration = $this->getModel()->getDuration();
         $this->available = $this->getModel()->getAvailable();
         $this->layout = $this->getModel()->getLayout();
@@ -76,19 +76,19 @@ $this->difficulty = $this->getModel()->getDifficulty();
         $this->teachers = $this->showFilters ? $this->getModel()->getTeachers() : [];
         $this->pathways = $this->showFilters ? $this->getModel()->getPathways() : [];
         if ($this->get('Errors')) {
-throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
+            throw new \RuntimeException(Text::_('JERROR_AN_ERROR_HAS_OCCURRED'), 500);
         }
         $app = Factory::getApplication();
         if ($this->showSubcategories) {
-        $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);
-        $model->setState('filter.parent_id', (int) $this->category->id);
-        $model->setState('list.limit', 20);
-        $model->setState('list.start', max(0, $app->getInput()->getInt('subcategories_limitstart', 0)));
-        $model->setState('pagination.prefix', 'subcategories_');
-        $this->children = $model->getItems();
-        $this->childrenPagination = $model->getPagination();
+            $model = $app->bootComponent('com_jlms')->getMVCFactory()->createModel('Categories', 'Site', ['ignore_request' => true]);
+            $model->setState('filter.parent_id', (int) $this->category->id);
+            $model->setState('list.limit', 20);
+            $model->setState('list.start', max(0, $app->getInput()->getInt('subcategories_limitstart', 0)));
+            $model->setState('pagination.prefix', 'subcategories_');
+            $this->children = $model->getItems();
+            $this->childrenPagination = $model->getPagination();
         // Independent subcategory pages must retain the active course filters.
-        CatalogPagination::apply($this->childrenPagination, $paginationFilters, $this->showFilters);
+            CatalogPagination::apply($this->childrenPagination, $paginationFilters, $this->showFilters);
         }
         CategoryNavigationHelper::addPath((int) $this->category->id);
         try {

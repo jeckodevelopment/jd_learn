@@ -13,7 +13,7 @@ final class CourseModel extends ItemModel
     public function hasPendingApproval(int $courseId, int $userId): bool
     {
         if ($courseId < 1 || $userId < 1) {
-return false;
+            return false;
         }
         $query = $this->getDatabase()->createQuery()
             ->select('1')->from('#__jlms_enrollment_requests AS request')

@@ -27,7 +27,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         if ($table instanceof \Jlms\Component\Jlms\Administrator\Table\CourseTable) {
             $table->requireStableAsset($this->associationWrite);
             if ($this->preparedAsset) {
-$table->usePreparedAsset($this->preparedAsset);
+                $table->usePreparedAsset($this->preparedAsset);
             }
         }
         return $table;
@@ -48,18 +48,18 @@ $table->usePreparedAsset($this->preparedAsset);
         $item = parent::getItem($pk);
         if ($item) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor($item, $this->siteTimezone()) as $key => $value) {
-$item->$key = $value;
+                $item->$key = $value;
             }
             // Keep the editor on Joomla's global option for a new course; the site IANA zone
             // is still used above to interpret/display dates and is persisted on save.
             if (empty($item->id)) {
-$item->calendar_timezone = '';
+                $item->calendar_timezone = '';
             }
         }
         if ($item && !empty($item->id)) {
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($item->params_json) ?? [] as $field => $value) {
                 if ($field !== '_schema') {
-$item->{'presentation_' . $field} = $value;
+                    $item->{'presentation_' . $field} = $value;
                 }
             }
             $mailPreferences = json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['mail_preferences'] ?? [];
@@ -126,7 +126,7 @@ $item->{'presentation_' . $field} = $value;
             throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
         }
         if (!array_key_exists('associations', $data)) {
-return;
+            return;
         }
         if (!\Joomla\CMS\Language\Associations::isEnabled() || !is_array($data['associations'])) {
             throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
@@ -139,7 +139,7 @@ return;
             }
             $target = (int) $target;
             if (!$target) {
-continue;
+                continue;
             }
             if (!isset($languages[$tag]) || $tag === $language || $language === '*' || $target === $id || in_array($target, $targets, true)) {
                 throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
@@ -149,11 +149,11 @@ continue;
         $currentTargets = [];
         foreach ($members as $member) {
             if ((int) $member->id !== $id) {
-$currentTargets[$member->language] = (int) $member->id;
+                $currentTargets[$member->language] = (int) $member->id;
             }
         }
         ksort($targets);
-ksort($currentTargets);
+        ksort($currentTargets);
         if ($targets === $currentTargets) {
             // Metadata-only save: leave the shared graph entirely untouched.
             unset($data['associations']);
@@ -210,22 +210,22 @@ ksort($currentTargets);
         $source = $this->getItem($id);
         if (!$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
             || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate($db, $actor, (int) $source->catid)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $title = $input['title'] ?? null;
         if (!is_string($title) || preg_match('/\A[^\r\n]{1,255}\z/u', trim($title)) !== 1) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_COURSE');
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_COURSE');
         }
         $title = trim($title);
         $category = new \Joomla\CMS\Table\Category($db);
         if (!$category->load((int) $source->catid) || $category->extension !== 'com_jlms.course' || (int) $category->published === -2) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $asset = new \Joomla\CMS\Table\Asset($db);
         $asset->setLocation((int) $category->asset_id, 'last-child');
         $asset->bind(['name' => 'com_jlms.copy.' . bin2hex(random_bytes(16)), 'title' => \Joomla\String\StringHelper::substr($title, 0, 100), 'rules' => '{}']);
         if (!$asset->check() || !$asset->store()) {
-throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+            throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
         }
         $this->setState('course.copy_complete', false);
         $this->preparedAsset = (int) $asset->id;
@@ -233,53 +233,53 @@ throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
         try {
             $data = (array) $source;
             $data['id'] = 0;
-$data['revision'] = 0;
-$data['title'] = $title;
+            $data['revision'] = 0;
+            $data['title'] = $title;
             $data['alias'] = 'copy-' . bin2hex(random_bytes(12));
             unset($data['associations'], $data['teacher_ids']);
             if (!$this->save($data)) {
-throw new \RuntimeException($this->getError());
+                throw new \RuntimeException($this->getError());
             }
             return (int) $this->getState('course.id');
         } finally {
             // Failed authoring writes roll back before removing the unused reserved native asset.
             if (!$this->getState('course.copy_complete', false)) {
-$asset->delete((int) $asset->id);
+                $asset->delete((int) $asset->id);
             }
             $this->preparedAsset = 0;
-$this->copyPlan = null;
+            $this->copyPlan = null;
         }
     }
 
     private function copySource(\Joomla\CMS\User\User $actor): ?object
     {
         if ($this->copyPlan === null) {
-return null;
+            return null;
         }
         $db = $this->getDatabase();
         $id = $this->copyPlan['course'];
-$version = $this->copyPlan['version'];
+        $version = $this->copyPlan['version'];
         $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
         $q->setQuery((string) $q . ' FOR UPDATE');
-$source = $db->setQuery($q)->loadObject();
+        $source = $db->setQuery($q)->loadObject();
         if (!$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
             || ($source->checked_out && (int) $source->checked_out !== (int) $actor->id)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         if ((int) $source->revision !== $this->copyPlan['revision']) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+            throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         $q = $db->createQuery()->select('*')->from('#__jlms_course_versions')->where('id=:id')->bind(':id', $version, ParameterType::INTEGER);
         $q->setQuery((string) $q . ' FOR UPDATE');
-$programme = $db->setQuery($q)->loadObject();
+        $programme = $db->setQuery($q)->loadObject();
         if (!$programme || (int) $programme->course_id !== $id) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+            throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
         if ((int) $programme->revision !== $this->copyPlan['version_revision']) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+            throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         if ($programme->checked_out && (int) $programme->checked_out !== (int) $actor->id) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         return (object) ['course' => $source, 'version' => $programme];
     }
@@ -290,7 +290,7 @@ throw new \DomainException('JERROR_ALERTNOAUTHOR');
         $this->associationWrite = false;
         $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'catalog_position', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_manager_request', 'mail_course_update', 'mail_lesson_release', 'mail_teacher_assignment', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) {
-$allowed[] = 'presentation_' . $field;
+            $allowed[] = 'presentation_' . $field;
         }
         $allowed = array_merge($allowed, \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS);
         $data = array_intersect_key($data, array_flip($allowed));
@@ -306,7 +306,7 @@ $allowed[] = 'presentation_' . $field;
             $user = new \Joomla\CMS\User\User((int) $this->getCurrentUser()->id);
             $user->clearAccessRights();
             if ($user->guest || $user->block || !$user->authorise('core.manage', 'com_jlms')) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $this->setCurrentUser($user);
             $copySource = $this->copySource($user);
@@ -332,7 +332,7 @@ throw new \DomainException('JERROR_ALERTNOAUTHOR');
                     throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 if ($record->checked_out && (int)$record->checked_out !== (int)$user->id) {
-throw new \DomainException('COM_JLMS_COURSE_CHECKED_OUT');
+                    throw new \DomainException('COM_JLMS_COURSE_CHECKED_OUT');
                 }
                 if ((int) $record->revision !== $expected) {
                     throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
@@ -362,12 +362,12 @@ throw new \DomainException('COM_JLMS_COURSE_CHECKED_OUT');
             if (array_key_exists('teacher_ids', $data)) {
                 $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db, $user, (string) ($data['language'] ?? $record->language ?? '*'), $data['teacher_ids']);
                 if (!$id && $teachers) {
-throw new \DomainException('COM_JLMS_TEACHER_SAVE_FIRST');
+                    throw new \DomainException('COM_JLMS_TEACHER_SAVE_FIRST');
                 }
                 if ($teachers === \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id)) {
-$teachers = null;
+                    $teachers = null;
                 } elseif ($id) {
-$this->associationWrite = true;
+                    $this->associationWrite = true;
                 } // Native asset must stay stable for atomic relation writes.
                 unset($data['teacher_ids']);
             }
@@ -375,33 +375,33 @@ $this->associationWrite = true;
                 $data, $record->params_json ?? '{}', static fn (string $html): string => \Joomla\CMS\Component\ComponentHelper::filterText($html),
             );
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) {
-unset($data['presentation_' . $field]);
+                unset($data['presentation_' . $field]);
             }
             if ($presentation !== null) {
-$data['params_json'] = $presentation;
+                $data['params_json'] = $presentation;
             }
             $mailPreferences = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::merge(
                 $data, $data['params_json'] ?? $record->params_json ?? '{}',
             );
             foreach (\Jlms\Component\Jlms\Administrator\Application\MailPreferences::EVENTS as $event) {
-unset($data['mail_' . $event]);
+                unset($data['mail_' . $event]);
             }
             if ($mailPreferences !== null) {
-$data['params_json'] = $mailPreferences;
+                $data['params_json'] = $mailPreferences;
             }
             $certificatePreferences = \Jlms\Component\Jlms\Administrator\Application\CertificatePreferences::merge(
                 $data, $data['params_json'] ?? $record->params_json ?? '{}',
             );
             unset($data['certificate_enabled']);
             if ($certificatePreferences !== null) {
-$data['params_json'] = $certificatePreferences;
+                $data['params_json'] = $certificatePreferences;
             }
             if (($data['calendar_timezone'] ?? null) === '') {
-$data['calendar_timezone'] = $this->siteTimezone();
+                $data['calendar_timezone'] = $this->siteTimezone();
             }
             $calendar = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data, $record ?? (object) [], $data['params_json'] ?? $record->params_json ?? '{}', $this->siteTimezone());
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) {
-unset($data[$field]);
+                unset($data[$field]);
             }
             $data = array_replace($data, $calendar);
             // Editorial position is course-level, independent of the teaching snapshot.
@@ -413,12 +413,12 @@ unset($data[$field]);
                 }
                 $params = json_decode((string) ($data['params_json'] ?? $record->params_json ?? '{}'), true, 32, JSON_THROW_ON_ERROR);
                 if (!is_array($params)) {
-throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                    throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
                 if ((int) $position === 0) {
-unset($params['catalog_position']);
+                    unset($params['catalog_position']);
                 } else {
-$params['catalog_position'] = (int) $position;
+                    $params['catalog_position'] = (int) $position;
                 }
                 $data['params_json'] = json_encode($params, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 unset($data['catalog_position']);
@@ -426,7 +426,7 @@ $params['catalog_position'] = (int) $position;
             if ($copySource !== null) {
                 // Trusted persisted source metadata, never raw JSON from the request.
                 foreach (['params_json', 'metadata_json', 'image'] as $field) {
-$data[$field] = $copySource->course->$field;
+                    $data[$field] = $copySource->course->$field;
                 }
             }
             if (!parent::save($data)) {
@@ -439,10 +439,10 @@ $data[$field] = $copySource->course->$field;
             }
             if ($teachers !== null) {
                 $q = $db->createQuery()->delete('#__jlms_course_teachers')->where('course_id=:course')->bind(':course', $id, ParameterType::INTEGER);
-$db->setQuery($q)->execute();
+                $db->setQuery($q)->execute();
                 foreach ($teachers as $ordering => $teacher) {
                     $relation = (object) ['course_id' => $id,'teacher_id' => $teacher,'ordering' => $ordering];
-$db->insertObject('#__jlms_course_teachers', $relation);
+                    $db->insertObject('#__jlms_course_teachers', $relation);
                 }
                 // Queue inside the same transaction: no notice on failed edits or unchanged assignments.
                 (new \Jlms\Component\Jlms\Administrator\Application\TeacherAssignmentNotice($db))
@@ -453,18 +453,18 @@ $db->insertObject('#__jlms_course_teachers', $relation);
                 $target = $this->getItem($newId);
                 $user->clearAccessRights();
                 if (!\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($user, $target)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                    throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 }
                 $workflow = new \Joomla\CMS\Workflow\Workflow('com_jlms.course', Factory::getApplication(), $db);
                 $stage = (int) $workflow->getDefaultStageByCategory((int) $target->catid);
                 if (!$stage || !$workflow->createAssociation($newId, $stage)) {
-throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
+                    throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
                 }
                 $selected = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db, $user, (string) $target->language,
                     \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $copySource->course->id));
                 foreach ($selected as $ordering => $teacher) {
-$relation = (object) ['course_id' => $newId, 'teacher_id' => $teacher, 'ordering' => $ordering];
-$db->insertObject('#__jlms_course_teachers', $relation);
+                    $relation = (object) ['course_id' => $newId, 'teacher_id' => $teacher, 'ordering' => $ordering];
+                    $db->insertObject('#__jlms_course_teachers', $relation);
                 }
                 $fieldModel = Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
                 $sourceItem = (string) $copySource->course->id;
@@ -473,16 +473,16 @@ $db->insertObject('#__jlms_course_teachers', $relation);
                     ->where('v.item_id=:item')->bind(':item', $sourceItem);
                 $values = [];
                 foreach ($db->setQuery($q)->loadObjectList() as $value) {
-$values[(int) $value->field_id][] = $value->value;
+                    $values[(int) $value->field_id][] = $value->value;
                 }
                 foreach ($values as $fieldId => $fieldValues) {
                     $field = $fieldModel->getItem($fieldId);
                     if (!$field || !$user->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
                         || !in_array((int) $field->access, $user->getAuthorisedViewLevels(), true)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                        throw new \DomainException('JERROR_ALERTNOAUTHOR');
                     }
                     if (!$fieldModel->setFieldValue($fieldId, $newId, $fieldValues)) {
-throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+                        throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
                     }
                 }
                 $programme = clone $copySource->version;
@@ -497,7 +497,7 @@ throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
             $this->persistHistory($history, $this->typeAlias);
             $db->transactionCommit();
             if ($copySource !== null) {
-$this->setState('course.copy_complete', true);
+                $this->setState('course.copy_complete', true);
             }
             return true;
         } catch (\Throwable $error) {
@@ -508,7 +508,7 @@ $this->setState('course.copy_complete', true);
             if (!in_array($error->getMessage(), $known, true)) {
                 // Private diagnostics omit SQL, values and exception messages.
                 try {
-\Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+                    \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
                 } catch (\Throwable) {
 
                 }
@@ -535,21 +535,21 @@ $this->setState('course.copy_complete', true);
     {
         $history = $this->getHistoryTable($historyId);
         if (!$history) {
-return false;
+            return false;
         }
         $data = json_decode($history->version_data, true, 64, JSON_THROW_ON_ERROR);
         $id = (int) ($data['id'] ?? 0);
         if ($id < 1 || $history->item_id !== $this->typeAlias . '.' . $id) {
-return false;
+            return false;
         }
         $current = $this->getItem($id);
         if (!$current) {
-return false;
+            return false;
         }
         $data['revision'] = (int) $current->revision;
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::details($data['params_json'] ?? '{}') ?? [] as $name => $value) {
             if ($name !== '_schema') {
-$data['presentation_' . $name] = $value;
+                $data['presentation_' . $name] = $value;
             }
         }
         $data = array_replace($data, \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::editor((object) $data, Factory::getApplication()->getIdentity()->getTimezone()->getName()));
@@ -600,7 +600,7 @@ $data['presentation_' . $name] = $value;
                     throw new \DomainException('COM_JLMS_INVALID_COURSE');
                 }
                 if ((int) $record->state === $target) {
-continue;
+                    continue;
                 }
                 $update = (object) [
                     'id' => $id, 'state' => $target,
@@ -622,7 +622,7 @@ continue;
             return true;
         } catch (\Throwable $error) {
             if ($started) {
-$db->transactionRollback();
+                $db->transactionRollback();
             }
             $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_INVALID_COURSE'];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true)
@@ -676,7 +676,7 @@ $db->transactionRollback();
     public function purgeImpact(int $id): array
     {
         if ($id < 1) {
-throw new \DomainException('COM_JLMS_INVALID_COURSE');
+            throw new \DomainException('COM_JLMS_INVALID_COURSE');
         }
         $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->getCurrentUser());
         if ($actor->guest || $actor->block || !$actor->authorise('core.delete', 'com_jlms.course.' . $id)) {
@@ -687,7 +687,7 @@ throw new \DomainException('COM_JLMS_INVALID_COURSE');
             ->from('#__jlms_courses')->where('id=:id')->bind(':id', $id, ParameterType::INTEGER);
         $record = $db->setQuery($q)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
         if ((int) $record->state !== -2) {
-throw new \DomainException('COM_JLMS_INVALID_COURSE');
+            throw new \DomainException('COM_JLMS_INVALID_COURSE');
         }
         $counts = [];
         foreach (["#__jlms_course_versions","#__jlms_editions","#__jlms_enrollments","#__jlms_course_teachers","#__jlms_pathway_courses","#__jlms_course_operations","#__jlms_mail_queue","#__jlms_course_announcement_campaigns"] as $table) {
@@ -790,7 +790,7 @@ throw new \DomainException('COM_JLMS_INVALID_COURSE');
             return true;
         } catch (\Throwable $error) {
             if ($started) {
-$db->transactionRollback();
+                $db->transactionRollback();
             }
             $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND',
                 'COM_JLMS_INVALID_COURSE', 'COM_JLMS_COURSE_DEPENDENCIES', 'COM_JLMS_REVISION_CONFLICT'];

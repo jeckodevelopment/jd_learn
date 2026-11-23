@@ -60,10 +60,10 @@ final class MailQueueAuditService
         [$where, $bind] = $this->filters($state, $template);
         $count = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue AS q')->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
         foreach ($where as $condition) {
-$count->where($condition);
+            $count->where($condition);
         }
         foreach ($bind as $name => [$value, $type]) {
-$count->bind($name, $value, $type);
+            $count->bind($name, $value, $type);
         }
         $total = (int) $this->db->setQuery($count)->loadResult();
 
@@ -76,10 +76,10 @@ $count->bind($name, $value, $type);
             '(CASE WHEN q.state = ' . $this->db->quote('sending') . ' AND q.claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' . self::STALE_MINUTES . ' MINUTE) THEN 1 ELSE 0 END) AS is_stale_sending',
         ])->from('#__jlms_mail_queue AS q')->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
         foreach ($where as $condition) {
-$query->where($condition);
+            $query->where($condition);
         }
         foreach ($bind as $name => [$value, $type]) {
-$query->bind($name, $value, $type);
+            $query->bind($name, $value, $type);
         }
         $rows = $this->db->setQuery($query->order('q.created_at DESC, q.id DESC'), $start, $limit)->loadObjectList();
         foreach ($rows as $row) {
@@ -209,7 +209,7 @@ $query->bind($name, $value, $type);
             ->bind(':id', $id, ParameterType::INTEGER)->bind(':marker', $errorMarker);
         $row = $this->db->setQuery($query)->loadObject();
         if (!$row) {
-return false;
+            return false;
         }
 
         try {
@@ -270,7 +270,7 @@ return false;
     private static function maskEmail(string $email): string
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-return '';
+            return '';
         }
         [$local, $domain] = explode('@', $email, 2);
         return mb_substr($local, 0, 1) . str_repeat('*', min(8, max(3, mb_strlen($local) - 1))) . '@' . $domain;

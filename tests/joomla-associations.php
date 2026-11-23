@@ -71,7 +71,7 @@ $checks = 0;
 function assocExpect(bool $condition, string $message): void {
     global $checks;
     if (!$condition) {
-throw new \RuntimeException($message);
+        throw new \RuntimeException($message);
     }
     $checks++;
 }
@@ -84,7 +84,7 @@ function assocSave(array $data): bool {
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
     $saved = $model->save($data);
     if (!$saved) {
-fwrite(STDERR, 'Association save rejected: ' . json_encode($model->getErrors(), JSON_THROW_ON_ERROR) . PHP_EOL);
+        fwrite(STDERR, 'Association save rejected: ' . json_encode($model->getErrors(), JSON_THROW_ON_ERROR) . PHP_EOL);
     }
     return $saved;
 }
@@ -97,9 +97,9 @@ if (($argv[2] ?? '') === 'worker') {
     // A native CMS model may start its session lazily; do it before barrier output.
     $app->getSession()->start();
     echo "ready\n";
-flush();
+    flush();
     if (trim((string) fgets(STDIN)) !== 'go') {
-throw new \RuntimeException('Association worker barrier missing');
+        throw new \RuntimeException('Association worker barrier missing');
     }
     echo json_encode(['saved' => assocSave(assocData($command['source']) + ['associations' => ['it-IT' => $command['target']]])], JSON_THROW_ON_ERROR);
     exit;
@@ -121,13 +121,13 @@ $language = new \Joomla\CMS\Table\Language($db);
 if (!$language->load(['lang_code' => 'it-IT'])) {
     $language->bind(['lang_code' => 'it-IT', 'title' => 'Italiano', 'title_native' => 'Italiano', 'sef' => 'it', 'image' => 'it_it', 'description' => '', 'published' => 1, 'access' => 1, 'ordering' => 2]);
     if (!$language->check() || !$language->store()) {
-throw new \RuntimeException('Content language fixture failed');
+        throw new \RuntimeException('Content language fixture failed');
     }
 }
 $language->published = 1;
 $language->access = 1;
 if (!$language->store()) {
-throw new \RuntimeException('Content language publication failed');
+    throw new \RuntimeException('Content language publication failed');
 }
 $catid = (int) $db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $create = static function (string $name, string $tag) use ($catid, $factory): int {
@@ -169,7 +169,7 @@ $baseline = assocRows();
 assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline, 'member cannot be stolen from another group');
 $update = static function (int $id, array $fields) use ($db): void {
     $record = (object) (['id' => $id] + $fields);
-$db->updateObject('#__jlms_courses', $record, 'id', true);
+    $db->updateObject('#__jlms_courses', $record, 'id', true);
 };
 $update($it, ['checked_out' => 999999]);
 assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'removing another editor checkout denied');
@@ -180,15 +180,15 @@ $db->updateObject('#__users', $blocked, 'id');
 try {
     assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'fresh blocked actor denied before graph mutation');
 } finally {
-$blocked->block = 0;
-$db->updateObject('#__users', $blocked, 'id');
+    $blocked->block = 0;
+    $db->updateObject('#__users', $blocked, 'id');
 }
 // Deny the target asset even when the actor can edit the source course.
 $restricted = new \Joomla\CMS\User\User();
 $userData = ['name' => 'Association editor', 'username' => 'association-editor', 'email' => 'association-editor@example.invalid',
     'password' => 'Ci-only-Association-Password-2026','password2' => 'Ci-only-Association-Password-2026','groups' => [2,6],'block' => 0,'activation' => ''];
 if (!$restricted->bind($userData) || !$restricted->save()) {
-throw new \RuntimeException('Editor fixture failed');
+    throw new \RuntimeException('Editor fixture failed');
 }
 $assetId = (int) $db->setQuery('SELECT asset_id FROM #__jlms_courses WHERE id=' . $it)->loadResult();
 $oldRules = $db->setQuery('SELECT rules FROM #__assets WHERE id=' . $assetId)->loadResult();
@@ -198,9 +198,9 @@ $app->loadIdentity(new \Joomla\CMS\User\User((int)$restricted->id));
 try {
     assocExpect(!assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]) && assocRows() === $baseline, 'removing a linked target requires target ACL too');
 } finally {
-$asset->rules = $oldRules;
-$db->updateObject('#__assets', $asset, 'id');
-$app->loadIdentity($actor);
+    $asset->rules = $oldRules;
+    $db->updateObject('#__assets', $asset, 'id');
+    $app->loadIdentity($actor);
 }
 assocExpect(assocSave(assocData($otherEn) + ['associations' => ['it-IT' => 0]]), 'native zero selection clears whole old group');
 assocExpect(!$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($otherEn,$otherIt)")->loadResult(), 'no dangling old group after clear');
@@ -214,7 +214,7 @@ foreach ([$raceEn1,$raceEn2] as $source) {
     $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',json_encode(['source' => $source,'target' => $raceIt], JSON_THROW_ON_ERROR)],
         [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
     if (!is_resource($process)) {
-throw new \RuntimeException('Association worker failed to start');
+        throw new \RuntimeException('Association worker failed to start');
     }
     $workers[] = [$process,$pipes];
 }
@@ -222,14 +222,14 @@ foreach ($workers as [$process,$pipes]) {
     stream_set_timeout($pipes[1], 30);
     $ready = trim((string) fgets($pipes[1]));
     if ($ready !== 'ready') {
-throw new \RuntimeException('Association worker bootstrap: ' . $ready . ' ' . stream_get_contents($pipes[2]));
+        throw new \RuntimeException('Association worker bootstrap: ' . $ready . ' ' . stream_get_contents($pipes[2]));
     }
 }
 $db->transactionStart();
 $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult();
 foreach ($workers as [$process,$pipes]) {
-fwrite($pipes[0], "go\n");
-fclose($pipes[0]);
+    fwrite($pipes[0], "go\n");
+    fclose($pipes[0]);
 }
 usleep(150000);
 $db->transactionCommit();
@@ -237,11 +237,11 @@ $outcomes = [];
 $workerDetails = [];
 foreach ($workers as [$process,$pipes]) {
     $out = stream_get_contents($pipes[1]);
-$err = stream_get_contents($pipes[2]);
+    $err = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
-fclose($pipes[2]);
+    fclose($pipes[2]);
     if (proc_close($process) !== 0) {
-throw new \RuntimeException('Association worker failed: ' . $err . $out);
+        throw new \RuntimeException('Association worker failed: ' . $err . $out);
     }
     $workerDetails[] = ['out' => $out,'err' => $err];
     $outcomes[] = json_decode($out, true, 16, JSON_THROW_ON_ERROR)['saved'];

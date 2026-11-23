@@ -27,7 +27,7 @@ namespace {
         public BreadcrumbMenu $menu;
         public BreadcrumbTrail $trail;
         public function __construct() { $this->menu = new BreadcrumbMenu();
-$this->trail = new BreadcrumbTrail();
+            $this->trail = new BreadcrumbTrail();
         }
         public function getMenu(): BreadcrumbMenu { return $this->menu;
         }
@@ -43,7 +43,7 @@ $this->trail = new BreadcrumbTrail();
     $app->menu->active = (object) ['query' => ['option' => 'com_jlms', 'view' => 'course', 'id' => 42]];
     PublicBreadcrumbHelper::addDetail('course', 42, 'A course');
     if (count($app->trail->items) !== 0) {
-throw new \RuntimeException('Duplicate direct-menu breadcrumb');
+        throw new \RuntimeException('Duplicate direct-menu breadcrumb');
     }
 
     // Navigating from a course listing adds only the detail item.

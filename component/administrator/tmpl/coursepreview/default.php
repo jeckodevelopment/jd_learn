@@ -29,11 +29,11 @@ foreach ($this->preview['lessons'] as $entry) {
             <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="coursepreview">
             <input type="hidden" name="id" value="<?= (int) $course->id ?>"><input type="hidden" name="version_id" value="<?= (int) $version->id ?>">
             <?php if ($lesson) :
-?><input type="hidden" name="lesson_id" value="<?= (int) $lesson->id ?>"><?php
+                ?><input type="hidden" name="lesson_id" value="<?= (int) $lesson->id ?>"><?php
             endif; ?>
             <fieldset><legend><?= Text::_('COM_JLMS_ACCESS_PREVIEW_LEVELS') ?></legend>
             <?php foreach ($access['levels'] as $level) :
-$levelId = (int) $level->id; ?>
+                $levelId = (int) $level->id; ?>
                 <label class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="access_levels[]" value="<?= $levelId ?>"<?= in_array($levelId, $access['selected'], true) ? ' checked' : '' ?>> <span class="form-check-label"><?= $this->escape($level->title) ?></span></label>
             <?php endforeach; ?>
             </fieldset>
@@ -69,7 +69,7 @@ $levelId = (int) $level->id; ?>
                         <?php $url = 'index.php?option=com_jlms&task=material.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
                         <article class="jlms-material"><h4><?= $this->escape($file->title) ?></h4>
                             <?php if ($file->description !== '') :
-?><p><?= $this->escape($file->description) ?></p><?php
+                                ?><p><?= $this->escape($file->description) ?></p><?php
                             endif; ?>
                             <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
                             <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
@@ -101,29 +101,29 @@ $levelId = (int) $level->id; ?>
                     <?php $audioFiles = array_values(array_filter($materials['lesson']['items'] ?? [], static fn ($file): bool => in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true))); ?>
                     <section id="jlms-preview-audio-region" aria-label="<?= $this->escape($lesson->title) ?>">
                         <?php if ($audioFiles) :
-?><audio id="jlms-preview-audio" controls preload="metadata" aria-label="<?= $this->escape($lesson->title) ?>">
+                            ?><audio id="jlms-preview-audio" controls preload="metadata" aria-label="<?= $this->escape($lesson->title) ?>">
                             <?php foreach ($audioFiles as $file) : ?>
                                 <?php $src = 'index.php?option=com_jlms&task=attachment.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
                                 <source src="<?= $this->escape(\Joomla\CMS\Router\Route::link('site', $src, false)) ?>" type="<?= $this->escape($file->mime_type) ?>">
                             <?php endforeach; ?>
                         </audio>
                         <?php else :
-?><p><?= Text::_('COM_JLMS_NO_MATERIALS') ?></p><?php
+                            ?><p><?= Text::_('COM_JLMS_NO_MATERIALS') ?></p><?php
                         endif; ?>
                     </section>
                 <?php endif; ?>
                 <?php $lessonFiles = $materials['lesson']['items'] ?? []; ?>
                 <?php if ($lessonFiles) :
-?><section id="jlms-preview-lesson-materials" class="jlms-material-list">
+                    ?><section id="jlms-preview-lesson-materials" class="jlms-material-list">
                     <h3><?= Text::_('COM_JLMS_LESSON_MATERIALS') ?></h3>
                     <?php foreach ($lessonFiles as $file) :
-if ($lesson->kind === 'audio' && in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true)) {
-continue;
-} ?>
+                        if ($lesson->kind === 'audio' && in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true)) {
+                            continue;
+                        } ?>
                         <?php $url = 'index.php?option=com_jlms&task=material.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
                         <article class="jlms-material"><h4><?= $this->escape($file->title) ?></h4>
                             <?php if ($file->description !== '') :
-?><p><?= $this->escape($file->description) ?></p><?php
+                                ?><p><?= $this->escape($file->description) ?></p><?php
                             endif; ?>
                             <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
                             <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>

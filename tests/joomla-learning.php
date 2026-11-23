@@ -74,51 +74,51 @@ if (($argv[2] ?? '') === 'retained') {
         throw new \RuntimeException('Package update lost learning history');
     }
     echo json_encode(['learning_upgrade' => 'passed','required_completed' => 3], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit(0);
+    exit(0);
 }
 if (($argv[2] ?? '') === 'worker') {
     echo "ready\n";
-fflush(STDOUT);
-fgets(STDIN);
+    fflush(STDOUT);
+    fgets(STDIN);
     $learning->complete(new \Joomla\CMS\User\User((int)$argv[3]), 'en-GB', (int)$argv[4], (int)$argv[5], $argv[6]);
     echo "worker passed\n";
-exit(0);
+    exit(0);
 }
 if (in_array($argv[2] ?? '', ['revoke','grant'], true)) {
     $id = (int)$argv[3];
     $name = $db->setQuery('SELECT username FROM #__users WHERE id=' . $id)->loadResult();
     if ($name !== 'cilearnerhttp') {
-throw new \RuntimeException('Not an HTTP test account');
+        throw new \RuntimeException('Not an HTTP test account');
     }
     $groupId = (int)$argv[4];
     if ($db->setQuery('SELECT title FROM #__usergroups WHERE id=' . $groupId)->loadResult() !== 'CI learning entitlement') {
-throw new \RuntimeException('Not a fixture group');
+        throw new \RuntimeException('Not a fixture group');
     }
     ($argv[2] === 'revoke') ? \Joomla\CMS\User\UserHelper::removeUserFromGroup($id, $groupId) : \Joomla\CMS\User\UserHelper::addUserToGroup($id, $groupId);
     echo "fixture access changed\n";
-exit(0);
+    exit(0);
 }
 $checks = 0;
 function learningExpect(bool $ok,string $message): void {
     global $checks;
     if (!$ok) {
-throw new \RuntimeException($message);
+        throw new \RuntimeException($message);
     }
     $checks++;
 }
 function learningDenied(callable $call,int $code,string $message): void {
     try {
-$call();
+        $call();
 
     } catch (\RuntimeException $error) {
-learningExpect($error->getCode() === $code, $message . '; received ' . $error->getMessage() . ' / ' . $error->getCode());
-return;
+        learningExpect($error->getCode() === $code, $message . '; received ' . $error->getMessage() . ' / ' . $error->getCode());
+        return;
     }
     throw new \RuntimeException($message);
 }
 function fixtureUpdate(string $table,object $record,bool $nulls=false): void {
     global $db;
-$db->updateObject('#__' . $table, $record, 'id', $nulls);
+    $db->updateObject('#__' . $table, $record, 'id', $nulls);
 }
 function fixtureStudent(string $username): \Joomla\CMS\User\User {
     global $learningGroup;
@@ -126,13 +126,13 @@ function fixtureStudent(string $username): \Joomla\CMS\User\User {
     $data = ['name' => 'CI Learner','username' => $username,'email' => $username . '@example.invalid',
         'password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$learningGroup],'block' => 0,'activation' => ''];
     if (!$user->bind($data) || !$user->save()) {
-throw new \RuntimeException('Learner fixture failed: ' . $user->getError());
+        throw new \RuntimeException('Learner fixture failed: ' . $user->getError());
     }
     return new \Joomla\CMS\User\User((int)$user->id);
 }
 $groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
 if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI learning entitlement'])) {
-throw new \RuntimeException('Core group fixture failed: ' . $groupModel->getError());
+    throw new \RuntimeException('Core group fixture failed: ' . $groupModel->getError());
 }
 $learningGroup = (int)$groupModel->getState('group.id');
 $level = (object)['title' => 'CI learning access','ordering' => 0,'rules' => json_encode([$learningGroup], JSON_THROW_ON_ERROR)];
@@ -148,7 +148,7 @@ $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_j
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Learning fixture','alias' => 'learning-fixture','catid' => $catid,
     'language' => '*','catalog_access' => 1,'content_access' => $learningLevel,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Text learning fixture'])) {
-throw new \RuntimeException($model->getError());
+    throw new \RuntimeException($model->getError());
 }
 $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
@@ -158,9 +158,9 @@ $scope = static function()use($db,$course,$version):array{return ['course_id' =>
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Learning chapter']);
 $lessons = [];
 for ($i = 1;$i <= 4;$i++) {
- $schedule = $i === 2 ? ['publish_up' => gmdate('Y-m-d H:i:s', time() + 3600),'publish_down' => gmdate('Y-m-d H:i:s', time() + 7200)] : [];
- $lessons[] = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Learning lesson ' . $i,'kind' => 'text',
-  'required' => $i === 4 ? '0' : '1','body' => '<p>LEARNING_PRIVATE_BODY_' . $i . '</p><img src="x" onerror="alert(1)"><script>alert(2)</script>'] + $schedule);
+    $schedule = $i === 2 ? ['publish_up' => gmdate('Y-m-d H:i:s', time() + 3600),'publish_down' => gmdate('Y-m-d H:i:s', time() + 7200)] : [];
+    $lessons[] = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Learning lesson ' . $i,'kind' => 'text',
+    'required' => $i === 4 ? '0' : '1','body' => '<p>LEARNING_PRIVATE_BODY_' . $i . '</p><img src="x" onerror="alert(1)"><script>alert(2)</script>'] + $schedule);
 }
 $cr = (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult();
 $publication->transition($actor, $course, $version, $cr, $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
@@ -179,10 +179,10 @@ learningExpect($learning->classroom($student, 'en-GB', $enrollment)['percent'] =
  // LCM-01: inactive lifecycle states must not be bypassable by direct calls,
  // even if a stale configuration still leaves admissions and delivery enabled.
 foreach ([0, 2, -2] as $inactiveState) {
- fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $inactiveState,'admissions_open' => 1,'delivery_enabled' => 1]);
- learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment), 404, 'LCM-01 inactive course denies direct classroom');
- learningDenied(fn()=>$learning->resourceContext($student, 'en-GB', $enrollment, $lessons[0]), 404, 'LCM-01 inactive course denies direct material context');
- learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lessons[0], bin2hex(random_bytes(16))), 404, 'LCM-01 inactive course denies direct completion');
+    fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $inactiveState,'admissions_open' => 1,'delivery_enabled' => 1]);
+    learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment), 404, 'LCM-01 inactive course denies direct classroom');
+    learningDenied(fn()=>$learning->resourceContext($student, 'en-GB', $enrollment, $lessons[0]), 404, 'LCM-01 inactive course denies direct material context');
+    learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lessons[0], bin2hex(random_bytes(16))), 404, 'LCM-01 inactive course denies direct completion');
 }
 fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => 1,'admissions_open' => 1,'delivery_enabled' => 1]);
 learningExpect($learning->classroom($student, 'en-GB', $enrollment)['percent'] === 0, 'LCM-01 inactive direct requests preserve progress');
@@ -224,32 +224,32 @@ learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment, $forei
 learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $foreign, bin2hex(random_bytes(16))), 404, 'foreign lesson completion rejected');
 // Independent PHP processes use the actual database locks, without a pcntl dependency.
 function learningWorkers(array $lessonIds): void {
- global $student,$enrollment,$root;
- $workers = [];
- foreach ($lessonIds as $lessonId) {
-  $pipes = [];
-$process = proc_open([PHP_BINARY,__FILE__,$root,'worker',(string)$student->id,(string)$enrollment,(string)$lessonId,bin2hex(random_bytes(16))], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-  if (!is_resource($process)) {
-throw new \RuntimeException('Worker could not start');
-  }
-  if (trim((string)fgets($pipes[1])) !== 'ready') {
-throw new \RuntimeException('Worker barrier failed');
-  }
-  $workers[] = [$process,$pipes];
- }
- foreach ($workers as [$process,$pipes]) {
-fwrite($pipes[0], "go\n");
-fclose($pipes[0]);
- }
- foreach ($workers as [$process,$pipes]) {
-  $out = stream_get_contents($pipes[1]);
-$err = stream_get_contents($pipes[2]);
-fclose($pipes[1]);
-fclose($pipes[2]);
-  if (proc_close($process) !== 0) {
-throw new \RuntimeException('Concurrent completion failed: ' . $out . ' ' . $err);
-  }
- }
+    global $student,$enrollment,$root;
+    $workers = [];
+    foreach ($lessonIds as $lessonId) {
+        $pipes = [];
+        $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',(string)$student->id,(string)$enrollment,(string)$lessonId,bin2hex(random_bytes(16))], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+        if (!is_resource($process)) {
+            throw new \RuntimeException('Worker could not start');
+        }
+        if (trim((string)fgets($pipes[1])) !== 'ready') {
+            throw new \RuntimeException('Worker barrier failed');
+        }
+        $workers[] = [$process,$pipes];
+    }
+    foreach ($workers as [$process,$pipes]) {
+        fwrite($pipes[0], "go\n");
+        fclose($pipes[0]);
+    }
+    foreach ($workers as [$process,$pipes]) {
+        $out = stream_get_contents($pipes[1]);
+        $err = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($process) !== 0) {
+            throw new \RuntimeException('Concurrent completion failed: ' . $out . ' ' . $err);
+        }
+    }
 }
 learningWorkers([$lessons[0],$lessons[0]]);
 learningExpect($learning->classroom($student, 'en-GB', $enrollment)['percent'] === 33, 'concurrent duplicate completion counts once and rounds down');
@@ -286,12 +286,12 @@ fixtureUpdate('categories', (object)['id' => $catid,'published' => 1]);
 $catalog = $component->getCatalogService();
 $storedProgress = (int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
 foreach ([0,2,-2] as $blockedState) {
- fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $blockedState,'publish_down' => '2000-01-01 00:00:00']);
- learningDenied(fn()=>$catalog->course($student, 'en-GB', $course), 404, 'nonpublished course absent from public catalog');
- learningDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'nonpublished course rejects new admission');
- learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment), 404, 'nonpublished archived or trashed course rejects existing classroom');
- learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lessons[1], bin2hex(random_bytes(16))), 404, 'nonpublished course rejects progress mutation');
- learningExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === $storedProgress, 'nonpublished lifecycle retains progress');
+    fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $blockedState,'publish_down' => '2000-01-01 00:00:00']);
+    learningDenied(fn()=>$catalog->course($student, 'en-GB', $course), 404, 'nonpublished course absent from public catalog');
+    learningDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'nonpublished course rejects new admission');
+    learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment), 404, 'nonpublished archived or trashed course rejects existing classroom');
+    learningDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lessons[1], bin2hex(random_bytes(16))), 404, 'nonpublished course rejects progress mutation');
+    learningExpect((int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === $storedProgress, 'nonpublished lifecycle retains progress');
 }
 fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => 1,'publish_down' => '2000-01-01 00:00:00']);
 learningExpect($learning->classroom($student, 'en-GB', $enrollment)['percent'] === 33, 'promotional end date alone does not revoke the enrolled classroom');

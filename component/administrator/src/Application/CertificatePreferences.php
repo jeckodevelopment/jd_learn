@@ -10,7 +10,7 @@ final class CertificatePreferences
     public static function merge(array $input, ?string $params): ?string
     {
         if (!array_key_exists('certificate_enabled', $input)) {
-return null;
+            return null;
         }
         $value = $input['certificate_enabled'];
         if (!is_string($value) || !in_array($value, ['inherit', 'enabled', 'disabled'], true)) {
@@ -18,12 +18,12 @@ return null;
         }
         $data = json_decode($params ?: '{}', true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($data)) {
-throw new \InvalidArgumentException('COM_JLMS_CERTIFICATE_PREFERENCE_INVALID');
+            throw new \InvalidArgumentException('COM_JLMS_CERTIFICATE_PREFERENCE_INVALID');
         }
         if ($value === 'inherit') {
-unset($data['certificate_enabled']);
+            unset($data['certificate_enabled']);
         } else {
-$data['certificate_enabled'] = $value;
+            $data['certificate_enabled'] = $value;
         }
         return json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
     }
@@ -32,7 +32,7 @@ $data['certificate_enabled'] = $value;
     {
         $data = json_decode($courseParams ?: '{}', true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($data)) {
-return false;
+            return false;
         }
         return match ($data['certificate_enabled'] ?? 'inherit') {
             'enabled' => true,

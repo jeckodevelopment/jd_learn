@@ -11,7 +11,7 @@ final class QuizreviewModel extends FormModel
     public function getItem():array
     {
         $app = Factory::getApplication();
-$i = $app->getInput();
+        $i = $app->getInput();
         return $app->bootComponent('com_jlms')->getQuizReviewService()->editor($app->getIdentity(), $i->getInt('id', 0), $i->getInt('lesson_id', 0), $i->getInt('enrollment_id', 0), $i->getInt('attempt_id', 0), $i->getInt('return_attempt', 0) === 1, $i->getInt('before', 0), $i->getInt('after', 0));
     }
 }

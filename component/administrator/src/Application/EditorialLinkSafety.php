@@ -16,7 +16,7 @@ final class EditorialLinkSafety
     {
         $parts = parse_url($url);
         if ($parts === false) {
-return true;
+            return true;
         }
         foreach (['query', 'fragment'] as $field) {
             parse_str(ltrim((string) ($parts[$field] ?? ''), '#?'), $parameters);

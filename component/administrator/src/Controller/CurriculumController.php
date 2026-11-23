@@ -25,7 +25,7 @@ class CurriculumController extends BaseController
         $courseId = 0;
         $versionId = 0;
         $resultId = 0;
-$failed = false;
+        $failed = false;
         try {
             $courseId = CurriculumService::id($input['course_id'] ?? null);
             $versionId = CurriculumService::id($input['version_id'] ?? 0, true);
@@ -43,7 +43,7 @@ $failed = false;
                         if ($ticket === '' && !isset($input['publication_confirmation'])) {
                             if ((int)$impact['course']->revision !== CurriculumService::id($input['revision'] ?? null)
                                 || (int)$impact['version']->revision !== CurriculumService::id($input['expected_version_revision'] ?? null)) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+                                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                             }
                             $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' => $transition, 'expires' => time() + 900,
                                 'ticket' => bin2hex(random_bytes(32)), 'fingerprint' => $impact['fingerprint']]);
@@ -54,7 +54,7 @@ throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                         if (!is_array($plan) || (int)$plan['actor'] !== (int)$actor->id || (int)$plan['transition'] !== $transition
                             || (int)$plan['expires'] < time() || !is_string($ticket) || !hash_equals($plan['ticket'], $ticket)
                             || ($input['publication_confirmation'] ?? '') !== '1') {
-throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
+                            throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
                         }
                         $fingerprint = $plan['fingerprint'];
                         $this->app->setUserState($key, null);
@@ -146,23 +146,23 @@ throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
     private function durationReceipt(\Joomla\CMS\User\User $actor, array $input): ?array
     {
         if (($input['duration_mode'] ?? '') !== 'auto' || empty($input['duration_ticket'])) {
-return null;
+            return null;
         }
         $ticket = $input['duration_ticket'];
-$key = 'com_jlms.video.duration';
+        $key = 'com_jlms.video.duration';
         $plans = $this->app->getUserState($key, []);
-$plans = is_array($plans) ? $plans : [];
+        $plans = is_array($plans) ? $plans : [];
         $proof = is_string($ticket) ? ($plans[$ticket] ?? null) : null;
         if (!is_array($proof) || ($proof['expires'] ?? 0) < time()
             || !hash_equals($proof['fingerprint'], $this->app->bootComponent('com_jlms')->getCurriculumService()->durationFingerprint($actor, $input))) {
             throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
         }
         unset($plans[$ticket]);
-$this->app->setUserState($key, $plans);
+        $this->app->setUserState($key, $plans);
         if ($proof['duration_ms'] === null) {
             $value = $input['sdk_duration_ms'] ?? '';
             if ((!is_string($value) && !is_int($value)) || !preg_match('/\A[1-9][0-9]{0,7}\z/D', (string)$value)) {
-throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
+                throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
             }
             $proof['duration_ms'] = (int)$value;
         }
@@ -180,15 +180,15 @@ throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
     public function saveOrder(): void
     {
         $code = 200;
-$error = false;
-$data = null;
-$message = '';
+        $error = false;
+        $data = null;
+        $message = '';
         try {
             if (strtoupper($this->input->getMethod()) !== 'POST') {
-throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+                throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
             }
             if (!$this->checkToken('post', false)) {
-throw new \RuntimeException('JINVALID_TOKEN', 403);
+                throw new \RuntimeException('JINVALID_TOKEN', 403);
             }
             $input = $this->input->post->get('jform', [], 'array');
             $data = ['revision' => $this->app->bootComponent('com_jlms')->getCurriculumService()->saveOrder($this->app->getIdentity(), $input)];

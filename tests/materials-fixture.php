@@ -69,13 +69,13 @@ if ($mode === 'configure') {
     $changes = json_decode($argv[3] ?? '{}', true, 8, JSON_THROW_ON_ERROR);
     $allowed = ['material_storage_root', 'material_max_mib', 'material_scan_required', 'material_clamd_socket', 'material_php_delivery', 'material_orphan_retention_hours'];
     if (array_diff(array_keys($changes), $allowed)) {
-throw new \RuntimeException('Unexpected fixture configuration');
+        throw new \RuntimeException('Unexpected fixture configuration');
     }
     $row = $db->setQuery("SELECT extension_id, params FROM #__extensions WHERE type='component' AND element='com_jlms'")->loadObject();
     $row->params = json_encode(array_replace(json_decode($row->params ?: '{}', true), $changes), JSON_THROW_ON_ERROR);
     $db->updateObject('#__extensions', $row, 'extension_id');
-echo "configured\n";
-exit(0);
+    echo "configured\n";
+    exit(0);
 }
 $fixturePath = dirname($root) . '/materials-fixture.json';
 if ($mode === 'denied') {
@@ -84,8 +84,8 @@ if ($mode === 'denied') {
         $component->getMaterialService()->administration(new \Joomla\CMS\User\User((int)$fixture['http_user_id']), (int)$fixture['course_id'], (int)$fixture['version_id']);
     } catch (\RuntimeException $error) {
         if ($error->getCode() === 403) {
-echo 'material ACL passed';
-exit(0);
+            echo 'material ACL passed';
+            exit(0);
         }
         throw $error;
     }
@@ -96,25 +96,25 @@ if ($mode === 'retained') {
     $course = $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . (int) $fixture['course_id'])->loadObject();
     $count = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attachments WHERE course_version_id=' . (int) $course->current_version_id)->loadResult();
     if ($count < 2) {
-throw new \RuntimeException('Package update lost materials');
+        throw new \RuntimeException('Package update lost materials');
     }
     $firstId = (int)$db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id=' . (int)$course->current_version_id . ' ORDER BY id LIMIT 1')->loadResult();
     $download = $component->getMaterialService()->adminDownload($app->getIdentity(), (int)$fixture['course_id'], (int)$course->current_version_id, $firstId);
     fclose($download['handle']);
     echo json_encode(['materials_upgrade' => 'passed','attachments' => $count], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit(0);
+    exit(0);
 }
 if ($mode === 'cleanup') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
     $params = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
     $rootPath = (string) $params->get('material_storage_root', '');
     if ($rootPath === '' || !is_dir($rootPath)) {
-throw new \RuntimeException('Private material storage is not configured.');
+        throw new \RuntimeException('Private material storage is not configured.');
     }
     $now = gmdate('Y-m-d H:i:s');
     $createOrphan = static function(int $ageHours)use($db,$rootPath,$userId,$now):array{
         $key = bin2hex(random_bytes(32)) . '.blob';
-$blob = $rootPath . DIRECTORY_SEPARATOR . $key;
+        $blob = $rootPath . DIRECTORY_SEPARATOR . $key;
         if (file_put_contents($blob, 'orphan-fixture-' . $ageHours) === false)throw new \RuntimeException('Could not create private cleanup fixture.');
         chmod($blob, 0600);
         $asset = (object)['storage' => 'local','storage_key' => $key,'sha256' => hash_file('sha256', $blob),'byte_size' => filesize($blob),
@@ -129,7 +129,7 @@ $blob = $rootPath . DIRECTORY_SEPARATOR . $key;
     $options = \Joomla\Component\Scheduler\Administrator\Helper\SchedulerHelper::getTaskOptions();
     $option = $options->findOption('jlms.materials.cleanup');
     if ($option === null) {
-throw new \RuntimeException('Native scheduler does not expose the material cleanup routine.');
+        throw new \RuntimeException('Native scheduler does not expose the material cleanup routine.');
     }
     $record = (object)['id' => 0,'type' => 'jlms.materials.cleanup','params' => '{"limit":100}','taskOption' => $option];
     $task = new \Joomla\Component\Scheduler\Administrator\Task\Task($record);
@@ -145,16 +145,16 @@ throw new \RuntimeException('Native scheduler does not expose the material clean
     $db->setQuery('DELETE FROM #__jlms_assets WHERE id=' . $retainedId)->execute();
     @unlink($retainedBlob);
     echo "material cleanup passed\n";
-exit(0);
+    exit(0);
 }
 if ($mode === 'hidden') {
     $courseId = (int) ($argv[3] ?? 0);
     if ($courseId < 1) {
-throw new \RuntimeException('Course id required.');
+        throw new \RuntimeException('Course id required.');
     }
     $db->setQuery('UPDATE #__jlms_courses SET state = 0 WHERE id = ' . $courseId)->execute();
     echo "course hidden\n";
-exit(0);
+    exit(0);
 }
 if ($mode === 'inspect') {
     $fixture = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
@@ -162,7 +162,7 @@ if ($mode === 'inspect') {
     $version = $db->setQuery('SELECT status, revision, structure_hash FROM #__jlms_course_versions WHERE id=' . (int)$fixture['version_id'])->loadAssoc();
     $foreign = $db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id=' . (int)$fixture['foreign_version_id'])->loadAssocList();
     echo json_encode(['files' => $rows,'version' => $version,'foreign_files' => $foreign], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit(0);
+    exit(0);
 }
 $learningFixture = json_decode(file_get_contents(dirname($root) . '/learning-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $actor = $app->getIdentity();
@@ -174,19 +174,19 @@ $fixture = [];
 foreach (['materials-fixture','materials-foreign'] as $alias) {
     if (!$model->save(['id' => 0,'revision' => 1,'title' => $alias,'alias' => $alias,'catid' => $catid,'language' => '*',
         'catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Protected materials fixture'])) {
-throw new \RuntimeException($model->getError());
+        throw new \RuntimeException($model->getError());
     }
     $courseId = (int)$model->getState('course.id');
-$versionId = $author->createDraft($actor, $courseId, 1);
+    $versionId = $author->createDraft($actor, $courseId, 1);
     $module = $author->saveModule($actor, ['course_id' => $courseId,'version_id' => $versionId,'expected_version_revision' => 1,'id' => 0,'title' => 'Materials chapter']);
     $lesson = $author->saveLesson($actor, ['course_id' => $courseId,'version_id' => $versionId,'expected_version_revision' => 2,'id' => 0,'module_id' => $module,
         'title' => 'Materials text','kind' => 'text','required' => '1','body' => '<p>PROTECTED_MATERIAL_LESSON</p>']);
     $component->getMaterialService()->administration($actor, $courseId, $versionId);
     if ($alias === 'materials-fixture') {
-$fixture = ['course_id' => $courseId,'version_id' => $versionId,'lesson_id' => $lesson];
+        $fixture = ['course_id' => $courseId,'version_id' => $versionId,'lesson_id' => $lesson];
     } else {
-$fixture['foreign_course_id'] = $courseId;
-$fixture['foreign_version_id'] = $versionId;
+        $fixture['foreign_course_id'] = $courseId;
+        $fixture['foreign_version_id'] = $versionId;
     }
 }
 $fixture['http_user_id'] = $learningFixture['http_user_id'];

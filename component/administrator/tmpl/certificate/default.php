@@ -13,10 +13,10 @@ $i = $this->item;
  <dt class="col-sm-3"><?= Text::_('COM_JLMS_CERTIFICATE_COMPLETED') ?></dt><dd class="col-sm-9"><?= $this->escape($i['completed_at']) ?></dd>
  <dt class="col-sm-3"><?= Text::_('COM_JLMS_CERTIFICATE_COURSE_VERSION') ?></dt><dd class="col-sm-9"><?= (int) $i['course_version_id'] ?></dd>
  <?php if ($i['revoked_at'] !== '') :
-?><dt class="col-sm-3"><?= Text::_('COM_JLMS_CERTIFICATE_REVOKED_AT') ?></dt><dd class="col-sm-9"><?= $this->escape($i['revoked_at']) ?> — <?= $this->escape($i['revocation_reason']) ?></dd><?php
+        ?><dt class="col-sm-3"><?= Text::_('COM_JLMS_CERTIFICATE_REVOKED_AT') ?></dt><dd class="col-sm-9"><?= $this->escape($i['revoked_at']) ?> — <?= $this->escape($i['revocation_reason']) ?></dd><?php
  endif; ?></dl>
  <?php if ($i['status'] === 'ready') :
-?><a class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&task=certificate.download&id=' . (int) $i['id']) ?>"><?= Text::_('COM_JLMS_CERTIFICATE_DOWNLOAD_ADMIN') ?></a><?php
+        ?><a class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&task=certificate.download&id=' . (int) $i['id']) ?>"><?= Text::_('COM_JLMS_CERTIFICATE_DOWNLOAD_ADMIN') ?></a><?php
  endif; ?>
  <?php if ($i['status'] === 'ready') : ?>
  <section id="jlms-certificate-regeneration" class="mt-4" aria-labelledby="jlms-cert-regenerate-heading">
@@ -29,19 +29,19 @@ $i = $this->item;
    <label for="jlms-regenerate-reason"><?= Text::_('COM_JLMS_CERTIFICATE_REGENERATE_REASON') ?></label>
    <textarea class="form-control" id="jlms-regenerate-reason" name="reason" minlength="8" maxlength="500" rows="2" required></textarea>
    <label class="d-block mt-2"><input type="checkbox" name="confirmation" value="1" required>
-    <?= Text::_('COM_JLMS_CERTIFICATE_REGENERATE_CONFIRM') ?></label>
-   <?= \Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
+        <?= Text::_('COM_JLMS_CERTIFICATE_REGENERATE_CONFIRM') ?></label>
+        <?= \Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
    <button type="submit" class="btn btn-warning mt-2"><?= Text::_('COM_JLMS_CERTIFICATE_REGENERATE') ?></button>
   </form>
  </section>
  <?php endif; ?>
  <h2><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT') ?></h2>
  <?php if (!$i['audit']) :
-?><p><?= Text::_('JGLOBAL_NO_MATCHING_RESULTS') ?></p><?php
+        ?><p><?= Text::_('JGLOBAL_NO_MATCHING_RESULTS') ?></p><?php
  else :
-?><table class="table"><thead><tr><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTION') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTOR') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_DATE') ?></th></tr></thead><tbody>
- <?php foreach ($i['audit'] as $event) :
-?><tr><td><?= $this->escape($event->action) ?></td><td><?= (int) $event->actor_user_id ?></td><td><?= $this->escape($event->created_at) ?></td></tr><?php
+        ?><table class="table"><thead><tr><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTION') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTOR') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_DATE') ?></th></tr></thead><tbody>
+     <?php foreach ($i['audit'] as $event) :
+            ?><tr><td><?= $this->escape($event->action) ?></td><td><?= (int) $event->actor_user_id ?></td><td><?= $this->escape($event->created_at) ?></td></tr><?php
  endforeach; ?>
  </tbody></table>
  <?php endif; ?>

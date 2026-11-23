@@ -63,7 +63,7 @@ if (($argv[2] ?? '') === 'mail-reconcile-worker') {
     echo "ready\n";
     fflush(STDOUT);
     if (trim((string) fgets(STDIN)) !== 'go') {
-exit(2);
+        exit(2);
     }
     $workerId = (int) ($argv[3] ?? 0);
     $workerAction = (string) ($argv[4] ?? '');
@@ -73,7 +73,7 @@ exit(2);
         echo "OK\n";
     } catch (\RuntimeException $error) {
         if ($error->getCode() !== 409) {
-throw $error;
+            throw $error;
         }
         echo "CONFLICT:409\n";
     }
@@ -81,15 +81,15 @@ throw $error;
 }
 
 function rosterExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new \RuntimeException($message);
-$checks++;
+    if (!$ok)throw new \RuntimeException($message);
+    $checks++;
 }
 function rosterDenied(callable $fn,int $code,string $message):void{try {
-$fn();
+        $fn();
 
 } catch (\RuntimeException $e) {
-rosterExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-return;
+    rosterExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
+    return;
 
 }throw new \RuntimeException($message);
 }
@@ -113,12 +113,12 @@ rosterExpect(count($read($actor)) > 0, 'roster read restored after account unblo
 rosterExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult() === $enrollmentCountBeforeBlock, 'blocking actor does not alter enrollments');
 $path = dirname($root) . '/roster-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
- $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
- rosterExpect(count($read($actor)) === $saved['total'], 'roster history retained');
- rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'completed'])) === 1, 'completion retained separately');
- rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User($saved['manager']), $otherCourse), 403, 'course scope retained');
- echo json_encode(['roster_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit;
+    $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
+    rosterExpect(count($read($actor)) === $saved['total'], 'roster history retained');
+    rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'completed'])) === 1, 'completion retained separately');
+    rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User($saved['manager']), $otherCourse), 403, 'course scope retained');
+    echo json_encode(['roster_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+    exit;
 }
 $before = $db->setQuery('SELECT id,revision,completed_total,completed_at,last_activity_at FROM #__jlms_enrollments ORDER BY id')->loadAssocList();
 $rows = $read($actor);
@@ -136,10 +136,10 @@ $ownerId = (int)$f['owner'];
 $rename = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name', $searchFixtureName)->bind(':id', $ownerId, \Joomla\Database\ParameterType::INTEGER);
 $db->setQuery($rename)->execute();
 try {
-rosterExpect(count($read($actor, ['user' => $f['owner'],'search' => 'Roster Search Name'])) === 25, 'search finds learner by display name');
+    rosterExpect(count($read($actor, ['user' => $f['owner'],'search' => 'Roster Search Name'])) === 25, 'search finds learner by display name');
 } finally {
-$restore = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name', $ownerName)->bind(':id', $ownerId, \Joomla\Database\ParameterType::INTEGER);
-$db->setQuery($restore)->execute();
+    $restore = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name', $ownerName)->bind(':id', $ownerId, \Joomla\Database\ParameterType::INTEGER);
+    $db->setQuery($restore)->execute();
 }
 rosterExpect(count($read($actor, ['search' => '%'])) === 0, 'search treats LIKE wildcards literally');
 rosterDenied(fn()=>$service->query($actor, $course, ['search' => str_repeat('x', 101)]), 400, 'overlong learner search rejected');
@@ -264,7 +264,7 @@ try {
                     $pipes
                 );
                 if (!is_resource($child)) {
-throw new \RuntimeException('Parallel mail worker could not start');
+                    throw new \RuntimeException('Parallel mail worker could not start');
                 }
                 $workers[] = [$child, $pipes];
             }
@@ -272,7 +272,7 @@ throw new \RuntimeException('Parallel mail worker could not start');
                 stream_set_timeout($pipes[1], 30);
                 $ready = trim((string) fgets($pipes[1]));
                 if ($ready !== 'ready') {
-throw new \RuntimeException('Mail worker barrier failed: ' . $ready);
+                    throw new \RuntimeException('Mail worker barrier failed: ' . $ready);
                 }
             }
             $db->transactionStart();
@@ -294,7 +294,7 @@ throw new \RuntimeException('Mail worker barrier failed: ' . $ready);
                 fclose($pipes[2]);
                 $exitStatus = proc_close($child);
                 if ($exitStatus !== 0) {
-throw new \RuntimeException('Mail worker failed: ' . $errors . ' ' . $output);
+                    throw new \RuntimeException('Mail worker failed: ' . $errors . ' ' . $output);
                 }
                 $results[] = $output;
             }
@@ -311,15 +311,15 @@ throw new \RuntimeException('Mail worker failed: ' . $errors . ' ' . $output);
         } finally {
             foreach ($workers as [$child, $pipes]) {
                 if (is_resource($child)) {
-proc_terminate($child);
+                    proc_terminate($child);
                 }
                 foreach ($pipes as $pipe) {
-if (is_resource($pipe)) {
-fclose($pipe);
-}
+                    if (is_resource($pipe)) {
+                        fclose($pipe);
+                    }
                 }
                 if (is_resource($child)) {
-proc_close($child);
+                    proc_close($child);
                 }
             }
         }
@@ -413,18 +413,18 @@ $permissions['jlms.enrollments.manage'][(string)$group] = false;
 $asset->rules = json_encode($permissions, JSON_THROW_ON_ERROR);
 $asset->store();
 try {
-rosterDenied(fn()=>$read($user), 403, 'explicit course deny refreshes stale identity');
+    rosterDenied(fn()=>$read($user), 403, 'explicit course deny refreshes stale identity');
 
 } finally {
-$asset->rules = $grantedRules;
-$asset->store();
+    $asset->rules = $grantedRules;
+    $asset->store();
 }
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$user->id, $group);
 try {
-rosterDenied(fn()=>$read($user), 403, 'group revocation refreshes stale identity');
+    rosterDenied(fn()=>$read($user), 403, 'group revocation refreshes stale identity');
 
 } finally {
-\Joomla\CMS\User\UserHelper::addUserToGroup((int)$user->id, $group);
+    \Joomla\CMS\User\UserHelper::addUserToGroup((int)$user->id, $group);
 }
 $app->loadIdentity($user);
 $m = $factory->createModel('Enrollments', 'Administrator', ['ignore_request' => true]);

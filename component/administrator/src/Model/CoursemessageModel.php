@@ -36,10 +36,10 @@ final class CoursemessageModel extends BaseDatabaseModel
                 throw new \RuntimeException($error->translatedMessage(), 422);
             }
             if ($error instanceof \InvalidArgumentException) {
-throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 400);
+                throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 400);
             }
             if (in_array($error->getCode(), [400,401,403,404,409,422], true) && str_starts_with($error->getMessage(), 'COM_JLMS_')) {
-throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
+                throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }

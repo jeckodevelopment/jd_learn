@@ -42,7 +42,7 @@ final class CurriculumService
     private function authorise(User $actor, object $course, string $action = 'core.edit'): void
     {
         $actor = new User((int) $actor->id);
-$actor->clearAccessRights();
+        $actor->clearAccessRights();
         $asset = 'com_jlms.course.' . (int) $course->id;
         $editOwn = $action === 'core.edit' && (int) $course->created_by === (int) $actor->id
             && $actor->authorise('core.edit.own', $asset);
@@ -72,7 +72,7 @@ $actor->clearAccessRights();
         }
         if (($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
             || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         if ($version->status !== 'draft') {
             throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
@@ -137,7 +137,7 @@ throw new \DomainException('JERROR_ALERTNOAUTHOR');
     private function update(string $table, object $record, array $fields, User $actor): void
     {
         if (!empty($record->checked_out) && (int) $record->checked_out !== (int) $actor->id) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $update = (object) (['id' => (int) $record->id] + $fields + [
             'revision' => (int) $record->revision + 1, 'modified_by' => (int) $actor->id,
@@ -207,7 +207,7 @@ throw new \DomainException('JERROR_ALERTNOAUTHOR');
                 ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER)->order('lesson_id, required_lesson_id');
             $rows = $this->db->setQuery($q, 0, 25001)->loadObjectList();
             if (count($rows) > 25000) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+                throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
             }
             foreach ($rows as $edge) {
                 $prerequisites[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
@@ -238,7 +238,7 @@ throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
             $course = $this->row('courses', $courseId, true);
             $this->authorise($actor, $course);
             if ($course->checked_out && (int) $course->checked_out !== (int) $actor->id) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $q = $this->db->createQuery()->select('id')->from($this->db->quoteName('#__jlms_course_versions'))
                 ->where('course_id = :course')->where('status = :status');
@@ -278,27 +278,27 @@ throw new \DomainException('JERROR_ALERTNOAUTHOR');
     public function restoreVersion(User $identity, array $input): int
     {
         if (!in_array($input['confirmation'] ?? null, ['1', 1], true)) {
-throw new \DomainException('COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED');
+            throw new \DomainException('COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED');
         }
         $courseId = self::id($input['course_id'] ?? null);
-$sourceId = self::id($input['version_id'] ?? null);
+        $sourceId = self::id($input['version_id'] ?? null);
         $courseRevision = self::id($input['revision'] ?? null);
-$sourceRevision = self::id($input['expected_version_revision'] ?? null);
+        $sourceRevision = self::id($input['expected_version_revision'] ?? null);
         return $this->transaction(function () use ($identity, $courseId, $sourceId, $courseRevision, $sourceRevision): int {
             $course = $this->row('courses', $courseId, true);
             $actor = new User((int)$identity->id);
-$actor->clearAccessRights();
+            $actor->clearAccessRights();
             $this->authorise($actor, $course);
             $source = $this->row('course_versions', $sourceId, true);
             if ((int)$source->course_id !== $courseId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id)
                 || ($source->checked_out && (int)$source->checked_out !== (int)$actor->id)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             if ((int)$course->revision !== $courseRevision || (int)$source->revision !== $sourceRevision) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             if ($course->current_version_id === null || (int)$course->current_version_id === $sourceId
                 || !in_array($source->status, ['published', 'retired'], true) || !$source->published_at
@@ -325,7 +325,7 @@ throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         $this->authorise($actor, $course);
         $version = $this->row('course_versions', $versionId);
         if ((int)$version->course_id !== $courseId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+            throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
         return \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
     }
@@ -333,7 +333,7 @@ throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
     public function saveTeachingRules(User $actor, array $input): void
     {
         $course = self::id($input['course_id'] ?? null);
-$version = self::id($input['version_id'] ?? null);
+        $version = self::id($input['version_id'] ?? null);
         $revision = self::id($input['expected_version_revision'] ?? null);
         $this->transaction(function () use ($actor, $course, $version, $revision, $input): void {
             $record = $this->draft($actor, $course, $version, $revision);
@@ -352,11 +352,11 @@ $version = self::id($input['version_id'] ?? null);
             // Consultation never produces course-completion certificates, even when
             // converting a draft copied from a certificate-enabled learning version.
             if ($mode === 'consultation') {
-$rules['certificate_enabled'] = false;
+                $rules['certificate_enabled'] = false;
             }
             $publicPreviews = $input['public_previews'] ?? ($rules['public_previews'] ? '1' : '0');
             if ((!is_string($publicPreviews) && !is_int($publicPreviews)) || !in_array((string) $publicPreviews, ['0', '1'], true)) {
-throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                throw new \DomainException('COM_JLMS_INVALID_INPUT');
             }
             $rules['public_previews'] = (string) $publicPreviews === '1';
             if (array_key_exists('video_threshold', $input)) {
@@ -402,7 +402,7 @@ throw new \DomainException('COM_JLMS_INVALID_INPUT');
     {
         $actor = CourseEditorAccess::fresh($identity);
         $table = match ($kind) {
-'module' => 'modules', 'lesson' => 'lessons', default => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
+            'module' => 'modules', 'lesson' => 'lessons', default => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
         };
         $courseId = self::id($input['course_id'] ?? null);
         $versionId = self::id($input['version_id'] ?? null);
@@ -413,18 +413,18 @@ throw new \DomainException('COM_JLMS_INVALID_INPUT');
             $course = $this->row('courses', $courseId);
             if (($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
                 || ($version->checked_out && (int) $version->checked_out !== (int) $actor->id)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $source = $this->row($table, $id, true);
             if ((int) $source->course_version_id !== $versionId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             if ((int) $source->revision !== self::id($input['revision'] ?? null)) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $moduleId = $kind === 'lesson' ? self::id($input['module_id'] ?? null) : 0;
             if ($moduleId && (int) $this->row('modules', $moduleId)->course_version_id !== $versionId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             $newId = (new CourseVersionCopy($this->db))->item($actor, $kind, $source, $versionId, $title, $moduleId);
             $this->update('course_versions', $version, [], $actor);
@@ -445,17 +445,17 @@ throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
     public static function duration(mixed $value): ?int
     {
         if ($value === '' || $value === null) {
-return null;
+            return null;
         }
         if (!is_string($value) && !is_int($value)) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         if (!preg_match('/\A([0-9]{1,5})(?:\.([0-9]{1,3}))?\z/D', (string) $value, $parts)) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $ms = (int) $parts[1] * 1000 + (int) str_pad($parts[2] ?? '', 3, '0');
         if ($ms < 1000 || $ms > 28800000) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         return $ms;
     }
@@ -464,39 +464,39 @@ throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
     public function durationFingerprint(User $actor, array $input): string
     {
         $course = $this->row('courses', self::id($input['course_id'] ?? null));
-$this->authorise($actor, $course);
+        $this->authorise($actor, $course);
         $version = $this->row('course_versions', self::id($input['version_id'] ?? null));
         $module = $this->row('modules', self::id($input['module_id'] ?? null));
         if ((int)$version->course_id !== (int)$course->id || (int)$module->course_version_id !== (int)$version->id) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+            throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
         if ($version->status !== 'draft') {
-throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
+            throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
         }
         if ((int)$version->revision !== self::id($input['expected_version_revision'] ?? null)) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+            throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $id = self::id($input['id'] ?? 0, true);
-$revision = self::id($input['revision'] ?? 1);
+        $revision = self::id($input['revision'] ?? 1);
         if ($id) {
             $lesson = $this->row('lessons', $id);
             if ((int)$lesson->course_version_id !== (int)$version->id || (int)$lesson->module_id !== (int)$module->id) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             if ((int)$lesson->revision !== $revision) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             if ($lesson->checked_out && (int)$lesson->checked_out !== (int)$actor->id) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
         }
         $provider = $input['provider_key'] ?? null;
         if (!is_string($provider) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $provider)
             || !is_string($input['source_reference'] ?? null) || !is_string($input['privacy_hash'] ?? '')) {
-throw new \DomainException('COM_JLMS_SOURCE_INVALID');
+            throw new \DomainException('COM_JLMS_SOURCE_INVALID');
         }
         $source = ($this->registryFactory)()->get($provider)->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]));
         return hash('sha256', json_encode([(int)$actor->id,(int)$course->id,(int)$version->id,(int)$version->revision,(int)$module->id,$id,$revision,$source->providerKey,$source->reference,$source->options], JSON_THROW_ON_ERROR));
@@ -506,13 +506,13 @@ throw new \DomainException('COM_JLMS_SOURCE_INVALID');
     {
         $fingerprint = $this->durationFingerprint($actor, $input);
         $key = $input['provider_key'];
-$provider = ($this->registryFactory)()->get($key);
+        $provider = ($this->registryFactory)()->get($key);
         if (!$provider->getDescriptor()->configured) {
-throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
+            throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
         }
         $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
         if (!in_array($policy, ['embed','site_consent'], true)) {
-throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
+            throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
         }
         $source = $provider->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]));
         $duration = null;
@@ -520,11 +520,11 @@ throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
             $metadata = $provider->fetchMetadata($source, new \Jlms\Contracts\Video\MetadataContext((int)$actor->id, \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag(), true));
             $duration = $metadata->durationMs;
             if (!\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($duration)) {
-throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
+                throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
             }
         }
         if (!hash_equals($fingerprint, $this->durationFingerprint($actor, $input))) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+            throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         return ['fingerprint' => $fingerprint,'duration_ms' => $duration,'origin' => $duration === null ? 'author_sdk' : 'provider_api',
             'provider' => $key,'options' => ['reference' => $source->reference,'locale' => \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag()] + $source->options];
@@ -571,20 +571,20 @@ throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         } elseif ($kind === 'video') {
             $mode = $input['duration_mode'] ?? 'legacy';
             if (!in_array($mode, ['auto','manual','legacy'], true)) {
-throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                throw new \DomainException('COM_JLMS_INVALID_INPUT');
             }
             $duration = $mode === 'auto' ? null : self::duration($input['duration_seconds'] ?? null);
             $origin = $mode === 'auto' ? 'unmeasured' : 'declared';
-$confirmed = $mode === 'manual' ? $duration !== null : ($mode === 'legacy' && ($input['duration_confirmed'] ?? '') === '1');
+            $confirmed = $mode === 'manual' ? $duration !== null : ($mode === 'legacy' && ($input['duration_confirmed'] ?? '') === '1');
             if ($durationProof !== null) {
                 if ($mode !== 'auto' || !hash_equals($this->durationFingerprint($actor, $input), (string)($durationProof['fingerprint'] ?? ''))
                     || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($durationProof['duration_ms'] ?? null)
                     || !in_array($durationProof['origin'] ?? '', ['author_sdk','provider_api'], true)) {
-throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
+                    throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
                 }
                 $duration = $durationProof['duration_ms'];
-$origin = $durationProof['origin'];
-$confirmed = true;
+                $origin = $durationProof['origin'];
+                $confirmed = true;
             }
             $fields['duration_ms'] = $duration;
             $fields['params_json'] = json_encode(['video_duration_confirmed' => $confirmed, 'video_duration_origin' => $origin, 'video_transcript' => $transcript], JSON_THROW_ON_ERROR);
@@ -615,7 +615,7 @@ $confirmed = true;
         }
         $requiredLessons = array_map(static fn($value): int => self::id($value), $requiredLessons);
         if (count(array_unique($requiredLessons)) !== count($requiredLessons)) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof, $requiredLessons, $thresholdSubmitted, $threshold): int {
             $version = $this->draft($actor, $courseId, $versionId, $versionRevision);
@@ -646,23 +646,23 @@ throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
                 $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($releaseDays);
                 if ($fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key === 'html5') {
                     foreach (['source_json', 'media_asset_id', 'duration_ms', 'params_json'] as $field) {
-$fields[$field] = $lesson->$field;
+                        $fields[$field] = $lesson->$field;
                     }
                 }
                 if ($fields['kind'] === 'video' && $fields['provider_key'] !== 'html5' && ($input['duration_mode'] ?? '') === 'auto'
                     && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson->source_json === $fields['source_json']) {
                     $fields['duration_ms'] = $lesson->duration_ms;
-$fields['params_json'] = $lesson->params_json;
+                    $fields['params_json'] = $lesson->params_json;
                 }
                 if ($fields['kind'] === 'video' && $thresholdSubmitted) {
                     $params = json_decode((string)$fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
                     if (!is_array($params)) {
-$params = [];
+                        $params = [];
                     }
                     if ($threshold === null) {
-unset($params['video_threshold_basis_points']);
+                        unset($params['video_threshold_basis_points']);
                     } else {
-$params['video_threshold_basis_points'] = $threshold;
+                        $params['video_threshold_basis_points'] = $threshold;
                     }
                     $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
                 } elseif ($fields['kind'] !== 'video' && $fields['kind'] !== 'audio') {
@@ -674,7 +674,7 @@ $params['video_threshold_basis_points'] = $threshold;
                 if ($fields['kind'] === 'video') {
                     $params = json_decode((string) $fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
                     if (!is_array($params)) {
-$params = [];
+                        $params = [];
                     }
                     $params['video_transcript'] = $transcript;
                     $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
@@ -684,7 +684,7 @@ $params = [];
                 if ($fields['kind'] === 'video' && $threshold !== null) {
                     $params = json_decode((string) $fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
                     if (!is_array($params)) {
-$params = [];
+                        $params = [];
                     }
                     $params['video_threshold_basis_points'] = $threshold;
                     $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
@@ -716,15 +716,15 @@ $params = [];
     private function savePrerequisites(int $versionId, int $lessonId, array $requiredLessons): void
     {
         if (in_array($lessonId, $requiredLessons, true)) {
-throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE');
+            throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE');
         }
         $ids = array_map('intval', array_column($this->listRows('lessons', 'course_version_id', $versionId, 5001), 'id'));
         if (count($ids) > 5000 || !in_array($lessonId, $ids, true)) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+            throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
         foreach ($requiredLessons as $requiredId) {
             if (!in_array($requiredId, $ids, true)) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
         }
         $edges = [];
@@ -732,30 +732,30 @@ throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
         $existingEdges = $this->db->setQuery($q, 0, 25001)->loadObjectList();
         if (count($existingEdges) > 25000) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+            throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
         foreach ($existingEdges as $edge) {
             if ((int) $edge->lesson_id !== $lessonId) {
-$edges[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
+                $edges[(int) $edge->lesson_id][] = (int) $edge->required_lesson_id;
             }
         }
         $edges[$lessonId] = $requiredLessons;
         $state = [];
         $visit = function (int $node) use (&$visit, &$state, $edges): void {
             if (($state[$node] ?? 0) === 1) {
-throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE');
+                throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE');
             }
             if (($state[$node] ?? 0) === 2) {
-return;
+                return;
             }
             $state[$node] = 1;
             foreach ($edges[$node] ?? [] as $parent) {
-$visit((int) $parent);
+                $visit((int) $parent);
             }
             $state[$node] = 2;
         };
         foreach ($ids as $node) {
-$visit($node);
+            $visit($node);
         }
         $delete = $this->db->createQuery()->delete('#__jlms_prerequisites')->where('lesson_id = :lesson')
             ->where('course_version_id = :version')->bind(':lesson', $lessonId, ParameterType::INTEGER)->bind(':version', $versionId, ParameterType::INTEGER);
@@ -770,29 +770,29 @@ $visit($node);
     private function saveLessonCustomFields(User $actor, int $lessonId, mixed $values): void
     {
         if (!is_array($values)) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $context = 'com_jlms.lesson';
         $q = $this->db->createQuery()->select('id, name, access')->from('#__fields')
             ->where('context = :context')->where('state = 1')->bind(':context', $context);
         $definitions = $this->db->setQuery($q, 0, 501)->loadObjectList();
         if (count($definitions) > 500) {
-throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
+            throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
         }
         $byName = [];
         foreach ($definitions as $field) {
-$byName[$field->name] = $field;
+            $byName[$field->name] = $field;
         }
         foreach (array_keys($values) as $name) {
             if (!is_string($name) || !isset($byName[$name])) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+                throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
         }
         $fieldModel = \Joomla\CMS\Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()
             ->createModel('Field', 'Administrator', ['ignore_request' => true]);
         foreach ($definitions as $field) {
             if (!array_key_exists($field->name, $values)) {
-continue;
+                continue;
             }
             $fieldId = (int) $field->id;
             if (!$actor->authorise('core.edit.value', 'com_jlms.field.' . $fieldId)
@@ -804,7 +804,7 @@ continue;
                 throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
             if (!$fieldModel->setFieldValue($fieldId, $lessonId, $value)) {
-throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
             }
         }
         // Keep a draft baseline for publication impact review. Publication rebuilds
@@ -818,7 +818,7 @@ throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
         foreach ($this->db->setQuery($snapshotQuery, 0, 1001)->loadObjectList() as $field) {
             if (!in_array((int) $field->access, $levels, true)) {
-continue;
+                continue;
             }
             $snapshot[$field->name] ??= ['label' => (string) $field->title, 'type' => (string) $field->type,
                 'access' => (int) $field->access, 'values' => []];
@@ -833,7 +833,7 @@ continue;
     public function deleteItem(User $actor, string $kind, array $input): void
     {
         $table = match ($kind) {
-'module' => 'modules', 'lesson' => 'lessons', default => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
+            'module' => 'modules', 'lesson' => 'lessons', default => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
         };
         $courseId = self::id($input['course_id'] ?? null);
         $versionId = self::id($input['version_id'] ?? null);
@@ -869,55 +869,55 @@ continue;
         $actor = CourseEditorAccess::fresh($identity);
         if (array_key_exists('order_json', $input)) {
             if (!is_string($input['order_json']) || strlen($input['order_json']) > 65536) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+                throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
             try {
-$input['order'] = json_decode($input['order_json'], true, 16, JSON_THROW_ON_ERROR);
+                $input['order'] = json_decode($input['order_json'], true, 16, JSON_THROW_ON_ERROR);
             } catch (\JsonException) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+                throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
         }
         $kind = $input['kind'] ?? '';
         if (!in_array($kind, ['module', 'lesson'], true) || !is_array($input['order'] ?? null)
             || !array_is_list($input['order']) || count($input['order']) > ($kind === 'module' ? 1000 : 5000)) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $course = self::id($input['course_id'] ?? null);
-$versionId = self::id($input['version_id'] ?? null);
+        $versionId = self::id($input['version_id'] ?? null);
         $revision = self::id($input['expected_version_revision'] ?? null);
         $order = array_map(static fn($id): int => self::id($id), $input['order']);
         if (count(array_unique($order)) !== count($order)) {
-throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
+            throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         return $this->transaction(function () use ($actor, $input, $kind, $course, $versionId, $revision, $order): int {
             $version = $this->draft($actor, $course, $versionId, $revision);
             $module = $kind === 'lesson' ? self::id($input['module_id'] ?? null) : $versionId;
             if ($kind === 'lesson' && (int) $this->row('modules', $module)->course_version_id !== $versionId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             $table = $kind === 'module' ? 'modules' : 'lessons';
             $items = $this->listRows($table, $kind === 'module' ? 'course_version_id' : 'module_id', $module, $kind === 'module' ? 1001 : 5001);
             $ids = array_map(static fn($row): int => (int) $row->id, $items);
-$sorted = $ids;
-$wanted = $order;
+            $sorted = $ids;
+            $wanted = $order;
             sort($sorted, SORT_NUMERIC);
-sort($wanted, SORT_NUMERIC);
+            sort($wanted, SORT_NUMERIC);
             if ($sorted !== $wanted) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $byId = [];
-foreach ($items as $item) {
-$byId[(int) $item->id] = $item;
-}
+            foreach ($items as $item) {
+                $byId[(int) $item->id] = $item;
+            }
             $changed = false;
             foreach ($order as $position => $id) {
                 if ((int) $byId[$id]->ordering !== $position) {
-$this->update($table, $byId[$id], ['ordering' => $position], $actor);
-$changed = true;
+                    $this->update($table, $byId[$id], ['ordering' => $position], $actor);
+                    $changed = true;
                 }
             }
             if ($changed) {
-$this->update('course_versions', $version, [], $actor);
+                $this->update('course_versions', $version, [], $actor);
             }
             return (int) $version->revision + (int) $changed;
         });
@@ -928,21 +928,21 @@ $this->update('course_versions', $version, [], $actor);
     {
         $actor = CourseEditorAccess::fresh($identity);
         $course = self::id($input['course_id'] ?? null);
-$versionId = self::id($input['version_id'] ?? null);
+        $versionId = self::id($input['version_id'] ?? null);
         $id = self::id($input['id'] ?? null);
-$destination = self::id($input['module_id'] ?? null);
+        $destination = self::id($input['module_id'] ?? null);
         return $this->transaction(function () use ($actor, $input, $course, $versionId, $id, $destination): int {
             $version = $this->draft($actor, $course, $versionId, self::id($input['expected_version_revision'] ?? null));
             $lesson = $this->row('lessons', $id, true);
-$module = $this->row('modules', $destination, true);
+            $module = $this->row('modules', $destination, true);
             if ((int) $lesson->course_version_id !== $versionId || (int) $module->course_version_id !== $versionId) {
-throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+                throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             if ((int) $lesson->revision !== self::id($input['revision'] ?? null)) {
-throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
+                throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             if ($lesson->kind === 'quiz' && !$actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . $course)) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             if ((int) $lesson->module_id !== $destination) {
                 $items = $this->listRows('lessons', 'module_id', $destination, 5001);

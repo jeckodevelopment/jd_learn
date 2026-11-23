@@ -28,9 +28,9 @@ final class EnrollmentsModel extends ListModel
     public function getCourse(): object
     {
         try {
-return $this->service()->course(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course'));
+            return $this->service()->course(Factory::getApplication()->getIdentity(), (int) $this->getState('filter.course'));
         } catch (\Throwable $error) {
-$this->fail($error);
+            $this->fail($error);
         }
     }
 
@@ -51,11 +51,11 @@ $this->fail($error);
             $this->getListQuery();
             $items = parent::getItems();
             if (!is_array($items)) {
-throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
             }
             return $items;
         } catch (\Throwable $error) {
-$this->fail($error);
+            $this->fail($error);
         }
     }
 
@@ -65,11 +65,11 @@ $this->fail($error);
             $this->getListQuery();
             $total = parent::getTotal();
             if ($total === false) {
-throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
             }
             return $total;
         } catch (\Throwable $error) {
-$this->fail($error);
+            $this->fail($error);
         }
     }
 

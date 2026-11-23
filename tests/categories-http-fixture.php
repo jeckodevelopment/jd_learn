@@ -12,14 +12,14 @@ if ($mode === 'enable') {
 } elseif ($mode === 'disable') {
     $s = json_decode(file_get_contents($state), true, 16, JSON_THROW_ON_ERROR);
     $q = $pdo->prepare("UPDATE joomla_extensions SET enabled=?,params=? WHERE type='plugin' AND folder='system' AND element='languagefilter'");
-$q->execute([$s['enabled'],$s['params']]);
+    $q->execute([$s['enabled'],$s['params']]);
     $q = $pdo->prepare('UPDATE joomla_categories SET access=1 WHERE id IN (?,?)');
-$q->execute([$f['en'],$f['it']]);
+    $q->execute([$f['en'],$f['it']]);
 } elseif (in_array($mode, ['hide_parent','restore_parent','hide_target','restore_target'], true)) {
     $id = str_ends_with($mode, 'parent') ? $f['en'] : $f['it'];
-$access = str_starts_with($mode, 'hide') ? 2 : 1;
+    $access = str_starts_with($mode, 'hide') ? 2 : 1;
     $q = $pdo->prepare('UPDATE joomla_categories SET access=? WHERE id=?');
-$q->execute([$access,$id]);
+    $q->execute([$access,$id]);
 } else {
-throw new \RuntimeException('Unknown fixture mode');
+    throw new \RuntimeException('Unknown fixture mode');
 }

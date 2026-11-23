@@ -20,7 +20,7 @@ use Joomla\CMS\Router\Route;
    <tbody><?php foreach ($this->items as $i => $item) : ?>
     <tr><td class="text-center"><?= HTMLHelper::_('grid.id', $i, (int) $item->id) ?></td><td><a href="<?= Route::_('index.php?option=com_jlms&task=pathway.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></td>
     <td><?= Text::_(match ((int) $item->state) {
-1 => 'JPUBLISHED', 2 => 'JARCHIVED', -2 => 'JTRASHED', default => 'JUNPUBLISHED'
+        1 => 'JPUBLISHED', 2 => 'JARCHIVED', -2 => 'JTRASHED', default => 'JUNPUBLISHED'
         }) ?></td><td><?= (int) $item->revision ?></td></tr>
           <?php endforeach; ?></tbody>
   </table>

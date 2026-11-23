@@ -22,7 +22,7 @@ final class CategoriesModel extends ListModel
     {
         $id = (int) $this->getState('filter.parent_id', 0);
         if (!$id) {
-return null;
+            return null;
         }
         $app = Factory::getApplication();
         return $app->bootComponent('com_jlms')->getCatalogService()->category($app->getIdentity(), $app->getLanguage()->getTag(), $id);

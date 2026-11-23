@@ -58,39 +58,39 @@ $service = $component->getEnrollmentStateService();
 $learning = $component->getLearningService();
 $checks = 0;
 function stateExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new \RuntimeException($message);
-$checks++;
+    if (!$ok)throw new \RuntimeException($message);
+    $checks++;
 }
 function stateDenied(callable $call,int $code,string $message):void{try {
-$call();
+        $call();
 
 } catch (\RuntimeException $e) {
-stateExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-return;
+    stateExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
+    return;
 
 }throw new \RuntimeException($message);
 }
 function stateKey():string{$k = bin2hex(random_bytes(16));
-return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3) . '-' . substr($k, 20);
+    return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3) . '-' . substr($k, 20);
 }
 function stateCommand(array $i,string $reason='PRIVATE_STATE_REASON'):array{return [(int)$i['course']->id,$i['enrollment_id'],$i['impact']['enrollment_revision'],$i['impact']['target_status'],$reason,stateKey(),$i['impact']['hash'],true];
 }
 $path = dirname($root) . '/enrollment-state-fixture.json';
 if (($argv[2] ?? '') === 'worker') {
- echo "ready\n";
-fflush(STDOUT);
-fgets(STDIN);
-$command = json_decode(file_get_contents(dirname($root) . '/enrollment-state-race.json'), true, 16, JSON_THROW_ON_ERROR);
- if (($argv[3] ?? '') === 'different')$command[5] = stateKey();
- try {
-$id = $service->apply($actor, ...$command);
-echo 'ok:' . $id . "\n";
+    echo "ready\n";
+    fflush(STDOUT);
+    fgets(STDIN);
+    $command = json_decode(file_get_contents(dirname($root) . '/enrollment-state-race.json'), true, 16, JSON_THROW_ON_ERROR);
+    if (($argv[3] ?? '') === 'different')$command[5] = stateKey();
+    try {
+        $id = $service->apply($actor, ...$command);
+        echo 'ok:' . $id . "\n";
 
- } catch (\RuntimeException $e) {
-if ($e->getCode() !== 409)throw $e;
-echo "conflict\n";
+    } catch (\RuntimeException $e) {
+        if ($e->getCode() !== 409)throw $e;
+        echo "conflict\n";
 
- }exit;
+    }exit;
 }
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $rf = json_decode(file_get_contents(dirname($root) . '/roster-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
@@ -124,12 +124,12 @@ $playerSessionExists = static fn(string $id):bool=>(int)$db->setQuery('SELECT CO
 
 $stable = static fn(int $id)=>$db->setQuery('SELECT user_id,subject_key,course_id,course_version_id,edition_id,required_total,completed_total,started_at,completed_at,last_activity_at,last_lesson_id,starts_at,ends_at FROM #__jlms_enrollments WHERE id=' . $id)->loadAssoc();
 if (($argv[2] ?? '') === 'retained') {
- $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
- stateExpect($count() === $saved['history_count'], 'state history retained');
- stateExpect($stable($enrollment) === $saved['stable'], 'same enrollment and learning evidence retained');
- stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.enrollmentstate' AND item_id=" . (int)$saved['first_event'])->loadResult() === 1, 'native state audit retained');
- echo json_encode(['enrollment_state_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit;
+    $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
+    stateExpect($count() === $saved['history_count'], 'state history retained');
+    stateExpect($stable($enrollment) === $saved['stable'], 'same enrollment and learning evidence retained');
+    stateExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.enrollmentstate' AND item_id=" . (int)$saved['first_event'])->loadResult() === 1, 'native state audit retained');
+    echo json_encode(['enrollment_state_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+    exit;
 }
 // SEC-P1 batch: a blocked Joomla operator retains no write or read privilege,
 // even if the previous User instance and a valid preview remain in memory.
@@ -152,38 +152,38 @@ stateExpect($service->editor($actor, $course, $enrollment, 'suspended')['impact'
 
 if (($argv[2] ?? '') === 'cancellation') {
 // MAIL-F: only real, not-completed cancellations produce one audited notification.
-$cancelUser = new \Joomla\CMS\User\User();
-$cancelData = ['name' => 'CI Cancellable Learner','username' => 'cicancellable20261114','email' => 'cicancellable20261114@example.invalid',
+    $cancelUser = new \Joomla\CMS\User\User();
+    $cancelData = ['name' => 'CI Cancellable Learner','username' => 'cicancellable20261114','email' => 'cicancellable20261114@example.invalid',
     'password' => 'CI-Only-Long-Password-2026','password2' => 'CI-Only-Long-Password-2026',
     'groups' => [2,$f['group']],'block' => 0,'activation' => ''];
-if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) {
-throw new \RuntimeException($cancelUser->getError());
-}
-$cancelUser = new \Joomla\CMS\User\User((int) $cancelUser->id);
-$cancelEnrollment = $learning->start($cancelUser, 'en-GB', $course, bin2hex(random_bytes(16)));
-$cancelBefore = $stable($cancelEnrollment);
-$cancelPlayer = $seedPlayerSession($cancelEnrollment, (int)$f['lesson']);
-stateExpect($playerSessionExists($cancelPlayer), 'cancelled fixture starts with a persistent player session');
-$cancelPreview = $service->editor($actor, $course, $cancelEnrollment, 'cancelled');
-stateExpect($cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled', 'valid cancellation preview');
-$cancelCommand = stateCommand($cancelPreview);
-$cancelRecord = $service->apply($actor, ...$cancelCommand);
-stateExpect($service->apply($actor, ...$cancelCommand) === $cancelRecord, 'replayed cancellation does not duplicate event');
-stateExpect((string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled', 'cancellation persisted');
-stateExpect($cancelBefore === $stable($cancelEnrollment), 'cancellation preserves prior learning and assignment data');
-stateExpect(!$playerSessionExists($cancelPlayer), 'cancellation invalidates player session without erasing learning history');
-stateDenied(fn()=>$learning->resumeTarget($cancelUser, 'en-GB', $cancelEnrollment), 403, 'cancelled enrollment denies classroom');
-stateExpect($service->editor($actor, $course, $cancelEnrollment, 'active')['impact']['blocked'] !== null, 'cancelled enrollment cannot be reactivated');
-stateExpect($service->editor($actor, $course, $cancelEnrollment, 'cancelled')['impact']['blocked'] !== null, 'cancelled enrollment cannot be cancelled twice');
-$cancelQ = $db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue')
+    if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) {
+        throw new \RuntimeException($cancelUser->getError());
+    }
+    $cancelUser = new \Joomla\CMS\User\User((int) $cancelUser->id);
+    $cancelEnrollment = $learning->start($cancelUser, 'en-GB', $course, bin2hex(random_bytes(16)));
+    $cancelBefore = $stable($cancelEnrollment);
+    $cancelPlayer = $seedPlayerSession($cancelEnrollment, (int)$f['lesson']);
+    stateExpect($playerSessionExists($cancelPlayer), 'cancelled fixture starts with a persistent player session');
+    $cancelPreview = $service->editor($actor, $course, $cancelEnrollment, 'cancelled');
+    stateExpect($cancelPreview['impact']['blocked'] === null && $cancelPreview['impact']['target_status'] === 'cancelled', 'valid cancellation preview');
+    $cancelCommand = stateCommand($cancelPreview);
+    $cancelRecord = $service->apply($actor, ...$cancelCommand);
+    stateExpect($service->apply($actor, ...$cancelCommand) === $cancelRecord, 'replayed cancellation does not duplicate event');
+    stateExpect((string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled', 'cancellation persisted');
+    stateExpect($cancelBefore === $stable($cancelEnrollment), 'cancellation preserves prior learning and assignment data');
+    stateExpect(!$playerSessionExists($cancelPlayer), 'cancellation invalidates player session without erasing learning history');
+    stateDenied(fn()=>$learning->resumeTarget($cancelUser, 'en-GB', $cancelEnrollment), 403, 'cancelled enrollment denies classroom');
+    stateExpect($service->editor($actor, $course, $cancelEnrollment, 'active')['impact']['blocked'] !== null, 'cancelled enrollment cannot be reactivated');
+    stateExpect($service->editor($actor, $course, $cancelEnrollment, 'cancelled')['impact']['blocked'] !== null, 'cancelled enrollment cannot be cancelled twice');
+    $cancelQ = $db->createQuery()->select('COUNT(*)')->from('#__jlms_mail_queue')
     ->where("template_id = 'com_jlms.enrollment.cancelled'")
     ->where('event_key = ' . $db->quote(hash('sha256', 'enrollment.state:' . $cancelRecord)));
-stateExpect((int) $db->setQuery($cancelQ)->loadResult() === 1, 'cancellation queues exactly one learner notification');
-$completionPreview = $service->editor($actor, $course, (int)$f['completed'], 'cancelled');
-stateExpect($completionPreview['impact']['blocked'] !== null, 'completed enrollment cannot be cancelled');
+    stateExpect((int) $db->setQuery($cancelQ)->loadResult() === 1, 'cancellation queues exactly one learner notification');
+    $completionPreview = $service->editor($actor, $course, (int)$f['completed'], 'cancelled');
+    stateExpect($completionPreview['impact']['blocked'] !== null, 'completed enrollment cannot be cancelled');
 
-echo json_encode(['enrollment_cancellation_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
-exit;
+    echo json_encode(['enrollment_cancellation_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+    exit;
 }
 $before = $stable($enrollment);
 $groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
@@ -226,9 +226,9 @@ stateExpect($learning->resumeTarget($owner, 'en-GB', $enrollment)['lesson_id'] =
 stateExpect($service->apply($manager, ...$command) === $event && $service->editor($actor, $course, $enrollment)['impact']['previous_status'] === 'active', 'late replay does not reapply historical suspension');
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$manager->id, (int)$rf['group']);
 try {
-stateDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked rights deny even historical replay');
+    stateDenied(fn()=>$service->apply($manager, ...$command), 403, 'revoked rights deny even historical replay');
 } finally {
-\Joomla\CMS\User\UserHelper::addUserToGroup((int)$manager->id, (int)$rf['group']);
+    \Joomla\CMS\User\UserHelper::addUserToGroup((int)$manager->id, (int)$rf['group']);
 }
 stateDenied(fn()=>$service->editor($owner, $course, $enrollment), 403, 'student cannot manage pedagogical state');
 stateDenied(fn()=>$service->editor(new \Joomla\CMS\User\User(), $course, $enrollment), 401, 'anonymous state access denied');
@@ -237,9 +237,9 @@ stateDenied(fn()=>$service->editor($actor, $course, $f['italian']), 404, 'foreig
 $i = $service->editor($actor, $course, $enrollment, 'suspended');
 $base = stateCommand($i);
 foreach ([[7,false,400],[3,'rejected',400],[4,'',422],[4,'<script>',422],[4,str_repeat('x', 501),422],[6,str_repeat('0', 64),409]]as[$index,$value,$code]) {
-$bad = $base;
-$bad[$index] = $value;
-stateDenied(fn()=>$service->apply($actor, ...$bad), $code, 'malformed or stale command rejected');
+    $bad = $base;
+    $bad[$index] = $value;
+    stateDenied(fn()=>$service->apply($actor, ...$bad), $code, 'malformed or stale command rejected');
 }
 stateExpect($count() === 2, 'failed commands create no events');
 $legacy = $service->editor($actor, $course, (int)$f['completed'], 'suspended');
@@ -250,48 +250,48 @@ stateExpect($stable((int)$f['completed']) === $legacyBefore, 'completed history 
 stateDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', (int)$f['completed']), 403, 'reactivation does not extend expired window');
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$owner->id, (int)$f['group']);
 try {
-$service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'suspended')));
-$service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'active')));
-stateDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $enrollment), 403, 'reactivation does not grant missing entitlement');
+    $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'suspended')));
+    $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'active')));
+    stateDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $enrollment), 403, 'reactivation does not grant missing entitlement');
 } finally {
-\Joomla\CMS\User\UserHelper::addUserToGroup((int)$owner->id, (int)$f['group']);
+    \Joomla\CMS\User\UserHelper::addUserToGroup((int)$owner->id, (int)$f['group']);
 }
 // Real parallel requests share the enrollment lock and the preview revision.
 foreach ([false,true]as$different) {
- $race = stateCommand($service->editor($actor, $course, $enrollment, 'suspended'));
-file_put_contents(dirname($root) . '/enrollment-state-race.json', json_encode($race, JSON_THROW_ON_ERROR));
-$startCount = $count();
-$workers = [];
- foreach (['same',$different ? 'different' : 'same']as$mode) {
-$pipes = [];
-$proc = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
-if (!is_resource($proc))throw new \RuntimeException('Worker failed');
-$workers[] = [$proc,$pipes];
- }
- foreach ($workers as[$proc,$pipes]) {
-stream_set_timeout($pipes[1], 30);
-if (trim((string)fgets($pipes[1])) !== 'ready')throw new \RuntimeException('Worker bootstrap failed');
- }
- $db->transactionStart();
-$db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id=' . $enrollment . ' FOR UPDATE')->loadResult();
-foreach ($workers as[$proc,$pipes]) {
-fwrite($pipes[0], "go\n");
-fclose($pipes[0]);
+    $race = stateCommand($service->editor($actor, $course, $enrollment, 'suspended'));
+    file_put_contents(dirname($root) . '/enrollment-state-race.json', json_encode($race, JSON_THROW_ON_ERROR));
+    $startCount = $count();
+    $workers = [];
+    foreach (['same',$different ? 'different' : 'same']as$mode) {
+        $pipes = [];
+        $proc = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+        if (!is_resource($proc))throw new \RuntimeException('Worker failed');
+        $workers[] = [$proc,$pipes];
+    }
+    foreach ($workers as[$proc,$pipes]) {
+        stream_set_timeout($pipes[1], 30);
+        if (trim((string)fgets($pipes[1])) !== 'ready')throw new \RuntimeException('Worker bootstrap failed');
+    }
+    $db->transactionStart();
+    $db->setQuery('SELECT id FROM #__jlms_enrollments WHERE id=' . $enrollment . ' FOR UPDATE')->loadResult();
+    foreach ($workers as[$proc,$pipes]) {
+        fwrite($pipes[0], "go\n");
+        fclose($pipes[0]);
 
-}usleep(200000);
-$db->transactionCommit();
-$results = [];
- foreach ($workers as[$proc,$pipes]) {
-$out = trim(stream_get_contents($pipes[1]));
-$err = stream_get_contents($pipes[2]);
-fclose($pipes[1]);
-fclose($pipes[2]);
-if (proc_close($proc) !== 0)throw new \RuntimeException($err . $out);
-$results[] = $out;
- }
- stateExpect($count() === $startCount + 1, 'parallel requests write one state transition');
- stateExpect($different ? (count(array_filter($results, static fn($v)=>$v === 'conflict')) === 1) : ($results[0] === $results[1] && str_starts_with($results[0], 'ok:')), 'parallel CAS and retry outcomes');
- $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'active')));
+    }usleep(200000);
+    $db->transactionCommit();
+    $results = [];
+    foreach ($workers as[$proc,$pipes]) {
+        $out = trim(stream_get_contents($pipes[1]));
+        $err = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        if (proc_close($proc) !== 0)throw new \RuntimeException($err . $out);
+        $results[] = $out;
+    }
+    stateExpect($count() === $startCount + 1, 'parallel requests write one state transition');
+    stateExpect($different ? (count(array_filter($results, static fn($v)=>$v === 'conflict')) === 1) : ($results[0] === $results[1] && str_starts_with($results[0], 'ok:')), 'parallel CAS and retry outcomes');
+    $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'active')));
 }
 stateExpect($before === $stable($enrollment), 'all state changes preserve learning history and assignment');
 stateExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'state changes never assign native groups');
@@ -348,7 +348,7 @@ $requestData = ['name' => 'CI Pending Applicant','username' => 'cimailfpending',
     'password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026',
     'groups' => [2,$f['group']],'block' => 0,'activation' => ''];
 if (!$requestUser->bind($requestData) || !$requestUser->save()) {
-throw new \RuntimeException($requestUser->getError());
+    throw new \RuntimeException($requestUser->getError());
 }
 $requestUser = new \Joomla\CMS\User\User((int)$requestUser->id);
 $modeBefore = (string)$db->setQuery('SELECT enrollment_mode FROM #__jlms_courses WHERE id=' . $course)->loadResult();
@@ -400,7 +400,7 @@ try {
         'password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026',
         'groups' => [2,$f['group']],'block' => 0,'activation' => ''];
     if (!$rejectedUser->bind($rejectedData) || !$rejectedUser->save()) {
-throw new \RuntimeException($rejectedUser->getError());
+        throw new \RuntimeException($rejectedUser->getError());
     }
     $rejectedUser = new \Joomla\CMS\User\User((int)$rejectedUser->id);
     $rejectRequestId = $learning->requestApproval($rejectedUser, 'en-GB', $course, stateKey());

@@ -64,10 +64,10 @@ $factory = $component->getMVCFactory();
 
 $checks = 0;
 function fieldsExpect(bool $ok,string $message): void { global $checks;
-if (!$ok) {
-throw new RuntimeException($message);
+    if (!$ok) {
+        throw new RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 $actor = $app->getIdentity();
 $catid = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();

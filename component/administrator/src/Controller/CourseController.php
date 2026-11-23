@@ -17,7 +17,7 @@ final class CourseController extends FormController
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         if (in_array(strtolower($task), ['programme', 'programmerules'], true)) {
-$this->registerTask($task, 'save');
+            $this->registerTask($task, 'save');
         }
         return parent::execute($task);
     }
@@ -78,7 +78,7 @@ $this->registerTask($task, 'save');
         }
         $expectedRevision = $this->input->post->getInt('expected_revision', 0);
         if ($expectedRevision < 1) {
-throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
+            throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
         }
         $model = $this->app->bootComponent('com_jlms')->getMVCFactory()
             ->createModel('Course', 'Administrator', ['ignore_request' => true]);
@@ -99,7 +99,7 @@ throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
                 $version = $this->app->bootComponent('com_jlms')->getCurriculumService()->createDraft($actor, $id, (int) $item->revision);
                 $url = 'index.php?option=com_jlms&view=curriculum&id=' . $id . '&version_id=' . $version;
                 if (strtolower($this->getTask()) === 'programmerules') {
-$url .= '&edit_rules=1#jlms-teaching-rules';
+                    $url .= '&edit_rules=1#jlms-teaching-rules';
                 }
             } catch (\Throwable) {
                 // The editorial save has succeeded; keep it and explain a failed programme preparation.

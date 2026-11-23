@@ -65,7 +65,7 @@ $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($u
 $packagePath = realpath($argv[2] ?? '');
 $expectDisabledPlugin = ($argv[3] ?? '') === 'disabled-upgrade';
 if (!$packagePath || !str_ends_with($packagePath, '.zip')) {
-throw new \RuntimeException('Package ZIP required.');
+    throw new \RuntimeException('Package ZIP required.');
 }
 if ($expectDisabledPlugin) {
     $db->setQuery("UPDATE #__extensions SET enabled=0 WHERE type='plugin' AND folder='system' AND element='jlmsmenu'")->execute();

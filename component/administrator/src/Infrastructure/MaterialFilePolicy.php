@@ -122,7 +122,7 @@ final class MaterialFilePolicy
                 }
                 $typeEntry = $zip->statName('[Content_Types].xml');
                 if (!$typeEntry || $typeEntry['size'] > 65536) {
-throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
+                    throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
                 }
                 $types = $zip->getFromName('[Content_Types].xml', 65536);
                 if ($types === false || stripos($types, '<!DOCTYPE') !== false || stripos($types, '<!ENTITY') !== false

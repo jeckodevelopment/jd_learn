@@ -93,7 +93,7 @@ if (!$user->bind($data) || !$user->save())throw new \RuntimeException($user->get
 $user = new \Joomla\CMS\User\User((int)$user->id);
 $enrollment = $component->getLearningService()->start($user, 'en-GB', $course, bin2hex(random_bytes(16)));
 $key = static function():string{$s = bin2hex(random_bytes(16));
-return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
+    return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
 
 };
 $runtime = $component->getQuizAttemptService();

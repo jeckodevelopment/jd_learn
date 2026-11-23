@@ -109,7 +109,7 @@ final class Router extends RouterView
     private function itemSegment(string $table, int $id, bool $courseCategory = false): string
     {
         if ($id < 1) {
-return (string) $id;
+            return (string) $id;
         }
         $cacheKey = $table . ':' . $id;
         if (!array_key_exists($cacheKey, self::$aliasCache)) {
@@ -130,7 +130,7 @@ return (string) $id;
     private function segmentId($segment): int
     {
         if (preg_match('/^(\d+)(?:(?::|-).*)?$/uD', (string) $segment, $matches) !== 1) {
-return 0;
+            return 0;
         }
         return (int) $matches[1];
     }

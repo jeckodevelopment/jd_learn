@@ -74,18 +74,18 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 $checks = 0;
 function copyExpect(bool $ok, string $message): void { global $checks;
-if (!$ok) {
-throw new RuntimeException($message);
+    if (!$ok) {
+        throw new RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 function copyDenied(callable $work, string $message): void {
     try {
-$work();
+        $work();
 
     } catch (Throwable $e) {
-copyExpect(true, $message);
-return;
+        copyExpect(true, $message);
+        return;
     }
     throw new RuntimeException($message);
 }
@@ -135,10 +135,10 @@ $lessonInput = ['course_id' => $copy,'version_id' => (int)$draft->id,'expected_v
 $lessonCopy = $authoring->duplicateItem($actor, 'lesson', $lessonInput);
 copyExpect((int)$db->setQuery('SELECT module_id FROM #__jlms_lessons WHERE id=' . $lessonCopy)->loadResult() === $moduleCopy, 'Lesson copy uses the explicitly selected draft module');
 if ($lesson->kind === 'quiz') {
- $originalQuiz = $db->setQuery('SELECT id FROM #__jlms_quizzes WHERE lesson_id=' . (int)$lesson->id)->loadResult();
- $newQuiz = $db->setQuery('SELECT * FROM #__jlms_quizzes WHERE lesson_id=' . $lessonCopy)->loadObject();
- copyExpect($newQuiz && (int)$newQuiz->id !== (int)$originalQuiz && !isset(json_decode($newQuiz->selection_json, true)['published_pool_hash']), 'Quiz configuration is independent and unfrozen');
- copyExpect($db->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' . (int)$originalQuiz . ' ORDER BY ordering')->loadAssocList() === $db->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' . (int)$newQuiz->id . ' ORDER BY ordering')->loadAssocList(), 'Immutable question revision links retained');
+    $originalQuiz = $db->setQuery('SELECT id FROM #__jlms_quizzes WHERE lesson_id=' . (int)$lesson->id)->loadResult();
+    $newQuiz = $db->setQuery('SELECT * FROM #__jlms_quizzes WHERE lesson_id=' . $lessonCopy)->loadObject();
+    copyExpect($newQuiz && (int)$newQuiz->id !== (int)$originalQuiz && !isset(json_decode($newQuiz->selection_json, true)['published_pool_hash']), 'Quiz configuration is independent and unfrozen');
+    copyExpect($db->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' . (int)$originalQuiz . ' ORDER BY ordering')->loadAssocList() === $db->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' . (int)$newQuiz->id . ' ORDER BY ordering')->loadAssocList(), 'Immutable question revision links retained');
 }
 copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', $lessonInput), 'Stale draft request rejected');
 $bad = array_replace($lessonInput, ['expected_version_revision' => $rev(),'module_id' => (int)$sourceLessons[0]['module_id']]);
@@ -186,15 +186,15 @@ copyExpect($db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=
 copyExpect($identityRows() === $beforeLearning, 'All duplication and denial paths preserve learning records');
 
 foreach (['html5-fixture','materials-fixture'] as $alias) {
- $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('alias=:alias')->bind(':alias', $alias);
-$mediaSource = $db->setQuery($q)->loadObject();
- copyExpect($mediaSource && $mediaSource->current_version_id, 'Media fixture exists and is published');
- $mediaVersion = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id=' . (int)$mediaSource->current_version_id)->loadObject();
- $mediaModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
- $new = $mediaModel->duplicate(['course_id' => (int)$mediaSource->id,'version_id' => (int)$mediaVersion->id,'revision' => (int)$mediaSource->revision,'expected_version_revision' => (int)$mediaVersion->revision,'title' => 'Copied ' . $alias]);
- $newVersion = (int)$db->setQuery('SELECT id FROM #__jlms_course_versions WHERE course_id=' . $new)->loadResult();
- copyExpect($db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id=' . (int)$mediaVersion->id . ' ORDER BY ordering,id')->loadColumn() === $db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id=' . $newVersion . ' ORDER BY ordering,id')->loadColumn(), 'Copied attachments reuse immutable assets with new links');
- copyExpect($db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id=' . (int)$mediaVersion->id . ' ORDER BY ordering,id')->loadColumn() === $db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id=' . $newVersion . ' ORDER BY ordering,id')->loadColumn(), 'Copied local video association retains the source asset');
+    $q = $db->createQuery()->select('*')->from('#__jlms_courses')->where('alias=:alias')->bind(':alias', $alias);
+    $mediaSource = $db->setQuery($q)->loadObject();
+    copyExpect($mediaSource && $mediaSource->current_version_id, 'Media fixture exists and is published');
+    $mediaVersion = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id=' . (int)$mediaSource->current_version_id)->loadObject();
+    $mediaModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
+    $new = $mediaModel->duplicate(['course_id' => (int)$mediaSource->id,'version_id' => (int)$mediaVersion->id,'revision' => (int)$mediaSource->revision,'expected_version_revision' => (int)$mediaVersion->revision,'title' => 'Copied ' . $alias]);
+    $newVersion = (int)$db->setQuery('SELECT id FROM #__jlms_course_versions WHERE course_id=' . $new)->loadResult();
+    copyExpect($db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id=' . (int)$mediaVersion->id . ' ORDER BY ordering,id')->loadColumn() === $db->setQuery('SELECT asset_id FROM #__jlms_attachments WHERE course_version_id=' . $newVersion . ' ORDER BY ordering,id')->loadColumn(), 'Copied attachments reuse immutable assets with new links');
+    copyExpect($db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id=' . (int)$mediaVersion->id . ' ORDER BY ordering,id')->loadColumn() === $db->setQuery('SELECT media_asset_id FROM #__jlms_lessons WHERE course_version_id=' . $newVersion . ' ORDER BY ordering,id')->loadColumn(), 'Copied local video association retains the source asset');
 }
 file_put_contents(dirname($root) . '/duplication-fixture.json', json_encode(['course' => $copy,'version' => (int)$draft->id,'source' => $course,'source_version' => (int)$version->id], JSON_THROW_ON_ERROR));
 echo json_encode(['duplication_checks' => $checks,'status' => 'passed']) . PHP_EOL;

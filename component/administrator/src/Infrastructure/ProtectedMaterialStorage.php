@@ -28,13 +28,13 @@ final class ProtectedMaterialStorage
     {
         $siteRoot = realpath(JPATH_ROOT);
         if ($siteRoot === false) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $path = $siteRoot;
         foreach (['media', 'com_jlms', 'private'] as $part) {
             $path .= DIRECTORY_SEPARATOR . $part;
             if (is_link($path)) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
             if (!is_dir($path) && (!@mkdir($path, $part === 'private' ? 0700 : 0755) && !is_dir($path))) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
@@ -44,7 +44,7 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         }
         if (!is_writable($path)) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
 
         // Apache/LiteSpeed deny direct HTTP access; encrypted guarded PHP blobs
@@ -57,7 +57,7 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
     private function guard(string $path, string $content): void
     {
         if (is_link($path)) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         if (!is_file($path)) {
             $handle = @fopen($path, 'xb');
@@ -67,7 +67,7 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                         throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                     }
                 } finally {
-fclose($handle);
+                    fclose($handle);
                 }
             }
         }
@@ -95,7 +95,7 @@ fclose($handle);
     public function root(): string
     {
         if ($this->managed()) {
-return $this->managedRoot();
+            return $this->managedRoot();
         }
 
         // Existing external private roots remain supported for advanced hosting
@@ -103,7 +103,7 @@ return $this->managedRoot();
         $configured = trim((string) $this->config()->get('material_storage_root', ''));
         $absolute = self::isAbsolutePath($configured);
         if (!$absolute) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $root = realpath($configured);
         if ($root === false || !is_dir($root) || !is_writable($root) || is_link($configured)) {
@@ -123,7 +123,7 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         $parse = static function (string $value): int {
             $value = trim($value);
             $factor = match (strtolower(substr($value, -1))) {
-'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
+                'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
             };
             return (int) ((float) $value * $factor);
         };
@@ -154,16 +154,16 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         $output = @fopen($path, 'xb');
         if (!$input || !$output) {
             if (is_resource($input)) {
-fclose($input);
+                fclose($input);
             }
             if (is_resource($output)) {
-fclose($output);
+                fclose($output);
             }
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         try {
             if (!@chmod($path, 0600)) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+                throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
             if ($managed) {
                 // GCM authenticates the bytes and hides private content even if a
@@ -189,12 +189,12 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         } catch (\Throwable $error) {
             fclose($input);
-fclose($output);
-@unlink($path);
-throw $error;
+            fclose($output);
+            @unlink($path);
+            throw $error;
         }
         fclose($input);
-fclose($output);
+        fclose($output);
         if (!$managed && !hash_equals($metadata['sha256'], hash_file('sha256', $path))) {
             @unlink($path);
             throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);
@@ -234,7 +234,7 @@ fclose($output);
         }
         $file = @fopen($path, 'xb');
         if ($file === false) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         try {
             if (!@chmod($path, 0600)) {
@@ -275,13 +275,13 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $path = $this->root() . DIRECTORY_SEPARATOR . $asset->storage_key;
         if (is_link($path) || !is_file($path)) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $handle = @fopen($path, 'rb');
         $stat = $handle ? fstat($handle) : false;
         if (!$stat || ($stat['mode'] & 0170000) !== 0100000) {
             if (is_resource($handle)) {
-fclose($handle);
+                fclose($handle);
             }
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
@@ -305,14 +305,14 @@ fclose($handle);
                 $decoded = fopen('php://temp/maxmemory:1048576', 'w+b');
                 if ($decoded === false || fwrite($decoded, $plain) !== strlen($plain)) {
                     if (is_resource($decoded)) {
-fclose($decoded);
+                        fclose($decoded);
                     }
                     throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                 }
                 rewind($decoded);
                 return $decoded;
             } finally {
-fclose($handle);
+                fclose($handle);
             }
         }
         if ($stat['size'] !== (int) $asset->byte_size) {
@@ -337,11 +337,11 @@ fclose($handle);
             return false;
         }
         if (str_ends_with($asset->storage_key, '.php') && !$this->managed()) {
-return false;
+            return false;
         }
         $path = $this->root() . DIRECTORY_SEPARATOR . $asset->storage_key;
         if (is_link($path)) {
-return false;
+            return false;
         }
         return !file_exists($path) || (is_file($path) && @unlink($path));
     }
@@ -369,11 +369,11 @@ return false;
         $write = static function ($handle, string $data) use ($deadline): void {
             while ($data !== '') {
                 if (microtime(true) > $deadline) {
-throw new \RuntimeException('Scanner unavailable');
+                    throw new \RuntimeException('Scanner unavailable');
                 }
                 $n = fwrite($handle, $data);
                 if (!$n) {
-throw new \RuntimeException('Scanner unavailable');
+                    throw new \RuntimeException('Scanner unavailable');
                 }
                 $data = substr($data, $n);
             }
@@ -383,10 +383,10 @@ throw new \RuntimeException('Scanner unavailable');
             while (!feof($input)) {
                 $chunk = fread($input, 65536);
                 if ($chunk === false) {
-throw new \RuntimeException('Scanner unavailable');
+                    throw new \RuntimeException('Scanner unavailable');
                 }
                 if ($chunk !== '') {
-$write($stream, pack('N', strlen($chunk)) . $chunk);
+                    $write($stream, pack('N', strlen($chunk)) . $chunk);
                 }
             }
             $write($stream, pack('N', 0));
@@ -396,7 +396,7 @@ $write($stream, pack('N', strlen($chunk)) . $chunk);
             $result = 'unavailable';
         } finally {
             fclose($input);
-fclose($stream);
+            fclose($stream);
         }
         return ['status' => $result === 'clean' ? 'ready' : ($result === 'infected' ? 'rejected' : 'quarantine'),
             'scan_json' => json_encode(['engine' => 'clamd', 'result' => $result], JSON_THROW_ON_ERROR)];

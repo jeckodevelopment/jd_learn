@@ -58,7 +58,7 @@ final class CatalogService
                     . ' AND (vp_ancestor.extension <> :catalogPathwayExtension OR vp_ancestor.published <> 1 OR vp_ancestor.access NOT IN (' . implode(',', $levels) . ')'
                     . ' OR (vp_ancestor.language <> :catalogPathwayAncestorAll AND vp_ancestor.language <> :catalogPathwayAncestorLanguage))))');
             $all = '*';
-$extension = 'com_jlms.pathway';
+            $extension = 'com_jlms.pathway';
             $query->where('EXISTS (' . $assigned . ')')->bind(':catalogPathwayId', $pathway, ParameterType::INTEGER)
                 ->bind(':catalogPathwayAll', $all)->bind(':catalogPathwayLanguage', $language)
                 ->bind(':catalogPathwayCatAll', $all)->bind(':catalogPathwayCatLanguage', $language)
@@ -90,7 +90,7 @@ $extension = 'com_jlms.pathway';
             ->innerJoin('#__jlms_course_teachers AS catalog_teacher ON catalog_teacher.course_id = c.id');
         $ids = array_map('intval', $this->db->setQuery($query, 0, 2001)->loadColumn());
         if (count($ids) > 2000) {
-$ids = array_slice($ids, 0, 2000);
+            $ids = array_slice($ids, 0, 2000);
         }
         return TeacherProfiles::available($this->db, $actor, $language, $ids);
     }
@@ -141,7 +141,7 @@ $ids = array_slice($ids, 0, 2000);
         $availableIds = array_map(static fn (object $row): int => (int) $row->id, $available);
         $selected = array_values(array_intersect($availableIds, array_unique(array_map('intval', $requestedLevels))));
         if (!$selected) {
-$selected = [in_array(1, $availableIds, true) ? 1 : ($availableIds[0] ?? 0)];
+            $selected = [in_array(1, $availableIds, true) ? 1 : ($availableIds[0] ?? 0)];
         }
         $selected = array_values(array_filter($selected));
         $left = (int) $course->lft;
@@ -157,8 +157,8 @@ $selected = [in_array(1, $availableIds, true) ? 1 : ($availableIds[0] ?? 0)];
         foreach ($ancestors as $category) {
             if ((int) $category->published !== 1 || !in_array((int) $category->access, $selected, true)
                 || !in_array((string) $category->language, ['*', $language], true)) {
-$categoryVisible = false;
-break;
+                $categoryVisible = false;
+                break;
             }
         }
         $now = time();
@@ -196,8 +196,8 @@ break;
                 ->where('(c.publish_down IS NULL OR c.publish_down > :nowDown)');
         }
         $status = 'published';
-$extension = 'com_jlms.course';
-$all = '*';
+        $extension = 'com_jlms.course';
+        $all = '*';
         $q->bind(':status', $status)->bind(':extension', $extension)->bind(':allLanguage', $all)->bind(':language', $language);
         if (!$forEnrolledLearner) {
             $now = gmdate('Y-m-d H:i:s');
@@ -234,13 +234,13 @@ $all = '*';
     public function categoryQuery(User $actor, string $language)
     {
         if ((int) $actor->id) {
-$actor = new User((int) $actor->id);
+            $actor = new User((int) $actor->id);
         }
         $actor->clearAccessRights();
         $levels = $actor->block ? [0] : array_map('intval', $actor->getAuthorisedViewLevels());
         $levels = $levels ?: [0];
         $extension = 'com_jlms.course';
-$all = '*';
+        $all = '*';
         $q = $this->db->createQuery()->select('cat.id, cat.parent_id, cat.title, cat.alias, cat.description, cat.language, cat.lft, cat.rgt')
             ->from('#__categories AS cat')->where('cat.id > 1')->where('cat.extension = :categoryExtension')
             ->where('cat.published = 1')->whereIn('cat.access', $levels)
@@ -264,12 +264,12 @@ $all = '*';
     {
         $category = $this->category($actor, $language, $id);
         $left = (int) $category->lft;
-$right = (int) $category->rgt;
+        $right = (int) $category->rgt;
         $q = $this->categoryQuery($actor, $language)->where('cat.lft <= :pathLeft')->where('cat.rgt >= :pathRight')
             ->bind(':pathLeft', $left, ParameterType::INTEGER)->bind(':pathRight', $right, ParameterType::INTEGER)->order('cat.lft');
         $items = $this->db->setQuery($q, 0, 101)->loadObjectList();
         if (count($items) > 100) {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return $items;
     }
@@ -330,7 +330,7 @@ throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
             ->where('id = :previewVersion')->bind(':previewVersion', $versionId, ParameterType::INTEGER);
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $this->db->setQuery($rulesQuery)->loadResult());
         if (!$rules['public_previews']) {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         $query = $this->db->createQuery()->select('l.id, l.title, l.body, l.publish_up, l.publish_down, l.release_after_days')
             ->from('#__jlms_lessons AS l')->innerJoin('#__jlms_modules AS m ON m.id = l.module_id AND m.course_version_id = l.course_version_id')

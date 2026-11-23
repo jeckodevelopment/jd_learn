@@ -15,7 +15,7 @@ final class AttachmentController extends BaseController
     public function execute($task)
     {
         if (!in_array(strtolower($task), ['download', 'audio', 'preview', 'inline', 'publicpreview', 'publiclessonpreview'], true)) {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
@@ -26,18 +26,18 @@ throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
             try {
-$courseId = CurriculumService::id($this->input->get('course_id', null, 'RAW'));
+                $courseId = CurriculumService::id($this->input->get('course_id', null, 'RAW'));
             } catch (\InvalidArgumentException $error) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             try {
-$attachmentId = CurriculumService::id($this->input->get('id', null, 'RAW'));
+                $attachmentId = CurriculumService::id($this->input->get('id', null, 'RAW'));
             } catch (\InvalidArgumentException $error) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $component = $this->app->bootComponent('com_jlms');
             $course = $component->getCatalogService()->course($this->app->getIdentity(), $this->app->getLanguage()->getTag(), $courseId);
@@ -46,7 +46,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
-throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
+                throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
             Log::add('Public preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
@@ -59,15 +59,15 @@ throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
             $ids = [];
             foreach (['course_id', 'lesson_id', 'id'] as $key) {
                 try {
-$ids[] = CurriculumService::id($this->input->get($key, null, 'RAW'));
+                    $ids[] = CurriculumService::id($this->input->get($key, null, 'RAW'));
                 } catch (\InvalidArgumentException $error) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                    throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             }
             $component = $this->app->bootComponent('com_jlms');
@@ -80,7 +80,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         } catch (\Throwable $error) {
             $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
-throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
+                throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
             Log::add('Public lesson preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
@@ -91,15 +91,15 @@ throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
     {
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
             $ids = [];
             foreach (['course_id', 'version_id', 'lesson_id', 'id'] as $key) {
                 try {
-$ids[] = CurriculumService::id($this->input->get($key, null, 'RAW'));
+                    $ids[] = CurriculumService::id($this->input->get($key, null, 'RAW'));
                 } catch (\InvalidArgumentException $error) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                    throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             }
             $file = $this->app->bootComponent('com_jlms')->getMaterialService()->previewDownload($this->app->getIdentity(), ...$ids);
@@ -109,7 +109,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED',
                 'COM_JLMS_RANGE_INVALID', 'COM_JLMS_INVALID_INPUT'];
             if (in_array($error->getMessage(), $known, true)) {
-throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
+                throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
             Log::add('Editorial preview material delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
@@ -120,7 +120,7 @@ throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
     {
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (!in_array(strtoupper($this->input->getMethod()), ['GET', 'HEAD'], true)) {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
             $file = $this->app->bootComponent('com_jlms')->getMaterialService()->audioDownload($this->app->getIdentity(),
@@ -130,7 +130,7 @@ throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
             $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_RESOURCE_NOT_FOUND',
                 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
-throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
+                throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
             Log::add('Audio delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);

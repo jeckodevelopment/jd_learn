@@ -16,16 +16,16 @@ final class TeacherProfiles
         // A Joomla session identity can outlive account blocking or group changes.
         // This shared authorization helper must never trust that cached snapshot.
         if (!$actor->id) {
-return false;
+            return false;
         }
         $actor = new User((int) $actor->id);
         $actor->clearAccessRights();
         if (!$actor->id || $actor->block) {
-return false;
+            return false;
         }
         $scope = 'com_jlms.teacher.' . (int) $profile->id;
         if ($actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor->authorise('core.edit', $scope)) {
-return true;
+            return true;
         }
         $own = (int) ($profile->user_id ?? 0) === (int) $actor->id
             || ((int) ($profile->created_by ?? 0) === (int) $actor->id && $actor->authorise('core.manage', 'com_jlms'));
@@ -35,18 +35,18 @@ return true;
     public static function available(DatabaseInterface $db, User $actor, string $language = '*', ?array $only = null, bool $details = false): array
     {
         if ($only === []) {
-return [];
+            return [];
         }
         if ($actor->id) {
-$actor = new User((int) $actor->id);
-$actor->clearAccessRights();
-if (!$actor->id || $actor->block) {
-return [];
-}
+            $actor = new User((int) $actor->id);
+            $actor->clearAccessRights();
+            if (!$actor->id || $actor->block) {
+                return [];
+            }
         }
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
         if (!$levels) {
-return [];
+            return [];
         }
         $q = $db->createQuery()->select($details ? 't.id,t.title,t.bio,t.image,t.params_json,t.access,t.language,t.catid' : 't.id,t.title,t.access,t.language,t.catid')
             ->from('#__jlms_teachers AS t')->innerJoin('#__categories AS cat ON cat.id=t.catid')
@@ -59,11 +59,11 @@ return [];
             $q->where("NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND ancestor.level>0 AND ancestor.language<>'*' AND ancestor.language<>:categoryLanguage)")->bind(':categoryLanguage', $language);
         }
         if ($only !== null) {
-$q->where('t.id IN (' . implode(',', array_map('intval', $only)) . ')');
+            $q->where('t.id IN (' . implode(',', array_map('intval', $only)) . ')');
         }
         $rows = $db->setQuery($q, 0, 2001)->loadObjectList('id');
         if (count($rows) > 2000) {
-throw new \RuntimeException('COM_JLMS_TEACHER_SELECTION_LIMIT');
+            throw new \RuntimeException('COM_JLMS_TEACHER_SELECTION_LIMIT');
         }
         return $rows;
     }
@@ -71,20 +71,20 @@ throw new \RuntimeException('COM_JLMS_TEACHER_SELECTION_LIMIT');
     public static function assignment(DatabaseInterface $db, User $actor, string $language, mixed $input): array
     {
         if (!is_array($input) || count($input) > 50) {
-throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
+            throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
         }
         $available = self::available($db, $actor, $language, array_map(static fn ($id): int => is_scalar($id) ? (int) $id : 0, $input));
         $ids = [];
         foreach ($input as $value) {
             if ($value === '') {
-continue;
+                continue;
             } // Native multiple-select empty marker.
             if ((!is_string($value) && !is_int($value)) || !preg_match('/^[1-9][0-9]{0,17}$/D', (string) $value)) {
-throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
+                throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
             }
             $id = (int) $value;
             if (!isset($available[$id]) || isset($ids[$id])) {
-throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
+                throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
             }
             $ids[$id] = $id;
         }
@@ -103,10 +103,10 @@ throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
         $profiles = [];
         foreach (self::selected($db, $course) as $id) {
             if (!isset($rows[$id])) {
-continue;
+                continue;
             }
             $row = $rows[$id];
-$params = json_decode($row->params_json, true, 16, JSON_THROW_ON_ERROR);
+            $params = json_decode($row->params_json, true, 16, JSON_THROW_ON_ERROR);
             $profiles[] = ['id' => $id, 'title' => $row->title, 'bio' => $row->bio, 'image' => $row->image,
                 'image_alt' => $params['image_alt'] ?? '', 'image_decorative' => (bool) ($params['image_decorative'] ?? false),
                 'website' => $params['website'] ?? ''];
@@ -118,7 +118,7 @@ $params = json_decode($row->params_json, true, 16, JSON_THROW_ON_ERROR);
     {
         $ids = self::selected($db, (int) $course->id);
         if (!$ids) {
-return $presentation;
+            return $presentation;
         }
         $ids = self::assignment($db, $actor, (string) $course->language, $ids);
         $available = self::available($db, $actor, (string) $course->language, $ids, true);
@@ -145,17 +145,17 @@ return $presentation;
         $data = json_decode($presentation, true, 32, JSON_THROW_ON_ERROR);
         $snapshots = $data['teachers'] ?? [];
         if (!$snapshots) {
-return [];
+            return [];
         }
         if (!is_array($snapshots) || count($snapshots) > 50) {
-throw new \RuntimeException('COM_JLMS_TEACHER_INVALID');
+            throw new \RuntimeException('COM_JLMS_TEACHER_INVALID');
         }
         if ($actor->id) {
-$actor = new User((int) $actor->id);
-$actor->clearAccessRights();
-if (!$actor->id || $actor->block) {
-return [];
-}
+            $actor = new User((int) $actor->id);
+            $actor->clearAccessRights();
+            if (!$actor->id || $actor->block) {
+                return [];
+            }
         }
         $current = self::available($db, $actor, $language, array_map(static fn (array $profile): int => (int) $profile['id'], $snapshots));
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
@@ -164,7 +164,7 @@ return [];
             if (!isset($current[$profile['id']]) || !in_array($profile['access'], $levels, true)
                 || array_diff($profile['category_access'], $levels) || array_diff($profile['category_language'], ['*',$language])
                 || !in_array($profile['language'], ['*', $language], true)) {
-continue;
+                continue;
             }
             // Live availability gates historical text; profile edits never rewrite the snapshot.
             $result[] = $profile;

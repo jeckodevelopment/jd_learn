@@ -16,7 +16,7 @@ use Joomla\CMS\Router\Route;
   <p><?= Text::_('COM_JLMS_MAIL_CONSENT_LINK_EXPLANATION') ?></p>
   <form id="jlms-mail-consent-revoke-form" method="post" action="<?= Route::_('index.php?option=com_jlms&task=mailconsent.revokeLink', false) ?>">
    <input type="hidden" name="token" value="<?= $this->escape($this->token) ?>">
-   <?= HTMLHelper::_('form.token') ?>
+     <?= HTMLHelper::_('form.token') ?>
    <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MAIL_CONSENT_LINK_CONFIRM') ?></button>
   </form>
  <?php else : ?>

@@ -66,27 +66,27 @@ $service = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
 function builderExpect(bool $ok, string $message): void { global $checks;
-if (!$ok) {
-throw new RuntimeException($message);
+    if (!$ok) {
+        throw new RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 function builderDenied(callable $work, string $key): void {
     try {
-$work();
+        $work();
 
     } catch (\Throwable $e) {
-builderExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
-return;
+        builderExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
+        return;
     }
     throw new RuntimeException('Expected rejection: ' . $key);
 }
 function builderRow(string $table, int $id): object { global $db;
-return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
+    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
 function builderCheckout(string $table, int $id, ?int $user): void { global $db;
-$row = (object)['id' => $id,'checked_out' => $user];
-$db->updateObject('#__jlms_' . $table, $row, 'id', true);
+    $row = (object)['id' => $id,'checked_out' => $user];
+    $db->updateObject('#__jlms_' . $table, $row, 'id', true);
 }
 function builderSnapshot(int $course, int $version): array {
     global $db;
@@ -101,17 +101,17 @@ if (in_array($mode, ['checkpoint','retained','state'], true)) {
     $f = json_decode(file_get_contents($file), true, 64, JSON_THROW_ON_ERROR);
     $snapshot = builderSnapshot($f['course'], $f['version']);
     if ($mode === 'state') {
-echo json_encode($snapshot, JSON_THROW_ON_ERROR);
-return;
+        echo json_encode($snapshot, JSON_THROW_ON_ERROR);
+        return;
     }
     if ($mode === 'checkpoint') {
-$f['snapshot'] = $snapshot;
-file_put_contents($file, json_encode($f, JSON_THROW_ON_ERROR));
-return;
+        $f['snapshot'] = $snapshot;
+        file_put_contents($file, json_encode($f, JSON_THROW_ON_ERROR));
+        return;
     }
     builderExpect($f['snapshot'] === $snapshot, 'Builder ordering and moves retained after package upgrade');
     echo json_encode(['curriculum_builder_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-return;
+    return;
 }
 $source = (int) $db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();
 $original = builderRow('courses', $source);
@@ -165,7 +165,7 @@ $service->moveLesson($actor, $move);
 $new = builderRow('lessons', $l1);
 builderExpect((int)$new->module_id === $m2 && (int)$new->revision === (int)$old->revision + 1, 'Move preserves identity and bumps lesson revision');
 foreach (['logical_key','course_version_id','body','kind','required','source_revision','source_json','media_asset_id'] as $key) {
-builderExpect($new->$key === $old->$key, 'Move preserves ' . $key);
+    builderExpect($new->$key === $old->$key, 'Move preserves ' . $key);
 }
 builderDenied(fn()=>$service->moveLesson($actor, $move), 'COM_JLMS_REVISION_CONFLICT');
 $foreignModule = (int)$sourceBefore[2][0]['id'];
@@ -181,21 +181,21 @@ $other = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerht
 builderExpect($other > 0, 'Disposable learner exists for checkout guard');
 builderCheckout('courses', $course, $other);
 try {
-builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order' => $order]), 'JERROR_ALERTNOAUTHOR');
+    builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order' => $order]), 'JERROR_ALERTNOAUTHOR');
 } finally {
-builderCheckout('courses', $course, null);
+    builderCheckout('courses', $course, null);
 }
 builderCheckout('lessons', $l1, $other);
 try {
-builderDenied(fn()=>$service->moveLesson($actor, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $m1]), 'JERROR_ALERTNOAUTHOR');
+    builderDenied(fn()=>$service->moveLesson($actor, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $m1]), 'JERROR_ALERTNOAUTHOR');
 } finally {
-builderCheckout('lessons', $l1, null);
+    builderCheckout('lessons', $l1, null);
 }
 builderCheckout('course_versions', $version, $other);
 try {
-builderDenied(fn()=>$service->moveLesson($actor, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $m1]), 'JERROR_ALERTNOAUTHOR');
+    builderDenied(fn()=>$service->moveLesson($actor, $scope() + ['id' => $l1,'revision' => $new->revision,'module_id' => $m1]), 'JERROR_ALERTNOAUTHOR');
 } finally {
-builderCheckout('course_versions', $version, null);
+    builderCheckout('course_versions', $version, null);
 }
 builderDenied(fn()=>$service->saveOrder($actor, ['course_id' => $source,'version_id' => $published->id,'expected_version_revision' => $published->revision,'kind' => 'module','order' => array_column($sourceBefore[2], 'id')]), 'COM_JLMS_VERSION_IMMUTABLE');
 builderExpect($sourceBefore === builderSnapshot($source, (int)$published->id), 'Published source untouched by every draft operation');

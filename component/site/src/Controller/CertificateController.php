@@ -16,7 +16,7 @@ final class CertificateController extends BaseController
     public function execute($task)
     {
         if (!in_array(strtolower($task), ['download'], true)) {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
@@ -29,9 +29,9 @@ throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         try {
             try {
-$enrollmentId = CurriculumService::id($this->input->get('enrollment_id', null, 'RAW'));
+                $enrollmentId = CurriculumService::id($this->input->get('enrollment_id', null, 'RAW'));
             } catch (\InvalidArgumentException $error) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $file = $this->app->bootComponent('com_jlms')->getCertificateService()->download($this->app->getIdentity(), $enrollmentId);
             MaterialDownload::send($this->app, $file);

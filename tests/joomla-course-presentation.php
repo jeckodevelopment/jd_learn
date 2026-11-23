@@ -72,7 +72,7 @@ $checks = 0;
 function presentationExpect(bool $ok, string $message): void {
     global $checks;
     if (!$ok) {
-throw new RuntimeException($message);
+        throw new RuntimeException($message);
     }
     $checks++;
 }
@@ -196,10 +196,10 @@ presentationExpect($model->save(array_replace($update, ['revision' => (int) $ite
 $item = $model->getItem($course);
 unlink($root . '/' . $coverPath);
 try {
-CoursePresentation::snapshot($item);
-throw new RuntimeException('Missing cover accepted at publication');
+    CoursePresentation::snapshot($item);
+    throw new RuntimeException('Missing cover accepted at publication');
 } catch (InvalidArgumentException) {
-$checks++;
+    $checks++;
 }
 file_put_contents($root . '/' . $coverPath, $coverBytes);
 // New publication requires a meaningful description, including on drafts created by older clients.
@@ -209,9 +209,9 @@ $beforeDescriptionCheck = $db->setQuery('SELECT state,current_version_id,revisio
 foreach ([null, '', "<p>&nbsp; \t<br></p>", '<p>&#8203;</p>'] as $description) {
     $params = json_decode($originalParams, true, 32, JSON_THROW_ON_ERROR);
     if ($description === null) {
-unset($params['presentation']);
+        unset($params['presentation']);
     } else {
-$params['presentation']['description'] = $description;
+        $params['presentation']['description'] = $description;
     }
     $missingDescription = (object) ['id' => $course, 'params_json' => json_encode($params, JSON_THROW_ON_ERROR)];
     $db->updateObject('#__jlms_courses', $missingDescription, 'id');

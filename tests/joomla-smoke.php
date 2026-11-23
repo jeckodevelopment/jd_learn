@@ -175,11 +175,11 @@ $expectedLinks = ['index.php?option=com_jlms&view=dashboard', 'index.php?option=
 $menuTitles = $db->setQuery($db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
 $expectedMenuTitles = ['COM_JLMS_DASHBOARD_MENU', 'COM_JLMS_COURSES', 'COM_JLMS_PATHWAYS', 'COM_JLMS_TEACHERS', 'COM_JLMS_QUESTION_BANK'];
 if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMenuTitles) {
-throw new \RuntimeException('Native administrator menu must include Dashboard first with the localized label and without duplicates.');
+    throw new \RuntimeException('Native administrator menu must include Dashboard first with the localized label and without duplicates.');
 }
 $reassignSystemLanguage = parse_ini_file(JPATH_ADMINISTRATOR . '/language/en-GB/com_jlms.sys.ini', false, INI_SCANNER_RAW);
 if (!is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CATEGORY_REASSIGN_TITLE'] ?? null) !== 'Category dependency cleanup') {
-throw new \RuntimeException('Category reassignment title must be installed in the administrator system language catalog.');
+    throw new \RuntimeException('Category reassignment title must be installed in the administrator system language catalog.');
 }
 // Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
@@ -394,11 +394,11 @@ if (!in_array('COURSE_TITLE', $finalTags, true) || in_array('NAME', $finalTags, 
 }
 $menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
 if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') {
-throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.');
+    throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.');
 }
 $menuLinksAfterUpdate = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
 if ($menuLinksAfterUpdate !== $expectedLinks) {
-throw new \RuntimeException('Dashboard submenu order or links changed during component upgrade.');
+    throw new \RuntimeException('Dashboard submenu order or links changed during component upgrade.');
 }
 $fieldContexts = array_keys(Factory::getApplication()->bootComponent('com_jlms')->getContexts());
 if ($fieldContexts !== ['com_jlms.teacher', 'com_jlms.course', 'com_jlms.lesson']) {
@@ -761,7 +761,7 @@ try {
     throw new \RuntimeException('Certificate non-issuance diagnosis must reject anonymous users.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
-throw $error;
+        throw $error;
     }
 }
 
@@ -770,14 +770,14 @@ $auditAction = 'admin_list';
 $auditCount = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_audit')
     ->where('actor_user_id = :actor')->where('action = :action')->bind(':actor', $auditActorId)->bind(':action', $auditAction))->loadResult();
 if ($auditCount < 1) {
-throw new \RuntimeException('Certificate administrator list access was not audited.');
+    throw new \RuntimeException('Certificate administrator list access was not audited.');
 }
 try {
     $certificateService->adminList(new \Joomla\CMS\User\User(), []);
     throw new \RuntimeException('Certificate administration must reject unauthorised users.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
-throw $error;
+        throw $error;
     }
 }
 // Explicit historical issuance remains restricted to certificate administrators.
@@ -786,7 +786,7 @@ try {
     throw new \RuntimeException('Historical recovery accepted an anonymous caller.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
-throw $error;
+        throw $error;
     }
 }
 try {
@@ -794,7 +794,7 @@ try {
     throw new \RuntimeException('Historical recovery accepted a missing justification.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') {
-throw $error;
+        throw $error;
     }
 }
 try {
@@ -802,7 +802,7 @@ try {
     throw new \RuntimeException('Historical recovery accepted a nonexistent enrollment.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') {
-throw $error;
+        throw $error;
     }
 }
 
@@ -812,7 +812,7 @@ try {
     throw new \RuntimeException('Missing issuance recovery accepted an anonymous caller.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
-throw $error;
+        throw $error;
     }
 }
 try {
@@ -820,7 +820,7 @@ try {
     throw new \RuntimeException('Missing issuance recovery accepted an invalid justification.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') {
-throw $error;
+        throw $error;
     }
 }
 try {
@@ -828,7 +828,7 @@ try {
     throw new \RuntimeException('Missing issuance recovery accepted an unknown enrollment.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') {
-throw $error;
+        throw $error;
     }
 }
 
@@ -839,7 +839,7 @@ try {
     throw new \RuntimeException('Certificate regeneration must reject unauthorized users.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'JERROR_ALERTNOAUTHOR') {
-throw $error;
+        throw $error;
     }
 }
 try {
@@ -847,7 +847,7 @@ try {
     throw new \RuntimeException('Certificate regeneration accepted invalid ID.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'COM_JLMS_INVALID_INPUT') {
-throw $error;
+        throw $error;
     }
 }
 try {
@@ -855,7 +855,7 @@ try {
     throw new \RuntimeException('Certificate regeneration accepted an absent certificate.');
 } catch (\RuntimeException $error) {
     if ($error->getMessage() !== 'COM_JLMS_RESOURCE_NOT_FOUND') {
-throw $error;
+        throw $error;
     }
 }
 

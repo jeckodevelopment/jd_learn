@@ -23,7 +23,7 @@ final class AssociationHelper
         }
         $actor = $app->getIdentity();
         if ((int) $actor->id) {
-$actor = new \Joomla\CMS\User\User((int) $actor->id);
+            $actor = new \Joomla\CMS\User\User((int) $actor->id);
         }
         $actor->clearAccessRights();
         $levels = $actor->block ? [0] : array_map('intval', $actor->getAuthorisedViewLevels());
@@ -34,12 +34,12 @@ $actor = new \Joomla\CMS\User\User((int) $actor->id);
                 : $catalog->course($actor, $app->getLanguage()->getTag(), $id);
         } catch (\RuntimeException $error) {
             if ($error->getCode() !== 404) {
-throw $error;
+                throw $error;
             }
             return [];
         }
         if ($source->language === '*') {
-return [];
+            return [];
         }
         // Do not use the core static association cache here: changes/revocations must be current.
         $db = Factory::getContainer()->get(DatabaseInterface::class);
@@ -58,23 +58,23 @@ return [];
         $languageQuery = $db->createQuery()->select('lang_code, sef')->from('#__languages')->where('published = 1')->whereIn('access', array_values(array_unique(array_merge([0], $levels))));
         $languages = $db->setQuery($languageQuery)->loadObjectList('lang_code');
         if (!isset($languages[$source->language])) {
-return [];
+            return [];
         }
         $links = [];
         foreach ($items as $item) {
             $tag = (string) $item->language;
             if ($tag === '*' || $tag === $source->language || !isset($languages[$tag])) {
-continue;
+                continue;
             }
             try {
                 if ($categoryView) {
-$catalog->category($actor, $tag, (int) $item->id);
+                    $catalog->category($actor, $tag, (int) $item->id);
                 } else {
-$catalog->course($actor, $tag, (int) $item->id);
+                    $catalog->course($actor, $tag, (int) $item->id);
                 }
             } catch (\RuntimeException $error) {
                 if ($error->getCode() !== 404) {
-throw $error;
+                    throw $error;
                 }
                 continue;
             }

@@ -314,13 +314,13 @@ final class MailQueue
         $userId = (int) ($row->recipient_user_id ?? 0);
         $courseId = (int) ($row->course_id ?? 0);
         if ($userId < 1 || $courseId < 1) {
-return false;
+            return false;
         }
         try {
             $data = json_decode((string) $row->template_data, true, 16, JSON_THROW_ON_ERROR);
             $requestId = (int) ($data['REQUEST_ID'] ?? 0);
             if ($requestId < 1) {
-return false;
+                return false;
             }
             $query = $this->db->createQuery()->select('r.id, r.user_id AS applicant_id, c.params_json')
                 ->from('#__jlms_enrollment_requests AS r')
@@ -345,7 +345,7 @@ return false;
                         ->get('mail_manager_request_enabled', false),
                     (string) $current->params_json
                 )) {
-return false;
+                return false;
             }
             return \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice::authorized(
                 $this->db, $courseId, $userId
@@ -360,14 +360,14 @@ return false;
     {
         $userId = (int) ($row->recipient_user_id ?? 0);
         if ($userId < 1) {
-return false;
+            return false;
         }
         try {
             $payload = json_decode((string) $row->template_data, true, 16, JSON_THROW_ON_ERROR);
             $migrationId = (int) ($payload['MIGRATION_ID'] ?? 0);
             $targetId = (int) ($payload['TARGET_ENROLLMENT_ID'] ?? 0);
             if ($migrationId < 1 || $targetId < 1) {
-return false;
+                return false;
             }
             $query = $this->db->createQuery()->select(
                 'target.course_version_id, source.course_version_id AS source_version_id, c.params_json, ' .
@@ -400,7 +400,7 @@ return false;
                 (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_course_update_enabled', false),
                 (string) $record->params_json
             )) {
-return false;
+                return false;
             }
             $user = new User($userId);
             $user->clearAccessRights();
@@ -422,14 +422,14 @@ return false;
     {
         $userId = (int) ($row->recipient_user_id ?? 0);
         if ($userId < 1) {
-return false;
+            return false;
         }
         try {
             $data = json_decode((string) $row->template_data, true, 16, JSON_THROW_ON_ERROR);
             $enrollmentId = (int) ($data['ENROLLMENT_ID'] ?? 0);
             $lessonId = (int) ($data['LESSON_ID'] ?? 0);
             if ($enrollmentId < 1 || $lessonId < 1) {
-return false;
+                return false;
             }
             $query = $this->db->createQuery()->select('e.id, e.created_at, e.started_at, e.starts_at, e.ends_at, e.course_version_id, ' .
                 'ed.starts_at AS edition_starts, ed.ends_at AS edition_ends, v.published_at, ' .
@@ -460,7 +460,7 @@ return false;
                 (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_lesson_release_enabled', false),
                 (string) $record->params_json
             )) {
-return false;
+                return false;
             }
             $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
             $start = \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::effectiveStart(
@@ -472,7 +472,7 @@ return false;
                 \Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::state(
                     $record->publish_up, $record->publish_down, $record->release_after_days, $record->started_at, $now
                 ) !== 'available') {
-return false;
+                return false;
             }
 
             // Native Joomla category/ancestor visibility and the learner's content ACL.

@@ -40,17 +40,17 @@ final class QuizSnapshotService
         if (!$pool || count($pool) > 200)throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         $rules['draw_count'] = $selection['mode'] === 'fixed' ? count($pool) : QuestionDefinition::integer($selection['draw_count'] ?? null, 1, count($pool));
         $seen = [];
-$manifest = [];
+        $manifest = [];
         foreach ($pool as$row) {
             if (isset($seen[$row->question_id]))throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
-$seen[$row->question_id] = true;
+            $seen[$row->question_id] = true;
             $public = json_decode($row->options_json, true, 16, JSON_THROW_ON_ERROR);
-$grading = json_decode($row->grading_json, true, 16, JSON_THROW_ON_ERROR);
-$feedback = json_decode($row->feedback_json, true, 16, JSON_THROW_ON_ERROR);
+            $grading = json_decode($row->grading_json, true, 16, JSON_THROW_ON_ERROR);
+            $feedback = json_decode($row->feedback_json, true, 16, JSON_THROW_ON_ERROR);
             if (($public['_schema'] ?? 0) !== 1 || ($grading['_schema'] ?? 0) !== 1 || ($feedback['_schema'] ?? 0) !== 1)throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
             $options = [];
             foreach ($public['items'] ?? []as$option) {
-$options[] = ['option_id' => $option['id'] ?? null,'label' => $option['label'] ?? null,'correct' => in_array($option['id'] ?? null, $grading['correct'] ?? [], true) ? '1' : '0'];
+                $options[] = ['option_id' => $option['id'] ?? null,'label' => $option['label'] ?? null,'correct' => in_array($option['id'] ?? null, $grading['correct'] ?? [], true) ? '1' : '0'];
             }
             $definition = QuestionDefinition::normalise(['kind' => $row->kind,'prompt' => $row->prompt,'options' => $options,'default_points' => $grading['default_points'] ?? null,'explanation' => $feedback['explanation'] ?? null], static fn(string $html):string=>$html);
             if (!hash_equals($row->content_hash, hash('sha256', QuestionDefinition::canonical($definition))))throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
@@ -80,7 +80,7 @@ $options[] = ['option_id' => $option['id'] ?? null,'label' => $option['label'] ?
         $selection['published_pool_hash'] = $hash;
         $update = (object)['id' => (int)$quiz->id,'selection_json' => QuestionDefinition::canonical($selection),'revision' => (int)$quiz->revision + 1,
             'modified_by' => (int)$actor->id,'modified_at' => gmdate('Y-m-d H:i:s')];
-$this->db->updateObject('#__jlms_quizzes', $update, 'id');
+        $this->db->updateObject('#__jlms_quizzes', $update, 'id');
         return $hash;
     }
 

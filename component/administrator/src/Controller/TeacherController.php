@@ -86,7 +86,7 @@ final class TeacherController extends FormController
     protected function allowAdd($data = [])
     {
         $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id);
-$actor->clearAccessRights();
+        $actor->clearAccessRights();
         return $actor->id && !$actor->block && $actor->authorise('jlms.teachers.manage', 'com_jlms') && $actor->authorise('core.create', 'com_jlms');
     }
 
@@ -95,7 +95,7 @@ $actor->clearAccessRights();
         $id = (int) ($data[$key] ?? 0);
         $item = $this->getModel()->getItem($id);
         $actor = new \Joomla\CMS\User\User((int) $this->app->getIdentity()->id);
-$actor->clearAccessRights();
+        $actor->clearAccessRights();
         return $actor->authorise('core.manage', 'com_jlms') && $id > 0 && $item
             && \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $item);
     }

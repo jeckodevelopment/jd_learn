@@ -72,22 +72,22 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess as EditorAccess;
 $checks = 0;
 function editorExpect(bool $ok,string $message):void { global $checks;
-if (!$ok)throw new RuntimeException($message);
-$checks++;
+    if (!$ok)throw new RuntimeException($message);
+    $checks++;
 }
 $fixture = dirname($root) . '/editor-access-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
- $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
-$user = new \Joomla\CMS\User\User((int)$f['user']);
- $list = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
-$list->setCurrentUser($user);
-$list->setState('list.limit', 100);
-$list->setState('list.start', 0);
- $ids = array_map(static fn($r)=>(int)$r->id, $list->getItems());
- editorExpect(in_array($f['allowed'], $ids, true) && !in_array($f['denied'], $ids, true), 'Category grants and record denies survive reinstall');
- editorExpect((int)$db->setQuery('SELECT checked_out FROM #__jlms_courses WHERE id=' . (int)$f['locked'])->loadResult() === $f['user'], 'Other-operator checkout preserved');
- echo json_encode(['editor_access_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-exit;
+    $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
+    $user = new \Joomla\CMS\User\User((int)$f['user']);
+    $list = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
+    $list->setCurrentUser($user);
+    $list->setState('list.limit', 100);
+    $list->setState('list.start', 0);
+    $ids = array_map(static fn($r)=>(int)$r->id, $list->getItems());
+    editorExpect(in_array($f['allowed'], $ids, true) && !in_array($f['denied'], $ids, true), 'Category grants and record denies survive reinstall');
+    editorExpect((int)$db->setQuery('SELECT checked_out FROM #__jlms_courses WHERE id=' . (int)$f['locked'])->loadResult() === $f['user'], 'Other-operator checkout preserved');
+    echo json_encode(['editor_access_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
+    exit;
 }
 $groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
 if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI category course editor']))throw new RuntimeException($groupModel->getError());
@@ -112,15 +112,15 @@ $user = new \Joomla\CMS\User\User((int)$user->id);
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
 $categories = [];
 foreach (['allowed','other','owned','trash']as$name) {
- if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'published' => $name === 'trash' ? -2 : 1,'language' => '*','access' => 1]))throw new RuntimeException($categoryModel->getError());
- $categories[$name] = (int)$categoryModel->getState('category.id');
+    if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'published' => $name === 'trash' ? -2 : 1,'language' => '*','access' => 1]))throw new RuntimeException($categoryModel->getError());
+    $categories[$name] = (int)$categoryModel->getState('category.id');
 }
 foreach (['allowed' => ['core.create','core.edit'],'owned' => ['core.edit.own']]as$name => $actions) {
- $asset->loadByName('com_jlms.course.category.' . $categories[$name]);
-$rules = json_decode($asset->rules, true);
-foreach ($actions as$action)$rules[$action][(string)$group] = true;
-$asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
-$asset->store();
+    $asset->loadByName('com_jlms.course.category.' . $categories[$name]);
+    $rules = json_decode($asset->rules, true);
+    foreach ($actions as$action)$rules[$action][(string)$group] = true;
+    $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
+    $asset->store();
 }
 $user = EditorAccess::fresh($user);
 editorExpect(!$user->authorise('core.create', 'com_jlms') && EditorAccess::canCreate($db, $user), 'Category-only create grant reaches the editor');
@@ -129,8 +129,8 @@ $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => t
 $base = ['id' => 0,'revision' => 1,'title' => '','alias' => '','catid' => 0,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Editor access fixture'];
 $courses = [];
 foreach (['allowed1' => 'allowed','allowed2' => 'allowed','denied' => 'allowed','foreign' => 'other','own' => 'owned','other_owner' => 'owned','locked' => 'other']as$name => $category) {
- editorExpect($model->save(array_replace($base, ['title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'catid' => $categories[$category]])), 'Fixture course saved');
-$courses[$name] = (int)$model->getState('course.id');
+    editorExpect($model->save(array_replace($base, ['title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'catid' => $categories[$category]])), 'Fixture course saved');
+    $courses[$name] = (int)$model->getState('course.id');
 }
 $change = (object)['id' => $courses['own'],'created_by' => (int)$user->id];
 $db->updateObject('#__jlms_courses', $change, 'id');
@@ -235,11 +235,11 @@ editorExpect(!$user->authorise('core.edit.state', 'com_jlms')
     'Publisher fixture has scoped rights only');
 $list->setCurrentUser(new \Joomla\CMS\User\User());
 try {
-$items = $list->getItems();
-editorExpect($items === false, 'Anonymous administration does not return course metadata');
+    $items = $list->getItems();
+    editorExpect($items === false, 'Anonymous administration does not return course metadata');
 
 } catch (RuntimeException $error) {
-editorExpect($error->getCode() === 403, 'Anonymous administration denied');
+    editorExpect($error->getCode() === 403, 'Anonymous administration denied');
 }
 file_put_contents($fixture, json_encode(['user' => (int)$user->id,'group' => $group,'backend' => $backend,'allowed' => $courses['allowed1'],'denied' => $courses['denied'],'owned' => $courses['own'],'locked' => $courses['locked'],'allowed_category' => $categories['allowed'],'other_category' => $categories['other'],'delegated' => $delegated], JSON_THROW_ON_ERROR));
 echo json_encode(['editor_access_checks' => $checks,'status' => 'passed']) . PHP_EOL;

@@ -35,16 +35,16 @@ final class CoursePresentation
             }
             if ($field === 'estimated_minutes') {
                 if ($value === '' || $value === null) {
-$result[$field] = null;
-continue;
+                    $result[$field] = null;
+                    continue;
                 }
                 if (!is_int($value) && !is_string($value)) {
-throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+                    throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
                 }
                 try {
-$result[$field] = DecimalId::parse((string) $value);
+                    $result[$field] = DecimalId::parse((string) $value);
                 } catch (\InvalidArgumentException) {
-throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+                    throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
                 }
                 continue;
             }
@@ -63,14 +63,14 @@ throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
             }
             $result[$field] = $field === 'description' ? self::html($value) : trim($value);
             if ($field === 'image') {
-$result[$field] = CourseArtwork::path($value);
+                $result[$field] = CourseArtwork::path($value);
             }
         }
         if ($result['image'] !== '' && !$result['image_decorative'] && $result['image_alt'] === '') {
             throw new \InvalidArgumentException('COM_JLMS_COURSE_IMAGE_ALT_REQUIRED');
         }
         if ($result['image_decorative']) {
-$result['image_alt'] = '';
+            $result['image_alt'] = '';
         }
         return $result;
     }
@@ -79,10 +79,10 @@ $result['image_alt'] = '';
     {
         $data = json_decode($params ?: '{}', true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($data)) {
-throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
+            throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
         }
         if (!array_key_exists('presentation', $data)) {
-return null;
+            return null;
         }
         if (!is_array($data['presentation']) || ($data['presentation']['_schema'] ?? null) !== 1) {
             throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
@@ -98,12 +98,12 @@ return null;
         foreach (self::FIELDS as $field) {
             $name = 'presentation_' . $field;
             if (array_key_exists($name, $input)) {
-$values[$field] = $input[$name];
-$changed = true;
+                $values[$field] = $input[$name];
+                $changed = true;
             }
         }
         if (!$changed) {
-return null;
+            return null;
         }
         // Validate types and lengths before invoking Joomla's actor-specific HTML policy.
         $values = self::normalise($values);
@@ -134,7 +134,7 @@ return null;
         }
         $calendar = CourseSchedule::snapshot($course);
         if ($calendar !== null) {
-$snapshot['calendar'] = $calendar;
+            $snapshot['calendar'] = $calendar;
         }
         return json_encode($snapshot, JSON_THROW_ON_ERROR);
     }
@@ -146,7 +146,7 @@ $snapshot['calendar'] = $calendar;
             throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');
         }
         if (!array_key_exists('details', $snapshot)) {
-return [];
+            return [];
         }
         if (!is_array($snapshot['details']) || ($snapshot['details']['_schema'] ?? null) !== 1) {
             throw new \InvalidArgumentException('COM_JLMS_PRESENTATION_INVALID');

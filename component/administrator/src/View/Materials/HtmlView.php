@@ -36,7 +36,7 @@ final class HtmlView extends BaseHtmlView
         $selectedLesson = \Joomla\CMS\Factory::getApplication()->getInput()->getInt('lesson_id');
         if ($selectedLesson) {
             if (!in_array($selectedLesson, array_map(static fn($lesson): int => (int) $lesson->id, $this->item['lessons']), true)) {
-throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
+                throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
             }
             $data['lesson_id'] = $selectedLesson;
         }
@@ -54,7 +54,7 @@ throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
                 }
             }
             if (!$this->replacement) {
-throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
+                throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
             }
         }
         foreach ($this->item['files']['items'] as $file) {

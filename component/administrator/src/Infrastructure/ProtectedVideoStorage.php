@@ -41,11 +41,11 @@ final class ProtectedVideoStorage
         foreach (['upload_max_filesize', 'post_max_size'] as $key) {
             $value = trim((string) ini_get($key));
             $factor = match (strtolower(substr($value, -1))) {
-'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
+                'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
             };
             $bytes = (int) ((float) $value * $factor);
             if ($bytes > 0) {
-$limits[] = $key === 'post_max_size' ? max(1, $bytes - 65536) : $bytes;
+                $limits[] = $key === 'post_max_size' ? max(1, $bytes - 65536) : $bytes;
             }
         }
         return min($limits);
@@ -54,20 +54,20 @@ $limits[] = $key === 'post_max_size' ? max(1, $bytes - 65536) : $bytes;
     public function stage(string $source, string $name): array
     {
         if (is_link($source) || !is_file($source)) {
-throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
+            throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
         $root = $this->root();
         $meta = VideoFilePolicy::inspect($source, $name, $this->limit(), (string) $this->config()->get('video_ffprobe_path', ''));
         $key = bin2hex(random_bytes(32)) . '.blob';
-$path = $root . DIRECTORY_SEPARATOR . $key;
+        $path = $root . DIRECTORY_SEPARATOR . $key;
         $input = @fopen($source, 'rb');
-$output = @fopen($path, 'xb');
+        $output = @fopen($path, 'xb');
         if (!$input || !$output) {
             if (is_resource($input)) {
-fclose($input);
+                fclose($input);
 
             } if (is_resource($output)) {
-fclose($output);
+                fclose($output);
             }
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
@@ -76,16 +76,16 @@ fclose($output);
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         } catch (\Throwable $error) {
-fclose($input);
-fclose($output);
-unlink($path);
-throw $error;
+            fclose($input);
+            fclose($output);
+            unlink($path);
+            throw $error;
         }
         fclose($input);
-fclose($output);
+        fclose($output);
         if (!hash_equals($meta['sha256'], hash_file('sha256', $path))) {
-unlink($path);
-throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
+            unlink($path);
+            throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
         return $meta + ['storage' => 'local_video', 'storage_key' => $key];
     }
@@ -93,7 +93,7 @@ throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
     public function scan(object $asset): array
     {
         $copy = clone $asset;
-$copy->storage = 'local';
+        $copy->storage = 'local';
         return $this->files->scan($copy);
     }
 
@@ -113,7 +113,7 @@ $copy->storage = 'local';
     public function delivery(object $asset): array
     {
         $path = $this->inspect($asset);
-$mode = $this->config()->get('video_delivery_mode', 'disabled');
+        $mode = $this->config()->get('video_delivery_mode', 'disabled');
         if ($mode === 'php_bounded' || $mode === 'x_accel') {
             // Upgrade existing sites from the former offload setting to the
             // standard PHP streamer; never emit web-server-specific headers.

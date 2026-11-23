@@ -29,7 +29,7 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
      <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $direction, $order) ?></th>
     </tr></thead>
     <tbody>
-    <?php foreach ($this->items as $i => $item) : ?>
+       <?php foreach ($this->items as $i => $item) : ?>
      <tr class="row<?= $i % 2 ?>" data-teacher-id="<?= (int) $item->id ?>">
       <td class="text-center"><?= HTMLHelper::_('grid.id', $i, (int) $item->id) ?></td>
       <td class="text-center"><?= (int) $item->state === -2 ? Text::_('JTRASHED') : HTMLHelper::_('jgrid.published', (int) $item->state, $i, 'teachers.', false) ?></td>

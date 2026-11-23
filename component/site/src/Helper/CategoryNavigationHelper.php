@@ -24,7 +24,7 @@ final class CategoryNavigationHelper
         foreach ($path as $category) {
             if ($matched) {
                 if ((int) $category->id === $menuCategory) {
-$matched = false;
+                    $matched = false;
                 }
                 continue;
             }

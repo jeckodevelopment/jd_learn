@@ -18,11 +18,11 @@ final class CourseVersionCopy
         $query = $this->db->createQuery()->select('*')->from('#__jlms_' . $table)
             ->where($column . ' = :owner')->bind(':owner', $id, ParameterType::INTEGER)->order('ordering,id');
         if (!in_array($table, ['modules', 'lessons', 'attachments'], true)) {
-$query->clear('order')->order($table === 'quiz_questions' ? 'ordering,question_revision_id' : 'id');
+            $query->clear('order')->order($table === 'quiz_questions' ? 'ordering,question_revision_id' : 'id');
         }
         $rows = $this->db->setQuery($query, 0, $limit + 1)->loadAssocList();
         if (count($rows) > $limit) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+            throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
         return $rows;
     }
@@ -41,8 +41,8 @@ throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         $row['created_by'] = $row['modified_by'] = (int) $actor->id;
         $row['created_at'] = $row['modified_at'] = gmdate('Y-m-d H:i:s');
         if (array_key_exists('checked_out', $row)) {
-$row['checked_out'] = null;
-$row['checked_out_time'] = null;
+            $row['checked_out'] = null;
+            $row['checked_out_time'] = null;
         }
         $record = (object) $row;
         $this->db->insertObject('#__jlms_' . $table, $record, 'id');
@@ -54,7 +54,7 @@ $row['checked_out_time'] = null;
         $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_' . $table)
             ->where('course_version_id=:version')->bind(':version', $version, ParameterType::INTEGER);
         if ((int) $this->db->setQuery($q)->loadResult() + $extra > $limit) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+            throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
     }
 
@@ -92,21 +92,21 @@ throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         $this->capacity('modules', $target, count($moduleRows), 1000);
         $this->capacity('lessons', $target, count($lessonRows), 5000);
         $sourceCourse = $this->course($sourceVersion);
-$targetCourse = $this->course($target);
+        $targetCourse = $this->course($target);
         $materialsAllowed = $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $sourceCourse) && $actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $targetCourse);
         $quizAllowed = $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . $sourceCourse) && $actor->authorise('jlms.quiz.manage', 'com_jlms.course.' . $targetCourse);
         $modules = [];
-$lessons = [];
-$first = 0;
+        $lessons = [];
+        $first = 0;
         foreach ($moduleRows as $module) {
             $old = (int) $module['id'];
-$module['course_version_id'] = $target;
+            $module['course_version_id'] = $target;
             if ($freshKeys) {
-$module['logical_key'] = self::key();
+                $module['logical_key'] = self::key();
             }
             if (!$whole) {
-$module['title'] = $title;
-$module['ordering'] = $this->nextOrder('modules', 'course_version_id', $target);
+                $module['title'] = $title;
+                $module['ordering'] = $this->nextOrder('modules', 'course_version_id', $target);
             }
             $modules[$old] = $this->insert('modules', $module, $actor);
             $first = $first ?: $modules[$old];
@@ -115,18 +115,18 @@ $module['ordering'] = $this->nextOrder('modules', 'course_version_id', $target);
             $old = (int) $lesson['id'];
             $module = $modules[$lesson['module_id']] ?? (!$whole && !$moduleRows ? $destinationModule : 0);
             if (!$module || (int) $lesson['course_version_id'] !== $sourceVersion) {
-throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                throw new \DomainException('COM_JLMS_INVALID_INPUT');
             }
             $lesson['course_version_id'] = $target;
-$lesson['module_id'] = $module;
+            $lesson['module_id'] = $module;
             // Keep the source baseline for publication impact review. Saving draft
             // field values refreshes it, and publication rebuilds the frozen snapshot.
             if ($freshKeys) {
-$lesson['logical_key'] = self::key();
+                $lesson['logical_key'] = self::key();
             }
             if (!$whole && !$moduleRows) {
-$lesson['title'] = $title;
-$lesson['ordering'] = $this->nextOrder('lessons', 'module_id', $module);
+                $lesson['title'] = $title;
+                $lesson['ordering'] = $this->nextOrder('lessons', 'module_id', $module);
             }
             $lessons[$old] = $this->insert('lessons', $lesson, $actor);
             $this->copyLessonFields($actor, $old, $lessons[$old]);
@@ -137,7 +137,7 @@ $lesson['ordering'] = $this->nextOrder('lessons', 'module_id', $module);
         $this->capacity('attachments', $target, count($attachments), 1000);
         foreach ($attachments as $attachment) {
             if (!$materialsAllowed) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $attachment['course_version_id'] = $target;
             $attachment['lesson_id'] = $attachment['lesson_id'] === null ? null : $lessons[$attachment['lesson_id']];
@@ -145,19 +145,19 @@ throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         foreach ($lessonRows as $lesson) {
             if ($lesson['media_asset_id'] && !$materialsAllowed) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
         }
         foreach ($this->rows('quizzes', 'course_version_id', $sourceVersion, 5000) as $quiz) {
             if (!isset($lessons[$quiz['lesson_id']])) {
-continue;
+                continue;
             }
             if (!$quizAllowed) {
-throw new \DomainException('JERROR_ALERTNOAUTHOR');
+                throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             $old = (int) $quiz['id'];
-$quiz['course_version_id'] = $target;
-$quiz['lesson_id'] = $lessons[$quiz['lesson_id']];
+            $quiz['course_version_id'] = $target;
+            $quiz['lesson_id'] = $lessons[$quiz['lesson_id']];
             $selection = json_decode($quiz['selection_json'], true, 32, JSON_THROW_ON_ERROR);
             unset($selection['published_pool_hash']);
             $quiz['selection_json'] = json_encode($selection, JSON_THROW_ON_ERROR);
@@ -171,11 +171,11 @@ $quiz['lesson_id'] = $lessons[$quiz['lesson_id']];
         }
         foreach ($this->rows('prerequisites', 'course_version_id', $sourceVersion, 10000) as $edge) {
             if (!isset($lessons[$edge['lesson_id']])) {
-continue;
+                continue;
             }
             $required = $lessons[$edge['required_lesson_id']] ?? ($target === $sourceVersion ? (int) $edge['required_lesson_id'] : 0);
             if (!$required) {
-throw new \DomainException('COM_JLMS_INVALID_INPUT');
+                throw new \DomainException('COM_JLMS_INVALID_INPUT');
             }
             $record = (object) ['course_version_id' => $target,
                 'lesson_id' => $lessons[$edge['lesson_id']], 'required_lesson_id' => $required];
@@ -215,13 +215,13 @@ throw new \DomainException('COM_JLMS_INVALID_INPUT');
             $values[$fieldId][] = (string) $row->value;
         }
         if (!$values) {
-return;
+            return;
         }
         $model = \Joomla\CMS\Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()
             ->createModel('Field', 'Administrator', ['ignore_request' => true]);
         foreach ($values as $fieldId => $fieldValues) {
             if (!$model->setFieldValue((int) $fieldId, $targetId, $fieldValues)) {
-throw new \RuntimeException('COM_JLMS_VERSION_COPY_NOT_AVAILABLE');
+                throw new \RuntimeException('COM_JLMS_VERSION_COPY_NOT_AVAILABLE');
             }
         }
     }

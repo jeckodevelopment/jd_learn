@@ -8,7 +8,7 @@ $i = $this->item;
 $p = $i['impact'];
 $target = [];
 foreach ($p['target_lessons'] as $lesson) {
-$target[(int)$lesson['id']] = $lesson;
+    $target[(int)$lesson['id']] = $lesson;
 }
 ?>
 <section id="jlms-enrollment-migration">
@@ -21,16 +21,16 @@ $target[(int)$lesson['id']] = $lesson;
   <input type="hidden" name="id" value="<?= (int)$i['course_id'] ?>"><input type="hidden" name="enrollment_id" value="<?= (int)$p['source_enrollment_id'] ?>">
   <fieldset><legend><?= Text::_('COM_JLMS_MIGRATION_MAP_TITLE') ?></legend>
    <?php if (!$p['completed_source_lessons']) :
-?><p><?= Text::_('COM_JLMS_MIGRATION_NO_COMPLETIONS') ?></p><?php
+        ?><p><?= Text::_('COM_JLMS_MIGRATION_NO_COMPLETIONS') ?></p><?php
    endif; ?>
    <?php foreach ($p['completed_source_lessons'] as $source) :
-$sid = (int)$source['id'];
-$selected = (int)($p['mapping'][$sid] ?? 0); ?>
+        $sid = (int)$source['id'];
+        $selected = (int)($p['mapping'][$sid] ?? 0); ?>
     <label for="jlms-migration-map-<?= $sid ?>"><?= $this->escape($source['title']) ?></label>
     <select id="jlms-migration-map-<?= $sid ?>" name="map[<?= $sid ?>]">
      <option value="0"><?= Text::_('COM_JLMS_MIGRATION_SKIP') ?></option>
-     <?php foreach ($p['target_lessons'] as $dest) :
-?><option value="<?= (int)$dest['id'] ?>"<?= $selected === (int)$dest['id'] ? ' selected' : '' ?>><?= $this->escape($dest['title']) ?><?= $dest['required'] ? ' · ' . Text::_('COM_JLMS_MIGRATION_REQUIRED') : '' ?></option><?php
+        <?php foreach ($p['target_lessons'] as $dest) :
+            ?><option value="<?= (int)$dest['id'] ?>"<?= $selected === (int)$dest['id'] ? ' selected' : '' ?>><?= $this->escape($dest['title']) ?><?= $dest['required'] ? ' · ' . Text::_('COM_JLMS_MIGRATION_REQUIRED') : '' ?></option><?php
      endforeach; ?>
     </select>
    <?php endforeach; ?>
@@ -40,25 +40,25 @@ $selected = (int)($p['mapping'][$sid] ?? 0); ?>
  <section id="jlms-migration-impact"><h2><?= Text::_('COM_JLMS_MIGRATION_IMPACT') ?></h2>
   <p><?= Text::sprintf('COM_JLMS_MIGRATION_TRANSFER_COUNT', count($p['transfers'])) ?></p>
   <?php if ($p['transfers']) :
-?><ul><?php foreach ($p['transfers'] as $row) :
-?><li><?= $this->escape($row['source_title']) ?> → <?= $this->escape($row['target_title']) ?> (<?= Text::_('COM_JLMS_MIGRATION_COMPLETED_ONLY') ?>)</li><?php
+        ?><ul><?php foreach ($p['transfers'] as $row) :
+    ?><li><?= $this->escape($row['source_title']) ?> → <?= $this->escape($row['target_title']) ?> (<?= Text::_('COM_JLMS_MIGRATION_COMPLETED_ONLY') ?>)</li><?php
 endforeach; ?></ul><?php
   endif; ?>
   <?php if ($p['unmapped']) :
-?><p><?= Text::_('COM_JLMS_MIGRATION_UNMAPPED') ?>: <?php foreach ($p['unmapped'] as $index => $row) :
-?><?= $index ? ', ' : '' ?><?= $this->escape($row['title']) ?><?php
+        ?><p><?= Text::_('COM_JLMS_MIGRATION_UNMAPPED') ?>: <?php foreach ($p['unmapped'] as $index => $row) :
+    ?><?= $index ? ', ' : '' ?><?= $this->escape($row['title']) ?><?php
 endforeach; ?></p><?php
   endif; ?>
   <p><?= Text::_('COM_JLMS_MIGRATION_NOT_TRANSFERRED') ?></p>
   <?php if ($p['blocked'] !== null) :
-?><p id="jlms-migration-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
+        ?><p id="jlms-migration-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
   <?php else : ?>
    <form id="jlms-migration-confirm" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
-    <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="enrollmentmigration.apply">
-    <?php foreach ($p['mapping'] as $from => $to) :
-?><input type="hidden" name="jform[mapping][<?= (int)$from ?>]" value="<?= (int)$to ?>"><?php
+      <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="enrollmentmigration.apply">
+      <?php foreach ($p['mapping'] as $from => $to) :
+            ?><input type="hidden" name="jform[mapping][<?= (int)$from ?>]" value="<?= (int)$to ?>"><?php
     endforeach; ?>
-    <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MIGRATION_CONFIRM_BUTTON') ?></button>
+      <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MIGRATION_CONFIRM_BUTTON') ?></button>
    </form>
   <?php endif; ?>
  </section>

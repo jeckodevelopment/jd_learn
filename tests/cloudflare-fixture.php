@@ -15,7 +15,7 @@ function cloudflareFixture(): array
     $transport = static function (string $method, string $url, array $headers, ?string $body) use ($state): array {
         $state->calls[] = ['method' => $method, 'url' => $url, 'body' => $body];
         if ($state->callback) {
-($state->callback)($method);
+            ($state->callback)($method);
         }
         $uid = str_repeat('b', 32);
         $result = ['uid' => $uid, 'requireSignedURLs' => $state->protected, 'readyToStream' => $state->ready,
@@ -27,7 +27,7 @@ function cloudflareFixture(): array
             $claims = ['sub' => $state->tokenMode === 'foreign' ? str_repeat('c', 32) : $uid,
                 'exp' => $request['exp'] + ($state->tokenMode === 'long' ? 100 : 0)];
             if ($state->tokenMode === 'download') {
-$claims['downloadable'] = true;
+                $claims['downloadable'] = true;
             }
             $encode = static fn (array $data): string => rtrim(strtr(base64_encode(json_encode($data, JSON_THROW_ON_ERROR)), '+/', '-_'), '=');
             $result = ['token' => $encode($header) . '.' . $encode($claims) . '.c2lnbmF0dXJl'];

@@ -25,7 +25,7 @@ $impact = $this->purgeImpact;
   <input type="hidden" name="cid[]" value="<?= (int) $impact['id'] ?>">
   <input type="hidden" name="expected_revision" value="<?= (int) $impact['revision'] ?>">
   <input type="hidden" name="confirm_purge" value="1">
-  <?= HTMLHelper::_('form.token') ?>
+        <?= HTMLHelper::_('form.token') ?>
   <button class="btn btn-danger" type="submit"><?= Text::_('COM_JLMS_PURGE_CONFIRM_ACTION') ?></button>
  </form>
  <?php else : ?>

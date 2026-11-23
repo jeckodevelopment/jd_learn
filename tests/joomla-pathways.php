@@ -35,7 +35,7 @@ $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $operatorId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cioperator'")->loadResult();
 if (!$operatorId) {
-throw new RuntimeException('CI operator missing.');
+    throw new RuntimeException('CI operator missing.');
 }
 $app->loadIdentity($container->get(UserFactoryInterface::class)->loadUserById($operatorId));
 $app->getSession()->set('user', $app->getIdentity());
@@ -91,12 +91,12 @@ $categoryModel->setState('category.section', 'pathway');
 $category = ['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.pathway','title' => 'CI pathway category','alias' => 'ci-pathway-category',
     'published' => 1,'language' => '*','access' => 1,'description' => ''];
 if (!$categoryModel->save($category)) {
-throw new RuntimeException('Native pathway category creation failed: ' . $categoryModel->getError());
+    throw new RuntimeException('Native pathway category creation failed: ' . $categoryModel->getError());
 }
 $categoryId = (int)$categoryModel->getState('category.id');
 $courseId = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='publication-test'")->loadResult();
 if (!$courseId) {
-throw new RuntimeException('Published catalog course fixture missing.');
+    throw new RuntimeException('Published catalog course fixture missing.');
 }
 $pathModel = $component->getMVCFactory()->createModel('Pathway', 'Administrator', ['ignore_request' => true]);
 // SECDEV-03: hostile editorial HTML and protected table columns must not escape
@@ -154,7 +154,7 @@ $detail = $service->detail($operator, 'en-GB', $pathwayId);
 $check($detail['progress'] === 0 && $detail['required_courses'] === 1, 'enrolled course with defined rules permits a zero percent pathway aggregate');
 $hiddenCourseId = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='test-course'")->loadResult();
 if (!$hiddenCourseId) {
-throw new RuntimeException('Draft course fixture missing.');
+    throw new RuntimeException('Draft course fixture missing.');
 }
 $check((bool)$pathModel->save(['id' => $pathwayId,'revision' => 1,'title' => 'CI learning pathway','alias' => 'ci-learning-pathway',
     'description' => '<p>Pathway summary</p>','catid' => $categoryId,'access' => 1,'language' => '*','state' => 1,
@@ -242,7 +242,7 @@ $grantAsset = static function(string $name,array $actions,int $group,bool $allow
     $check($aclAsset->loadByName($name), 'LCM-05 Joomla asset exists: ' . $name);
     $rules = json_decode((string)$aclAsset->rules, true) ?: [];
     foreach ($actions as $action) {
-$rules[$action][(string)$group] = $allowed;
+        $rules[$action][(string)$group] = $allowed;
     }
     $aclAsset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
     $check($aclAsset->store(), 'LCM-05 ACL fixture rule saved for ' . $name);
@@ -307,17 +307,17 @@ $check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $path
     'archived pathway state is stored');
 $archiveDenied = false;
 try {
-$service->detail($operator, 'en-GB', $pathwayId);
+    $service->detail($operator, 'en-GB', $pathwayId);
 } catch (\RuntimeException $error) {
-$archiveDenied = $error->getCode() === 404;
+    $archiveDenied = $error->getCode() === 404;
 }
 $check($archiveDenied, 'archived pathway cannot be read through the public detail endpoint');
 $assertSiblingUnchanged('archive');
 $archiveGuestDenied = false;
 try {
-$service->detail($guest, 'en-GB', $pathwayId);
+    $service->detail($guest, 'en-GB', $pathwayId);
 } catch (\RuntimeException $error) {
-$archiveGuestDenied = $error->getCode() === 404;
+    $archiveGuestDenied = $error->getCode() === 404;
 }
 $check($archiveGuestDenied, 'archived pathway direct detail also denies anonymous visitors');
 $check($db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,
@@ -330,9 +330,9 @@ $check((bool)$pathModel->save($pathwayBase + ['revision' => 3,'state' => 0]),
     'restoring archived pathway to unpublished succeeds: ' . $pathModel->getError());
 $draftDenied = false;
 try {
-$service->detail($operator, 'en-GB', $pathwayId);
+    $service->detail($operator, 'en-GB', $pathwayId);
 } catch (\RuntimeException $error) {
-$draftDenied = $error->getCode() === 404;
+    $draftDenied = $error->getCode() === 404;
 }
 $check($draftDenied, 'restoration does not automatically republish a pathway');
 $check((bool)$pathModel->save($pathwayBase + ['revision' => 4,'state' => 1]),
@@ -347,17 +347,17 @@ $check((int)$db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $path
     'trash is represented by the native state');
 $trashDenied = false;
 try {
-$service->detail($operator, 'en-GB', $pathwayId);
+    $service->detail($operator, 'en-GB', $pathwayId);
 } catch (\RuntimeException $error) {
-$trashDenied = $error->getCode() === 404;
+    $trashDenied = $error->getCode() === 404;
 }
 $check($trashDenied, 'trashed pathway is inaccessible via direct public URL');
 $assertSiblingUnchanged('trash');
 $trashGuestDenied = false;
 try {
-$service->detail($guest, 'en-GB', $pathwayId);
+    $service->detail($guest, 'en-GB', $pathwayId);
 } catch (\RuntimeException $error) {
-$trashGuestDenied = $error->getCode() === 404;
+    $trashGuestDenied = $error->getCode() === 404;
 }
 $check($trashGuestDenied, 'trashed pathway direct detail also denies anonymous visitors');
 $check($db->setQuery('SELECT id,state FROM #__jlms_courses WHERE id IN (' . $courseId . ',' . $hiddenCourseId . ') ORDER BY id')->loadAssocList() === $courseStatesBefore,

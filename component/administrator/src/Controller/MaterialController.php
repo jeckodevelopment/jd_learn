@@ -24,18 +24,18 @@ final class MaterialController extends BaseController
     private function perform(string $operation): void
     {
         if (strtoupper($this->input->getMethod()) !== 'POST') {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         $postLimit = (string) ini_get('post_max_size');
         $factor = match (strtolower(substr($postLimit, -1))) {
-'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
+            'g' => 1073741824, 'm' => 1048576, 'k' => 1024, default => 1
         };
         $postBytes = (int) ((float) $postLimit * $factor);
         if ($postBytes > 0 && $this->input->server->getInt('CONTENT_LENGTH', 0) > $postBytes) {
             throw new \RuntimeException(Text::_('COM_JLMS_FILE_SIZE'), 413);
         }
         if (!$this->checkToken('post', false)) {
-throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
+            throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
         }
         try {
             $data = $this->input->post->get('jform', [], 'array');
@@ -61,7 +61,7 @@ throw new \RuntimeException(Text::_('JINVALID_TOKEN_NOTICE'), 403);
             }
             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=materials&id=' . $courseId . '&version_id=' . $versionId, false));
         } catch (\Throwable $error) {
-$this->failure($error);
+            $this->failure($error);
         }
     }
 
@@ -101,7 +101,7 @@ $this->failure($error);
                 $this->input->getInt('course_id', 0), $this->input->getInt('version_id', 0), $this->input->getInt('id', 0));
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
-$this->failure($error);
+            $this->failure($error);
         }
     }
 
@@ -115,15 +115,15 @@ $this->failure($error);
             $ids = [];
             foreach (['course_id', 'version_id', 'lesson_id', 'id'] as $key) {
                 try {
-$ids[] = CurriculumService::id($this->input->get($key, null, 'RAW'));
+                    $ids[] = CurriculumService::id($this->input->get($key, null, 'RAW'));
                 } catch (\InvalidArgumentException $error) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                    throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             }
             $file = $this->app->bootComponent('com_jlms')->getMaterialService()->previewDownload($this->app->getIdentity(), ...$ids);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
-$this->failure($error);
+            $this->failure($error);
         }
     }
 }

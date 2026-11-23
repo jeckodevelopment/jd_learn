@@ -10,7 +10,7 @@ final class TeacherController extends \Joomla\CMS\MVC\Controller\FormController
     public function execute($task)
     {
         if (!in_array(strtolower($task), ['edit', 'save', 'apply', 'cancel'], true)) {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }

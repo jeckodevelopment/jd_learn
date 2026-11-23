@@ -72,7 +72,7 @@ $data = ['id' => 0,'title' => 'Publication fixture','alias' => 'publication-test
     'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>',
     'presentation_difficulty' => 'beginner','presentation_estimated_minutes' => '45','summary' => 'Public summary','revision' => 1];
 if (!$model->save($data)) {
-throw new \RuntimeException('Publication fixture failed: ' . $model->getError());
+    throw new \RuntimeException('Publication fixture failed: ' . $model->getError());
 }
 $course = (int) $model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
@@ -83,17 +83,17 @@ $writeFixture = static function (string $table, object $record, string $key = 'i
 function pubExpect(bool $ok, string $message): void {
     global $checks;
     if (!$ok) {
-throw new \RuntimeException($message);
+        throw new \RuntimeException($message);
     }
     $checks++;
 }
 function pubDenied(callable $call, string $message): void {
     try {
-$call();
+        $call();
 
     } catch (\DomainException | \InvalidArgumentException $expected) {
-pubExpect(true, $message);
-return;
+        pubExpect(true, $message);
+        return;
     }
     throw new \RuntimeException($message);
 }
@@ -109,7 +109,7 @@ function pubTransition(?int $expectedCourse = null): void {
     global $publication,$actor,$course,$version;
     $choices = $publication->transitions($actor, $course);
     if (!$choices) {
-throw new \RuntimeException('Native workflow transition missing');
+        throw new \RuntimeException('Native workflow transition missing');
     }
     $publication->transition($actor, $course, $version, $expectedCourse ?? pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$choices[0]->id);
 }
@@ -117,10 +117,10 @@ $guest = new \Joomla\CMS\User\User();
 pubExpect($catalog->publicTags($guest, 'en-GB', $catid) === [], 'public tag choices exclude courses that are still drafts');
 $hidden = static function () use ($catalog,$guest,$course): bool {
     try {
-$catalog->course($guest, 'en-GB', $course);
+        $catalog->course($guest, 'en-GB', $course);
 
     } catch (\RuntimeException $error) {
-return $error->getCode() === 404;
+        return $error->getCode() === 404;
     }
     return false;
 };
@@ -175,9 +175,9 @@ $authoring->saveLesson($actor, pubScope() + ['id' => $lesson,'revision' => 1,'mo
 $writeFixture('#__jlms_courses', (object)['id' => $course,'publish_down' => $courseClose], 'id');
 $unreachableRejected = false;
 try {
-$publication->transition($actor, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$publication->transitions($actor, $course)[0]->id);
+    $publication->transition($actor, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$publication->transitions($actor, $course)[0]->id);
 } catch (\DomainException $error) {
-$unreachableRejected = $error->getMessage() === 'COM_JLMS_LESSON_UNREACHABLE';
+    $unreachableRejected = $error->getMessage() === 'COM_JLMS_LESSON_UNREACHABLE';
 }
 pubExpect($unreachableRejected, 'publication rejects a required lesson outside the course window');
 $writeFixture('#__jlms_courses', (object)['id' => $course,'publish_down' => null], 'id', true);
@@ -186,15 +186,15 @@ $authoring->saveLesson($actor, pubScope() + ['id' => $lesson,'revision' => 2,'mo
 $writeFixture('#__jlms_lessons', (object)['id' => $lesson,'release_after_days' => 5], 'id');
 $dripWithoutEntryRejected = false;
 try {
-$publication->transition($actor, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$publication->transitions($actor, $course)[0]->id);
+    $publication->transition($actor, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$publication->transitions($actor, $course)[0]->id);
 } catch (\DomainException $error) {
-$dripWithoutEntryRejected = $error->getMessage() === 'COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED';
+    $dripWithoutEntryRejected = $error->getMessage() === 'COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED';
 }
 pubExpect($dripWithoutEntryRejected, 'publication rejects a programme with no required day-zero entry lesson');
 $writeFixture('#__jlms_lessons', (object)['id' => $lesson,'release_after_days' => null], 'id', true);
 // Native plugin veto must roll back frozen version, pointer and edition as one unit.
 $veto = static function ($event): void { if ($event->getArgument('extension') === 'com_jlms.course') {
-$event->setStopTransition();
+        $event->setStopTransition();
 
 }
 };
@@ -205,7 +205,7 @@ pubExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' .
     && !(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_id=' . $course)->loadResult(), 'veto rolls back teaching snapshot and default edition');
 // The core Workflow helper does not propagate a false model result; the service must.
 $afterVeto = static function ($event): void { if ($event->getContext() === 'com_jlms.course') {
-$event->addResult(false);
+        $event->addResult(false);
 
 }
 };
@@ -245,10 +245,10 @@ pubExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE co
     && (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts')->loadResult() === $previewAttemptCounts, 'public preview creates no enrolment or quiz attempt');
 $missingPreviewRejected = false;
 try {
-$catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson + 99999);
+    $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson + 99999);
 
 } catch (\RuntimeException $error) {
-$missingPreviewRejected = $error->getCode() === 404;
+    $missingPreviewRejected = $error->getCode() === 404;
 }
 pubExpect($missingPreviewRejected, 'unselected lesson ID is not previewable');
 
@@ -283,7 +283,7 @@ foreach ([['catalog_access',2],['language','it-IT'],['publish_up','2099-01-01 00
     $writeFixture('#__jlms_courses', (object)['id' => $course,$field => $value], 'id', true);
     pubExpect($hidden(), 'current ' . $field . ' hides direct lookup');
     $writeFixture('#__jlms_courses', (object)['id' => $course,$field => match ($field) {
-'catalog_access'=>1,'language'=>'*',default=>null
+        'catalog_access'=>1,'language'=>'*',default=>null
     }], 'id', true);
 }
 $writeFixture('#__categories', (object)['id' => $catid,'published' => 0], 'id');
@@ -294,7 +294,7 @@ $child = new \Joomla\CMS\Table\Category($db);
 $child->setLocation($catid, 'last-child');
 $child->bind(['title' => 'Child category','description' => '','alias' => 'publication-child','extension' => 'com_jlms.course','published' => 1,'access' => 1,'language' => '*','params' => '{}','metadata' => '{}']);
 if (!$child->check() || !$child->store()) {
-throw new \RuntimeException('Child category fixture failed');
+    throw new \RuntimeException('Child category fixture failed');
 }
 $writeFixture('#__jlms_courses', (object)['id' => $course,'catid' => (int)$child->id], 'id');
 $writeFixture('#__categories', (object)['id' => $catid,'access' => 2], 'id');
@@ -314,8 +314,8 @@ foreach ($publication->transitions($actor, $course, $nextVersion) as $candidate)
     $options = new \Joomla\Registry\Registry($candidate->options);
     $action = (string)$options->get('jlms_action', (string)$options->get('publishing') === '1' ? 'publish' : 'unpublish');
     if ($action === 'publish') {
-$publishChoice = $candidate;
-break;
+        $publishChoice = $candidate;
+        break;
     }
 }
 pubExpect((bool)$publishChoice, 'new teaching version has a publish transition');

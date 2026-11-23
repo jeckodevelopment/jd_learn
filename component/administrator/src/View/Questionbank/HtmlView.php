@@ -22,18 +22,18 @@ final class HtmlView extends BaseHtmlView
     {
         $actor = Factory::getApplication()->getIdentity();
         if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.quiz.manage', 'com_jlms')) {
-throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
+            throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
         $this->bank = $this->get('Bank');
-$this->filterForm = $this->get('FilterForm');
-$this->state = $this->get('State');
+        $this->filterForm = $this->get('FilterForm');
+        $this->state = $this->get('State');
         $db = Factory::getContainer()->get(DatabaseInterface::class);
         $this->questionCategories = $db->setQuery($db->createQuery()->select('id,title')->from('#__categories')->where('extension=' . $db->quote('com_jlms.question'))->where('published=1')->order('lft ASC'))->loadObjectList();
         foreach (['search','published','catid','language'] as $key) {
-$value = $this->state->get('filter.' . $key);
-if ($value !== null && $value !== '') {
-$this->activeFilters[$key] = $value;
-}
+            $value = $this->state->get('filter.' . $key);
+            if ($value !== null && $value !== '') {
+                $this->activeFilters[$key] = $value;
+            }
         }
         ToolbarHelper::title(Text::_('COM_JLMS_QUESTION_BANK'), 'list');
         ToolbarHelper::link('index.php?option=com_jlms&view=question', 'JTOOLBAR_NEW', 'new');

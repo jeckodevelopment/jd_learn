@@ -41,18 +41,18 @@ final class Provider extends AbstractFoundationProvider
             throw new \RuntimeException('COM_JLMS_VIDEO_CONFIGURATION', 503);
         }
         $c['ttl'] = $ttl;
-$c['renew'] = $renew;
+        $c['renew'] = $renew;
         return $c;
     }
 
     public function getDescriptor(): ProviderDescriptor
     {
         try {
-$this->configuration();
-($this->secrets)((string) ($this->config['api_token_ref'] ?? ''));
-$configured = true;
+            $this->configuration();
+            ($this->secrets)((string) ($this->config['api_token_ref'] ?? ''));
+            $configured = true;
         } catch (\Throwable $error) {
-$configured = false;
+            $configured = false;
         }
         return new ProviderDescriptor($this->key(), 'PLG_JLMSVIDEO_CLOUDFLARESTREAM', 1, $configured);
     }
@@ -70,32 +70,32 @@ $configured = false;
         $secret = ($this->secrets)((string) ($c['api_token_ref'] ?? ''));
         $url = 'https://api.cloudflare.com/client/v4/accounts/' . $c['account_id'] . '/stream/' . $uid . ($method === 'POST' ? '/token' : '');
         try {
-$response = ($this->transport)($method, $url, ['Authorization' => 'Bearer ' . $secret, 'Content-Type' => 'application/json'],
+            $response = ($this->transport)($method, $url, ['Authorization' => 'Bearer ' . $secret, 'Content-Type' => 'application/json'],
             $body === null ? null : json_encode($body, JSON_THROW_ON_ERROR));
         } catch (\Throwable $error) {
-throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         // Never include provider response bodies, credentials or token URLs in exceptions/logs.
         if (!is_array($response) || !is_int($response['status'] ?? null) || !is_string($response['body'] ?? null)
             || strlen($response['body']) > 262144) {
-throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         if (in_array($response['status'], [401,403], true)) {
-throw new \RuntimeException('COM_JLMS_VIDEO_CREDENTIAL_REJECTED', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_CREDENTIAL_REJECTED', 503);
         }
         if ($response['status'] === 404) {
-throw new \RuntimeException('COM_JLMS_VIDEO_REMOTE_NOT_FOUND', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_REMOTE_NOT_FOUND', 503);
         }
         if ($response['status'] === 429) {
-throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_BUSY', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_BUSY', 503);
         }
         if ($response['status'] !== 200) {
-throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         try {
-$data = json_decode($response['body'], true, 16, JSON_THROW_ON_ERROR);
+            $data = json_decode($response['body'], true, 16, JSON_THROW_ON_ERROR);
         } catch (\JsonException $error) {
-throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         if (($data['success'] ?? false) !== true || !is_array($data['result'] ?? null)) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
@@ -109,7 +109,7 @@ throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
             throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
         }
         $c = $this->configuration();
-$data = $this->request('GET', $source->reference);
+        $data = $this->request('GET', $source->reference);
         if (($data['uid'] ?? '') !== $source->reference || ($data['requireSignedURLs'] ?? null) !== true) {
             throw new \RuntimeException('COM_JLMS_VIDEO_REMOTE_UNPROTECTED', 503);
         }
@@ -137,12 +137,12 @@ $data = $this->request('GET', $source->reference);
     {
         $raw = base64_decode(strtr($part, '-_', '+/'), true);
         try {
-$data = $raw === false ? null : json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
+            $data = $raw === false ? null : json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
         } catch (\JsonException $error) {
-$data = null;
+            $data = null;
         }
         if (!is_array($data)) {
-throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         return $data;
     }
@@ -156,10 +156,10 @@ throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         $this->fetchMetadata($source, new MetadataContext($context->userId, $context->locale, true));
         $c = $this->configuration();
-$now = $context->now->getTimestamp();
+        $now = $context->now->getTimestamp();
         $expiry = min($now + $c['ttl'], $context->accessExpiresAt?->getTimestamp() ?? PHP_INT_MAX);
         if ($expiry <= $now + 5) {
-throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
+            throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
         }
         $data = $this->request('POST', $source->reference, ['exp' => $expiry, 'downloadable' => false]);
         $token = $data['token'] ?? null;
@@ -167,7 +167,7 @@ throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
             throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         $header = self::decode($parts[1]);
-$claims = self::decode($parts[2]);
+        $claims = self::decode($parts[2]);
         if (($header['alg'] ?? '') !== 'RS256' || ($claims['sub'] ?? '') !== $source->reference || !is_int($claims['exp'] ?? null)
             || $claims['exp'] > $expiry || $claims['exp'] <= $now + 5 || (isset($claims['downloadable']) && $claims['downloadable'] !== false)) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);

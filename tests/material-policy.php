@@ -6,22 +6,22 @@ require dirname(__DIR__) . '/component/administrator/src/Infrastructure/Material
 use Jlms\Component\Jlms\Administrator\Infrastructure\MaterialFilePolicy;
 $root = dirname(__DIR__) . '/.runtime/material-policy';
 if (!is_dir($root)) {
-mkdir($root, 0700, true);
+    mkdir($root, 0700, true);
 }
 $checks = 0;
 function materialExpect(bool $ok, string $message): void { global $checks;
-if (!$ok) {
-throw new \RuntimeException($message);
+    if (!$ok) {
+        throw new \RuntimeException($message);
 
-} $checks++;
+    } $checks++;
 }
 function materialReject(callable $call, string $message): void {
     try {
-$call();
+        $call();
 
     } catch (\RuntimeException $error) {
-materialExpect(true, $message);
-return;
+        materialExpect(true, $message);
+        return;
     }
     throw new \RuntimeException($message);
 }
@@ -41,9 +41,9 @@ file_put_contents($root . '/html', '<html><script>alert(1)</script></html>');
 materialReject(fn () => MaterialFilePolicy::inspect($root . '/html', 'disguised.txt'), 'Active MIME rejected');
 function materialZip(string $path, array $files): void {
     $zip = new \ZipArchive();
-$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+    $zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
     foreach ($files as $name => $content) {
-$zip->addFromString($name, $content);
+        $zip->addFromString($name, $content);
 
     }$zip->close();
 }

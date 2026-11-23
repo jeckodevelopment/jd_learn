@@ -40,42 +40,42 @@ $app->getSession()->set('user', $actor);
 $component = $app->bootComponent('com_jlms');
 $checks = 0;
 function migrationExpect(bool $ok,string $message):void{global$checks;
-if (!$ok)throw new RuntimeException($message);
-$checks++;
+    if (!$ok)throw new RuntimeException($message);
+    $checks++;
 }
 function migrationRow(string $table,int $id):object{global$db;
-return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
+    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
 function migrationDenied(callable $fn,int $code,string $message):void{try {
-$fn();
+        $fn();
 
 } catch (RuntimeException $e) {
-migrationExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-return;
+    migrationExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
+    return;
 
 }throw new RuntimeException($message);
 }
 $fixture = dirname($root) . '/enrollment-migration-fixture.json';
 $mode = $argv[2] ?? '';
 if ($mode === 'retained') {
- $f = json_decode(file_get_contents($fixture), true, 16, JSON_THROW_ON_ERROR);
-$source = migrationRow('enrollments', $f['source']);
-$target = migrationRow('enrollments', $f['target']);
- migrationExpect($source->status === 'migrated', 'source enrollment remains archived after migration');
-migrationExpect((int)$target->course_version_id === $f['target_version'], 'target assignment remains in the current version');
- migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $f['source'] . ' AND target_enrollment_id=' . $f['target'])->loadResult() === 1, 'one immutable migration record remains');
+    $f = json_decode(file_get_contents($fixture), true, 16, JSON_THROW_ON_ERROR);
+    $source = migrationRow('enrollments', $f['source']);
+    $target = migrationRow('enrollments', $f['target']);
+    migrationExpect($source->status === 'migrated', 'source enrollment remains archived after migration');
+    migrationExpect((int)$target->course_version_id === $f['target_version'], 'target assignment remains in the current version');
+    migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $f['source'] . ' AND target_enrollment_id=' . $f['target'])->loadResult() === 1, 'one immutable migration record remains');
 
- $retainedCertificate = (array)migrationRow('certificates', (int)$f['certificate']);
- $retainedDocument = (array)migrationRow('certificate_documents', (int)$f['certificate_document']);
- migrationExpect((int)$retainedCertificate['enrollment_id'] === (int)$f['source']
+    $retainedCertificate = (array)migrationRow('certificates', (int)$f['certificate']);
+    $retainedDocument = (array)migrationRow('certificate_documents', (int)$f['certificate_document']);
+    migrationExpect((int)$retainedCertificate['enrollment_id'] === (int)$f['source']
      && (int)$retainedCertificate['course_version_id'] === (int)$f['source_version']
      && (int)$retainedDocument['certificate_id'] === (int)$f['certificate'],
      'upgrade retains original ownership and source version for historical certificate');
- migrationExpect(hash('sha256', json_encode([$retainedCertificate,$retainedDocument], JSON_THROW_ON_ERROR)) === $f['certificate_source_hash'],
+    migrationExpect(hash('sha256', json_encode([$retainedCertificate,$retainedDocument], JSON_THROW_ON_ERROR)) === $f['certificate_source_hash'],
      'upgrade retains certificate and immutable document snapshot byte-for-byte');
 
- echo json_encode(['enrollment_migration_retained_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
-return;
+    echo json_encode(['enrollment_migration_retained_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+    return;
 }
 $cat = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
 $model = $component->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
@@ -112,13 +112,13 @@ $originalBlock = (int)$db->setQuery('SELECT block FROM #__users WHERE id=' . $ui
 $sourceStatusBeforeBlock = (string)migrationRow('enrollments', $enrollment)->status;
 $migrationsBeforeBlock = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult();
 try {
- $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $uid)->execute();
- migrationDenied(fn()=>$service->preview($actor, $course, $enrollment, $mapping), 403, 'blocked stale actor cannot preview migration');
- migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, 1, $mapping, 'Blocked actor attempt', '00000000-0000-4000-8000-000000000001', str_repeat('0', 64), true), 403, 'blocked stale actor cannot apply migration');
- migrationExpect((string)migrationRow('enrollments', $enrollment)->status === $sourceStatusBeforeBlock, 'blocked access does not mutate source enrollment');
- migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $migrationsBeforeBlock, 'blocked access does not create migration record');
+    $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $uid)->execute();
+    migrationDenied(fn()=>$service->preview($actor, $course, $enrollment, $mapping), 403, 'blocked stale actor cannot preview migration');
+    migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, 1, $mapping, 'Blocked actor attempt', '00000000-0000-4000-8000-000000000001', str_repeat('0', 64), true), 403, 'blocked stale actor cannot apply migration');
+    migrationExpect((string)migrationRow('enrollments', $enrollment)->status === $sourceStatusBeforeBlock, 'blocked access does not mutate source enrollment');
+    migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $migrationsBeforeBlock, 'blocked access does not create migration record');
 } finally {
- $db->setQuery('UPDATE #__users SET block=' . $originalBlock . ' WHERE id=' . $uid)->execute();
+    $db->setQuery('UPDATE #__users SET block=' . $originalBlock . ' WHERE id=' . $uid)->execute();
 }
 migrationExpect($service->preview($actor, $course, $enrollment, $mapping)['hash'] === $plan['hash'], 'migration preview restored after unblocking the operator');
 
@@ -129,14 +129,14 @@ migrationExpect($emptyPlan['transfers'] === [] && count($emptyPlan['unmapped']) 
 migrationDenied(fn()=>$service->preview($actor, $course, $enrollment, [$lesson => 999999]), 422, 'lesson IDs outside the destination version are rejected');
 // LCM-01: inactive courses must not migrate students even with a fresh admin preview.
 foreach ([0, 2, -2] as $inactiveState) {
- $lifecycleRecord = (object)['id' => $course,'state' => $inactiveState];
- $db->updateObject('#__jlms_courses', $lifecycleRecord, 'id');
- $blockedPlan = $service->preview($actor, $course, $enrollment, $mapping);
- migrationExpect($blockedPlan['blocked'] === 'COM_JLMS_LEARNING_DENIED', 'inactive course disables migration preview');
- migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, (int)migrationRow('enrollments', $enrollment)->revision,
+    $lifecycleRecord = (object)['id' => $course,'state' => $inactiveState];
+    $db->updateObject('#__jlms_courses', $lifecycleRecord, 'id');
+    $blockedPlan = $service->preview($actor, $course, $enrollment, $mapping);
+    migrationExpect($blockedPlan['blocked'] === 'COM_JLMS_LEARNING_DENIED', 'inactive course disables migration preview');
+    migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, (int)migrationRow('enrollments', $enrollment)->revision,
      $mapping, 'Inactive migration refused', '1e6d0f21-8c37-4a42-b57a-185fe9d0c001', $blockedPlan['hash'], true), 409,
      'inactive course rejects migration even with current impact hash');
- migrationExpect(migrationRow('enrollments', $enrollment)->status === 'active', 'blocked migration preserves active enrollment');
+    migrationExpect(migrationRow('enrollments', $enrollment)->status === 'active', 'blocked migration preserves active enrollment');
 }
 $lifecycleRecord = (object)['id' => $course,'state' => 1];
 $db->updateObject('#__jlms_courses', $lifecycleRecord, 'id');
@@ -155,18 +155,18 @@ $db->insertObject('#__jlms_attempts', $probeAttempt, 'id');
 $activeAttempt = (object)['enrollment_id' => $enrollment,'quiz_id' => (int)$probeQuiz->id,'attempt_id' => (int)$probeAttempt->id];
 $db->insertObject('#__jlms_active_attempts', $activeAttempt);
 try {
- $attemptPlan = $service->preview($actor, $course, $enrollment, $mapping);
- migrationExpect($attemptPlan['blocked'] === 'COM_JLMS_MIGRATION_OPEN_ATTEMPT', 'open quiz attempt blocks version migration');
- migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, (int)$beforeBlockedSource['revision'],
+    $attemptPlan = $service->preview($actor, $course, $enrollment, $mapping);
+    migrationExpect($attemptPlan['blocked'] === 'COM_JLMS_MIGRATION_OPEN_ATTEMPT', 'open quiz attempt blocks version migration');
+    migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, (int)$beforeBlockedSource['revision'],
      $mapping, 'Open quiz migration denied', '4e6d0f21-8c37-4a42-b57a-185fe9d0c001', $attemptPlan['hash'], true),
      409, 'open quiz cannot be migrated even after explicit confirmation');
- migrationExpect((array)migrationRow('enrollments', $enrollment) === $beforeBlockedSource, 'open-quiz denial preserves source enrollment exactly');
- migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $beforeBlockedMigrationCount,
+    migrationExpect((array)migrationRow('enrollments', $enrollment) === $beforeBlockedSource, 'open-quiz denial preserves source enrollment exactly');
+    migrationExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $beforeBlockedMigrationCount,
      'open-quiz denial does not create migration records');
 } finally {
- $db->setQuery('DELETE FROM #__jlms_active_attempts WHERE enrollment_id=' . (int)$enrollment . ' AND quiz_id=' . (int)$probeQuiz->id)->execute();
- $db->setQuery('DELETE FROM #__jlms_attempts WHERE id=' . (int)$probeAttempt->id)->execute();
- $db->setQuery('DELETE FROM #__jlms_quizzes WHERE id=' . (int)$probeQuiz->id)->execute();
+    $db->setQuery('DELETE FROM #__jlms_active_attempts WHERE enrollment_id=' . (int)$enrollment . ' AND quiz_id=' . (int)$probeQuiz->id)->execute();
+    $db->setQuery('DELETE FROM #__jlms_attempts WHERE id=' . (int)$probeAttempt->id)->execute();
+    $db->setQuery('DELETE FROM #__jlms_quizzes WHERE id=' . (int)$probeQuiz->id)->execute();
 }
 migrationExpect($service->preview($actor, $course, $enrollment, $mapping)['blocked'] === null, 'closing quiz attempt restores migration eligibility');
 // A destination edition at capacity must also fail without partial migration.
@@ -175,14 +175,14 @@ $destinationEdition = (int)$plan['target_edition_id'];
 $editionBefore = $db->setQuery('SELECT capacity FROM #__jlms_editions WHERE id=' . $destinationEdition)->loadResult();
 $db->setQuery('UPDATE #__jlms_editions SET capacity=0 WHERE id=' . $destinationEdition)->execute();
 try {
- $fullPlan = $service->preview($actor, $course, $enrollment, $mapping);
- migrationExpect($fullPlan['blocked'] === 'COM_JLMS_MIGRATION_EDITION_FULL', 'full target edition blocks migration');
- migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, (int)$beforeBlockedSource['revision'],
+    $fullPlan = $service->preview($actor, $course, $enrollment, $mapping);
+    migrationExpect($fullPlan['blocked'] === 'COM_JLMS_MIGRATION_EDITION_FULL', 'full target edition blocks migration');
+    migrationDenied(fn()=>$service->apply($actor, $course, $enrollment, (int)$beforeBlockedSource['revision'],
      $mapping, 'Edition full migration denied', '5e6d0f21-8c37-4a42-b57a-185fe9d0c001', $fullPlan['hash'], true),
      409, 'confirmed migration cannot bypass edition capacity');
- migrationExpect((array)migrationRow('enrollments', $enrollment) === $beforeBlockedSource, 'capacity denial preserves source enrollment');
+    migrationExpect((array)migrationRow('enrollments', $enrollment) === $beforeBlockedSource, 'capacity denial preserves source enrollment');
 } finally {
- $db->setQuery('UPDATE #__jlms_editions SET capacity=' . ($editionBefore === null ? 'NULL' : (int)$editionBefore)
+    $db->setQuery('UPDATE #__jlms_editions SET capacity=' . ($editionBefore === null ? 'NULL' : (int)$editionBefore)
      . ' WHERE id=' . $destinationEdition)->execute();
 }
 migrationExpect($service->preview($actor, $course, $enrollment, $mapping)['blocked'] === null, 'restored edition capacity re-enables migration');

@@ -69,26 +69,26 @@ $publication = $component->getPublicationService();
 $learning = $component->getLearningService();
 $checks = 0;
 function ruleExpect(bool $ok,string $message):void{global $checks;
-if (!$ok)throw new RuntimeException($message);
-$checks++;
+    if (!$ok)throw new RuntimeException($message);
+    $checks++;
 }
 function ruleDenied(callable $work,string $key):void{try {
-$work();
+        $work();
 
 } catch (DomainException $error) {
-ruleExpect($error->getMessage() === $key, 'Expected ' . $key . ', got ' . $error->getMessage());
-return;
+    ruleExpect($error->getMessage() === $key, 'Expected ' . $key . ', got ' . $error->getMessage());
+    return;
 
 }throw new RuntimeException('Expected ' . $key);
 }
 function ruleRow(string $table,int $id):object{global $db;
-return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
+    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
 }
 function ruleLearning(?int $course=null):array{global $db;
-if ($course !== null) {
-return [$db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(),$db->setQuery('SELECT a.* FROM #__jlms_attempts a JOIN #__jlms_enrollments e ON e.id=a.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY a.id')->loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
+    if ($course !== null) {
+        return [$db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(),$db->setQuery('SELECT a.* FROM #__jlms_attempts a JOIN #__jlms_enrollments e ON e.id=a.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY a.id')->loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
 
-}return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
+    }return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
 }
 $fixture = dirname($root) . '/teaching-rules-fixture.json';
 $mode = $argv[2] ?? '';
@@ -96,79 +96,79 @@ $mode = $argv[2] ?? '';
 if (in_array($mode, ['asset-checkpoint','asset-retained'], true)) {
  // File backup is independent from the SQL-only snapshots. A ready PDF must
  // survive the loss and restoration of its guarded encrypted storage blob.
- $pdf = $db->setQuery("SELECT d.id AS document_id,c.enrollment_id,a.* FROM #__jlms_certificate_documents d " .
+    $pdf = $db->setQuery("SELECT d.id AS document_id,c.enrollment_id,a.* FROM #__jlms_certificate_documents d " .
      "JOIN #__jlms_certificates c ON c.id=d.certificate_id " .
      "JOIN #__jlms_assets a ON a.id=d.pdf_asset_id " .
      "WHERE d.status='ready' AND a.mime_type='application/pdf' AND a.storage='local' " .
      "AND a.storage_key LIKE '%.php' " .
      "ORDER BY d.id LIMIT 1")->loadObject();
- ruleExpect($pdf !== null, 'At least one real rendered certificate PDF exists');
- $certificateParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
- $certificateParams->set('material_storage_root', '');
- $storage = new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(
+    ruleExpect($pdf !== null, 'At least one real rendered certificate PDF exists');
+    $certificateParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+    $certificateParams->set('material_storage_root', '');
+    $storage = new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(
      static fn()=>$certificateParams);
- $path = $storage->root() . DIRECTORY_SEPARATOR . $pdf->storage_key;
- ruleExpect(preg_match('/\A[a-f0-9]{64}\.php\z/D', (string)$pdf->storage_key) === 1
+    $path = $storage->root() . DIRECTORY_SEPARATOR . $pdf->storage_key;
+    ruleExpect(preg_match('/\A[a-f0-9]{64}\.php\z/D', (string)$pdf->storage_key) === 1
      && is_file($path) && !is_link($path), 'PDF is a managed opaque regular file');
- $manifest = dirname($root) . '/aut04-pdf-file-manifest.json';
- if ($mode === 'asset-checkpoint') {
-     $handle = $storage->open($pdf);
-     try {
-$payload = stream_get_contents($handle);
+    $manifest = dirname($root) . '/aut04-pdf-file-manifest.json';
+    if ($mode === 'asset-checkpoint') {
+        $handle = $storage->open($pdf);
+        try {
+            $payload = stream_get_contents($handle);
 
-     } finally {
-fclose($handle);
-     }
-     ruleExpect(is_string($payload) && str_starts_with($payload, '%PDF-'), 'Encrypted asset can be opened as PDF before backup');
-     $data = ['key' => $pdf->storage_key,'on_disk_sha256' => hash_file('sha256', $path),
-       'plaintext_sha256' => hash('sha256', $payload),'asset_id' => (int)$pdf->id,
-       'document_id' => (int)$pdf->document_id,'enrollment_id' => (int)$pdf->enrollment_id];
-     file_put_contents($manifest, json_encode($data, JSON_THROW_ON_ERROR));
- } else {
-     $saved = json_decode(file_get_contents($manifest), true, 32, JSON_THROW_ON_ERROR);
-     ruleExpect(hash_equals($saved['key'], (string)$pdf->storage_key) &&
+        } finally {
+            fclose($handle);
+        }
+        ruleExpect(is_string($payload) && str_starts_with($payload, '%PDF-'), 'Encrypted asset can be opened as PDF before backup');
+        $data = ['key' => $pdf->storage_key,'on_disk_sha256' => hash_file('sha256', $path),
+          'plaintext_sha256' => hash('sha256', $payload),'asset_id' => (int)$pdf->id,
+          'document_id' => (int)$pdf->document_id,'enrollment_id' => (int)$pdf->enrollment_id];
+        file_put_contents($manifest, json_encode($data, JSON_THROW_ON_ERROR));
+    } else {
+        $saved = json_decode(file_get_contents($manifest), true, 32, JSON_THROW_ON_ERROR);
+        ruleExpect(hash_equals($saved['key'], (string)$pdf->storage_key) &&
          $saved['asset_id'] === (int)$pdf->id && $saved['document_id'] === (int)$pdf->document_id,
          'Restored SQL references the identical historical document and asset');
-     ruleExpect(hash_equals($saved['on_disk_sha256'], hash_file('sha256', $path)),
+        ruleExpect(hash_equals($saved['on_disk_sha256'], hash_file('sha256', $path)),
          'Restored protected PDF file bytes match the original backup');
-     $handle = $storage->open($pdf);
-     try {
-$payload = stream_get_contents($handle);
+        $handle = $storage->open($pdf);
+        try {
+            $payload = stream_get_contents($handle);
 
-     } finally {
-fclose($handle);
-     }
-     ruleExpect(is_string($payload) && str_starts_with($payload, '%PDF-')
+        } finally {
+            fclose($handle);
+        }
+        ruleExpect(is_string($payload) && str_starts_with($payload, '%PDF-')
          && hash_equals($saved['plaintext_sha256'], hash('sha256', $payload)),
          'Restored encrypted PDF decrypts to the original certificate');
-     $download = $component->getCertificateService()->download($actor, (int)$pdf->enrollment_id);
-     try {
-$downloaded = stream_get_contents($download['handle']);
+        $download = $component->getCertificateService()->download($actor, (int)$pdf->enrollment_id);
+        try {
+            $downloaded = stream_get_contents($download['handle']);
 
-     } finally {
-fclose($download['handle']);
-     }
-     ruleExpect(is_string($downloaded) && hash_equals($saved['plaintext_sha256'], hash('sha256', $downloaded)),
+        } finally {
+            fclose($download['handle']);
+        }
+        ruleExpect(is_string($downloaded) && hash_equals($saved['plaintext_sha256'], hash('sha256', $downloaded)),
          'Historical certificate remains downloadable after SQL and file recovery');
- }
- echo json_encode(['aut04_certificate_file_checks' => $checks,'status' => 'passed']) . PHP_EOL;
- return;
+    }
+    echo json_encode(['aut04_certificate_file_checks' => $checks,'status' => 'passed']) . PHP_EOL;
+    return;
 }
 
 if (in_array($mode, ['state','checkpoint','retained'], true)) {
- $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
- $state = ['course' => (array)ruleRow('courses', $f['course']),'version' => (array)ruleRow('course_versions', $f['version']),'original' => (array)ruleRow('course_versions', $f['original']),'learning' => ruleLearning($f['course'])];
- if ($mode === 'checkpoint') {
-file_put_contents($fixture . '.snapshot', json_encode($state, JSON_THROW_ON_ERROR));
-return;
- }
- if ($mode === 'retained') {
-ruleExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Teaching rules and assigned history survive upgrade');
-echo json_encode(['teaching_rules_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-return;
- }
- echo json_encode($state, JSON_THROW_ON_ERROR);
-return;
+    $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
+    $state = ['course' => (array)ruleRow('courses', $f['course']),'version' => (array)ruleRow('course_versions', $f['version']),'original' => (array)ruleRow('course_versions', $f['original']),'learning' => ruleLearning($f['course'])];
+    if ($mode === 'checkpoint') {
+        file_put_contents($fixture . '.snapshot', json_encode($state, JSON_THROW_ON_ERROR));
+        return;
+    }
+    if ($mode === 'retained') {
+        ruleExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Teaching rules and assigned history survive upgrade');
+        echo json_encode(['teaching_rules_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
+        return;
+    }
+    echo json_encode($state, JSON_THROW_ON_ERROR);
+    return;
 }
 \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->set('video_external_policy', 'embed');
 $source = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='video-fixture'")->loadResult();
@@ -180,8 +180,8 @@ $item = $model->getItem($course);
 ruleExpect($model->save(['id' => $course,'revision' => $item->revision,'catalog_access' => 1,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent rules fixture has explicit learner access');
 $version = (int)$authoring->outline($actor, $course)['version']->id;
 $publish = static function(int $id)use($publication,$actor,$course):void{$transition = (int)$publication->transitions($actor, $course, $id)[0]->id;
-$impact = $publication->updateImpact($actor, $course, $id, $transition);
-$publication->transition($actor, $course, $id, (int)ruleRow('courses', $course)->revision, (int)ruleRow('course_versions', $id)->revision, $transition, $impact['fingerprint'] ?? null);
+    $impact = $publication->updateImpact($actor, $course, $id, $transition);
+    $publication->transition($actor, $course, $id, (int)ruleRow('courses', $course)->revision, (int)ruleRow('course_versions', $id)->revision, $transition, $impact['fingerprint'] ?? null);
 
 };
 ruleExpect($authoring->teachingRules($actor, $course, $version)['video_threshold_basis_points'] === 9000, 'Default is90 percent');
@@ -208,11 +208,11 @@ $consultationLesson = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE c
 $consultationClassroom = $learning->classroom($actor, 'en-GB', $consultationEnrollment, $consultationLesson);
 ruleExpect($consultationClassroom['progress_applicable'] === false && $consultationClassroom['percent'] === null && $consultationClassroom['completed_at'] === null, 'Consultation enrollment exposes no progress or course completion');
 try {
-$learning->complete($actor, 'en-GB', $consultationEnrollment, $consultationLesson, bin2hex(random_bytes(20)));
-throw new RuntimeException('Consultation must not grant lesson completion');
+    $learning->complete($actor, 'en-GB', $consultationEnrollment, $consultationLesson, bin2hex(random_bytes(20)));
+    throw new RuntimeException('Consultation must not grant lesson completion');
 
 } catch (RuntimeException $error) {
-ruleExpect($error->getMessage() === 'COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE', 'Consultation lesson completion is explicitly denied');
+    ruleExpect($error->getMessage() === 'COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE', 'Consultation lesson completion is explicitly denied');
 }
 ruleExpect((int)ruleRow('enrollments', $consultationEnrollment)->required_total === 0 && (int)ruleRow('enrollments', $consultationEnrollment)->completed_total === 0, 'Consultation enrollment stores zero completion requirements and credit');
 $version = $authoring->createDraft($actor, $course, (int)ruleRow('courses', $course)->revision);
@@ -225,16 +225,16 @@ ruleDenied(fn()=>$authoring->saveTeachingRules($actor, array_replace($input, ['v
 ruleDenied(fn()=>$authoring->saveTeachingRules($actor, array_replace($input, ['video_threshold' => '0'])), 'COM_JLMS_TEACHING_THRESHOLD_INVALID');
 $other = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult();
 foreach ([['courses',$course],['course_versions',$version]] as [$table,$id]) {
-$oldCheckout = ruleRow($table, $id)->checked_out;
-$locked = (object)['id' => $id,'checked_out' => $other];
-$db->updateObject('#__jlms_' . $table, $locked, 'id', true);
-try {
-ruleDenied(fn()=>$authoring->saveTeachingRules($actor, $input), 'JERROR_ALERTNOAUTHOR');
+    $oldCheckout = ruleRow($table, $id)->checked_out;
+    $locked = (object)['id' => $id,'checked_out' => $other];
+    $db->updateObject('#__jlms_' . $table, $locked, 'id', true);
+    try {
+        ruleDenied(fn()=>$authoring->saveTeachingRules($actor, $input), 'JERROR_ALERTNOAUTHOR');
 
-} finally {
-$locked->checked_out = $oldCheckout;
-$db->updateObject('#__jlms_' . $table, $locked, 'id', true);
-}
+    } finally {
+        $locked->checked_out = $oldCheckout;
+        $db->updateObject('#__jlms_' . $table, $locked, 'id', true);
+    }
 }
 $authoring->saveTeachingRules($actor, $input + ['mode' => 'consultation','certificate_enabled' => true,'rules_json' => '{}']);
 $rules = $authoring->teachingRules($actor, $course, $version);
@@ -305,11 +305,11 @@ $historicalDocument = $db->setQuery('SELECT d.id, d.status FROM #__jlms_certific
 ruleExpect($historicalDocument->status === 'pending_render', 'Recovered historical certificate is queued for on-demand PDF rendering');
 $certificateDownload = $certificateService->download($actor, $oldEnrollment);
 try {
-ruleExpect($certificateDownload['mime'] === 'application/pdf' && $certificateDownload['size'] > 100
+    ruleExpect($certificateDownload['mime'] === 'application/pdf' && $certificateDownload['size'] > 100
     && str_starts_with((string)fread($certificateDownload['handle'], 8), '%PDF-'),
     'Historical certificate PDF renders and downloads from SQL DATETIME(6)');
 } finally {
-fclose($certificateDownload['handle']);
+    fclose($certificateDownload['handle']);
 }
 $renderedDocument = ruleRow('certificate_documents', (int)$historicalDocument->id);
 ruleExpect($renderedDocument->status === 'ready' && (int)$renderedDocument->pdf_asset_id > 0,
@@ -327,10 +327,10 @@ ruleExpect(is_file($storageRoot . '/.htaccess') && is_file($storageRoot . '/inde
     'Managed private storage provisions native server access guards');
 $again = $certificateService->download($actor, $oldEnrollment);
 try {
-ruleExpect($again['mime'] === 'application/pdf' && $again['size'] === $certificateDownload['size'],
+    ruleExpect($again['mime'] === 'application/pdf' && $again['size'] === $certificateDownload['size'],
     'Historical certificate is repeatably downloadable without re-render');
 } finally {
-fclose($again['handle']);
+    fclose($again['handle']);
 }
 ruleExpect((int)ruleRow('certificate_documents', (int)$historicalDocument->id)->pdf_asset_id === (int)$renderedDocument->pdf_asset_id,
     'Repeated download preserves the original private PDF asset');
@@ -343,19 +343,19 @@ ruleExpect(is_string($serviceSource) && $temporaryCalls === [],
     'Certificate creation and regeneration do not depend on global PHP temporary paths');
 $storageForCertificates = new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn()=>$certificateParams);
 try {
-$storageForCertificates->stageGeneratedPdf('invalid PDF');
-throw new \RuntimeException('Invalid generated PDF accepted');
+    $storageForCertificates->stageGeneratedPdf('invalid PDF');
+    throw new \RuntimeException('Invalid generated PDF accepted');
 } catch (\RuntimeException $error) {
-ruleExpect($error->getMessage() === 'COM_JLMS_CERTIFICATE_RENDER_FAILED', 'Generated PDF content is strictly validated before storage');
+    ruleExpect($error->getMessage() === 'COM_JLMS_CERTIFICATE_RENDER_FAILED', 'Generated PDF content is strictly validated before storage');
 }
 
 
 ruleExpect(ruleRow('course_versions', $original)->rules_json === $historicRules, 'Historical recovery never mutates the published rules');
 try {
-$certificateService->adminRecoverHistorical($actor, $oldEnrollment, 'Duplicate historical certificate recovery');
-throw new \RuntimeException('Duplicate certificate was issued');
+    $certificateService->adminRecoverHistorical($actor, $oldEnrollment, 'Duplicate historical certificate recovery');
+    throw new \RuntimeException('Duplicate certificate was issued');
 } catch (\RuntimeException $error) {
-ruleExpect($error->getMessage() === 'COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode() === 409, 'Duplicate historical issuance is rejected with HTTP 409');
+    ruleExpect($error->getMessage() === 'COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode() === 409, 'Duplicate historical issuance is rejected with HTTP 409');
 }
 // Disposable integration fixture: simulate a completed enrollment whose published
 // snapshot requires a certificate but whose issuance event was missed.
@@ -379,7 +379,7 @@ try {
     ruleExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE action='missing_issuance_recovery' AND certificate_id=" . (int)$eligibleCertificate->id)->loadResult() === 1,
         'Eligible recovery creates one durable audit entry');
     try {
-$certificateService->adminRecoverMissing($actor, $newEnrollment, 'Attempt duplicate eligible issuance');
+        $certificateService->adminRecoverMissing($actor, $newEnrollment, 'Attempt duplicate eligible issuance');
         throw new \RuntimeException('Duplicate eligible issuance accepted');
     } catch (\RuntimeException $error) {
         ruleExpect($error->getMessage() === 'COM_JLMS_CERTIFICATE_UNAVAILABLE' && $error->getCode() === 409,

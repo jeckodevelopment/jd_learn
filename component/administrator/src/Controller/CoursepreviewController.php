@@ -13,7 +13,7 @@ final class CoursepreviewController extends BaseController
     public function execute($task)
     {
         if (strtolower($task) !== 'playback') {
-throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
     }
@@ -21,14 +21,14 @@ throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     public function playback(): void
     {
         $code = 200;
-$data = null;
-$message = '';
+        $data = null;
+        $message = '';
         try {
             if (strtoupper($this->input->getMethod()) !== 'POST') {
-throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
+                throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
             }
             if (!$this->checkToken('post', false)) {
-throw new \RuntimeException('JINVALID_TOKEN', 403);
+                throw new \RuntimeException('JINVALID_TOKEN', 403);
             }
             $data = $this->app->bootComponent('com_jlms')->getMVCFactory()
                 ->createModel('Coursepreview', 'Administrator', ['ignore_request' => true])->getPlaybackDescriptor();

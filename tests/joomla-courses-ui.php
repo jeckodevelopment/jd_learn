@@ -73,24 +73,24 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 $checks = 0;
 function listExpect(bool $ok,string $message):void { global $checks;
-if (!$ok)throw new RuntimeException($message);
-$checks++;
+    if (!$ok)throw new RuntimeException($message);
+    $checks++;
 }
 $fixturePath = dirname($root) . '/courses-ui-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
- $f = json_decode(file_get_contents($fixturePath), true, 32, JSON_THROW_ON_ERROR);
- $rows = $db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN (' . implode(',', array_map('intval', $f['courses'])) . ') ORDER BY id')->loadAssocList();
- listExpect($rows === $f['rows'], 'List and editor navigation preserve course state, version and revision after upgrade');
- echo json_encode(['courses_ui_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
-exit;
+    $f = json_decode(file_get_contents($fixturePath), true, 32, JSON_THROW_ON_ERROR);
+    $rows = $db->setQuery('SELECT id,state,current_version_id,revision FROM #__jlms_courses WHERE id IN (' . implode(',', array_map('intval', $f['courses'])) . ') ORDER BY id')->loadAssocList();
+    listExpect($rows === $f['rows'], 'List and editor navigation preserve course state, version and revision after upgrade');
+    echo json_encode(['courses_ui_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
+    exit;
 }
 $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
 $parent = 1;
 $categories = [];
 foreach (['parent','child'] as $name) {
- listExpect($categoryModel->save(['id' => 0,'parent_id' => $parent,'extension' => 'com_jlms.course','title' => 'List UI ' . $name,'alias' => 'list-ui-' . $name,'published' => 1,'language' => '*','access' => 1]), 'Native list category fixture');
- $categories[$name] = (int)$categoryModel->getState('category.id');
-$parent = $categories[$name];
+    listExpect($categoryModel->save(['id' => 0,'parent_id' => $parent,'extension' => 'com_jlms.course','title' => 'List UI ' . $name,'alias' => 'list-ui-' . $name,'published' => 1,'language' => '*','access' => 1]), 'Native list category fixture');
+    $categories[$name] = (int)$categoryModel->getState('category.id');
+    $parent = $categories[$name];
 }
 $teacherCategoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
 listExpect($teacherCategoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.teacher','title' => 'List UI teachers','alias' => 'list-ui-teachers','published' => 1,'language' => '*','access' => 1]), 'Native teacher category fixture');
@@ -102,20 +102,20 @@ $editor = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cieditor'"
 $ids = [];
 $versions = [];
 foreach (['Zebra','Alpha','Bravo'] as $name) {
- $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
- listExpect($model->save(['id' => 0,'revision' => 1,'title' => 'List UI ' . $name,'alias' => 'list-ui-' . strtolower($name),'catid' => $categories[$name === 'Alpha' ? 'child' : 'parent'],'language' => $name === 'Alpha' ? 'en-GB' : '*','catalog_access' => 1,'content_access' => $name === 'Bravo' ? 1 : 2,'enrollment_mode' => 'auto','summary' => 'List fixture','presentation_description' => '<p>List UI public presentation</p>']), 'List course fixture');
- $id = (int)$model->getState('course.id');
-$ids[$name] = $id;
- if (in_array($name, ['Alpha','Bravo'], true))listExpect($model->save(['id' => $id,'revision' => 1,'teacher_ids' => [$teacherId]]), 'Teacher assigned to selected list fixture course');
- $draft = $authoring->createDraft($actor, $id, (int)$model->getItem($id)->revision);
-$versions[$name] = $draft;
- $module = $authoring->saveModule($actor, ['course_id' => $id,'version_id' => $draft,'expected_version_revision' => 1,'title' => 'List UI module']);
- $revision = (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult();
- $authoring->saveLesson($actor, ['course_id' => $id,'version_id' => $draft,'expected_version_revision' => $revision,'module_id' => $module,'title' => 'List UI lesson','kind' => 'text','body' => '<p>LIST_UI_PRIVATE_LESSON_BODY</p>','required' => '1']);
- if ($name === 'Alpha') {
-  $choices = $publication->transitions($actor, $id, $draft);
-  $publication->transition($actor, $id, $draft, (int)$model->getItem($id)->revision, (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult(), (int)$choices[0]->id);
- }
+    $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
+    listExpect($model->save(['id' => 0,'revision' => 1,'title' => 'List UI ' . $name,'alias' => 'list-ui-' . strtolower($name),'catid' => $categories[$name === 'Alpha' ? 'child' : 'parent'],'language' => $name === 'Alpha' ? 'en-GB' : '*','catalog_access' => 1,'content_access' => $name === 'Bravo' ? 1 : 2,'enrollment_mode' => 'auto','summary' => 'List fixture','presentation_description' => '<p>List UI public presentation</p>']), 'List course fixture');
+    $id = (int)$model->getState('course.id');
+    $ids[$name] = $id;
+    if (in_array($name, ['Alpha','Bravo'], true))listExpect($model->save(['id' => $id,'revision' => 1,'teacher_ids' => [$teacherId]]), 'Teacher assigned to selected list fixture course');
+    $draft = $authoring->createDraft($actor, $id, (int)$model->getItem($id)->revision);
+    $versions[$name] = $draft;
+    $module = $authoring->saveModule($actor, ['course_id' => $id,'version_id' => $draft,'expected_version_revision' => 1,'title' => 'List UI module']);
+    $revision = (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult();
+    $authoring->saveLesson($actor, ['course_id' => $id,'version_id' => $draft,'expected_version_revision' => $revision,'module_id' => $module,'title' => 'List UI lesson','kind' => 'text','body' => '<p>LIST_UI_PRIVATE_LESSON_BODY</p>','required' => '1']);
+    if ($name === 'Alpha') {
+        $choices = $publication->transitions($actor, $id, $draft);
+        $publication->transition($actor, $id, $draft, (int)$model->getItem($id)->revision, (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult(), (int)$choices[0]->id);
+    }
 }
 // Finder tests use an explicitly public, published *disposable* fixture. The
 // ordinary course-editor fixture is not guaranteed to have reached publication.
@@ -248,15 +248,15 @@ listExpect(count($get()) === 3, 'SQL ordering is allowlisted');
 // Verify the archived state against an actual record without changing retained fixtures.
 $db->setQuery('UPDATE #__jlms_courses SET state=2 WHERE id=' . (int)$ids['Bravo'])->execute();
 try {
- $archivedList = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
- $archivedList->setState('list.limit', 100);
-$archivedList->setState('list.start', 0);
- $archivedList->setState('filter.search', 'List UI');
-$archivedList->setState('filter.published', '2');
- $archiveIds = array_map(static fn($row):int=>(int)$row->id, $archivedList->getItems());
- listExpect($archiveIds === [$ids['Bravo']] && (int)$archivedList->getTotal() === 1, 'Archived state filter returns exactly archived records');
+    $archivedList = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
+    $archivedList->setState('list.limit', 100);
+    $archivedList->setState('list.start', 0);
+    $archivedList->setState('filter.search', 'List UI');
+    $archivedList->setState('filter.published', '2');
+    $archiveIds = array_map(static fn($row):int=>(int)$row->id, $archivedList->getItems());
+    listExpect($archiveIds === [$ids['Bravo']] && (int)$archivedList->getTotal() === 1, 'Archived state filter returns exactly archived records');
 } finally {
- $db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id=' . (int)$ids['Bravo'])->execute();
+    $db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id=' . (int)$ids['Bravo'])->execute();
 }
 // LCM-02: native reversible course trash/restore with a preserved programme.
 $courseModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
@@ -272,7 +272,7 @@ $learningBefore = [
 $finderStates = [];
 $finderWitness = static function ($event) use (&$finderStates, $db, $ids): void {
     if ($event->getContext() !== 'com_jlms.course' || (int)$event->getItem()->id !== (int)$ids['Alpha']) {
-return;
+        return;
     }
     $finderStates[] = $db->setQuery('SELECT state,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$ids['Alpha'])->loadAssoc();
 };
@@ -328,33 +328,33 @@ listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$impact['revision'] + 1), 'Pu
  $associationKey = 'jlms-lcm02-purge-' . (string)$emptyId;
  $associationRow = (object)['id' => $emptyId,'context' => 'com_jlms.item','key' => $associationKey];
  $db->insertObject('#__associations', $associationRow);
- try {
-  $associatedImpact = $emptyModel->purgeImpact($emptyId);
-  listExpect(!$associatedImpact['eligible'] && (int)$associatedImpact['references']['#__associations'] === 1, 'Native course association prevents purge preview');
-  listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$associatedImpact['revision']), 'Native course association prevents destructive purge');
-  listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id=' . (int)$emptyId)->loadResult() === 1, 'Rejected associated-course purge retains course');
-  listExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE id=" . (int)$emptyId . " AND context='com_jlms.item'")->loadResult() === 1, 'Rejected purge retains native association');
- } finally {
-  $cleanup = $db->createQuery()->delete('#__associations')->where('id = :id')->where('context = :context')
-   ->bind(':id', $emptyId, \Joomla\Database\ParameterType::INTEGER)
-   ->bind(':context', $associationRow->context);
-  $db->setQuery($cleanup)->execute();
- }
+try {
+    $associatedImpact = $emptyModel->purgeImpact($emptyId);
+    listExpect(!$associatedImpact['eligible'] && (int)$associatedImpact['references']['#__associations'] === 1, 'Native course association prevents purge preview');
+    listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$associatedImpact['revision']), 'Native course association prevents destructive purge');
+    listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id=' . (int)$emptyId)->loadResult() === 1, 'Rejected associated-course purge retains course');
+    listExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE id=" . (int)$emptyId . " AND context='com_jlms.item'")->loadResult() === 1, 'Rejected purge retains native association');
+} finally {
+    $cleanup = $db->createQuery()->delete('#__associations')->where('id = :id')->where('context = :context')
+    ->bind(':id', $emptyId, \Joomla\Database\ParameterType::INTEGER)
+    ->bind(':context', $associationRow->context);
+    $db->setQuery($cleanup)->execute();
+}
 
 // LCM-02: the same physically empty course must still be protected by
 // fresh per-record core.delete authorization, not merely by its preview.
 $emptyModel->setCurrentUser(new \Joomla\CMS\User\User(0));
 try {
- $guestDenied = false;
- try {
-  $guestDenied = !$emptyModel->purgeEmpty($emptyId, (int)$impact['revision']);
- } catch (\RuntimeException $denied) {
-  $guestDenied = $denied->getMessage() === 'JERROR_ALERTNOAUTHOR';
- }
- listExpect($guestDenied, 'Guest cannot purge a physically empty course');
- listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id=' . (int)$emptyId)->loadResult() === 1, 'Denied guest purge preserves course');
+    $guestDenied = false;
+    try {
+        $guestDenied = !$emptyModel->purgeEmpty($emptyId, (int)$impact['revision']);
+    } catch (\RuntimeException $denied) {
+        $guestDenied = $denied->getMessage() === 'JERROR_ALERTNOAUTHOR';
+    }
+    listExpect($guestDenied, 'Guest cannot purge a physically empty course');
+    listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id=' . (int)$emptyId)->loadResult() === 1, 'Denied guest purge preserves course');
 } finally {
- $emptyModel->setCurrentUser($operator);
+    $emptyModel->setCurrentUser($operator);
 }
 $purged = $emptyModel->purgeEmpty($emptyId, (int)$impact['revision']);
 listExpect($purged, 'Purge succeeds only on trashed course with no teaching dependencies: ' . (string)$emptyModel->getError());

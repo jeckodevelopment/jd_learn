@@ -15,7 +15,7 @@ final class LearningLanguages
     public static function available(User $actor, string $uiLanguage): array
     {
         if (!Multilanguage::isEnabled()) {
-return [$uiLanguage => true];
+            return [$uiLanguage => true];
         }
         $installed = LanguageHelper::getInstalledLanguages(0);
         $levels = array_map('intval', $actor->getAuthorisedViewLevels());
@@ -25,7 +25,7 @@ return [$uiLanguage => true];
         $languages = [];
         foreach ($db->setQuery($q)->loadColumn() as $tag) {
             if (isset($installed[$tag])) {
-$languages[$tag] = true;
+                $languages[$tag] = true;
             }
         }
         return $languages;

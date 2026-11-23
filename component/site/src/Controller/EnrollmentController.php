@@ -88,7 +88,7 @@ class EnrollmentController extends BaseController
             $data = $this->input->post->get('jform', [], 'array');
             $key = $data['idempotency_key'] ?? null;
             if (!is_string($key)) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             $courseId = CurriculumService::id($data['course_id'] ?? null);
             $this->app->bootComponent('com_jlms')->getLearningService()->requestApproval(
@@ -120,7 +120,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         if (strtoupper($this->input->getMethod()) !== 'GET') {
-throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
+            throw new \RuntimeException(Text::_('COM_JLMS_METHOD_NOT_ALLOWED'), 405);
         }
         try {
             $id = CurriculumService::id($this->input->get('id', 0, 'raw'));

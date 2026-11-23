@@ -78,7 +78,7 @@ final class LearningService
             if ($candidate) {
                 $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
                 if ($date > $base) {
-$base = $date;
+                    $base = $date;
                 }
             }
         }
@@ -95,7 +95,7 @@ $base = $date;
                 if ($courseStart) {
                     $date = new \DateTimeImmutable($courseStart, new \DateTimeZone('UTC'));
                     if (!$available || $date > $available) {
-$available = $date;
+                        $available = $date;
                     }
                 }
             }
@@ -104,7 +104,7 @@ $available = $date;
                 if ($candidate) {
                     $date = new \DateTimeImmutable($candidate, new \DateTimeZone('UTC'));
                     if (!$close || $date < $close) {
-$close = $date;
+                        $close = $date;
                     }
                 }
             }
@@ -130,7 +130,7 @@ $close = $date;
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         if (!(int) $course->delivery_enabled) {
-throw new \RuntimeException('COM_JLMS_COURSE_DELIVERY_SUSPENDED', 403);
+            throw new \RuntimeException('COM_JLMS_COURSE_DELIVERY_SUSPENDED', 403);
         }
         return $course;
     }
@@ -151,13 +151,13 @@ throw new \RuntimeException('COM_JLMS_COURSE_DELIVERY_SUSPENDED', 403);
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         try {
-$rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
+            $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
         } catch (\DomainException) {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         if (!$allowExpiredWindow) {
-self::window($edition);
-self::window($enrollment);
+            self::window($edition);
+            self::window($enrollment);
         } else {
             $now = gmdate('Y-m-d H:i:s');
             if (($edition->starts_at !== null && $edition->starts_at > $now) || ($enrollment->starts_at !== null && $enrollment->starts_at > $now)) {
@@ -242,7 +242,7 @@ self::window($enrollment);
             ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':code', $code);
         $editionId = (int) $this->db->setQuery($q)->loadResult();
         if (!$editionId) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
 
         return $this->transaction(function () use ($actor, $language, $course, $courseId, $versionId, $editionId, $subject): int {
@@ -256,7 +256,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
             }
             if ($edition->status !== 'open') {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+                throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
             self::window($edition);
             $q = $this->db->createQuery()->select('id, status')->from('#__jlms_enrollment_requests')
@@ -270,13 +270,13 @@ throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 return (int) $existing->id;
             }
             if (!(int) $current->admissions_open) {
-throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409);
+                throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409);
             }
             $q = $this->db->createQuery()->select('id')->from('#__jlms_enrollments')
                 ->where('subject_key = :subject')->where('edition_id = :edition')
                 ->bind(':subject', $subject)->bind(':edition', $editionId, ParameterType::INTEGER);
             if ($this->db->setQuery($q)->loadResult()) {
-throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
+                throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
             }
             // Requests never consume capacity and never create progress, enrollments or Joomla group grants.
             $now = gmdate('Y-m-d H:i:s');
@@ -347,7 +347,7 @@ throw new \RuntimeException('COM_JLMS_IDEMPOTENCY_CONFLICT', 409);
                 $this->authorisedEnrollment($actor, $language, $id, true);
             } else {
                 if (!(int) $current->admissions_open) {
-throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409);
+                    throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409);
                 }
                 if ($edition->capacity !== null) {
                     $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')->where('edition_id = :edition')
@@ -431,10 +431,10 @@ throw new \RuntimeException('COM_JLMS_COURSE_ADMISSIONS_CLOSED', 409);
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':lesson', $lessonId, ParameterType::INTEGER);
         $explicit = $this->db->setQuery($q, 0, 1)->loadObject();
         if ($explicit) {
-return $explicit;
+            return $explicit;
         }
         if (!$sequential) {
-return null;
+            return null;
         }
         $sequence = $this->db->createQuery()->select('required.id, required.title')
             ->from('#__jlms_lessons AS target')->innerJoin('#__jlms_modules AS targetModule ON targetModule.id = target.module_id AND targetModule.course_version_id = target.course_version_id')
@@ -466,7 +466,7 @@ return null;
         $this->assertLessonAvailable($lesson, $enrollment);
         $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         if ($lesson->kind !== 'quiz') {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         return [$actor, $enrollment, $lesson];
     }
@@ -484,7 +484,7 @@ throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         $this->assertLessonAvailable($lesson, $enrollment);
         $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         if ($lesson->kind !== 'video') {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $courseId = (int) $course->id;
         $q = $this->db->createQuery()->select('l.source_json')->from('#__jlms_lessons AS l')
@@ -500,12 +500,12 @@ throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
     public function audioLessonContext(User $identity, string $language, int $enrollmentId, int $lessonId): array
     {
         $actor = $this->freshActor($identity);
-[$course, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
+        [$course, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
         $lesson = $this->lesson((int) $version->id, $lessonId);
         $this->assertLessonAvailable($lesson, $enrollment);
         $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
         if ($lesson->kind !== 'audio') {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+            throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         return ['course_id' => (int) $course->id, 'version_id' => (int) $version->id];
     }
@@ -557,7 +557,7 @@ throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                         'required_title' => (string) $pendingRequired[array_key_last($pendingRequired)]->title];
                 }
                 if ((int) $entry->required === 1 && $entry->state !== 'completed') {
-$pendingRequired[] = $entry;
+                    $pendingRequired[] = $entry;
                 }
             }
         }
@@ -577,8 +577,8 @@ $pendingRequired[] = $entry;
         $selectedScheduleState = 'available';
         foreach ($outline as $entry) {
             if ((int) $entry->id === $lessonId) {
-$selectedScheduleState = $entry->schedule_state;
-break;
+                $selectedScheduleState = $entry->schedule_state;
+                break;
             }
         }
         $scheduleBlocked = $selectedScheduleState !== 'available';
@@ -588,7 +588,7 @@ break;
         $customFields = [];
         foreach (($fieldSnapshot['fields'] ?? []) as $name => $field) {
             if (!is_array($field) || !in_array((int) ($field['access'] ?? 0), $viewLevels, true)) {
-continue;
+                continue;
             }
             $customFields[] = ['name' => (string) $name, 'label' => (string) ($field['label'] ?? $name),
                 'values' => array_values(array_filter($field['values'] ?? [], static fn($value): bool => is_string($value) || is_numeric($value)))];
@@ -612,7 +612,7 @@ continue;
                 ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':lesson', (int) $lesson->id, ParameterType::INTEGER);
             $audio = $this->db->setQuery($audioQuery, 0, 2)->loadObjectList();
             if (count($audio) >= 1) {
-$lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->title, 'mime' => $audio[0]->mime_type];
+                $lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->title, 'mime' => $audio[0]->mime_type];
             }
         }
         $audioTranscript = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
@@ -644,13 +644,13 @@ $lesson->audio_attachment = ['id' => (int) $audio[0]->id, 'title' => $audio[0]->
     public function resumeTarget(User $identity, string $uiLanguage, int $enrollmentId): array
     {
         $actor = $this->freshActor($identity);
-$owner = (int) $actor->id;
+        $owner = (int) $actor->id;
         $q = $this->db->createQuery()->select('c.language')->from('#__jlms_enrollments AS e')
             ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->where('e.id = :enrollment')->where('e.user_id = :owner')
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)->bind(':owner', $owner, ParameterType::INTEGER);
         $language = $this->db->setQuery($q)->loadResult();
         if ($language === null) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $language = $language === '*' ? $uiLanguage : (string) $language;
         if (!isset(LearningLanguages::available($actor, $uiLanguage)[$language])) {
@@ -664,7 +664,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 $this->assertLessonAvailable($last, $enrollment);
             } catch (\RuntimeException $error) {
                 if (!in_array($error->getMessage(), ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LESSON_NOT_YET_AVAILABLE', 'COM_JLMS_LESSON_CLOSED'], true)) {
-throw $error;
+                    throw $error;
                 }
                 $lessonId = 0;
             }
@@ -708,7 +708,7 @@ throw $error;
             $this->assertLessonAvailable($lesson, $enrollment);
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
             if (!in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule !== 'manual') {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+                throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
             $this->ledger($actor, 'lesson.complete', $key, ['enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId], $enrollmentId);
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
@@ -805,7 +805,7 @@ throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
     public function saveAudioResume(User $identity, string $language, int $enrollmentId, int $lessonId, int $positionMs): int
     {
         if ($positionMs < 0 || $positionMs > 28800000) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $actor = $this->freshActor($identity);
         return $this->transaction(function () use ($actor, $language, $enrollmentId, $lessonId, $positionMs): int {
@@ -814,7 +814,7 @@ throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             $this->assertLessonAvailable($lesson, $enrollment);
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
             if ($lesson->kind !== 'audio') {
-throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
+                throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
             $q = $this->db->createQuery()->select('*')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')

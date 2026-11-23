@@ -13,7 +13,7 @@ use Joomla\CMS\HTML\HTMLHelper;
    <p id="jlms-mail-consent-state"><?= Text::_('COM_JLMS_MAIL_CONSENT_ACTIVE') ?></p>
    <form method="post" action="<?= Route::_('index.php?option=com_jlms&task=mailconsent.revoke', false) ?>">
     <button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_MAIL_CONSENT_REVOKE') ?></button>
-    <?= HTMLHelper::_('form.token') ?>
+        <?= HTMLHelper::_('form.token') ?>
    </form>
   <?php elseif ($this->announcementConsent === 'pending') : ?>
    <p id="jlms-mail-consent-state"><?= Text::_('COM_JLMS_MAIL_CONSENT_PENDING') ?></p>
@@ -21,7 +21,7 @@ use Joomla\CMS\HTML\HTMLHelper;
    <form method="post" action="<?= Route::_('index.php?option=com_jlms&task=mailconsent.request', false) ?>">
     <label><input type="checkbox" name="consent" value="1" required> <?= Text::_('COM_JLMS_MAIL_CONSENT_CHECKBOX') ?></label>
     <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MAIL_CONSENT_REQUEST') ?></button>
-    <?= HTMLHelper::_('form.token') ?>
+      <?= HTMLHelper::_('form.token') ?>
    </form>
   <?php endif; ?>
  </section>

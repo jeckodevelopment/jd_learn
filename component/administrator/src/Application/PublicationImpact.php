@@ -18,7 +18,7 @@ final class PublicationImpact
         $query = $this->db->createQuery()->setQuery($sql)->bind(':version', $version, ParameterType::INTEGER);
         $rows = $this->db->setQuery($query, 0, $limit + 1)->loadAssocList();
         if (count($rows) > $limit) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+            throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
         return $rows;
     }
@@ -32,10 +32,10 @@ throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
     {
         if (is_array($value)) {
             if (!array_is_list($value)) {
-ksort($value);
+                ksort($value);
             }
             foreach ($value as &$child) {
-$child = self::canonical($child);
+                $child = self::canonical($child);
 
             } unset($child);
         }
@@ -46,10 +46,10 @@ $child = self::canonical($child);
     {
         $modules = $this->rows('SELECT id,logical_key,title,ordering,SHA2(params_json,256) AS settings FROM #__jlms_modules WHERE course_version_id=:version ORDER BY ordering,id', $version, 1000);
         $moduleKeys = [];
-$result = ['modules' => [], 'lessons' => [], 'quizzes' => [], 'materials' => []];
+        $result = ['modules' => [], 'lessons' => [], 'quizzes' => [], 'materials' => []];
         foreach ($modules as $row) {
             $moduleKeys[$row['id']] = $row['logical_key'];
-unset($row['id']);
+            unset($row['id']);
             $result['modules'][$row['logical_key']] = $row;
         }
         // Hash large bodies in SQL: do not buffer thousands of 1 MiB lesson bodies in PHP.
@@ -57,35 +57,35 @@ unset($row['id']);
         $lessonKeys = [];
         foreach ($lessons as $row) {
             $lessonKeys[$row['id']] = $row['logical_key'];
-$row['module_id'] = $moduleKeys[$row['module_id']] ?? throw new \DomainException('COM_JLMS_INVALID_INPUT');
+            $row['module_id'] = $moduleKeys[$row['module_id']] ?? throw new \DomainException('COM_JLMS_INVALID_INPUT');
             unset($row['id']);
-$result['lessons'][$row['logical_key']] = $row;
+            $result['lessons'][$row['logical_key']] = $row;
         }
         $quizzes = $this->rows('SELECT id,lesson_id,pass_basis_points,max_attempts,time_limit_seconds,feedback_policy,selection_json FROM #__jlms_quizzes WHERE course_version_id=:version ORDER BY id', $version, 5000);
         $questionHashes = [];
         foreach (array_chunk(array_column($quizzes, 'id'), 32) as $batch) {
             $query = $this->db->createQuery()->select('quiz_id,question_revision_id,ordering,points')->from('#__jlms_quiz_questions')->order('quiz_id,ordering,question_revision_id');
             $values = array_map('intval', $batch);
-$names = [];
+            $names = [];
             foreach (array_keys($values) as $index) {
-$name = ':quiz' . $index;
-$names[] = $name;
-$query->bind($name, $values[$index], ParameterType::INTEGER);
+                $name = ':quiz' . $index;
+                $names[] = $name;
+                $query->bind($name, $values[$index], ParameterType::INTEGER);
             }
             $query->where('quiz_id IN (' . implode(',', $names) . ')');
             $questionRows = [];
             $rows = $this->db->setQuery($query, 0, 6401)->loadAssocList();
             if (count($rows) > 6400) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+                throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
             }
             foreach ($rows as $question) {
-$id = $question['quiz_id'];
-unset($question['quiz_id']);
-$questionRows[$id][] = $question;
+                $id = $question['quiz_id'];
+                unset($question['quiz_id']);
+                $questionRows[$id][] = $question;
             }
             foreach ($questionRows as $id => $questions) {
                 if (count($questions) > 200) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+                    throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
                 }
                 $questionHashes[$id] = self::hash($questions);
             }
@@ -104,12 +104,12 @@ throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         foreach ($attachments as $row) {
             $scope = $row['lesson_id'] === null ? 'course' : ($lessonKeys[$row['lesson_id']] ?? throw new \DomainException('COM_JLMS_INVALID_INPUT'));
             $base = $scope . ':' . $row['asset_id'];
-$occurrences[$base] = ($occurrences[$base] ?? 0) + 1;
+            $occurrences[$base] = ($occurrences[$base] ?? 0) + 1;
             unset($row['lesson_id']);
-$result['materials'][$base . ':' . $occurrences[$base]] = $row;
+            $result['materials'][$base . ':' . $occurrences[$base]] = $row;
         }
         foreach ($result as &$items) {
-ksort($items);
+            ksort($items);
 
         } unset($items);
         return $result;
@@ -121,18 +121,18 @@ ksort($items);
         foreach ($after as $key => $item) {
             $kind = !isset($before[$key]) ? 'added' : (self::hash($item) !== self::hash($before[$key]) ? 'changed' : '');
             if ($kind !== '') {
-$diff[$kind]++;
-if (count($diff['details']) < 100) {
-$diff['details'][] = ['kind' => $kind, 'title' => $item['title']];
-}
+                $diff[$kind]++;
+                if (count($diff['details']) < 100) {
+                    $diff['details'][] = ['kind' => $kind, 'title' => $item['title']];
+                }
             }
         }
         foreach ($before as $key => $item) {
             if (!isset($after[$key])) {
-$diff['removed']++;
-if (count($diff['details']) < 100) {
-$diff['details'][] = ['kind' => 'removed', 'title' => $item['title']];
-}
+                $diff['removed']++;
+                if (count($diff['details']) < 100) {
+                    $diff['details'][] = ['kind' => 'removed', 'title' => $item['title']];
+                }
             }
         }
         return $diff;
@@ -164,7 +164,7 @@ $diff['details'][] = ['kind' => 'removed', 'title' => $item['title']];
         $oldRules = self::canonical(json_decode((string) $versions[$sourceVersionId]->rules_json, true, 32, JSON_THROW_ON_ERROR));
         $newRules = self::canonical(json_decode((string) $versions[$targetVersionId]->rules_json, true, 32, JSON_THROW_ON_ERROR));
         if ($oldRules !== $newRules) {
-return true;
+            return true;
         }
 
         $before = $this->structure($sourceVersionId);
@@ -172,11 +172,11 @@ return true;
         // Module titles and additions/removals matter; cosmetic module ordering
         // and presentation-only changes do not trigger learner notifications.
         foreach ($before['modules'] as &$module) {
-unset($module['ordering'], $module['settings']);
+            unset($module['ordering'], $module['settings']);
         }
         unset($module);
         foreach ($after['modules'] as &$module) {
-unset($module['ordering'], $module['settings']);
+            unset($module['ordering'], $module['settings']);
         }
         unset($module);
         return $before !== $after;
@@ -185,11 +185,11 @@ unset($module['ordering'], $module['settings']);
     public function build(object $course, object $source, object $draft, int $transition, int $actor): array
     {
         $before = $this->structure((int) $source->id);
-$after = $this->structure((int) $draft->id);
+        $after = $this->structure((int) $draft->id);
         $diff = [];
-foreach ($before as $kind => $items) {
-$diff[$kind] = self::changes($items, $after[$kind]);
-}
+        foreach ($before as $kind => $items) {
+            $diff[$kind] = self::changes($items, $after[$kind]);
+        }
         $rulesBefore = self::canonical(json_decode($source->rules_json, true, 32, JSON_THROW_ON_ERROR));
         $rulesAfter = self::canonical(json_decode($draft->rules_json, true, 32, JSON_THROW_ON_ERROR));
         $oldThreshold = $rulesBefore['video_threshold_basis_points'] ?? 9000;
@@ -201,10 +201,10 @@ $diff[$kind] = self::changes($items, $after[$kind]);
             ->innerJoin('#__jlms_course_versions AS v ON v.id=e.course_version_id AND v.course_id=e.course_id')
             ->where('e.course_id=:course')->group('v.id,v.version_no')->order('v.version_no');
         $id = (int) $course->id;
-$query->bind(':course', $id, ParameterType::INTEGER);
+        $query->bind(':course', $id, ParameterType::INTEGER);
         $enrollments = $this->db->setQuery($query, 0, 101)->loadAssocList();
         if (count($enrollments) > 100) {
-throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
+            throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
         // Enrollment counts are informational at preview time; admissions do not invalidate a programme review.
         $fingerprint = self::hash([$id,(int)$course->revision,(int)$source->id,(int)$source->revision,(int)$draft->id,(int)$draft->revision,$transition,$actor,$before,$after,$rulesBefore,$rulesAfter,$draft->fields_snapshot_json]);

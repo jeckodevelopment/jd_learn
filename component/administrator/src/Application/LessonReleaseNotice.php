@@ -84,7 +84,7 @@ final class LessonReleaseNotice
                 $language = is_array($params) && is_string($params['language'] ?? null) ? $params['language'] : '';
                 $language = $language ?: (string) $row->course_language;
                 if (!preg_match('/^[a-z]{2}-[A-Z]{2}$/D', $language)) {
-$language = 'en-GB';
+                    $language = 'en-GB';
                 }
                 $name = trim((string) $row->learner_name);
                 $queue->enqueue((int) $row->course_id,

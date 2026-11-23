@@ -28,15 +28,15 @@ final class QuizController extends BaseController
             $input = $read ? $this->input->get : $this->input->post;
             $integer = static function(string $key)use($input):int{
                 try {
-return \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input->get($key, null, 'RAW'));
+                    return \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input->get($key, null, 'RAW'));
                 } catch (\InvalidArgumentException $error) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+                    throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             };
             $service = $this->app->bootComponent('com_jlms')->getQuizAttemptService();
             $args = [$this->app->getIdentity(),$this->app->getLanguage()->getTag(),$integer('enrollment_id'),$integer('lesson_id')];
             $answers = $input->get('answers_json', '{}', 'RAW');
-if (!is_string($answers))throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            if (!is_string($answers))throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             $data = match ($operation) {
                 'start'=>$service->start(...[...$args,$input->getString('mutation_id', '')]),
                 'state'=>$service->state(...[...$args,$input->getInt('attempt_id', 0),$input->getInt('compact', 0) === 1]),
@@ -45,14 +45,14 @@ if (!is_string($answers))throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 4
             echo new JsonResponse($data, null, false, true);
         } catch (\Throwable $error) {
             $code = (int)$error->getCode();
-$key = $error->getMessage();
+            $key = $error->getMessage();
             if (!in_array($code, [400,401,403,404,405,409,413,422,429], true) || (!preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) && $key !== 'JINVALID_TOKEN')) {
                 Log::add('Quiz operation failed; correlation=' . $request, Log::ERROR, 'com_jlms');
-$key = 'COM_JLMS_SAVE_FAILED';
-$code = 500;
+                $key = 'COM_JLMS_SAVE_FAILED';
+                $code = 500;
             }
             $this->app->setHeader('status', (string)$code, true);
-http_response_code($code);
+            http_response_code($code);
             echo new JsonResponse(['code' => $key,'request_id' => $request], Text::_($key), true, true);
         }
         $this->app->close();

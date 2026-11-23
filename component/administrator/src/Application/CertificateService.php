@@ -31,7 +31,7 @@ final class CertificateService
         foreach ($this->db->setQuery($query)->loadObjectList() as $row) {
             $snapshot = json_decode((string) $row->identity_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
             if (!is_array($snapshot)) {
-continue;
+                continue;
             }
             $items[] = ['enrollment_id' => (int) $row->enrollment_id,
                 'title' => (string) ($snapshot['course_title'] ?? ''), 'serial' => (string) $row->serial,
@@ -85,7 +85,7 @@ continue;
             ->order('e.completed_at DESC, e.id DESC');
         $records = $this->db->setQuery($query, 0, $limit)->loadObjectList();
         if (!$records) {
-return [];
+            return [];
         }
         $activeTemplate = $this->db->createQuery()->select('id')->from('#__jlms_certificate_templates')
             ->where('state = 1')->order('id ASC');
@@ -258,11 +258,11 @@ return [];
     {
         $userId = $this->assertCurrentStudent($identity);
         if ($enrollmentId < 1) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $record = $this->document($userId, $enrollmentId);
         if (!$record) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         if ($record->status === 'pending_render') {
             $this->renderPending($record, $userId, $enrollmentId);
@@ -279,7 +279,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             ->bind(':asset', $assetId, ParameterType::INTEGER)->bind(':ready', $readyStatus)->bind(':mime', $pdfMime);
         $asset = $this->db->setQuery($query)->loadObject();
         if (!$asset) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $handle = $this->storage->open($asset);
         return ['handle' => $handle, 'size' => (int) $asset->byte_size, 'mime' => 'application/pdf',
@@ -302,7 +302,7 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         $identity = json_decode((string) $record->identity_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
         $template = json_decode((string) $record->template_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($identity) || !is_array($template)) {
-throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
         }
         $identity['serial'] = (string) $record->serial;
         try {
@@ -330,7 +330,7 @@ throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
         $committed = false;
         try {
             $this->db->transactionStart();
-$started = true;
+            $started = true;
             $documentId = (int) $record->document_id;
             $locked = $this->db->createQuery()->select('d.id, d.status, c.id AS certificate_id')
                 ->from('#__jlms_certificate_documents AS d')->innerJoin('#__jlms_certificates AS c ON c.id = d.certificate_id AND c.current_document_id = d.id')
@@ -343,11 +343,11 @@ $started = true;
             $locked->setQuery((string) $locked . ' FOR UPDATE');
             $current = $this->db->setQuery($locked)->loadObject();
             if (!$current) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+                throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
             if ($current->status !== 'pending_render') {
                 $this->db->transactionCommit();
-$started = false;
+                $started = false;
                 $this->storage->remove((object) $staged);
                 $committed = true;
                 return;
@@ -360,14 +360,14 @@ $started = false;
                 'revision' => (int) $record->revision + 1];
             $this->db->updateObject('#__jlms_certificate_documents', $update, 'id');
             $this->db->transactionCommit();
-$started = false;
-$committed = true;
+            $started = false;
+            $committed = true;
         } catch (\Throwable $error) {
             if ($started) {
-$this->db->transactionRollback();
+                $this->db->transactionRollback();
             }
             if (!$committed) {
-$this->storage->remove((object) $staged);
+                $this->storage->remove((object) $staged);
             }
             $this->logRenderFailure('database', $error);
             throw $error;
@@ -386,13 +386,13 @@ $this->storage->remove((object) $staged);
     private function logoFile(string $value): ?string
     {
         if ($value === '') {
-return null;
+            return null;
         }
         try {
-$path = CourseArtwork::path($value);
-CourseArtwork::validateLocal($path);
+            $path = CourseArtwork::path($value);
+            CourseArtwork::validateLocal($path);
         } catch (\Throwable $error) {
-throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         }
         // Validated local raster image; the PDF renderer converts non-JPEG formats.
         if (!preg_match('/\.(?:jpe?g|png|gif|webp|avif)\z/iD', $path)) {
@@ -409,7 +409,7 @@ throw new \RuntimeException('COM_JLMS_CERTIFICATE_RENDER_FAILED', 503);
         $search = function_exists('mb_substr') ? mb_substr($search, 0, 120) : substr($search, 0, 120);
         $status = (string) ($filters['status'] ?? '');
         if (!in_array($status, ['', 'pending_render', 'ready', 'revoked'], true)) {
-$status = '';
+            $status = '';
         }
         $limit = max(1, min(100, (int) ($filters['limit'] ?? 50)));
         $offset = max(0, min(50000, (int) ($filters['offset'] ?? 0)));
@@ -426,19 +426,19 @@ $status = '';
         $order = (string) ($filters['ordering'] ?? 'd.issued_at');
         $direction = strtoupper((string) ($filters['direction'] ?? 'DESC'));
         if (!isset($allowedOrders[$order])) {
-$order = 'd.issued_at';
+            $order = 'd.issued_at';
         }
         if (!in_array($direction, ['ASC', 'DESC'], true)) {
-$direction = 'DESC';
+            $direction = 'DESC';
         }
         $where = $this->db->createQuery()->from('#__jlms_certificates AS c')
             ->innerJoin('#__jlms_enrollments AS e ON e.id = c.enrollment_id')
             ->innerJoin('#__jlms_certificate_documents AS d ON d.id = c.current_document_id AND d.certificate_id = c.id')
             ->innerJoin('#__jlms_course_versions AS v ON v.id = c.course_version_id');
         if ($status === 'revoked') {
-$where->where('d.revoked_at IS NOT NULL');
+            $where->where('d.revoked_at IS NOT NULL');
         } elseif ($status !== '') {
-$where->where('d.revoked_at IS NULL')->where('d.status = :status')->bind(':status', $status);
+            $where->where('d.revoked_at IS NULL')->where('d.status = :status')->bind(':status', $status);
         }
         if ($search !== '') {
             $needle = '%' . $search . '%';
@@ -471,16 +471,16 @@ $where->where('d.revoked_at IS NULL')->where('d.status = :status')->bind(':statu
     {
         $this->assertCertificateAdministrator($identity);
         if ($certificateId < 1) {
-throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $record = $this->adminDocument($certificateId);
         if (!$record) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $identitySnapshot = json_decode((string) $record->identity_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
         $templateSnapshot = json_decode((string) $record->template_snapshot_json, true, 32, JSON_THROW_ON_ERROR);
         if (!is_array($identitySnapshot) || !is_array($templateSnapshot)) {
-throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
         }
         $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity->id, 'admin_view');
         $certificateId = (int) $record->certificate_id;
@@ -503,7 +503,7 @@ throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
         $this->assertCertificateAdministrator($identity);
         $record = $this->adminDocument($certificateId);
         if (!$record) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         if ($record->status === 'pending_render' && !$record->revoked_at) {
             $this->renderPending($record, (int) $record->user_id, (int) $record->enrollment_id);
@@ -520,7 +520,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             ->bind(':asset', $assetId, ParameterType::INTEGER)->bind(':ready', $readyStatus)->bind(':mime', $pdfMime);
         $asset = $this->db->setQuery($query)->loadObject();
         if (!$asset) {
-throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
+            throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $handle = $this->storage->open($asset);
         $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity->id, 'admin_download');
@@ -542,7 +542,7 @@ throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $record = $this->adminDocument($certificateId);
         if (!$record) {
-throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         if ($record->revoked_at !== null || $record->status !== 'ready' || (int) $record->asset_id < 1) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
@@ -566,7 +566,7 @@ throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $committed = false;
         try {
             $this->db->transactionStart();
-$started = true;
+            $started = true;
             $lock = $this->db->createQuery()
                 ->select('c.current_document_id, d.id, d.revision, d.status, d.revoked_at, d.pdf_asset_id,
                     d.serial, d.identity_snapshot_json, d.template_snapshot_json')
@@ -607,14 +607,14 @@ $started = true;
                     'new_asset_id' => $newAssetId, 'revision' => $expectedRevision + 1,
                     'sha256' => (string) $staged['sha256']]);
             $this->db->transactionCommit();
-$started = false;
-$committed = true;
+            $started = false;
+            $committed = true;
         } catch (\Throwable $error) {
             if ($started) {
-$this->db->transactionRollback();
+                $this->db->transactionRollback();
             }
             if (!$committed) {
-$this->storage->remove((object) $staged);
+                $this->storage->remove((object) $staged);
             }
             throw $error;
         }
@@ -652,9 +652,9 @@ $this->storage->remove((object) $staged);
         $row = (object) ['certificate_id' => $certificateId, 'document_id' => $documentId, 'actor_user_id' => $actorId,
             'action' => $action, 'context_json' => json_encode($context, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE), 'created_at' => gmdate('Y-m-d H:i:s')];
         try {
-$this->db->insertObject('#__jlms_certificate_audit', $row, 'id');
+            $this->db->insertObject('#__jlms_certificate_audit', $row, 'id');
         } catch (\Throwable $error) {
-throw new \RuntimeException('COM_JLMS_CERTIFICATE_AUDIT_FAILED', 503, $error);
+            throw new \RuntimeException('COM_JLMS_CERTIFICATE_AUDIT_FAILED', 503, $error);
         }
     }
 

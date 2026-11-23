@@ -11,6 +11,6 @@ final class QuizModel extends FormModel
     public function getItem(): array
     {
         $app = Factory::getApplication();
-return $app->bootComponent('com_jlms')->getQuizAuthoringService()->editor($app->getIdentity(), $app->getInput()->getInt('id', 0), $app->getInput()->getInt('version_id', 0), $app->getInput()->getInt('lesson_id', 0));
+        return $app->bootComponent('com_jlms')->getQuizAuthoringService()->editor($app->getIdentity(), $app->getInput()->getInt('id', 0), $app->getInput()->getInt('version_id', 0), $app->getInput()->getInt('lesson_id', 0));
     }
 }
