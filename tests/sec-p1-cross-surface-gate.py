@@ -68,7 +68,7 @@ for path, fragment in [
     ("component/administrator/src/Application/CourseCommunicationService.php", "max(1, min(100, $limit))"),
     ("component/administrator/src/Infrastructure/MailQueue.php", "max(1, min(100, $limit))"),
 ]:
-    assert re.search(r"max\\(\\s*1\\s*,\\s*min\\(\\s*100\\s*,\\s*\\$limit\\s*\\)\\s*\\)",
+    assert re.search(r"max\(\s*1\s*,\s*min\(\s*100\s*,\s*\$limit\s*\)\s*\)",
                      (ROOT / path).read_text(encoding="utf-8")), path
 
 cloudflare = (PLUGINS / "jlmsvideo/cloudflarestream/src/Extension/Cloudflarestream.php").read_text(encoding="utf-8")
