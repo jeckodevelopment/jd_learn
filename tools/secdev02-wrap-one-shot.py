@@ -42,7 +42,16 @@ def main() -> int:
     for name in files:
         path = ROOT / name
         data = path.read_bytes()
-        subprocess.run(["php", str(WRAPPER), name], cwd=ROOT, check=True, timeout=25)
+        wrapped = subprocess.run(
+            ["php", str(WRAPPER), name], cwd=ROOT,
+            capture_output=True, check=False, timeout=25,
+        )
+        if wrapped.returncode == 3:
+            # Strict token preservation is mandatory. Skip unsupported PHP
+            # syntax rather than weakening that invariant or blocking the batch.
+            continue
+        if wrapped.returncode != 0:
+            raise RuntimeError(f"Formatter process failed: {name}")
         if path.read_bytes() != data:
             originals[name] = data
             syntax = subprocess.run(
