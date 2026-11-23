@@ -54,6 +54,9 @@ def check() -> None:
             "SECDEV-03: pathway course association values must be bound SQL parameters"
         )
     assert "->values(implode(', ', [$pathwayId, $courseId, $ordering]))" not in path_model
+    for payload in ("1 OR 1=1 --", "1; DROP TABLE courses; --", "1 UNION SELECT 1"):
+        assert payload in pathways, "SECDEV-03: missing negative course association ID fixture"
+
     assert "!is_string($imageInput) || !is_string($altInput)" in path_model, (
         "SECDEV-03: pathway artwork must reject forged input types"
     )
