@@ -86,6 +86,7 @@ jobs:
           python3 tests/secdev02-core-native-contracts.py
           python3 tests/secdev02-joomla-api-gate.py --self-test
           python3 tests/secdev02-joomla-api-gate.py
+          php tests/secdev02-joomla-native-runtime.php --self-test
           python3 tests/secdev02-psr4-hygiene.py --self-test
           python3 tests/secdev02-psr4-hygiene.py --base-ref origin/main
           python3 tests/sec-p2-dependency-gate.py
@@ -239,6 +240,8 @@ jobs:
           PACKAGE_VERSION="$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev"
           php tests/install-package.php .runtime/joomla "$(pwd)/dist/pkg_jlms-${PACKAGE_VERSION}.zip"
           php tests/secdev02-compat6-disabled.php .runtime/joomla
+      - name: SECDEV-02 verify native Joomla 6.2.0 API with compat6 disabled
+        run: php tests/secdev02-joomla-native-runtime.php .runtime/joomla
       - name: Native Joomla MVC, ACL, category, draft and provider smoke tests
         run: php tests/joomla-smoke.php .runtime/joomla retained
       - name: Teaching draft, modules and lessons integration tests
