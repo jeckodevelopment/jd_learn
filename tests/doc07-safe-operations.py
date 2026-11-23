@@ -72,7 +72,7 @@ assert "function mailTemplates(array $required, array $installed): array" in dia
 assert "string $documentRoot = ''" in diagnostics_code
 assert "static function (string $label, bool $enabled" in diagnostics_code
 assert "$params['material_clamd_socket']" in diagnostics_code
-assert "array_push($this->configurationDiagnostics" in view
+assert re.search(r"array_push\s*\(\s*\$this->configurationDiagnostics\b", view) is not None
 assert "is_string($_SERVER['DOCUMENT_ROOT'] ?? null)" in view
 assert "->select($db->quoteName(['template_id', 'language']))" in view
 for forbidden in ("->insert(", "->update(", "->delete(", "stream_socket_client(", "sendMail("):
