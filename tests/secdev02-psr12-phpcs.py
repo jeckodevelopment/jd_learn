@@ -38,7 +38,7 @@ def signatures(phpcs: Path, root: Path, paths: list[str]) -> Counter[tuple[str, 
         files = report["files"]
     except (json.JSONDecodeError, KeyError, TypeError) as exc:
         raise RuntimeError("PHPCS JSON report missing or invalid") from exc
-    if process.returncode not in (0, 1, 2):
+    if process.returncode not in (0, 1, 2, 3):
         raise RuntimeError(f"PHPCS invocation failed with exit {process.returncode}")
     findings: Counter[tuple[str, str, str, str]] = Counter()
     for filename, details in files.items():
