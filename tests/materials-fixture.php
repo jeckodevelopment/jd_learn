@@ -70,7 +70,8 @@ $factory = $component->getMVCFactory();
 $mode = $argv[2] ?? '';
 if ($mode === 'configure') {
     $changes = json_decode($argv[3] ?? '{}', true, 8, JSON_THROW_ON_ERROR);
-    $allowed = ['material_storage_root', 'material_max_mib', 'material_scan_required', 'material_clamd_socket', 'material_php_delivery', 'material_orphan_retention_hours'];
+    $allowed = ['material_storage_root', 'material_max_mib', 'material_scan_required',
+         'material_clamd_socket', 'material_php_delivery', 'material_orphan_retention_hours'];
     if (array_diff(array_keys($changes), $allowed)) {
         throw new \RuntimeException('Unexpected fixture configuration');
     }
@@ -183,7 +184,8 @@ if ($mode === 'inspect') {
     $rows = $db->setQuery(('SELECT a.id, a.title, a.lesson_id, a.preview, a.asset_id, '
         . 'f.status, f.storage_key, f.sha256, f.scan_json FROM '
         . '#__jlms_attachments AS a JOIN #__jlms_assets AS f ON '
-        . 'f.id=a.asset_id WHERE a.course_version_id=') . (int)$fixture['version_id'] . ' ORDER BY a.id')->loadAssocList();
+        . 'f.id=a.asset_id WHERE a.course_version_id=') . (int)$fixture['version_id'] . ' ORDER BY a.id')
+            ->loadAssocList();
     $version = $db->setQuery('SELECT status, revision, structure_hash FROM #__jlms_course_versions WHERE id='
         . (int)$fixture['version_id'])->loadAssoc();
     $foreign = $db->setQuery('SELECT id FROM #__jlms_attachments WHERE course_version_id='
