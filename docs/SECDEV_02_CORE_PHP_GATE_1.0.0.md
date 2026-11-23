@@ -150,7 +150,7 @@ L'intervento è mirato ai tre rilievi del gruppo `PSR12.Traits.UseDeclaration` (
 
 SECDEV-02 rimane aperto, come i criteri CORE non ancora verificabili. La verifica su installazioni Joomla reali rimane un collaudo separato.
 
-## Mass remediaton di stringhe PHP lunghe (dopo PR #995)
+## Remediation massiva delle stringhe PHP lunghe (dopo PR #995)
 
 La pipeline di formattazione monouso [run 45237660792](https://github.com/jeckodevelopment/jd_learn/actions/runs/45237660792) ha scandito tutti i file PHP versionati con righe oltre 120 caratteri e cercato stringhe costanti `T_CONSTANT_ENCAPSED_STRING` divisibili in più segmenti nei soli punti corrispondenti a spazi ASCII. Ogni riscrittura usa la concatenazione di stringhe tra parentesi, con verifica della **ricostruzione byte-per-byte del contenuto letterale** originario. Stringhe interpolate, multilinea, senza punti sicuri di divisione e codici fuori dai letterali non sono stati modificati.
 
