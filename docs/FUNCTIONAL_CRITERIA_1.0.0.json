@@ -3520,7 +3520,8 @@
         "status": "implemented",
         "evidence": [
           "component/media/css/site.css",
-          "docs/FRONTEND_CSS.md"
+          "docs/FRONTEND_CSS.md",
+          "tests/secdev02-core-native-contracts.py"
         ]
       },
       {
@@ -3548,7 +3549,8 @@
         "status": "implemented",
         "evidence": [
           "component/administrator/language/it-IT/com_jlms.ini",
-          "component/site/language/en-GB/com_jlms.ini"
+          "component/site/language/en-GB/com_jlms.ini",
+          "tests/secdev02-core-native-contracts.py"
         ]
       },
       {
@@ -3632,7 +3634,8 @@
         "status": "implemented",
         "evidence": [
           "component/administrator/src/Table/CourseTable.php",
-          "component/administrator/src/Infrastructure/EditorialInstaller.php"
+          "component/administrator/src/Infrastructure/EditorialInstaller.php",
+          "tests/secdev02-core-native-contracts.py"
         ]
       },
       {
