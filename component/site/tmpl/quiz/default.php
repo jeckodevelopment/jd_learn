@@ -91,8 +91,8 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
         ?><p><?= Text::_('COM_JLMS_QUIZ_UNAVAILABLE') ?></p><?php
  endif; ?>
  <?php if ($i['active_attempt_id'] && (!$attempt || $i['active_attempt_id'] !== $attempt['id'])) :
-        ?><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$i['enrollment_id'] . 
-    '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' . 
+        ?><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$i['enrollment_id'] .
+    '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' .
     (int)$i['active_attempt_id']) ?>"><?= Text::_('COM_JLMS_QUIZ_RESUME') ?></a><?php
  endif; ?>
  </div></form>
@@ -101,13 +101,13 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
         ?><p><?= Text::_('COM_JLMS_QUIZ_BEST') ?>: <?= (int)$i['best']['score_points'] ?>/<?= (int)$i['best']['max_points'] ?></p><?php
  endif; ?>
  <ol><?php foreach ($i['history'] as $entry) :
-        ?><li><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' . 
-    (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' . 
+        ?><li><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' .
+    (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' .
     (int)$entry['id']) ?>"><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?> <?= (int)$entry['attempt_no'] ?></a><?php if ($entry['status'] === 'invalidated') :
     ?> · <?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?><?php
         endif; ?></li><?php
      endforeach; ?></ol></section>
  <a id="jlms-quiz-back"
- href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] . 
+ href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] .
     '&lesson_id=' . (int)$i['lesson_id']) ?>"><?= Text::_('COM_JLMS_QUIZ_CLASSROOM') ?></a>
 </section>
