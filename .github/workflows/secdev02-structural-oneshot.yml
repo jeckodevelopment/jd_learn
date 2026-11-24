@@ -42,6 +42,15 @@ jobs:
               base=pathlib.Path(td)
               old=audit.signatures(phpcs,base,audit.baseline(root,'HEAD',base))
           introduced=audit.diff(now,old)
+          # A later guarded formatter can interact with an earlier accepted
+          # change. Reject complete regressing files, never hide findings.
+          rejected={filename for filename,_rule in introduced}
+          for filename in sorted(rejected):
+              subprocess.run(['git','restore','--source=HEAD','--',filename],check=True)
+              print(f'RESTORED regression source {filename}',flush=True)
+          if rejected:
+              now=audit.signatures(phpcs,root,audit.tracked_php(root))
+              introduced=audit.diff(now,old)
           modified=subprocess.check_output(['git','diff','--name-only','--','*.php'],text=True).splitlines()
           for file in modified: subprocess.run(['php','-l',file],check=True,stdout=subprocess.DEVNULL)
           start,end=sum(old.values()),sum(now.values())
