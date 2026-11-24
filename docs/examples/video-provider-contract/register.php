@@ -1,12 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Minimal event registration demonstration. A real Joomla plugin wraps this
  * in a CMSPlugin implementing SubscriberInterface and its service provider.
  * See plugins/jlmsvideo/youtube/src/Extension/Youtube.php.
  */
+
+declare(strict_types=1);
 
 use Jlms\Contracts\Video\VideoProviderRegistryInterface;
 use Jlms\Contracts\Video\ProviderDescriptor;
