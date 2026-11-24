@@ -493,10 +493,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 } else {
                     $params['catalog_position'] = (int) $position;
                 }
-                $data['params_json'] = json_encode(
-                    $params,
-                    JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-                );
+                $data['params_json'] = json_encode($params, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 unset($data['catalog_position']);
             }
             if ($copySource !== null) {
