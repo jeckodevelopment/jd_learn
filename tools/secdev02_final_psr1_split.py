@@ -87,7 +87,7 @@ def main():
             # generic tokenizer reports it at global depth before the body.
             manifest["imports"] = [
                 (a, b) for a, b in manifest["imports"]
-                if not re.match(rb"\\s*use\\s*\\(", entry[a:b])
+                if not entry[a:b].lstrip().startswith((b"use (", b"use("))
             ]
             function_pair = rewrite(entry, manifest, function_name)
             if function_pair:
@@ -95,11 +95,8 @@ def main():
                 # Avoid a new end-of-file-newline warning from removed bodies.
                 entry = entry.rstrip(b"\r\n") + b"\n"
                 new_helpers[function_name] = helper_content
-            # Preserve the mandated single blank line after strict_types.
-            entry = re.sub(
-                rb"(declare\\s*\\(\\s*strict_types\\s*=\\s*1\\s*\\)\\s*;)\\n{3,}",
-                rb"\\1\\n\\n", entry,
-            )
+            # Preserve the exact canonical spacing after strict types.
+            entry = entry.replace(b"declare(strict_types=1);\n\n\n", b"declare(strict_types=1);\n\n")
             if not new_helpers:
                 rejected += 1
                 continue
