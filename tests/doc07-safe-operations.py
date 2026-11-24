@@ -70,7 +70,7 @@ diagnostics_code = (ROOT / "component/administrator/src/Application/Configuratio
 assert "function operationalSettings(array $params): array" in diagnostics_code
 assert "function mailTemplates(array $required, array $installed): array" in diagnostics_code
 assert "string $documentRoot = ''" in diagnostics_code
-assert "static function (string $label, bool $enabled" in diagnostics_code
+assert re.search(r"static\s+function\s*\(\s*string\s+\$label\s*,\s*bool\s+\$enabled\b", diagnostics_code)
 assert "$params['material_clamd_socket']" in diagnostics_code
 assert re.search(r"array_push\s*\(\s*\$this->configurationDiagnostics\b", view) is not None
 assert "is_string($_SERVER['DOCUMENT_ROOT'] ?? null)" in view
