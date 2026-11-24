@@ -429,9 +429,14 @@ A full pinned PHPCS 4.0.4 PSR-12 audit measured **813 → 770**, net **-43** fin
 
 ### PR #1019 second structural batch: complete arrays and inline PHP (24 November 2026)
 
-The full unchanged pinned PSR12 4.0.4 audit against the main baseline measured **811 → 322 (−489)** findings over **119 PHP files**. Changes include semantic-preserving constant literals, operator statements, whitespace-only HTML attributes, PHP expressions embedded in Joomla views, and whole PHP arrays with PHPCBF normalization. Original source contracts, PHP lint, PHP significant token identity where applicable and zero introduced per-file/per-rule findings were enforced. No waived sniffs, no security relaxation. **SECDEV-02 remains Parziale** until the complete PSR12 debt and separate CORE/API criteria are cleared; manual Joomla acceptance remains distinct. Functional requirement coverage percentages remain unchanged.
+The full unchanged pinned PSR12 4.0.4 audit against the main baseline measured **811 → 331 (−480)** findings over **119 PHP files**. Changes include semantic-preserving constant literals, operator statements, whitespace-only HTML attributes, PHP expressions embedded in Joomla views, and whole PHP arrays with PHPCBF normalization. Original source contracts, PHP lint, PHP significant token identity where applicable and zero introduced per-file/per-rule findings were enforced. No waived sniffs, no security relaxation. **SECDEV-02 remains Parziale** until the complete PSR12 debt and separate CORE/API criteria are cleared; manual Joomla acceptance remains distinct. Functional requirement coverage percentages remain unchanged.
 
 ### Comportamenti da testare
 
 - PHP array keys/order and values, dynamic HTML attributes and Joomla templates, PHP echo outputs, course and lesson logic, certificates, ACL and emails.
 - Complete PHP/DB Joomla integration matrices, Chromium, SAST, PHPCS and generated installable extension package.
+
+
+### Final post-merge CI reconciliation — PR #1019
+
+After restoring the original protected course-completion notification call and dashboard shortcut markup, the final verification run [#45448336480](https://github.com/jeckodevelopment/jd_learn/actions/runs/45448336480) passed the lightweight source/SAST/PHPCS gates, Chromium, PHP 8.3/MySQL 8.4 and PHP 8.4/MariaDB 10.6. Its exhaustive pinned PHPCS 4.0.4 PSR-12 output is **historical 811 → final 331 (−480, 59.2%)**, **zero introduced per-file/per-rule findings**; 260 long lines and 71 other structural findings remain. The prior 811 → 322 report was an intermediate pre-reversion measurement and must **not** be interpreted as the final merged state. Functional coverage percentages remain unchanged; SECDEV-02 remains **Parziale** and manual Joomla acceptance remains separate.
