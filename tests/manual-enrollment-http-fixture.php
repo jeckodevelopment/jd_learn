@@ -48,7 +48,9 @@ if ($mode === 'snapshot') {
             $q->execute([$action === 'block_operator' ? 1 : 0,$id]);
             continue;
         }
-        $sql = str_starts_with($action, 'revoke') ? 'DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?' : 'INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)';
+        $sql = str_starts_with($action, 'revoke') ?
+            'DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?' :
+            'INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)';
         $q = $db->prepare($sql);
         $q->execute([$id,$group]);
     }
