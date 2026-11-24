@@ -109,7 +109,12 @@ final class CourseMessageTemplate
             throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
         }
 
-        $htmlbody = (string) InputFilter::getInstance([], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS, InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES)->clean($htmlbody, 'html');
+        $htmlbody = (string) InputFilter::getInstance(
+            [],
+            [],
+            InputFilter::ONLY_BLOCK_DEFINED_TAGS,
+            InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES
+        )->clean($htmlbody, 'html');
         // These legacy slots referred to a separate free-message editor. In
         // single-editor mode they would reference their own field and must not
         // silently render recursively or leak raw placeholders to recipients.
