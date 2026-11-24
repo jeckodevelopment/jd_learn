@@ -142,18 +142,22 @@ def main() -> int:
     accepted=rejected=removed=0
     paths=subprocess.check_output(["git","ls-files","-z","--","tests/*.php"],cwd=ROOT).split(b"\0")
     for raw in paths:
-        if not raw: continue
+        if not raw:
+            continue
         relative=raw.decode()
-        if not relative.startswith("tests/") or relative.count("/")!=1: continue
+        if not relative.startswith("tests/") or relative.count("/")!=1:
+            continue
         path=ROOT/relative
-        if not path.is_file(): continue
+        if not path.is_file():
+            continue
         original=path.read_bytes()
         before=phpcs_counts(args.phpcs,path)
         if before["PSR1.Files.SideEffects.FoundWithSymbols"]<1:
             continue
         helper_name=path.stem+".functions.php"
         helper_path=ROOT/"tests/helpers"/helper_name
-        if helper_path.exists(): continue
+        if helper_path.exists():
+            continue
         try:
             proposal=rewrite(original,inspect(path),helper_name)
         except (ValueError,TimeoutError):
