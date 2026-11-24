@@ -149,11 +149,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             if (!$target) {
                 continue;
             }
-            if (!isset($languages[$tag])
-                || $tag === $language
-                || $language === '*'
-                || $target === $id
-                || in_array($target, $targets, true)) {
+            if (!isset($languages[$tag]) || $tag === $language || $language === '*' || $target === $id || in_array($target, $targets, true)) {
                 throw new \DomainException('COM_JLMS_INVALID_ASSOCIATION');
             }
             $targets[$tag] = $target;
@@ -233,8 +229,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $source = $this->getItem($id);
         if (
             !$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
-
-                || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate($db, $actor, (int) $source->catid)
+            || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate($db, $actor, (int) $source->catid)
         ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
@@ -244,9 +239,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         }
         $title = trim($title);
         $category = new \Joomla\CMS\Table\Category($db);
-        if (!$category->load((int) $source->catid)
-            || $category->extension !== 'com_jlms.course'
-            || (int) $category->published === -2) {
+        if (!$category->load((int) $source->catid) || $category->extension !== 'com_jlms.course' || (int) $category->published === -2) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $asset = new \Joomla\CMS\Table\Asset($db);
