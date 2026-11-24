@@ -20,7 +20,13 @@ $p = $i['impact'];
     value="<?= (int)$i['lesson_id'] ?>">
  <input type="hidden" name="enrollment_id" value="<?= (int)$i['enrollment']
      ->id ?>"><input type="hidden" name="attempt_id" value="<?= (int)$i['attempt']->id ?>">
- <label for="jlms-quiz-extend-minutes"><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?></label><input id="jlms-quiz-extend-minutes" type="number" name="minutes" min="1" max="1440" step="1" value="<?= (int)$i['minutes'] ?>" required>
+ <label for="jlms-quiz-extend-minutes"><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?></label><input id="jlms-quiz-extend-minutes"
+     type="number"
+     name="minutes"
+     min="1"
+     max="1440"
+     step="1"
+     value="<?= (int)$i['minutes'] ?>" required>
  <button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?></button></form>
  <section id="jlms-quiz-extend-impact"><h3><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?></h3>
  <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?>: <?= $p['previous_deadline'] === null ? '—' : $this
@@ -36,10 +42,14 @@ $p = $i['impact'];
     method="post"
     class="form-validate"
     action="<?= Route::_('index.php?option=com_jlms') ?>">
-     <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="quizextend.apply"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_QUIZ_EXTEND_APPLY') ?></button></form><?php
+     <?= $this->form->renderFieldset('details') ?><input type="hidden"
+         name="task"
+         value="quizextend.apply"><?= HTMLHelper::_('form.token') ?><button type="submit"
+         class="btn btn-primary"><?= Text::_('COM_JLMS_QUIZ_EXTEND_APPLY') ?></button></form><?php
  endif; ?>
  </section>
- <table id="jlms-quiz-extend-history" class="table"><caption><?= Text::_('COM_JLMS_QUIZ_EXTEND_HISTORY') ?></caption><thead><tr><th>#</th><th><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?></th><th><?= Text::_('COM_JLMS_QUIZ_TIME_REASON_LABEL') ?></th><th><?= Text::_('JAUTHOR') ?></th></tr></thead><tbody>
+ <table id="jlms-quiz-extend-history"
+     class="table"><caption><?= Text::_('COM_JLMS_QUIZ_EXTEND_HISTORY') ?></caption><thead><tr><th>#</th><th><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?></th><th><?= Text::_('COM_JLMS_QUIZ_TIME_REASON_LABEL') ?></th><th><?= Text::_('JAUTHOR') ?></th></tr></thead><tbody>
  <?php foreach ($i['history'] as $h) :
         ?><tr><td><?= (int)$h->revision_no ?></td><td><?= $this->escape($h->previous_deadline) ?> → <?= $this
             ->escape($h->new_deadline) ?> UTC</td><td><?= $this->escape($h->reason) ?></td><td><?= (int)$h

@@ -23,7 +23,10 @@ use Joomla\CMS\Uri\Uri;
   <article class="jlms-card jlms-course-card jlms-teacher-card">
         <?php if ($validImage) : ?>
    <div class="jlms-teacher-card__cover"><img src="<?= $this->escape(Uri::root()
-       . implode('/', array_map('rawurlencode', explode('/', $image)))) ?>" alt="<?= !empty($params['image_decorative']) ? '' : $this->escape((string) ($params['image_alt'] ?? '')) ?>" loading="lazy" decoding="async"></div>
+       . implode('/', array_map('rawurlencode', explode('/', $image)))) ?>"
+           alt="<?= !empty($params['image_decorative']) ? '' : $this->escape((string) ($params['image_alt'] ?? '')) ?>"
+           loading="lazy"
+           decoding="async"></div>
         <?php endif; ?>
    <div class="jlms-teacher-card__content">
     <h2 class="jlms-teacher-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id='

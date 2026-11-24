@@ -13,7 +13,13 @@ $i = $this->item;
  <h1><?= Text::_('COM_JLMS_MANUAL_TITLE') ?>: <?= $this->escape($i['course']->title) ?></h1>
  <p id="jlms-manual-policy" class="alert alert-info"><?= Text::_('COM_JLMS_MANUAL_POLICY') ?></p>
  <form id="jlms-manual-selection" method="get" action="<?= Route::_('index.php') ?>">
-  <?= $this->selectionForm->renderFieldset('selection') ?><input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="manualenrollment"><input type="hidden" name="id" value="<?= (int) $i['course']->id ?>">
+  <?= $this->selectionForm->renderFieldset('selection') ?><input type="hidden"
+      name="option"
+      value="com_jlms"><input type="hidden"
+      name="view"
+      value="manualenrollment"><input type="hidden"
+      name="id"
+      value="<?= (int) $i['course']->id ?>">
   <button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_MANUAL_PREVIEW') ?></button>
  </form>
  <?php if ($i['preview']) :
@@ -39,7 +45,10 @@ $i = $this->item;
     method="post"
     class="form-validate"
     action="<?= Route::_('index.php?option=com_jlms') ?>">
-            <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="manualenrollment.apply"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MANUAL_APPLY') ?></button>
+            <?= $this->form->renderFieldset('details') ?><input type="hidden"
+                name="task"
+                value="manualenrollment.apply"><?= HTMLHelper::_('form.token') ?><button type="submit"
+                class="btn btn-primary"><?= Text::_('COM_JLMS_MANUAL_APPLY') ?></button>
   </form>
         <?php endif; ?>
         <?php if ($v['receipt']) :

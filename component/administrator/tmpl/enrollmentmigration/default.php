@@ -65,7 +65,8 @@ foreach ($p['target_lessons'] as $lesson) {
       <?php foreach ($p['mapping'] as $from => $to) :
             ?><input type="hidden" name="jform[mapping][<?= (int)$from ?>]" value="<?= (int)$to ?>"><?php
       endforeach; ?>
-      <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MIGRATION_CONFIRM_BUTTON') ?></button>
+      <?= HTMLHelper::_('form.token') ?><button type="submit"
+          class="btn btn-primary"><?= Text::_('COM_JLMS_MIGRATION_CONFIRM_BUTTON') ?></button>
    </form>
   <?php endif; ?>
  </section>
