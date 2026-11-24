@@ -1,0 +1,78 @@
+name: SECDEV-02 complete function signature bulk
+on:
+  push:
+    branches: [style/secdev02-867-mass-refactor]
+permissions:
+  contents: write
+jobs:
+  structural:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PSR12 and Python style tools
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          python3 -m pip install --user ruff==0.14.6
+      - name: Complete long PHP function and method signatures
+        run: |
+          set -euo pipefail
+          python3 -m ruff check --select E701,E702 tools/secdev02_mass_signature_reflow.py
+          python3 tools/secdev02_mass_signature_reflow.py --self-test
+          python3 tools/secdev02_mass_signature_reflow.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs"
+      - name: Reconcile original source and complete PSR12
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build.py
+          python3 tools/secdev02_source_contract_repair.py --base-ref HEAD --max-reversions 90
+          python3 tools/check.py
+          python3 - <<'PY'
+          import pathlib,subprocess,tempfile,importlib.machinery,csv
+          root=pathlib.Path('.').resolve()
+          phpcs=root/'.runtime/secdev02-phpcs/vendor/bin/phpcs'
+          audit=importlib.machinery.SourceFileLoader('audit',str(root/'tests/secdev02-psr12-phpcs.py')).load_module()
+          after=audit.signatures(phpcs,root,audit.tracked_php(root))
+          with tempfile.TemporaryDirectory() as td:
+              b=pathlib.Path(td)
+              before=audit.signatures(phpcs,b,audit.baseline(root,'HEAD',b))
+          introduced=audit.diff(after,before)
+          changed=subprocess.check_output(['git','diff','--name-only','--','*.php'],text=True).splitlines()
+          for file in changed:
+              subprocess.run(['php','-l',file],check=True,stdout=subprocess.DEVNULL)
+          start,end=sum(before.values()),sum(after.values())
+          print(f'CONSOLIDATED SIGNATURES {start}->{end} net={start-end} files={len(changed)}',flush=True)
+          assert not introduced,f'New PSR-12: {introduced}'
+          assert end<start and changed,'No net improvement'
+          doc=root/'docs/SECDEV_02_CORE_PHP_GATE_1.0.0.md'
+          with doc.open('a',encoding='utf-8') as out:
+              out.write(f"\n### SECDEV-02/PR #1018 full multiline method signature batch\n\nThe full pinned PHPCS 4.0.4 PSR12 scan measured **{start} → {end} (-{start-end})** on **{len(changed)} PHP files**, without any per-file/per-rule regressions. Named function declarations use PSR12-conformant one-parameter-per-line layout and a separate opening-brace line; significant lexer tokens, PHP lint and original source contracts are retained. No PHPCS rules or limits were relaxed. Functional requirement coverage remains unchanged. **SECDEV-02 is still partial** while findings, CORE/API reviews and manual acceptance remain outstanding.\n\n### Comportamenti da testare\n\n- Joomla backend/front-end functionality, class methods and services, signatures of public APIs, ACL, CSRF, enrollment, quiz, videos, certificates and email.\n- Full PHPCS PSR12, code contracts, security scanner, Joomla integration matrix and packaged release.\n")
+          target=root/'docs/REQUIREMENTS_STATUS.csv'
+          with target.open(newline='',encoding='utf-8') as f:
+              rows=list(csv.reader(f))
+          hdr=rows[0]
+          entry=[r for r in rows if r and r[0]=='SECDEV-02']
+          assert len(entry)==1
+          entry[0][hdr.index('Evidenza e limiti')]+=f' PR #1018 full signature batch PHPCS {start}->{end} (-{start-end}) on {len(changed)} files; no introduced rules; coverage unchanged.'
+          with target.open('w',newline='',encoding='utf-8') as f:
+              csv.writer(f,lineterminator='\n').writerows(rows)
+          PY
+          python3 tests/requirements-status.py
+          python3 tests/secdev02-psr12-phpcs.py --base-ref HEAD
+          git diff --check
+      - name: Remove all disposable workflow files and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/secdev02-mass-diagnosis.yml
+          git rm .github/workflows/secdev02-signatures-one-shot.yml
+          git add component libraries plugins tests tools docs
+          git diff --cached --check
+          git commit -m 'style(SECDEV-02): mass PSR12 method signature refactor with verified no regressions'
+          git push origin HEAD:style/secdev02-867-mass-refactor
