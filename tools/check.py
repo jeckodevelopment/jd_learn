@@ -185,7 +185,7 @@ composer=(ROOT/'component/administrator/src/Application/CourseMessageTemplate.ph
 assert "MailTemplate::getTemplate(self::TEMPLATE_ID, $language)" in composer
 assert "'com_jlms.course.message'" in composer
 assert "MailTemplatePlaceholderValidator::unresolved(" in composer
-assert "InputFilter::getInstance([], [], InputFilter::ONLY_BLOCK_DEFINED_TAGS, InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES)" in composer
+assert re.search(r"InputFilter::getInstance\(\s*\[\]\s*,\s*\[\]\s*,\s*InputFilter::ONLY_BLOCK_DEFINED_TAGS\s*,\s*InputFilter::ONLY_BLOCK_DEFINED_ATTRIBUTES\s*\)", composer)
 assert "throw new CourseMessageVariableException($missing)" in composer
 assert "MailTemplate::updateTemplate" not in composer
 # Regression #419: Joomla DatabaseQuery::bind() accepts values by reference.

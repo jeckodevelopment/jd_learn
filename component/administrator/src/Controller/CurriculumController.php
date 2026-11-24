@@ -42,7 +42,9 @@ class CurriculumController extends BaseController
                         if ($ticket === '' && !isset($input['publication_confirmation'])) {
                             if (
                                 (int)$impact['course']->revision !== CurriculumService::id($input['revision'] ?? null)
-                                || (int)$impact['version']->revision !== CurriculumService::id($input['expected_version_revision'] ?? null)
+                                || (int)$impact['version']->revision !== CurriculumService::id(
+                                    $input['expected_version_revision'] ?? null
+                                )
                             ) {
                                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                             }
