@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-enrollment-state.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -17,13 +20,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-enrollment-state.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-enrollment-state.bootstrap-defines-02.php';
 
 
 use Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService as JdEnrollmentStateService;
@@ -60,34 +62,10 @@ $actor = $app->getIdentity();
 $service = $component->getEnrollmentStateService();
 $learning = $component->getLearningService();
 $checks = 0;
-function stateExpect(bool $ok, string $message): void
-{
-    global$checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function stateDenied(callable $call, int $code, string $message): void
-{
-    try {
-        $call();
-    } catch (\RuntimeException $e) {
-        stateExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-        return;
-    }throw new \RuntimeException($message);
-}
-function stateKey(): string
-{
-    $k = bin2hex(random_bytes(16));
-    return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3)
-        . '-' . substr($k, 20);
-}
-function stateCommand(array $i, string $reason = 'PRIVATE_STATE_REASON'): array
-{
-    return [(int)$i['course']->id,$i['enrollment_id'],$i['impact']['enrollment_revision']
-        ,$i['impact']['target_status'],$reason,stateKey(),$i['impact']['hash'],true];
-}
+
+
+
+
 $path = dirname($root) . '/enrollment-state-fixture.json';
 if (($argv[2] ?? '') === 'worker') {
     echo "ready\n";

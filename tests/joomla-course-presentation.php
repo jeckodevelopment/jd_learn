@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-course-presentation.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? "");
@@ -17,13 +20,12 @@ $_SERVER["REQUEST_URI"] = "/administrator/index.php?option=com_jlms";
 $_SERVER["SCRIPT_NAME"] = "/administrator/index.php";
 $_SERVER["PHP_SELF"] = "/administrator/index.php";
 $_SERVER["SCRIPT_FILENAME"] = $root . "/administrator/index.php";
-\define("_JEXEC", 1);
-\define("JPATH_BASE", $root . "/administrator");
+
+require_once __DIR__ . '/helpers/joomla-course-presentation.bootstrap-defines-01.php';
 require $root . "/administrator/includes/defines.php";
 require $root . "/administrator/includes/framework.php";
-\define("JPATH_COMPONENT", JPATH_ADMINISTRATOR . "/components/com_jlms");
-\define("JPATH_COMPONENT_ADMINISTRATOR", JPATH_COMPONENT);
-\define("JPATH_COMPONENT_SITE", JPATH_SITE . "/components/com_jlms");
+
+require_once __DIR__ . '/helpers/joomla-course-presentation.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -71,14 +73,7 @@ $catid = (int) $db
 use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 $checks = 0;
-function presentationExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    }
-    $checks++;
-}
+
 $fixture = dirname($root) . "/course-presentation-fixture.json";
 if (($argv[2] ?? "") === "retained") {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);

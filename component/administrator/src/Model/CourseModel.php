@@ -118,7 +118,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $query = $db->createQuery()
             ->select('c.*, a.' . $db
             ->quoteName('key') . ' AS association_key')->from('#__associations AS a')
-            ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.' . $db->quoteName('key') . ' AND b.context = a.context')
+            ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.'
+                . $db->quoteName('key') . ' AND b.context = a.context')
             ->innerJoin('#__jlms_courses AS c ON c.id = b.id')
             ->where('a.id = :id')->where('a.context = :context')
             ->bind(':id', $id, ParameterType::INTEGER)->bind(':context', $context);

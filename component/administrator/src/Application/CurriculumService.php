@@ -841,7 +841,8 @@ final class CurriculumService
                 }
                 $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ??
                      null, $input['publish_down'] ?? null, $timezone));
-                $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($input['release_after_days'] ?? null);
+                $fields['release_after_days'] =
+                    LessonAvailability::normalizeReleaseDays($input['release_after_days'] ?? null);
                 $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_lessons'))
                     ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);
                 if ((int) $this->db->setQuery($q)->loadResult() >= 5000) {

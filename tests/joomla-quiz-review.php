@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-quiz-review.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? "");
@@ -45,13 +48,12 @@ $_SERVER["REQUEST_URI"] = "/administrator/index.php?option=com_jlms";
 $_SERVER["SCRIPT_NAME"] = "/administrator/index.php";
 $_SERVER["PHP_SELF"] = "/administrator/index.php";
 $_SERVER["SCRIPT_FILENAME"] = $root . "/administrator/index.php";
-\define("_JEXEC", 1);
-\define("JPATH_BASE", $root . "/administrator");
+
+require_once __DIR__ . '/helpers/joomla-quiz-review.bootstrap-defines-01.php';
 require $root . "/administrator/includes/defines.php";
 require $root . "/administrator/includes/framework.php";
-\define("JPATH_COMPONENT", JPATH_ADMINISTRATOR . "/components/com_jlms");
-\define("JPATH_COMPONENT_ADMINISTRATOR", JPATH_COMPONENT);
-\define("JPATH_COMPONENT_SITE", JPATH_SITE . "/components/com_jlms");
+
+require_once __DIR__ . '/helpers/joomla-quiz-review.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -85,80 +87,12 @@ $component = $app->bootComponent("com_jlms");
 $factory = $component->getMVCFactory();
 
 $checks = 0;
-function reviewExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function reviewReject(callable $work, int $code, string $message): void
-{
-    try {
-        $work();
-    } catch (\RuntimeException $error) {
-        reviewExpect($error->getCode() === $code, $message . ": " . $error->getMessage() . " / " . $error->getCode());
-        return;
-    }
-    throw new \RuntimeException($message);
-}
-function reviewKey(): string
-{
-    $s = bin2hex(random_bytes(16));
-    return substr($s, 0, 8) .
-        "-" .
-        substr($s, 8, 4) .
-        "-4" .
-        substr($s, 13, 3) .
-        "-a" .
-        substr($s, 17, 3) .
-        "-" .
-        substr($s, 20);
-}
-function reviewAnswers(array $a): string
-{
-    $r = [];
-    foreach ($a["questions"] as $q) {
-        $r[$q["id"]] = $q["kind"] === "multiple" ? ["first", "second"] : ["first"];
-    }
-    return json_encode($r, JSON_THROW_ON_ERROR);
-}
-function reviewUser(string $name, int $group): \Joomla\CMS\User\User
-{
-    $u = new \Joomla\CMS\User\User();
-    $d = [
-        "name" => "CI " . $name,
-        "username" => $name,
-        "email" => $name . "@example.invalid",
-        "password" => "Ci-only-Learner-Password-2026",
-        "password2" => "Ci-only-Learner-Password-2026",
-        "groups" => [2, $group],
-        "block" => 0,
-        "activation" => "",
-    ];
-    if (!$u->bind($d) || !$u->save()) {
-        throw new \RuntimeException((string) $u->getError());
-    }
-    return new \Joomla\CMS\User\User((int) $u->id);
-}
-function reviewCommand(array $item, string $reason = "PRIVATE_CANCEL_REASON", ?string $key = null): array
-{
-    $p = $item["impact"];
-    return [
-        $item["course_id"],
-        $item["lesson_id"],
-        (int) $item["enrollment"]->id,
-        (int) $item["selected"]->id,
-        $p["enrollment_revision"],
-        $p["attempt_revision"],
-        $item["refund"],
-        $reason,
-        $key ?? reviewKey(),
-        $p["hash"],
-        true,
-    ];
-}
+
+
+
+
+
+
 $actor = $app->getIdentity();
 $review = $component->getQuizReviewService();
 $learning = $component->getLearningService();

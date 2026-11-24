@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-video-duration.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -17,13 +20,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-video-duration.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-video-duration.bootstrap-defines-02.php';
 
 
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService as JdCurriculumService;
@@ -85,43 +87,10 @@ $actor = $app->getIdentity();
 $publication = $component->getPublicationService();
 $learning = $component->getLearningService();
 $checks = 0;
-function durationExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    }
-    $checks++;
-}
-function durationDenied(callable $work, string $key): void
-{
-    try {
-        $work();
-    } catch (\Throwable $e) {
-        durationExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
-        return;
-    }throw new RuntimeException('Expected ' . $key);
-}
-function durationRow(string $table, int $id): object
-{
-    global $db;
-    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
-}
-function durationState(int $course): array
-{
-    global $db;
-    $versions = $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE course_id=' . $course
-        . ' ORDER BY id')->loadAssocList();
-    $ids = implode(',', array_column($versions, 'id'));
-    return ['course' => (array)durationRow('courses', $course),'versions' => $versions,'lessons' => $db
-        ->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id IN (' . $ids . ') ORDER BY id')
-            ->loadAssocList(),'enrollments' => $db->
-                setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->
-                loadAssocList(),'progress' => $db->
-                setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN ' .
-                    '#__jlms_enrollments e ON e.id=p.enrollment_id WHERE ' .
-                    'e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
-}
+
+
+
+
 $fixture = dirname($root) . '/video-duration-fixture.json';
 $mode = $argv[2] ?? '';
 if (in_array($mode, ['state','checkpoint','retained'], true)) {

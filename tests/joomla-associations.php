@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-associations.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -36,13 +39,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-associations.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-associations.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -79,38 +81,10 @@ $factory = $component->getMVCFactory();
 }], \Joomla\CMS\Log\Log::ALL, ['com_jlms']);
 
 $checks = 0;
-function assocExpect(bool $condition, string $message): void
-{
-    global $checks;
-    if (!$condition) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function assocData(int $id): array
-{
-    global $db;
-    return (array) $db->setQuery(('SELECT id,title,alias,catid,language,catalog_access,content_' .
-        'access,enrollment_mode,summary,revision FROM #__jlms_courses WHERE id=') . $id)->loadObject();
-}
-function assocSave(array $data): bool
-{
-    global $factory;
-    $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-    $saved = $model->save($data);
-    if (!$saved) {
-        fwrite(STDERR, 'Association save rejected: ' . json_encode($model->getErrors(), JSON_THROW_ON_ERROR) . PHP_EOL);
-    }
-    return $saved;
-}
-function assocRows(): string
-{
-    global $db;
-    return json_encode(
-        $db->setQuery("SELECT * FROM #__associations WHERE context='com_jlms.item' ORDER BY id")->loadObjectList(),
-        JSON_THROW_ON_ERROR
-    );
-}
+
+
+
+
 if (($argv[2] ?? '') === 'worker') {
     $command = json_decode($argv[3], true, 16, JSON_THROW_ON_ERROR);
     // A native CMS model may start its session lazily; do it before barrier output.

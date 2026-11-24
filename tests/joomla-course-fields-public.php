@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-course-fields-public.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -17,13 +20,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-course-fields-public.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-course-fields-public.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -65,41 +67,11 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function publicFieldsExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    } $checks++;
-}
+
 PluginHelper::importPlugin('system', 'fields');
 $fixture = dirname($root) . '/course-fields-public-fixture.json';
 $mode = $argv[2] ?? '';
-function publicFieldsState(array $f): array
-{
-    global $db;
-    $c = (int)$f['course'];
-    $v = (int)$f['version'];
-    $e = (int)$f['enrollment'];
-    return ['teaching' => [
-    'version' => $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id=' . $v)->loadAssoc(),
-    'modules' => $db->setQuery('SELECT * FROM #__jlms_modules WHERE course_version_id=' . $v . ' ORDER BY id')
-        ->loadAssocList(),
-    'lessons' => $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . $v . ' ORDER BY id')
-        ->loadAssocList(),
-    'enrollment' => $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE id=' . $e)->loadAssoc(),
-    'progress' => $db->setQuery('SELECT * FROM #__jlms_lesson_progress WHERE enrollment_id=' . $e
-        . ' ORDER BY lesson_id')->loadAssocList()],
-    'course' => $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $c)->loadAssoc(),
-    'values' => $db->setQuery('SELECT field_id,value FROM #__fields_values WHERE item_id=' . $db
-        ->quote((string)$c) . ' AND field_id IN (' . implode(
-            ',',
-            array_map('intval', array_values($f['fields']))
-        ) . ') ORDER BY field_id,value')->loadAssocList(),
-    'groups' => $db->setQuery('SELECT * FROM #__fields_groups WHERE id=' . (int)$f['group'])->loadAssocList(),
-    'fields' => $db->setQuery('SELECT * FROM #__fields WHERE id IN ('
-        . implode(',', array_map('intval', array_values($f['fields']))) . ') ORDER BY id')->loadAssocList()];
-}
+
 if ($mode !== '') {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
     if ($mode === 'state') {

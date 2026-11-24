@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/run.functions.php';
+
+
 require __DIR__ . '/bootstrap.php';
 
 use Jlms\Component\Jlms\Administrator\Domain\Coverage;
@@ -18,24 +21,8 @@ use Jlms\Contracts\Video\ProviderDescriptor;
 use Jlms\Contracts\Video\AbstractFoundationProvider;
 
 $passed = 0;
-function expect(bool $condition, string $message): void
-{
-    global $passed;
-    if (!$condition) {
-        throw new \RuntimeException($message);
-    }
-    $passed++;
-}
-function rejects(callable $work, string $message): void
-{
-    try {
-        $work();
-    } catch (\DomainException | \InvalidArgumentException $expected) {
-        expect(true, $message);
-        return;
-    }
-    throw new \RuntimeException($message);
-}
+
+
 $links = \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::secure(
     '<p><a href="https://example.invalid/public" rel="opener">Public</a>'
     . '<a href="https://example.invalid/private?accessToken=TEST_CREDENTIAL">Secret</a>'

@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-enrollment-migration.functions.php';
+
+
 /* Explicit one-enrollment migration; run only against the disposable Joomla CI installation. */
 
 $root = realpath($argv[1] ?? "");
@@ -16,13 +19,12 @@ $_SERVER["REQUEST_URI"] = "/administrator/index.php?option=com_jlms";
 $_SERVER["SCRIPT_NAME"] = "/administrator/index.php";
 $_SERVER["PHP_SELF"] = "/administrator/index.php";
 $_SERVER["SCRIPT_FILENAME"] = $root . "/administrator/index.php";
-define("_JEXEC", 1);
-define("JPATH_BASE", $root . "/administrator");
+
+require_once __DIR__ . '/helpers/joomla-enrollment-migration.bootstrap-defines-01.php';
 require $root . "/administrator/includes/defines.php";
 require $root . "/administrator/includes/framework.php";
-define("JPATH_COMPONENT", JPATH_ADMINISTRATOR . "/components/com_jlms");
-define("JPATH_COMPONENT_ADMINISTRATOR", JPATH_COMPONENT);
-define("JPATH_COMPONENT_SITE", JPATH_SITE . "/components/com_jlms");
+
+require_once __DIR__ . '/helpers/joomla-enrollment-migration.bootstrap-defines-02.php';
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -51,29 +53,9 @@ $app->loadIdentity($actor);
 $app->getSession()->set("user", $actor);
 $component = $app->bootComponent("com_jlms");
 $checks = 0;
-function migrationExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    }
-    $checks++;
-}
-function migrationRow(string $table, int $id): object
-{
-    global $db;
-    return $db->setQuery("SELECT * FROM #__jlms_" . $table . " WHERE id=" . $id)->loadObject();
-}
-function migrationDenied(callable $fn, int $code, string $message): void
-{
-    try {
-        $fn();
-    } catch (RuntimeException $e) {
-        migrationExpect($e->getCode() === $code, $message . ": " . $e->getMessage());
-        return;
-    }
-    throw new RuntimeException($message);
-}
+
+
+
 $fixture = dirname($root) . "/enrollment-migration-fixture.json";
 $mode = $argv[2] ?? "";
 if ($mode === "retained") {

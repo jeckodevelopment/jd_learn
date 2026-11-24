@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-cloudflare.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? "");
@@ -42,13 +45,12 @@ $_SERVER["REQUEST_URI"] = "/administrator/index.php?option=com_jlms";
 $_SERVER["SCRIPT_NAME"] = "/administrator/index.php";
 $_SERVER["PHP_SELF"] = "/administrator/index.php";
 $_SERVER["SCRIPT_FILENAME"] = $root . "/administrator/index.php";
-\define("_JEXEC", 1);
-\define("JPATH_BASE", $root . "/administrator");
+
+require_once __DIR__ . '/helpers/joomla-cloudflare.bootstrap-defines-01.php';
 require $root . "/administrator/includes/defines.php";
 require $root . "/administrator/includes/framework.php";
-\define("JPATH_COMPONENT", JPATH_ADMINISTRATOR . "/components/com_jlms");
-\define("JPATH_COMPONENT_ADMINISTRATOR", JPATH_COMPONENT);
-\define("JPATH_COMPONENT_SITE", JPATH_SITE . "/components/com_jlms");
+
+require_once __DIR__ . '/helpers/joomla-cloudflare.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -86,24 +88,8 @@ use Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Jlms\Component\Jlms\Administrator\Application\VideoProgressService;
 $checks = 0;
-function streamExpect(bool $value, string $message): void
-{
-    global $checks;
-    if (!$value) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function streamDenied(callable $work, string $key): void
-{
-    try {
-        $work();
-    } catch (\RuntimeException $e) {
-        streamExpect($e->getMessage() === $key, $key . ": " . $e->getMessage());
-        return;
-    }
-    throw new \RuntimeException("Expected " . $key);
-}
+
+
 [$config, $secrets, $transport, $remote] = cloudflareFixture();
 $provider = new Provider($config, $secrets, $transport);
 $registry = new \Jlms\Contracts\Video\VideoProviderRegistry();

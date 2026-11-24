@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-quiz-attempts.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -41,13 +44,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-quiz-attempts.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-quiz-attempts.bootstrap-defines-02.php';
 
 
 use Jlms\Component\Jlms\Administrator\Application\QuizAttemptService as JdQuizAttemptService;
@@ -87,55 +89,10 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function attemptExpect(bool $ok, string $message): void
-{
-    global$checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function attemptReject(callable $call, int $code, string $message): void
-{
-    try {
-        $call();
-    } catch (\RuntimeException $error) {
-        attemptExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-        return;
-    }throw new \RuntimeException($message);
-}
-function attemptKey(): string
-{
-    $s = bin2hex(random_bytes(16));
-    return substr(
-        $s,
-        0,
-        8
-    ) . '-' . substr(
-        $s,
-        8,
-        4
-    ) . '-4' . substr(
-        $s,
-        13,
-        3
-    ) . '-a' . substr(
-        $s,
-        17,
-        3
-    ) . '-' . substr(
-        $s,
-        20
-    );
-}
-function attemptAnswers(array $dto, bool $correct = true): string
-{
-    $a = [];
-    foreach ($dto['questions'] as $q) {
-        $a[$q['id']] = $correct ? ($q['kind'] === 'multiple' ? ['first','second'] : ['first']) : [];
-    }
-    return json_encode($a, JSON_THROW_ON_ERROR);
-}
+
+
+
+
 $learning = $component->getLearningService();
 $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
