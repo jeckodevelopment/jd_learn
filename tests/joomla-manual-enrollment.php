@@ -210,7 +210,8 @@ manualExpect(
 );
 $opened = $operations->editor($manager, $course, 'admissions_open');
 $operations->apply($manager, $course, 'admissions_open', $opened['impact']['revision'], 'Fixture reopening', manualKey(), $opened['impact']['hash']);
-$groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
+$groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+    'user_id,group_id')->loadAssocList();
 $counts = static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments')->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects')->loadResult()];
 $before = $counts();
 $i = $service->editor($manager, $course, (int)$users['one']->id, 'en-GB');
@@ -521,7 +522,8 @@ $update('jlms_courses', $course, ['enrollment_mode' => 'explicit']);
 manualExpect((int)$db->setQuery(('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE '
     . 'enrollment_id IS NULL OR course_version_id IS NULL'))->loadResult() === 0, 'no incomplete receipt committed');
 manualExpect(
-    $groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(),
+    $groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+        'user_id,group_id')->loadAssocList(),
     'admission never changes native group assignments'
 );
 $receipt = (int)$db->setQuery('SELECT id FROM #__jlms_manual_enrollments WHERE enrollment_id=' . $id)->loadResult();

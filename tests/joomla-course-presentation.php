@@ -115,7 +115,13 @@ $input = $base + ['presentation_image' => $coverPath . '#joomlaImage://local-ima
     'presentation_image_alt' => 'Course cover "example" <plain text>', 'presentation_image_decorative' => '0',
     'presentation_seo_title' => 'Published course SEO title', 'presentation_seo_description'
         => 'SEO description & public presentation',
-    'presentation_description' => '<p>Extended <strong>presentation</strong></p><script>alert(1)</script><iframe src="https://example.invalid"></iframe><img src="https://example.invalid/pixel"><a href="javascript:alert(2)" onclick="alert(3)">Safe link text</a><a href="https://example.invalid/resource" rel="opener">Public resource</a><a href="https://example.invalid/secret?accessToken=TEST_CREDENTIAL">Protected link</a><a href="https://user:pass@example.invalid/private">Userinfo link</a><a href="https://example.invalid/hash#clientSecret=TEST_CREDENTIAL">Fragment link</a>',
+    'presentation_description' => '<p>Extended <strong>presentation</strong></p><script>alert(1)</script><iframe ' .
+        'src="https://example.invalid"></iframe><img src="https://example.invalid/pixel"><a ' .
+        'href="javascript:alert(2)" onclick="alert(3)">Safe link text</a><a ' .
+        'href="https://example.invalid/resource" rel="opener">Public resource</a><a ' .
+        'href="https://example.invalid/secret?accessToken=TEST_CREDENTIAL">Protected link</a><a ' .
+        'href="https://user:pass@example.invalid/private">Userinfo link</a><a ' .
+        'href="https://example.invalid/hash#clientSecret=TEST_CREDENTIAL">Fragment link</a>',
     'presentation_objectives' => 'Learn <em>as plain text</em>', 'presentation_audience'
         => "Learners\nNewcomers", 'presentation_prerequisite_text' => 'Read the introduction',
     'presentation_difficulty' => 'beginner', 'presentation_estimated_minutes' => '45', 'params_json'
@@ -241,7 +247,8 @@ try {
 file_put_contents($root . '/' . $coverPath, $coverBytes);
 // New publication requires a meaningful description, including on drafts created by older clients.
 $originalParams = $item->params_json;
-$beforeVersionCheck = $db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc();
+$beforeVersionCheck = $db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM ' .
+    '#__jlms_course_versions WHERE id=' . $version)->loadAssoc();
 $beforeDescriptionCheck = $db->setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id=' . $course)->loadAssoc();
 foreach ([null, '', "<p>&nbsp; \t<br></p>", '<p>&#8203;</p>'] as $description) {
     $params = json_decode($originalParams, true, 32, JSON_THROW_ON_ERROR);
@@ -261,7 +268,8 @@ foreach ([null, '', "<p>&nbsp; \t<br></p>", '<p>&#8203;</p>'] as $description) {
     }
     presentationExpect($db->setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id='
         . $course)->loadAssoc() === $beforeDescriptionCheck, 'Denied publication leaves course and revision unchanged');
-    presentationExpect($db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $beforeVersionCheck, 'Denied publication leaves the draft version unchanged');
+    presentationExpect($db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM ' .
+        '#__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $beforeVersionCheck, 'Denied publication leaves the draft version unchanged');
     presentationExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_version_id='
         . $version)->loadResult() === 0, 'Denied publication creates no edition');
 }
@@ -294,7 +302,8 @@ foreach ([0, 1] as $expectedState) {
     presentationExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
         . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() === $baseline, 'Withdrawal/republication retains presentation and hash');
 }
-$oldPresentation = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy","details":{"_schema":1,"description":"<p>Existing 0.21 presentation</p>"}}');
+$oldPresentation = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy","details":{"_schema":1,"description":"<p>Existing 0.21 ' .
+    'presentation</p>"}}');
 presentationExpect($oldPresentation['image'] === '' && !$oldPresentation['image_decorative']
     && $oldPresentation['seo_title'] === '', '0.21 snapshots gain only empty optional defaults without database mutation');
 $legacy = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy public summary"}');

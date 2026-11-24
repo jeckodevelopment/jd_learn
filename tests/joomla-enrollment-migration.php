@@ -79,7 +79,8 @@ if ($mode === 'retained') {
         'target assignment remains in the current version'
     );
     migrationExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $f['source'] . ' AND target_enrollment_id=' . $f['target'])->loadResult() === 1,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+            'source_enrollment_id=' . $f['source'] . ' AND target_enrollment_id=' . $f['target'])->loadResult() === 1,
         'one immutable migration record remains'
     );
 
@@ -138,7 +139,8 @@ $plan = $service->preview($actor, $course, $enrollment, $mapping);
 // or enrollment state may change when the access check denies these calls.
 $originalBlock = (int)$db->setQuery('SELECT block FROM #__users WHERE id=' . $uid)->loadResult();
 $sourceStatusBeforeBlock = (string)migrationRow('enrollments', $enrollment)->status;
-$migrationsBeforeBlock = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult();
+$migrationsBeforeBlock = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+    'source_enrollment_id=' . $enrollment)->loadResult();
 try {
     $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $uid)->execute();
     migrationDenied(
@@ -156,7 +158,8 @@ try {
         'blocked access does not mutate source enrollment'
     );
     migrationExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $migrationsBeforeBlock,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+            'source_enrollment_id=' . $enrollment)->loadResult() === $migrationsBeforeBlock,
         'blocked access does not create migration record'
     );
 } finally {
@@ -219,7 +222,8 @@ migrationExpect(
 );
 // AUT-04: in-progress quizzes must block migration without creating any target
 // assignment or changing the source, even if a valid preview was already issued.
-$beforeBlockedMigrationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult();
+$beforeBlockedMigrationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+    'source_enrollment_id=' . $enrollment)->loadResult();
 $beforeBlockedSource = (array)migrationRow('enrollments', $enrollment);
 $probeQuiz = (object)['lesson_id' => $lesson,'course_version_id' => $sourceVersion,
     'selection_json' => '{}','created_at' => gmdate('Y-m-d H:i:s'),'modified_at' => gmdate('Y-m-d H:i:s')];
@@ -256,7 +260,8 @@ try {
         'open-quiz denial preserves source enrollment exactly'
     );
     migrationExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $beforeBlockedMigrationCount,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+            'source_enrollment_id=' . $enrollment)->loadResult() === $beforeBlockedMigrationCount,
         'open-quiz denial does not create migration records'
     );
 } finally {
@@ -320,7 +325,8 @@ migrationExpect(
 // AUT-04: a pre-existing historical certificate document belongs to the source
 // version, even if this one enrollment is later explicitly transferred. This
 // fixture tests persistence and ownership, not the issuance eligibility path.
-$templateId = (int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1')->loadResult();
+$templateId = (int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id ' .
+    'LIMIT 1')->loadResult();
 migrationExpect($templateId > 0, 'default immutable certificate template available for history retention');
 $historyCertificate = (object)['enrollment_id' => $enrollment,'course_version_id' => $sourceVersion,
     'template_id' => $templateId,'current_document_id' => null,'issued_at' => $now,'revision' => 1];
@@ -399,7 +405,8 @@ migrationDenied(
     401,
     'anonymous migration preview denied'
 );
-$jobId = (int)$db->setQuery('SELECT job_id FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult();
+$jobId = (int)$db->setQuery('SELECT job_id FROM #__jlms_enrollment_migrations WHERE ' .
+    'source_enrollment_id=' . $enrollment)->loadResult();
 migrationExpect(
     (string)$db->setQuery('SELECT status FROM #__jlms_jobs WHERE id=' . $jobId)->loadResult() === 'succeeded',
     'single migration is recorded as a completed immutable job'

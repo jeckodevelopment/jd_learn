@@ -319,7 +319,8 @@ $finderWitness = static function ($event) use (&$finderStates, $db, $ids): void 
     if ($event->getContext() !== 'com_jlms.course' || (int)$event->getItem()->id !== (int)$ids['Alpha']) {
         return;
     }
-    $finderStates[] = $db->setQuery('SELECT state,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$ids['Alpha'])->loadAssoc();
+    $finderStates[] = $db->setQuery('SELECT state,admissions_open,delivery_enabled FROM #__jlms_courses WHERE ' .
+        'id=' . (int)$ids['Alpha'])->loadAssoc();
 };
 $app->getDispatcher()->addListener('onFinderAfterSave', $finderWitness);
 listExpect($courseModel->changeStates([$ids['Alpha']], -2), 'Published course can be moved to trash');
@@ -353,7 +354,8 @@ listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_
     . (int)$ids['Alpha'])->loadAssoc() == ['admissions_open' => 0,'delivery_enabled'
         => 0], 'Restore never opens gates closed by trash');
 listExpect(count($finderStates) === 2 && (int)$finderStates[1]['state'] === 0
-    && (int)$finderStates[1]['admissions_open'] === 0 && (int)$finderStates[1]['delivery_enabled'] === 0, 'Finder refresh after restore observes committed unpublished and gated state');
+    && (int)$finderStates[1]['admissions_open'] === 0 && (int)$finderStates[1]['delivery_enabled'] === 0, 'Finder refresh after restore observes committed unpublished and gated ' .
+        'state');
 $app->getDispatcher()->removeListener('onFinderAfterSave', $finderWitness);
 listExpect($db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . (int)$ids['Alpha'])
     ->loadResult() === $originalVersion, 'Restored course keeps its frozen version pointer');

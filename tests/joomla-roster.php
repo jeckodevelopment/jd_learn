@@ -275,7 +275,8 @@ try {
             409,
             'second operator cannot retry a reconciled sending claim'
         );
-        $sentState = $db->setQuery('SELECT state,reconciliation_note,last_error FROM #__jlms_mail_queue WHERE id=' . $staleSent)->loadAssoc();
+        $sentState = $db->setQuery('SELECT state,reconciliation_note,last_error FROM #__jlms_mail_queue WHERE ' .
+            'id=' . $staleSent)->loadAssoc();
         rosterExpect(
             $sentState['state'] === 'sent' && $sentState['reconciliation_note'] === $sensitiveNote
             && $sentState['last_error'] === 'Manual reconciliation recorded.',
@@ -337,7 +338,8 @@ try {
                 $results === ['CONFLICT:409', 'OK'],
                 'two independent mail reconcilers yield one winner and one 409 conflict'
             );
-            $parallelRow = $db->setQuery('SELECT state,attempts,reconciliation_note,last_error,recipient_email FROM #__jlms_mail_queue WHERE id=' . (int)$parallelId)->loadObject();
+            $parallelRow = $db->setQuery('SELECT state,attempts,reconciliation_note,last_error,recipient_email FROM ' .
+                '#__jlms_mail_queue WHERE id=' . (int)$parallelId)->loadObject();
             rosterExpect(
                 $parallelRow->state === 'sent' && (int)$parallelRow->attempts === 1
                 && $parallelRow->reconciliation_note === 'CI parallel SMTP claim'

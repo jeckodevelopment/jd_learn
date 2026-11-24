@@ -80,7 +80,8 @@ function teacherExpect(bool $ok, string $message): void
     } $checks++;
 }
 $teacherListTemplate = file_get_contents(dirname(__DIR__) . '/component/administrator/tmpl/teachers/default.php');
-teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "HTMLHelper::_('jgrid.published'") && str_contains($teacherListTemplate, "'teachers.'"), 'Teacher state uses Joomla status icons without enabling inline state changes');
+teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "HTMLHelper::_('jgrid.published'") && str_contains($teacherListTemplate, "'teachers.'"), 'Teacher state uses Joomla status icons without enabling inline state ' .
+    'changes');
 teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "'btn-success'")
     && str_contains($teacherListTemplate, "'btn-secondary'") && !str_contains($teacherListTemplate, 'badge bg-info text-dark'), 'Teacher course count follows Joomla category count button contrast');
 $fixture = dirname($root) . '/teachers-fixture.json';
@@ -89,7 +90,8 @@ if (($argv[2] ?? '') === 'retained') {
     teacherExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
         . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen teacher projection survives upgrade');
     $outline = $catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int)$f['course']);
-    teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] === 'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection is unchanged');
+    teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] === 'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection ' .
+        'is unchanged');
     teacherExpect(TeacherProfiles::selected($db, (int)$f['course']) === $f['ids'], 'Assigned teacher relations survive upgrade');
     echo json_encode(['teacher_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit;
@@ -145,7 +147,8 @@ $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('com_jlms.teacher.' . $public);
 $parent = (int)$db->setQuery('SELECT asset_id FROM #__categories WHERE id=' . $teacherCategory)->loadResult();
 teacherExpect((int)$asset->parent_id === $parent, 'Teacher asset inherits native teacher category');
-teacherExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'Account link grants no groups');
+teacherExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+    'user_id,group_id')->loadAssocList(), 'Account link grants no groups');
 teacherExpect($teacherModel->save(array_replace($teacherBase, ['title' => 'PRIVATE_TEACHER_NAME','alias'
     => 'private-teacher','access' => 2,'bio' => 'PRIVATE_TEACHER_BIO','user_id'
         => ''])), 'Restricted teacher saved without native account');

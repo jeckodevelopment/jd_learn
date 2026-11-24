@@ -322,7 +322,8 @@ attemptReject(
 );
 $beforeRevokeAttempt = $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc();
 $beforeRevokeAnswers = $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
-. '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE q.attempt_id=') . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList();
+. '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE ' .
+    'q.attempt_id=') . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList();
 $student->getAuthorisedViewLevels();
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
 try {

@@ -237,7 +237,8 @@ if (($argv[2] ?? '') === 'cancellation') {
     exit;
 }
 $before = $stable($enrollment);
-$groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
+$groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+    'user_id,group_id')->loadAssocList();
 $suspendedPlayer = $seedPlayerSession($enrollment, (int)$f['lesson']);
 stateExpect($playerSessionExists($suspendedPlayer), 'active enrollment holds a player session before suspension');
 $i = $service->editor($manager, $course, $enrollment, 'suspended');
@@ -396,7 +397,8 @@ foreach ([false,true] as $different) {
 }
 stateExpect($before === $stable($enrollment), 'all state changes preserve learning history and assignment');
 stateExpect(
-    $groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(),
+    $groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+        'user_id,group_id')->loadAssocList(),
     'state changes never assign native groups'
 );
 $log = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
@@ -427,7 +429,8 @@ $savedAnswers = $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa I
     . 'WHERE q.attempt_id=') . $aid)->loadAssocList();
 // LCM-01: stale authenticated quiz POSTs, including an existing attempt,
 // cannot bypass course lifecycle even if admission/delivery flags are stale.
-$quizCourseBefore = $db->setQuery('SELECT state, admissions_open, delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$qf['course_id'])->loadAssoc();
+$quizCourseBefore = $db->setQuery('SELECT state, admissions_open, delivery_enabled FROM #__jlms_courses ' .
+    'WHERE id=' . (int)$qf['course_id'])->loadAssoc();
 try {
     foreach ([0, 2, -2] as $inactiveQuizState) {
         $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$inactiveQuizState . ', admissions_open=1, delivery_enabled=1 WHERE id=' . (int)$qf['course_id'])->execute();

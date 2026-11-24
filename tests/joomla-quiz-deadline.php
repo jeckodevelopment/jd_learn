@@ -167,7 +167,8 @@ $u = deadlineUser('ciquizdeadline', $group);
 $enrollment = $learning->start($u, 'en-GB', $course, bin2hex(random_bytes(16)));
 $a = $runtime->start($u, 'en-GB', $enrollment, $lesson, deadlineKey());
 $attempt = $a['attempt']['id'];
-$original = $db->setQuery('SELECT rules_snapshot_json,deadline_at,revision FROM #__jlms_attempts WHERE id=' . $attempt)->loadObject();
+$original = $db->setQuery('SELECT rules_snapshot_json,deadline_at,revision FROM #__jlms_attempts ' .
+    'WHERE id=' . $attempt)->loadObject();
 $cancelBefore = $component->getQuizReviewService()->editor($actor, $course, $lesson, $enrollment, $attempt, false);
 $i = $deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 2);
 $command = deadlineCommand($i);
@@ -194,7 +195,8 @@ deadlineExpect(!str_contains(json_encode($r, JSON_THROW_ON_ERROR), 'PRIVATE_DEAD
 $raw = $db->setQuery('SELECT rules_snapshot_json FROM #__jlms_attempts WHERE id=' . $attempt)->loadResult();
 deadlineExpect($raw === $original->rules_snapshot_json, 'frozen rules remain byte-for-byte unchanged');
 $compact = $runtime->state($u, 'en-GB', $enrollment, $lesson, $attempt, true);
-deadlineExpect($compact['questions'] === [] && $compact['attempt']['deadline'] === $r['attempt']['deadline'], 'compact synchronization carries the current deadline without question bodies');
+deadlineExpect($compact['questions'] === [] && $compact['attempt']['deadline'] === $r['attempt']['deadline'], 'compact synchronization carries the current deadline without question ' .
+    'bodies');
 $answers = [];
 foreach ($a['questions'] as $q) {
     $answers[$q['id']] = $q['kind'] === 'multiple' ? ['first','second'] : ['first'];

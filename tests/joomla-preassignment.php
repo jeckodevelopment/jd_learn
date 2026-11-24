@@ -137,8 +137,10 @@ foreach (['audit','race','stale','http','blocked'] as $name) {
 }
 $owner = new \Joomla\CMS\User\User((int)$f['denied_user']);
 $id = (int)$owner->id;
-$groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList();
-$counts = static fn(int $user)=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects WHERE user_id=' . $user)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $user . ' AND course_id=' . $course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id IN (SELECT id FROM #__jlms_enrollments WHERE user_id=' . $user . ' AND course_id=' . $course . ')')->loadResult()];
+$groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+    'user_id,group_id')->loadAssocList();
+$counts = static fn(int $user)=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects WHERE user_id=' . $user)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $user . ' AND course_id=' . $course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id IN ' .
+    '(SELECT id FROM #__jlms_enrollments WHERE user_id=' . $user . ' AND course_id=' . $course . ')')->loadResult()];
 $before = $counts($id);
 preDenied(fn()=>$service->editor($manager, $course, $id, 'en-GB'), 403, 'default admission still requires access');
 $i = $service->editor($manager, $course, $id, 'en-GB', true);
@@ -314,6 +316,7 @@ try {
 } finally {
     $update('jlms_editions', $edition, ['capacity' => null]);
 }
-preExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'preassignment never changes native group memberships');
+preExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+    'user_id,group_id')->loadAssocList(), 'preassignment never changes native group memberships');
 file_put_contents($path, json_encode(['course' => $course,'learner' => $id,'enrollment' => $eid,'receipt' => $receipt,'command' => $command,'http_user' => (int)$users['http']->id,'group' => $group,'manager' => (int)$manager->id,'manager_group' => (int)$f['manager_group'],'lesson' => (int)$f['lesson']], JSON_THROW_ON_ERROR));
 echo json_encode(['preassignment_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
