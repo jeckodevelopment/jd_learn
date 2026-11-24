@@ -55,21 +55,24 @@ def breakpoints(source:bytes,parts:list,mode:str)->list[tuple[int,int]]:
                 if p<end:
                     locations.append((p,0))
         if mode in ("attrs","both"):
-            quoted=False
+            quoted=None
             tag=False
             # Tokenized HTML: only break between complete quoted attributes
             # while inside an opening tag, never in text or a value.
             for i,char in enumerate(chunk):
-                if char==60 and not quoted:
+                if char==60 and quoted is None:
                     tag=True
-                elif char==62 and not quoted:
+                elif char==62 and quoted is None:
                     tag=False
                 elif char in (34,39) and tag:
                     # Account for alternate HTML quote styles.
                     previous=chunk[i-1:i]
                     if previous!=b"\\":
-                        quoted=not quoted
-                if not tag or quoted or char not in (32,9):
+                        if quoted is None:
+                            quoted=char
+                        elif quoted==char:
+                            quoted=None
+                if not tag or quoted is not None or char not in (32,9):
                     continue
                 before=chunk[max(0,i-1):i]
                 rest=chunk[i+1:i+42]
