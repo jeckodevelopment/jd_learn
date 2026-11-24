@@ -699,8 +699,7 @@ final class CurriculumService
                         $this->durationFingerprint($actor, $input),
                         (string)($durationProof['fingerprint'] ?? '')
                     )
-
-                        || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($durationProof['duration_ms'] ?? null)
+                    || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($durationProof['duration_ms'] ?? null)
                     || !in_array($durationProof['origin'] ?? '', ['author_sdk','provider_api'], true)
                 ) {
                     throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
