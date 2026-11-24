@@ -128,7 +128,11 @@ final class PublicationService
                 if ($action === 'review' && (int) $state !== $currentState) {
                     return false;
                 }
-                if ($action === 'return' && ((int) $transition->jlms_source_stage_id !== $reviewStage || (int) $state !== $returnState)) {
+                if (
+                    $action === 'return'
+                    && ((int) $transition->jlms_source_stage_id !== $reviewStage
+                    || (int) $state !== $returnState)
+                ) {
                     return false;
                 }
                 if ($action === 'publish' && (int) $state !== 1) {
@@ -198,11 +202,20 @@ final class PublicationService
         if ($version->status !== 'draft' || $course->current_version_id === null || $action !== 'publish') {
             return null;
         }
-        if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) {
+        if (
+            ($course->checked_out
+            && (int)$course->checked_out !== (int)$actor->id)
+            || ($version->checked_out
+            && (int)$version->checked_out !== (int)$actor->id)
+        ) {
             throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         $source = $this->row('course_versions', (int)$course->current_version_id);
-        if ((int)$source->course_id !== $courseId || $source->status !== 'published' || (int)$source->id === $versionId) {
+        if (
+            (int)$source->course_id !== $courseId
+            || $source->status !== 'published'
+            || (int)$source->id === $versionId
+        ) {
             throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
         }
         return (new PublicationImpact($this->db))->build($course, $source, $version, $transitionId, (int)$actor->id);
@@ -374,7 +387,12 @@ final class PublicationService
                     if (!$provider->getDescriptor()->configured) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
                     }
-                    if ($rules['mode'] !== 'consultation' && !(($capabilities = $provider->getCapabilities($normal))->position && $capabilities->duration && $capabilities->seek)) {
+                    if (
+                        $rules['mode'] !== 'consultation'
+                        && !(($capabilities = $provider->getCapabilities($normal))->position
+                        && $capabilities->duration
+                        && $capabilities->seek)
+                    ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                 } else {
