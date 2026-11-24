@@ -28,7 +28,10 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScrip
    <div class="col-md-2"><label class="form-label" for="filter_published"><?= Text::_('JSTATUS') ?></label><select class="form-select" id="filter_published" name="filter[published]"><option value=""><?= Text::_('JOPTION_SELECT_PUBLISHED') ?></option><option value="1" <?= (string)$this->state->get('filter.published', '') === '1' ? 'selected' : '' ?>><?= Text::_('JPUBLISHED') ?></option><option value="0" <?= (string)$this->state->get('filter.published', '') === '0' ? 'selected' : '' ?>><?= Text::_('JUNPUBLISHED') ?></option><option value="-2" <?= (string)$this->state->get('filter.published', '') === '-2' ? 'selected' : '' ?>><?= Text::_('JTRASHED') ?></option></select></div>
    <div class="col-md-2"><label class="form-label" for="filter_language"><?=
     Text::_('JGRID_HEADING_LANGUAGE') ?></label><select class="form-select" id="filter_language" name="filter[language]"><option value=""><?= Text::_('JOPTION_SELECT_LANGUAGE') ?></option><option value="*" <?= (string)$this->state->get('filter.language', '') === '*' ? 'selected' : '' ?>><?= Text::_('JALL') ?></option><option value="it-IT" <?= (string)$this->state->get('filter.language', '') === 'it-IT' ? 'selected' : '' ?>>Italiano</option><option value="en-GB" <?= (string)$this->state->get('filter.language', '') === 'en-GB' ? 'selected' : '' ?>>English</option></select></div>
-   <div class="col-md-2 d-flex gap-2"><button class="btn btn-primary" type="submit"><?= Text::_('JSEARCH_FILTER_SUBMIT') ?></button><a class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=questionbank') ?>"><?= Text::_('JSEARCH_FILTER_CLEAR') ?></a></div>
+   <div class="col-md-2 d-flex gap-2"><button class="btn btn-primary" type="submit"><?=
+    Text::_('JSEARCH_FILTER_SUBMIT') ?></button><a class="btn btn-secondary" href="<?=
+    Route::_('index.php?option=com_jlms&view=questionbank') ?>"><?=
+    Text::_('JSEARCH_FILTER_CLEAR') ?></a></div>
   </div>
  </form>
  <?php if (!$this->bank['items']) : ?>
