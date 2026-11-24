@@ -13,46 +13,16 @@ namespace Joomla\CMS {
     }
 }
 namespace {
+    use Jlms\Tests\Fixtures\Cat04Breadcrumb\BreadcrumbApplication;
+
+    require __DIR__ . '/fixtures/cat04-breadcrumb-menu.php';
+    require __DIR__ . '/fixtures/cat04-breadcrumb-trail.php';
+    require __DIR__ . '/fixtures/cat04-breadcrumb-application.php';
     require __DIR__ . '/../component/site/src/Helper/PublicBreadcrumbHelper.php';
 
-    final class BreadcrumbMenu
-    {
-        public ?object $active = null;
-        public function getActive(): ?object
-        {
-            return $this->active;
-        }
-    }
-    final class BreadcrumbTrail
-    {
-        public array $items = [];
-        public function getPathway(): array
-        {
-            return $this->items;
-        }
-        public function addItem(string $title): void
-        {
-            $this->items[] = (object) ['name' => $title];
-        }
-    }
-    final class BreadcrumbApplication
-    {
-        public BreadcrumbMenu $menu;
-        public BreadcrumbTrail $trail;
-        public function __construct()
-        {
-            $this->menu = new BreadcrumbMenu();
-            $this->trail = new BreadcrumbTrail();
-        }
-        public function getMenu(): BreadcrumbMenu
-        {
-            return $this->menu;
-        }
-        public function getPathway(): BreadcrumbTrail
-        {
-            return $this->trail;
-        }
-    }
+
+
+
 
     use Jlms\Component\Jlms\Site\Helper\PublicBreadcrumbHelper;
     \Joomla\CMS\Factory::$application = new BreadcrumbApplication();
