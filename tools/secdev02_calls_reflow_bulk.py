@@ -104,42 +104,48 @@ def required_source_fragments() -> dict[str, set[bytes]]:
     The syntax-preserving formatter must not break byte-exact contracts relied
     upon by the existing safety suite. Never relax these test assertions.
     """
-    checks = (ROOT / "tools/check.py").read_text(encoding="utf-8")
-    bindings = {}
-    for found in re.finditer(
-        r'(?m)^\s*(\w+)\s*=\s*\(\s*ROOT\s*/\s*[\'"]([^\'"]+)[\'"]\s*\)\.read_text\(',
-        checks,
-    ):
-        bindings[found.group(1)] = found.group(2)
+    checks_paths = [
+        ROOT / "tools/check.py",
+        *sorted((ROOT / "tests").glob("*.py")),
+        *sorted((ROOT / "tools").glob("*.py")),
+    ]
     snippets: dict[str, set[bytes]] = {}
-    for node in ast.walk(ast.parse(checks)):
-        if not isinstance(node, ast.Assert):
-            continue
-        for expr in ast.walk(node.test):
-            if isinstance(expr, ast.Compare):
+    for check_path in checks_paths:
+        checks = check_path.read_text(encoding="utf-8")
+        bindings = {}
+        for found in re.finditer(
+            r'(?m)^\s*(\w+)\s*=\s*\(\s*(?:ROOT|root)\s*/\s*[\'"]([^\'"]+)[\'"]\s*\)\.read_text\(',
+            checks,
+        ):
+            bindings[found.group(1)] = found.group(2)
+        for node in ast.walk(ast.parse(checks)):
+            if not isinstance(node, ast.Assert):
+                continue
+            for expr in ast.walk(node.test):
+                if isinstance(expr, ast.Compare):
+                    if (
+                        isinstance(expr.left, ast.Constant)
+                        and isinstance(expr.left.value, str)
+                        and expr.ops and isinstance(expr.ops[0], ast.In)
+                        and expr.comparators and isinstance(expr.comparators[0], ast.Name)
+                    ):
+                        name = expr.comparators[0].id
+                        if name in bindings:
+                            snippets.setdefault(bindings[name], set()).add(
+                                expr.left.value.encode("utf-8")
+                            )
                 if (
-                    isinstance(expr.left, ast.Constant)
-                    and isinstance(expr.left.value, str)
-                    and expr.ops and isinstance(expr.ops[0], ast.In)
-                    and expr.comparators and isinstance(expr.comparators[0], ast.Name)
+                    isinstance(expr, ast.Call)
+                    and isinstance(expr.func, ast.Attribute)
+                    and expr.func.attr == "count"
+                    and isinstance(expr.func.value, ast.Name)
+                    and expr.func.value.id in bindings
+                    and expr.args and isinstance(expr.args[0], ast.Constant)
+                    and isinstance(expr.args[0].value, str)
                 ):
-                    name = expr.comparators[0].id
-                    if name in bindings:
-                        snippets.setdefault(bindings[name], set()).add(
-                            expr.left.value.encode("utf-8")
-                        )
-            if (
-                isinstance(expr, ast.Call)
-                and isinstance(expr.func, ast.Attribute)
-                and expr.func.attr == "count"
-                and isinstance(expr.func.value, ast.Name)
-                and expr.func.value.id in bindings
-                and expr.args and isinstance(expr.args[0], ast.Constant)
-                and isinstance(expr.args[0].value, str)
-            ):
-                snippets.setdefault(bindings[expr.func.value.id], set()).add(
-                    expr.args[0].value.encode("utf-8")
-                )
+                    snippets.setdefault(bindings[expr.func.value.id], set()).add(
+                        expr.args[0].value.encode("utf-8")
+                    )
     return snippets
 
 
