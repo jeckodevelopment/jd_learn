@@ -25,7 +25,8 @@ final class CourseExpiryReminderService
         $days = max(1, min(30, (int) $params->get('mail_expiry_days', 3)));
         $until = 'DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ' . $days . ' DAY)';
         $query = $this->db->createQuery()->select('e.id AS enrollment_id, e.course_id, e.ends_at AS enrollment_ends_at,
-                ed.ends_at AS edition_ends_at, u.id AS learner_user_id, u.name AS learner_name, u.email AS learner_email, u.params AS user_params,
+                ed.ends_at AS edition_ends_at, u.id AS learner_user_id, u.name AS learner_name,'
+                . ' u.email AS learner_email, u.params AS user_params,
                 c.title AS course_title, c.language AS course_language, c.params_json AS course_params')
             ->from('#__jlms_enrollments AS e')->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
             ->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id')
