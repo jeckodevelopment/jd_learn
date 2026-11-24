@@ -14,22 +14,31 @@ final class PublicationReadiness
      * @param array<int,array{configured:bool,trackable:bool}> $providerChecks Local provider capability results keyed by lesson ID.
      * @return array{blockers:list<string>,warnings:list<string>}
      */
-    public static function inspect(object $course, array $modules, array $lessons, array $attachments = [], bool $scanRequired = false, array $rules = [], array $providerChecks = []): array
-    {
+    public static function inspect(
+        object $course,
+        array $modules,
+        array $lessons,
+        array $attachments = [],
+        bool $scanRequired = false,
+        array $rules = [],
+        array $providerChecks = [],
+    ): array {
         $blockers = [];
         $warnings = [];
 
-        $params = json_decode((string) ($course->params_json ?? '{}'), true);
-        $presentation = is_array($params) && is_array($params['presentation'] ?? null)
-            ? $params['presentation']
-            : [];
-        $description = html_entity_decode(strip_tags((string) ($presentation['description'] ?? '')), ENT_QUOTES | ENT_HTML5, 'UTF-8');
-        if (preg_replace('/[\s\p{Z}\p{Cf}]/u', '', $description) === '') {
-            $blockers[] = 'COM_JLMS_COURSE_DESCRIPTION_REQUIRED';
+        $params = json_decode((string) ($course->params_json ?? "{}"), true);
+        $presentation = is_array($params) && is_array($params["presentation"] ?? null) ? $params["presentation"] : [];
+        $description = html_entity_decode(
+            strip_tags((string) ($presentation["description"] ?? "")),
+            ENT_QUOTES | ENT_HTML5,
+            "UTF-8",
+        );
+        if (preg_replace("/[\s\p{Z}\p{Cf}]/u", "", $description) === "") {
+            $blockers[] = "COM_JLMS_COURSE_DESCRIPTION_REQUIRED";
         }
 
         if (!$modules) {
-            $blockers[] = 'COM_JLMS_READINESS_MODULES_REQUIRED';
+            $blockers[] = "COM_JLMS_READINESS_MODULES_REQUIRED";
         }
 
         $moduleCounts = [];
@@ -39,7 +48,8 @@ final class PublicationReadiness
 
         $required = 0;
         $initialRequired = 0;
-        $consultation = ($rules['mode'] ?? 'learning') === 'consultation' && ($rules['completion_policy'] ?? '') === 'none';
+        $consultation =
+            ($rules["mode"] ?? "learning") === "consultation" && ($rules["completion_policy"] ?? "") === "none";
         foreach ($lessons as $lesson) {
             $moduleId = (int) $lesson->module_id;
             if (!array_key_exists($moduleId, $moduleCounts)) {
@@ -52,119 +62,139 @@ final class PublicationReadiness
             }
 
             if (
-                !LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)
-                || !LessonAvailability::validReleaseDays($lesson->release_after_days ?? null)
+                !LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null) ||
+                !LessonAvailability::validReleaseDays($lesson->release_after_days ?? null)
             ) {
-                $blockers[] = 'COM_JLMS_LESSON_SCHEDULE_INVALID';
+                $blockers[] = "COM_JLMS_LESSON_SCHEDULE_INVALID";
             } elseif (($lesson->publish_up ?? null) !== null || ($lesson->publish_down ?? null) !== null) {
-                $warnings[] = 'COM_JLMS_READINESS_LESSON_SCHEDULED';
+                $warnings[] = "COM_JLMS_READINESS_LESSON_SCHEDULED";
             }
             if ((int) ($lesson->release_after_days ?? 0) > 0) {
-                $warnings[] = 'COM_JLMS_READINESS_LESSON_DRIP';
+                $warnings[] = "COM_JLMS_READINESS_LESSON_DRIP";
             }
-            if ((int) ($lesson->required ?? 0) === 1 && LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)) {
+            if (
+                (int) ($lesson->required ?? 0) === 1 &&
+                LessonAvailability::validStored($lesson->publish_up ?? null, $lesson->publish_down ?? null)
+            ) {
                 $courseWindow = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::read($course);
-                if (!LessonAvailability::reachable($lesson->publish_up ?? null, $lesson->publish_down ?? null, $courseWindow)) {
-                    $blockers[] = 'COM_JLMS_LESSON_UNREACHABLE';
+                if (
+                    !LessonAvailability::reachable(
+                        $lesson->publish_up ?? null,
+                        $lesson->publish_down ?? null,
+                        $courseWindow,
+                    )
+                ) {
+                    $blockers[] = "COM_JLMS_LESSON_UNREACHABLE";
                 }
             }
 
             // Editorial transcripts are optional accessibility aids. This check
             // does not establish whether remote providers offer captions or tracks.
-            if (in_array(($lesson->kind ?? ''), ['audio', 'video'], true)) {
-                $mediaParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
-                $key = $lesson->kind === 'video' ? 'video_transcript' : 'audio_transcript';
-                $transcript = is_array($mediaParams) && is_string($mediaParams[$key] ?? null)
-                    ? html_entity_decode(strip_tags($mediaParams[$key]), ENT_QUOTES | ENT_HTML5, 'UTF-8')
-                    : '';
-                if (preg_replace('/[\\s\\p{Z}\\p{Cf}]/u', '', $transcript) === '') {
-                    $warnings[] = $lesson->kind === 'video'
-                        ? 'COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING'
-                        : 'COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING';
+            if (in_array($lesson->kind ?? "", ["audio", "video"], true)) {
+                $mediaParams = json_decode((string) ($lesson->params_json ?? "{}"), true);
+                $key = $lesson->kind === "video" ? "video_transcript" : "audio_transcript";
+                $transcript =
+                    is_array($mediaParams) && is_string($mediaParams[$key] ?? null)
+                        ? html_entity_decode(strip_tags($mediaParams[$key]), ENT_QUOTES | ENT_HTML5, "UTF-8")
+                        : "";
+                if (preg_replace("/[\\s\\p{Z}\\p{Cf}]/u", "", $transcript) === "") {
+                    $warnings[] =
+                        $lesson->kind === "video"
+                            ? "COM_JLMS_READINESS_VIDEO_TRANSCRIPT_MISSING"
+                            : "COM_JLMS_READINESS_AUDIO_TRANSCRIPT_MISSING";
                 }
                 // A locally authored transcript is not evidence that a remote
                 // media item supplies selectable caption tracks. Provider SDKs
                 // cannot reliably enumerate them during editorial readiness.
                 // Surface the independent check without blocking publication.
                 if (
-                    $lesson->kind === 'video'
-                    && in_array((string) ($lesson->provider_key ?? ''), ['youtube', 'vimeo', 'cloudflarestream'], true)
+                    $lesson->kind === "video" &&
+                    in_array((string) ($lesson->provider_key ?? ""), ["youtube", "vimeo", "cloudflarestream"], true)
                 ) {
-                    $warnings[] = 'COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED';
+                    $warnings[] = "COM_JLMS_READINESS_REMOTE_CAPTIONS_UNVERIFIED";
                 }
             }
 
-            if (($lesson->kind ?? '') === 'document') {
+            if (($lesson->kind ?? "") === "document") {
                 $linked = false;
                 foreach ($attachments as $attachment) {
                     if (
-                        (int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
-                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0
+                        (int) ($attachment->lesson_id ?? 0) === (int) $lesson->id &&
+                        ($attachment->status ?? "") === "ready" &&
+                        (int) ($attachment->state ?? 0) === 1 &&
+                        (int) ($attachment->preview ?? 0) === 0
                     ) {
                         $linked = true;
                         break;
                     }
                 }
                 if (!$linked) {
-                    $blockers[] = 'COM_JLMS_DOCUMENT_MATERIAL_REQUIRED';
+                    $blockers[] = "COM_JLMS_DOCUMENT_MATERIAL_REQUIRED";
                 }
-            } elseif (($lesson->kind ?? '') === 'audio') {
+            } elseif (($lesson->kind ?? "") === "audio") {
                 $linked = false;
                 foreach ($attachments as $attachment) {
                     if (
-                        (int) ($attachment->lesson_id ?? 0) === (int) $lesson->id && ($attachment->status ?? '') === 'ready'
-                        && in_array(($attachment->mime_type ?? ''), ['audio/mpeg', 'audio/ogg'], true)
-                        && (int) ($attachment->state ?? 0) === 1 && (int) ($attachment->preview ?? 0) === 0
+                        (int) ($attachment->lesson_id ?? 0) === (int) $lesson->id &&
+                        ($attachment->status ?? "") === "ready" &&
+                        in_array($attachment->mime_type ?? "", ["audio/mpeg", "audio/ogg"], true) &&
+                        (int) ($attachment->state ?? 0) === 1 &&
+                        (int) ($attachment->preview ?? 0) === 0
                     ) {
                         $linked = true;
                         break;
                     }
                 }
                 if (!$linked) {
-                    $blockers[] = 'COM_JLMS_AUDIO_MATERIAL_REQUIRED';
+                    $blockers[] = "COM_JLMS_AUDIO_MATERIAL_REQUIRED";
                 }
-            } elseif (($lesson->kind ?? '') === 'video') {
+            } elseif (($lesson->kind ?? "") === "video") {
                 // The administrator preflight uses the same local capability
                 // contract as publication. Missing provider details are not
                 // guessed: authoritative publication still validates the source.
                 $providerCheck = $providerChecks[(int) ($lesson->id ?? 0)] ?? null;
                 if (is_array($providerCheck)) {
-                    if (($providerCheck['configured'] ?? false) !== true) {
-                        $blockers[] = 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED';
-                    } elseif (!$consultation && ($providerCheck['trackable'] ?? false) !== true) {
-                        $blockers[] = 'COM_JLMS_PUBLICATION_UNSUPPORTED';
+                    if (($providerCheck["configured"] ?? false) !== true) {
+                        $blockers[] = "COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED";
+                    } elseif (!$consultation && ($providerCheck["trackable"] ?? false) !== true) {
+                        $blockers[] = "COM_JLMS_PUBLICATION_UNSUPPORTED";
                     }
                 }
-                $lessonParams = json_decode((string) ($lesson->params_json ?? '{}'), true);
+                $lessonParams = json_decode((string) ($lesson->params_json ?? "{}"), true);
                 $duration = (int) ($lesson->duration_ms ?? 0);
-                $durationReady = $duration >= 1000 && $duration <= 28800000
-                    && is_array($lessonParams) && ($lessonParams['video_duration_confirmed'] ?? false) === true;
+                $durationReady =
+                    $duration >= 1000 &&
+                    $duration <= 28800000 &&
+                    is_array($lessonParams) &&
+                    ($lessonParams["video_duration_confirmed"] ?? false) === true;
                 if (!$durationReady && $consultation) {
-                    $warnings[] = 'COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED';
+                    $warnings[] = "COM_JLMS_READINESS_VIDEO_DURATION_UNCONFIRMED";
                 } elseif (!$durationReady) {
-                    $blockers[] = 'COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED';
+                    $blockers[] = "COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED";
                 }
             }
         }
 
         if ($required > 0 && $initialRequired === 0) {
-            $blockers[] = 'COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED';
+            $blockers[] = "COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED";
         }
 
         foreach ($attachments as $attachment) {
-            $scan = json_decode((string) ($attachment->scan_json ?? '{}'), true);
+            $scan = json_decode((string) ($attachment->scan_json ?? "{}"), true);
             $preview = (int) ($attachment->preview ?? 0);
             $lessonId = $attachment->lesson_id ?? null;
             if (
-                ($scanRequired && (!is_array($scan) || ($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
-                || ($attachment->status ?? '') !== 'ready' || !in_array($preview, [0, 1], true)
-                || ($preview === 1 && $lessonId !== null)
-                || !MaterialAvailability::validStored($attachment->publish_up ?? null, $attachment->publish_down ?? null)
+                ($scanRequired &&
+                    (!is_array($scan) || ($scan["engine"] ?? "") !== "clamd" || ($scan["result"] ?? "") !== "clean")) ||
+                ($attachment->status ?? "") !== "ready" ||
+                !in_array($preview, [0, 1], true) ||
+                ($preview === 1 && $lessonId !== null) ||
+                !MaterialAvailability::validStored($attachment->publish_up ?? null, $attachment->publish_down ?? null)
             ) {
-                $blockers[] = 'COM_JLMS_MATERIAL_NOT_READY';
+                $blockers[] = "COM_JLMS_MATERIAL_NOT_READY";
             }
             if (($attachment->publish_up ?? null) !== null || ($attachment->publish_down ?? null) !== null) {
-                $warnings[] = 'COM_JLMS_READINESS_MATERIAL_SCHEDULED';
+                $warnings[] = "COM_JLMS_READINESS_MATERIAL_SCHEDULED";
             }
         }
 
@@ -172,31 +202,31 @@ final class PublicationReadiness
 
         foreach ($moduleCounts as $count) {
             if ($count === 0) {
-                $blockers[] = 'COM_JLMS_READINESS_MODULE_EMPTY';
+                $blockers[] = "COM_JLMS_READINESS_MODULE_EMPTY";
                 break;
             }
         }
         if ($consultation && $required > 0) {
-            $blockers[] = 'COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS';
+            $blockers[] = "COM_JLMS_CONSULTATION_COURSE_HAS_REQUIRED_LESSONS";
         } elseif (!$consultation && $required === 0) {
-            $blockers[] = 'COM_JLMS_READINESS_REQUIRED_LESSON';
+            $blockers[] = "COM_JLMS_READINESS_REQUIRED_LESSON";
         }
         if ($consultation) {
             foreach ($lessons as $lesson) {
-                if (($lesson->kind ?? '') === 'quiz') {
-                    $blockers[] = 'COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED';
+                if (($lesson->kind ?? "") === "quiz") {
+                    $blockers[] = "COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED";
                     break;
                 }
             }
         }
 
-        if (trim((string) ($course->summary ?? '')) === '') {
-            $warnings[] = 'COM_JLMS_READINESS_SUMMARY_MISSING';
+        if (trim((string) ($course->summary ?? "")) === "") {
+            $warnings[] = "COM_JLMS_READINESS_SUMMARY_MISSING";
         }
-        if (trim((string) ($presentation['image'] ?? '')) === '') {
-            $warnings[] = 'COM_JLMS_READINESS_IMAGE_MISSING';
+        if (trim((string) ($presentation["image"] ?? "")) === "") {
+            $warnings[] = "COM_JLMS_READINESS_IMAGE_MISSING";
         }
 
-        return ['blockers' => array_values(array_unique($blockers)), 'warnings' => $warnings];
+        return ["blockers" => array_values(array_unique($blockers)), "warnings" => $warnings];
     }
 }
