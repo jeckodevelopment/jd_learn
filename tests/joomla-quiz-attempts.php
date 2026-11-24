@@ -423,7 +423,8 @@ attemptReject(
     422,
     'nested option value rejected without warning'
 );
-$beforeRevokeAttempt = $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc();
+$beforeRevokeAttempt = $db->
+    setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc();
 $beforeRevokeAnswers = $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
 . '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id WHERE ' .
     'q.attempt_id=') . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList();
@@ -494,7 +495,8 @@ $submit = attemptKey();
 $body = attemptAnswers($a);
 $passed = $service->mutate($student, 'en-GB', $enrollment, $lesson, $a['attempt']['id'], 1, $submit, $body, true);
 attemptExpect(
-    $passed['attempt']['passed'] && $passed['course_completed'] && $passed['course_percent'] === 100 && $passed['feedback_available'],
+    $passed['attempt']['passed'] && $passed['course_completed'] && $passed['course_percent'] === 100 &&
+         $passed['feedback_available'],
     'exact set grading passes and completes course'
 );
 attemptExpect(
@@ -531,7 +533,8 @@ $expired = $service->mutate(
     true
 );
 attemptExpect(
-    $expired['attempt']['state'] === 'expired' && $expired['attempt']['score_points'] === 0 && $expired['best']['score_points'] === 5,
+    $expired['attempt']['state'] === 'expired' && $expired['attempt']['score_points'] === 0 &&
+         $expired['best']['score_points'] === 5,
     'late answers ignored and best score retained'
 );
 attemptExpect(
@@ -771,7 +774,8 @@ foreach ($workers as [$process,$pipes]) {
 }
 attemptExpect($ids[0] === $ids[1] && (int)$ids[0] > 0, 'concurrent starts allocate one attempt');
 attemptExpect(
-    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id=' . $concurrentEnrollment)->loadResult() === 1,
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_active_attempts WHERE enrollment_id=' .
+         $concurrentEnrollment)->loadResult() === 1,
     'one unique active slot after concurrent starts'
 );
 echo json_encode(['quiz_runtime_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

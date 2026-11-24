@@ -60,7 +60,8 @@ final class QuizAuthoringService
             ->where('course_version_id = :version')
             ->bind(':version', $version, ParameterType::INTEGER)->order('ordering, id');
         $modules = $this->db->setQuery($q, 0, 1000)->loadObjectList();
-        $data = ['course_id' => $course, 'version_id' => $version, 'expected_version_revision' => (int) $v->revision, 'lesson_id' => 0,
+        $data = ['course_id' => $course, 'version_id' => $version, 'expected_version_revision' => (int) $v
+            ->revision, 'lesson_id' => 0,
             'revision' => 1, 'required' => '1', 'threshold' => '70', 'max_attempts' => 3, 'time_minutes' => 0, 'retry_minutes' => 0,
             'assessment' => 'graded', 'selection_mode' => 'fixed', 'feedback_policy' => 'pass_or_exhausted', 'questions' => []];
         if ($lesson) {
@@ -86,7 +87,8 @@ final class QuizAuthoringService
                 'max_attempts' => (int) $quiz->max_attempts, 'time_minutes' => intdiv((int) $quiz->time_limit_seconds, 60),
                 'retry_minutes' => intdiv($selection['retry_delay_seconds'], 60), 'assessment' => $selection['assessment'],
                 'selection_mode' => $selection['mode'], 'draw_count' => $selection['draw_count'],
-                'shuffle_questions' => (int) $selection['shuffle_questions'], 'shuffle_options' => (int) $selection['shuffle_options'],
+                'shuffle_questions' => (int) $selection['shuffle_questions'], 'shuffle_options' =>
+                     (int) $selection['shuffle_options'],
                 'feedback_policy' => $quiz->feedback_policy, 'questions' => $this->db->setQuery($q, 0, 200)->loadAssocList()]);
         }
         return ['course' => $c, 'version' => $v, 'modules' => $modules, 'data' => $data];

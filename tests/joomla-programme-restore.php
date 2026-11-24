@@ -162,7 +162,8 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
     $course = $f['course'];
     $ids = $db->setQuery('SELECT id FROM #__jlms_course_versions WHERE ' .
         'course_id=' . $course . ' ORDER BY version_no')->loadColumn();
-    $state = ['course' => (array)restoreRow('courses', $course),'versions' => array_map(static fn($id)=>restoreTree((int)$id), $ids),'learning' => restoreLearning(),
+    $state = ['course' => (array)restoreRow('courses', $course),'versions' => array_map(static fn($id)
+        =>restoreTree((int)$id), $ids),'learning' => restoreLearning(),
     'audit' => $db->setQuery(("SELECT * FROM #__action_logs WHERE "
         . "extension='com_jlms.programmerestore' AND item_id=") . $course . ' ORDER BY id')->loadAssocList()];
     if ($mode === 'checkpoint') {
@@ -300,7 +301,8 @@ foreach (['modules','lessons','quizzes','attachments'] as $table) {
         }
     }
 }
-restoreExpect(count($restored['questions']) === count($trees[$historical]['questions']) && count($restored['questions']) > 0, 'Quiz question references retained');
+restoreExpect(count($restored['questions']) === count($trees[$historical]['questions']) &&
+     count($restored['questions']) > 0, 'Quiz question references retained');
 foreach ($trees[$historical]['questions'] as $i => $question) {
     $new = $restored['questions'][$i];
     unset($question['quiz_id'], $new['quiz_id']);
@@ -314,7 +316,8 @@ foreach (['revision','modified_at','modified_by'] as $field) {
 }
 restoreExpect($courseBefore == $courseAfter, 'Course presentation, teachers, access, state and current pointer are ' .
     'preserved');
-restoreExpect(restoreLearning() === $before && (int)restoreRow('enrollments', $enrollment)->course_version_id === $historical, 'Recovery leaves all learning history unchanged');
+restoreExpect(restoreLearning() === $before && (int)restoreRow('enrollments', $enrollment)->
+    course_version_id === $historical, 'Recovery leaves all learning history unchanged');
 restoreExpect(
     (array)restoreRow('certificates', (int)$historyCertificate->id) === $certificateBefore
     && (array)restoreRow('certificate_documents', (int)$historyDocument->id) === $documentBefore,

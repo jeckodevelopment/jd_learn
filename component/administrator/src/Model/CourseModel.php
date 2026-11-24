@@ -178,7 +178,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $asset = 'com_jlms.course.' . $target;
             if (
                 !$item || $actor->guest || $actor->block
-                || !($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id && $actor->authorise('core.edit.own', $asset)))
+                || !($actor->authorise('core.edit', $asset) || ((int) $item->created_by ===
+                     (int) $actor->id && $actor->authorise('core.edit.own', $asset)))
                 || ($item->checked_out && (int) $item->checked_out !== (int) $actor->id)
             ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');

@@ -708,7 +708,8 @@ final class CurriculumService
                 $publishUp = $input['publish_up'] ?? LessonAvailability::editor($lesson->publish_up, $timezone);
                 $publishDown = $input['publish_down'] ?? LessonAvailability::editor($lesson->publish_down, $timezone);
                 $fields = array_replace($fields, LessonAvailability::normalize($publishUp, $publishDown, $timezone));
-                $releaseDays = array_key_exists('release_after_days', $input) ? $input['release_after_days'] : $lesson->release_after_days;
+                $releaseDays = array_key_exists('release_after_days', $input) ?
+                     $input['release_after_days'] : $lesson->release_after_days;
                 $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($releaseDays);
                 if ($fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key === 'html5') {
                     foreach (['source_json', 'media_asset_id', 'duration_ms', 'params_json'] as $field) {

@@ -232,7 +232,8 @@ final class QuizAttemptService
                 'status' => 'open','score_points' => null,'passed' => null,'submitted_at' => null
                     ,'rules_snapshot_json' => QuestionDefinition::canonical($rules),'max_points' => $max
                     ,'started_at' => self::date($now),
-                'deadline_at' => $rules['time_seconds'] ? self::date($now + $rules['time_seconds']) : null,'counted_for_limit' => 1,'revision' => 1];
+                'deadline_at' => $rules['time_seconds'] ? self::date($now + $rules['time_seconds']) : null
+                    ,'counted_for_limit' => 1,'revision' => 1];
             $this->db->insertObject('#__jlms_attempts', $a, 'id');
             $filter = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1);
             $order = 0;
@@ -633,7 +634,8 @@ final class QuizAttemptService
             }
         }
         $remaining = $rules['max_attempts'] === 0 ? null : max(0, $rules['max_attempts'] - $history['used']);
-        $dto = ['enrollment_id' => $enrollment,'lesson_id' => (int)$l->id,'title' => $l->title,'server_now' => $now,'assessment' => $rules['assessment'],
+        $dto = ['enrollment_id' => $enrollment,'lesson_id' => (int)$l->id,'title' => $l->title,
+            'server_now' => $now,'assessment' => $rules['assessment'],
             'base_time_seconds' => $rules['base_time_seconds'] ?? $rules['time_seconds'],
                 'extra_time_seconds' => $rules['extra_time_seconds'] ?? 0,'next_time_seconds' =>
                  $nextRules['time_seconds'],'next_extra_time_seconds' =>

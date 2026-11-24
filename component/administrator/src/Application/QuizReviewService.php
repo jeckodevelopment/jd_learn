@@ -225,7 +225,8 @@ final class QuizReviewService
             if (!hash_equals($impact['hash'], $impactHash)) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_CONFLICT', 409);
             }
-            $now = gmdate('Y-m-d H:i:s');$update = (object)['id' => $attempt,'status' => 'invalidated','counted_for_limit' => $refund ? 0 : 1,'invalidation_reason' => $reason,
+            $now = gmdate('Y-m-d H:i:s');$update = (object)['id' => $attempt,'status' => 'invalidated'
+                ,'counted_for_limit' => $refund ? 0 : 1,'invalidation_reason' => $reason,
                 'invalidated_by' => (int)$actor->id,'invalidated_at' => $now,'revision' => (int)$a->revision + 1];
             $this->db->updateObject('#__jlms_attempts', $update, 'id');
             $q = $this->db->createQuery()

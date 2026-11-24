@@ -111,7 +111,8 @@ foreach ($quizzes as $quiz) {
 }
 $revision = static fn(): int => (int) $db->setQuery('SELECT revision FROM #__jlms_course_versions ' .
     'WHERE id=' . $draft)->loadResult();
-$authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $draft,'expected_version_revision' => $revision(),
+$authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $draft,
+    'expected_version_revision' => $revision(),
     'module_id' => (int)$outline['modules'][0]->id,'title' => 'New lesson in working copy','kind' => 'text'
         ,'required' => '0','body' => '<p>New content</p>']);
 $current = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadObject();
@@ -282,7 +283,8 @@ $fieldId = (int)$fieldModel->getState('field.id');
 $teacher = $factory->createModel('Teacher', 'Administrator', ['ignore_request' => true]);
 $data = ['id' => 0,'revision' => 1,'title' => 'Editorial teacher profile','alias' => 'editorial-teacher-profile'
     ,'state' => 1,'access' => 1,'language' => '*',
-    'bio' => 'Teacher presentation','image' => '','user_id' => '','com_fields' => ['teaching-contact' => 'contact@example.invalid']];
+    'bio' => 'Teacher presentation','image' => '','user_id' => '','com_fields' => ['teaching-contact' =>
+         'contact@example.invalid']];
 editorialExpect($teacher->save($data), 'Teacher creation needs no category choice');
 $teacherId = (int)$teacher->getState('teacher.id');
 editorialExpect(!$teacher->getForm([], false)->getField('catid'), 'Teacher form has no category selector');
