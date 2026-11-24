@@ -333,7 +333,8 @@ listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_
     . (int)$ids['Alpha'])->loadAssoc() == ['admissions_open' => 0,'delivery_enabled'
         => 0], 'Trash closes both gates for a previously open course');
 listExpect(count($finderStates) === 1 && (int)$finderStates[0]['state'] === -2
-    && (int)$finderStates[0]['admissions_open'] === 0 && (int)$finderStates[0]['delivery_enabled'] === 0, 'Finder refresh after trash observes committed state and closed gates');
+    && (int)$finderStates[0]['admissions_open'] === 0 && (int)$finderStates[0]['delivery_enabled'] ===
+         0, 'Finder refresh after trash observes committed state and closed gates');
 listExpect(!$courseModel->purgeEmpty($ids['Alpha']), 'Purge rejects trashed course with frozen teaching version');
 listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id=' . (int)$ids['Alpha'])
     ->loadResult() === 1, 'Denied purge leaves trashed course intact');
@@ -357,7 +358,8 @@ listExpect($db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_
     . (int)$ids['Alpha'])->loadAssoc() == ['admissions_open' => 0,'delivery_enabled'
         => 0], 'Restore never opens gates closed by trash');
 listExpect(count($finderStates) === 2 && (int)$finderStates[1]['state'] === 0
-    && (int)$finderStates[1]['admissions_open'] === 0 && (int)$finderStates[1]['delivery_enabled'] === 0, 'Finder refresh after restore observes committed unpublished and gated ' .
+    && (int)$finderStates[1]['admissions_open'] === 0 && (int)$finderStates[1]['delivery_enabled'] ===
+         0, 'Finder refresh after restore observes committed unpublished and gated ' .
         'state');
 $app->getDispatcher()->removeListener('onFinderAfterSave', $finderWitness);
 listExpect($db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . (int)$ids['Alpha'])

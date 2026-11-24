@@ -24,7 +24,9 @@ if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
         if (!$q->fetchColumn()) {
             throw new \RuntimeException('Native HTTP translation save did not persist');
         }
-        $f['rows'] = json_encode($pdo->query("SELECT * FROM joomla_associations WHERE context='com_jlms.item' ORDER BY id")->fetchAll(\PDO::FETCH_OBJ), JSON_THROW_ON_ERROR);
+        $f['rows'] = json_encode($pdo
+            ->query("SELECT * FROM joomla_associations WHERE context='com_jlms.item' ORDER BY id")
+            ->fetchAll(\PDO::FETCH_OBJ), JSON_THROW_ON_ERROR);
         file_put_contents($fixturePath, json_encode($f, JSON_THROW_ON_ERROR));
         exit;
     }
@@ -35,7 +37,8 @@ if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
     exit;
 }
 file_put_contents($state, json_encode($pdo->query(("SELECT enabled,params FROM joomla_extensions WHERE "
-    . "type='plugin' AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
+    . "type='plugin' AND folder='system' AND element='languagefilter'"))
+        ->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
 $pdo->exec(("UPDATE joomla_extensions SET "
     . "enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1,'$.detect_browser',0,'$.remove_default_prefix',0) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
 // Simulate the web request context required by AdministratorApplication in a CLI smoke test.

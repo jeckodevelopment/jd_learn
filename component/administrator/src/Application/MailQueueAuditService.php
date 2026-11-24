@@ -94,7 +94,8 @@ final class MailQueueAuditService
             // Only show a finite diagnostic category. Never render stored exception
             // text or legacy SMTP responses (which may contain addresses or secrets).
             $row->diagnostic_key = match ((string) ($row->last_error ?? '')) {
-                'Mail template is missing or contains unavailable placeholders.' => 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE',
+                'Mail template is missing or contains unavailable placeholders.' =>
+                     'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TEMPLATE',
                 'Delivery failed; transport details are withheld.' => 'COM_JLMS_MAIL_QUEUE_DIAGNOSTIC_TRANSPORT',
                 default => null,
             };

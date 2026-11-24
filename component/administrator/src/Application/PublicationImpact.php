@@ -54,7 +54,8 @@ final class PublicationImpact
             $result['modules'][$row['logical_key']] = $row;
         }
         // Hash large bodies in SQL: do not buffer thousands of 1 MiB lesson bodies in PHP.
-        $lessons = $this->rows("SELECT id,logical_key,module_id,title,ordering,kind,required,preview,completion_rule,duration_ms,provider_key,media_asset_id,publish_up,publish_down,release_after_days,SHA2(COALESCE(body,''),256) AS body_hash,SHA2(COALESCE(source_json,''),256) AS source_hash,SHA2(params_json,256) AS settings,SHA2(fields_snapshot_json,256) AS fields_hash FROM #__jlms_lessons WHERE course_version_id=:version ORDER BY ordering,id", $version, 5000);
+        $lessons = $this->
+            rows("SELECT id,logical_key,module_id,title,ordering,kind,required,preview,completion_rule,duration_ms,provider_key,media_asset_id,publish_up,publish_down,release_after_days,SHA2(COALESCE(body,''),256) AS body_hash,SHA2(COALESCE(source_json,''),256) AS source_hash,SHA2(params_json,256) AS settings,SHA2(fields_snapshot_json,256) AS fields_hash FROM #__jlms_lessons WHERE course_version_id=:version ORDER BY ordering,id", $version, 5000);
         $lessonKeys = [];
         foreach ($lessons as $row) {
             $lessonKeys[$row['id']] = $row['logical_key'];
@@ -62,7 +63,8 @@ final class PublicationImpact
             unset($row['id']);
             $result['lessons'][$row['logical_key']] = $row;
         }
-        $quizzes = $this->rows('SELECT id,lesson_id,pass_basis_points,max_attempts,time_limit_seconds,feedback_policy,selection_json FROM #__jlms_quizzes WHERE course_version_id=:version ORDER BY id', $version, 5000);
+        $quizzes = $this->
+            rows('SELECT id,lesson_id,pass_basis_points,max_attempts,time_limit_seconds,feedback_policy,selection_json FROM #__jlms_quizzes WHERE course_version_id=:version ORDER BY id', $version, 5000);
         $questionHashes = [];
         foreach (array_chunk(array_column($quizzes, 'id'), 32) as $batch) {
             $query = $this->db->createQuery()->select('quiz_id,question_revision_id,ordering,points')
@@ -124,7 +126,8 @@ final class PublicationImpact
     {
         $diff = ['added' => 0, 'changed' => 0, 'removed' => 0, 'details' => []];
         foreach ($after as $key => $item) {
-            $kind = !isset($before[$key]) ? 'added' : (self::hash($item) !== self::hash($before[$key]) ? 'changed' : '');
+            $kind = !isset($before[$key]) ? 'added' : (self::hash($item) !==
+                 self::hash($before[$key]) ? 'changed' : '');
             if ($kind !== '') {
                 $diff[$kind]++;
                 if (count($diff['details']) < 100) {

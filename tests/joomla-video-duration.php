@@ -106,7 +106,10 @@ function durationState(int $course): array
     $ids = implode(',', array_column($versions, 'id'));
     return ['course' => (array)durationRow('courses', $course),'versions' => $versions,'lessons' => $db
         ->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id IN (' . $ids . ') ORDER BY id')
-            ->loadAssocList(),'enrollments' => $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(),'progress' => $db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
+            ->loadAssocList(),'enrollments' => $db->
+                setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->
+                loadAssocList(),'progress' => $db->
+                setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
 }
 $fixture = dirname($root) . '/video-duration-fixture.json';
 $mode = $argv[2] ?? '';
@@ -157,7 +160,8 @@ $input = static fn(): array=>$scope() + ['id' => $lesson,'revision' => durationR
 $before = durationState($course);
 $data = $authoring->authoringMetadata($actor, $input());
 durationExpect($data['duration_ms'] === null && $data['origin'] === 'author_sdk'
-    && $data['options']['reference'] === 'dQw4w9WgXcQ', 'YouTube inspection returns normalized SDK options without fake enrollment');
+    && $data['options']['reference'] ===
+         'dQw4w9WgXcQ', 'YouTube inspection returns normalized SDK options without fake enrollment');
 durationExpect(durationState($course) === $before, 'Metadata acquisition performs no programme or learning write');
 durationDenied(fn()=>$authoring->authoringMetadata(new \Joomla\CMS\User\User(0), $input()), 'JERROR_ALERTNOAUTHOR');
 durationDenied(fn()=>$authoring->authoringMetadata($actor, array_replace($input(), ['version_id'
@@ -169,14 +173,16 @@ durationDenied(fn()=>$authoring->authoringMetadata($actor, $input()), 'COM_JLMS_
 $settings->set('video_external_policy', 'embed');
 $vimeo = $authoring->authoringMetadata($actor, array_replace($input(), ['provider_key'
     => 'vimeo','source_reference' => 'https://vimeo.com/123456789/abcdef1234']));
-durationExpect($vimeo['duration_ms'] === null && $vimeo['options']['privacy_hash'] === 'abcdef1234', 'Vimeo normalization retains unlisted privacy hash for SDK preview');
+durationExpect($vimeo['duration_ms'] === null && $vimeo['options']['privacy_hash'] ===
+     'abcdef1234', 'Vimeo normalization retains unlisted privacy hash for SDK preview');
 $proof = ['fingerprint' => $data['fingerprint'],'duration_ms' => 10000,'origin' => 'author_sdk'];
 durationDenied(fn()=>$authoring->saveLesson($actor, array_replace($input(), ['source_reference'
     => 'aaaaaaaaaaa']), $proof), 'COM_JLMS_VIDEO_METADATA_STALE');
 $authoring->saveLesson($actor, $input(), $proof);
 $measured = durationRow('lessons', $lesson);
 durationExpect((int)$measured->duration_ms === 10000 && json_decode($measured
-    ->params_json, true)['video_duration_origin'] === 'author_sdk', 'SDK duration is stored without author typing or confirmation');
+    ->params_json, true)['video_duration_origin'] ===
+         'author_sdk', 'SDK duration is stored without author typing or confirmation');
 $authoring->saveLesson($actor, $input());
 durationExpect(durationRow('lessons', $lesson)->duration_ms === $measured->duration_ms
     && durationRow('lessons', $lesson)->source_revision === $measured
@@ -197,10 +203,12 @@ durationDenied(fn()=>$authoring->authoringMetadata($actor, $stream), 'COM_JLMS_R
 $reset = (object)['id' => $version,'revision' => $previousRevision];
 $db->updateObject('#__jlms_course_versions', $reset, 'id');
 $api = $authoring->authoringMetadata($actor, $stream);
-durationExpect($api['duration_ms'] === 10000 && $api['origin'] === 'provider_api', 'Stream duration comes from controlled official API metadata');
+durationExpect($api['duration_ms'] === 10000 && $api['origin'] ===
+     'provider_api', 'Stream duration comes from controlled official API metadata');
 $streamId = $authoring->saveLesson($actor, $stream, ['fingerprint' => $api['fingerprint'],'duration_ms'
     => $api['duration_ms'],'origin' => $api['origin']]);
-durationExpect(json_decode(durationRow('lessons', $streamId)->params_json, true)['video_duration_origin'] === 'provider_api', 'Server API provenance retained');
+durationExpect(json_decode(durationRow('lessons', $streamId)->
+    params_json, true)['video_duration_origin'] === 'provider_api', 'Server API provenance retained');
 $publish = static function (int $id) use ($publication, $actor, $course): void {
     $t = (int)$publication->transitions($actor, $course, $id)[0]->id;
     $impact = $publication->updateImpact($actor, $course, $id, $t);
@@ -222,7 +230,8 @@ $now += 1000;
 $save = static fn(int $seq, array $events, int $duration)=>$video
     ->save($actor, 'en-GB', $enrollment, $lesson, $grant['session_id'], $grant['source_revision'], $seq, $duration, json_encode($events, JSON_THROW_ON_ERROR));
 $r = $save(1, [$event(1, 'play', 0, 0),$event(2, 'seeking', 8000, 1, false),$event(3, 'ended', 8000, 2, false)], 8000);
-durationExpect(!$r['lesson_completed'] && $r['covered_ms'] === 0, 'Minor duration difference and ended event never count skipped content');
+durationExpect(!$r['lesson_completed'] && $r['covered_ms'] ===
+     0, 'Minor duration difference and ended event never count skipped content');
 $now += 7200;
 $r = $save(2, [$event(4, 'seeked', 0, 3, false),$event(5, 'play', 0, 4),$event(6, 'position', 7200, 7204)], 8000);
 durationExpect($r['lesson_completed'] && $r['course_completed']

@@ -148,7 +148,8 @@ foreach ($sourceLessons as $n => $lesson) {
     );
     copyExpect($lesson['body'] === $targetLessons[$n]['body']
         &&
-            $lesson['media_asset_id'] === $targetLessons[$n]['media_asset_id'], 'Lesson content and media association copied');
+            $lesson['media_asset_id'] ===
+                 $targetLessons[$n]['media_asset_id'], 'Lesson content and media association copied');
 }
 copyExpect($identityRows() === $beforeLearning, 'Course duplication never copies or modifies learning data');
 $outline = $authoring->outline($actor, $copy, (int)$draft->id);

@@ -104,7 +104,8 @@ final class QuestionbankController extends BaseController
                     . $copy, false));
             } elseif ($action === 'trash' || $action === 'restore') {
                 $service->trash($this->app->getIdentity(), $id, $action === 'restore');
-                $this->setMessage(Text::_($action === 'restore' ? 'JLIB_APPLICATION_SUCCESS_ITEM_RESTORED' : 'JLIB_APPLICATION_SUCCESS_ITEM_TRASHED'));
+                $this->setMessage(Text::_($action ===
+                     'restore' ? 'JLIB_APPLICATION_SUCCESS_ITEM_RESTORED' : 'JLIB_APPLICATION_SUCCESS_ITEM_TRASHED'));
                 $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=questionbank&filter[published]=' . ($action === 'restore' ? '0' : '-2'), false));
             } else {
                 $service->delete($this->app->getIdentity(), $id);

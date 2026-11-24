@@ -97,7 +97,8 @@ function ruleLearning(?int $course = null): array
     if ($course !== null) {
         return [$db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')
             ->loadAssocList(),$db->setQuery(('SELECT a.* FROM #__jlms_attempts a JOIN #__jlms_enrollments e ON '
-                . 'e.id=a.enrollment_id WHERE e.course_id=') . $course . ' ORDER BY a.id')->loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
+                . 'e.id=a.enrollment_id WHERE e.course_id=') . $course . ' ORDER BY a.id')->
+                    loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
     }return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db
         ->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db
             ->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
@@ -265,7 +266,8 @@ $consultationLesson = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE c
     . (int)$consultationVersion . ' ORDER BY ordering,id')->loadResult();
 $consultationClassroom = $learning->classroom($actor, 'en-GB', $consultationEnrollment, $consultationLesson);
 ruleExpect($consultationClassroom['progress_applicable'] === false
-    && $consultationClassroom['percent'] === null && $consultationClassroom['completed_at'] === null, 'Consultation enrollment exposes no progress or course completion');
+    && $consultationClassroom['percent'] === null && $consultationClassroom['completed_at'] ===
+         null, 'Consultation enrollment exposes no progress or course completion');
 try {
     $learning->complete($actor, 'en-GB', $consultationEnrollment, $consultationLesson, bin2hex(random_bytes(20)));
     throw new RuntimeException('Consultation must not grant lesson completion');
@@ -308,7 +310,8 @@ $authoring->saveTeachingRules($actor, $input + ['mode' => 'consultation','certif
     => true,'rules_json' => '{}']);
 $rules = $authoring->teachingRules($actor, $course, $version);
 ruleExpect($rules['video_threshold_basis_points'] === 5025 && $rules['mode'] === 'consultation'
-    && $rules['certificate_enabled'] === false, 'Supported mode and threshold fields change; unsupported fields are ignored');
+    && $rules['certificate_enabled'] ===
+         false, 'Supported mode and threshold fields change; unsupported fields are ignored');
 ruleExpect(
     (int)ruleRow('course_versions', $version)->revision === (int)$input['expected_version_revision'] + 1,
     'Rule save increments version CAS'
@@ -461,7 +464,8 @@ $recoveryAudit = (int)$db->setQuery(("SELECT COUNT(*) FROM #__jlms_certificate_a
 ruleExpect($recoveryAudit === 1, 'Historical recovery records a durable audit entry');
 
 $historicalDocument = $db->setQuery(('SELECT d.id, d.status FROM #__jlms_certificate_documents AS d JOIN '
-    . '#__jlms_certificates AS c ON c.current_document_id=d.id WHERE c.enrollment_id=') . (int)$oldEnrollment)->loadObject();
+    . '#__jlms_certificates AS c ON c.current_document_id=d.id WHERE c.enrollment_id=') .
+         (int)$oldEnrollment)->loadObject();
 ruleExpect(
     $historicalDocument->status === 'pending_render',
     'Recovered historical certificate is queued for on-demand PDF rendering'
@@ -579,7 +583,8 @@ try {
     );
     ruleExpect(
         (int)$db->setQuery(("SELECT COUNT(*) FROM #__jlms_certificate_audit WHERE "
-            . "action='missing_issuance_recovery' AND certificate_id=") . (int)$eligibleCertificate->id)->loadResult() === 1,
+            . "action='missing_issuance_recovery' AND certificate_id=") . (int)$eligibleCertificate->id)->
+                loadResult() === 1,
         'Eligible recovery creates one durable audit entry'
     );
     try {
@@ -606,8 +611,10 @@ $certificateParams->set('certificate_enabled', $previousCertificateSetting);
 
 $consultationVideo = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id='
     . (int)$consultationVersion . " AND kind='video' ORDER BY id")->loadResult();
-$progressBeforeConsultationPlayback = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE lesson_id=' . (int)$consultationVideo)->loadResult();
-$sessionsBeforeConsultationPlayback = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id=' . (int)$consultationVideo)->loadResult();
+$progressBeforeConsultationPlayback = (int)$db->
+    setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE lesson_id=' . (int)$consultationVideo)->loadResult();
+$sessionsBeforeConsultationPlayback = (int)$db->
+    setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id=' . (int)$consultationVideo)->loadResult();
 $consultationGrant = $video->playback($actor, 'en-GB', $consultationEnrollment, $consultationVideo, true);
 ruleExpect($consultationGrant['tracking'] === false && $consultationGrant['session_id'] === null
     && $consultationGrant['duration_ms'] === null, ('Consultation video receives a playback descriptor without '
@@ -615,7 +622,8 @@ ruleExpect($consultationGrant['tracking'] === false && $consultationGrant['sessi
 ruleExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE lesson_id='
     . (int)$consultationVideo)->loadResult() === $progressBeforeConsultationPlayback
     && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id='
-        . (int)$consultationVideo)->loadResult() === $sessionsBeforeConsultationPlayback, 'Consultation video playback creates no progress rows or telemetry sessions');
+        . (int)$consultationVideo)->loadResult() ===
+             $sessionsBeforeConsultationPlayback, 'Consultation video playback creates no progress rows or telemetry sessions');
 $version = $authoring->createDraft($actor, $course, (int)ruleRow('courses', $course)->revision);
 file_put_contents($fixture, json_encode(['course' => $course,'version' => $version,'original'
     => $original], JSON_THROW_ON_ERROR));

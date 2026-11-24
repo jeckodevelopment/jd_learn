@@ -53,7 +53,9 @@ final class LessonController extends CurriculumController
                 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED','COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED'=>422,
                 default=>503,
             };
-            $message = \Joomla\CMS\Language\Text::_($code === 503 ? 'COM_JLMS_VIDEO_METADATA_FAILED' : ($key === 'SOURCE_INVALID' ? 'COM_JLMS_SOURCE_INVALID' : $key));
+            $message = \Joomla\CMS\Language\Text::_($code ===
+                 503 ? 'COM_JLMS_VIDEO_METADATA_FAILED' : ($key ===
+                 'SOURCE_INVALID' ? 'COM_JLMS_SOURCE_INVALID' : $key));
             $data = null;
         }
         $this->app->setHeader('status', (string)$code, true);

@@ -31,7 +31,8 @@ final class PublicMetadataHelper
         $document->setMetaData('og:type', 'website', 'property');
         $document->setMetaData('og:url', $canonical, 'property');
         // Text-only pages must not advertise a missing large image.
-        $validImage = $image !== '' && preg_match('#^(?:images|media)/[\\p{L}\\p{N}_./ -]+\\.(?:png|jpe?g|gif|webp|avif)$#iuD', $image)
+        $validImage = $image !== '' &&
+             preg_match('#^(?:images|media)/[\\p{L}\\p{N}_./ -]+\\.(?:png|jpe?g|gif|webp|avif)$#iuD', $image)
             && !str_contains($image, '..');
         $document->setMetaData('twitter:card', $validImage ? 'summary_large_image' : 'summary');
         if ($validImage) {
