@@ -395,7 +395,14 @@ final class QuizAttemptService
                     $a->revision = (int)$a->revision + 1;
                     $update = (object)['id' => $attempt,'revision' => $a->revision];
                     $this->db->updateObject('#__jlms_attempts', $update, 'id');
-                    $touch = (object)['id' => $enrollment,'last_activity_at' => self::date($now),'last_lesson_id' => $lesson,'revision' => (int)$e->revision + 1,'modified_at' => self::date($now),'modified_by' => $e->user_id];
+                    $touch = (object)[
+                        'id' => $enrollment,
+                        'last_activity_at' => self::date($now),
+                        'last_lesson_id' => $lesson,
+                        'revision' => (int)$e->revision + 1,
+                        'modified_at' => self::date($now),
+                        'modified_by' => $e->user_id
+                    ];
                     $this->db->updateObject('#__jlms_enrollments', $touch, 'id');
                     $e->revision = $touch->revision;
                 }

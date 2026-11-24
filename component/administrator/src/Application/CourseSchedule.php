@@ -7,7 +7,13 @@ namespace Jlms\Component\Jlms\Administrator\Application;
 /** Typed author calendar: explicit IANA zone on input, UTC instants in storage. */
 final class CourseSchedule
 {
-    public const FIELDS = ['calendar_timezone','calendar_publish_up','calendar_publish_down','calendar_starts_at','calendar_ends_at'];
+    public const FIELDS = [
+        'calendar_timezone',
+        'calendar_publish_up',
+        'calendar_publish_down',
+        'calendar_starts_at',
+        'calendar_ends_at'
+    ];
     private const DATES = ['publish_up','publish_down','starts_at','ends_at'];
 
     public static function zone(mixed $zone): \DateTimeZone
@@ -131,8 +137,17 @@ final class CourseSchedule
         }
         $data = self::validate($data);
         $saved = json_decode($params, true, 32, JSON_THROW_ON_ERROR);
-        $saved['calendar'] = ['_schema' => 1,'timezone' => $data['timezone'],'starts_at' => $data['starts_at'],'ends_at' => $data['ends_at']];
-        return ['publish_up' => $data['publish_up'],'publish_down' => $data['publish_down'],'params_json' => json_encode($saved, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)];
+        $saved['calendar'] = [
+            '_schema' => 1,
+            'timezone' => $data['timezone'],
+            'starts_at' => $data['starts_at'],
+            'ends_at' => $data['ends_at']
+        ];
+        return [
+            'publish_up' => $data['publish_up'],
+            'publish_down' => $data['publish_down'],
+            'params_json' => json_encode($saved, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)
+        ];
     }
     public static function snapshot(object $course): ?array
     {

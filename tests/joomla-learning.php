@@ -145,7 +145,11 @@ if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI learning entit
     throw new \RuntimeException('Core group fixture failed: ' . $groupModel->getError());
 }
 $learningGroup = (int)$groupModel->getState('group.id');
-$level = (object)['title' => 'CI learning access','ordering' => 0,'rules' => json_encode([$learningGroup], JSON_THROW_ON_ERROR)];
+$level = (object)[
+    'title' => 'CI learning access',
+    'ordering' => 0,
+    'rules' => json_encode([$learningGroup], JSON_THROW_ON_ERROR)
+];
 $db->insertObject('#__viewlevels', $level, 'id');
 $learningLevel = (int)$level->id;
 $student = fixtureStudent('cilearner');
@@ -209,7 +213,12 @@ learningExpect(
  // LCM-01: inactive lifecycle states must not be bypassable by direct calls,
  // even if a stale configuration still leaves admissions and delivery enabled.
 foreach ([0, 2, -2] as $inactiveState) {
-    fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $inactiveState,'admissions_open' => 1,'delivery_enabled' => 1]);
+    fixtureUpdate('jlms_courses', (object)[
+        'id' => $course,
+        'state' => $inactiveState,
+        'admissions_open' => 1,
+        'delivery_enabled' => 1
+    ]);
     learningDenied(
         fn()=>$learning->classroom($student, 'en-GB', $enrollment),
         404,
@@ -330,7 +339,20 @@ function learningWorkers(array $lessonIds): void
     $workers = [];
     foreach ($lessonIds as $lessonId) {
         $pipes = [];
-        $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',(string)$student->id,(string)$enrollment,(string)$lessonId,bin2hex(random_bytes(16))], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+        $process = proc_open([
+            PHP_BINARY,
+            __FILE__,
+            $root,
+            'worker',
+            (string)$student->id,
+            (string)$enrollment,
+            (string)$lessonId,
+            bin2hex(random_bytes(16))
+        ], [
+            0 => ['pipe','r'],
+            1 => ['pipe','w'],
+            2 => ['pipe','w']
+        ], $pipes);
         if (!is_resource($process)) {
             throw new \RuntimeException('Worker could not start');
         }
@@ -403,7 +425,11 @@ learningDenied(
 fixtureUpdate('users', (object)['id' => (int)$student->id,'block' => 0]);
 fixtureUpdate('jlms_enrollments', (object)['id' => $enrollment,'status' => 'suspended']);
 learningDenied(fn()=>$learning->start($student, 'en-GB', $course, $key), 403, 'start cannot reactivate a suspension');
-fixtureUpdate('jlms_enrollments', (object)['id' => $enrollment,'status' => 'active','ends_at' => '2000-01-01 00:00:00']);
+fixtureUpdate('jlms_enrollments', (object)[
+    'id' => $enrollment,
+    'status' => 'active',
+    'ends_at' => '2000-01-01 00:00:00'
+]);
 learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment), 403, 'expired educational window denied');
 fixtureUpdate('jlms_enrollments', (object)['id' => $enrollment,'ends_at' => null], true);
 $edition = (int)$db->setQuery('SELECT edition_id FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
@@ -425,7 +451,11 @@ fixtureUpdate('categories', (object)['id' => $catid,'published' => 1]);
 $catalog = $component->getCatalogService();
 $storedProgress = (int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
 foreach ([0,2,-2] as $blockedState) {
-    fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $blockedState,'publish_down' => '2000-01-01 00:00:00']);
+    fixtureUpdate('jlms_courses', (object)[
+        'id' => $course,
+        'state' => $blockedState,
+        'publish_down' => '2000-01-01 00:00:00'
+    ]);
     learningDenied(
         fn()=>$catalog->course($student, 'en-GB', $course),
         404,
@@ -484,5 +514,14 @@ learningDenied(
     'approval mode cannot bypass request workflow'
 );
 fixtureUpdate('jlms_courses', (object)['id' => $course,'enrollment_mode' => 'auto']);
-file_put_contents(dirname($root) . '/learning-fixture.json', json_encode(['course_id' => $course,'lessons' => $lessons,'http_user_id' => (int)$httpStudent->id,'group_id' => $learningGroup], JSON_THROW_ON_ERROR));
-echo json_encode(['learning_checks' => $checks,'status' => 'passed','concurrent_workers' => 4], JSON_THROW_ON_ERROR) . PHP_EOL;
+file_put_contents(dirname($root) . '/learning-fixture.json', json_encode([
+    'course_id' => $course,
+    'lessons' => $lessons,
+    'http_user_id' => (int)$httpStudent->id,
+    'group_id' => $learningGroup
+], JSON_THROW_ON_ERROR));
+echo json_encode([
+    'learning_checks' => $checks,
+    'status' => 'passed',
+    'concurrent_workers' => 4
+], JSON_THROW_ON_ERROR) . PHP_EOL;

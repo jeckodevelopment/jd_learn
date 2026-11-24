@@ -86,7 +86,16 @@ final class QuizDeadlineService
             ->from('#__jlms_quiz_deadline_extensions')
             ->where('attempt_id = :attempt')
                 ->bind(':attempt', $attempt, ParameterType::INTEGER)->order('revision_no DESC');
-        return ['course_id' => $course,'lesson_id' => $lesson,'quiz' => $quiz,'enrollment' => $e,'attempt' => $a,'minutes' => $minutes,'impact' => $this->plan($e, $a, $minutes),'history' => $this->db->setQuery($q, 0, 20)->loadObjectList()];
+        return [
+            'course_id' => $course,
+            'lesson_id' => $lesson,
+            'quiz' => $quiz,
+            'enrollment' => $e,
+            'attempt' => $a,
+            'minutes' => $minutes,
+            'impact' => $this->plan($e, $a, $minutes),
+            'history' => $this->db->setQuery($q, 0, 20)->loadObjectList()
+        ];
     }
     public function extend(User $identity, int $course, int $lesson, int $enrollment, int $attempt, int $enrollmentRevision, int $attemptRevision, int $minutes, string $reason, string $key, string $impactHash, bool $confirmed): int
     {
@@ -109,7 +118,18 @@ final class QuizDeadlineService
             $this->db->setQuery($q)->loadResult();
             [$actor,$quiz,$e] = $this->time->managementContext($identity, $course, $lesson, $enrollment);
             $a = $this->attempt($attempt, $enrollment, (int)$quiz->id, true);
-            $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int)$actor->id,'course' => $course,'lesson' => $lesson,'enrollment' => $enrollment,'attempt' => $attempt,'enrollment_revision' => $enrollmentRevision,'attempt_revision' => $attemptRevision,'minutes' => $minutes,'reason' => $reason,'impact' => $impactHash]));
+            $hash = hash('sha256', QuestionDefinition::canonical([
+                'actor' => (int)$actor->id,
+                'course' => $course,
+                'lesson' => $lesson,
+                'enrollment' => $enrollment,
+                'attempt' => $attempt,
+                'enrollment_revision' => $enrollmentRevision,
+                'attempt_revision' => $attemptRevision,
+                'minutes' => $minutes,
+                'reason' => $reason,
+                'impact' => $impactHash
+            ]));
             $q = $this->db->createQuery()
                 ->select('id,request_hash')
                 ->from('#__jlms_quiz_deadline_extensions')
@@ -138,7 +158,12 @@ final class QuizDeadlineService
             $this->db->insertObject('#__jlms_quiz_deadline_extensions', $record, 'id');
             $update = (object)['id' => $attempt,'deadline_at' => $new];
             $this->db->updateObject('#__jlms_attempts', $update, 'id');
-            $update = (object)['id' => $enrollment,'revision' => (int)$e->revision + 1,'modified_by' => (int)$actor->id,'modified_at' => $now];
+            $update = (object)[
+                'id' => $enrollment,
+                'revision' => (int)$e->revision + 1,
+                'modified_by' => (int)$actor->id,
+                'modified_at' => $now
+            ];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
             ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,'attempt_id' => $attempt,'enrollment_id' => $enrollment,'previous_deadline' => $a->deadline_at,'new_deadline' => $new,
                 'added_seconds' => $minutes * 60,'reason_reference' => (int)$record->id,'reason_code' => 'quiz_deadline_extended','correlation_id' => bin2hex(random_bytes(16))]);

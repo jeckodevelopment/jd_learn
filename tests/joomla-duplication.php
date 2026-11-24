@@ -200,7 +200,17 @@ $update = (object)['id' => (int)$sourceAsset->id,'rules' => $originalRules];
 $db->updateObject('#__assets', $update, 'id');
 \Joomla\CMS\Access\Access::clearStatics();
 $counts = static fn(): array=>array_map(static fn(string $table): int=>(int)$db
-    ->setQuery('SELECT COUNT(*) FROM #__' . $table)->loadResult(), ['jlms_courses','jlms_course_versions','jlms_modules','jlms_lessons','jlms_quizzes','assets','history','workflow_associations','fields_values']);
+    ->setQuery('SELECT COUNT(*) FROM #__' . $table)->loadResult(), [
+        'jlms_courses',
+        'jlms_course_versions',
+        'jlms_modules',
+        'jlms_lessons',
+        'jlms_quizzes',
+        'assets',
+        'history',
+        'workflow_associations',
+        'fields_values'
+    ]);
 $before = $counts();
 copyDenied(fn()=>$model->duplicate(array_replace($input, ['revision' => (int)$source
     ->revision + 1])), 'Stale source course rejected');

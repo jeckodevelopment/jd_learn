@@ -93,7 +93,11 @@ final class QuestionDefinition
         }
         $points = self::integer($input['default_points'] ?? 1, 1, 10000);
         $definition = ['kind' => $kind, 'prompt' => $prompt, 'options' => ['_schema' => 1, 'items' => $options],
-            'grading' => ['_schema' => 1, 'correct' => $correct, 'default_points' => $points], 'feedback' => ['_schema' => 1, 'explanation' => $feedback]];
+            'grading' => [
+                '_schema' => 1,
+                'correct' => $correct,
+                'default_points' => $points
+            ], 'feedback' => ['_schema' => 1, 'explanation' => $feedback]];
         if (strlen(self::canonical($definition)) > 262144) {
             throw new \RuntimeException('COM_JLMS_QUESTION_TOO_LARGE', 422);
         }

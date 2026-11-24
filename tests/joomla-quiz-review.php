@@ -108,7 +108,16 @@ function reviewAnswers(array $a): string
 function reviewUser(string $name, int $group): \Joomla\CMS\User\User
 {
     $u = new \Joomla\CMS\User\User();
-    $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
+    $d = [
+        'name' => 'CI ' . $name,
+        'username' => $name,
+        'email' => $name . '@example.invalid',
+        'password' => 'Ci-only-Learner-Password-2026',
+        'password2' => 'Ci-only-Learner-Password-2026',
+        'groups' => [2,$group],
+        'block' => 0,
+        'activation' => ''
+    ];
     if (!$u->bind($d) || !$u->save()) {
         throw new \RuntimeException((string)$u->getError());
     }
@@ -117,7 +126,19 @@ function reviewUser(string $name, int $group): \Joomla\CMS\User\User
 function reviewCommand(array $item, string $reason = 'PRIVATE_CANCEL_REASON', ?string $key = null): array
 {
     $p = $item['impact'];
-    return [$item['course_id'],$item['lesson_id'],(int)$item['enrollment']->id,(int)$item['selected']->id,$p['enrollment_revision'],$p['attempt_revision'],$item['refund'],$reason,$key ?? reviewKey(),$p['hash'],true];
+    return [
+        $item['course_id'],
+        $item['lesson_id'],
+        (int)$item['enrollment']->id,
+        (int)$item['selected']->id,
+        $p['enrollment_revision'],
+        $p['attempt_revision'],
+        $item['refund'],
+        $reason,
+        $key ?? reviewKey(),
+        $p['hash'],
+        true
+    ];
 }
 $actor = $app->getIdentity();
 $review = $component->getQuizReviewService();
@@ -296,10 +317,23 @@ $bad[9] = str_repeat('0', 64);
 reviewReject(fn()=>$review->cancel($actor, ...$bad), 409, 'forged impact hash rejected');
 // Certificates require a dedicated review; no root/document may be silently modified.
 $nowSql = gmdate('Y-m-d H:i:s');
-$template = (object)['title' => 'CI review guard','version_no' => 1,'template_json' => '{}','hash' => str_repeat('1', 64),'state' => 1,'created_at' => $nowSql,'modified_at' => $nowSql];
+$template = (object)[
+    'title' => 'CI review guard',
+    'version_no' => 1,
+    'template_json' => '{}',
+    'hash' => str_repeat('1', 64),
+    'state' => 1,
+    'created_at' => $nowSql,
+    'modified_at' => $nowSql
+];
 $db->insertObject('#__jlms_certificate_templates', $template, 'id');
 $version = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
-$certificate = (object)['enrollment_id' => $enrollment,'course_version_id' => $version,'template_id' => (int)$template->id,'issued_at' => $nowSql];
+$certificate = (object)[
+    'enrollment_id' => $enrollment,
+    'course_version_id' => $version,
+    'template_id' => (int)$template->id,
+    'issued_at' => $nowSql
+];
 $db->insertObject('#__jlms_certificates', $certificate, 'id');
 $item = $review->editor($actor, $course, $lesson, $enrollment, $fourth, false);
 reviewExpect(
@@ -313,9 +347,26 @@ reviewReject(
 );
 $db->setQuery('DELETE FROM #__jlms_certificates WHERE id=' . (int)$certificate->id)->execute();
 $db->setQuery('DELETE FROM #__jlms_certificate_templates WHERE id=' . (int)$template->id)->execute();
-$job = (object)['kind' => 'ci_review_guard','scope_json' => '{}','payload_json' => '{}','available_at' => $nowSql,'created_at' => $nowSql];
+$job = (object)[
+    'kind' => 'ci_review_guard',
+    'scope_json' => '{}',
+    'payload_json' => '{}',
+    'available_at' => $nowSql,
+    'created_at' => $nowSql
+];
 $db->insertObject('#__jlms_jobs', $job, 'id');
-$correction = (object)['attempt_id' => $second,'revision_no' => 1,'job_id' => (int)$job->id,'reason' => 'CI review guard','rules_snapshot_json' => '{}','previous_score_points' => 5,'previous_passed' => 1,'result_score_points' => 0,'result_passed' => 0,'created_at' => $nowSql];
+$correction = (object)[
+    'attempt_id' => $second,
+    'revision_no' => 1,
+    'job_id' => (int)$job->id,
+    'reason' => 'CI review guard',
+    'rules_snapshot_json' => '{}',
+    'previous_score_points' => 5,
+    'previous_passed' => 1,
+    'result_score_points' => 0,
+    'result_passed' => 0,
+    'created_at' => $nowSql
+];
 $db->insertObject('#__jlms_assessment_revisions', $correction, 'id');
 $item = $review->editor($actor, $course, $lesson, $enrollment, $fourth, false);
 reviewExpect(
@@ -405,7 +456,17 @@ file_put_contents(dirname($root) . '/quiz-review-race.json', json_encode($race, 
 $workers = [];
 foreach (['cancel','submit'] as $mode) {
     $pipes = [];
-    $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+    $process = proc_open([
+        PHP_BINARY,
+        __FILE__,
+        $root,
+        'worker',
+        $mode
+    ], [
+        0 => ['pipe','r'],
+        1 => ['pipe','w'],
+        2 => ['pipe','w']
+    ], $pipes);
     if (!is_resource($process)) {
         throw new \RuntimeException('Worker failed');
     }
@@ -447,5 +508,16 @@ reviewExpect(
     $log['before_status'] === 'submitted' && $log['after_status'] === 'invalidated' && !str_contains(json_encode($log, JSON_THROW_ON_ERROR), 'PRIVATE_CANCEL_REASON'),
     'native audit preserves minimal transition metadata, not free-text reason'
 );
-file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $lesson,'user_id' => (int)$user->id,'enrollment_id' => $enrollment,'passed_attempt' => $second,'first_attempt' => $first,'snapshot_hash' => $snapshotHash,'http_enrollment' => $f['http_enrollment'],'http_lesson' => $f['never_id'],'http_attempt' => $httpA['attempt']['id']], JSON_THROW_ON_ERROR));
+file_put_contents($path, json_encode([
+    'course_id' => $course,
+    'lesson_id' => $lesson,
+    'user_id' => (int)$user->id,
+    'enrollment_id' => $enrollment,
+    'passed_attempt' => $second,
+    'first_attempt' => $first,
+    'snapshot_hash' => $snapshotHash,
+    'http_enrollment' => $f['http_enrollment'],
+    'http_lesson' => $f['never_id'],
+    'http_attempt' => $httpA['attempt']['id']
+], JSON_THROW_ON_ERROR));
 echo json_encode(['quiz_review_checks' => $checks,'status' => 'passed']) . PHP_EOL;

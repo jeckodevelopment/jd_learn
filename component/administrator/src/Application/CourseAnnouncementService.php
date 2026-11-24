@@ -163,7 +163,17 @@ final class CourseAnnouncementService
         ];
         $result['template_data'] = $tags;
         $renderer = new CourseAnnouncementPreviewRenderer('com_jlms.course.published', $language);
-        $renderer->addUnsafeTags(['USER_FULLNAME', 'COURSE_TITLE', 'COURSE_INTRO_TEXT', 'COURSE_LESSONS_TEXT', 'COURSE_URL', 'SITE_NAME', 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT']);
+        $renderer->addUnsafeTags([
+            'USER_FULLNAME',
+            'COURSE_TITLE',
+            'COURSE_INTRO_TEXT',
+            'COURSE_LESSONS_TEXT',
+            'COURSE_URL',
+            'SITE_NAME',
+            'UNSUBSCRIBE_URL',
+            'UNSUBSCRIBE_URL_HTML',
+            'UNSUBSCRIBE_URL_TEXT'
+        ]);
         $result['subject'] = $renderer->render((string) $template->subject, $tags);
         $result['body_text'] = $renderer->render((string) $template->body, $tags);
         $result['body_html'] = $renderer->render((string) $template->htmlbody, $tags, true);
@@ -193,7 +203,13 @@ final class CourseAnnouncementService
         $actor = CourseEditorAccess::fresh($identity);
         $campaign = $this->db->createQuery()->insert('#__jlms_course_announcement_campaigns')
             ->columns(['course_id','requested_by','recipient_count','state','requested_at'])
-            ->values(implode(',', [(string) $courseId, (string) (int) $actor->id, (string) count($recipients), $this->db->quote('queued'), 'UTC_TIMESTAMP(6)']));
+            ->values(implode(',', [
+                (string) $courseId,
+                (string) (int) $actor->id,
+                (string) count($recipients),
+                $this->db->quote('queued'),
+                'UTC_TIMESTAMP(6)'
+            ]));
         $queue = new MailQueue($this->db);
         $consent = new CourseAnnouncementConsent($this->db);
         $queued = 0;

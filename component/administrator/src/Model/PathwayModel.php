@@ -116,7 +116,21 @@ final class PathwayModel extends AdminModel
             $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult()
                 ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
 
-            $allowed = ['id', 'revision', 'title', 'alias', 'description', 'catid', 'access', 'language', 'state', 'courses', 'cover_image', 'cover_alt', 'cover_decorative'];
+            $allowed = [
+                'id',
+                'revision',
+                'title',
+                'alias',
+                'description',
+                'catid',
+                'access',
+                'language',
+                'state',
+                'courses',
+                'cover_image',
+                'cover_alt',
+                'cover_decorative'
+            ];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id', 'revision', 'catid', 'access', 'state'] as $key) {
                 if (
@@ -278,7 +292,12 @@ final class PathwayModel extends AdminModel
                     // A later asset maintenance pass can remove an orphaned placeholder.
                 }
             }
-            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_PATHWAY_INVALID'];
+            $known = [
+                'JERROR_ALERTNOAUTHOR',
+                'JERROR_LAYOUT_PAGE_NOT_FOUND',
+                'COM_JLMS_REVISION_CONFLICT',
+                'COM_JLMS_PATHWAY_INVALID'
+            ];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             if (getenv('JLMS_TEST_DISPOSABLE') === '1') {
                 $this->setError($this->getError() . ' [' . $stage . ': ' . $error->getMessage() . ']');

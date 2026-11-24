@@ -31,7 +31,11 @@ $transitionDisplay = static function (object $transition) use ($transitionLabel,
             : ($transition->title === 'JUNPUBLISH' ? 'COM_JLMS_UNPUBLISH_ACTION' : $transition->title),
     });
 };
-$scope = $version ? ['course_id' => $course->id, 'version_id' => $version->id, 'expected_version_revision' => $version->revision] : [];
+$scope = $version ? [
+    'course_id' => $course->id,
+    'version_id' => $version->id,
+    'expected_version_revision' => $version->revision
+] : [];
 $hidden = static function (array $fields): void {
     foreach ($fields as $name => $value) {
         echo '<input type="hidden" name="jform[' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ']" value="' . htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8') . '">';

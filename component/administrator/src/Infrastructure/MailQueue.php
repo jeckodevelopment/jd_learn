@@ -48,7 +48,11 @@ final class MailQueue
             return;
         }
         $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
-        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', !in_array($event, ['lesson_release', 'course_update', 'manager_request'], true));
+        $globalEnabled = (bool) $settings->get('mail_' . $event . '_enabled', !in_array($event, [
+            'lesson_release',
+            'course_update',
+            'manager_request'
+        ], true));
         if (!\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled($event, $globalEnabled, (string) $courseParams)) {
             return;
         }
@@ -57,7 +61,19 @@ final class MailQueue
 
         $now = gmdate('Y-m-d H:i:s');
         $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
-            ->columns(['event_key', 'template_id', 'course_id', 'recipient_user_id', 'language', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at'])
+            ->columns([
+                'event_key',
+                'template_id',
+                'course_id',
+                'recipient_user_id',
+                'language',
+                'recipient_email',
+                'recipient_name',
+                'template_data',
+                'state',
+                'available_at',
+                'created_at'
+            ])
             ->values(implode(',', [
                 $this->db->quote($key), $this->db->quote($template), (string) $courseId, $recipientUserId ? (string) $recipientUserId : 'NULL', $this->db->quote($language ?: '*'),
                 $this->db->quote($email), $this->db->quote($name), $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)),
@@ -92,7 +108,20 @@ final class MailQueue
         }
         $data = MailTemplateContext::enrich($this->db, $courseId, $data);
         $query = $this->db->createQuery()->insert('#__jlms_mail_queue')
-            ->columns(['event_key','template_id','course_id','recipient_user_id','recipient_consent_at','language','recipient_email','recipient_name','template_data','state','available_at','created_at'])
+            ->columns([
+                'event_key',
+                'template_id',
+                'course_id',
+                'recipient_user_id',
+                'recipient_consent_at',
+                'language',
+                'recipient_email',
+                'recipient_name',
+                'template_data',
+                'state',
+                'available_at',
+                'created_at'
+            ])
             ->values(implode(',', [
                 $this->db->quote($key), $this->db->quote('com_jlms.course.published'), (string) $courseId, (string) $userId,
                 $this->db->quote($consentAt), $this->db->quote($language ?: '*'), $this->db->quote($email), $this->db->quote($name),

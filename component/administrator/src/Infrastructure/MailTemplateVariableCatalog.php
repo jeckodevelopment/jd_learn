@@ -34,7 +34,11 @@ final class MailTemplateVariableCatalog
             'Joomla sender address when configured and valid'],
         'SITE_NAME' => ['text', 'Nome del sito', 'Site name'],
         'SITE_NAME_HTML' => ['html-escaped', 'Nome del sito per HTML', 'HTML-escaped site name'],
-        'COURSE_MANAGEMENT_URL' => ['url', 'URL amministrativa del registro iscrizioni del corso, accessibile solo ai responsabili autorizzati', 'Administrative course enrollment management URL for authorized managers'],
+        'COURSE_MANAGEMENT_URL' => [
+            'url',
+            'URL amministrativa del registro iscrizioni del corso, accessibile solo ai responsabili autorizzati',
+            'Administrative course enrollment management URL for authorized managers'
+        ],
         'DASHBOARD_URL' => ['url', 'Collegamento autenticato all’area personale',
             'Authenticated personal dashboard link'],
         'COURSE_URL' => ['url', 'Collegamento al corso', 'Course link'],

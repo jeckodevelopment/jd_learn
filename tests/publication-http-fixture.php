@@ -30,7 +30,15 @@ if ($operation === 'material-add') {
     $assetId = (int) $db->lastInsertId();
     $q = $db->prepare(("INSERT INTO joomla_jlms_attachments "
         . "(course_version_id,lesson_id,asset_id,title,description,ordering,state,preview,revision,created_by,created_at,modified_by,modified_at) VALUES (?,?,?,'Readiness test material','',0,1,0,1,?,?,?,?)"));
-    $q->execute([(int) $version['version_id'], $lessonId, $assetId, (int) $version['created_by'], $now, (int) $version['created_by'], $now]);
+    $q->execute([
+        (int) $version['version_id'],
+        $lessonId,
+        $assetId,
+        (int) $version['created_by'],
+        $now,
+        (int) $version['created_by'],
+        $now
+    ]);
     echo json_encode(['attachment_id' => (int) $db->lastInsertId(), 'asset_id'
         => $assetId], JSON_THROW_ON_ERROR) . "\n";
     exit;

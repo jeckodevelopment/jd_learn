@@ -173,7 +173,11 @@ final class DashboardService
             } elseif (!in_array((int) $visible[$tag][(int) $row->course_id]->content_access, $levels, true)) {
                 $reason = 'access';
             } elseif (!in_array($row->status, ['active', 'completed'], true)) {
-                $reason = in_array($row->status, ['suspended', 'expired', 'cancelled'], true) ? $row->status : 'pending';
+                $reason = in_array($row->status, [
+                    'suspended',
+                    'expired',
+                    'cancelled'
+                ], true) ? $row->status : 'pending';
             } elseif ($row->version_status !== 'published' || $row->edition_status !== 'open') {
                 $reason = 'unavailable';
             } else {

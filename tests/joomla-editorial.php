@@ -133,7 +133,11 @@ editorialExpect($oldRows === $db->setQuery('SELECT * FROM #__jlms_lessons WHERE 
 editorialExpect($oldEnrollment === $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(), 'Existing enrollments and results stay unchanged');
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $item = $model->getItem($course);
-editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision,'title' => 'Editorially updated course']), 'Normal save updates a published course');
+editorialExpect($model->save([
+    'id' => $course,
+    'revision' => (int)$item->revision,
+    'title' => 'Editorially updated course'
+]), 'Normal save updates a published course');
 $history = $db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course . "' ORDER BY version_id DESC")->loadObjectList();
 editorialExpect(count($history) > 0, 'Native Joomla history stores course revisions');
 editorialExpect((int)$model->getItem($course)->state === 1, 'Normal save preserves publication state');
@@ -141,7 +145,11 @@ $oldHistory = end($history);
 editorialExpect($model->loadHistory((int)$oldHistory->version_id), 'Native history restores editorial data through the guarded save');
 editorialExpect((int)$model->getItem($course)->current_version_id === $draft, 'Restoring editorial history does not roll back teaching assignments');
 $item = $model->getItem($course);
-editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision,'title' => 'Editorially updated course']), 'Course stays editable after history restoration');
+editorialExpect($model->save([
+    'id' => $course,
+    'revision' => (int)$item->revision,
+    'title' => 'Editorially updated course'
+]), 'Course stays editable after history restoration');
 
 // Native course fields participate in Joomla Content History and restore through
 // the same guarded CourseModel save without changing the active teaching version.
@@ -228,7 +236,11 @@ $rules['core.edit.value'][(string)$editorFixture['group']] = true;
 $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
 $asset->store();
 $item = $teacher->getItem($teacherId);
-editorialExpect($teacher->save(['id' => $teacherId,'revision' => (int)$item->revision,'user_id' => (int)$linked->id]), 'Secretariat links a native account to its profile');
+editorialExpect($teacher->save([
+    'id' => $teacherId,
+    'revision' => (int)$item->revision,
+    'user_id' => (int)$linked->id
+]), 'Secretariat links a native account to its profile');
 $teacher->setCurrentUser($linked);
 $app->loadIdentity($linked);
 $app->getSession()->set('user', $linked);
@@ -241,6 +253,15 @@ $app->loadIdentity($actor);
 $app->getSession()->set('user', $actor);
 $teacher->setCurrentUser($actor);
 $item = $model->getItem($course);
-editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision,'teacher_ids' => [$teacherId]]), 'A published course can be assigned to the teacher');
-file_put_contents(dirname($root) . '/editorial-fixture.json', json_encode(['course' => $course,'version' => $draft,'teacher' => $teacherId,'field' => $fieldId], JSON_THROW_ON_ERROR));
+editorialExpect($model->save([
+    'id' => $course,
+    'revision' => (int)$item->revision,
+    'teacher_ids' => [$teacherId]
+]), 'A published course can be assigned to the teacher');
+file_put_contents(dirname($root) . '/editorial-fixture.json', json_encode([
+    'course' => $course,
+    'version' => $draft,
+    'teacher' => $teacherId,
+    'field' => $fieldId
+], JSON_THROW_ON_ERROR));
 echo json_encode(['editorial_checks' => $checks,'status' => 'passed']) . PHP_EOL;

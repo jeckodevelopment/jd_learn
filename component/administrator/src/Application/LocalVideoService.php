@@ -99,18 +99,34 @@ final class LocalVideoService
             [$actor, $v, $l] = $this->author($identity, $course, $version, $lesson, true);
             self::draft($v, $expected);
             $now = gmdate('Y-m-d H:i:s');
-            $metadata = array_intersect_key($staged, array_flip(['duration_ms', 'video_codec', 'audio_codec', 'sha256']));
+            $metadata = array_intersect_key($staged, array_flip([
+                'duration_ms',
+                'video_codec',
+                'audio_codec',
+                'sha256'
+            ]));
             $fields = array_diff_key($staged, array_flip(['duration_ms', 'video_codec', 'audio_codec']));
             $asset = (object) ($fields + $scan + ['asset_revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
                 'created_at' => $now, 'modified_at' => $now]);
             $this->db->insertObject('#__jlms_assets', $asset, 'id');
             $update = (object) ['id' => $lesson, 'media_asset_id' => (int) $asset->id, 'duration_ms' => $staged['duration_ms'],
-                'source_json' => json_encode(['_schema' => 1, 'provider' => 'html5', 'reference' => (string) $asset->id, 'asset_sha256' => $asset->sha256, 'options' => []], JSON_THROW_ON_ERROR),
+                'source_json' => json_encode([
+                    '_schema' => 1,
+                    'provider' => 'html5',
+                    'reference' => (string) $asset->id,
+                    'asset_sha256' => $asset->sha256,
+                    'options' => []
+                ], JSON_THROW_ON_ERROR),
                 'params_json' => json_encode(['video_duration_confirmed' => true, 'local_video' => $metadata], JSON_THROW_ON_ERROR),
                 'source_revision' => (int) $l->source_revision + 1, 'revision' => (int) $l->revision + 1,
                 'modified_by' => (int) $actor->id, 'modified_at' => $now];
             $this->db->updateObject('#__jlms_lessons', $update, 'id');
-            $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
+            $touch = (object) [
+                'id' => $version,
+                'revision' => (int) $v->revision + 1,
+                'modified_by' => (int) $actor->id,
+                'modified_at' => $now
+            ];
             $this->db->updateObject('#__jlms_course_versions', $touch, 'id');
         });
     }
@@ -182,7 +198,13 @@ final class LocalVideoService
             $delivery['handle'] = $handle;
         }
         unset($delivery['path']);
-        return $delivery + ['size' => (int) $asset->byte_size, 'name' => 'video.mp4', 'mime' => 'video/mp4', 'etag' => '"' . $asset->sha256 . '"', 'inline' => true];
+        return $delivery + [
+            'size' => (int) $asset->byte_size,
+            'name' => 'video.mp4',
+            'mime' => 'video/mp4',
+            'etag' => '"' . $asset->sha256 . '"',
+            'inline' => true
+        ];
     }
 
     /** Read-only media preview; every request rechecks the current course editor ACL. */

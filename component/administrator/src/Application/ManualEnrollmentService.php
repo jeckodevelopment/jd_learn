@@ -211,11 +211,23 @@ final class ManualEnrollmentService
                 ->bind(':id', $edition, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE');
             $this->db->setQuery($q)->loadResult();
-            [$actor, $learner, $courseRecord, $p] = $this->context($identity, $course, $user, $language, $preassignment);
+            [
+                $actor,
+                $learner,
+                $courseRecord,
+                $p
+            ] = $this->context($identity, $course, $user, $language, $preassignment);
             if ($p['edition_id'] !== $edition) {
                 throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409);
             }
-            $payload = ['actor' => (int) $actor->id, 'course' => $course, 'user' => $user, 'language' => $language, 'reason' => $reason, 'impact' => $impact];
+            $payload = [
+                'actor' => (int) $actor->id,
+                'course' => $course,
+                'user' => $user,
+                'language' => $language,
+                'reason' => $reason,
+                'impact' => $impact
+            ];
             if ($preassignment) {
                 $payload['preassignment'] = true;
             }
@@ -270,7 +282,11 @@ final class ManualEnrollmentService
                 'created_by' => $actorId, 'modified_by' => $actorId, 'created_at' => $now, 'modified_at' => $now];
             $this->db->insertObject('#__jlms_enrollments', $record, 'id');
             $id = (int) $record->id;
-            $update = (object) ['id' => (int) $receipt->id, 'enrollment_id' => $id, 'course_version_id' => $p['version_id']];
+            $update = (object) [
+                'id' => (int) $receipt->id,
+                'enrollment_id' => $id,
+                'course_version_id' => $p['version_id']
+            ];
             $this->db->updateObject('#__jlms_manual_enrollments', $update, 'id');
             ($this->audit)($actor, ['id' => (int) $receipt->id, 'actor_id' => $actorId, 'enrollment_id' => $id, 'reason_reference' => (int) $receipt->id,
                 'reason_code' => 'manual_enrollment_created', 'preassignment_requested' => $preassignment, 'access_at_assignment' => $p['has_current_access'], 'correlation_id' => bin2hex(random_bytes(16))]);

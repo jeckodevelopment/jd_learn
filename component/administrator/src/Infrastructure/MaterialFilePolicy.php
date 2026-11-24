@@ -32,7 +32,11 @@ final class MaterialFilePolicy
             throw new \RuntimeException('COM_JLMS_FILE_SIZE', 413);
         }
         $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-        $types = ['pdf' => ['application/pdf'], 'txt' => ['text/plain'], 'csv' => ['text/plain', 'text/csv', 'application/csv'],
+        $types = ['pdf' => ['application/pdf'], 'txt' => ['text/plain'], 'csv' => [
+            'text/plain',
+            'text/csv',
+            'application/csv'
+        ],
             'mp3' => ['audio/mpeg'], 'ogg' => ['audio/ogg', 'application/ogg'],
             'jpg' => ['image/jpeg'], 'jpeg' => ['image/jpeg'], 'png' => ['image/png'], 'webp' => ['image/webp'],
             'zip' => ['application/zip', 'application/octet-stream'],
@@ -81,7 +85,12 @@ final class MaterialFilePolicy
                 $mime = 'application/zip';
             }
         }
-        return ['mime_type' => $mime, 'byte_size' => $size, 'sha256' => hash_file('sha256', $path), 'original_name' => $name];
+        return [
+            'mime_type' => $mime,
+            'byte_size' => $size,
+            'sha256' => hash_file('sha256', $path),
+            'original_name' => $name
+        ];
     }
 
     private static function archive(string $path, string $ext): void
@@ -124,7 +133,11 @@ final class MaterialFilePolicy
                 }
             }
             if (in_array($ext, ['docx', 'xlsx', 'pptx'], true)) {
-                $main = ['docx' => 'word/document.xml', 'xlsx' => 'xl/workbook.xml', 'pptx' => 'ppt/presentation.xml'][$ext];
+                $main = [
+                    'docx' => 'word/document.xml',
+                    'xlsx' => 'xl/workbook.xml',
+                    'pptx' => 'ppt/presentation.xml'
+                ][$ext];
                 foreach (['[Content_Types].xml', '_rels/.rels', $main] as $required) {
                     if ($zip->locateName($required) === false) {
                         throw new \RuntimeException('COM_JLMS_FILE_INVALID', 422);

@@ -161,7 +161,13 @@ final class EnrollmentStateService
                 'previous_status' => $e->status, 'target_status' => $target, 'impact_hash' => $impactHash,
                 'reason' => $reason, 'actor_user_id' => (int) $actor->id, 'mutation_id' => $key, 'request_hash' => $hash, 'created_at' => $now];
             $this->db->insertObject('#__jlms_enrollment_state_changes', $record, 'id');
-            $update = (object) ['id' => $enrollment, 'status' => $target, 'revision' => $expected + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
+            $update = (object) [
+                'id' => $enrollment,
+                'status' => $target,
+                'revision' => $expected + 1,
+                'modified_by' => (int) $actor->id,
+                'modified_at' => $now
+            ];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
             // Revoking an enrollment also invalidates already-issued server player
             // sessions. Keep lesson progress and certificate history untouched.

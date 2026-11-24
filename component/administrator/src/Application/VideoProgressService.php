@@ -169,7 +169,13 @@ final class VideoProgressService
                 'options' => $descriptor->playerOptions, 'expires_at' => $descriptor->expiresAt?->getTimestamp()];
         }
         return $this->transaction(function () use ($identity, $language, $enrollmentId, $lessonId, $fingerprint, $descriptor): array {
-            [$actor, , $enrollment, $lesson, $provider] = $this->context($identity, $language, $enrollmentId, $lessonId);
+            [
+                $actor,
+                ,
+                $enrollment,
+                $lesson,
+                $provider
+            ] = $this->context($identity, $language, $enrollmentId, $lessonId);
             if (!hash_equals($fingerprint, self::fingerprint($lesson))) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
             }

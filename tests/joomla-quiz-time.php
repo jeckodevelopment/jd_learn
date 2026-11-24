@@ -126,7 +126,16 @@ timeExpect($oldState['extra_time_seconds'] === 0 && $oldState['base_time_seconds
 timeExpect(hash('sha256', json_encode($oldSnapshot, JSON_THROW_ON_ERROR)) === $old['snapshot_hash'], 'upgrade preserves actual pre-0.11 snapshot and deadline');
 $group = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learning entitlement'")->loadResult();
 $user = new \Joomla\CMS\User\User();
-$data = ['name' => 'CI extra time learner','username' => 'ciquiztimelearner','email' => 'ciquiztimelearner@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
+$data = [
+    'name' => 'CI extra time learner',
+    'username' => 'ciquiztimelearner',
+    'email' => 'ciquiztimelearner@example.invalid',
+    'password' => 'Ci-only-Learner-Password-2026',
+    'password2' => 'Ci-only-Learner-Password-2026',
+    'groups' => [2,$group],
+    'block' => 0,
+    'activation' => ''
+];
 if (!$user->bind($data) || !$user->save()) {
     throw new \RuntimeException($user->getError());
 }
@@ -219,7 +228,14 @@ foreach (['core.manage','jlms.enrollments.manage','jlms.assessment.correct'] as 
 $asset->rules = json_encode($permissions, JSON_THROW_ON_ERROR);
 $asset->store();
 $manager = new \Joomla\CMS\User\User();
-$data = array_replace($data, ['name' => 'CI Time Manager','username' => 'ciquiztimemanager','email' => 'ciquiztimemanager@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$managerGroup]]);
+$data = array_replace($data, [
+    'name' => 'CI Time Manager',
+    'username' => 'ciquiztimemanager',
+    'email' => 'ciquiztimemanager@example.invalid',
+    'password' => 'Ci-only-Learner-Password-2026',
+    'password2' => 'Ci-only-Learner-Password-2026',
+    'groups' => [2,$managerGroup]
+]);
 if (!$manager->bind($data) || !$manager->save()) {
     throw new \RuntimeException($manager->getError());
 }
@@ -244,5 +260,14 @@ timeReject(fn()=>$runtime->state($user, 'en-GB', $enrollment, $lesson), 403, 'al
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$user->id, $group);
 $last = $time->editor($actor, $course, $lesson, $enrollment);
 timeExpect(count($last['history']) === 3, 'all previous values and reasons remain immutable');
-file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $lesson,'enrollment_id' => $enrollment,'learner_id' => (int)$user->id,'attempt_id' => $attempt,'first_adjustment' => $id,'last_revision' => 3,'snapshot_hash' => hash('sha256', json_encode($original, JSON_THROW_ON_ERROR))], JSON_THROW_ON_ERROR));
+file_put_contents($path, json_encode([
+    'course_id' => $course,
+    'lesson_id' => $lesson,
+    'enrollment_id' => $enrollment,
+    'learner_id' => (int)$user->id,
+    'attempt_id' => $attempt,
+    'first_adjustment' => $id,
+    'last_revision' => 3,
+    'snapshot_hash' => hash('sha256', json_encode($original, JSON_THROW_ON_ERROR))
+], JSON_THROW_ON_ERROR));
 echo json_encode(['quiz_time_checks' => $checks,'status' => 'passed']) . PHP_EOL;
