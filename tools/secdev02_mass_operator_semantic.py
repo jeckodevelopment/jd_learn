@@ -83,7 +83,7 @@ def main()->int:
     p.add_argument("--self-test",action="store_true")
     args=p.parse_args()
     if args.self_test:
-        example=b"$result = $object->getSomething()->getAnother()->getThird()->getFourth()->getFifth()->getFinal()->calculate();\n"
+        example=b"$result = $object->getSomething()->getAnother()->getThird()->getFourth()->getFifth()->getFinal()->calculate()->getNext()->getLast()->getFinished();\n"
         points=[[i,i+2,"->"] for i in range(len(example)) if example[i:i+2]==b"->"]
         assert propose(example,points,88,4,False)!=example
         print("SECDEV-02 operator statement normalization fixtures OK")
