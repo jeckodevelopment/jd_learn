@@ -83,6 +83,7 @@ def run() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--max-reversions", type=int, default=45)
+    parser.add_argument("--base-ref", default="HEAD")
     args = parser.parse_args()
     if args.self_test:
         assert fingerprint(subprocess.CompletedProcess([], 0, "", "")) == "SUCCESS"
@@ -92,14 +93,14 @@ def run() -> int:
         print("SECDEV-02 source-contract rollback fixtures: OK")
         return 0
 
-    changed = execute(["git", "diff", "--name-only", "--", "*.php"], 30)
+    changed = execute(["git", "diff", "--name-only", args.base_ref, "--", "*.php"], 30)
     if changed.returncode:
         raise RuntimeError(changed.stderr)
     files = [name for name in changed.stdout.splitlines() if (ROOT / name).is_file()]
     original = {}
     for name in files:
         before = subprocess.run(
-            ["git", "show", "HEAD:" + name], cwd=ROOT,
+            ["git", "show", args.base_ref + ":" + name], cwd=ROOT,
             capture_output=True, check=True, timeout=30
         )
         original[name] = before.stdout
