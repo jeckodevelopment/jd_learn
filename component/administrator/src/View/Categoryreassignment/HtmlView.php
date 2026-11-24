@@ -29,7 +29,10 @@ final class HtmlView extends BaseHtmlView
         $this->categories = array_values(array_filter($db->setQuery($query)->loadObjectList(), static function (object $category) use ($actor): bool {
             $asset = $category->extension . '.category.' . (int) $category->id;
             return $actor->authorise('core.delete', $asset)
-                || ((int) $category->created_user_id === (int) $actor->id && $actor->authorise('core.delete.own', $asset));
+                || ((int) $category->created_user_id === (int) $actor->id && $actor->authorise(
+                    'core.delete.own',
+                    $asset
+                ));
         }));
         $categoryId = Factory::getApplication()->input->getInt('category_id');
         if ($categoryId > 1) {

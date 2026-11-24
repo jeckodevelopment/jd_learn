@@ -19,9 +19,21 @@ final class CategoryReassignmentService
     /** @var array<string, array{table:string, extension:string, label:string}> */
     private const REFERENCES = [
         'courses' => ['table' => '#__jlms_courses', 'extension' => 'com_jlms.course', 'label' => 'COM_JLMS_COURSES'],
-        'pathways' => ['table' => '#__jlms_pathways', 'extension' => 'com_jlms.pathway', 'label' => 'COM_JLMS_PATHWAYS'],
-        'teachers' => ['table' => '#__jlms_teachers', 'extension' => 'com_jlms.teacher', 'label' => 'COM_JLMS_TEACHERS'],
-        'questions' => ['table' => '#__jlms_questions', 'extension' => 'com_jlms.question', 'label' => 'COM_JLMS_QUESTION_BANK'],
+        'pathways' => [
+            'table' => '#__jlms_pathways',
+            'extension' => 'com_jlms.pathway',
+            'label' => 'COM_JLMS_PATHWAYS'
+        ],
+        'teachers' => [
+            'table' => '#__jlms_teachers',
+            'extension' => 'com_jlms.teacher',
+            'label' => 'COM_JLMS_TEACHERS'
+        ],
+        'questions' => [
+            'table' => '#__jlms_questions',
+            'extension' => 'com_jlms.question',
+            'label' => 'COM_JLMS_QUESTION_BANK'
+        ],
     ];
 
     public function __construct(private readonly DatabaseInterface $db)

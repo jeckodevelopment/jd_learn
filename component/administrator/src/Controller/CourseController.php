@@ -128,7 +128,10 @@ final class CourseController extends FormController
     protected function allowAdd($data = [])
     {
         $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app->getIdentity());
-        return \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(\Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor);
+        return \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(
+            \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),
+            $actor
+        );
     }
 
     protected function allowEdit($data = [], $key = 'id')
@@ -136,6 +139,9 @@ final class CourseController extends FormController
         $id = (int) ($data[$key] ?? 0);
         $item = $this->getModel()->getItem($id);
         $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($this->app->getIdentity());
-        return $id > 0 && $item && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $item);
+        return $id > 0 && $item && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit(
+            $actor,
+            $item
+        );
     }
 }

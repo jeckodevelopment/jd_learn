@@ -163,7 +163,8 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
         return;
     }
     if ($mode === 'retained') {
-        restoreExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Recovered programmes, provider references, native audit and learning survive upgrade');
+        restoreExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Recovered programmes, provider references, native audit and learning ' .
+            'survive upgrade');
         echo json_encode(['programme_restore_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
         return;
     }
@@ -203,7 +204,8 @@ $historical = $version;
 $enrollment = $component->getLearningService()->start($actor, 'en-GB', $course, bin2hex(random_bytes(20)));
 // Seed a certificate bound to the historical edition before the newer edition
 // or a restoration draft exists. This tests record retention, not issuance rules.
-$templateId = (int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1')->loadResult();
+$templateId = (int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id ' .
+    'LIMIT 1')->loadResult();
 restoreExpect($templateId > 0, 'Certificate template is available for historical retention regression');
 $issuedAt = gmdate('Y-m-d H:i:s');
 $historyCertificate = (object)['enrollment_id' => $enrollment,'course_version_id' => $historical,
@@ -284,7 +286,8 @@ $courseAfter = restoreRow('courses', $course);
 foreach (['revision','modified_at','modified_by'] as $field) {
     unset($courseBefore->$field, $courseAfter->$field);
 }
-restoreExpect($courseBefore == $courseAfter, 'Course presentation, teachers, access, state and current pointer are preserved');
+restoreExpect($courseBefore == $courseAfter, 'Course presentation, teachers, access, state and current pointer are ' .
+    'preserved');
 restoreExpect(restoreLearning() === $before && (int)restoreRow('enrollments', $enrollment)->course_version_id === $historical, 'Recovery leaves all learning history unchanged');
 restoreExpect(
     (array)restoreRow('certificates', (int)$historyCertificate->id) === $certificateBefore
@@ -303,7 +306,8 @@ restoreDenied(fn()=>$publish($target), 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
 restoreExpect(restoreRow('course_versions', $target)->status === 'draft' && (int)restoreRow('courses', $course)->current_version_id === $current && restoreLearning() === $before, 'Unavailable provider blocks publication without activating recovery');
 $vimeoEnabled = true;
 $publish($target);
-restoreExpect((int)restoreRow('courses', $course)->current_version_id === $target && restoreLearning() === $before, 'Normal impact-confirmed publication activates recovery without migrating learners');
+restoreExpect((int)restoreRow('courses', $course)->current_version_id === $target && restoreLearning() === $before, 'Normal impact-confirmed publication activates recovery without migrating ' .
+    'learners');
 restoreExpect(restoreTree($existing) === $trees[$existing], 'Publishing recovered programme preserves another open draft');
 restoreExpect(count($remote->calls) > 0, 'Cloudflare privacy and metadata validation uses controlled transport');
 file_put_contents($fixture, json_encode(['course' => $course,'historical' => $historical,'current' => $target,'existing' => $existing], JSON_THROW_ON_ERROR));

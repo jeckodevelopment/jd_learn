@@ -152,7 +152,21 @@ final class CurriculumService
     {
         $columns = $table === 'modules'
             ? ['id', 'course_version_id', 'title', 'ordering', 'revision']
-            : ['id', 'course_version_id', 'module_id', 'title', 'kind', 'provider_key', 'media_asset_id', 'required', 'ordering', 'revision', 'checked_out', 'duration_ms', 'params_json'];
+            : [
+                'id',
+                'course_version_id',
+                'module_id',
+                'title',
+                'kind',
+                'provider_key',
+                'media_asset_id',
+                'required',
+                'ordering',
+                'revision',
+                'checked_out',
+                'duration_ms',
+                'params_json'
+            ];
         $q = $this->db->createQuery()
             ->select($this
             ->db
@@ -523,7 +537,18 @@ final class CurriculumService
             throw new \DomainException('COM_JLMS_SOURCE_INVALID');
         }
         $source = ($this->registryFactory)()->get($provider)->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]));
-        return hash('sha256', json_encode([(int)$actor->id,(int)$course->id,(int)$version->id,(int)$version->revision,(int)$module->id,$id,$revision,$source->providerKey,$source->reference,$source->options], JSON_THROW_ON_ERROR));
+        return hash('sha256', json_encode([
+            (int)$actor->id,
+            (int)$course->id,
+            (int)$version->id,
+            (int)$version->revision,
+            (int)$module->id,
+            $id,
+            $revision,
+            $source->providerKey,
+            $source->reference,
+            $source->options
+        ], JSON_THROW_ON_ERROR));
     }
 
     public function authoringMetadata(User $actor, array $input): array
@@ -617,7 +642,11 @@ final class CurriculumService
                 $confirmed = true;
             }
             $fields['duration_ms'] = $duration;
-            $fields['params_json'] = json_encode(['video_duration_confirmed' => $confirmed, 'video_duration_origin' => $origin, 'video_transcript' => $transcript], JSON_THROW_ON_ERROR);
+            $fields['params_json'] = json_encode([
+                'video_duration_confirmed' => $confirmed,
+                'video_duration_origin' => $origin,
+                'video_transcript' => $transcript
+            ], JSON_THROW_ON_ERROR);
             if (
                 !is_string($input['provider_key'] ?? null) || !is_string($input['source_reference'] ?? null)
                 || !is_string($input['privacy_hash'] ?? '')
@@ -886,7 +915,12 @@ final class CurriculumService
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $dependencies = $kind === 'module' ? [['lessons', 'module_id']]
-                : [['attachments', 'lesson_id'], ['quizzes', 'lesson_id'], ['prerequisites', 'lesson_id'], ['prerequisites', 'required_lesson_id']];
+                : [
+                    ['attachments', 'lesson_id'],
+                    ['quizzes', 'lesson_id'],
+                    ['prerequisites', 'lesson_id'],
+                    ['prerequisites', 'required_lesson_id']
+                ];
             foreach ($dependencies as [$related, $column]) {
                 $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_' . $related))
                     ->where($this->db->quoteName($column) . ' = :id')->bind(':id', $id, ParameterType::INTEGER);

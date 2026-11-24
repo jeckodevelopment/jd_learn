@@ -116,12 +116,18 @@ impactExpect($model->save(['id' => $course,'revision' => $copyRecord->revision,'
     => 1,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent impact fixture has explicit learner access');
 $version = (int)$authoring->outline($actor, $course)['version']->id;
 $transition = (int)$service->transitions($actor, $course, $version)[0]->id;
-impactExpect($service->updateImpact($actor, $course, $version, $transition) === null, 'Initial publication has no update review');
+impactExpect(
+    $service->updateImpact($actor, $course, $version, $transition) === null,
+    'Initial publication has no update review'
+);
 $service->transition($actor, $course, $version, (int)impactRow('courses', $course)
     ->revision, (int)impactRow('course_versions', $version)->revision, $transition);
 $old = $version;
 $enrollment = $component->getLearningService()->start($actor, 'en-GB', $course, str_repeat('e', 40));
-impactExpect((int)impactRow('enrollments', $enrollment)->course_version_id === $old, 'Real enrollment assigned to the original programme');
+impactExpect(
+    (int)impactRow('enrollments', $enrollment)->course_version_id === $old,
+    'Real enrollment assigned to the original programme'
+);
 $before = impactLearning();
 $draft = $authoring->createDraft($actor, $course, (int)impactRow('courses', $course)->revision);
 $findTransition = static function (string $action) use ($service, $actor, $course, $draft): object {
@@ -146,7 +152,10 @@ impactExpect(!$initial['rules_changed'], 'Equivalent teaching rules remain uncha
 impactExpect((int)$initial['enrollments'][0][
     'total'] === 1, 'Review counts existing assignments without learner identities');
 impactDenied(fn()=>$service->transition($actor, $course, $draft, (int)impactRow('courses', $course)
-    ->revision, (int)impactRow('course_versions', $draft)->revision, $transition), 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
+    ->revision, (int)impactRow(
+        'course_versions',
+        $draft
+    )->revision, $transition), 'COM_JLMS_PUBLICATION_REVIEW_REQUIRED');
 $return = $findTransition('return');
 $service->transition($actor, $course, $draft, (int)impactRow('courses', $course)
     ->revision, (int)impactRow('course_versions', $draft)->revision, (int)$return->id);
@@ -196,7 +205,10 @@ impactDenied(fn()=>$service->updateImpact($actor, $course, (int)$original
 $current = $review();
 $service->transition($actor, $course, $draft, (int)impactRow('courses', $course)
     ->revision, (int)impactRow('course_versions', $draft)->revision, $transition, $current['fingerprint']);
-impactExpect((int)impactRow('courses', $course)->current_version_id === $draft, 'Confirmed current review activates the update');
+impactExpect(
+    (int)impactRow('courses', $course)->current_version_id === $draft,
+    'Confirmed current review activates the update'
+);
 impactExpect(impactLearning() === $before && (int)impactRow('enrollments', $enrollment)
     ->course_version_id === $old, 'Existing assignments, attempts and progress remain byte-for-byte unchanged');
 $version = $authoring->createDraft($actor, $course, (int)impactRow('courses', $course)->revision);

@@ -72,7 +72,14 @@ final class CoursemessageController extends BaseController
         try {
             [$raw,$course,$ids] = $this->read();
             $service = $this->app->bootComponent('com_jlms')->getCourseCommunicationService();
-            $plan = $service->preview($this->app->getIdentity(), $course, $raw['subject'], $raw['body'], $ids, $raw['template'] ?? []);
+            $plan = $service->preview(
+                $this->app->getIdentity(),
+                $course,
+                $raw['subject'],
+                $raw['body'],
+                $ids,
+                $raw['template'] ?? []
+            );
             $key = 'com_jlms.coursemessage.' . (int)$this->app->getIdentity()->id . '.' . $course;
             $this->app->getSession()->set($key, ['subject' => $plan['subject'],'body'
                 => $plan['body'],'template' => $plan['template'],'enrollment_ids' => $plan['enrollment_ids'],

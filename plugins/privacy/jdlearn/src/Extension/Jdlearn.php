@@ -60,7 +60,10 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         $attemptDomain = $this->createDomain('jdlearn_attempts', 'plg_privacy_jdlearn_domain_attempts');
         $answerDomain = $this->createDomain('jdlearn_answers', 'plg_privacy_jdlearn_domain_answers');
         $certificateDomain = $this->createDomain('jdlearn_certificates', 'plg_privacy_jdlearn_domain_certificates');
-        $consentDomain = $this->createDomain('jdlearn_course_announcement_consent', 'plg_privacy_jdlearn_domain_course_announcement_consent');
+        $consentDomain = $this->createDomain(
+            'jdlearn_course_announcement_consent',
+            'plg_privacy_jdlearn_domain_course_announcement_consent'
+        );
 
         $query = $db->createQuery()
             ->select([
@@ -160,7 +163,14 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
             $certificateDomain->addItem($this->createItemFromArray((array) $certificate));
         }
 
-        $consentQuery = $db->createQuery()->select(['state', 'origin', 'policy_version', 'requested_at', 'confirmed_at', 'revoked_at'])
+        $consentQuery = $db->createQuery()->select([
+            'state',
+            'origin',
+            'policy_version',
+            'requested_at',
+            'confirmed_at',
+            'revoked_at'
+        ])
             ->from($db->quoteName('#__jlms_mail_consents'))->where($db->quoteName('user_id') . ' = :userId')
                 ->bind(':userId', $user->id);
         foreach ($db->setQuery($consentQuery)->loadObjectList() as $consent) {
@@ -182,7 +192,16 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
             $mailDomain->addItem($this->createItemFromArray((array) $delivery));
         }
 
-        $event->addResult([$enrollmentDomain, $requestDomain, $progressDomain, $attemptDomain, $answerDomain, $certificateDomain, $consentDomain, $mailDomain]);
+        $event->addResult([
+            $enrollmentDomain,
+            $requestDomain,
+            $progressDomain,
+            $attemptDomain,
+            $answerDomain,
+            $certificateDomain,
+            $consentDomain,
+            $mailDomain
+        ]);
     }
 
     public function onPrivacyCanRemoveData(CanRemoveDataEvent $event): void

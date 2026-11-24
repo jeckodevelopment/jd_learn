@@ -86,7 +86,11 @@ final class ConfigurationDiagnostics
         $keys = match ($state) {
             'private' => ['ok', 'COM_JLMS_CONFIG_STORAGE_PRIVATE', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_PRIVATE'],
             'public' => ['error', 'COM_JLMS_CONFIG_STORAGE_PUBLIC', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_PUBLIC'],
-            'unavailable' => ['error', 'COM_JLMS_CONFIG_STORAGE_UNAVAILABLE', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_UNAVAILABLE'],
+            'unavailable' => [
+                'error',
+                'COM_JLMS_CONFIG_STORAGE_UNAVAILABLE',
+                'COM_JLMS_CONFIG_STORAGE_GUIDANCE_UNAVAILABLE'
+            ],
             default => ['warning', 'COM_JLMS_CONFIG_STORAGE_MANAGED', 'COM_JLMS_CONFIG_STORAGE_GUIDANCE_MANAGED'],
         };
         return [

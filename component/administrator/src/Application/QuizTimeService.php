@@ -123,7 +123,17 @@ final class QuizTimeService
                 $active = (object)['id' => (int)$active->id,'deadline_at' => $active->deadline_at,'time_seconds' => $active->deadline_at === null ? 0 : (new \DateTimeImmutable($active->deadline_at, new \DateTimeZone('UTC')))->getTimestamp() - (new \DateTimeImmutable($active->started_at, new \DateTimeZone('UTC')))->getTimestamp()];
             }
         }
-        return ['course_id' => $course,'lesson_id' => $lesson,'quiz' => $quiz,'enrollment' => $e,'candidates' => $candidates,'more' => $more,'current' => $current,'history' => $history,'active' => $active];
+        return [
+            'course_id' => $course,
+            'lesson_id' => $lesson,
+            'quiz' => $quiz,
+            'enrollment' => $e,
+            'candidates' => $candidates,
+            'more' => $more,
+            'current' => $current,
+            'history' => $history,
+            'active' => $active
+        ];
     }
 
     public function save(User $identity, int $course, int $lesson, int $enrollment, int $expected, int $minutes, string $reason, string $key): int
@@ -149,7 +159,15 @@ final class QuizTimeService
             [$actor,$quiz] = $this->scope($identity, $course, $lesson, $enrollment);
             $quizId = (int)$quiz->id;
             $seconds = $minutes * 60;
-            $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int)$actor->id,'course' => $course,'lesson' => $lesson,'enrollment' => $enrollment,'revision' => $expected,'extra_seconds' => $seconds,'reason' => $reason]));
+            $hash = hash('sha256', QuestionDefinition::canonical([
+                'actor' => (int)$actor->id,
+                'course' => $course,
+                'lesson' => $lesson,
+                'enrollment' => $enrollment,
+                'revision' => $expected,
+                'extra_seconds' => $seconds,
+                'reason' => $reason
+            ]));
             $q = $this->db->createQuery()
                 ->select('id,request_hash')
                 ->from('#__jlms_quiz_time_adjustments')

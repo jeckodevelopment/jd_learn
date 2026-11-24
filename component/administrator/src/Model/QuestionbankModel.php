@@ -36,7 +36,10 @@ final class QuestionbankModel extends ListModel
         }
         $ordering = (string)($list['ordering'] ?? 'r.prompt');
         $direction = (string)($list['direction'] ?? 'ASC');
-        if (isset($list['fullordering']) && preg_match('/\A(.+)\s+(ASC|DESC)\z/iD', (string)$list['fullordering'], $match)) {
+        if (
+            isset($list['fullordering']) &&
+            preg_match('/\A(.+)\s+(ASC|DESC)\z/iD', (string)$list['fullordering'], $match)
+        ) {
             $ordering = $match[1];
             $direction = $match[2];
         }

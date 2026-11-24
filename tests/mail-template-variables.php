@@ -88,7 +88,15 @@ foreach (
 
 // Approved course and lesson context is declared, rendered and produced by the
 // queue boundary. USER_FIRSTNAME is intentionally not a supported tag.
-$contextTags = ['COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'LESSON_DESCRIPTION', 'LESSON_URL', 'TEACHER_NAME', 'CONTACT_EMAIL'];
+$contextTags = [
+    'COURSE_DESCRIPTION',
+    'COURSE_DURATION',
+    'COURSE_START_DATE',
+    'LESSON_DESCRIPTION',
+    'LESSON_URL',
+    'TEACHER_NAME',
+    'CONTACT_EMAIL'
+];
 $contextSource = file_get_contents(__DIR__ . '/../component/administrator/src/Infrastructure/MailTemplateContext.php');
 $queueSource = file_get_contents(__DIR__ . '/../component/administrator/src/Infrastructure/MailQueue.php');
 if (
@@ -98,7 +106,12 @@ if (
     throw new RuntimeException('Mail template context enrichment is not connected to both queue paths.');
 }
 foreach (['com_jlms.lesson.available', 'com_jlms.teacher.assigned', 'com_jlms.course.published'] as $templateId) {
-    $scopedTags = array_intersect($contextTags, ['COURSE_DESCRIPTION', 'COURSE_DURATION', 'COURSE_START_DATE', 'CONTACT_EMAIL']);
+    $scopedTags = array_intersect($contextTags, [
+        'COURSE_DESCRIPTION',
+        'COURSE_DURATION',
+        'COURSE_START_DATE',
+        'CONTACT_EMAIL'
+    ]);
     if ($templateId === 'com_jlms.lesson.available') {
         $scopedTags = array_merge($scopedTags, ['LESSON_DESCRIPTION', 'LESSON_URL']);
     }

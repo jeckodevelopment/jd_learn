@@ -11,7 +11,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     $fixtureDb->exec(("UPDATE joomla_extensions SET "
     . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE "
@@ -149,7 +154,10 @@ try {
         static fn (): \Joomla\Registry\Registry => new \Joomla\Registry\Registry(['video_storage_root'
             => $goodVideoPath])
     );
-    videoExpect($goodVideoRoot->root() === realpath($goodVideoPath), 'configured off-webroot video root remains supported');
+    videoExpect(
+        $goodVideoRoot->root() === realpath($goodVideoPath),
+        'configured off-webroot video root remains supported'
+    );
 } finally {
     rmdir($goodVideoPath);
 }
@@ -200,14 +208,31 @@ $cr = (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $cou
 $settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
 $settings->set('video_external_policy', 'blocked');
 try {
-    $publication->transition($actor, $course, $version, $cr, $scope()['expected_version_revision'], (int) $publication->transitions($actor, $course)[0]->id);
+    $publication->transition(
+        $actor,
+        $course,
+        $version,
+        $cr,
+        $scope()['expected_version_revision'],
+        (int) $publication->transitions($actor, $course)[0]->id
+    );
     throw new \RuntimeException('Blocked YouTube policy permitted publication');
 } catch (\DomainException $error) {
-    videoExpect($error->getMessage() === 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED', 'Blocked YouTube policy returns its own actionable error');
+    videoExpect(
+        $error->getMessage() === 'COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED',
+        'Blocked YouTube policy returns its own actionable error'
+    );
 } finally {
     $settings->set('video_external_policy', 'embed');
 }
-$publication->transition($actor, $course, $version, $cr, $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
+$publication->transition(
+    $actor,
+    $course,
+    $version,
+    $cr,
+    $scope()['expected_version_revision'],
+    (int)$publication->transitions($actor, $course)[0]->id
+);
 $enrollment = $learning->start($student, 'en-GB', $course, bin2hex(random_bytes(16)));
 $now = (int)floor(microtime(true) * 1000);
 $service = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
@@ -215,13 +240,25 @@ $service = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressServi
 });
 videoFixtureUpdate('jlms_lessons', (object)['id' => $lesson,'publish_up'
     => gmdate('Y-m-d H:i:s', time() + 3600),'publish_down' => gmdate('Y-m-d H:i:s', time() + 7200)]);
-videoDenied(fn()=>$learning->videoContext($student, 'en-GB', $enrollment, $lesson), 403, 'scheduled video source is protected before release');
-videoDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 403, 'scheduled video player is protected before release');
+videoDenied(
+    fn()=>$learning->videoContext($student, 'en-GB', $enrollment, $lesson),
+    403,
+    'scheduled video source is protected before release'
+);
+videoDenied(
+    fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true),
+    403,
+    'scheduled video player is protected before release'
+);
 videoFixtureUpdate('jlms_lessons', (object)['id' => $lesson,'publish_up' => null,'publish_down' => null], true);
 videoDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, false), 403, 'no consent');
 videoDenied(fn()=>$service->playback($other, 'en-GB', $enrollment, $lesson, true), 404, 'foreign enrollment');
 videoDenied(fn()=>$service->playback(new \Joomla\CMS\User\User(), 'en-GB', $enrollment, $lesson, true), 401, 'guest');
-videoDenied(fn()=>$learning->complete($student, 'en-GB', $enrollment, $lesson, bin2hex(random_bytes(16))), 403, 'manual completion cannot bypass video');
+videoDenied(
+    fn()=>$learning->complete($student, 'en-GB', $enrollment, $lesson, bin2hex(random_bytes(16))),
+    403,
+    'manual completion cannot bypass video'
+);
 $view = $learning->classroom($student, 'en-GB', $enrollment, $lesson);
 videoExpect($view['lesson']->kind === 'video' && !isset($view['lesson']
     ->source_json), 'classroom never exposes reference');
@@ -230,9 +267,21 @@ videoExpect($view['lesson']->kind === 'video' && !isset($view['lesson']
 foreach ([0,2,-2] as $blockedState) {
     videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $blockedState,'publish_down'
         => '2000-01-01 00:00:00']);
-    videoDenied(fn()=>$learning->videoContext($student, 'en-GB', $enrollment, $lesson), 404, 'inactive course rejects direct video context');
-    videoDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 404, 'inactive course rejects video playback');
-    videoDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'inactive course rejects a new learner');
+    videoDenied(
+        fn()=>$learning->videoContext($student, 'en-GB', $enrollment, $lesson),
+        404,
+        'inactive course rejects direct video context'
+    );
+    videoDenied(
+        fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true),
+        404,
+        'inactive course rejects video playback'
+    );
+    videoDenied(
+        fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))),
+        404,
+        'inactive course rejects a new learner'
+    );
 }
 videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state' => 1,'publish_down' => '2000-01-01 00:00:00']);
 [, , , $availableVideo] = $learning->videoContext($student, 'en-GB', $enrollment, $lesson);
@@ -252,7 +301,17 @@ $event = static fn(int $id, string $type, int $p, int $t, bool $playing = true):
 $batch = json_encode([$event(1, 'play', 0, 0),$event(2, 'position', 5000, 5000)], JSON_THROW_ON_ERROR);
 $now += 5000;
 $save = static fn(array $grant, int $seq, string $events, int $duration = 10000)=>$service
-    ->save($student, 'en-GB', $enrollment, $lesson, $grant['session_id'], $grant['source_revision'], $seq, $duration, $events);
+    ->save(
+        $student,
+        'en-GB',
+        $enrollment,
+        $lesson,
+        $grant['session_id'],
+        $grant['source_revision'],
+        $seq,
+        $duration,
+        $events
+    );
 $r = $save($b, 1, $batch);
 videoExpect($r['covered_ms'] === 5000 && !$r['lesson_completed'], 'first valid interval');
 videoExpect($save($b, 1, $batch)['replay'], 'identical batch replay');
@@ -266,10 +325,18 @@ $beforeLifecycleSession = $db->setQuery("SELECT sequence_no, last_batch_hash FRO
 foreach ([0, 2, -2] as $inactiveCourseState) {
     videoFixtureUpdate('jlms_courses', (object)['id' => $course,'state'
         => $inactiveCourseState,'admissions_open' => 1,'delivery_enabled' => 1]);
-    videoDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 404, 'LCM-01 inactive course denies new playback');
+    videoDenied(
+        fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true),
+        404,
+        'LCM-01 inactive course denies new playback'
+    );
     videoDenied(fn()=>$save($b, 1, $batch), 404, 'LCM-01 inactive course denies idempotent session replay');
     videoDenied(fn()=>$save($b, 2, $batch), 404, 'LCM-01 inactive course denies new session telemetry');
-    videoDenied(fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))), 404, 'LCM-01 inactive course denies direct new enrollment');
+    videoDenied(
+        fn()=>$learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16))),
+        404,
+        'LCM-01 inactive course denies direct new enrollment'
+    );
     $afterLifecycleProgress = $db->setQuery(('SELECT covered_ms, resume_ms, state, completed_at, revision FROM '
     . '#__jlms_lesson_progress WHERE enrollment_id=') . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
     $afterLifecycleSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
@@ -295,10 +362,18 @@ try {
     foreach (['suspended', 'cancelled'] as $revokedStatus) {
         $revocation = (object)['id' => $enrollment,'status' => $revokedStatus];
         $db->updateObject('#__jlms_enrollments', $revocation, 'id');
-        videoDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true), 403, 'revoked enrollment rejects fresh video playback: ' . $revokedStatus);
+        videoDenied(
+            fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, true),
+            403,
+            'revoked enrollment rejects fresh video playback: ' . $revokedStatus
+        );
         videoDenied(fn()=>$save($b, 1, $batch), 403, 'revoked enrollment rejects replay of active session: '
             . $revokedStatus);
-        videoDenied(fn()=>$save($b, 2, $batch), 403, 'revoked enrollment rejects new telemetry in active session: ' . $revokedStatus);
+        videoDenied(
+            fn()=>$save($b, 2, $batch),
+            403,
+            'revoked enrollment rejects new telemetry in active session: ' . $revokedStatus
+        );
         $afterProgress = $db->setQuery(('SELECT covered_ms, resume_ms, state, completed_at, revision FROM '
         . '#__jlms_lesson_progress WHERE enrollment_id=') . (int)$enrollment . ' AND lesson_id=' . (int)$lesson)->loadAssoc();
         $afterPlayerSession = $db->setQuery("SELECT sequence_no, last_batch_hash FROM #__jlms_progress_sessions WHERE id=" . $db->quote($b['session_id']))->loadAssoc();
@@ -329,9 +404,15 @@ videoExpect($r['resume_conflict'] && $r['resume_ms'] === 5000, 'stale tab cannot
 $now += 1000;
 $staleAgain = json_encode([$event(3, 'position', 6000, 6000)], JSON_THROW_ON_ERROR);
 $r = $save($b, 2, $staleAgain);
-videoExpect($r['resume_conflict'] && $r['resume_ms'] === 5000, 'stale session keeps the newer resume after first conflict');
+videoExpect(
+    $r['resume_conflict'] && $r['resume_ms'] === 5000,
+    'stale session keeps the newer resume after first conflict'
+);
 $replay = $save($b, 2, $staleAgain);
-videoExpect($replay['replay'] && $replay['resume_conflict'] && $replay['resume_ms'] === 5000, 'idempotent replay preserves the stale resume conflict');
+videoExpect(
+    $replay['replay'] && $replay['resume_conflict'] && $replay['resume_ms'] === 5000,
+    'idempotent replay preserves the stale resume conflict'
+);
 $now += 1000;
 $staleThird = json_encode([$event(4, 'position', 7000, 7000)], JSON_THROW_ON_ERROR);
 $r = $save($b, 3, $staleThird);
@@ -358,7 +439,11 @@ videoExpect(
 $service->close($student, 'en-GB', $enrollment, $lesson, $completedReplay['session_id']);
 videoExpect($save($c, 1, $otherBatch)['replay'], 'completion replay');
 $service->close($student, 'en-GB', $enrollment, $lesson, $b['session_id']);
-videoDenied(fn()=>$save($b, 2, json_encode([$event(3, 'position', 6000, 6000)], JSON_THROW_ON_ERROR)), 409, 'closed session cannot write');
+videoDenied(
+    fn()=>$save($b, 2, json_encode([$event(3, 'position', 6000, 6000)], JSON_THROW_ON_ERROR)),
+    409,
+    'closed session cannot write'
+);
 file_put_contents(dirname($root) . '/video-fixture.json', json_encode(['course_id' => $course,'enrollment_id'
     => $enrollment,'lesson_id' => $lesson,'user_id' => (int)$student->id], JSON_THROW_ON_ERROR));
 echo json_encode(['video_checks' => $checks,'status' => 'passed']) . PHP_EOL;

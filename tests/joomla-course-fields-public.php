@@ -92,7 +92,10 @@ function publicFieldsState(array $f): array
         . ' ORDER BY lesson_id')->loadAssocList()],
     'course' => $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $c)->loadAssoc(),
     'values' => $db->setQuery('SELECT field_id,value FROM #__fields_values WHERE item_id=' . $db
-        ->quote((string)$c) . ' AND field_id IN (' . implode(',', array_map('intval', array_values($f['fields']))) . ') ORDER BY field_id,value')->loadAssocList(),
+        ->quote((string)$c) . ' AND field_id IN (' . implode(
+            ',',
+            array_map('intval', array_values($f['fields']))
+        ) . ') ORDER BY field_id,value')->loadAssocList(),
     'groups' => $db->setQuery('SELECT * FROM #__fields_groups WHERE id=' . (int)$f['group'])->loadAssocList(),
     'fields' => $db->setQuery('SELECT * FROM #__fields WHERE id IN ('
         . implode(',', array_map('intval', array_values($f['fields']))) . ') ORDER BY id')->loadAssocList()];
@@ -109,7 +112,8 @@ if ($mode !== '') {
     }
     if ($mode === 'retained') {
         publicFieldsExpect(json_decode(file_get_contents($fixture
-            . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === publicFieldsState($f), 'Editorial fields and assigned teaching survive package upgrade');
+            . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) ===
+                publicFieldsState($f), 'Editorial fields and assigned teaching survive package upgrade');
         echo json_encode(['course_fields_public_retained_checks' => $checks,'status' => 'passed']);
         return;
     }
@@ -227,7 +231,10 @@ foreach ($definitions as $key => $definition) {
     $id = (int)$fieldModel->getState('field.id');
     $fields[$key] = $id;
     if ($definition[2] !== null) {
-        publicFieldsExpect($fieldModel->setFieldValue($id, $course, $definition[2]), 'Native field value saved: ' . $key);
+        publicFieldsExpect(
+            $fieldModel->setFieldValue($id, $course, $definition[2]),
+            'Native field value saved: ' . $key
+        );
     }
 }
 $reader = new \Joomla\CMS\User\User();
@@ -241,5 +248,8 @@ file_put_contents($fixture, json_encode($f, JSON_THROW_ON_ERROR));
 $frozen = publicFieldsState($f)['teaching'];
 publicFieldsExpect($model->save(['id' => $course,'revision' => $model->getItem($course)->revision,'com_fields'
     => ['public-fields-after-title' => 'PUB_AFTER_TITLE']]), 'Existing published course accepts editorial field save');
-publicFieldsExpect(publicFieldsState($f)['teaching'] === $frozen, 'Editorial save leaves assigned programme, enrollment and progress unchanged');
+publicFieldsExpect(
+    publicFieldsState($f)['teaching'] === $frozen,
+    'Editorial save leaves assigned programme, enrollment and progress unchanged'
+);
 echo json_encode(['course_fields_public_native_checks' => $checks,'status' => 'passed']);

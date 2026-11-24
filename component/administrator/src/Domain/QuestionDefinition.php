@@ -40,7 +40,10 @@ final class QuestionDefinition
         $kind = $input['kind'] ?? '';
         if (
             !in_array($kind, ['single', 'true_false', 'multiple'], true) || !is_string($input['prompt'] ?? null)
-            || !is_string($input['explanation'] ?? '') || strlen($input['prompt']) > 65536 || strlen($input['explanation'] ?? '') > 65536
+            ||
+            !is_string($input['explanation'] ?? '') ||
+            strlen($input['prompt']) > 65536 ||
+            strlen($input['explanation'] ?? '') > 65536
         ) {
             throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_CONTENT', 422);
         }
@@ -50,7 +53,12 @@ final class QuestionDefinition
             throw new \RuntimeException('COM_JLMS_QUESTION_PROMPT_REQUIRED', 422);
         }
         $rows = $input['options'] ?? null;
-        if (!is_array($rows) || count($rows) < 2 || count($rows) > 20 || ($kind === 'true_false' && count($rows) !== 2)) {
+        if (
+            !is_array($rows) ||
+            count($rows) < 2 ||
+            count($rows) > 20 ||
+            ($kind === 'true_false' && count($rows) !== 2)
+        ) {
             throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_OPTIONS', 422);
         }
         $options = [];
@@ -76,7 +84,10 @@ final class QuestionDefinition
                 $id = bin2hex(random_bytes(12));
             }
             if (
-                !preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D', $id) || isset($ids[$id]) || $label === '' || strlen($label) > 4096
+                !preg_match(
+                    '/\A[A-Za-z0-9_-]{1,64}\z/D',
+                    $id
+                ) || isset($ids[$id]) || $label === '' || strlen($label) > 4096
                 || preg_match('/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/', $label) || isset($labels[$label])
             ) {
                 throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_OPTION_LABELS', 422);
@@ -93,7 +104,11 @@ final class QuestionDefinition
         }
         $points = self::integer($input['default_points'] ?? 1, 1, 10000);
         $definition = ['kind' => $kind, 'prompt' => $prompt, 'options' => ['_schema' => 1, 'items' => $options],
-            'grading' => ['_schema' => 1, 'correct' => $correct, 'default_points' => $points], 'feedback' => ['_schema' => 1, 'explanation' => $feedback]];
+            'grading' => [
+                '_schema' => 1,
+                'correct' => $correct,
+                'default_points' => $points
+            ], 'feedback' => ['_schema' => 1, 'explanation' => $feedback]];
         if (strlen(self::canonical($definition)) > 262144) {
             throw new \RuntimeException('COM_JLMS_QUESTION_TOO_LARGE', 422);
         }

@@ -47,7 +47,15 @@ final class CourseOperationsService
                 ->where("a.status = 'open'")
                 ->bind(':course', $courseId, ParameterType::INTEGER);
         $attempts = (int)$this->db->setQuery($q)->loadResult();
-        $state = ['course_id' => $courseId,'revision' => (int)$course->revision,'operation' => $operation,'current' => (int)$course->current_value,'target' => $target,'learners' => $learners,'open_attempts' => $attempts];
+        $state = [
+            'course_id' => $courseId,
+            'revision' => (int)$course->revision,
+            'operation' => $operation,
+            'current' => (int)$course->current_value,
+            'target' => $target,
+            'learners' => $learners,
+            'open_attempts' => $attempts
+        ];
         $state['hash'] = hash('sha256', QuestionDefinition::canonical($state));
         // Reopening delivery or admissions is forbidden until the course is explicitly restored to Published.
         // Otherwise an operator could pre-arm a suspended or archived course and bypass the restore gate.
@@ -143,7 +151,18 @@ final class CourseOperationsService
                 ->where('course_id=:course')
                 ->bind(':course', $courseId, ParameterType::INTEGER);
             $sequence = (int)$this->db->setQuery($q)->loadResult();
-            $record = (object)['course_id' => $courseId,'revision_no' => $sequence,'operation' => $operation,'previous_value' => (int)$p['current'],'target_value' => $target,'impact_hash' => $impactHash,'reason' => $reason,'actor_user_id' => (int)$actor->id,'mutation_id' => $mutation,'created_at' => $now];
+            $record = (object)[
+                'course_id' => $courseId,
+                'revision_no' => $sequence,
+                'operation' => $operation,
+                'previous_value' => (int)$p['current'],
+                'target_value' => $target,
+                'impact_hash' => $impactHash,
+                'reason' => $reason,
+                'actor_user_id' => (int)$actor->id,
+                'mutation_id' => $mutation,
+                'created_at' => $now
+            ];
             $this->db->insertObject('#__jlms_course_operations', $record, 'id');
             ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,'course_id' => $courseId,'operation' => $operation,
                 'previous_value' => (int)$p['current'],'target_value' => $target,'reason_reference' => (int)$record->id,'correlation_id' => bin2hex(random_bytes(16))]);

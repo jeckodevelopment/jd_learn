@@ -49,7 +49,12 @@ final class CourseTable extends Table implements TaggableTableInterface
     {
         $this->title = trim((string) $this->title);
         $this->alias = ApplicationHelper::stringURLSafe((string) ($this->alias ?: $this->title));
-        if ($this->title === '' || \Joomla\String\StringHelper::strlen($this->title) > 255 || $this->alias === '' || strlen($this->alias) > 180) {
+        if (
+            $this->title === '' ||
+            \Joomla\String\StringHelper::strlen($this->title) > 255 ||
+            $this->alias === '' ||
+            strlen($this->alias) > 180
+        ) {
             $this->setError('COM_JLMS_INVALID_COURSE');
             return false;
         }
@@ -74,7 +79,9 @@ final class CourseTable extends Table implements TaggableTableInterface
         }
         $extension = 'com_jlms.course';
         $q = $db->createQuery()->select($db->quoteName('id'))->from($db->quoteName('#__categories'))
-            ->where($db->quoteName('id') . ' = :catid')->where($db->quoteName('extension') . ' = :extension')->where('published<>-2')
+            ->where($db->quoteName('id') . ' = :catid')
+            ->where($db->quoteName('extension') . ' = :extension')
+            ->where('published<>-2')
             ->bind(':catid', $catid, ParameterType::INTEGER)->bind(':extension', $extension);
         if (!$db->setQuery($q)->loadResult()) {
             $this->setError('JLIB_DATABASE_ERROR_CATEGORY_REQUIRED');

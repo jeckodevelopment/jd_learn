@@ -34,7 +34,10 @@ final class MaterialAvailability
     /** MySQL DATETIME(6) may return zero microseconds even for second-precision values. */
     private static function storedValue(mixed $value): mixed
     {
-        if (is_string($value) && preg_match('/\A([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\.000000\z/D', $value, $match)) {
+        if (
+            is_string($value) &&
+            preg_match('/\A([0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2})\.000000\z/D', $value, $match)
+        ) {
             return $match[1];
         }
         return $value;

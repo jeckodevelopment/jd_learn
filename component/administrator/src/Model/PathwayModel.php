@@ -116,12 +116,29 @@ final class PathwayModel extends AdminModel
             $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult()
                 ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
 
-            $allowed = ['id', 'revision', 'title', 'alias', 'description', 'catid', 'access', 'language', 'state', 'courses', 'cover_image', 'cover_alt', 'cover_decorative'];
+            $allowed = [
+                'id',
+                'revision',
+                'title',
+                'alias',
+                'description',
+                'catid',
+                'access',
+                'language',
+                'state',
+                'courses',
+                'cover_image',
+                'cover_alt',
+                'cover_decorative'
+            ];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id', 'revision', 'catid', 'access', 'state'] as $key) {
                 if (
                     isset($data[$key]) && ((!is_int($data[$key]) && !is_string($data[$key]))
-                    || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))
+                    || !preg_match(
+                        $key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D',
+                        (string) $data[$key]
+                    ))
                 ) {
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
@@ -133,7 +150,8 @@ final class PathwayModel extends AdminModel
                 $query = $db->createQuery()->select('*')->from('#__jlms_pathways')
                     ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $query->setQuery((string) $query . ' FOR UPDATE');
-                $record = $db->setQuery($query)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+                $record =
+                    $db->setQuery($query)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
                 if (
                     !$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
                     || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)
@@ -163,7 +181,13 @@ final class PathwayModel extends AdminModel
             if ($record && $categoryId !== (int) $record->catid) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
-            if ($record && (int) $record->state === -2 && isset($data['state']) && (int) $data['state'] !== -2 && (int) $data['state'] !== 0) {
+            if (
+                $record &&
+                (int) $record->state === -2 &&
+                isset($data['state']) &&
+                (int) $data['state'] !== -2 &&
+                (int) $data['state'] !== 0
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
             if (
@@ -278,8 +302,17 @@ final class PathwayModel extends AdminModel
                     // A later asset maintenance pass can remove an orphaned placeholder.
                 }
             }
-            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_PATHWAY_INVALID'];
-            $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            $known = [
+                'JERROR_ALERTNOAUTHOR',
+                'JERROR_LAYOUT_PAGE_NOT_FOUND',
+                'COM_JLMS_REVISION_CONFLICT',
+                'COM_JLMS_PATHWAY_INVALID'
+            ];
+            $this->setError(Text::_(in_array(
+                $error->getMessage(),
+                $known,
+                true
+            ) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             if (getenv('JLMS_TEST_DISPOSABLE') === '1') {
                 $this->setError($this->getError() . ' [' . $stage . ': ' . $error->getMessage() . ']');
             }

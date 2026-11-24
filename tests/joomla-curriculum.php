@@ -11,7 +11,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     unset($fixtureDb);
 }
@@ -106,7 +111,10 @@ function recordRevision(string $table, int $id): int
     global $db;
     return (int) $db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadResult();
 }
-curriculumExpect($service->createDraft($actor, $course, 1) === $version, 'repeat draft start must reuse existing draft');
+curriculumExpect(
+    $service->createDraft($actor, $course, 1) === $version,
+    'repeat draft start must reuse existing draft'
+);
 $stale = scopeInput();
 $module = $service->saveModule($actor, scopeInput() + ['id' => 0,'title' => 'First module','status' => 'published']);
 $second = $service->saveModule($actor, scopeInput() + ['id' => 0,'title' => 'Second module']);
@@ -126,7 +134,10 @@ $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $firstLesson)->
 curriculumExpect($row->completion_rule === 'manual' && (int)$row
     ->preview === 1, 'explicit text preview is saved while derived completion rules ignore mass assignment');
 curriculumExpect((int)$row->release_after_days === 2, 'relative lesson release is validated and persisted');
-curriculumExpect($row->body === \Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'), 'body uses the native Joomla content filter');
+curriculumExpect(
+    $row->body === \Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'),
+    'body uses the native Joomla content filter'
+);
 $video = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
     => 'Video draft','kind' => 'video',
     'required' => '0','body' => '','provider_key' => 'youtube','source_reference' => 'https://youtu.be/dQw4w9WgXcQ']);
@@ -180,10 +191,16 @@ $foreignModule = $service->saveModule($actor, ['course_id' => $foreignCourse,'ve
     'expected_version_revision' => 1,'id' => 0,'title' => 'Foreign module']);
 curriculumDenied(fn () => $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $foreignModule,
     'title' => 'Wrong parent','kind' => 'text','required' => '1','body' => 'not allowed']), 'foreign module rejected');
-curriculumDenied(fn () => $service->outline($actor, $course, $foreignVersion), 'foreign teaching version is not disclosed through another course');
+curriculumDenied(
+    fn () => $service->outline($actor, $course, $foreignVersion),
+    'foreign teaching version is not disclosed through another course'
+);
 $db->setQuery("UPDATE #__jlms_course_versions SET status='published' WHERE id=" . $version)->execute();
 curriculumDenied(fn () => $service->saveModule($actor, scopeInput() + ['id' => $module,'revision'
-    => recordRevision('modules', $module),'title' => 'Change published history']), 'published teaching history immutable');
+    => recordRevision(
+        'modules',
+        $module
+    ),'title' => 'Change published history']), 'published teaching history immutable');
 $db->setQuery("UPDATE #__jlms_course_versions SET status='draft' WHERE id=" . $version)->execute();
 $service->deleteItem($actor, 'lesson', scopeInput() + ['id' => $firstLesson,'revision'
     => recordRevision('lessons', $firstLesson),'confirmation' => '1']);
@@ -201,7 +218,10 @@ curriculumExpect((int)$curriculumModel->getOutline()['version']
 curriculumExpect((bool)$curriculumModel->getForm([], false) && (bool)$curriculumModel
     ->getLessonForm(), 'native curriculum forms load');
 $outline = $service->outline($actor, $course, $version);
-curriculumExpect(count($outline['modules']) === 1 && count($outline['lessons']) === 2, 'final outline remains coherent with the document lesson');
+curriculumExpect(
+    count($outline['modules']) === 1 && count($outline['lessons']) === 2,
+    'final outline remains coherent with the document lesson'
+);
 // Rendering is tested over HTTP, where Joomla initialises its document and toolbar.
 echo json_encode(['curriculum_checks' => $checks,'status' => 'passed','course_id' => $course,'version_id'
     => $version], JSON_THROW_ON_ERROR) . PHP_EOL;

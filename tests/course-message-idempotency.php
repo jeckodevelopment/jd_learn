@@ -22,10 +22,22 @@ for ($i = 0; $i < 100; $i++) {
     $seen[$id] = true;
     $key = CourseMessageMutation::testEventKey(15, 42, $id);
     mail08Assert(preg_match('/^[a-f0-9]{64}$/', $key) === 1, 'Invalid event hash');
-    mail08Assert($key === CourseMessageMutation::testEventKey(15, 42, $id), 'Same preview POST must reuse same event key');
-    mail08Assert($key === CourseMessageMutation::testEventKey(15, 42, strtoupper($id)), 'UUID case must not bypass deduplication');
-    mail08Assert($key !== CourseMessageMutation::testEventKey(16, 42, $id), 'Different course must not reuse test event');
-    mail08Assert($key !== CourseMessageMutation::testEventKey(15, 43, $id), 'Different actor must not reuse test event');
+    mail08Assert(
+        $key === CourseMessageMutation::testEventKey(15, 42, $id),
+        'Same preview POST must reuse same event key'
+    );
+    mail08Assert(
+        $key === CourseMessageMutation::testEventKey(15, 42, strtoupper($id)),
+        'UUID case must not bypass deduplication'
+    );
+    mail08Assert(
+        $key !== CourseMessageMutation::testEventKey(16, 42, $id),
+        'Different course must not reuse test event'
+    );
+    mail08Assert(
+        $key !== CourseMessageMutation::testEventKey(15, 43, $id),
+        'Different actor must not reuse test event'
+    );
 }
 mail08Assert(count($seen) === 100, 'Missing mutations');
 try {
@@ -52,10 +64,22 @@ mail08Assert(str_contains($model, "\\CourseMessageMutation::valid("), 'GET must 
 mail08Assert(str_contains($model, "\\CourseMessageMutation::create()"), 'Legacy session must be upgraded once');
 mail08Assert(str_contains($model, "'mutation_id'] = " . '$preview'
     . "['mutation_id']"), 'GET must pass persisted mutation to view');
-mail08Assert(str_contains($view, '$mutation = $preview' . "['mutation_id'] ?? '';"), 'View must read, never mint, the id');
+mail08Assert(
+    str_contains($view, '$mutation = $preview' . "['mutation_id'] ?? '';"),
+    'View must read, never mint, the id'
+);
 mail08Assert(!str_contains($view, 'random_bytes('), 'GET must not mint mutations');
-mail08Assert(str_contains($service, 'CourseMessageMutation::testEventKey('), 'Test send must use deterministic event key');
-mail08Assert(str_contains($mailQueue, 'A repeated event key is an expected idempotent no-op'), 'Outbox dedupe must remain');
-mail08Assert(str_contains($schema, 'UNIQUE KEY `uq_event_key` (`event_key`)'), 'Database uniqueness needed for concurrent POSTs');
+mail08Assert(
+    str_contains($service, 'CourseMessageMutation::testEventKey('),
+    'Test send must use deterministic event key'
+);
+mail08Assert(
+    str_contains($mailQueue, 'A repeated event key is an expected idempotent no-op'),
+    'Outbox dedupe must remain'
+);
+mail08Assert(
+    str_contains($schema, 'UNIQUE KEY `uq_event_key` (`event_key`)'),
+    'Database uniqueness needed for concurrent POSTs'
+);
 
 echo "MAIL-08: stable mutation across GET, unique UUID v4, scoped event key and durable unique outbox index OK\n";

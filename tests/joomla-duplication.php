@@ -105,7 +105,11 @@ $beforeLearning = $identityRows();
 $sourceLessons = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . (int) $version->id
     . ' ORDER BY id')->loadAssocList();
 PluginHelper::importPlugin('system', 'fields');
-$fields = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
+$fields = $app->bootComponent('com_fields')->getMVCFactory()->createModel(
+    'Field',
+    'Administrator',
+    ['ignore_request' => true]
+);
 copyExpect($fields->save(['id' => 0,'context' => 'com_jlms.course','title' => 'Copy course note','name'
     => 'copy-course-note','type' => 'text','state' => 1,'access' => 1,'language' => '*','group_id'
         => 0,'default_value' => '','description' => '','params' => [],'fieldparams'
@@ -128,16 +132,23 @@ $asset = $db->setQuery('SELECT * FROM #__assets WHERE id=' . (int)$target->asset
 copyExpect($asset->name === 'com_jlms.course.' . $copy && $asset
     ->rules === '{}', 'Independent native asset inherits category permissions');
 copyExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_associations WHERE "
-    . "extension='com_jlms.course' AND item_id=") . $copy)->loadResult() === 1, 'Native workflow initialized on the new course');
+    . "extension='com_jlms.course' AND item_id=") . $copy)
+        ->loadResult() === 1, 'Native workflow initialized on the new course');
 copyExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id=' . $field
-    . ' AND item_id=' . $db->quote((string)$copy))->loadResult() === 'Preserved field value', 'Native course field values copied');
+    . ' AND item_id=' .
+                $db->quote((string)$copy))
+        ->loadResult() === 'Preserved field value', 'Native course field values copied');
 $targetLessons = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . (int)$draft->id
     . ' ORDER BY id')->loadAssocList();
 copyExpect(count($sourceLessons) === count($targetLessons), 'Whole lesson outline copied');
 foreach ($sourceLessons as $n => $lesson) {
-    copyExpect($lesson['id'] !== $targetLessons[$n]['id'] && $lesson['logical_key'] !== $targetLessons[$n]['logical_key'], 'New physical and logical lesson identity');
+    copyExpect(
+        $lesson['id'] !== $targetLessons[$n]['id'] && $lesson['logical_key'] !== $targetLessons[$n]['logical_key'],
+        'New physical and logical lesson identity'
+    );
     copyExpect($lesson['body'] === $targetLessons[$n]['body']
-        && $lesson['media_asset_id'] === $targetLessons[$n]['media_asset_id'], 'Lesson content and media association copied');
+        &&
+            $lesson['media_asset_id'] === $targetLessons[$n]['media_asset_id'], 'Lesson content and media association copied');
 }
 copyExpect($identityRows() === $beforeLearning, 'Course duplication never copies or modifies learning data');
 $outline = $authoring->outline($actor, $copy, (int)$draft->id);
@@ -165,7 +176,13 @@ if ($lesson->kind === 'quiz') {
     copyExpect($newQuiz && (int)$newQuiz->id !== (int)$originalQuiz && !isset(json_decode($newQuiz
         ->selection_json, true)['published_pool_hash']), 'Quiz configuration is independent and unfrozen');
     copyExpect($db->setQuery(('SELECT question_revision_id,ordering,points FROM '
-        . '#__jlms_quiz_questions WHERE quiz_id=') . (int)$originalQuiz . ' ORDER BY ordering')->loadAssocList() === $db->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' . (int)$newQuiz->id . ' ORDER BY ordering')->loadAssocList(), 'Immutable question revision links retained');
+        . '#__jlms_quiz_questions WHERE quiz_id=') .
+                    (int)$originalQuiz . ' ORDER BY ordering')
+            ->loadAssocList() ===
+            $db
+                ->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' .
+                        (int)$newQuiz->id . ' ORDER BY ordering')
+                ->loadAssocList(), 'Immutable question revision links retained');
 }
 copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', $lessonInput), 'Stale draft request rejected');
 $bad = array_replace($lessonInput, ['expected_version_revision' => $rev(),'module_id'
@@ -179,7 +196,11 @@ copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', $bad), 'Published c
 $editorId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cieditor'")->loadResult();
 $locked = (object)['id' => $copy,'checked_out' => $editorId];
 $db->updateObject('#__jlms_courses', $locked, 'id');
-copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', array_replace($lessonInput, ['expected_version_revision' => $rev()])), 'Other user checkout blocks copying');
+copyDenied(fn()=>$authoring->duplicateItem(
+    $actor,
+    'lesson',
+    array_replace($lessonInput, ['expected_version_revision' => $rev()])
+), 'Other user checkout blocks copying');
 $update = (object)['id' => $copy,'checked_out' => null];
 $db->updateObject('#__jlms_courses', $update, 'id', true);
 $sourceAsset = new \Joomla\CMS\Table\Asset($db);
@@ -200,7 +221,17 @@ $update = (object)['id' => (int)$sourceAsset->id,'rules' => $originalRules];
 $db->updateObject('#__assets', $update, 'id');
 \Joomla\CMS\Access\Access::clearStatics();
 $counts = static fn(): array=>array_map(static fn(string $table): int=>(int)$db
-    ->setQuery('SELECT COUNT(*) FROM #__' . $table)->loadResult(), ['jlms_courses','jlms_course_versions','jlms_modules','jlms_lessons','jlms_quizzes','assets','history','workflow_associations','fields_values']);
+    ->setQuery('SELECT COUNT(*) FROM #__' . $table)->loadResult(), [
+        'jlms_courses',
+        'jlms_course_versions',
+        'jlms_modules',
+        'jlms_lessons',
+        'jlms_quizzes',
+        'assets',
+        'history',
+        'workflow_associations',
+        'fields_values'
+    ]);
 $before = $counts();
 copyDenied(fn()=>$model->duplicate(array_replace($input, ['revision' => (int)$source
     ->revision + 1])), 'Stale source course rejected');

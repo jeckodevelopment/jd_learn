@@ -17,7 +17,10 @@ return new class () implements ServiceProviderInterface {
     public function register(Container $container)
     {
         $container->set(PluginInterface::class, static function (Container $container): Html5 {
-            return new Html5($container->get(DispatcherInterface::class), (array) PluginHelper::getPlugin('jlmsvideo', 'html5'));
+            return new Html5(
+                $container->get(DispatcherInterface::class),
+                (array) PluginHelper::getPlugin('jlmsvideo', 'html5')
+            );
         });
     }
 };

@@ -93,7 +93,13 @@ final class CourseCommunicationService
         ) {
             throw new \RuntimeException('COM_JLMS_COMMUNICATION_TEMPLATE_INVALID', 422);
         }
-        $hash = hash('sha256', json_encode([$courseId, $subject, $body, $ids, $snapshot], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
+        $hash = hash('sha256', json_encode([
+            $courseId,
+            $subject,
+            $body,
+            $ids,
+            $snapshot
+        ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE));
         return ['course_id' => $courseId,'subject' => $subject,'body' => $body,'template' => $snapshot,
             'rendered' => $rendered,'enrollment_ids' => $ids,'count' => count($ids),'hash' => $hash];
     }
@@ -159,7 +165,13 @@ final class CourseCommunicationService
             if ($created) {
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record(
                     $actor,
-                    ['id' => $jobId,'course_id' => $courseId,'recipient_count' => $plan['count'],'event' => 'queued','correlation_id' => $mutationId],
+                    [
+                        'id' => $jobId,
+                        'course_id' => $courseId,
+                        'recipient_count' => $plan['count'],
+                        'event' => 'queued',
+                        'correlation_id' => $mutationId
+                    ],
                     'coursecommunication'
                 );
             }

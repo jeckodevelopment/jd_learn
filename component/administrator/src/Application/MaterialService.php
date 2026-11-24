@@ -108,7 +108,12 @@ final class MaterialService
             . 'a.preview, a.publish_up, a.publish_down, a.revision, '
             . 'f.original_name, f.mime_type, f.byte_size, f.status'))
             ->order('a.ordering, a.id');
-        return ['items' => $this->db->setQuery($q, $page * 20, 20)->loadObjectList(), 'total' => $total, 'page' => $page, 'limit' => 20];
+        return [
+            'items' => $this->db->setQuery($q, $page * 20, 20)->loadObjectList(),
+            'total' => $total,
+            'page' => $page,
+            'limit' => 20
+        ];
     }
 
     public function administration(User $actor, int $courseId, int $versionId, int $page = 0, int $scope = 0): array
@@ -268,7 +273,14 @@ final class MaterialService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $file['inline'] = $link->lesson_id !== null && $lesson->kind === 'audio'
-            || in_array($file['mime'], ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true);
+            || in_array($file['mime'], [
+                'application/pdf',
+                'image/jpeg',
+                'image/png',
+                'image/webp',
+                'text/plain',
+                'text/csv'
+            ], true);
         return $file;
     }
 

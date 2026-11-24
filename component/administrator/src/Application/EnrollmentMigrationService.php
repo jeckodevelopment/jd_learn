@@ -223,7 +223,11 @@ final class EnrollmentMigrationService
             'blocked' => (int)$courseRecord->state !== 1 ? 'COM_JLMS_LEARNING_DENIED' : ($openAttempts ? 'COM_JLMS_MIGRATION_OPEN_ATTEMPT' : ($existingTarget ? 'COM_JLMS_MIGRATION_TARGET_EXISTS' : ($mappingConflict ? 'COM_JLMS_MIGRATION_MAPPING_CONFLICT' : (!$courseRecord->delivery_enabled ? 'COM_JLMS_COURSE_DELIVERY_SUSPENDED' : ($editionUnavailable ? 'COM_JLMS_MIGRATION_EDITION_UNAVAILABLE' : ($editionFull ? 'COM_JLMS_MIGRATION_EDITION_FULL' : null))))))];
         $plan['hash'] = hash('sha256', QuestionDefinition::canonical($plan));
         $plan['completed_source_lessons'] = array_map(static fn(object $row): array=>['id' => (int)$row->lesson_id,'title' => $row->title], $completed);
-        $plan['target_lessons'] = array_map(static fn(object $row): array=>['id' => (int)$row->id,'title' => $row->title,'required' => (bool)$row->required], array_values($targetLessons));
+        $plan['target_lessons'] = array_map(static fn(object $row): array=>[
+            'id' => (int)$row->id,
+            'title' => $row->title,
+            'required' => (bool)$row->required
+        ], array_values($targetLessons));
         return $plan;
     }
 

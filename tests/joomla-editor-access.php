@@ -89,12 +89,19 @@ if (($argv[2] ?? '') === 'retained') {
     $list->setState('list.limit', 100);
     $list->setState('list.start', 0);
     $ids = array_map(static fn($r)=>(int)$r->id, $list->getItems());
-    editorExpect(in_array($f['allowed'], $ids, true) && !in_array($f['denied'], $ids, true), 'Category grants and record denies survive reinstall');
+    editorExpect(
+        in_array($f['allowed'], $ids, true) && !in_array($f['denied'], $ids, true),
+        'Category grants and record denies survive reinstall'
+    );
     editorExpect((int)$db->setQuery('SELECT checked_out FROM #__jlms_courses WHERE id=' . (int)$f['locked'])->loadResult() === $f['user'], 'Other-operator checkout preserved');
     echo json_encode(['editor_access_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit;
 }
-$groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
+$groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel(
+    'Group',
+    'Administrator',
+    ['ignore_request' => true]
+);
 if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI category course editor'])) {
     throw new RuntimeException($groupModel->getError());
 }
@@ -120,7 +127,11 @@ if (!$user->bind($userData) || !$user->save()) {
     throw new RuntimeException('Editor user failed');
 }
 $user = new \Joomla\CMS\User\User((int)$user->id);
-$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
+$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel(
+    'Category',
+    'Administrator',
+    ['ignore_request' => true]
+);
 $categories = [];
 foreach (['allowed','other','owned','trash'] as $name) {
     if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'published' => $name === 'trash' ? -2 : 1,'language' => '*','access' => 1])) {
@@ -138,13 +149,27 @@ foreach (['allowed' => ['core.create','core.edit'],'owned' => ['core.edit.own']]
     $asset->store();
 }
 $user = EditorAccess::fresh($user);
-editorExpect(!$user->authorise('core.create', 'com_jlms') && EditorAccess::canCreate($db, $user), 'Category-only create grant reaches the editor');
-editorExpect(EditorAccess::canCreate($db, $user, $categories['allowed']) && !EditorAccess::canCreate($db, $user, $categories['other']), 'Create scope remains category specific');
+editorExpect(
+    !$user->authorise('core.create', 'com_jlms') && EditorAccess::canCreate($db, $user),
+    'Category-only create grant reaches the editor'
+);
+editorExpect(EditorAccess::canCreate(
+    $db,
+    $user,
+    $categories['allowed']
+) && !EditorAccess::canCreate(
+    $db,
+    $user,
+    $categories['other']
+), 'Create scope remains category specific');
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $base = ['id' => 0,'revision' => 1,'title' => '','alias' => '','catid' => 0,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Editor access fixture'];
 $courses = [];
 foreach (['allowed1' => 'allowed','allowed2' => 'allowed','denied' => 'allowed','foreign' => 'other','own' => 'owned','other_owner' => 'owned','locked' => 'other'] as $name => $category) {
-    editorExpect($model->save(array_replace($base, ['title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'catid' => $categories[$category]])), 'Fixture course saved');
+    editorExpect($model->save(array_replace(
+        $base,
+        ['title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'catid' => $categories[$category]]
+    )), 'Fixture course saved');
     $courses[$name] = (int)$model->getState('course.id');
 }
 $change = (object)['id' => $courses['own'],'created_by' => (int)$user->id];
@@ -178,45 +203,78 @@ $rules['core.edit'][(string)$group] = false;
 $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
 $asset->store();
 $list->setState('list.start', 0);
-editorExpect((int)$list->getTotal() === 1 && count($list->getItems()) === 1, 'Same-session category revoke invalidates native list cache scope');
+editorExpect(
+    (int)$list->getTotal() === 1 && count($list->getItems()) === 1,
+    'Same-session category revoke invalidates native list cache scope'
+);
 $asset->rules = $savedRules;
 $asset->store();
 editorExpect((int)$list->getTotal() === 3, 'Native grant restoration refreshes list total');
 $before = $db->setQuery('SELECT revision,title FROM #__jlms_courses WHERE id=' . $courses['locked'])->loadAssoc();
-editorExpect(!$model->save(array_replace($base, ['id' => $courses['locked'],'revision' => 1,'title' => 'Forbidden lock overwrite','catid' => $categories['other']])), 'Other-operator checkout cannot be bypassed even by direct model save');
+editorExpect(!$model->save(array_replace(
+    $base,
+    ['id' => $courses['locked'],'revision' => 1,'title' => 'Forbidden lock overwrite','catid' => $categories['other']]
+)), 'Other-operator checkout cannot be bypassed even by direct model save');
 editorExpect($model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_CHECKED_OUT') && $db->setQuery('SELECT revision,title FROM #__jlms_courses WHERE id=' . $courses['locked'])->loadAssoc() === $before, 'Checkout refusal is specific and preserves course');
 $model->setCurrentUser($user);
 editorExpect($model->save(array_replace($base, ['title' => 'Editor delegated save','alias' => 'editor-delegated-save','catid' => $categories['allowed'],'presentation_description' => ''])), 'Native save accepts category delegate without global create');
 $delegated = (int)$model->getState('course.id');
-editorExpect(!$model->save(array_replace($base, ['title' => 'Wrong category','alias' => 'wrong-category','catid' => $categories['other']])), 'Forged create outside category scope denied');
+editorExpect(!$model->save(array_replace(
+    $base,
+    ['title' => 'Wrong category','alias' => 'wrong-category','catid' => $categories['other']]
+)), 'Forged create outside category scope denied');
 $model->setCurrentUser($actor);
-editorExpect(!$model->save(array_replace($base, ['title' => 'Trash category','alias' => 'trash-category','catid' => $categories['trash']])), 'Trashed category cannot accept course creation');
+editorExpect(!$model->save(array_replace(
+    $base,
+    ['title' => 'Trash category','alias' => 'trash-category','catid' => $categories['trash']]
+)), 'Trashed category cannot accept course creation');
 $imageEdit = array_replace($base, ['id' => $courses['allowed1'],'revision' => 1,'title' => 'Editor allowed1','alias' => 'editor-allowed1','catid' => $categories['allowed'],'presentation_image' => 'https://example.invalid/image.png','presentation_image_alt' => 'Cover']);
-editorExpect(!$model->save($imageEdit) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_IMAGE_INVALID'), 'Image validation retains actionable error');
+editorExpect(
+    !$model->save($imageEdit) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_IMAGE_INVALID'),
+    'Image validation retains actionable error'
+);
 $validation = array_replace($base, [
     'title' => 'Editorial validation fixture',
     'alias' => 'editorial-validation-fixture',
     'catid' => $categories['allowed'],
-    'presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => str_repeat('è', 500),
+    'presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => str_repeat(
+        'è',
+        500
+    ),
 ]);
 editorExpect($model->save($validation), '500 Unicode characters accepted without truncation');
 $validationId = (int) $model->getState('course.id');
 $validation['id'] = $validationId;
 editorExpect($model->getItem($validationId)->summary === $validation['summary'], 'Unicode summary stored verbatim');
 $tooLong = array_replace($validation, ['presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => $validation['summary'] . 'è']);
-editorExpect(!$model->save($tooLong) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_SUMMARY_TOO_LONG'), '501 characters rejected with actionable message');
+editorExpect(
+    !$model->save($tooLong) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_SUMMARY_TOO_LONG'),
+    '501 characters rejected with actionable message'
+);
 editorExpect((int) $model->getItem($validationId)->revision === 1, 'Invalid summary does not increment revision');
 $duplicate = array_replace($validation, ['id' => 0, 'alias' => 'Editorial Validation Fixture']);
-editorExpect(!$model->save($duplicate) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_ALIAS_DUPLICATE'), 'Duplicate normalized alias rejected in the same category and language');
-editorExpect($model->save(array_replace($duplicate, ['catid' => $categories['other']])), 'Alias can be reused in another category');
+editorExpect(
+    !$model->save($duplicate) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_ALIAS_DUPLICATE'),
+    'Duplicate normalized alias rejected in the same category and language'
+);
+editorExpect(
+    $model->save(array_replace($duplicate, ['catid' => $categories['other']])),
+    'Alias can be reused in another category'
+);
 $legacy = str_repeat('è', 501) . "\nLegacy";
 $legacyRecord = (object) ['id' => $validationId, 'presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => $legacy];
 $db->updateObject('#__jlms_courses', $legacyRecord, 'id');
 $validation['summary'] = str_replace("\n", "\r\n", $legacy);
-editorExpect($model->save($validation) && $model->getItem($validationId)->summary === $legacy, 'An unchanged legacy summary survives a normal browser round-trip');
+editorExpect(
+    $model->save($validation) && $model->getItem($validationId)->summary === $legacy,
+    'An unchanged legacy summary survives a normal browser round-trip'
+);
 $validation['revision'] = 2;
 $validation['summary'] = 'Shortened description';
-editorExpect($model->save($validation) && $model->getItem($validationId)->summary === $validation['summary'], 'Legacy summary can be shortened');
+editorExpect(
+    $model->save($validation) && $model->getItem($validationId)->summary === $validation['summary'],
+    'Legacy summary can be shortened'
+);
 // Preserve one record grant after the category is no longer a creation destination.
 $asset->loadByName('com_jlms.course.' . $courses['own']);
 $rules = json_decode($asset->rules, true);

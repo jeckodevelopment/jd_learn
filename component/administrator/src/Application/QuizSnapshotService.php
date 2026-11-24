@@ -74,16 +74,31 @@ final class QuizSnapshotService
             }
             $options = [];
             foreach ($public['items'] ?? [] as $option) {
-                $options[] = ['option_id' => $option['id'] ?? null,'label' => $option['label'] ?? null,'correct' => in_array($option['id'] ?? null, $grading['correct'] ?? [], true) ? '1' : '0'];
+                $options[] = [
+                    'option_id' => $option['id'] ?? null,
+                    'label' => $option['label'] ?? null,
+                    'correct' => in_array($option['id'] ?? null, $grading['correct'] ?? [], true) ? '1' : '0'
+                ];
             }
-            $definition = QuestionDefinition::normalise(['kind' => $row->kind,'prompt' => $row->prompt,'options' => $options,'default_points' => $grading['default_points'] ?? null,'explanation' => $feedback['explanation'] ?? null], static fn(string $html): string=>$html);
+            $definition = QuestionDefinition::normalise([
+                'kind' => $row->kind,
+                'prompt' => $row->prompt,
+                'options' => $options,
+                'default_points' => $grading['default_points'] ?? null,
+                'explanation' => $feedback['explanation'] ?? null
+            ], static fn(string $html): string=>$html);
             if (!hash_equals($row->content_hash, hash('sha256', QuestionDefinition::canonical($definition)))) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
             }
             $row->points = QuestionDefinition::integer((int)$row->points, 1, 10000);
             $row->public = ['_schema' => 1,'kind' => $row->kind,'prompt' => $row->prompt,'options' => $public['items']];
             $row->grading = ['_schema' => 1,'correct' => $grading['correct'],'explanation' => $feedback['explanation']];
-            $manifest[] = ['id' => (int)$row->id,'hash' => $row->content_hash,'points' => $row->points,'ordering' => (int)$row->ordering];
+            $manifest[] = [
+                'id' => (int)$row->id,
+                'hash' => $row->content_hash,
+                'points' => $row->points,
+                'ordering' => (int)$row->ordering
+            ];
         }
         $hash = hash('sha256', QuestionDefinition::canonical(['rules' => $rules,'pool' => $manifest]));
         return [$quiz,$rules,$pool,$hash,$selection];

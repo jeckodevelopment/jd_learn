@@ -33,10 +33,19 @@ final class SchemaInstaller
                 if ($columns !== $expected) {
                     throw new \RuntimeException('COM_JLMS_SCHEMA_MISMATCH');
                 }
-                preg_match_all('/^  `([^`]+)` ([A-Z]+(?:\(\d+\))?(?: UNSIGNED)?) (NOT NULL|NULL)/m', $statement, $types, PREG_SET_ORDER);
+                preg_match_all(
+                    '/^  `([^`]+)` ([A-Z]+(?:\(\d+\))?(?: UNSIGNED)?) (NOT NULL|NULL)/m',
+                    $statement,
+                    $types,
+                    PREG_SET_ORDER
+                );
                 foreach ($types as $column) {
                     $normalise = static fn (string $type): string
-                        => strtolower((string) preg_replace('/(tinyint|smallint|mediumint|bigint|int)\(\d+\)/i', '$1', $type));
+                        => strtolower((string) preg_replace(
+                            '/(tinyint|smallint|mediumint|bigint|int)\(\d+\)/i',
+                            '$1',
+                            $type
+                        ));
                     $actual = $metadata[$column[1]];
                     if (
                         $normalise($actual->Type) !== $normalise($column[2])
@@ -51,7 +60,12 @@ final class SchemaInstaller
                     $keys[$key->Key_name][(int) $key->Seq_in_index] = $key->Column_name;
                     $nonUnique[$key->Key_name] = (int) $key->Non_unique;
                 }
-                preg_match_all('/(PRIMARY KEY|UNIQUE KEY `([^`]+)`|KEY `([^`]+)`) \(([^)]+)\)/', $statement, $indexes, PREG_SET_ORDER);
+                preg_match_all(
+                    '/(PRIMARY KEY|UNIQUE KEY `([^`]+)`|KEY `([^`]+)`) \(([^)]+)\)/',
+                    $statement,
+                    $indexes,
+                    PREG_SET_ORDER
+                );
                 foreach ($indexes as $index) {
                     $name = $index[1] === 'PRIMARY KEY' ? 'PRIMARY' : ($index[2] ?: $index[3]);
                     preg_match_all('/`([^`]+)`/', $index[4], $fields);

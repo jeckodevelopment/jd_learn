@@ -17,7 +17,10 @@ return new class () implements ServiceProviderInterface {
     public function register(Container $container)
     {
         $container->set(PluginInterface::class, static function (Container $container): Vimeo {
-            return new Vimeo($container->get(DispatcherInterface::class), (array) PluginHelper::getPlugin('jlmsvideo', 'vimeo'));
+            return new Vimeo(
+                $container->get(DispatcherInterface::class),
+                (array) PluginHelper::getPlugin('jlmsvideo', 'vimeo')
+            );
         });
     }
 };

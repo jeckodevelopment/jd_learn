@@ -23,7 +23,8 @@ final class HtmlView extends BaseHtmlView
             && (int) $data['lesson_id'] > 0
             && $actor->authorise('jlms.enrollments.manage', $asset)
             && $actor->authorise('jlms.assessment.correct', $asset);
-        $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />');
+        $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" ' .
+            'required="true" />');
         foreach ($this->item['modules'] as $module) {
             $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))
                 ->addAttribute('value', (string)$module->id);

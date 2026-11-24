@@ -65,7 +65,24 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             if ($actor->guest || $actor->block) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
-            $allowed = ['id', 'revision', 'title', 'alias', 'catid', 'bio', 'image', 'image_alt', 'image_decorative', 'website', 'language', 'access', 'state', 'user_id', 'com_fields', 'version_note'];
+            $allowed = [
+                'id',
+                'revision',
+                'title',
+                'alias',
+                'catid',
+                'bio',
+                'image',
+                'image_alt',
+                'image_decorative',
+                'website',
+                'language',
+                'access',
+                'state',
+                'user_id',
+                'com_fields',
+                'version_note'
+            ];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id','revision','catid','access','state'] as $key) {
                 if (array_key_exists($key, $data) && ((!is_int($data[$key]) && !is_string($data[$key])) || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))) {
@@ -193,7 +210,14 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_ALERTNOAUTHOR', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_COURSE_IMAGE_INVALID', 'COM_JLMS_COURSE_IMAGE_ALT_REQUIRED'];
+            $known = [
+                'JERROR_ALERTNOAUTHOR',
+                'JERROR_LAYOUT_PAGE_NOT_FOUND',
+                'COM_JLMS_REVISION_CONFLICT',
+                'COM_JLMS_TEACHER_INVALID',
+                'COM_JLMS_COURSE_IMAGE_INVALID',
+                'COM_JLMS_COURSE_IMAGE_ALT_REQUIRED'
+            ];
             $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             return false;
         }
@@ -214,7 +238,11 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             return false;
         }
         $data['revision'] = (int) $current->revision;
-        $data = array_replace($data, array_intersect_key(json_decode($data['params_json'] ?? '{}', true), array_flip(['website', 'image_alt', 'image_decorative'])));
+        $data = array_replace($data, array_intersect_key(json_decode($data['params_json'] ?? '{}', true), array_flip([
+            'website',
+            'image_alt',
+            'image_decorative'
+        ])));
         return $this->save($data);
     }
 

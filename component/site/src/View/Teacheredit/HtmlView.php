@@ -13,7 +13,10 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         $actor = new \Joomla\CMS\User\User((int) \Joomla\CMS\Factory::getApplication()->getIdentity()->id);
         $actor->clearAccessRights();
         $this->item = $this->get('Item');
-        if (!$this->item || !\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $this->item)) {
+        if (
+            !$this->item ||
+            !\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $this->item)
+        ) {
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
         $this->form = $this->get('Form');

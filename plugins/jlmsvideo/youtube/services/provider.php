@@ -17,7 +17,10 @@ return new class () implements ServiceProviderInterface {
     public function register(Container $container)
     {
         $container->set(PluginInterface::class, static function (Container $container): Youtube {
-            return new Youtube($container->get(DispatcherInterface::class), (array) PluginHelper::getPlugin('jlmsvideo', 'youtube'));
+            return new Youtube(
+                $container->get(DispatcherInterface::class),
+                (array) PluginHelper::getPlugin('jlmsvideo', 'youtube')
+            );
         });
     }
 };

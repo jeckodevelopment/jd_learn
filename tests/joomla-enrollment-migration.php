@@ -30,10 +30,25 @@ use Joomla\Session\SessionInterface;
 use Joomla\Database\DatabaseInterface;
 use Joomla\CMS\User\UserFactoryInterface;
 $container = Factory::getContainer();
-$container->alias('session.web', 'session.web.administrator')->alias('session', 'session.web.administrator')->alias(Session::class, 'session.web.administrator')->alias(SessionInterface::class, 'session.web.administrator');
+$container->alias(
+    'session.web',
+    'session.web.administrator'
+)->alias(
+    'session',
+    'session.web.administrator'
+)->alias(
+    Session::class,
+    'session.web.administrator'
+)->alias(
+    SessionInterface::class,
+    'session.web.administrator'
+);
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $uid = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cioperator'")->loadResult();
@@ -79,7 +94,8 @@ if ($mode === 'retained') {
         'target assignment remains in the current version'
     );
     migrationExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $f['source'] . ' AND target_enrollment_id=' . $f['target'])->loadResult() === 1,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+            'source_enrollment_id=' . $f['source'] . ' AND target_enrollment_id=' . $f['target'])->loadResult() === 1,
         'one immutable migration record remains'
     );
 
@@ -92,11 +108,17 @@ if ($mode === 'retained') {
         'upgrade retains original ownership and source version for historical certificate'
     );
     migrationExpect(
-        hash('sha256', json_encode([$retainedCertificate,$retainedDocument], JSON_THROW_ON_ERROR)) === $f['certificate_source_hash'],
+        hash(
+            'sha256',
+            json_encode([$retainedCertificate,$retainedDocument], JSON_THROW_ON_ERROR)
+        ) === $f['certificate_source_hash'],
         'upgrade retains certificate and immutable document snapshot byte-for-byte'
     );
 
-    echo json_encode(['enrollment_migration_retained_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+    echo json_encode(
+        ['enrollment_migration_retained_checks' => $checks,'status' => 'passed'],
+        JSON_THROW_ON_ERROR
+    ) . PHP_EOL;
     return;
 }
 $cat = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
@@ -110,14 +132,27 @@ $author = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $learning = $component->getLearningService();
 $version = (int)$author->createDraft($actor, $course, (int)migrationRow('courses', $course)->revision);
-$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => migrationRow('course_versions', $version)->revision];
+$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => migrationRow(
+    'course_versions',
+    $version
+)->revision];
 $module = $author->saveModule($actor, $scope() + ['id' => 0,'title' => 'Migration chapter']);
 $lesson = $author->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Completed source lesson','kind' => 'text','required' => '1','body' => '<p>Completed.</p>']);
 $transition = (int)$publication->transitions($actor, $course, $version)[0]->id;
-$publication->transition($actor, $course, $version, (int)migrationRow('courses', $course)->revision, (int)migrationRow('course_versions', $version)->revision, $transition);
+$publication->transition(
+    $actor,
+    $course,
+    $version,
+    (int)migrationRow('courses', $course)->revision,
+    (int)migrationRow('course_versions', $version)->revision,
+    $transition
+);
 $sourceVersion = $version;
 $enrollment = $learning->start($actor, 'en-GB', $course, str_repeat('m', 40));
-$now = gmdate('Y-m-d H:i:s');$progress = (object)['enrollment_id' => $enrollment,'course_version_id' => $sourceVersion,'lesson_id' => $lesson,'source_revision' => (int)migrationRow('lessons', $lesson)->source_revision,
+$now = gmdate('Y-m-d H:i:s');$progress = (object)['enrollment_id' => $enrollment,'course_version_id' => $sourceVersion,'lesson_id' => $lesson,'source_revision' => (int)migrationRow(
+    'lessons',
+    $lesson
+)->source_revision,
  'coverage_json' => '[]','covered_ms' => 0,'resume_ms' => 0,'state' => 'completed','completed_at' => $now,'last_activity_at' => $now,'revision' => 1];
 $db->insertObject('#__jlms_lesson_progress', $progress);
 $version = (int)$author->createDraft($actor, $course, (int)migrationRow('courses', $course)->revision);
@@ -129,7 +164,15 @@ if (!$targetLesson) {
 }
 $transition = (int)$publication->transitions($actor, $course, $version)[0]->id;
 $review = $publication->updateImpact($actor, $course, $version, $transition);
-$publication->transition($actor, $course, $version, (int)migrationRow('courses', $course)->revision, (int)migrationRow('course_versions', $version)->revision, $transition, $review['fingerprint']);
+$publication->transition(
+    $actor,
+    $course,
+    $version,
+    (int)migrationRow('courses', $course)->revision,
+    (int)migrationRow('course_versions', $version)->revision,
+    $transition,
+    $review['fingerprint']
+);
 $service = $component->getEnrollmentMigrationService();
 $mapping = [$lesson => $targetLesson];
 $plan = $service->preview($actor, $course, $enrollment, $mapping);
@@ -138,7 +181,8 @@ $plan = $service->preview($actor, $course, $enrollment, $mapping);
 // or enrollment state may change when the access check denies these calls.
 $originalBlock = (int)$db->setQuery('SELECT block FROM #__users WHERE id=' . $uid)->loadResult();
 $sourceStatusBeforeBlock = (string)migrationRow('enrollments', $enrollment)->status;
-$migrationsBeforeBlock = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult();
+$migrationsBeforeBlock = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+    'source_enrollment_id=' . $enrollment)->loadResult();
 try {
     $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $uid)->execute();
     migrationDenied(
@@ -147,7 +191,17 @@ try {
         'blocked stale actor cannot preview migration'
     );
     migrationDenied(
-        fn()=>$service->apply($actor, $course, $enrollment, 1, $mapping, 'Blocked actor attempt', '00000000-0000-4000-8000-000000000001', str_repeat('0', 64), true),
+        fn()=>$service->apply(
+            $actor,
+            $course,
+            $enrollment,
+            1,
+            $mapping,
+            'Blocked actor attempt',
+            '00000000-0000-4000-8000-000000000001',
+            str_repeat('0', 64),
+            true
+        ),
         403,
         'blocked stale actor cannot apply migration'
     );
@@ -156,7 +210,8 @@ try {
         'blocked access does not mutate source enrollment'
     );
     migrationExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $migrationsBeforeBlock,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+            'source_enrollment_id=' . $enrollment)->loadResult() === $migrationsBeforeBlock,
         'blocked access does not create migration record'
     );
 } finally {
@@ -219,7 +274,8 @@ migrationExpect(
 );
 // AUT-04: in-progress quizzes must block migration without creating any target
 // assignment or changing the source, even if a valid preview was already issued.
-$beforeBlockedMigrationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult();
+$beforeBlockedMigrationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+    'source_enrollment_id=' . $enrollment)->loadResult();
 $beforeBlockedSource = (array)migrationRow('enrollments', $enrollment);
 $probeQuiz = (object)['lesson_id' => $lesson,'course_version_id' => $sourceVersion,
     'selection_json' => '{}','created_at' => gmdate('Y-m-d H:i:s'),'modified_at' => gmdate('Y-m-d H:i:s')];
@@ -256,7 +312,8 @@ try {
         'open-quiz denial preserves source enrollment exactly'
     );
     migrationExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult() === $beforeBlockedMigrationCount,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_migrations WHERE ' .
+            'source_enrollment_id=' . $enrollment)->loadResult() === $beforeBlockedMigrationCount,
         'open-quiz denial does not create migration records'
     );
 } finally {
@@ -320,7 +377,8 @@ migrationExpect(
 // AUT-04: a pre-existing historical certificate document belongs to the source
 // version, even if this one enrollment is later explicitly transferred. This
 // fixture tests persistence and ownership, not the issuance eligibility path.
-$templateId = (int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1')->loadResult();
+$templateId = (int)$db->setQuery('SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id ' .
+    'LIMIT 1')->loadResult();
 migrationExpect($templateId > 0, 'default immutable certificate template available for history retention');
 $historyCertificate = (object)['enrollment_id' => $enrollment,'course_version_id' => $sourceVersion,
     'template_id' => $templateId,'current_document_id' => null,'issued_at' => $now,'revision' => 1];
@@ -342,16 +400,46 @@ $beforeProgress = (array)$db->setQuery('SELECT * FROM #__jlms_lesson_progress WH
 $sourceBefore = migrationRow('enrollments', $enrollment);
 $key = '2e6d0f21-8c37-4a42-b57a-185fe9d0c001';
 migrationDenied(
-    fn()=>$service->apply($actor, $course, $enrollment, (int)$sourceBefore->revision, $mapping, 'Learner requested transfer', $key, str_repeat('0', 64), true),
+    fn()=>$service->apply(
+        $actor,
+        $course,
+        $enrollment,
+        (int)$sourceBefore->revision,
+        $mapping,
+        'Learner requested transfer',
+        $key,
+        str_repeat('0', 64),
+        true
+    ),
     409,
     'stale preview hash prevents any migration write'
 );
 migrationDenied(
-    fn()=>$service->apply($actor, $course, $enrollment, (int)$sourceBefore->revision, ['not-an-id' => '5foo'], 'Learner requested transfer', '3e6d0f21-8c37-4a42-b57a-185fe9d0c001', $plan['hash'], true),
+    fn()=>$service->apply(
+        $actor,
+        $course,
+        $enrollment,
+        (int)$sourceBefore->revision,
+        ['not-an-id' => '5foo'],
+        'Learner requested transfer',
+        '3e6d0f21-8c37-4a42-b57a-185fe9d0c001',
+        $plan['hash'],
+        true
+    ),
     400,
     'service rejects malformed mapping values without relying on controller validation'
 );
-$target = $service->apply($actor, $course, $enrollment, (int)$sourceBefore->revision, $mapping, 'Learner requested transfer', $key, $plan['hash'], true);
+$target = $service->apply(
+    $actor,
+    $course,
+    $enrollment,
+    (int)$sourceBefore->revision,
+    $mapping,
+    'Learner requested transfer',
+    $key,
+    $plan['hash'],
+    true
+);
 $afterSource = migrationRow('enrollments', $enrollment);
 $afterProgress = (array)$db->setQuery('SELECT * FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadObject();
 $targetRow = migrationRow('enrollments', $target);
@@ -387,10 +475,30 @@ migrationExpect(
     $targetProgress && $targetProgress->state === 'completed' && (int)$targetProgress->covered_ms === 0,
     'only completion state transfers, not video coverage'
 );
-$targetReplay = $service->apply($actor, $course, $enrollment, (int)$sourceBefore->revision, $mapping, 'Learner requested transfer', $key, $plan['hash'], true);
+$targetReplay = $service->apply(
+    $actor,
+    $course,
+    $enrollment,
+    (int)$sourceBefore->revision,
+    $mapping,
+    'Learner requested transfer',
+    $key,
+    $plan['hash'],
+    true
+);
 migrationExpect($targetReplay === $target, 'identical retry returns the same target enrollment');
 migrationDenied(
-    fn()=>$service->apply($actor, $course, $enrollment, (int)$sourceBefore->revision, $mapping, 'Different reason', $key, $plan['hash'], true),
+    fn()=>$service->apply(
+        $actor,
+        $course,
+        $enrollment,
+        (int)$sourceBefore->revision,
+        $mapping,
+        'Different reason',
+        $key,
+        $plan['hash'],
+        true
+    ),
     409,
     'same idempotency scope with changed request conflicts'
 );
@@ -399,11 +507,15 @@ migrationDenied(
     401,
     'anonymous migration preview denied'
 );
-$jobId = (int)$db->setQuery('SELECT job_id FROM #__jlms_enrollment_migrations WHERE source_enrollment_id=' . $enrollment)->loadResult();
+$jobId = (int)$db->setQuery('SELECT job_id FROM #__jlms_enrollment_migrations WHERE ' .
+    'source_enrollment_id=' . $enrollment)->loadResult();
 migrationExpect(
     (string)$db->setQuery('SELECT status FROM #__jlms_jobs WHERE id=' . $jobId)->loadResult() === 'succeeded',
     'single migration is recorded as a completed immutable job'
 );
 file_put_contents($fixture, json_encode(['course' => $course,'source' => $enrollment,'target' => $target,'source_version' => $sourceVersion,'target_version' => $version,'certificate' => (int)$historyCertificate->id,
-    'certificate_document' => (int)$historyDocument->id,'certificate_source_hash' => hash('sha256', json_encode([$certificateBefore,$documentBefore], JSON_THROW_ON_ERROR))], JSON_THROW_ON_ERROR));
+    'certificate_document' => (int)$historyDocument->id,'certificate_source_hash' => hash(
+        'sha256',
+        json_encode([$certificateBefore,$documentBefore], JSON_THROW_ON_ERROR)
+    )], JSON_THROW_ON_ERROR));
 echo json_encode(['enrollment_migration_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

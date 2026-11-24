@@ -10,7 +10,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 }
 // Only the parent configures the fixture; workers must not mutate shared plugin settings.
 if (($argv[2] ?? '') !== 'worker') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $plugin = $fixtureDb->query(("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' "
         . "AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC);
     $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1, "
@@ -56,7 +61,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -106,15 +114,25 @@ $helper = $component->getAssociationsExtension();
 $fixturePath = dirname($root) . '/categories-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
-    catExpect((int)$helper->getAssociations('course.category', $f['en'])['it-IT']->id === $f['it'], 'native category translation retained');
-    catExpect((int)$catalog->category($guest, 'en-GB', $f['child'])->parent_id === $f['en'], 'native hierarchy retained');
+    catExpect(
+        (int)$helper->getAssociations('course.category', $f['en'])['it-IT']->id === $f['it'],
+        'native category translation retained'
+    );
+    catExpect(
+        (int)$catalog->category($guest, 'en-GB', $f['child'])->parent_id === $f['en'],
+        'native hierarchy retained'
+    );
     catExpect((int)$catalog->course($guest, 'en-GB', $f['course'])->catid === $f['child'], 'course taxonomy retained');
     echo json_encode(['category_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
 $app->getInput()->set('extension', 'com_jlms.course');
 $saveCategory = static function (array $data) use ($app): int {
-    $model = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
+    $model = $app->bootComponent('com_categories')->getMVCFactory()->createModel(
+        'Category',
+        'Administrator',
+        ['ignore_request' => true]
+    );
     $model->setState('category.extension', $data['extension'] ?? 'com_jlms.course');
     $model->setState('category.component', 'com_jlms');
     $model->setState('category.section', 'course');
@@ -131,9 +149,21 @@ $unpublished = $saveCategory(['title' => 'UNPUBLISHED_TAXONOMY_CHILD','alias' =>
 $wrongLanguage = $saveCategory(['title' => 'WRONG_LANGUAGE_TAXONOMY_CHILD','alias' => 'taxonomy-language','parent_id' => $en,'language' => 'it-IT']);
 $grandchild = $saveCategory(['title' => 'HIDDEN_TAXONOMY_GRANDCHILD','alias' => 'taxonomy-grandchild','parent_id' => $hidden]);
 $otherSection = $saveCategory(['title' => 'PRIVATE_QUESTION_CATEGORY','alias' => 'taxonomy-question','extension' => 'com_jlms.question']);
-catExpect($helper->getTypeTables('course.category')['a'] === '#__categories', 'native manager category type registered');
-catExpect((int)$helper->getAssociations('course.category', $en)['it-IT']->id === $it, 'section-scoped core category association');
-catExpect($helper->getItem('course.category', $otherSection) === null && $helper->getAssociations('course.category', $otherSection) === [], 'question taxonomy excluded from course association helper');
+catExpect(
+    $helper->getTypeTables('course.category')['a'] === '#__categories',
+    'native manager category type registered'
+);
+catExpect(
+    (int)$helper->getAssociations('course.category', $en)['it-IT']->id === $it,
+    'section-scoped core category association'
+);
+catExpect($helper->getItem(
+    'course.category',
+    $otherSection
+) === null && $helper->getAssociations(
+    'course.category',
+    $otherSection
+) === [], 'question taxonomy excluded from course association helper');
 catExpect(catHidden(1) && catHidden($hidden) && catHidden($unpublished) && catHidden($wrongLanguage) && catHidden($grandchild) && catHidden($otherSection), 'root, section, language and ancestor access denied');
 $app->loadIdentity($guest);
 $model = $factory->createModel('Categories', 'Site', ['ignore_request' => true]);
@@ -183,7 +213,14 @@ $createCourse = static function (int $catid, string $tag, string $alias) use ($f
     $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Category lesson','kind' => 'text','required' => '1','body' => '<p>PRIVATE_CATEGORY_LESSON</p>']);
     $publication = $component->getPublicationService();
     $choices = $publication->transitions($actor, $course);
-    $publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$choices[0]->id);
+    $publication->transition(
+        $actor,
+        $course,
+        $version,
+        (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(),
+        $scope()['expected_version_revision'],
+        (int)$choices[0]->id
+    );
     return $course;
 };
 $course = $createCourse($child, 'en-GB', 'taxonomy-visible-course');
@@ -206,10 +243,16 @@ $categoryModel = $factory->createModel('Category', 'Site', ['ignore_request' => 
 $categoryModel->setState('filter.category_id', $en);
 $categoryModel->setState('list.limit', 20);
 $categoryModel->setState('list.start', 0);
-catExpect(array_map(static fn($c)=>(int)$c->id, $categoryModel->getItems()) === [$course], 'category course list includes visible descendants only');
+catExpect(
+    array_map(static fn($c)=>(int)$c->id, $categoryModel->getItems()) === [$course],
+    'category course list includes visible descendants only'
+);
 catExpect((int)$categoryModel->getTotal() === 1, 'course pagination excludes hidden descendants');
 $app->loadIdentity($guest);
-catExpect(str_contains($helper->getAssociationsForItem($en, 'category')['it-IT'] ?? '', 'view=category&id=' . $it), 'category language switch targets associated visible category');
+catExpect(
+    str_contains($helper->getAssociationsForItem($en, 'category')['it-IT'] ?? '', 'view=category&id=' . $it),
+    'category language switch targets associated visible category'
+);
 $update($it, ['access' => 2]);
 catExpect($helper->getAssociationsForItem($en, 'category') === [], 'target category access checked live');
 $update($it, ['access' => 1]);
@@ -219,7 +262,11 @@ $update($it, ['published' => 1]);
 $app->loadIdentity($actor);
 \Joomla\CMS\Form\Form::addFormPath(JPATH_ADMINISTRATOR . '/components/com_categories/forms');
 // Native category form must own the association fields; no replacement editor.
-$native = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
+$native = $app->bootComponent('com_categories')->getMVCFactory()->createModel(
+    'Category',
+    'Administrator',
+    ['ignore_request' => true]
+);
 $native->setState('category.id', $en);
 $native->setState('category.extension', 'com_jlms.course');
 $native->setState('category.component', 'com_jlms');
@@ -234,7 +281,10 @@ $listed = $factory->createModel('Categories', 'Site', ['ignore_request' => true]
 $listed->setState('filter.parent_id', $en);
 $listed->setState('list.start', 20);
 $listed->setState('list.limit', 20);
-catExpect(count($listed->getItems()) === 2 && (int)$listed->getTotal() === 22, 'bounded second page counts visible children only');
+catExpect(
+    count($listed->getItems()) === 2 && (int)$listed->getTotal() === 22,
+    'bounded second page counts visible children only'
+);
 $description = static fn($id)=>(string)$db->setQuery('SELECT description FROM #__categories WHERE id=' . (int)$id)->loadResult();
 $app->loadIdentity($actor);
 $componentId = (int)$db->setQuery(("SELECT extension_id FROM #__extensions WHERE type='component' AND "
@@ -263,8 +313,14 @@ $db->setQuery('UPDATE #__jlms_courses SET catid=' . (int)$moveSource . ' WHERE i
 $versionBefore = (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . (int)$course)->loadResult();
 $reassignment = $component->getCategoryReassignmentService();
 $inspection = $reassignment->inspect($actor, $moveSource);
-catExpect($inspection['references']['courses'] === 1 && $inspection['targets']['courses'] !== [], 'category dependency review includes trashed sources, counts courses and offers permitted sibling destinations');
-catExpect(!in_array($moveChild, array_map(static fn($target)=>(int)$target->id, $inspection['targets']['courses']), true), 'descendant categories are excluded as relocation targets');
+catExpect(
+    $inspection['references']['courses'] === 1 && $inspection['targets']['courses'] !== [],
+    'category dependency review includes trashed sources, counts courses and offers permitted sibling destinations'
+);
+catExpect(
+    !in_array($moveChild, array_map(static fn($target)=>(int)$target->id, $inspection['targets']['courses']), true),
+    'descendant categories are excluded as relocation targets'
+);
 // SEC-P1: the operator session may remain in memory after the user is blocked.
 // Authorization must load current Joomla account state before either read or mutation.
 $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . (int)$actor->id)->execute();
@@ -298,9 +354,25 @@ try {
 }
 catExpect($descendantRejected, 'server rejects a manually submitted descendant destination');
 $reassignment->reassign($actor, $moveSource, ['courses' => $moveTarget]);
-catExpect((int)$db->setQuery('SELECT catid FROM #__jlms_courses WHERE id=' . (int)$course)->loadResult() === $moveTarget, 'explicit reassignment changes the course category');
+catExpect(
+    (int)$db->setQuery('SELECT catid FROM #__jlms_courses WHERE id=' . (int)$course)->loadResult() === $moveTarget,
+    'explicit reassignment changes the course category'
+);
 catExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . (int)$course)->loadResult() === $versionBefore, 'category reassignment keeps the active teaching version');
 // Restore the shared course fixture for the following HTTP category-view suite.
 $db->setQuery('UPDATE #__jlms_courses SET catid=' . (int)$child . ' WHERE id=' . (int)$course)->execute();
-file_put_contents($fixturePath, json_encode(compact('en', 'it', 'child', 'hidden', 'unpublished', 'wrongLanguage', 'grandchild', 'otherSection', 'course', 'italianCourse', 'hiddenCourse', 'menus') + ['description' => $description($en)], JSON_THROW_ON_ERROR));
+file_put_contents($fixturePath, json_encode(compact(
+    'en',
+    'it',
+    'child',
+    'hidden',
+    'unpublished',
+    'wrongLanguage',
+    'grandchild',
+    'otherSection',
+    'course',
+    'italianCourse',
+    'hiddenCourse',
+    'menus'
+) + ['description' => $description($en)], JSON_THROW_ON_ERROR));
 echo json_encode(['native_category_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

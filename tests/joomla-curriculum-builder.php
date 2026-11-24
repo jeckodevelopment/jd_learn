@@ -164,9 +164,16 @@ $ids = array_map(static fn($m): int => (int)$m->id, $outline['modules']);
 $order = array_reverse($ids);
 $stale = $scope() + ['kind' => 'module','order' => $order];
 $revision = $service->saveOrder($actor, $stale);
-builderExpect($revision === (int)$stale['expected_version_revision'] + 1, 'One version bump for an atomic sibling permutation');
+builderExpect(
+    $revision === (int)$stale['expected_version_revision'] + 1,
+    'One version bump for an atomic sibling permutation'
+);
 builderExpect(array_map(static fn($m): int => (int)$m->id, $service
-    ->outline($actor, $course, $version)['modules']) === $order, 'Persisted module order matches the submitted exact permutation');
+    ->outline(
+        $actor,
+        $course,
+        $version
+    )['modules']) === $order, 'Persisted module order matches the submitted exact permutation');
 builderDenied(fn()=>$service->saveOrder($actor, $stale), 'COM_JLMS_REVISION_CONFLICT');
 $stable = builderSnapshot($course, $version);
 builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order_json'
@@ -179,7 +186,10 @@ builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','
     => [$m1]]), 'COM_JLMS_REVISION_CONFLICT');
 builderDenied(fn()=>$service->saveOrder($actor, $scope() + ['kind' => 'module','order'
     => array_merge($ids, [2147483647])]), 'COM_JLMS_REVISION_CONFLICT');
-builderExpect(builderSnapshot($course, $version) === $stable, 'Rejected permutations change neither records nor revisions');
+builderExpect(
+    builderSnapshot($course, $version) === $stable,
+    'Rejected permutations change neither records nor revisions'
+);
 $lessonOrder = $scope() + ['kind' => 'lesson','module_id' => $m1,'order' => [$l2,$l1]];
 $service->saveOrder($actor, $lessonOrder);
 builderExpect(array_map(static fn($l): int => (int)$l->id, array_values(array_filter($service

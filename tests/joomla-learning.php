@@ -12,7 +12,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Retained checks must not alter state. Workers inherit the parent's committed setup;
 // rewriting extension settings concurrently can deadlock before the test barrier.
 if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     $fixtureDb->exec(("UPDATE joomla_extensions SET "
         . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'"));
@@ -53,7 +58,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -98,7 +106,13 @@ if (in_array($argv[2] ?? '', ['revoke','grant'], true)) {
     if ($db->setQuery('SELECT title FROM #__usergroups WHERE id=' . $groupId)->loadResult() !== 'CI learning entitlement') {
         throw new \RuntimeException('Not a fixture group');
     }
-    ($argv[2] === 'revoke') ? \Joomla\CMS\User\UserHelper::removeUserFromGroup($id, $groupId) : \Joomla\CMS\User\UserHelper::addUserToGroup($id, $groupId);
+    ($argv[2] === 'revoke') ? \Joomla\CMS\User\UserHelper::removeUserFromGroup(
+        $id,
+        $groupId
+    ) : \Joomla\CMS\User\UserHelper::addUserToGroup(
+        $id,
+        $groupId
+    );
     echo "fixture access changed\n";
     exit(0);
 }
@@ -140,12 +154,20 @@ function fixtureStudent(string $username): \Joomla\CMS\User\User
     }
     return new \Joomla\CMS\User\User((int)$user->id);
 }
-$groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
+$groupModel = $app->bootComponent('com_users')->getMVCFactory()->createModel(
+    'Group',
+    'Administrator',
+    ['ignore_request' => true]
+);
 if (!$groupModel->save(['id' => 0,'parent_id' => 2,'title' => 'CI learning entitlement'])) {
     throw new \RuntimeException('Core group fixture failed: ' . $groupModel->getError());
 }
 $learningGroup = (int)$groupModel->getState('group.id');
-$level = (object)['title' => 'CI learning access','ordering' => 0,'rules' => json_encode([$learningGroup], JSON_THROW_ON_ERROR)];
+$level = (object)[
+    'title' => 'CI learning access',
+    'ordering' => 0,
+    'rules' => json_encode([$learningGroup], JSON_THROW_ON_ERROR)
+];
 $db->insertObject('#__viewlevels', $level, 'id');
 $learningLevel = (int)$level->id;
 $student = fixtureStudent('cilearner');
@@ -171,12 +193,25 @@ $scope = static function () use ($db, $course, $version): array {
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Learning chapter']);
 $lessons = [];
 for ($i = 1; $i <= 4; $i++) {
-    $schedule = $i === 2 ? ['publish_up' => gmdate('Y-m-d H:i:s', time() + 3600),'publish_down' => gmdate('Y-m-d H:i:s', time() + 7200)] : [];
+    $schedule = $i === 2 ? ['publish_up' => gmdate(
+        'Y-m-d H:i:s',
+        time() + 3600
+    ),'publish_down' => gmdate(
+        'Y-m-d H:i:s',
+        time() + 7200
+    )] : [];
     $lessons[] = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Learning lesson ' . $i,'kind' => 'text',
     'required' => $i === 4 ? '0' : '1','body' => '<p>LEARNING_PRIVATE_BODY_' . $i . '</p><img src="x" onerror="alert(1)"><script>alert(2)</script>'] + $schedule);
 }
 $cr = (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult();
-$publication->transition($actor, $course, $version, $cr, $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
+$publication->transition(
+    $actor,
+    $course,
+    $version,
+    $cr,
+    $scope()['expected_version_revision'],
+    (int)$publication->transitions($actor, $course)[0]->id
+);
 $key = bin2hex(random_bytes(16));
 $enrollment = $learning->start($student, 'en-GB', $course, $key);
 learningExpect($learning->start($student, 'en-GB', $course, $key) === $enrollment, 'same start key reuses enrollment');
@@ -209,7 +244,12 @@ learningExpect(
  // LCM-01: inactive lifecycle states must not be bypassable by direct calls,
  // even if a stale configuration still leaves admissions and delivery enabled.
 foreach ([0, 2, -2] as $inactiveState) {
-    fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $inactiveState,'admissions_open' => 1,'delivery_enabled' => 1]);
+    fixtureUpdate('jlms_courses', (object)[
+        'id' => $course,
+        'state' => $inactiveState,
+        'admissions_open' => 1,
+        'delivery_enabled' => 1
+    ]);
     learningDenied(
         fn()=>$learning->classroom($student, 'en-GB', $enrollment),
         404,
@@ -330,7 +370,20 @@ function learningWorkers(array $lessonIds): void
     $workers = [];
     foreach ($lessonIds as $lessonId) {
         $pipes = [];
-        $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',(string)$student->id,(string)$enrollment,(string)$lessonId,bin2hex(random_bytes(16))], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+        $process = proc_open([
+            PHP_BINARY,
+            __FILE__,
+            $root,
+            'worker',
+            (string)$student->id,
+            (string)$enrollment,
+            (string)$lessonId,
+            bin2hex(random_bytes(16))
+        ], [
+            0 => ['pipe','r'],
+            1 => ['pipe','w'],
+            2 => ['pipe','w']
+        ], $pipes);
         if (!is_resource($process)) {
             throw new \RuntimeException('Worker could not start');
         }
@@ -403,7 +456,11 @@ learningDenied(
 fixtureUpdate('users', (object)['id' => (int)$student->id,'block' => 0]);
 fixtureUpdate('jlms_enrollments', (object)['id' => $enrollment,'status' => 'suspended']);
 learningDenied(fn()=>$learning->start($student, 'en-GB', $course, $key), 403, 'start cannot reactivate a suspension');
-fixtureUpdate('jlms_enrollments', (object)['id' => $enrollment,'status' => 'active','ends_at' => '2000-01-01 00:00:00']);
+fixtureUpdate('jlms_enrollments', (object)[
+    'id' => $enrollment,
+    'status' => 'active',
+    'ends_at' => '2000-01-01 00:00:00'
+]);
 learningDenied(fn()=>$learning->classroom($student, 'en-GB', $enrollment), 403, 'expired educational window denied');
 fixtureUpdate('jlms_enrollments', (object)['id' => $enrollment,'ends_at' => null], true);
 $edition = (int)$db->setQuery('SELECT edition_id FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
@@ -425,7 +482,11 @@ fixtureUpdate('categories', (object)['id' => $catid,'published' => 1]);
 $catalog = $component->getCatalogService();
 $storedProgress = (int)$db->setQuery('SELECT completed_total FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
 foreach ([0,2,-2] as $blockedState) {
-    fixtureUpdate('jlms_courses', (object)['id' => $course,'state' => $blockedState,'publish_down' => '2000-01-01 00:00:00']);
+    fixtureUpdate('jlms_courses', (object)[
+        'id' => $course,
+        'state' => $blockedState,
+        'publish_down' => '2000-01-01 00:00:00'
+    ]);
     learningDenied(
         fn()=>$catalog->course($student, 'en-GB', $course),
         404,
@@ -484,5 +545,14 @@ learningDenied(
     'approval mode cannot bypass request workflow'
 );
 fixtureUpdate('jlms_courses', (object)['id' => $course,'enrollment_mode' => 'auto']);
-file_put_contents(dirname($root) . '/learning-fixture.json', json_encode(['course_id' => $course,'lessons' => $lessons,'http_user_id' => (int)$httpStudent->id,'group_id' => $learningGroup], JSON_THROW_ON_ERROR));
-echo json_encode(['learning_checks' => $checks,'status' => 'passed','concurrent_workers' => 4], JSON_THROW_ON_ERROR) . PHP_EOL;
+file_put_contents(dirname($root) . '/learning-fixture.json', json_encode([
+    'course_id' => $course,
+    'lessons' => $lessons,
+    'http_user_id' => (int)$httpStudent->id,
+    'group_id' => $learningGroup
+], JSON_THROW_ON_ERROR));
+echo json_encode([
+    'learning_checks' => $checks,
+    'status' => 'passed',
+    'concurrent_workers' => 4
+], JSON_THROW_ON_ERROR) . PHP_EOL;

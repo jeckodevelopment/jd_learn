@@ -232,3 +232,19 @@ Il workflow monouso [45336153577](https://github.com/jeckodevelopment/jd_learn/a
 La baseline certificata su `main` dopo la PR #1006 era **2.637 rilievi**: il residuo finale è **da misurare nuovamente dopo il ripristino del template**, da confermare con la scansione completa PHPCS della PR corrente e la CI PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium. L'intervento non riguarda la logica applicativa, non elimina il restante debito e non dichiara chiuso SECDEV-02. I collaudi manuali restano separati.
 
 **Comportamenti da testare:** equivalenza di attributi HTML, valori, interfacce e percorsi di navigazione in tutte le viste modificate; validazione form, autorizzazioni e token; controlli CI di regressione PHP e Chromium.
+
+
+## Consolidamento massivo PSR-12 su PHP distribuito (PR #1008)
+
+Il batch unico di consolidamento eseguito sul ramo `style/secdev02-psr12-consolidated-closeout` parte dalla baseline verificata **2.549** rilievi in `main` dopo PR #1007, senza modificare lo standard PSR-12 né escludere sorgenti dal suo gate. Sono stati applicati quattro interventi massivi sotto protezione `php -l`, preservazione dei token PHP dove pertinente, PHPCS 4.0.4 per regola e gate strutturali del progetto:
+
+- [Workflow #45339767617](https://github.com/jeckodevelopment/jd_learn/actions/runs/45339767617): 13 file, **26** rilievi netti rimossi mediante segmentazione di stringhe PHP semplici senza escape e a contenuto identico.
+- [Workflow #45340098274](https://github.com/jeckodevelopment/jd_learn/actions/runs/45340098274): 35 file, **93** rilievi netti rimossi mediante formattazione di array monoriga con identità dei token.
+- [Workflow #45340743209](https://github.com/jeckodevelopment/jd_learn/actions/runs/45340743209): 68 file, **533** rilievi netti rimossi mediante interruzioni di riga nei parametri di chiamate/dichiarazioni. Sono stati preservati i contratti testuali controllati da `tools/check.py`.
+- [Workflow #45341872446](https://github.com/jeckodevelopment/jd_learn/actions/runs/45341872446): 21 file, **28** rilievi netti rimossi proiettando soltanto whitespace da un formatter PHP, mantenendo invariati i token originali e i contratti di tutti i test sorgente. L'esperimento con output completo del formatter [#45341223260](https://github.com/jeckodevelopment/jd_learn/actions/runs/45341223260) è stato correttamente scartato: zero modifiche ammissibili.
+
+**Risultato verificato sul ramo prima della PR:** 2.549 → **1.869** rilievi, riduzione di **680** (circa 26,7%), nuove violazioni per regola **0**. I quattro workflow monouso con permesso di scrittura sono stati rimossi dopo l'esecuzione. I codici dei trasformatori rimangono documentati sotto `tools/`, per consentire tracciabilità e future diagnosi. La CI finale della PR con Joomla 6.2.0, compat6 disabilitato, PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium deve ancora certificare il merge.
+
+**Limite e prossimo lavoro:** il debito **non è azzerato**. Le violazioni residue includono prevalentemente righe oltre i 120 caratteri in sorgenti e test che non possono essere spezzate automaticamente senza compromettere contratti testuali o introdurre altre violazioni; restano anche regole PSR1/PSR2 da risolvere con refactoring strutturale. Non cambiare lo standard o mascherare questi rilievi; SECDEV-02 rimane parziale. I collaudi manuali Joomla saranno effettuati separatamente.
+
+**Comportamenti da testare:** nessuna modifica funzionale ai contenuti delle stringhe, valori, chiamate Joomla e permessi; PHP lint e PHPCS sul repository intero; gate contratti di sicurezza; matrice CI e integrità dei pacchetti installabili.

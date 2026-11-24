@@ -131,7 +131,10 @@ if (in_array($mode, ['asset-checkpoint','asset-retained'], true)) {
         } finally {
             fclose($handle);
         }
-        ruleExpect(is_string($payload) && str_starts_with($payload, '%PDF-'), 'Encrypted asset can be opened as PDF before backup');
+        ruleExpect(
+            is_string($payload) && str_starts_with($payload, '%PDF-'),
+            'Encrypted asset can be opened as PDF before backup'
+        );
         $data = ['key' => $pdf->storage_key,'on_disk_sha256' => hash_file('sha256', $path),
           'plaintext_sha256' => hash('sha256', $payload),'asset_id' => (int)$pdf->id,
           'document_id' => (int)$pdf->document_id,'enrollment_id' => (int)$pdf->enrollment_id];
@@ -183,7 +186,10 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
         return;
     }
     if ($mode === 'retained') {
-        ruleExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Teaching rules and assigned history survive upgrade');
+        ruleExpect(
+            json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state,
+            'Teaching rules and assigned history survive upgrade'
+        );
         echo json_encode(['teaching_rules_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
         return;
     }
@@ -208,7 +214,10 @@ $publish = static function (int $id) use ($publication, $actor, $course): void {
     $publication->transition($actor, $course, $id, (int)ruleRow('courses', $course)
         ->revision, (int)ruleRow('course_versions', $id)->revision, $transition, $impact['fingerprint'] ?? null);
 };
-ruleExpect($authoring->teachingRules($actor, $course, $version)['video_threshold_basis_points'] === 9000, 'Default is90 percent');
+ruleExpect(
+    $authoring->teachingRules($actor, $course, $version)['video_threshold_basis_points'] === 9000,
+    'Default is90 percent'
+);
 $publish($version);
 $original = $version;
 $oldLesson = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id=' . $original
@@ -230,10 +239,27 @@ $authoring->saveTeachingRules($actor, ['course_id' => $consultationCourse,'versi
     => $consultationVersion,'expected_version_revision' => ruleRow('course_versions', $consultationVersion)
         ->revision,'mode' => 'consultation','sequence_mode' => 'free','video_threshold' => '90']);
 $consultationOutline = $authoring->outline($actor, $consultationCourse, $consultationVersion);
-$consultationReadiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(ruleRow('courses', $consultationCourse), $consultationOutline['modules'], $consultationOutline['lessons'], [], false, $authoring->teachingRules($actor, $consultationCourse, $consultationVersion));
-ruleExpect(!in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $consultationReadiness['blockers'], true), 'Consultation video can be published without tracking-only duration metadata');
+$consultationReadiness = \Jlms\Component\Jlms\Administrator\Domain\PublicationReadiness::inspect(
+    ruleRow('courses', $consultationCourse),
+    $consultationOutline['modules'],
+    $consultationOutline['lessons'],
+    [],
+    false,
+    $authoring->teachingRules($actor, $consultationCourse, $consultationVersion)
+);
+ruleExpect(
+    !in_array('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED', $consultationReadiness['blockers'], true),
+    'Consultation video can be published without tracking-only duration metadata'
+);
 $consultationTransition = (int)$publication->transitions($actor, $consultationCourse, $consultationVersion)[0]->id;
-$publication->transition($actor, $consultationCourse, $consultationVersion, (int)ruleRow('courses', $consultationCourse)->revision, (int)ruleRow('course_versions', $consultationVersion)->revision, $consultationTransition);
+$publication->transition(
+    $actor,
+    $consultationCourse,
+    $consultationVersion,
+    (int)ruleRow('courses', $consultationCourse)->revision,
+    (int)ruleRow('course_versions', $consultationVersion)->revision,
+    $consultationTransition
+);
 $consultationEnrollment = $learning->start($actor, 'en-GB', $consultationCourse, bin2hex(random_bytes(20)));
 $consultationLesson = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id='
     . (int)$consultationVersion . ' ORDER BY ordering,id')->loadResult();
@@ -244,10 +270,16 @@ try {
     $learning->complete($actor, 'en-GB', $consultationEnrollment, $consultationLesson, bin2hex(random_bytes(20)));
     throw new RuntimeException('Consultation must not grant lesson completion');
 } catch (RuntimeException $error) {
-    ruleExpect($error->getMessage() === 'COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE', 'Consultation lesson completion is explicitly denied');
+    ruleExpect(
+        $error->getMessage() === 'COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE',
+        'Consultation lesson completion is explicitly denied'
+    );
 }
 ruleExpect((int)ruleRow('enrollments', $consultationEnrollment)->required_total === 0
-    && (int)ruleRow('enrollments', $consultationEnrollment)->completed_total === 0, 'Consultation enrollment stores zero completion requirements and credit');
+    && (int)ruleRow(
+        'enrollments',
+        $consultationEnrollment
+    )->completed_total === 0, 'Consultation enrollment stores zero completion requirements and credit');
 $version = $authoring->createDraft($actor, $course, (int)ruleRow('courses', $course)->revision);
 $courseBefore = ruleRow('courses', $course);
 $before = ruleLearning();
@@ -277,7 +309,10 @@ $authoring->saveTeachingRules($actor, $input + ['mode' => 'consultation','certif
 $rules = $authoring->teachingRules($actor, $course, $version);
 ruleExpect($rules['video_threshold_basis_points'] === 5025 && $rules['mode'] === 'consultation'
     && $rules['certificate_enabled'] === false, 'Supported mode and threshold fields change; unsupported fields are ignored');
-ruleExpect((int)ruleRow('course_versions', $version)->revision === (int)$input['expected_version_revision'] + 1, 'Rule save increments version CAS');
+ruleExpect(
+    (int)ruleRow('course_versions', $version)->revision === (int)$input['expected_version_revision'] + 1,
+    'Rule save increments version CAS'
+);
 ruleExpect(ruleRow('courses', $course) == $courseBefore && ruleRow('course_versions', $original) == $old
     && ruleLearning() === $before, 'Draft rule change preserves metadata, frozen source and all learning');
 ruleDenied(fn()=>$authoring->saveTeachingRules($actor, $input), 'COM_JLMS_REVISION_CONFLICT');
@@ -289,11 +324,17 @@ ruleExpect($review['video_threshold_change'] === ['before' => 9000,'after'
 $authoring->saveTeachingRules($actor, array_replace($input, ['expected_version_revision'
     => ruleRow('course_versions', $version)->revision,'mode' => 'learning','video_threshold' => '50.26']));
 ruleDenied(fn()=>$publication->transition($actor, $course, $version, (int)ruleRow('courses', $course)
-    ->revision, (int)ruleRow('course_versions', $version)->revision, $t, $review['fingerprint']), 'COM_JLMS_PUBLICATION_REVIEW_STALE');
+    ->revision, (int)ruleRow(
+        'course_versions',
+        $version
+    )->revision, $t, $review['fingerprint']), 'COM_JLMS_PUBLICATION_REVIEW_STALE');
 $authoring->saveTeachingRules($actor, array_replace($input, ['expected_version_revision'
     => ruleRow('course_versions', $version)->revision]));
 $valid = ruleRow('course_versions', $version);
-$invalid = (object)['id' => $version,'rules_json' => json_encode(array_replace($rules, ['video_threshold_basis_points' => 10001]), JSON_THROW_ON_ERROR)];
+$invalid = (object)['id' => $version,'rules_json' => json_encode(
+    array_replace($rules, ['video_threshold_basis_points' => 10001]),
+    JSON_THROW_ON_ERROR
+)];
 $db->updateObject('#__jlms_course_versions', $invalid, 'id');
 ruleDenied(fn()=>$publish($version), 'COM_JLMS_PUBLICATION_UNSUPPORTED');
 ruleExpect((int)ruleRow('courses', $course)->current_version_id === $original
@@ -305,7 +346,10 @@ $newEnrollment = $learning->start($actor, 'en-GB', $course, bin2hex(random_bytes
 $newLesson = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id=' . $version
     . " AND kind='video' ORDER BY id")->loadResult();
 ruleExpect((int)ruleRow('enrollments', $oldEnrollment)->course_version_id === $original
-    && (int)ruleRow('enrollments', $newEnrollment)->course_version_id === $version, 'New admissions use updated rules while historical assignments remain');
+    && (int)ruleRow(
+        'enrollments',
+        $newEnrollment
+    )->course_version_id === $version, 'New admissions use updated rules while historical assignments remain');
 $now = (int)floor(microtime(true) * 1000);
 $video = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
     return $now;
@@ -316,18 +360,74 @@ $oldGrant = $video->playback($actor, 'en-GB', $oldEnrollment, $oldLesson, true);
 $newGrant = $video->playback($actor, 'en-GB', $newEnrollment, $newLesson, true);
 $now += 5000;
 $batch = json_encode([$event(1, 0, 0, 'play'),$event(2, 5000, 5000)], JSON_THROW_ON_ERROR);
-$oldResult = $video->save($actor, 'en-GB', $oldEnrollment, $oldLesson, $oldGrant['session_id'], $oldGrant['source_revision'], 1, 10000, $batch);
-$newResult = $video->save($actor, 'en-GB', $newEnrollment, $newLesson, $newGrant['session_id'], $newGrant['source_revision'], 1, 10000, $batch);
-ruleExpect(!$oldResult['lesson_completed'] && !$newResult['lesson_completed'], '5000ms cannot round up to50.25 percent');
+$oldResult = $video->save(
+    $actor,
+    'en-GB',
+    $oldEnrollment,
+    $oldLesson,
+    $oldGrant['session_id'],
+    $oldGrant['source_revision'],
+    1,
+    10000,
+    $batch
+);
+$newResult = $video->save(
+    $actor,
+    'en-GB',
+    $newEnrollment,
+    $newLesson,
+    $newGrant['session_id'],
+    $newGrant['source_revision'],
+    1,
+    10000,
+    $batch
+);
+ruleExpect(
+    !$oldResult['lesson_completed'] && !$newResult['lesson_completed'],
+    '5000ms cannot round up to50.25 percent'
+);
 $now += 25;
 $batch = json_encode([$event(3, 5025, 5025)], JSON_THROW_ON_ERROR);
-$newResult = $video->save($actor, 'en-GB', $newEnrollment, $newLesson, $newGrant['session_id'], $newGrant['source_revision'], 2, 10000, $batch);
-$oldResult = $video->save($actor, 'en-GB', $oldEnrollment, $oldLesson, $oldGrant['session_id'], $oldGrant['source_revision'], 2, 10000, $batch);
+$newResult = $video->save(
+    $actor,
+    'en-GB',
+    $newEnrollment,
+    $newLesson,
+    $newGrant['session_id'],
+    $newGrant['source_revision'],
+    2,
+    10000,
+    $batch
+);
+$oldResult = $video->save(
+    $actor,
+    'en-GB',
+    $oldEnrollment,
+    $oldLesson,
+    $oldGrant['session_id'],
+    $oldGrant['source_revision'],
+    2,
+    10000,
+    $batch
+);
 ruleExpect($newResult['lesson_completed'] && $newResult['course_completed']
     && !$oldResult['lesson_completed'], 'Exact configured threshold applies only to its assigned version');
 $now += 3975;
-$oldResult = $video->save($actor, 'en-GB', $oldEnrollment, $oldLesson, $oldGrant['session_id'], $oldGrant['source_revision'], 3, 10000, json_encode([$event(4, 9000, 9000)], JSON_THROW_ON_ERROR));
-ruleExpect($oldResult['lesson_completed'] && $oldResult['course_completed'], 'Existing student still completes at original90percent');
+$oldResult = $video->save(
+    $actor,
+    'en-GB',
+    $oldEnrollment,
+    $oldLesson,
+    $oldGrant['session_id'],
+    $oldGrant['source_revision'],
+    3,
+    10000,
+    json_encode([$event(4, 9000, 9000)], JSON_THROW_ON_ERROR)
+);
+ruleExpect(
+    $oldResult['lesson_completed'] && $oldResult['course_completed'],
+    'Existing student still completes at original90percent'
+);
 
 $certificateParams = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
 $previousCertificateSetting = $certificateParams->get('certificate_enabled', 0);
@@ -337,14 +437,21 @@ $certificateParams->set('material_storage_root', '');
 
 $certificateService = $component->getCertificateService();
 $historicRules = ruleRow('course_versions', $original)->rules_json;
-ruleExpect(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($historicRules)['certificate_enabled'] === false, 'Historical published fixture originally excluded certificates');
+ruleExpect(
+    \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($historicRules)['certificate_enabled'] === false,
+    'Historical published fixture originally excluded certificates'
+);
 // Explicitly exercise SQL DATETIME(6) from real completion history, which must
 // remain renderable without overwriting the immutable certificate snapshot.
 $completedSql = (string)ruleRow('enrollments', $oldEnrollment)->completed_at;
 $microsecondDate = substr($completedSql, 0, 19) . '.123456';
 $db->setQuery('UPDATE #__jlms_enrollments SET completed_at=' . $db->quote($microsecondDate) . ' WHERE id='
     . (int)$oldEnrollment)->execute();
-$certificateService->adminRecoverHistorical($actor, $oldEnrollment, 'Administrator approved historical certificate recovery');
+$certificateService->adminRecoverHistorical(
+    $actor,
+    $oldEnrollment,
+    'Administrator approved historical certificate recovery'
+);
 $recovered = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_certificates WHERE enrollment_id='
     . (int)$oldEnrollment)->loadResult();
 ruleExpect($recovered === 1, 'Completed historical enrollment receives exactly one certificate');
@@ -355,7 +462,10 @@ ruleExpect($recoveryAudit === 1, 'Historical recovery records a durable audit en
 
 $historicalDocument = $db->setQuery(('SELECT d.id, d.status FROM #__jlms_certificate_documents AS d JOIN '
     . '#__jlms_certificates AS c ON c.current_document_id=d.id WHERE c.enrollment_id=') . (int)$oldEnrollment)->loadObject();
-ruleExpect($historicalDocument->status === 'pending_render', 'Recovered historical certificate is queued for on-demand PDF rendering');
+ruleExpect(
+    $historicalDocument->status === 'pending_render',
+    'Recovered historical certificate is queued for on-demand PDF rendering'
+);
 $certificateDownload = $certificateService->download($actor, $oldEnrollment);
 try {
     ruleExpect(
@@ -417,11 +527,17 @@ try {
     $storageForCertificates->stageGeneratedPdf('invalid PDF');
     throw new \RuntimeException('Invalid generated PDF accepted');
 } catch (\RuntimeException $error) {
-    ruleExpect($error->getMessage() === 'COM_JLMS_CERTIFICATE_RENDER_FAILED', 'Generated PDF content is strictly validated before storage');
+    ruleExpect(
+        $error->getMessage() === 'COM_JLMS_CERTIFICATE_RENDER_FAILED',
+        'Generated PDF content is strictly validated before storage'
+    );
 }
 
 
-ruleExpect(ruleRow('course_versions', $original)->rules_json === $historicRules, 'Historical recovery never mutates the published rules');
+ruleExpect(
+    ruleRow('course_versions', $original)->rules_json === $historicRules,
+    'Historical recovery never mutates the published rules'
+);
 try {
     $certificateService->adminRecoverHistorical($actor, $oldEnrollment, 'Duplicate historical certificate recovery');
     throw new \RuntimeException('Duplicate certificate was issued');
@@ -449,7 +565,11 @@ try {
             . (int)$newEnrollment)->loadResult() === 0,
         'Eligible completion has no existing certificate before recovery'
     );
-    $certificateService->adminRecoverMissing($actor, $newEnrollment, 'Administrative recovery of missed eligible issuance');
+    $certificateService->adminRecoverMissing(
+        $actor,
+        $newEnrollment,
+        'Administrative recovery of missed eligible issuance'
+    );
     $eligibleCertificate = $db->setQuery(('SELECT c.id, c.current_document_id, c.issued_at FROM '
         . '#__jlms_certificates AS c WHERE c.enrollment_id=') . (int)$newEnrollment)->loadObject();
     ruleExpect(

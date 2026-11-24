@@ -199,7 +199,8 @@ final class HtmlView extends BaseHtmlView
             $actionId = $app->getInput()->getInt('item_id');
             $foundModule = !$editModule;
             $foundLesson = !$editLesson;
-            $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" required="true" />');
+            $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" ' .
+                'required="true" />');
             foreach ($this->outline['modules'] as $module) {
                 $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))->addAttribute('value', (string) $module->id);
                 if (!$this->selectedModule) {

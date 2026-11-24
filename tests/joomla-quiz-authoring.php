@@ -11,7 +11,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     $fixtureDb->exec(("UPDATE joomla_extensions SET "
         . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'"));
@@ -56,7 +61,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -110,7 +118,11 @@ if (($argv[2] ?? '') === 'retained') {
     echo json_encode(['quiz_authoring_upgrade' => 'passed','checks' => $checks], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit(0);
 }
-$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
+$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel(
+    'Category',
+    'Administrator',
+    ['ignore_request' => true]
+);
 if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.question','title' => 'CI Question bank','alias' => 'ci-questions','published' => 1,'language' => '*','access' => 1])) {
     throw new \RuntimeException($categoryModel->getError());
 }
@@ -148,7 +160,13 @@ $question['prompt'] = '<p>PRIVATE_QUIZ_PROMPT_V2</p>';
 $bank->save($actor, $question);
 quizExpect($bank->editor($actor, $id)['revision'] === 2, 'editing creates a new revision');
 quizExpect(
-    json_encode($db->setQuery('SELECT * FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadObject(), JSON_THROW_ON_ERROR) === json_encode($firstContent, JSON_THROW_ON_ERROR),
+    json_encode(
+        $db->setQuery('SELECT * FROM #__jlms_question_revisions WHERE id=' . $firstRevision)->loadObject(),
+        JSON_THROW_ON_ERROR
+    ) === json_encode(
+        $firstContent,
+        JSON_THROW_ON_ERROR
+    ),
     'entire old revision remains byte-for-byte unchanged after native HTML filtering'
 );
 $currentDefinition = $bank->editor($actor, $id);
@@ -173,7 +191,14 @@ quizExpect(
     'trashed question excluded from normal bank listing'
 );
 quizExpect(
-    $bank->adminListing($actor, ['search' => 'id:' . $copyId,'published' => '-2'], 0, 20, 'q.id', 'DESC')['total'] === 1,
+    $bank->adminListing(
+        $actor,
+        ['search' => 'id:' . $copyId,'published' => '-2'],
+        0,
+        20,
+        'q.id',
+        'DESC'
+    )['total'] === 1,
     'trashed question available in explicit trash filter'
 );
 quizReject(fn()=>$bank->trash($actor, $copyId), 409, 'cannot trash an already trashed question');
@@ -194,12 +219,26 @@ quizExpect(
     $list['total'] === 1 && (int)$list['items'][0]->id === $id,
     'question administration list searches by ID and filters state'
 );
-$filtered = $bank->adminListing($actor, ['catid' => (string)$category,'published' => '1','language' => '*','search' => 'id:' . $id], 0, 20, 'q.id', 'DESC');
+$filtered = $bank->adminListing(
+    $actor,
+    ['catid' => (string)$category,'published' => '1','language' => '*','search' => 'id:' . $id],
+    0,
+    20,
+    'q.id',
+    'DESC'
+);
 quizExpect(
     $filtered['total'] === 1 && (int)$filtered['items'][0]->id === $id,
     'question bank combines category, state, language and search filters'
 );
-$emptyFilter = $bank->adminListing($actor, ['catid' => (string)$category,'published' => '0','language' => '*'], 0, 20, 'q.id', 'DESC');
+$emptyFilter = $bank->adminListing(
+    $actor,
+    ['catid' => (string)$category,'published' => '0','language' => '*'],
+    0,
+    20,
+    'q.id',
+    'DESC'
+);
 quizExpect($emptyFilter['total'] === 0, ('question bank state filter excludes published questions when '
     . 'drafts are selected'));
 quizReject(fn()=>$bank->save($actor, $question), 409, 'stale question revision rejected');
@@ -258,11 +297,21 @@ quizExpect(
     'explicit older immutable revision remains pinned'
 );
 quizExpect(
-    !str_contains(json_encode($config, JSON_THROW_ON_ERROR), 'PRIVATE_CORRECT_EXPLANATION') && !str_contains(json_encode($config, JSON_THROW_ON_ERROR), '"correct"'),
+    !str_contains(
+        json_encode($config, JSON_THROW_ON_ERROR),
+        'PRIVATE_CORRECT_EXPLANATION'
+    ) && !str_contains(
+        json_encode($config, JSON_THROW_ON_ERROR),
+        '"correct"'
+    ),
     'quiz editor DTO contains no answer key'
 );
 quizReject(fn()=>$quizzes->save($actor, $input), 409, 'stale aggregate revision rejected');
-$invalid = array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1,'selection_mode' => 'random','draw_count' => '3']);
+$invalid = array_replace(
+    $input,
+    $scope(),
+    ['lesson_id' => $lesson,'revision' => 1,'selection_mode' => 'random','draw_count' => '3']
+);
 quizReject(fn()=>$quizzes->save($actor, $invalid), 400, 'oversized extraction rejected');
 quizReject(
     fn()=>$quizzes->save($actor, array_replace($invalid, ['draw_count' => '1','questions' => [['revision_id' => $firstRevision,'points' => 1],['revision_id' => $firstRevision,'points' => 2]]])),
@@ -270,12 +319,19 @@ quizReject(
     'duplicate pool revision rejected'
 );
 quizReject(
-    fn()=>$quizzes->save($actor, array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1,'feedback_policy' => 'after_submit'])),
+    fn()=>$quizzes->save(
+        $actor,
+        array_replace($input, $scope(), ['lesson_id' => $lesson,'revision' => 1,'feedback_policy' => 'after_submit'])
+    ),
     422,
     'graded tests cannot enable immediate answer feedback'
 );
 // Native asset rules can deny a single question while leaving course authoring available.
-$group = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
+$group = $app->bootComponent('com_users')->getMVCFactory()->createModel(
+    'Group',
+    'Administrator',
+    ['ignore_request' => true]
+);
 if (!$group->save(['id' => 0,'parent_id' => 2,'title' => 'CI Quiz author'])) {
     throw new \RuntimeException($group->getError());
 }
@@ -321,7 +377,14 @@ $selectionBefore = $db->setQuery('SELECT selection_json FROM #__jlms_quizzes WHE
 $db->setQuery(("UPDATE #__jlms_quizzes SET "
     . "selection_json=JSON_SET(selection_json,'$._schema',99) WHERE id=") . $quizId)->execute();
 try {
-    $publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
+    $publication->transition(
+        $actor,
+        $course,
+        $version,
+        (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(),
+        $scope()['expected_version_revision'],
+        (int)$publication->transitions($actor, $course)[0]->id
+    );
 } catch (\RuntimeException $error) {
     $blocked = $error->getMessage() === 'COM_JLMS_QUIZ_INVALID';
 }

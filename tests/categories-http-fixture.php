@@ -6,7 +6,12 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required');
 }
-$pdo = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+$pdo = new \PDO(
+    getenv('JLMS_TEST_DSN'),
+    getenv('JLMS_TEST_USER'),
+    getenv('JLMS_TEST_PASSWORD'),
+    [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+);
 $state = dirname($root) . '/categories-http-plugin.json';
 $f = json_decode(file_get_contents(dirname($root) . '/categories-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $mode = $argv[2] ?? '';

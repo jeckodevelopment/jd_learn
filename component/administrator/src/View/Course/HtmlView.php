@@ -26,8 +26,14 @@ final class HtmlView extends BaseHtmlView
         $this->item = $this->get('Item');
         $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         $id = (int)($this->item->id ?? 0);
-        $allowed = $id > 0 ? \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $this->item)
-            : \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor);
+        $allowed = $id > 0 ? \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit(
+            $actor,
+            $this->item
+        )
+            : \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(
+                Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),
+                $actor
+            );
         if (!$allowed) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
@@ -58,7 +64,13 @@ final class HtmlView extends BaseHtmlView
             $this->form->setValue('asset_id', null, $assetId);
         }
         $this->editorRights = ['COM_JLMS_EDITOR_RIGHT_CREATE'
-            => \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor),'COM_JLMS_EDITOR_RIGHT_EDIT' => $allowed,'COM_JLMS_EDITOR_RIGHT_PUBLISH' => $actor->authorise('core.edit.state', $asset),'COM_JLMS_EDITOR_RIGHT_OPTIONS' => $this->canConfigure];
+            => \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(
+                Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class),
+                $actor
+            ),'COM_JLMS_EDITOR_RIGHT_EDIT' => $allowed,'COM_JLMS_EDITOR_RIGHT_PUBLISH' => $actor->authorise(
+                'core.edit.state',
+                $asset
+            ),'COM_JLMS_EDITOR_RIGHT_OPTIONS' => $this->canConfigure];
         $this->readOnly = $this->checkedOutByOther;
         if ($this->readOnly) {
             foreach ($this->form->getFieldsets('com_fields') as $fieldset) {

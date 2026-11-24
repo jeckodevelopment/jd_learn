@@ -31,10 +31,22 @@ $mutation = $preview['mutation_id'] ?? '';
     <?php
     $editorName = (string) Factory::getApplication()->getIdentity()
         ->getParam('editor', Factory::getApplication()->get('editor'));
-    echo Editor::getInstance($editorName)->display('jform[template][htmlbody]', (string) $template['htmlbody'], '100%', '260', '60', '10', false, 'jlms-template-htmlbody');
+    echo Editor::getInstance($editorName)->display(
+        'jform[template][htmlbody]',
+        (string) $template['htmlbody'],
+        '100%',
+        '260',
+        '60',
+        '10',
+        false,
+        'jlms-template-htmlbody'
+    );
     ?>
     <p class="small text-muted mt-2"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_TAGS') ?> <code><?= $this
-        ->escape(implode(', ', \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::tags())) ?></code></p>
+        ->escape(implode(
+            ', ',
+            \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::tags()
+        )) ?></code></p>
    </div>
   </div>
   <fieldset class="mt-3 mb-3"><legend><?= Text::_('COM_JLMS_COMMUNICATION_RECIPIENTS') ?></legend>

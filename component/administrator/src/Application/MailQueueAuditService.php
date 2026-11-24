@@ -78,7 +78,9 @@ final class MailQueueAuditService
             'q.state', 'q.attempts', 'q.available_at', 'q.claimed_at', 'q.sent_at',
             'q.created_at', 'q.last_error', 'q.reconciliation_action', 'q.reconciliation_by', 'q.reconciliation_at',
             'q.reconciliation_note',
-            '(CASE WHEN q.state = ' . $this->db->quote('sending') . ' AND q.claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' . self::STALE_MINUTES . ' MINUTE) THEN 1 ELSE 0 END) AS is_stale_sending',
+            '(CASE WHEN q.state = ' .
+                $this->db->quote('sending') . ' AND q.claimed_at <= DATE_SUB(UTC_TIMESTAMP(6), INTERVAL ' .
+                self::STALE_MINUTES . ' MINUTE) THEN 1 ELSE 0 END) AS is_stale_sending',
         ])->from('#__jlms_mail_queue AS q')->leftJoin('#__jlms_courses AS c ON c.id=q.course_id');
         foreach ($where as $condition) {
             $query->where($condition);
@@ -148,7 +150,13 @@ final class MailQueueAuditService
             throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
         }
         $note = trim($note);
-        if ($queueId < 1 || !in_array($action, ['sent', 'retry'], true) || !$confirmed || mb_strlen($note) < 10 || mb_strlen($note) > 1000) {
+        if (
+            $queueId < 1 ||
+            !in_array($action, ['sent', 'retry'], true) ||
+            !$confirmed ||
+            mb_strlen($note) < 10 ||
+            mb_strlen($note) > 1000
+        ) {
             throw new \InvalidArgumentException('COM_JLMS_MAIL_QUEUE_RECONCILE_INVALID');
         }
 

@@ -175,7 +175,11 @@ final class QuestionBankService
         $grading = json_decode($content->grading_json, true, 16, JSON_THROW_ON_ERROR);
         $rows = [];
         foreach ($options as $option) {
-            $rows[] = ['option_id' => $option['id'], 'label' => $option['label'], 'correct' => in_array($option['id'], $grading['correct'], true) ? '1' : '0'];
+            $rows[] = [
+                'option_id' => $option['id'],
+                'label' => $option['label'],
+                'correct' => in_array($option['id'], $grading['correct'], true) ? '1' : '0'
+            ];
         }
         return ['id' => $id, 'revision' => (int) $question->revision, 'catid' => (int) $question->catid, 'language' => $question->language,
             'state' => (int) $question->state, 'kind' => $content->kind, 'prompt' => $content->prompt, 'options' => $rows,

@@ -11,7 +11,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     unset($fixtureDb);
 }
@@ -80,7 +85,12 @@ if (!$model->save($data)) {
 $course = (int) $model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
 $checks = 0;
-$writeFixture = static function (string $table, object $record, string $key = 'id', bool $nulls = false) use ($db): void {
+$writeFixture = static function (
+    string $table,
+    object $record,
+    string $key = 'id',
+    bool $nulls = false
+) use ($db): void {
     $db->updateObject($table, $record, $key, $nulls);
 };
 function pubExpect(bool $ok, string $message): void
@@ -123,7 +133,10 @@ function pubTransition(?int $expectedCourse = null): void
         ?? pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$choices[0]->id);
 }
 $guest = new \Joomla\CMS\User\User();
-pubExpect($catalog->publicTags($guest, 'en-GB', $catid) === [], 'public tag choices exclude courses that are still drafts');
+pubExpect(
+    $catalog->publicTags($guest, 'en-GB', $catid) === [],
+    'public tag choices exclude courses that are still drafts'
+);
 $hidden = static function () use ($catalog, $guest, $course): bool {
     try {
         $catalog->course($guest, 'en-GB', $course);
@@ -193,7 +206,14 @@ pubExpect(
 );
 pubDenied(fn()=>pubTransition(1), 'stale publication revision rejected');
 $choices = $publication->transitions($actor, $course);
-pubDenied(fn()=>$publication->transition($guest, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$choices[0]->id), 'guest publication denied');
+pubDenied(fn()=>$publication->transition(
+    $guest,
+    $course,
+    $version,
+    pubRevision('courses', $course),
+    pubRevision('course_versions', $version),
+    (int)$choices[0]->id
+), 'guest publication denied');
 // A draft video is valid authoring input but not a publishable lesson yet.
 $video = $authoring->saveLesson($actor, pubScope() + ['id' => 0,'module_id' => $module,'title'
     => 'Unsupported video','kind' => 'video','required' => '0','body' => '','provider_key'
@@ -209,7 +229,14 @@ $authoring->saveLesson($actor, pubScope() + ['id' => $lesson,'revision' => 1,'mo
 $writeFixture('#__jlms_courses', (object)['id' => $course,'publish_down' => $courseClose], 'id');
 $unreachableRejected = false;
 try {
-    $publication->transition($actor, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$publication->transitions($actor, $course)[0]->id);
+    $publication->transition(
+        $actor,
+        $course,
+        $version,
+        pubRevision('courses', $course),
+        pubRevision('course_versions', $version),
+        (int)$publication->transitions($actor, $course)[0]->id
+    );
 } catch (\DomainException $error) {
     $unreachableRejected = $error->getMessage() === 'COM_JLMS_LESSON_UNREACHABLE';
 }
@@ -222,7 +249,14 @@ $authoring->saveLesson($actor, pubScope() + ['id' => $lesson,'revision' => 2,'mo
 $writeFixture('#__jlms_lessons', (object)['id' => $lesson,'release_after_days' => 5], 'id');
 $dripWithoutEntryRejected = false;
 try {
-    $publication->transition($actor, $course, $version, pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$publication->transitions($actor, $course)[0]->id);
+    $publication->transition(
+        $actor,
+        $course,
+        $version,
+        pubRevision('courses', $course),
+        pubRevision('course_versions', $version),
+        (int)$publication->transitions($actor, $course)[0]->id
+    );
 } catch (\DomainException $error) {
     $dripWithoutEntryRejected = $error->getMessage() === 'COM_JLMS_REQUIRED_INITIAL_LESSON_REQUIRED';
 }
@@ -269,7 +303,12 @@ pubExpect(
     ($courseSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
     'publication freezes native course custom fields into the assigned teaching version'
 );
-$lessonSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_lessons WHERE id=' . $lesson)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
+$lessonSnapshot = json_decode(
+    (string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_lessons WHERE id=' . $lesson)->loadResult(),
+    true,
+    32,
+    JSON_THROW_ON_ERROR
+);
 pubExpect(($lessonSnapshot['fields']['lesson-reference']['values'][0]
     ?? '') === 'LESSON_FIELD_SNAPSHOT', 'publication freezes lesson custom field value');
 pubExpect(
@@ -337,7 +376,10 @@ pubExpect(
     ($classroom['lesson']->custom_fields[0]['values'][0] ?? '') === 'LESSON_FIELD_SNAPSHOT',
     'assigned classroom renders frozen lesson custom field value'
 );
-pubExpect(!str_contains(json_encode($catalog->outline($guest, 'en-GB', $course)), 'SECRET_LESSON_BODY'), 'public outline contains no protected body');
+pubExpect(
+    !str_contains(json_encode($catalog->outline($guest, 'en-GB', $course)), 'SECRET_LESSON_BODY'),
+    'public outline contains no protected body'
+);
 pubDenied(fn()=>$authoring->saveModule($actor, pubScope() + ['id' => 0,'title'
     => 'Change history']), 'published authoring is immutable');
 $ids = [$course];
@@ -367,7 +409,10 @@ pubExpect($hidden(), 'restricted ancestor hides direct course URL');
 $writeFixture('#__categories', (object)['id' => $catid,'access' => 1], 'id');
 pubExpect((bool)$catalog->course($guest, 'en-GB', $course), 'restored ancestor visibility is current');
 $filtered = $db->setQuery($catalog->query($guest, 'en-GB', $catid))->loadObjectList();
-pubExpect(in_array($course, array_map(static fn($c)=>(int)$c->id, $filtered), true), 'category filter includes descendants');
+pubExpect(
+    in_array($course, array_map(static fn($c)=>(int)$c->id, $filtered), true),
+    'category filter includes descendants'
+);
 pubTransition();
 pubExpect($hidden(), 'native unpublish hides course');
 pubExpect($db->setQuery('SELECT structure_hash FROM #__jlms_course_versions WHERE id=' . $version)

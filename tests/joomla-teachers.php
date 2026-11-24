@@ -80,17 +80,34 @@ function teacherExpect(bool $ok, string $message): void
     } $checks++;
 }
 $teacherListTemplate = file_get_contents(dirname(__DIR__) . '/component/administrator/tmpl/teachers/default.php');
-teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "HTMLHelper::_('jgrid.published'") && str_contains($teacherListTemplate, "'teachers.'"), 'Teacher state uses Joomla status icons without enabling inline state changes');
+teacherExpect($teacherListTemplate !== false && str_contains(
+    $teacherListTemplate,
+    "HTMLHelper::_('jgrid.published'"
+) && str_contains(
+    $teacherListTemplate,
+    "'teachers.'"
+), 'Teacher state uses Joomla status icons without enabling inline state ' .
+    'changes');
 teacherExpect($teacherListTemplate !== false && str_contains($teacherListTemplate, "'btn-success'")
-    && str_contains($teacherListTemplate, "'btn-secondary'") && !str_contains($teacherListTemplate, 'badge bg-info text-dark'), 'Teacher course count follows Joomla category count button contrast');
+    && str_contains(
+        $teacherListTemplate,
+        "'btn-secondary'"
+    ) && !str_contains(
+        $teacherListTemplate,
+        'badge bg-info text-dark'
+    ), 'Teacher course count follows Joomla category count button contrast');
 $fixture = dirname($root) . '/teachers-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
     teacherExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
         . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen teacher projection survives upgrade');
     $outline = $catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int)$f['course']);
-    teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] === 'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection is unchanged');
-    teacherExpect(TeacherProfiles::selected($db, (int)$f['course']) === $f['ids'], 'Assigned teacher relations survive upgrade');
+    teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] === 'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection ' .
+        'is unchanged');
+    teacherExpect(
+        TeacherProfiles::selected($db, (int)$f['course']) === $f['ids'],
+        'Assigned teacher relations survive upgrade'
+    );
     echo json_encode(['teacher_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit;
 }
@@ -145,7 +162,8 @@ $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('com_jlms.teacher.' . $public);
 $parent = (int)$db->setQuery('SELECT asset_id FROM #__categories WHERE id=' . $teacherCategory)->loadResult();
 teacherExpect((int)$asset->parent_id === $parent, 'Teacher asset inherits native teacher category');
-teacherExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')->loadAssocList(), 'Account link grants no groups');
+teacherExpect($groups === $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
+    'user_id,group_id')->loadAssocList(), 'Account link grants no groups');
 teacherExpect($teacherModel->save(array_replace($teacherBase, ['title' => 'PRIVATE_TEACHER_NAME','alias'
     => 'private-teacher','access' => 2,'bio' => 'PRIVATE_TEACHER_BIO','user_id'
         => ''])), 'Restricted teacher saved without native account');
@@ -161,7 +179,10 @@ teacherExpect($courseModel->save($courseBase), 'Draft course saved');
 $course = (int)$courseModel->getState('course.id');
 $courseData = array_replace($courseBase, ['id' => $course,'teacher_ids' => [$public,$private]]);
 teacherExpect($courseModel->save($courseData), 'Ordered teachers assigned to saved draft');
-teacherExpect(TeacherProfiles::selected($db, $course) === [$public,$private], 'Teacher order persisted in relation table');
+teacherExpect(
+    TeacherProfiles::selected($db, $course) === [$public,$private],
+    'Teacher order persisted in relation table'
+);
 
 $teacherNoticeCount = static function () use ($db, $course): int {
     return (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE course_id=" . $course
@@ -203,7 +224,10 @@ teacherExpect($courseList->getItems() === [], 'Malformed teacher filter cannot b
 $courseData['revision'] = 2;
 unset($courseData['teacher_ids']);
 teacherExpect($courseModel->save($courseData), 'Legacy client can save without teacher field');
-teacherExpect(TeacherProfiles::selected($db, $course) === [$public,$private], 'Omitted teacher field preserves assignment');
+teacherExpect(
+    TeacherProfiles::selected($db, $course) === [$public,$private],
+    'Omitted teacher field preserves assignment'
+);
 foreach ([[999999],[$public,$public],['1 OR 1=1'],[['bad']]] as $bad) {
     teacherExpect(!$courseModel->save(array_replace($courseData, ['revision' => 3,'teacher_ids'
         => $bad])), 'Invalid teacher assignment denied');
@@ -250,25 +274,46 @@ $snapshot = $db->setQuery(('SELECT presentation_json,structure_hash,published_at
     . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc();
 $guest = new \Joomla\CMS\User\User();
 $outline = $catalog->outline($guest, 'en-GB', $course);
-teacherExpect(count($outline['teachers']) === 1 && $outline['teachers'][0]['id'] === $public, 'Guest only sees authorised public teacher');
+teacherExpect(
+    count($outline['teachers']) === 1 && $outline['teachers'][0]['id'] === $public,
+    'Guest only sees authorised public teacher'
+);
 teacherExpect(!str_contains(json_encode($outline), 'PRIVATE_TEACHER_BIO')
     && !str_contains(json_encode($outline), 'PRIVATE_TEACHER_NAME')
-        && !str_contains(json_encode($outline), 'user_id') && !str_contains(json_encode($outline), 'ci@example.invalid'), 'Public projection excludes restricted profile and linked account data');
-teacherExpect(count($catalog->outline($actor, 'en-GB', $course)['teachers']) === 2, 'Authorised account can see both frozen teachers');
+        && !str_contains(
+            json_encode($outline),
+            'user_id'
+        ) && !str_contains(
+            json_encode($outline),
+            'ci@example.invalid'
+        ), 'Public projection excludes restricted profile and linked account data');
+teacherExpect(
+    count($catalog->outline($actor, 'en-GB', $course)['teachers']) === 2,
+    'Authorised account can see both frozen teachers'
+);
 $edit['title'] = 'Updated public teacher';
 $edit['bio'] = 'Updated public biography';
 teacherExpect($teacherModel->save($edit), 'Public profile can be updated independently');
-teacherExpect($catalog->outline($guest, 'en-GB', $course)['teachers'][0]['title'] === 'Updated public teacher', 'Public profile reflects the current teacher presentation');
+teacherExpect(
+    $catalog->outline($guest, 'en-GB', $course)['teachers'][0]['title'] === 'Updated public teacher',
+    'Public profile reflects the current teacher presentation'
+);
 teacherExpect(!$teacherModel->save($edit), 'Stale teacher revision rejected');
 $edit['revision'] = 2;
 $edit['state'] = 0;
 teacherExpect($teacherModel->save($edit), 'Teacher can be withdrawn with state permission');
-teacherExpect($catalog->outline($guest, 'en-GB', $course)['teachers'] === [], 'Withdrawal hides historical profile without changing snapshot');
+teacherExpect(
+    $catalog->outline($guest, 'en-GB', $course)['teachers'] === [],
+    'Withdrawal hides historical profile without changing snapshot'
+);
 $edit['revision'] = 3;
 $edit['state'] = 1;
 $edit['access'] = 2;
 teacherExpect($teacherModel->save($edit), 'Teacher republished with stricter level');
-teacherExpect($catalog->outline($guest, 'en-GB', $course)['teachers'] === [], 'Current teacher level rechecked for historical data');
+teacherExpect(
+    $catalog->outline($guest, 'en-GB', $course)['teachers'] === [],
+    'Current teacher level rechecked for historical data'
+);
 $edit['revision'] = 4;
 $edit['access'] = 1;
 teacherExpect($teacherModel->save($edit), 'Teacher public availability restored');
@@ -286,7 +331,10 @@ if (!$learner->bind($learnerData) || !$learner->save()) {
 }
 $learner = new \Joomla\CMS\User\User((int)$learner->id);
 $learner->getAuthorisedViewLevels();
-teacherExpect(count($catalog->outline($learner, 'en-GB', $course)['teachers']) === 2, 'Registered viewer sees originally registered snapshot');
+teacherExpect(
+    count($catalog->outline($learner, 'en-GB', $course)['teachers']) === 2,
+    'Registered viewer sees originally registered snapshot'
+);
 $directory = $factory->createModel('Teachers', 'Administrator', ['ignore_request' => true]);
 $directory->setCurrentUser($actor);
 $directory->setState('filter.search', 'Updated public');
@@ -298,7 +346,10 @@ $directory = $factory->createModel('Teachers', 'Administrator', ['ignore_request
 $directory->setCurrentUser($learner);
 try {
     $items = $directory->getItems();
-    teacherExpect($items === false && $directory->getError() !== null, 'Native list model rejects unauthorised directory reads');
+    teacherExpect(
+        $items === false && $directory->getError() !== null,
+        'Native list model rejects unauthorised directory reads'
+    );
 } catch (RuntimeException $denied) {
     teacherExpect($denied->getCode() === 403, 'Authenticated viewer cannot read administrative teacher directory');
 }
@@ -309,15 +360,24 @@ $teacherModel->setCurrentUser($actor);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$learner->id, 2);
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__user_usergroup_map WHERE user_id=' . (int)$learner
     ->id . ' AND group_id=2')->loadResult() === 0, 'Native group revocation actually persisted before checking cached identity');
-teacherExpect(count($catalog->outline($learner, 'en-GB', $course)['teachers']) === 2, 'The current public profiles remain visible without registered access');
+teacherExpect(
+    count($catalog->outline($learner, 'en-GB', $course)['teachers']) === 2,
+    'The current public profiles remain visible without registered access'
+);
 $categoryLanguage = (object)['id' => $teacherCategory,'language' => 'en-GB'];
 $db->updateObject('#__categories', $categoryLanguage, 'id');
-teacherExpect(TeacherProfiles::visible($db, $guest, 'it-IT', $snapshot['presentation_json']) === [], 'Current ancestor category language gates historical profile');
+teacherExpect(
+    TeacherProfiles::visible($db, $guest, 'it-IT', $snapshot['presentation_json']) === [],
+    'Current ancestor category language gates historical profile'
+);
 $categoryLanguage->language = '*';
 $db->updateObject('#__categories', $categoryLanguage, 'id');
 $update = (object)['id' => $teacherCategory,'published' => 0];
 $db->updateObject('#__categories', $update, 'id');
-teacherExpect($catalog->outline($guest, 'en-GB', $course)['teachers'] === [], 'Native category withdrawal gates teacher history');
+teacherExpect(
+    $catalog->outline($guest, 'en-GB', $course)['teachers'] === [],
+    'Native category withdrawal gates teacher history'
+);
 $update->published = 1;
 $db->updateObject('#__categories', $update, 'id');
 teacherExpect($courseModel->save(array_replace($courseData, ['revision' => (int)$courseModel->getItem($course)
@@ -434,7 +494,10 @@ $emptyTeacher = array_replace($teacherBase, [
     'id' => 0, 'revision' => 1, 'title' => 'Disposable CI empty teacher',
     'alias' => 'disposable-ci-empty-teacher', 'user_id' => $linkedUserId, 'state' => 0,
 ]);
-teacherExpect($teacherModel->save($emptyTeacher), 'new teacher linked to an independent Joomla account can be authored');
+teacherExpect(
+    $teacherModel->save($emptyTeacher),
+    'new teacher linked to an independent Joomla account can be authored'
+);
 $emptyTeacherId = (int)$teacherModel->getState('teacher.id');
 teacherExpect($emptyTeacherId > 0, 'empty teacher fixture created');
 teacherExpect($teacherModel->changeStates([$emptyTeacherId], -2), 'empty teacher placed in trash');

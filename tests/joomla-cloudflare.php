@@ -11,7 +11,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     $fixtureDb->exec(("UPDATE joomla_extensions SET "
     . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE "
@@ -59,7 +64,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -100,7 +108,11 @@ function streamDenied(callable $work, string $key): void
 $provider = new Provider($config, $secrets, $transport);
 $registry = new \Jlms\Contracts\Video\VideoProviderRegistry();
 $registry->register($provider->getDescriptor(), static fn()=>$provider);
-$authoring = new CurriculumService($db, static fn(string $body): string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), static fn()=>$registry);
+$authoring = new CurriculumService(
+    $db,
+    static fn(string $body): string=>\Joomla\CMS\Component\ComponentHelper::filterText($body),
+    static fn()=>$registry
+);
 $component->setCurriculumService($authoring);
 $learning = $component->getLearningService();
 $publication = $component->getPublicationService();
@@ -119,16 +131,34 @@ $version = $authoring->createDraft($actor, $course, 1);
 $scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Stream chapter']);
 $lesson = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Protected Stream lesson','kind' => 'video','required' => '1',
- 'body' => '','provider_key' => 'cloudflarestream','source_reference' => str_repeat('b', 32),'duration_seconds' => '10','duration_confirmed' => '1']);
+ 'body' => '','provider_key' => 'cloudflarestream','source_reference' => str_repeat(
+     'b',
+     32
+ ),'duration_seconds' => '10','duration_confirmed' => '1']);
 $transition = (int)$publication->transitions($actor, $course)[0]->id;
-$publish = static fn()=>$publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], $transition);
+$publish = static fn()=>$publication->transition(
+    $actor,
+    $course,
+    $version,
+    (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(),
+    $scope()['expected_version_revision'],
+    $transition
+);
 $remote->protected = false;
 streamDenied($publish, 'COM_JLMS_VIDEO_REMOTE_UNPROTECTED');
-streamExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft', 'unsafe remote video leaves draft untouched');
+streamExpect(
+    $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'draft',
+    'unsafe remote video leaves draft untouched'
+);
 $remote->protected = true;
 // Verify that provider HTTP work does not hold course/enrollment row locks: another connection can lock them.
 $remote->callback = static function (string $method) use ($course): void {
-    $pdo = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $pdo = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $pdo->exec('SET innodb_lock_wait_timeout=1');
     $pdo->beginTransaction();
     $pdo->query('SELECT id FROM joomla_jlms_courses WHERE id=' . $course . ' FOR UPDATE');
@@ -136,7 +166,10 @@ $remote->callback = static function (string $method) use ($course): void {
     $pdo->rollBack();
 };
 $publish();
-streamExpect($db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'published', 'verified provider permits publication');
+streamExpect(
+    $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'published',
+    'verified provider permits publication'
+);
 $enrollment = $learning->start($student, 'en-GB', $course, bin2hex(random_bytes(16)));
 $now = (int)floor(microtime(true) * 1000);
 $service = new VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
@@ -149,28 +182,51 @@ $grant = $service->playback($student, 'en-GB', $enrollment, $lesson, true);
 streamExpect($grant['provider'] === 'cloudflarestream' && isset($grant['options']['token']) && !isset($grant['options']['reference']), 'only temporary token reaches player');
 $session = $grant['session_id'];
 $revision = $grant['source_revision'];
-streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_VIDEO_CONFLICT');
-$event = static fn(int $id, string $type, int $p, int $t): array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $t,'rate_milli' => 1000,'playing' => true];
+streamDenied(
+    fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true),
+    'COM_JLMS_VIDEO_CONFLICT'
+);
+$event = static fn(
+    int $id,
+    string $type,
+    int $p,
+    int $t
+): array=>['id' => $id,'type' => $type,'position_ms' => $p,'client_ms' => $t,'rate_milli' => 1000,'playing' => true];
 $batch = json_encode([$event(1, 'play', 0, 0),$event(2, 'position', 4000, 4000)], JSON_THROW_ON_ERROR);
 $now += 4000;
 $count = count($remote->calls);
 $progress = $service->save($student, 'en-GB', $enrollment, $lesson, $session, $revision, 1, 10000, $batch);
-streamExpect($progress['covered_ms'] === 4000 && count($remote->calls) === $count, 'progress saves without provider HTTP');
+streamExpect(
+    $progress['covered_ms'] === 4000 && count($remote->calls) === $count,
+    'progress saves without provider HTTP'
+);
 $now += 37000;
 $remote->status = 503;
-streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE');
+streamDenied(
+    fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true),
+    'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE'
+);
 $remote->status = 200;
 streamExpect((int)$db->setQuery('SELECT covered_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult() === 4000, 'provider failure preserves progress');
 $renewed = $service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true);
-streamExpect($renewed['expires_at'] > $grant['expires_at'] && $renewed['source_revision'] === $revision, 'renewal keeps session/source and extends temporary access');
-streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_VIDEO_CONFLICT');
+streamExpect(
+    $renewed['expires_at'] > $grant['expires_at'] && $renewed['source_revision'] === $revision,
+    'renewal keeps session/source and extends temporary access'
+);
+streamDenied(
+    fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true),
+    'COM_JLMS_VIDEO_CONFLICT'
+);
 $now += 41000;
 $remote->callback = static function (string $method) use ($student, $group): void {
     if ($method === 'POST') {
         \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$student->id, $group);
     }
 };
-streamDenied(fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true), 'COM_JLMS_LEARNING_DENIED');
+streamDenied(
+    fn()=>$service->renew($student, 'en-GB', $enrollment, $lesson, $session, $revision, true),
+    'COM_JLMS_LEARNING_DENIED'
+);
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);
 $remote->callback = null;
 // Access revoked while the remote API was running must not deliver an initial token either.
@@ -183,8 +239,21 @@ streamDenied(fn()=>$service->playback($student, 'en-GB', $enrollment, $lesson, t
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$student->id, $group);
 $remote->callback = null;
 $now += 61000;
-streamDenied(fn()=>$service->save($student, 'en-GB', $enrollment, $lesson, $session, $revision, 2, 10000, json_encode([$event(3, 'play', 4000, 82000),$event(4, 'position', 9000, 87000)], JSON_THROW_ON_ERROR)), 'COM_JLMS_VIDEO_CONFLICT');
-streamDenied(fn()=>$service->save($student, 'en-GB', $enrollment, $lesson, $session, $revision, 1, 10000, $batch), 'COM_JLMS_VIDEO_CONFLICT');
+streamDenied(fn()=>$service->save(
+    $student,
+    'en-GB',
+    $enrollment,
+    $lesson,
+    $session,
+    $revision,
+    2,
+    10000,
+    json_encode([$event(3, 'play', 4000, 82000),$event(4, 'position', 9000, 87000)], JSON_THROW_ON_ERROR)
+), 'COM_JLMS_VIDEO_CONFLICT');
+streamDenied(
+    fn()=>$service->save($student, 'en-GB', $enrollment, $lesson, $session, $revision, 1, 10000, $batch),
+    'COM_JLMS_VIDEO_CONFLICT'
+);
 streamExpect((int)$db->setQuery('SELECT covered_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult() === 4000, 'expired playback replay cannot mutate prior progress');
 streamExpect((int)$db->setQuery('SELECT covered_ms FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollment . ' AND lesson_id=' . $lesson)->loadResult() === 4000, 'expired media cannot award new coverage');
 $enrollmentRow = (object)['id' => $enrollment,'ends_at' => gmdate('Y-m-d H:i:s', intdiv($now, 1000) + 25)];

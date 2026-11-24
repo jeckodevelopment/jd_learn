@@ -22,7 +22,11 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         $this->item = $this->get('Item');
         $id = (int) $this->item->id;
         $scope = $id ? 'com_jlms.teacher.' . $id : 'com_jlms';
-        if ($id ? !\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $this->item) : (!$actor->authorise('jlms.teachers.manage', 'com_jlms') || !$actor->authorise('core.create', $scope))) {
+        if (
+            $id
+                ? !\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $this->item)
+                : (!$actor->authorise('jlms.teachers.manage', 'com_jlms') || !$actor->authorise('core.create', $scope))
+        ) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
         $this->form = $this->get('Form');

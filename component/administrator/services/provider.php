@@ -78,66 +78,157 @@ return new class () implements ServiceProviderInterface {
                         $registry = new VideoProviderRegistry();
                         $dispatcher = Factory::getApplication()->getDispatcher();
                         PluginHelper::importPlugin('jlmsvideo', null, true, $dispatcher);
-                        $dispatcher->dispatch(RegisterVideoProvidersEvent::NAME, new RegisterVideoProvidersEvent($registry));
+                        $dispatcher->dispatch(
+                            RegisterVideoProvidersEvent::NAME,
+                            new RegisterVideoProvidersEvent($registry)
+                        );
                     }
                     return $registry;
                 },
             );
         });
-        $container->set(CategoryReassignmentService::class, static fn (Container $c) => new CategoryReassignmentService($c->get(DatabaseInterface::class)));
-        $container->set(CatalogService::class, static fn (Container $c) => new CatalogService($c->get(DatabaseInterface::class)));
-        $container->set(LearningService::class, static fn (Container $c) => new LearningService($c->get(DatabaseInterface::class), $c->get(CatalogService::class)));
-        $container->set(ProtectedMaterialStorage::class, static fn () => new ProtectedMaterialStorage(static fn () => ComponentHelper::getParams('com_jlms')));
-        $container->set(MaterialService::class, static fn (Container $c) => new MaterialService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(ProtectedMaterialStorage::class)));
-        $container->set(CertificateService::class, static fn (Container $c) => new CertificateService($c->get(DatabaseInterface::class), $c->get(ProtectedMaterialStorage::class)));
-        $container->set(CourseAnnouncementConsent::class, static fn (Container $c) => new CourseAnnouncementConsent($c->get(DatabaseInterface::class)));
-        $container->set(CourseAnnouncementService::class, static fn (Container $c) => new CourseAnnouncementService($c->get(DatabaseInterface::class)));
-        $container->set(VideoProgressService::class, static fn (Container $c) => new VideoProgressService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(CurriculumService::class), static fn (): int => (int) floor(microtime(true) * 1000), $c->get(LocalVideoService::class)));
-        $container->set(ProtectedVideoStorage::class, static fn () => new ProtectedVideoStorage(static fn () => ComponentHelper::getParams('com_jlms')));
+        $container->set(
+            CategoryReassignmentService::class,
+            static fn (Container $c) => new CategoryReassignmentService($c->get(DatabaseInterface::class))
+        );
+        $container->set(
+            CatalogService::class,
+            static fn (Container $c) => new CatalogService($c->get(DatabaseInterface::class))
+        );
+        $container->set(LearningService::class, static fn (Container $c) => new LearningService(
+            $c->get(DatabaseInterface::class),
+            $c->get(CatalogService::class)
+        ));
+        $container->set(
+            ProtectedMaterialStorage::class,
+            static fn () => new ProtectedMaterialStorage(static fn () => ComponentHelper::getParams('com_jlms'))
+        );
+        $container->set(MaterialService::class, static fn (Container $c) => new MaterialService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class),
+            $c->get(ProtectedMaterialStorage::class)
+        ));
+        $container->set(CertificateService::class, static fn (Container $c) => new CertificateService(
+            $c->get(DatabaseInterface::class),
+            $c->get(ProtectedMaterialStorage::class)
+        ));
+        $container->set(
+            CourseAnnouncementConsent::class,
+            static fn (Container $c) => new CourseAnnouncementConsent($c->get(DatabaseInterface::class))
+        );
+        $container->set(
+            CourseAnnouncementService::class,
+            static fn (Container $c) => new CourseAnnouncementService($c->get(DatabaseInterface::class))
+        );
+        $container->set(VideoProgressService::class, static fn (Container $c) => new VideoProgressService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class),
+            $c->get(CurriculumService::class),
+            static fn (): int => (int) floor(microtime(true) * 1000),
+            $c->get(LocalVideoService::class)
+        ));
+        $container->set(
+            ProtectedVideoStorage::class,
+            static fn () => new ProtectedVideoStorage(static fn () => ComponentHelper::getParams('com_jlms'))
+        );
         $container->set(LocalVideoService::class, static fn (Container $c) => new LocalVideoService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(ProtectedVideoStorage::class), static function (): bool {
             return PluginHelper::isEnabled('jlmsvideo', 'html5')
                 && (int) (new Registry(PluginHelper::getPlugin('jlmsvideo', 'html5')->params
                     ?? '{}'))->get('playback_enabled', 0) === 1;
         }));
-        $container->set(QuestionBankService::class, static fn (Container $c) => new QuestionBankService($c->get(DatabaseInterface::class), $c->get(LearningService::class), static fn (string $html): string => ComponentHelper::filterText($html), static fn () => Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()->createTable('Question', 'Administrator')));
-        $container->set(QuizAuthoringService::class, static fn (Container $c) => new QuizAuthoringService($c->get(DatabaseInterface::class), $c->get(LearningService::class)));
-        $container->set(QuizSnapshotService::class, static fn (Container $c) => new QuizSnapshotService($c->get(DatabaseInterface::class)));
-        $container->set(QuizTimeService::class, static fn (Container $c) => new QuizTimeService($c->get(DatabaseInterface::class), $c->get(LearningService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(QuestionBankService::class, static fn (Container $c) => new QuestionBankService($c->get(DatabaseInterface::class), $c->get(LearningService::class), static fn (string $html): string => ComponentHelper::filterText($html), static fn () => Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()->createTable(
+            'Question',
+            'Administrator'
+        )));
+        $container->set(QuizAuthoringService::class, static fn (Container $c) => new QuizAuthoringService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class)
+        ));
+        $container->set(
+            QuizSnapshotService::class,
+            static fn (Container $c) => new QuizSnapshotService($c->get(DatabaseInterface::class))
+        );
+        $container->set(QuizTimeService::class, static fn (Container $c) => new QuizTimeService($c->get(DatabaseInterface::class), $c->get(LearningService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message);
         }));
-        $container->set(QuizDeadlineService::class, static fn (Container $c) => new QuizDeadlineService($c->get(DatabaseInterface::class), $c->get(QuizTimeService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(QuizDeadlineService::class, static fn (Container $c) => new QuizDeadlineService($c->get(DatabaseInterface::class), $c->get(QuizTimeService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'quizextend');
         }, static fn (): int => time()));
-        $container->set(QuizReviewService::class, static fn (Container $c) => new QuizReviewService($c->get(DatabaseInterface::class), $c->get(QuizTimeService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(QuizReviewService::class, static fn (Container $c) => new QuizReviewService($c->get(DatabaseInterface::class), $c->get(QuizTimeService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'quizcancel');
         }));
-        $container->set(QuizAttemptService::class, static fn (Container $c) => new QuizAttemptService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(QuizSnapshotService::class), static fn (): int => time(), $c->get(QuizTimeService::class)));
-        $container->set(DashboardService::class, static fn (Container $c) => new DashboardService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(CatalogService::class)));
-        $container->set(PathwayService::class, static fn (Container $c) => new PathwayService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(CatalogService::class)));
+        $container->set(QuizAttemptService::class, static fn (Container $c) => new QuizAttemptService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class),
+            $c->get(QuizSnapshotService::class),
+            static fn (): int => time(),
+            $c->get(QuizTimeService::class)
+        ));
+        $container->set(DashboardService::class, static fn (Container $c) => new DashboardService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class),
+            $c->get(CatalogService::class)
+        ));
+        $container->set(PathwayService::class, static fn (Container $c) => new PathwayService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class),
+            $c->get(CatalogService::class)
+        ));
         $container->set(PublicationService::class, static fn (Container $c): PublicationService
             => new PublicationService($c->get(DatabaseInterface::class), Factory::getApplication()));
-        $container->set(EnrollmentApprovalService::class, static fn (Container $c) => new EnrollmentApprovalService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(EnrollmentRosterService::class), $c->get(CatalogService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(EnrollmentApprovalService::class, static fn (Container $c) => new EnrollmentApprovalService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(EnrollmentRosterService::class), $c->get(CatalogService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'enrollmentapproval');
         }));
-        $container->set(EnrollmentRosterService::class, static fn (Container $c) => new EnrollmentRosterService($c->get(DatabaseInterface::class), $c->get(LearningService::class)));
-        $container->set(CourseCommunicationService::class, static fn (Container $c) => new CourseCommunicationService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(EnrollmentRosterService::class)));
-        $container->set(EnrollmentStateService::class, static fn (Container $c) => new EnrollmentStateService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(EnrollmentRosterService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(EnrollmentRosterService::class, static fn (Container $c) => new EnrollmentRosterService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class)
+        ));
+        $container->set(CourseCommunicationService::class, static fn (Container $c) => new CourseCommunicationService(
+            $c->get(DatabaseInterface::class),
+            $c->get(LearningService::class),
+            $c->get(EnrollmentRosterService::class)
+        ));
+        $container->set(EnrollmentStateService::class, static fn (Container $c) => new EnrollmentStateService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(EnrollmentRosterService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'enrollmentstate');
         }));
-        $container->set(EnrollmentMigrationService::class, static fn (Container $c) => new EnrollmentMigrationService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(EnrollmentRosterService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(EnrollmentMigrationService::class, static fn (Container $c) => new EnrollmentMigrationService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(EnrollmentRosterService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'enrollmentmigration');
         }));
-        $container->set(CourseOperationsService::class, static fn (Container $c) => new CourseOperationsService($c->get(DatabaseInterface::class), $c->get(EnrollmentRosterService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(CourseOperationsService::class, static fn (Container $c) => new CourseOperationsService($c->get(DatabaseInterface::class), $c->get(EnrollmentRosterService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'courseoperations');
         }));
-        $container->set(ManualEnrollmentService::class, static fn (Container $c) => new ManualEnrollmentService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(CatalogService::class), $c->get(EnrollmentRosterService::class), static function (User $actor, array $message) use ($c): void {
+        $container->set(ManualEnrollmentService::class, static fn (Container $c) => new ManualEnrollmentService($c->get(DatabaseInterface::class), $c->get(LearningService::class), $c->get(CatalogService::class), $c->get(EnrollmentRosterService::class), static function (
+            User $actor,
+            array $message
+        ) use ($c): void {
             (new AssessmentAudit($c->get(DatabaseInterface::class)))
                 ->record($actor, $message, 'manualenrollment');
         }));
