@@ -1,0 +1,79 @@
+name: SECDEV-02 incremental PHP long-line remediation
+on:
+  push:
+    branches: [style/secdev02-914-structural-closure]
+permissions:
+  contents: write
+jobs:
+  consolidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PHPCS and Ruff
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          python3 -m pip install --user ruff==0.14.6
+      - name: Conservative per-line source-wide remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m ruff check --select E701,E702 tools/secdev02_incremental_line_reflow.py
+          python3 tools/secdev02_incremental_line_reflow.py --self-test
+          python3 tools/secdev02_incremental_line_reflow.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs" --max-files=180
+      - name: Strict PSR12 audit, source contracts and traceability
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import csv,importlib.machinery,pathlib,subprocess,tempfile
+          root=pathlib.Path('.').resolve()
+          phpcs=root/'.runtime/secdev02-phpcs/vendor/bin/phpcs'
+          audit=importlib.machinery.SourceFileLoader('audit',str(root/'tests/secdev02-psr12-phpcs.py')).load_module()
+          current=audit.signatures(phpcs,root,audit.tracked_php(root))
+          with tempfile.TemporaryDirectory() as td:
+              base=pathlib.Path(td)
+              baseline=audit.signatures(phpcs,base,audit.baseline(root,'HEAD',base))
+          regressions=audit.diff(current,baseline)
+          before=sum(baseline.values());after=sum(current.values())
+          assert not regressions,f'Introduced PSR12 file/rule violations: {regressions}'
+          assert after<before,f'No PHPCS reduction ({before}->{after})'
+          changed=subprocess.check_output(['git','diff','--name-only','--','*.php'],text=True).splitlines()
+          assert changed, 'No PHP sources updated'
+          for name in changed:
+              subprocess.run(['php','-l',name],check=True,stdout=subprocess.DEVNULL)
+          print(f'SECDEV-02 real PHPCS: {before} -> {after}; removed {before-after} on {len(changed)} PHP files',flush=True)
+          doc=root/'docs/SECDEV_02_CORE_PHP_GATE_1.0.0.md'
+          with doc.open('a',encoding='utf-8') as file:
+              file.write(f"\n### Incremental PHP line reflow in PR #1017\n\nThe bounded lexical whitespace pass reduced the pinned PHPCS PSR12 4.0.4 inventory from **{before} to {after}**, **-{before-after}** across **{len(changed)} PHP sources**, without new file/rule violations. Each candidate preserved significant tokens, lint and protected source fragments; a strictly improving, file-scoped PHPCS audit gated every edit. Full source contract checks, integrated Joomla CI and manual acceptance remain independent. Functional requirement percentages are unchanged; **SECDEV-02 is still partial** until all other findings/CORE/API review are complete.\n\n### Comportamenti da testare\n\n- Exact PHP syntax and tokens, no changed string literals, business logic, ACL, CSRF, SQL or runtime API contracts.\n- Full Joomla 6.2 CI matrix, browser fixtures and package build.\n")
+          matrix=root/'docs/REQUIREMENTS_STATUS.csv'
+          with matrix.open(newline='',encoding='utf-8') as f:
+              rows=list(csv.reader(f))
+          h=rows[0]
+          entries=[r for r in rows if r and r[0]=='SECDEV-02']
+          assert len(entries)==1
+          entries[0][h.index('Evidenza e limiti')]+=f' PR #1017 incremental source reflow: {before}->{after} (-{before-after}) PHPCS PSR12, {len(changed)} PHP files, no new rule findings; percentage unchanged.'
+          with matrix.open('w',newline='',encoding='utf-8') as f:
+              csv.writer(f,lineterminator='\n').writerows(rows)
+          PY
+          python3 tools/build.py
+          python3 tools/check.py
+          python3 tests/requirements-status.py
+          python3 tests/secdev02-psr12-phpcs.py --base-ref HEAD
+          git diff --check
+      - name: Finalize one consolidated branch, remove disposable workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/secdev02-incremental-reflow.yml
+          git rm .github/workflows/secdev02-psr1-diagnostics.yml
+          git add component libraries plugins tests tools docs
+          git diff --cached --check
+          git commit -m 'style(SECDEV-02): consolidate safe structural and line-length remediation'
+          git push origin HEAD:style/secdev02-914-structural-closure
