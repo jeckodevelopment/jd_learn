@@ -34,6 +34,7 @@ jobs:
           python3 tools/secdev02_incremental_line_reflow.py --phpcs "$P" --max-files 130
           python3 tools/secdev02_comment_wrap.py --phpcs "$P" --apply
           python3 tools/secdev02_query_chain_wrap.py --phpcs "$P" --apply
+          python3 tools/build.py
           python3 tools/secdev02_source_contract_repair.py --base-ref HEAD --max-reversions 50
           python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
           git diff --check
