@@ -93,7 +93,7 @@ def run() -> int:
         print("SECDEV-02 source-contract rollback fixtures: OK")
         return 0
 
-    changed = execute(["git", "diff", "--name-only", args.base_ref, "--", "*.php"], 30)
+    changed = execute(["git", "diff", "--name-only", "--diff-filter=M", args.base_ref, "--", "*.php"], 30)
     if changed.returncode:
         raise RuntimeError(changed.stderr)
     files = [name for name in changed.stdout.splitlines() if (ROOT / name).is_file()]
