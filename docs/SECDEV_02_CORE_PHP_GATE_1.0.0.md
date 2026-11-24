@@ -534,3 +534,10 @@ Il merge #1025 ha misurato un debito PHPCS PSR12 di **122** finding, rispetto ai
 5. Aggiornamento del registro canonico e delle percentuali esclusivamente in base a evidenze concluse, con 'Comportamenti da testare' e collegamento al pacchetto installabile dopo merge.
 
 Non marcare SECDEV-02 completato finché queste condizioni non sono dimostrate. In particolare, i template misti HTML/PHP richiedono la preservazione dell'output, degli attributi e delle stringhe controllate dai test; il solo superamento di lint o PHPCS è insufficiente.
+
+
+### PR #1026 — bonifica multipla di espressioni PHP nei template (24 novembre 2026)
+
+Dopo il primo intervento sulla costante SQL di `CourseExpiryReminderService.php`, il lotto è stato esteso a template di corso, aula, quiz, catalogo e amministrazione. I tentativi di separazione fra elementi HTML che generavano nuovi rilievi `Squiz.WhiteSpace.ScopeClosingBrace.Indent` sono stati ripristinati. Le nuove trasformazioni spezzano invece concatenazioni all'interno di espressioni PHP senza cambiare gli argomenti o il markup previsto. La CI #45507962214 ha rilevato preliminarmente **122 → 111**, con quattro regressioni di indentazione localizzate per file/riga; sono state corrette seguendo esattamente i messaggi di PHPCS. Il saldo finale **non è ancora certificato** e non è lecito dichiarare SECDEV-02 chiuso. La diagnostica PHPCS ora espone file e righe delle nuove violazioni senza alterare il gate di regressione.
+
+Comportamenti da testare: PHPCS 4.0.4 PSR12 senza nuovi rilievi, lint PHP, confronto dei contratti di rendering HTML, template del catalogo/corso/aula/quiz, controlli ACL e CSRF, integrazione Joomla 6.2 su entrambe le matrici PHP/database, Chromium, integrità CSV, ZIP installabile. I nomi di override Joomla e la verifica CORE/API restano autonomi; nessuna percentuale funzionale viene promossa in assenza di evidenza.
