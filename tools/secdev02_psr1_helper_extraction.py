@@ -163,11 +163,13 @@ def main() -> int:
         except (ValueError,TimeoutError):
             proposal=None
         if proposal is None:
+            print(f'PSR1 REJECT {relative}: no safe extraction manifest',flush=True)
             rejected+=1
             continue
         amended,helper=proposal
         required=contracts.get(relative,set())
         if any(fragment in original and fragment not in amended for fragment in required):
+            print(f'PSR1 REJECT {relative}: protected source contract',flush=True)
             rejected+=1
             continue
         helper_path.parent.mkdir(parents=True,exist_ok=True)
@@ -188,6 +190,7 @@ def main() -> int:
                    all(after[rule]<=count for rule,count in before.items()) and
                    sum(after.values())<sum(before.values()))
         if not valid:
+            print(f'PSR1 REJECT {relative}: lint/rule issues; helper={dict(locals().get("helper_after", {}))} existing={dict(locals().get("after", {}))}',flush=True)
             path.write_bytes(original)
             helper_path.unlink()
             rejected+=1
