@@ -125,7 +125,8 @@ final class MailQueue
             ])
             ->values(implode(',', [
                 $this->db->quote($key), $this->db->quote('com_jlms.course.published'), (string) $courseId, (string) $userId,
-                $this->db->quote($consentAt), $this->db->quote($language ?: '*'), $this->db->quote($email), $this->db->quote($name),
+                $this->db->quote($consentAt), $this->db->quote($language ?: '*'), $this->db->quote($email)
+                    , $this->db->quote($name),
                 $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)), $this->db->quote('pending')
                     , 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)',
             ]));

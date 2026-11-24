@@ -359,7 +359,8 @@ final class PublicationService
                     }
                     $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider($lesson->provider_key);
                     $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
-                    $normal = $provider->normaliseSource(new \Jlms\Contracts\Video\SourceInput($source['reference'], $source['options'] ?? []));
+                    $normal = $provider->normaliseSource(new
+                        \Jlms\Contracts\Video\SourceInput($source['reference'], $source['options'] ?? []));
                     if (!$provider->getDescriptor()->configured) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
                     }

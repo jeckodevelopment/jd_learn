@@ -191,7 +191,8 @@ if (($argv[2] ?? '') === 'retained') {
     $t = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     $i = $deadline->editor($actor, $course, $lesson, $t['enrollment_id'], $t['attempt_id']);
     deadlineExpect(count($i['history']) === 2, 'append-only deadline history survives upgrade');
-    $raw = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . (int)$t['attempt_id'])->loadObject();
+    $raw = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' .
+         (int)$t['attempt_id'])->loadObject();
     deadlineExpect(
         hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'],
         'frozen rules and effective deadline survive upgrade'

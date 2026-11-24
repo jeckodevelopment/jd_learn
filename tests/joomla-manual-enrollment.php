@@ -397,7 +397,8 @@ $state = $component->getEnrollmentStateService();
 $si = $state->editor($actor, $course, $id, 'suspended');
 $state->apply($actor, $course, $id, $si['impact']['enrollment_revision'], 'suspended', 'Fixture suspension', manualKey(), $si['impact']['hash'], true);
 manualExpect(
-    $service->apply($manager, ...$command) === $id && $service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['existing_status'] === 'suspended',
+    $service->apply($manager, ...$command) === $id && $service->editor($manager, $course, (int)$users['one']->
+            id, 'en-GB')['impact']['existing_status'] === 'suspended',
     'creation replay never reactivates an existing enrollment'
 );
 $si = $state->editor($actor, $course, $id, 'active');

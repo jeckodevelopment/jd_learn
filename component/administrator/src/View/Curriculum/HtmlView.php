@@ -61,7 +61,8 @@ final class HtmlView extends BaseHtmlView
             && (int)$course->current_version_id !== (int)$version->id && in_array($version->status, ['published','retired'], true);
         if ($version) {
             try {
-                $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()->teachingRules($actor, (int)$course->id, (int)$version->id);
+                $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()
+                    ->teachingRules($actor, (int)$course->id, (int)$version->id);
             } catch (\DomainException $error) {
                 if ($error->getMessage() !== 'COM_JLMS_PUBLICATION_UNSUPPORTED') {
                     throw $error;

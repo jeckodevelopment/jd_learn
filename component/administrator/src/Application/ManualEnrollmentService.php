@@ -267,7 +267,8 @@ final class ManualEnrollmentService
                 throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409);
             }
             $hex = bin2hex(random_bytes(16));
-            $subject = substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) . '-a' . substr($hex, 17, 3) . '-' . substr($hex, 20);
+            $subject = substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) .
+                 '-a' . substr($hex, 17, 3) . '-' . substr($hex, 20);
             $q = $this->db->createQuery();
             $q->setQuery(('INSERT INTO #__jlms_subjects (subject_key,user_id,created_at) VALUES '
             . '(:subject,:user,:now) ON DUPLICATE KEY UPDATE user_id=user_id'))

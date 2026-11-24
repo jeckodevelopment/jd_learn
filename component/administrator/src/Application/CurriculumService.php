@@ -977,7 +977,8 @@ final class CurriculumService
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
             $table = $kind === 'module' ? 'modules' : 'lessons';
-            $items = $this->listRows($table, $kind === 'module' ? 'course_version_id' : 'module_id', $module, $kind === 'module' ? 1001 : 5001);
+            $items = $this->listRows($table, $kind === 'module' ? 'course_version_id' :
+                 'module_id', $module, $kind === 'module' ? 1001 : 5001);
             $ids = array_map(static fn($row): int => (int) $row->id, $items);
             $sorted = $ids;
             $wanted = $order;

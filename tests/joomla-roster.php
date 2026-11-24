@@ -518,7 +518,8 @@ rosterExpect(
     'denied course messages do not enqueue mail'
 );
 rosterExpect(
-    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->
+        loadResult() === $jobsBefore,
     'denied course messages do not enqueue jobs'
 );
 
@@ -578,7 +579,8 @@ try {
     }
 }
 rosterExpect(
-    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->
+        loadResult() === $jobsBefore,
     'SEC-P1 replay fixture leaves no queued communication job'
 );
 

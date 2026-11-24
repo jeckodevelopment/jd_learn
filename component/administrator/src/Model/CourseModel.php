@@ -540,7 +540,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $programme->course_id = $newId;
                 $programme->title_snapshot = $target->title;
                 $programme->presentation_json = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::snapshot($target);
-                (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionCopy($db))->copy($user, $programme, 1, true, (int) $copySource->version->id);
+                (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionCopy($db))
+                    ->copy($user, $programme, 1, true, (int) $copySource->version->id);
             }
             $history = $data;
             $history['teacher_ids'] = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $this->getState('course.id'));

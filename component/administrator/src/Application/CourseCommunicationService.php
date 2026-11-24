@@ -153,7 +153,8 @@ final class CourseCommunicationService
                 $now = gmdate('Y-m-d H:i:s');
                 $job = (object) [
                     'kind' => 'course_communication','owner_user_id' => (int) $actor->id,
-                    'scope_json' => json_encode(['course_id' => $courseId,'mutation_id' => $mutationId], JSON_THROW_ON_ERROR),
+                    'scope_json' => json_encode(['course_id' => $courseId,'mutation_id' =>
+                         $mutationId], JSON_THROW_ON_ERROR),
                     'payload_json' => $expectedPayload,
                     'status' => 'queued','cursor_json' => json_encode(['offset' => 0], JSON_THROW_ON_ERROR),
                     'progress_done' => 0,'progress_total' => $plan['count'],'attempts' => 0,

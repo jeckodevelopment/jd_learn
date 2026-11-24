@@ -81,7 +81,8 @@ function stateKey(): string
 }
 function stateCommand(array $i, string $reason = 'PRIVATE_STATE_REASON'): array
 {
-    return [(int)$i['course']->id,$i['enrollment_id'],$i['impact']['enrollment_revision'],$i['impact']['target_status'],$reason,stateKey(),$i['impact']['hash'],true];
+    return [(int)$i['course']->id,$i['enrollment_id'],$i['impact']['enrollment_revision']
+        ,$i['impact']['target_status'],$reason,stateKey(),$i['impact']['hash'],true];
 }
 $path = dirname($root) . '/enrollment-state-fixture.json';
 if (($argv[2] ?? '') === 'worker') {
@@ -600,7 +601,8 @@ try {
         'repeat decision must conflict'
     );
     stateExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.decision:' . $requestId) . "'")->loadResult() === 1,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" .
+             hash('sha256', 'enrollment.decision:' . $requestId) . "'")->loadResult() === 1,
         'single approval notification'
     );
 

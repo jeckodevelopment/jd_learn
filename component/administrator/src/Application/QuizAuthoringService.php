@@ -124,7 +124,8 @@ final class QuizAuthoringService
         $threshold = (int) $match[1] * 100 + (int) str_pad($match[2] ?? '', 2, '0');
         if (
             $threshold > 10000 || !in_array($assessment, ['graded', 'practice'], true) || ($required && ($assessment !== 'graded' || $threshold === 0))
-            || !in_array($selectionMode, ['fixed', 'random'], true) || !in_array($feedback, ['pass_or_exhausted', 'never', 'after_submit'], true)
+            || !in_array($selectionMode, ['fixed', 'random'], true) || !in_array($feedback, ['pass_or_exhausted'
+                , 'never', 'after_submit'], true)
             || ($assessment === 'graded' && $feedback === 'after_submit')
         ) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
@@ -247,7 +248,8 @@ final class QuizAuthoringService
                 $link = (object) ['quiz_id' => $quizId, 'question_revision_id' => $id, 'ordering' => $order++, 'points' => $points];
                 $this->db->insertObject('#__jlms_quiz_questions', $link);
             }
-            $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
+            $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' =>
+                 (int) $actor->id, 'modified_at' => $now];
             $this->db->updateObject('#__jlms_course_versions', $touch, 'id');
             $this->db->transactionCommit();
             return $lesson;

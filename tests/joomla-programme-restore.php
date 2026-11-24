@@ -237,7 +237,8 @@ restoreExpect(
 );
 $version = $authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision);
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
-$authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Current additional text','kind' => 'text','required' => '0','body' => '<p>Current edition</p>']);
+$authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Current additional text'
+    ,'kind' => 'text','required' => '0','body' => '<p>Current edition</p>']);
 $publish($version);
 $current = $version;
 $existing = $authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision);
@@ -256,7 +257,8 @@ restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['v
 restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' =>
      $existing,'expected_version_revision' => restoreRow('course_versions', $existing)->
     revision])), 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
-restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['expected_version_revision' => (int)$input['expected_version_revision'] + 1])), 'COM_JLMS_REVISION_CONFLICT');
+restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['expected_version_revision' =>
+         (int)$input['expected_version_revision'] + 1])), 'COM_JLMS_REVISION_CONFLICT');
 $otherId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult();
 foreach ([['courses',$course],['course_versions',$historical]] as [$table,$id]) {
     $old = restoreRow($table, $id)->checked_out;

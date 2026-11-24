@@ -144,7 +144,8 @@ if (($argv[2] ?? '') === 'retained') {
         'native API still resolves retained translation'
     );
     assocExpect(
-        (int) $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $fixture['en'])->loadResult() === $fixture['version'],
+        (int) $db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $fixture['en'])
+            ->loadResult() === $fixture['version'],
         'published teaching pointer retained'
     );
     echo json_encode(['association_retention_checks' => $checks, 'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

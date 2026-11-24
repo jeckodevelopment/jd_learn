@@ -127,7 +127,8 @@ final class EnrollmentMigrationService
             $q = $this->db->createQuery()
                 ->select('e.source_lesson_id,e.target_lesson_id')
                 ->from('#__jlms_version_equivalences AS e')
-                ->innerJoin('#__jlms_lessons AS s ON s.id=e.source_lesson_id')->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')
+                ->innerJoin('#__jlms_lessons AS s ON s.id=e.source_lesson_id')
+                    ->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')
                 ->where('s.course_version_id=:source')->where('t.course_version_id=:target')
                 ->bind(':source', $source
                     ->course_version_id, ParameterType::INTEGER)
@@ -374,7 +375,8 @@ final class EnrollmentMigrationService
                 'payload_json' => json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),'status' => 'succeeded',
                 'cursor_json' => json_encode(['source_enrollment_id' => $enrollment,
                     'target_enrollment_id' => $targetId], JSON_THROW_ON_ERROR),
-                'progress_done' => 1,'progress_total' => 1,'attempts' => 1,'available_at' => $now,'created_at' => $now,'finished_at' => $now];
+                'progress_done' => 1,'progress_total' => 1,'attempts' => 1,'available_at' => $now,
+                    'created_at' => $now,'finished_at' => $now];
             $this->db->insertObject('#__jlms_jobs', $job, 'id');
             $idempotency = (object)['scope_hash' => $scopeHash,'request_hash' => $requestHash,'state' =>
                  'completed','result_type' => 'enrollment_migration',

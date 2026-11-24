@@ -46,7 +46,8 @@ class CurriculumController extends BaseController
                             ) {
                                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                             }
-                            $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' => $transition, 'expires' => time() + 900,
+                            $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' =>
+                             $transition, 'expires' => time() + 900,
                                 'ticket' => bin2hex(random_bytes(32)), 'fingerprint' => $impact['fingerprint']]);
                             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=publicationreview&id=' . $courseId . '&version_id=' . $versionId, false));
                             return;
@@ -106,7 +107,8 @@ class CurriculumController extends BaseController
                 default:
                     throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
-            $this->setMessage(Text::_($operation === 'restore' ? 'COM_JLMS_PROGRAMME_RESTORE_SAVED' : 'COM_JLMS_CURRICULUM_SAVED'));
+            $this->setMessage(Text::_($operation === 'restore' ? 'COM_JLMS_PROGRAMME_RESTORE_SAVED' :
+                 'COM_JLMS_CURRICULUM_SAVED'));
         } catch (\DomainException | \InvalidArgumentException $error) {
             $failed = true;
             $key = match ($error->getMessage()) {

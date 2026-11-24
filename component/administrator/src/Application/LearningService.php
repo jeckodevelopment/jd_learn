@@ -425,7 +425,8 @@ final class LearningService
     private function lesson(int $versionId, int $lessonId, bool $includeBody = false): object
     {
         $columns = ['id', 'course_version_id', 'title', 'kind', 'required', 'completion_rule',
-            'publish_up', 'publish_down', 'release_after_days', 'source_revision', 'provider_key', 'duration_ms', 'media_asset_id', 'params_json'];
+            'publish_up', 'publish_down', 'release_after_days', 'source_revision', 'provider_key', 'duration_ms'
+                , 'media_asset_id', 'params_json'];
         if ($includeBody) {
             $columns[] = 'body';
             $columns[] = 'fields_snapshot_json';

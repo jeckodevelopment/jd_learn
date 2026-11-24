@@ -32,7 +32,8 @@ final class QuizTimeService
             ->where("l.kind = 'quiz' AND v.status = 'published'")
                 ->where('c.id = :course')->where('q.lesson_id = :lesson')
             ->bind(':course', $course, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
-        $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $quiz = $this->db->setQuery($q)->loadObject() ?
+            : throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $e = null;
         if ($enrollment) {
             $version = (int)$quiz->course_version_id;

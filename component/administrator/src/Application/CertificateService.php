@@ -533,7 +533,8 @@ final class CertificateService
             ->bind(':certificate', $certificateId, ParameterType::INTEGER)->order('id DESC');
         $audit = $this->db->setQuery($auditQuery, 0, 50)->loadObjectList();
         return ['id' => (int) $record->certificate_id, 'document_id' => (int) $record->document_id,
-            'serial' => (string) $record->serial, 'status' => $record->revoked_at ? 'revoked' : (string) $record->status,
+            'serial' => (string) $record->serial, 'status' => $record->revoked_at ? 'revoked' :
+                 (string) $record->status,
             'issued_at' => (string) $record->issued_at, 'revoked_at' => (string) ($record->revoked_at ?? ''),
             'revocation_reason' => (string) ($record->revocation_reason ?? ''), 'student_name' =>
                  (string) ($identitySnapshot['name'] ?? ''),
@@ -573,7 +574,8 @@ final class CertificateService
         $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity
             ->id, 'admin_download');
         return ['handle' => $handle, 'size' => (int) $asset->byte_size, 'mime' => 'application/pdf',
-            'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset->sha256 . '"'];
+            'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset
+                ->sha256 . '"'];
     }
 
     /**

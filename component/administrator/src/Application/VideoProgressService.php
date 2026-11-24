@@ -349,7 +349,8 @@ final class VideoProgressService
                 $progress->resume_ms = $telemetry['resume_ms'];
             }
             $progress->state = !$consultation && ($completed || $progress->state === 'completed') ? 'completed' : 'started';
-            $progress->completed_at = $consultation ? null : ($progress->completed_at ?? ($completed ? self::date($now) : null));
+            $progress->completed_at = $consultation ? null : ($progress->completed_at ?? ($completed ?
+                 self::date($now) : null));
             $progress->last_activity_at = self::date($now);
             $progress->revision = (int) $progress->revision + 1;
             $q = $this->db->createQuery()->update('#__jlms_lesson_progress')->set('coverage_json = :coverage')

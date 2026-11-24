@@ -264,7 +264,8 @@ $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel(
     'Administrator',
     ['ignore_request' => true]
 );
-$field = ['id' => 0,'context' => 'com_jlms.teacher','title' => 'Public teaching contact','name' => 'teaching-contact','type' => 'text',
+$field = ['id' => 0,'context' => 'com_jlms.teacher','title' => 'Public teaching contact','name' =>
+     'teaching-contact','type' => 'text',
     'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'required' => 0,'default_value' => ''
         ,'description' => '','note' => '','ordering' => 0,
     'params' => ['display' => 2],'fieldparams' => ['filter' => 'string']];

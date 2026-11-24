@@ -494,7 +494,8 @@ final class QuizAttemptService
         $completed = $wasCompleted || $passed || $rules['assessment'] === 'practice';
         $fields = ['coverage_json' => QuestionDefinition::canonical($best),'state' => $completed ?
              'completed' : 'started','last_activity_at' => self::date($time),
-            'completed_at' => $progress?->completed_at ?: ($completed ? self::date($time) : null),'revision' => $progress ? (int)$progress->revision + 1 : 1];
+            'completed_at' => $progress?->completed_at ?: ($completed ? self::date($time) : null),
+                'revision' => $progress ? (int)$progress->revision + 1 : 1];
         if ($progress) {
             $q = $this->db->createQuery()
                 ->update('#__jlms_lesson_progress')
@@ -660,7 +661,8 @@ final class QuizAttemptService
                 'number' => (int)$a->attempt_no,
                 'state' => $a->status,
                 'revision' => (int)$a->revision,
-                'deadline' => self::timestamp($a->deadline_at),'started_at' => self::timestamp($a->started_at),'submitted_at' => self::timestamp($a->submitted_at),
+                'deadline' => self::timestamp($a->deadline_at),'started_at' => self::timestamp($a->started_at)
+                    ,'submitted_at' => self::timestamp($a->submitted_at),
                 'valid' => $a->status !== 'invalidated','counted_for_limit' => (bool)($a->
                     counted_for_limit ?? 1),'score_points' => $a->score_points === null ? null :
                      (int)$a->score_points,'max_points' => (int)$a->max_points,'passed' => $a->passed ===

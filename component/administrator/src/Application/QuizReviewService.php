@@ -274,7 +274,8 @@ final class QuizReviewService
                     counted_for_limit,'after_counted' => $refund ? 0 : 1,
                 'before_completed_total' => $impact['before_completed_total'],'after_completed_total' => $impact['after_completed_total'],
                 'before_completed_at' => $e->completed_at,'after_completed_at' => $impact['after_course_completed_at'],'correlation_id' => bin2hex(random_bytes(16))]);
-            $ledger = (object)['scope_hash' => $scope,'request_hash' => $hash,'state' => 'completed','result_type' => 'quiz_cancel','result_id' => $attempt,'http_status' => 200,
+            $ledger = (object)['scope_hash' => $scope,'request_hash' => $hash,'state' => 'completed'
+                ,'result_type' => 'quiz_cancel','result_id' => $attempt,'http_status' => 200,
                 'created_at' => $now,'expires_at' => gmdate('Y-m-d H:i:s', time() + 604800)];
             $this->db->insertObject('#__jlms_idempotency', $ledger);
             $this->db->transactionCommit();

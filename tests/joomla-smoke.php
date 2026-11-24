@@ -926,7 +926,8 @@ if (($argv[2] ?? '') === 'retained') {
     if (!$record || $record->title !== 'Updated course' || (int) $record->revision !== 2 || $enabled !== 4) {
         throw new \RuntimeException('Package update lost draft data or plugin state.');
     }
-    echo json_encode(['admin_menu_install_checks' => 1, 'package_upgrade' => 'passed', 'draft_revision' => 2, 'enabled_providers' => $enabled], JSON_THROW_ON_ERROR) . PHP_EOL;
+    echo json_encode(['admin_menu_install_checks' => 1, 'package_upgrade' => 'passed', 'draft_revision' => 2
+        , 'enabled_providers' => $enabled], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit(0);
 }
 

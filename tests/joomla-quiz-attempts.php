@@ -443,7 +443,8 @@ try {
         'current access checked on start replay'
     );
     attemptExpect(
-        $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc() === $beforeRevokeAttempt,
+        $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)
+            ->loadAssoc() === $beforeRevokeAttempt,
         'revoked quiz operations preserve score revision and attempt state'
     );
     attemptExpect(
@@ -503,7 +504,8 @@ attemptExpect(
 );
 // Quiz is the last required lesson: completion mail must be queued exactly once.
 $completionKey = hash('sha256', 'course.completed:' . $enrollment);
-$completionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($completionKey))->loadResult();
+$completionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key=" . $db
+    ->quote($completionKey))->loadResult();
 attemptExpect($completionCount === 1, 'quiz completion enqueues exactly one course.completed message');
 $passedAttempt = $a['attempt']['id'];
 $completedAt = $db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
