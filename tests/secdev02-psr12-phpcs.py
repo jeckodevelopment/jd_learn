@@ -207,7 +207,7 @@ def main() -> int:
                 cwd=ROOT, text=True, capture_output=True, timeout=30, check=False,
             )
             try:
-                messages = json.loads(scan.stdout)["files"][filename]["messages"]
+                messages = next(iter(json.loads(scan.stdout)["files"].values()))["messages"]
             except (KeyError, ValueError, TypeError):
                 continue
             for hit in messages[:30]:
