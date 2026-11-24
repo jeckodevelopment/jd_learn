@@ -28,7 +28,10 @@ final class CourseAnnouncementConsent
         if (!$record) {
             return 'none';
         }
-        if ($record->state === 'pending' && (!$record->token_expires_at || strtotime((string) $record->token_expires_at . ' UTC') < time())) {
+        if (
+            $record->state === 'pending' &&
+            (!$record->token_expires_at || strtotime((string) $record->token_expires_at . ' UTC') < time())
+        ) {
             return 'none';
         }
         return (string) $record->state;

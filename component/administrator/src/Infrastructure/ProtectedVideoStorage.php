@@ -75,7 +75,10 @@ final class ProtectedVideoStorage
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         try {
-            if (!chmod($path, 0640) || stream_copy_to_stream($input, $output, $meta['byte_size'] + 1) !== $meta['byte_size']) {
+            if (
+                !chmod($path, 0640) ||
+                stream_copy_to_stream($input, $output, $meta['byte_size'] + 1) !== $meta['byte_size']
+            ) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         } catch (\Throwable $error) {

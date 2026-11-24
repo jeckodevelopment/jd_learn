@@ -13,7 +13,12 @@ final class EnvironmentSecretProvider
             throw new \RuntimeException('COM_JLMS_VIDEO_CONFIGURATION', 503);
         }
         $secret = getenv($match[1]);
-        if (!is_string($secret) || strlen($secret) < 10 || strlen($secret) > 4096 || preg_match('/[^\x21-\x7e]/', $secret)) {
+        if (
+            !is_string($secret) ||
+            strlen($secret) < 10 ||
+            strlen($secret) > 4096 ||
+            preg_match('/[^\x21-\x7e]/', $secret)
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_CONFIGURATION', 503);
         }
         return $secret;

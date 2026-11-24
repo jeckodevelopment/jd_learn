@@ -169,7 +169,10 @@ $update = static function (string $table, int $id, array $fields) use ($db): voi
     $r = (object)(['id' => $id] + $fields);
     $db->updateObject('#__' . $table, $r, 'id', true);
 };
-$snapshot = static fn()=>$db->setQuery('SELECT revision,started_at,completed_total,last_activity_at,last_lesson_id FROM #__jlms_enrollments WHERE id=' . $active)->loadAssoc();
+$snapshot = static fn()=>$db
+    ->setQuery('SELECT revision,started_at,completed_total,last_activity_at,last_lesson_id FROM #__jlms_enrollments WHERE id=' .
+            $active)
+    ->loadAssoc();
 $before = $snapshot();
 dashExpect($read($empty) === [], 'empty owner has no accidental enrollments');
 dashDenied(fn()=>$service->query(new \Joomla\CMS\User\User()), 401, 'guest history denied');
@@ -298,7 +301,9 @@ dashExpect(
 // the current publication state or by lesson access. A distinct owner still
 // cannot list or download it. Use the default installed immutable PDF template.
 $certificates = $component->getCertificateService();
-$templateId = (int)$db->setQuery("SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1")->loadResult();
+$templateId = (int)$db
+    ->setQuery("SELECT id FROM #__jlms_certificate_templates WHERE state=1 ORDER BY id LIMIT 1")
+    ->loadResult();
 dashExpect($templateId > 0, 'certificate fixture has the installed default PDF template');
 // DATETIME(6) returns fractional seconds on some database drivers; issuance snapshots use SQL seconds.
 $completedAt = substr((string)$db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id='

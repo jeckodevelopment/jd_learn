@@ -54,7 +54,9 @@ $readLifecycleSnapshot = static function (int $pathId, int $courseId) use ($db):
     return [
         'pathway' => $db->setQuery(('SELECT id,title,description,state,access,language,catid FROM '
             . '#__jlms_pathways WHERE id=') . (int)$pathId)->loadAssoc(),
-        'course_links' => $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$pathId . ' ORDER BY ordering')->loadAssocList(),
+        'course_links' => $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id=' .
+                    (int)$pathId . ' ORDER BY ordering')
+            ->loadAssocList(),
     ];
 };
 

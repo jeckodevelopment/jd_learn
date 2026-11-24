@@ -23,7 +23,8 @@ final class EnrollmentRosterService
         }
         $q = $this->db->createQuery()->select('id, title')->from('#__jlms_courses')
             ->where('id = :course')->bind(':course', $courseId, ParameterType::INTEGER);
-        $course = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $course =
+            $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $courseAccess = $actor->authorise('jlms.enrollments.manage', 'com_jlms.course.' . $courseId);
         $administrator = $actor->authorise('core.manage', 'com_jlms');
         $teacher = false;
@@ -83,7 +84,12 @@ final class EnrollmentRosterService
         }
         $search = trim($search);
         $searchLength = preg_match_all('/./us', $search);
-        if (strlen($search) > 400 || $searchLength === false || $searchLength > 100 || preg_match('/[\\x00-\\x1f\\x7f]/', $search)) {
+        if (
+            strlen($search) > 400 ||
+            $searchLength === false ||
+            $searchLength > 100 ||
+            preg_match('/[\\x00-\\x1f\\x7f]/', $search)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         if (

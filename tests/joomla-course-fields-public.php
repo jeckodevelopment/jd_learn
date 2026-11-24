@@ -112,7 +112,8 @@ if ($mode !== '') {
     }
     if ($mode === 'retained') {
         publicFieldsExpect(json_decode(file_get_contents($fixture
-            . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === publicFieldsState($f), 'Editorial fields and assigned teaching survive package upgrade');
+            . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) ===
+                publicFieldsState($f), 'Editorial fields and assigned teaching survive package upgrade');
         echo json_encode(['course_fields_public_retained_checks' => $checks,'status' => 'passed']);
         return;
     }

@@ -150,7 +150,8 @@ final class PathwayModel extends AdminModel
                 $query = $db->createQuery()->select('*')->from('#__jlms_pathways')
                     ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $query->setQuery((string) $query . ' FOR UPDATE');
-                $record = $db->setQuery($query)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
+                $record =
+                    $db->setQuery($query)->loadObject() ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
                 if (
                     !$actor->authorise('core.edit', 'com_jlms.pathway.' . $id)
                     || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)
@@ -180,7 +181,13 @@ final class PathwayModel extends AdminModel
             if ($record && $categoryId !== (int) $record->catid) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
-            if ($record && (int) $record->state === -2 && isset($data['state']) && (int) $data['state'] !== -2 && (int) $data['state'] !== 0) {
+            if (
+                $record &&
+                (int) $record->state === -2 &&
+                isset($data['state']) &&
+                (int) $data['state'] !== -2 &&
+                (int) $data['state'] !== 0
+            ) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }
             if (

@@ -132,9 +132,12 @@ $asset = $db->setQuery('SELECT * FROM #__assets WHERE id=' . (int)$target->asset
 copyExpect($asset->name === 'com_jlms.course.' . $copy && $asset
     ->rules === '{}', 'Independent native asset inherits category permissions');
 copyExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_associations WHERE "
-    . "extension='com_jlms.course' AND item_id=") . $copy)->loadResult() === 1, 'Native workflow initialized on the new course');
+    . "extension='com_jlms.course' AND item_id=") . $copy)
+        ->loadResult() === 1, 'Native workflow initialized on the new course');
 copyExpect((string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id=' . $field
-    . ' AND item_id=' . $db->quote((string)$copy))->loadResult() === 'Preserved field value', 'Native course field values copied');
+    . ' AND item_id=' .
+                $db->quote((string)$copy))
+        ->loadResult() === 'Preserved field value', 'Native course field values copied');
 $targetLessons = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . (int)$draft->id
     . ' ORDER BY id')->loadAssocList();
 copyExpect(count($sourceLessons) === count($targetLessons), 'Whole lesson outline copied');
@@ -144,7 +147,8 @@ foreach ($sourceLessons as $n => $lesson) {
         'New physical and logical lesson identity'
     );
     copyExpect($lesson['body'] === $targetLessons[$n]['body']
-        && $lesson['media_asset_id'] === $targetLessons[$n]['media_asset_id'], 'Lesson content and media association copied');
+        &&
+            $lesson['media_asset_id'] === $targetLessons[$n]['media_asset_id'], 'Lesson content and media association copied');
 }
 copyExpect($identityRows() === $beforeLearning, 'Course duplication never copies or modifies learning data');
 $outline = $authoring->outline($actor, $copy, (int)$draft->id);
@@ -172,7 +176,13 @@ if ($lesson->kind === 'quiz') {
     copyExpect($newQuiz && (int)$newQuiz->id !== (int)$originalQuiz && !isset(json_decode($newQuiz
         ->selection_json, true)['published_pool_hash']), 'Quiz configuration is independent and unfrozen');
     copyExpect($db->setQuery(('SELECT question_revision_id,ordering,points FROM '
-        . '#__jlms_quiz_questions WHERE quiz_id=') . (int)$originalQuiz . ' ORDER BY ordering')->loadAssocList() === $db->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' . (int)$newQuiz->id . ' ORDER BY ordering')->loadAssocList(), 'Immutable question revision links retained');
+        . '#__jlms_quiz_questions WHERE quiz_id=') .
+                    (int)$originalQuiz . ' ORDER BY ordering')
+            ->loadAssocList() ===
+            $db
+                ->setQuery('SELECT question_revision_id,ordering,points FROM #__jlms_quiz_questions WHERE quiz_id=' .
+                        (int)$newQuiz->id . ' ORDER BY ordering')
+                ->loadAssocList(), 'Immutable question revision links retained');
 }
 copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', $lessonInput), 'Stale draft request rejected');
 $bad = array_replace($lessonInput, ['expected_version_revision' => $rev(),'module_id'

@@ -40,7 +40,10 @@ final class QuestionDefinition
         $kind = $input['kind'] ?? '';
         if (
             !in_array($kind, ['single', 'true_false', 'multiple'], true) || !is_string($input['prompt'] ?? null)
-            || !is_string($input['explanation'] ?? '') || strlen($input['prompt']) > 65536 || strlen($input['explanation'] ?? '') > 65536
+            ||
+            !is_string($input['explanation'] ?? '') ||
+            strlen($input['prompt']) > 65536 ||
+            strlen($input['explanation'] ?? '') > 65536
         ) {
             throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_CONTENT', 422);
         }
@@ -50,7 +53,12 @@ final class QuestionDefinition
             throw new \RuntimeException('COM_JLMS_QUESTION_PROMPT_REQUIRED', 422);
         }
         $rows = $input['options'] ?? null;
-        if (!is_array($rows) || count($rows) < 2 || count($rows) > 20 || ($kind === 'true_false' && count($rows) !== 2)) {
+        if (
+            !is_array($rows) ||
+            count($rows) < 2 ||
+            count($rows) > 20 ||
+            ($kind === 'true_false' && count($rows) !== 2)
+        ) {
             throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_OPTIONS', 422);
         }
         $options = [];
