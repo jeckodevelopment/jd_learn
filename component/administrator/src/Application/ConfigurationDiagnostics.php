@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jlms\Component\Jlms\Administrator\Application;
 
+use Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth;
+
 /**
  * DOC-07: safe, read-only configuration diagnostics from existing local
  * scheduler/provider projections. Never probe a remote provider or expose
@@ -35,7 +37,7 @@ final class ConfigurationDiagnostics
                 'labelKey' => self::safeLabel($entry['label'] ?? null),
                 'severity' => $severity,
                 'guidanceKey' =>
-                     \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::guidanceKey($state, $duplicates),
+                     SchedulerHealth::guidanceKey($state, $duplicates),
                 'stateKey' => self::schedulerStateKey($state),
             ];
         }
@@ -63,7 +65,12 @@ final class ConfigurationDiagnostics
      * Managed storage is deliberately not reported as ready before runtime checks.
      * Never include the configured path in the diagnostic result.
      */
-    public static function storage(string $configured, string $siteRoot, string $publicRoot, string $documentRoot = ''): array
+    public static function storage(
+        string $configured,
+        string $siteRoot,
+        string $publicRoot,
+        string $documentRoot = ''
+    ): array
     {
         $configured = trim($configured);
         $state = 'managed';
@@ -153,7 +160,14 @@ final class ConfigurationDiagnostics
     public static function operationalSettings(array $params): array
     {
         $checks = [];
-        $add = static function (string $label, bool $enabled, string $on, string $off, string $guidanceOn, string $guidanceOff) use (&$checks): void {
+        $add = static function (
+            string $label,
+            bool $enabled,
+            string $on,
+            string $off,
+            string $guidanceOn,
+            string $guidanceOff
+        ) use (&$checks): void {
             $checks[] = [
                 'kind' => 'setting',
                 'labelKey' => $label,
@@ -347,7 +361,12 @@ final class ConfigurationDiagnostics
      * @param list<string|null> $courseParams
      * @param list<array{link:string,params:string}> $menuEntries
      */
-    public static function inheritance(array $courseParams, array $menuEntries, bool $coursesComplete, bool $menusComplete): array
+    public static function inheritance(
+        array $courseParams,
+        array $menuEntries,
+        bool $coursesComplete,
+        bool $menusComplete
+    ): array
     {
         $courseOverrides = 0;
         $courseInvalid = 0;
