@@ -1,0 +1,49 @@
+name: SECDEV-02 one-shot strict pure PHP formatter pass
+
+on:
+  push:
+    branches:
+      - style/secdev02-psr12-consolidated-closeout
+    paths:
+      - .github/workflows/secdev02-prettier-one-shot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  guarded-prettier:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-psr12-consolidated-closeout
+          persist-credentials: true
+      - name: Install pinned PHPCS and isolated PHP formatter
+        run: |
+          mkdir -p .runtime/secdev02-phpcs .runtime/secdev02-prettier
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          npm install --prefix .runtime/secdev02-prettier --no-save --ignore-scripts --no-audit --no-fund --package-lock=false prettier@3.6.0 @prettier/plugin-php@0.26.0
+      - name: Apply token-preserving formatter only when PSR-12 decreases
+        run: |
+          python3 tools/secdev02_prettier_guarded.py --self-test
+          python3 tools/secdev02_prettier_guarded.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --prettier .runtime/secdev02-prettier/node_modules/.bin/prettier
+          git diff --check
+      - name: Verify strict PHP and source policy
+        run: |
+          git diff --name-only -z -- '*.php' | xargs -0 -r -n1 php -l
+          python3 tests/secdev02-psr12-phpcs.py --base-ref HEAD
+          python3 tools/build.py
+          python3 tools/check.py
+      - name: Commit safe reductions then delete one-shot workflow
+        run: |
+          rm .github/workflows/secdev02-prettier-one-shot.yml
+          git add -A -- component libraries plugins packages tests tools .github/workflows/secdev02-prettier-one-shot.yml
+          if git diff --cached --quiet; then
+            echo 'No additional reductions'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'style(SECDEV-02): token-safe pure PHP structural formatting'
+          git push origin HEAD:style/secdev02-psr12-consolidated-closeout
