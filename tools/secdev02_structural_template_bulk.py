@@ -154,7 +154,8 @@ def main() -> int:
             accepted+=1
             removed+=sum(before.values())-score
             print(f'TEMPLATE accepted {name} removed={sum(before.values())-score}',flush=True)
-        else: rejected+=1
+        else:
+            rejected += 1
     print(f'SECDEV-02 structural template accepted_files={accepted} rejected_files={rejected} net_removed={removed}',flush=True)
     return 0
 
