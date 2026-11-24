@@ -351,3 +351,20 @@ On the checked-out main baseline the pinned PHPCS 4.0.4 PSR12 full tracked-PHP s
 
 - Identical significant PHP tokens, source contracts, PHP lint, complete PHPCS PSR-12 and full CI.
 - Joomla backend/frontend course and lesson workflows, authorization, CSRF, media, certificates and notifications in separate manual acceptance.
+
+## Structural bulk PHP/HTML remediation, PR #1016 (24 November 2026)
+
+PHPCS 4.0.4 PSR12 full repository comparison: **1018 → 993**, net **25 findings removed** on **15 PHP files**, no new file/rule findings. PHP lint successful on every changed file. Structural HTML boundaries only in T_INLINE_HTML plus guarded tag/attribute, literal and whitespace transformations. Any candidate failing source contracts, PHP syntax or per-rule PHPCS was restored. No standards relaxed. **SECDEV-02 remains partial until its CORE services, Joomla API audit and PSR12 residual are fully covered. Functional requirement percentages unchanged; manual acceptance separately pending.**
+
+### Comportamenti da testare
+
+- Verify HTML templates in frontend/backend across desktop/mobile; exact title, link, attribute and field data; confirm no unexpected whitespace-sensitive DOM nodes.
+- Verify PHP syntax, PHPCS PSR12 (zero regressions), contract gates, package build and full Joomla CI.
+
+### Second batch within PR #1016: PHP echo boundaries
+
+The pinned PHPCS 4.0.4 full tracked-PHP audit measured **993 → 914** (-79) across **23 PHP files** with zero per-file/per-rule regressions. Newlines are inserted only inside `<?= ... ?>` code regions, leaving rendered markup and PHP significant tokens identical; PHP lint, source contracts and complete CI remain mandatory. **No functional coverage percentage promotion.** SECDEV-02 remains partial while findings remain and CORE/API reviews are pending.
+
+### Third batch within PR #1016: PHP control tags
+
+The third-pass formatter tentatively reduced PHPCS from 914 to 913, but the CI source contract for the communication confirmation label required restoration of its original contiguous attributes. The **final integrated full PSR-12 baseline remains 914 findings**, with **zero additional net reduction** from this pass and **104 findings eliminated across the two preceding batches (1,018 → 914)**. No finding was suppressed, PHPCS rules remain unchanged, the full Joomla CI matrix passed after the contract repair, and functional requirement percentages remain unchanged. **SECDEV-02 is still partial**, pending the remaining PSR-12 debt and independent CORE/API evidence.

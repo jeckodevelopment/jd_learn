@@ -61,19 +61,31 @@ $lessonUrl = static fn (object $lesson): string => $lesson->kind === 'quiz'
     ? $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id)
     : $link($view . '&edit_lesson=' . (int) $lesson->id) . '#jlms-lesson-form';
 $actions = function (string $kind, object $item, int $position, int $total) use ($actionUrl): void {
-    ?><details class="jlms-item-menu"><summary><?= Text::_('COM_JLMS_PROGRAMME_ACTIONS') ?><span class="visually-hidden">: <?= $this->escape($item->title) ?></span></summary><ul>
-    <li><a href="<?= $actionUrl('copy_' . $kind, (int) $item->id) ?>"><?= Text::_($kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON') ?></a></li>
+    ?><details class="jlms-item-menu">
+        <summary><?= Text::_('COM_JLMS_PROGRAMME_ACTIONS') ?><span class="visually-hidden">: <?=
+             $this->escape($item->title) ?></span></summary><ul>
+    <li><a href="<?= $actionUrl('copy_' . $kind, (int) $item->id) ?>"><?=
+         Text::_($kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON') ?></a></li>
     <?php if ($kind === 'lesson') :
-        ?><li><a href="<?= $actionUrl('move_lesson', (int) $item->id) ?>"><?= Text::_('COM_JLMS_PROGRAMME_MOVE_LESSON') ?></a></li><?php
+        ?><li><a href="<?=
+             $actionUrl('move_lesson', (int) $item->id) ?>"><?=
+             Text::_('COM_JLMS_PROGRAMME_MOVE_LESSON') ?></a></li><?php
     endif; ?>
     <?php foreach (['up','down'] as $direction) :
         if (($direction === 'up' && !$position) || ($direction === 'down' && $position === $total - 1)) {
             continue;
         } ?>
-    <li><a data-order-kind="<?= $kind ?>" data-order-id="<?= (int) $item->id ?>" data-direction="<?= $direction ?>" href="<?= $this->escape(str_replace('#jlms-item-action', '&direction=' . $direction . '#jlms-item-action', html_entity_decode($actionUrl('order_' . $kind, (int) $item->id), ENT_QUOTES, 'UTF-8'))) ?>"><?= Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></a></li>
+    <li><a data-order-kind="<?=
+         $kind ?>" data-order-id="<?=
+         (int) $item->id ?>" data-direction="<?=
+         $direction ?>" href="<?=
+         $this->escape(str_replace('#jlms-item-action', '&direction=' . $direction . '#jlms-item-action', html_entity_decode($actionUrl('order_' . $kind, (int) $item->id), ENT_QUOTES, 'UTF-8'))) ?>"><?=
+         Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></a></li>
     <?php endforeach; ?>
     <?php if ($this->canDelete && ($kind === 'module' || $item->kind !== 'quiz')) :
-        ?><li><a href="<?= $actionUrl('delete_' . $kind, (int) $item->id) ?>"><?= Text::_('JACTION_DELETE') ?></a></li><?php
+        ?><li><a href="<?=
+             $actionUrl('delete_' . $kind, (int) $item->id) ?>"><?=
+             Text::_('JACTION_DELETE') ?></a></li><?php
     endif; ?>
     </ul></details><?php
 };
@@ -106,7 +118,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             ?><p class="alert alert-info"><?= Text::_('COM_JLMS_VERSION_IMMUTABLE') ?></p><?php
      endif; ?>
  <p id="jlms-order-status" role="status" aria-live="polite"
-  data-reload="<?= Text::_('COM_JLMS_PROGRAMME_RELOAD') ?>" data-saving="<?= Text::_('COM_JLMS_PROGRAMME_SAVING') ?>" data-error="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_FAILED') ?>"></p>
+  data-reload="<?= Text::_('COM_JLMS_PROGRAMME_RELOAD') ?>" data-saving="<?=
+       Text::_('COM_JLMS_PROGRAMME_SAVING') ?>" data-error="<?=
+       Text::_('COM_JLMS_PROGRAMME_ORDER_FAILED') ?>"></p>
      <?php if ($this->editable && $this->outline['modules']) :
             ?><p class="small text-muted"><?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?></p><?php
      endif; ?>
@@ -118,13 +132,20 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     data-item-id="<?= (int) $module->id ?>"
     data-module-id="<?= (int) $module->id ?>">
   <details<?= (!$modulePosition || $this->selectedModule === (int) $module->id || ($this->editorMode === 'module' && (int) $this->moduleForm->getValue('id') === (int) $module->id)) ? ' open' : '' ?>>
-   <summary><span class="jlms-module-title"><?= $this->escape($module->title) ?></span><span class="badge bg-secondary"><?= count($lessons) ?> <?= Text::_('COM_JLMS_PROGRAMME_LESSONS') ?></span></summary>
+   <summary><span class="jlms-module-title"><?=
+        $this->escape($module->title) ?></span><span class="badge bg-secondary"><?=
+        count($lessons) ?> <?=
+        Text::_('COM_JLMS_PROGRAMME_LESSONS') ?></span></summary>
    <div class="jlms-module-content">
             <?php if ($this->editable) :
                 ?><div class="jlms-programme-buttons">
      <button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button"
-  draggable="true" data-drag-handle="module" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $module->title)) ?>" title="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button>
-     <a class="btn btn-sm btn-secondary" href="<?= $link($view . '&edit_module=' . (int) $module->id) ?>#jlms-module-form"><?= Text::_('COM_JLMS_PROGRAMME_EDIT_MODULE') ?></a>
+  draggable="true" data-drag-handle="module" aria-label="<?=
+       $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $module->title)) ?>" title="<?=
+       Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button>
+     <a class="btn btn-sm btn-secondary" href="<?=
+          $link($view . '&edit_module=' . (int) $module->id) ?>#jlms-module-form"><?=
+          Text::_('COM_JLMS_PROGRAMME_EDIT_MODULE') ?></a>
                 <?php $actions('module', $module, $modulePosition, count($this->outline['modules'])); ?>
     </div>
             <?php endif; ?>
@@ -136,7 +157,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
      <li id="jlms-lesson-<?= (int) $lesson->id ?>" data-item-id="<?= (int) $lesson->id ?>">
                 <?php if ($this->editable) :
                     ?><button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button"
-  draggable="true" data-drag-handle="lesson" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $lesson->title)) ?>" title="<?= Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button><?php
+  draggable="true" data-drag-handle="lesson" aria-label="<?=
+       $this->escape(Text::sprintf('COM_JLMS_PROGRAMME_DRAG', $lesson->title)) ?>" title="<?=
+       Text::_('COM_JLMS_PROGRAMME_ORDER_HINT') ?>"><span aria-hidden="true">↕</span></button><?php
                 endif; ?>
       <div class="jlms-lesson-label">
                 <?php if (($this->editable && ($lesson->kind !== 'quiz' || $this->canQuiz)) || (!$this->editable && $this->canMaterials && $lesson->provider_key === 'html5')) :
@@ -156,12 +179,22 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             <?php endforeach; ?></ol>
             <?php if ($this->editable) :
                 ?><div class="jlms-programme-buttons jlms-add-lesson">
-     <a class="btn btn-sm btn-outline-primary" href="<?= $link($view . '&new_lesson=1&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?= Text::_('COM_JLMS_PROGRAMME_ADD_LESSON') ?></a>
-     <a class="btn btn-sm btn-outline-secondary" href="<?= $link($view . '&new_lesson=1&lesson_kind=video&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?= Text::_('COM_JLMS_LESSON_VIDEO') ?></a>
-     <a class="btn btn-sm btn-outline-secondary" href="<?= $link($view . '&new_lesson=1&lesson_kind=document&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?= Text::_('COM_JLMS_LESSON_DOCUMENT') ?></a>
-     <a class="btn btn-sm btn-outline-secondary" href="<?= $link($view . '&new_lesson=1&lesson_kind=audio&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?= Text::_('COM_JLMS_LESSON_AUDIO') ?></a>
+     <a class="btn btn-sm btn-outline-primary" href="<?=
+          $link($view . '&new_lesson=1&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?=
+          Text::_('COM_JLMS_PROGRAMME_ADD_LESSON') ?></a>
+     <a class="btn btn-sm btn-outline-secondary" href="<?=
+          $link($view . '&new_lesson=1&lesson_kind=video&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?=
+          Text::_('COM_JLMS_LESSON_VIDEO') ?></a>
+     <a class="btn btn-sm btn-outline-secondary" href="<?=
+          $link($view . '&new_lesson=1&lesson_kind=document&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?=
+          Text::_('COM_JLMS_LESSON_DOCUMENT') ?></a>
+     <a class="btn btn-sm btn-outline-secondary" href="<?=
+          $link($view . '&new_lesson=1&lesson_kind=audio&module_id=' . (int) $module->id) ?>#jlms-lesson-form"><?=
+          Text::_('COM_JLMS_LESSON_AUDIO') ?></a>
                 <?php if ($this->canQuiz) :
-                    ?><a class="btn btn-sm btn-outline-secondary" href="<?= $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&module_id=' . (int) $module->id) ?>"><?= Text::_('COM_JLMS_QUIZ_NEW') ?></a><?php
+                    ?><a class="btn btn-sm btn-outline-secondary" href="<?=
+                         $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&module_id=' . (int) $module->id) ?>"><?=
+                         Text::_('COM_JLMS_QUIZ_NEW') ?></a><?php
                 endif; ?>
     </div>
             <?php endif; ?>
@@ -192,7 +225,14 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
    </form>
                 <?php else :
-                    ?><p><?= Text::_('COM_JLMS_TEACHING_MODE') ?>: <?= Text::_($this->teachingRules['mode'] === 'consultation' ? 'COM_JLMS_TEACHING_MODE_CONSULTATION' : 'COM_JLMS_TEACHING_MODE_LEARNING') ?></p><p><?= Text::_('COM_JLMS_SEQUENCE_MODE') ?>: <?= Text::_($this->teachingRules['sequence_mode'] === 'sequential' ? 'COM_JLMS_SEQUENCE_SEQUENTIAL' : 'COM_JLMS_SEQUENCE_FREE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_THRESHOLD') ?>: <?= $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])) ?>%</p><p><?= Text::_('COM_JLMS_TEACHING_RULES_READ_ONLY') ?></p><?php
+                    ?><p><?=
+                         Text::_('COM_JLMS_TEACHING_MODE') ?>: <?=
+                         Text::_($this->teachingRules['mode'] === 'consultation' ? 'COM_JLMS_TEACHING_MODE_CONSULTATION' : 'COM_JLMS_TEACHING_MODE_LEARNING') ?></p><p><?=
+                         Text::_('COM_JLMS_SEQUENCE_MODE') ?>: <?=
+                         Text::_($this->teachingRules['sequence_mode'] === 'sequential' ? 'COM_JLMS_SEQUENCE_SEQUENTIAL' : 'COM_JLMS_SEQUENCE_FREE') ?></p><p><?=
+                         Text::_('COM_JLMS_TEACHING_THRESHOLD') ?>: <?=
+                         $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points'])) ?>%</p><p><?=
+                         Text::_('COM_JLMS_TEACHING_RULES_READ_ONLY') ?></p><?php
                 endif; ?>
             <?php endif; ?>
  </section>
@@ -219,7 +259,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     <fieldset id="jlms-lesson-fields">
      <legend><?= Text::_('JFIELD_CUSTOM_FIELDS') ?></legend>
                 <?php foreach ($fieldsets as $fieldset) : ?>
-      <fieldset><legend><?= $this->escape(Text::_($fieldset->label)) ?></legend><?= $form->renderFieldset($fieldset->name) ?></fieldset>
+      <fieldset><legend><?=
+           $this->escape(Text::_($fieldset->label)) ?></legend><?=
+           $form->renderFieldset($fieldset->name) ?></fieldset>
                 <?php endforeach; ?>
     </fieldset>
             <?php endif; ?>
@@ -237,14 +279,17 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
    <a class="btn btn-secondary" href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a>
   </form>
             <?php if (!$isModule && $this->canMaterials && $this->selectedItem) : ?>
-   <p><a class="btn btn-secondary" href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $this->selectedItem->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p>
+   <p><a class="btn btn-secondary" href="<?=
+        $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $this->selectedItem->id) ?>"><?=
+        Text::_('COM_JLMS_MATERIALS') ?></a></p>
             <?php endif; ?>
  </section>
      <?php endif; ?>
      <?php $lesson = $this->selectedItem && isset($this->selectedItem->kind) ? $this->selectedItem : null; ?>
      <?php if ($lesson && $lesson->provider_key === 'html5' && $this->canUploadLocalVideo) : ?>
     <section id="jlms-video-file-<?= (int) $lesson->id ?>" class="jlms-video-file">
-     <p><?= Text::_('COM_JLMS_VIDEO_FILE_NOTICE') ?> <?= $lesson->media_asset_id ? Text::_('COM_JLMS_VIDEO_FILE_ATTACHED') : Text::_('COM_JLMS_VIDEO_FILE_MISSING') ?></p>
+     <p><?= Text::_('COM_JLMS_VIDEO_FILE_NOTICE') ?> <?=
+          $lesson->media_asset_id ? Text::_('COM_JLMS_VIDEO_FILE_ATTACHED') : Text::_('COM_JLMS_VIDEO_FILE_MISSING') ?></p>
             <?php if ($this->editable) : ?>
      <form id="jlms-video-upload-<?= (int) $lesson->id ?>"
     method="post"
@@ -302,31 +347,46 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   value="<?= $this->escape(\Joomla\String\StringHelper::substr(Text::sprintf('COM_JLMS_COPY_OF', $item->title), 0, 255)) ?>"><?php
             endif; ?>
             <?php if ($kind === 'lesson' && in_array($operation, ['duplicate','move'], true)) : ?>
-   <label for="jlms-target-module"><?= Text::_('COM_JLMS_COPY_DESTINATION_MODULE') ?></label><select id="jlms-target-module"
+   <label for="jlms-target-module"><?=
+        Text::_('COM_JLMS_COPY_DESTINATION_MODULE') ?></label><select id="jlms-target-module"
   name="jform[module_id]" class="form-select" required>
                 <?php foreach ($this->outline['modules'] as $destination) :
-                    ?><option value="<?= (int) $destination->id ?>"<?= (int) $destination->id === (int) $item->module_id ? ' selected' : '' ?>><?= $this->escape($destination->title) ?></option><?php
+                    ?><option value="<?=
+                         (int) $destination->id ?>"<?=
+                         (int) $destination->id === (int) $item->module_id ? ' selected' : '' ?>><?=
+                         $this->escape($destination->title) ?></option><?php
                 endforeach; ?>
    </select>
             <?php endif; ?>
             <?php if ($operation === 'reorder') :
                 $direction = \Joomla\CMS\Factory::getApplication()->getInput()->getCmd('direction');
                 $direction = $direction === 'down' ? 'down' : 'up'; ?>
-                <?php $hidden(['direction' => $direction]); ?><p><?= Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></p>
+                <?php $hidden(['direction' => $direction]); ?><p><?=
+                     Text::_($direction === 'up' ? 'COM_JLMS_MOVE_UP' : 'COM_JLMS_MOVE_DOWN') ?></p>
             <?php endif; ?>
             <?php if ($operation === 'delete') :
-                ?><p><?= Text::_($kind === 'module' ? 'COM_JLMS_DELETE_EMPTY_MODULE' : 'COM_JLMS_CONFIRM_DELETE_LESSON') ?></p><label><input type="checkbox"
+                ?><p><?=
+                     Text::_($kind === 'module' ? 'COM_JLMS_DELETE_EMPTY_MODULE' : 'COM_JLMS_CONFIRM_DELETE_LESSON') ?></p><label><input type="checkbox"
   name="jform[confirmation]" value="1" required> <?= Text::_('COM_JLMS_PROGRAMME_CONFIRM_DELETE') ?></label><?php
             endif; ?>
-  <div class="jlms-programme-buttons"><?= HTMLHelper::_('form.token') ?><button class="btn <?= $operation === 'delete' ? 'btn-danger' : 'btn-primary' ?>" type="submit"><?= Text::_($heading) ?></button><a class="btn btn-secondary"
+  <div class="jlms-programme-buttons"><?=
+       HTMLHelper::_('form.token') ?><button class="btn <?=
+       $operation === 'delete' ? 'btn-danger' : 'btn-primary' ?>" type="submit"><?=
+       Text::_($heading) ?></button><a class="btn btn-secondary"
   href="<?= $link($view) ?>"><?= Text::_('JCANCEL') ?></a></div>
  </form></section>
      <?php endif; ?>
  </div><aside class="jlms-programme-sidebar" aria-label="<?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?>">
  <section id="jlms-publication-status"><h2 class="h4"><?= Text::_('COM_JLMS_PUBLICATION_HEADING') ?></h2>
- <p><?= Text::_('JSTATUS') ?>: <strong><?= Text::_((int) $course->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></strong></p>
- <p><?= Text::_('COM_JLMS_VERSION') ?> <?= (int) $version->version_no ?> · <?= Text::_($this->inReview && $version->status === 'draft' ? 'COM_JLMS_IN_REVIEW' : ($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED'))) ?></p>
- <p><?= count($this->outline['modules']) ?> <?= Text::_('COM_JLMS_PROGRAMME_MODULES') ?> · <?= count($this->outline['lessons']) ?> <?= Text::_('COM_JLMS_PROGRAMME_LESSONS') ?></p>
+ <p><?= Text::_('JSTATUS') ?>: <strong><?=
+      Text::_((int) $course->state === 1 ? 'JPUBLISHED' : 'JUNPUBLISHED') ?></strong></p>
+ <p><?= Text::_('COM_JLMS_VERSION') ?> <?=
+      (int) $version->version_no ?> · <?=
+      Text::_($this->inReview && $version->status === 'draft' ? 'COM_JLMS_IN_REVIEW' : ($version->status === 'draft' ? 'COM_JLMS_DRAFT' : ($version->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED'))) ?></p>
+ <p><?= count($this->outline['modules']) ?> <?=
+      Text::_('COM_JLMS_PROGRAMME_MODULES') ?> · <?=
+      count($this->outline['lessons']) ?> <?=
+      Text::_('COM_JLMS_PROGRAMME_LESSONS') ?></p>
      <?php if ($version->status === 'draft') : ?>
  <section id="jlms-publication-readiness" aria-labelledby="jlms-publication-readiness-heading">
   <h3 id="jlms-publication-readiness-heading" class="h5"><?= Text::_('COM_JLMS_READINESS_HEADING') ?></h3>
@@ -359,7 +419,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   <label for="jlms-transition"><?= Text::_('COM_JLMS_WORKFLOW_TRANSITION') ?></label>
   <select id="jlms-transition" name="jform[transition_id]" class="form-select">
             <?php foreach ($this->transitions as $transition) :
-                ?><option value="<?= (int) $transition->id ?>"><?= $this->escape($transitionDisplay($transition)) ?></option><?php
+                ?><option value="<?=
+                     (int) $transition->id ?>"><?=
+                     $this->escape($transitionDisplay($transition)) ?></option><?php
             endforeach; ?>
   </select>
             <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
@@ -389,11 +451,18 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
  </section>
      <?php if ($this->canMaterials) :
             ?><p><a id="jlms-manage-materials" class="btn btn-secondary"
-  href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p><?php
+  href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?=
+       Text::_('COM_JLMS_MATERIALS') ?></a></p><?php
      endif; ?>
- <details class="jlms-programme-versions"><summary><?= Text::_('COM_JLMS_VERSIONS') ?></summary><nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>"><ul>
+ <details class="jlms-programme-versions"><summary><?= Text::_('COM_JLMS_VERSIONS') ?>
+     </summary>
+     <nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>"><ul>
      <?php foreach ($this->outline['versions'] as $entry) :
-            ?><li><a href="<?= $link($base . '&version_id=' . (int) $entry->id) ?>"<?= (int) $entry->id === (int) $version->id ? ' aria-current="page"' : '' ?>>v<?= (int) $entry->version_no ?> · <?= Text::_($this->inReview && (int) $entry->id === (int) $version->id ? 'COM_JLMS_IN_REVIEW' : ($entry->status === 'draft' ? 'COM_JLMS_DRAFT' : ($entry->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED'))) ?></a></li><?php
+            ?><li><a href="<?=
+                 $link($base . '&version_id=' . (int) $entry->id) ?>"<?=
+                 (int) $entry->id === (int) $version->id ? ' aria-current="page"' : '' ?>>v<?=
+                 (int) $entry->version_no ?> · <?=
+                 Text::_($this->inReview && (int) $entry->id === (int) $version->id ? 'COM_JLMS_IN_REVIEW' : ($entry->status === 'draft' ? 'COM_JLMS_DRAFT' : ($entry->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED'))) ?></a></li><?php
      endforeach; ?>
  </ul></nav></details>
      <?php if ($this->canRestoreProgramme) : ?>
@@ -435,10 +504,12 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
    </ul>
    <p><?= Text::_('COM_JLMS_VIDEO_EDITOR_INSTRUCTIONS') ?></p>
             <?php if ($this->canManagePlugins) : ?>
-    <p><a href="<?= $link('index.php?option=com_plugins&filter[folder]=jlmsvideo') ?>"><?= Text::_('COM_JLMS_VIDEO_EDITOR_PLUGINS') ?></a></p>
+    <p><a href="<?= $link('index.php?option=com_plugins&filter[folder]=jlmsvideo') ?>"><?=
+         Text::_('COM_JLMS_VIDEO_EDITOR_PLUGINS') ?></a></p>
             <?php endif; ?>
             <?php if ($this->canConfigureVideo) : ?>
-    <p><a href="<?= $link('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('COM_JLMS_VIDEO_EDITOR_OPTIONS') ?></a></p>
+    <p><a href="<?= $link('index.php?option=com_config&view=component&component=com_jlms') ?>"><?=
+         Text::_('COM_JLMS_VIDEO_EDITOR_OPTIONS') ?></a></p>
             <?php endif; ?>
   </details>
      <?php endif; ?>

@@ -42,7 +42,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
         <?php if ($this->mailScheduler['duplicates']) :
             ?> · <?= Text::_('COM_JLMS_MAIL_SCHEDULER_DUPLICATES') ?><?php
         endif; ?>
-  <a href="<?= Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE') ?></a>
+  <a href="<?= Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?=
+       Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE') ?></a>
  </div>
  <?php endif; ?>
  <form method="get" action="<?= Route::_('index.php') ?>" class="row g-2 align-items-end mb-3">
@@ -53,7 +54,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    <select class="form-select" name="filter[state]" id="jlms-mail-queue-state">
     <option value=""><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_ALL') ?></option>
     <?php foreach (['pending','retry','sending','sent','failed','skipped'] as $state) : ?>
-     <option value="<?= $state ?>" <?= $filters['state'] === $state ? 'selected' : '' ?>><?= Text::_($stateKeys[$state]) ?></option>
+     <option value="<?= $state ?>" <?=
+          $filters['state'] === $state ? 'selected' : '' ?>><?=
+          Text::_($stateKeys[$state]) ?></option>
     <?php endforeach; ?>
    </select>
   </div>
@@ -63,7 +66,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    <select class="form-select" name="filter[template]" id="jlms-mail-queue-template">
     <option value=""><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_ALL') ?></option>
     <?php foreach (\Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds() as $template) : ?>
-     <option value="<?= $this->escape($template) ?>" <?= $filters['template'] === $template ? 'selected' : '' ?>><?= $this->escape($template) ?></option>
+     <option value="<?= $this->escape($template) ?>" <?=
+          $filters['template'] === $template ? 'selected' : '' ?>><?=
+          $this->escape($template) ?></option>
     <?php endforeach; ?>
    </select>
   </div>
@@ -130,7 +135,10 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
               ->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_NOTE') ?></label>
           <textarea class="form-control mb-2" id="jlms-mail-queue-sent-note-<?= (int) $row
               ->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
-          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-sent-confirm-<?= (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-sent-confirm-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_SENT_CONFIRM') ?></label></div>
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-sent-confirm-<?=
+               (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-sent-confirm-<?=
+               (int) $row->id ?>"><?=
+               Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_SENT_CONFIRM') ?></label></div>
           <button class="btn btn-success" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_MARK_SENT') ?></button>
                 <?= HTMLHelper::_('form.token') ?>
          </form>
@@ -142,7 +150,10 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
               ->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_NOTE') ?></label>
           <textarea class="form-control mb-2" id="jlms-mail-queue-retry-note-<?= (int) $row
               ->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
-          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-retry-confirm-<?= (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-retry-confirm-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-retry-confirm-<?=
+               (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-retry-confirm-<?=
+               (int) $row->id ?>"><?=
+               Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
           <button class="btn btn-warning" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY') ?></button>
                     <?= Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
          </form>
@@ -166,7 +177,10 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
               ->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_NOTE') ?></label>
           <textarea class="form-control mb-2" id="jlms-mail-queue-template-note-<?= (int) $row
               ->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
-          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-template-confirm-<?= (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-template-confirm-<?= (int) $row->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-template-confirm-<?=
+               (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-template-confirm-<?=
+               (int) $row->id ?>"><?=
+               Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
           <button class="btn btn-warning" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY') ?></button>
           <?= HTMLHelper::_('form.token') ?>
          </form>
@@ -190,10 +204,14 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
  <nav aria-label="<?= $this->escape(Text::_('COM_JLMS_MAIL_QUEUE_PAGINATION')) ?>">
   <ul class="pagination">
    <?php if ($start > 0) :
-        ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . max(0, $start - $limit) . $filterQuery) ?>"><?= Text::_('JPREV') ?></a></li><?php
+        ?><li class="page-item"><a class="page-link" href="<?=
+             Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . max(0, $start - $limit) . $filterQuery) ?>"><?=
+             Text::_('JPREV') ?></a></li><?php
    endif; ?>
    <?php if ($start + $limit < (int) $data['total']) :
-        ?><li class="page-item"><a class="page-link" href="<?= Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . ($start + $limit) . $filterQuery) ?>"><?= Text::_('JNEXT') ?></a></li><?php
+        ?><li class="page-item"><a class="page-link" href="<?=
+             Route::_('index.php?option=com_jlms&view=mailqueue&limitstart=' . ($start + $limit) . $filterQuery) ?>"><?=
+             Text::_('JNEXT') ?></a></li><?php
    endif; ?>
   </ul>
  </nav>

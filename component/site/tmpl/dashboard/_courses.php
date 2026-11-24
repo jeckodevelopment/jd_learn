@@ -18,10 +18,15 @@ use Joomla\CMS\Router\Route;
     <article id="jlms-my-course-<?= (int) $item['id'] ?>"
     class="jlms-card jlms-my-course"
     data-enrollment-id="<?= (int) $item['id'] ?>">
-     <h3 class="jlms-my-course__title"><?= $this->escape($item['title'] !== '' ? $item['title'] : Text::_('COM_JLMS_DASHBOARD_HISTORICAL_COURSE')) ?></h3>
-     <p class="jlms-my-course__access"><?= Text::_(implode('_', ['COM', 'JLMS', 'DASHBOARD', 'ACCESS', strtoupper($item['access'])])) ?></p>
+     <h3 class="jlms-my-course__title"><?=
+        $this->escape($item['title'] !== '' ? $item['title'] : Text::_('COM_JLMS_DASHBOARD_HISTORICAL_COURSE')) ?></h3>
+     <p class="jlms-my-course__access"><?=
+        Text::_(implode('_', ['COM', 'JLMS', 'DASHBOARD', 'ACCESS', strtoupper($item['access'])])) ?></p>
         <?php if ($item['percent'] !== null) : ?>
-      <label for="jlms-my-course-progress-<?= (int) $item['id'] ?>"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $item['percent'] ?>%</label>
+      <label for="jlms-my-course-progress-<?=
+         (int) $item['id'] ?>"><?=
+         Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?=
+         (int) $item['percent'] ?>%</label>
       <progress id="jlms-my-course-progress-<?= (int) $item['id'] ?>"
     class="jlms-my-course__progress"
     max="100"
@@ -30,7 +35,10 @@ use Joomla\CMS\Router\Route;
             ?><p><?= Text::_(!empty($item['progress_applicable']) ? 'COM_JLMS_DASHBOARD_PROGRESS_UNKNOWN' : 'COM_JLMS_DASHBOARD_PROGRESS_NOT_APPLICABLE') ?></p><?php
         endif; ?>
         <?php if ($item['access'] === 'available') :
-            ?><a id="jlms-my-course-resume-<?= (int) $item['id'] ?>" class="jlms-my-course__action" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $item['id']) ?>"><?= Text::_($item['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : 'COM_JLMS_DASHBOARD_RESUME') ?></a><?php
+            ?><a id="jlms-my-course-resume-<?=
+               (int) $item['id'] ?>" class="jlms-my-course__action" href="<?=
+               Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $item['id']) ?>"><?=
+               Text::_($item['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : 'COM_JLMS_DASHBOARD_RESUME') ?></a><?php
         endif; ?>
     </article>
                                     <?php endforeach; ?></div>

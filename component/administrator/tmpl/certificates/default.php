@@ -35,11 +35,15 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
     <table class="table itemList" id="jlms-certificates-list">
      <caption class="visually-hidden"><?= Text::_('COM_JLMS_CERTIFICATES') ?></caption>
      <thead><tr>
-      <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_STUDENT', 'student_name', $direction, $order) ?></th>
-      <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_COURSE', 'course_title', $direction, $order) ?></th>
-      <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_CODE', 'd.serial', $direction, $order) ?></th>
+      <th scope="col"><?=
+           HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_STUDENT', 'student_name', $direction, $order) ?></th>
+      <th scope="col"><?=
+           HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_COURSE', 'course_title', $direction, $order) ?></th>
+      <th scope="col"><?=
+           HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_CODE', 'd.serial', $direction, $order) ?></th>
       <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'JSTATUS', 'certificate_state', $direction, $order) ?></th>
-      <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_ISSUED', 'd.issued_at', $direction, $order) ?></th>
+      <th scope="col"><?=
+           HTMLHelper::_('searchtools.sort', 'COM_JLMS_CERTIFICATE_ISSUED', 'd.issued_at', $direction, $order) ?></th>
       <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'c.id', $direction, $order) ?></th>
      </tr></thead>
      <tbody>
@@ -94,7 +98,9 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
                 <?= Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_CONFIRM' : 'COM_JLMS_CERTIFICATE_HISTORICAL_CONFIRM') ?></label>
             <button type="submit"
                 class="btn btn-sm btn-outline-primary"
-                form="<?= $recoveryFormId ?>"><?= Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_ACTION' : 'COM_JLMS_CERTIFICATE_HISTORICAL_ACTION') ?></button>
+                form="<?=
+                     $recoveryFormId ?>"><?=
+                     Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_ACTION' : 'COM_JLMS_CERTIFICATE_HISTORICAL_ACTION') ?></button>
             <?php endif; ?>
           </td>
          </tr>

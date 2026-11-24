@@ -18,13 +18,17 @@ $courseId = (int) $this->preview['course_id'];
     role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_NOT_ELIGIBLE') ?></div>
  <?php else : ?>
   <p><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_HELP') ?></p>
-  <div class="alert alert-info" role="status"><?= Text::sprintf('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_RECIPIENTS', (int) $this->preview['eligible_count']) ?></div>
+  <div class="alert alert-info" role="status"><?=
+       Text::sprintf('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_RECIPIENTS', (int) $this->preview['eligible_count']) ?></div>
   <section class="card mb-3" aria-labelledby="jlms-announcement-subject">
-   <div class="card-header"><strong id="jlms-announcement-subject"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_SUBJECT') ?></strong></div>
-   <div class="card-body"><?= htmlspecialchars((string) $this->preview['subject'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></div>
+   <div class="card-header"><strong id="jlms-announcement-subject"><?=
+        Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_SUBJECT') ?></strong></div>
+   <div class="card-body"><?=
+        htmlspecialchars((string) $this->preview['subject'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></div>
   </section>
   <section class="card mb-3" aria-labelledby="jlms-announcement-html">
-   <div class="card-header"><strong id="jlms-announcement-html"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_HTML') ?></strong></div>
+   <div class="card-header"><strong id="jlms-announcement-html"><?=
+        Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_HTML') ?></strong></div>
    <div class="card-body"><?= $this->preview['body_html'] ?></div>
   </section>
   <details class="mb-3">

@@ -16,14 +16,19 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
  <header id="jlms-pathway-header">
   <h1><?= $this->escape($pathway->title) ?></h1>
   <?php if ($cover['image'] !== '') : ?>
-   <div id="jlms-pathway-cover" class="jlms-pathway-cover"><img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover['image'])))) ?>" alt="<?= $this->escape($cover['alt']) ?>" loading="lazy" decoding="async"></div>
+   <div id="jlms-pathway-cover" class="jlms-pathway-cover"><img src="<?=
+        $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover['image'])))) ?>" alt="<?=
+        $this->escape($cover['alt']) ?>" loading="lazy" decoding="async"></div>
   <?php endif; ?>
   <?php if (trim(strip_tags((string) $pathway->description)) !== '') : ?>
    <div class="jlms-pathway-description content"><?= $pathway->description ?></div>
   <?php endif; ?>
-  <p id="jlms-pathway-course-count"><?= Text::sprintf('COM_JLMS_PATHWAY_COURSE_COUNT', (int) $this->item['required_courses']) ?></p>
+  <p id="jlms-pathway-course-count"><?=
+       Text::sprintf('COM_JLMS_PATHWAY_COURSE_COUNT', (int) $this->item['required_courses']) ?></p>
   <?php if (!$this->isGuest && $this->item['progress'] !== null) : ?>
-   <label for="jlms-pathway-progress"><?= Text::_('COM_JLMS_PATHWAY_PROGRESS') ?>: <?= (int) $this->item['progress'] ?>%</label>
+   <label for="jlms-pathway-progress"><?=
+        Text::_('COM_JLMS_PATHWAY_PROGRESS') ?>: <?=
+        (int) $this->item['progress'] ?>%</label>
    <progress id="jlms-pathway-progress"
     max="100"
     value="<?= (int) $this->item['progress'] ?>"><?= (int) $this->item['progress'] ?>%</progress>
@@ -41,9 +46,12 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
     <div class="jlms-card jlms-pathway-timeline__card">
      <p class="jlms-pathway-timeline__step"><?= Text::sprintf('COM_JLMS_PATHWAY_STEP', (int) $index + 1) ?></p>
         <?php if ($course['id'] !== null) : ?>
-      <h3 class="jlms-pathway-timeline__title"><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course['id']) ?>"><?= $this->escape($course['title']) ?></a></h3>
+      <h3 class="jlms-pathway-timeline__title"><a href="<?=
+           Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course['id']) ?>"><?=
+           $this->escape($course['title']) ?></a></h3>
             <?php if (trim((string) ($course['summary'] ?? '')) !== '') :
-                ?><p class="jlms-pathway-timeline__summary"><?= $this->escape(\Joomla\String\StringHelper::substr((string) $course['summary'], 0, 300)) ?></p><?php
+                ?><p class="jlms-pathway-timeline__summary"><?=
+                     $this->escape(\Joomla\String\StringHelper::substr((string) $course['summary'], 0, 300)) ?></p><?php
             endif; ?>
             <?php if (!$this->isGuest) :
                 $stateKey = match ($course['learning_state']) {
@@ -55,7 +63,10 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
     ?>
        <p class="jlms-pathway-timeline__state"><?= Text::_($stateKey) ?></p>
                 <?php if ($course['access'] === 'available' && $course['learning_state'] !== 'not_enrolled' && $course['percent'] !== null) : ?>
-        <label for="jlms-pathway-course-progress-<?= (int) $index ?>"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $course['percent'] ?>%</label>
+        <label for="jlms-pathway-course-progress-<?=
+             (int) $index ?>"><?=
+             Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?=
+             (int) $course['percent'] ?>%</label>
         <progress id="jlms-pathway-course-progress-<?= (int) $index ?>"
     max="100"
     value="<?= (int) $course['percent'] ?>"><?= (int) $course['percent'] ?>%</progress>

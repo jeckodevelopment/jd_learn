@@ -20,7 +20,9 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
         $enr = $base . '&enrollment_id=' . (int)$i['enrollment']->id; ?>
  <h2><?= $this->escape($i['enrollment']->learner_name) ?> #<?= (int)$i['enrollment']->id ?></h2>
  <table id="jlms-quiz-review-attempts"
-     class="table"><thead><tr><th><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?></th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></th><th><?= Text::_('COM_JLMS_QUIZ_REVIEW_COUNTED') ?></th></tr></thead><tbody>
+     class="table"><thead>
+         <tr>
+         <th><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?></th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></th><th><?= Text::_('COM_JLMS_QUIZ_REVIEW_COUNTED') ?></th></tr></thead><tbody>
         <?php foreach ($i['attempts'] as $a) :
             ?><tr><td><a href="<?= Route::_($enr . '&attempt_id=' . (int)$a->id) ?>">#<?= (int)$a->attempt_no ?></a></td><td><?= Text::_(match ($a->status) {
             'open'=>'COM_JLMS_QUIZ_STATUS_OPEN','submitted'=>'COM_JLMS_QUIZ_STATUS_SUBMITTED',
@@ -37,10 +39,13 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
                     href="<?= Route::_('index.php?option=com_jlms&view=quizextend&id=' . (int)$i['course_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&enrollment_id=' . (int)$i['enrollment']->id . '&attempt_id=' . (int)$a->id) ?>"><?= Text::_('COM_JLMS_QUIZ_EXTEND_TITLE') ?></a></p><?php
             endif; ?>
             <?php if ($a->status === 'invalidated') : ?>
- <section id="jlms-quiz-review-record"><h3><?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?></h3><p><?= $this->escape($a->invalidation_reason) ?></p><p><?= (int)$a->invalidated_by ?> · <?= $this->escape($a->invalidated_at) ?> UTC</p></section>
+ <section id="jlms-quiz-review-record"><h3><?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?></h3><p><?= $this->escape($a->invalidation_reason) ?>
+     </p>
+     <p><?= (int)$a->invalidated_by ?> · <?= $this->escape($a->invalidated_at) ?> UTC</p></section>
             <?php else :
                 $p = $i['impact']; ?>
- <section id="jlms-quiz-review-preview"><h3><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?> #<?= (int)$a->attempt_no ?></h3>
+ <section id="jlms-quiz-review-preview">
+     <h3><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?> #<?= (int)$a->attempt_no ?></h3>
  <p><?= Text::_('COM_JLMS_QUIZ_REVIEW_REFUND') ?>: <a href="<?= Route::_($enr . '&attempt_id=' . (int)$a->id . '&return_attempt=0') ?>"><?= Text::_('JNO') ?></a> · <a href="<?= Route::_($enr . '&attempt_id=' . (int)$a->id . '&return_attempt=1') ?>"><?= Text::_('JYES') ?></a> · <?= Text::_($i['refund'] ? 'JYES' : 'JNO') ?></p>
  <dl><dt><?= Text::_('COM_JLMS_QUIZ_REVIEW_LESSON') ?></dt><dd><?= Text::_($p['before_lesson_completed'] ? 'JYES' : 'JNO') ?> → <?= Text::_($p['after_lesson_completed'] ? 'JYES' : 'JNO') ?></dd>
  <dt><?= Text::_('COM_JLMS_QUIZ_REVIEW_COURSE') ?></dt><dd><?= (int)$p['before_completed_total'] ?> → <?= (int)$p['after_completed_total'] ?> / <?= (int)$i['enrollment']->required_total ?></dd>

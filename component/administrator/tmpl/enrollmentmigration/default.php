@@ -36,7 +36,11 @@ foreach ($p['target_lessons'] as $lesson) {
     <select id="jlms-migration-map-<?= $sid ?>" name="map[<?= $sid ?>]">
      <option value="0"><?= Text::_('COM_JLMS_MIGRATION_SKIP') ?></option>
         <?php foreach ($p['target_lessons'] as $dest) :
-            ?><option value="<?= (int)$dest['id'] ?>"<?= $selected === (int)$dest['id'] ? ' selected' : '' ?>><?= $this->escape($dest['title']) ?><?= $dest['required'] ? ' · ' . Text::_('COM_JLMS_MIGRATION_REQUIRED') : '' ?></option><?php
+            ?><option value="<?=
+                 (int)$dest['id'] ?>"<?=
+                 $selected === (int)$dest['id'] ? ' selected' : '' ?>><?=
+                 $this->escape($dest['title']) ?><?=
+                 $dest['required'] ? ' · ' . Text::_('COM_JLMS_MIGRATION_REQUIRED') : '' ?></option><?php
         endforeach; ?>
     </select>
    <?php endforeach; ?>

@@ -18,8 +18,10 @@ use Joomla\CMS\Router\Route;
   <section class="jlms-card jlms-my-course" aria-labelledby="jlms-summary-courses-title">
    <h2 id="jlms-summary-courses-title"><?= Text::_('COM_JLMS_MY_COURSES') ?></h2>
    <dl class="jlms-summary-stats">
-    <div><dt><?= Text::_('COM_JLMS_DASHBOARD_NOT_STARTED') ?></dt><dd><?= (int) $this->summary['not_started'] ?></dd></div>
-    <div><dt><?= Text::_('COM_JLMS_DASHBOARD_IN_PROGRESS') ?></dt><dd><?= (int) $this->summary['in_progress'] ?></dd></div>
+    <div><dt><?= Text::_('COM_JLMS_DASHBOARD_NOT_STARTED') ?></dt><dd><?=
+         (int) $this->summary['not_started'] ?></dd></div>
+    <div><dt><?= Text::_('COM_JLMS_DASHBOARD_IN_PROGRESS') ?></dt><dd><?=
+         (int) $this->summary['in_progress'] ?></dd></div>
     <div><dt><?= Text::_('COM_JLMS_DASHBOARD_COMPLETED') ?></dt><dd><?= (int) $this->summary['completed'] ?></dd></div>
    </dl>
    <a id="jlms-dashboard-my-courses-link"
@@ -28,7 +30,9 @@ use Joomla\CMS\Router\Route;
   <section class="jlms-card jlms-my-course" aria-labelledby="jlms-summary-certificates-title">
    <h2 id="jlms-summary-certificates-title"><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></h2>
    <p><?= Text::sprintf('COM_JLMS_MY_CERTIFICATES_COUNT', (int) $this->certificateCount) ?></p>
-   <a id="jlms-dashboard-my-certificates-link" href="<?= Route::_('index.php?option=com_jlms&view=mycertificates') ?>"><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></a>
+   <a id="jlms-dashboard-my-certificates-link" href="<?=
+        Route::_('index.php?option=com_jlms&view=mycertificates') ?>"><?=
+        Text::_('COM_JLMS_MY_CERTIFICATES') ?></a>
   </section>
   <section class="jlms-card jlms-my-course" aria-labelledby="jlms-summary-preferences-title">
    <h2 id="jlms-summary-preferences-title"><?= Text::_('COM_JLMS_PREFERENCES') ?></h2>
@@ -44,7 +48,9 @@ use Joomla\CMS\Router\Route;
         <?php if ($recent['percent'] !== null) : ?>
     <p><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $recent['percent'] ?>%</p>
         <?php endif; ?>
-   <a id="jlms-dashboard-resume" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $recent['id']) ?>"><?= Text::_('COM_JLMS_DASHBOARD_RESUME') ?></a>
+   <a id="jlms-dashboard-resume" href="<?=
+        Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $recent['id']) ?>"><?=
+        Text::_('COM_JLMS_DASHBOARD_RESUME') ?></a>
   </section>
  <?php endif; ?>
  <?php if ((int) $this->summary['not_started'] + (int) $this->summary['in_progress'] + (int) $this->summary['completed'] === 0) : ?>

@@ -27,7 +27,10 @@ $id = (int) $this->item->id;
    <?= $this->form->renderField('title') ?><?= $this->form->renderField('alias') ?>
    <section id="jlms-course-presentation">
     <?= $this->form->renderField('summary') ?><?= $this->form->renderField('presentation_description') ?>
-    <details id="jlms-course-learning-description"><summary><?= Text::_('COM_JLMS_COURSE_OBJECTIVES') ?>, <?= Text::_('COM_JLMS_COURSE_AUDIENCE') ?>, <?= Text::_('COM_JLMS_COURSE_PREREQUISITE_TEXT') ?></summary>
+    <details id="jlms-course-learning-description">
+      <summary><?= Text::_('COM_JLMS_COURSE_OBJECTIVES') ?>, <?=
+           Text::_('COM_JLMS_COURSE_AUDIENCE') ?>, <?=
+           Text::_('COM_JLMS_COURSE_PREREQUISITE_TEXT') ?></summary>
      <?= $this->form->renderField('presentation_objectives') ?><?= $this->form
          ->renderField('presentation_audience') ?><?= $this->form->renderField('presentation_prerequisite_text') ?>
     </details>
@@ -100,7 +103,9 @@ $id = (int) $this->item->id;
  <section id="jlms-course-certificate-settings" aria-label="<?= Text::_('COM_JLMS_CERTIFICATE_SETTINGS') ?>">
   <?= $this->form->renderField('certificate_enabled') ?>
   <?php if ($this->canConfigure) : ?>
-   <p class="small"><a href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('COM_JLMS_CERTIFICATE_GLOBAL_DESC') ?></a></p>
+   <p class="small"><a href="<?=
+        Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?=
+        Text::_('COM_JLMS_CERTIFICATE_GLOBAL_DESC') ?></a></p>
   <?php endif; ?>
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
@@ -118,7 +123,9 @@ $id = (int) $this->item->id;
  <section id="jlms-course-metadata"><h2 class="h4"><?= Text::_('COM_JLMS_COURSE_METADATA') ?></h2><?= $this
      ->form->renderFieldset('metadata') ?></section>
  <?php if ($this->form->getFieldset('item_associations')) : ?>
-  <section id="jlms-course-translations"><h2 class="h4"><?= Text::_('COM_JLMS_ASSOCIATIONS') ?></h2><div id="jlms-course-associations"><?= $this->form->renderFieldset('item_associations') ?></div></section>
+  <section id="jlms-course-translations">
+    <h2 class="h4"><?= Text::_('COM_JLMS_ASSOCIATIONS') ?></h2>
+    <div id="jlms-course-associations"><?= $this->form->renderFieldset('item_associations') ?></div></section>
  <?php endif; ?>
  <section id="jlms-course-permissions"><h2 class="h4"><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS') ?></h2>
   <details id="jlms-course-effective-rights"><summary><?= Text::_('COM_JLMS_EDITOR_PERMISSIONS_HELP') ?></summary><dl>
@@ -126,7 +133,9 @@ $id = (int) $this->item->id;
         ?><dt><?= Text::_($label) ?></dt><dd><?= Text::_($allowed ? 'JYES' : 'JNO') ?></dd><?php
   endforeach; ?></dl>
   <?php if ($this->canConfigure) :
-        ?><a id="jlms-course-options-link" href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('JOPTIONS') ?></a><?php
+        ?><a id="jlms-course-options-link" href="<?=
+             Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?=
+             Text::_('JOPTIONS') ?></a><?php
   endif; ?>
   </details>
   <?php if ($this->canManageCourseRules) : ?>
