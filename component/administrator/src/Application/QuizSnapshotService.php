@@ -76,7 +76,10 @@ final class QuizSnapshotService
             $public = json_decode($row->options_json, true, 16, JSON_THROW_ON_ERROR);
             $grading = json_decode($row->grading_json, true, 16, JSON_THROW_ON_ERROR);
             $feedback = json_decode($row->feedback_json, true, 16, JSON_THROW_ON_ERROR);
-            if (($public['_schema'] ?? 0) !== 1 || ($grading['_schema'] ?? 0) !== 1 || ($feedback['_schema'] ?? 0) !== 1) {
+            if (
+                ($public['_schema'] ?? 0) !== 1 || ($grading['_schema'] ?? 0) !== 1 || ($feedback['_schema']
+                ?? 0) !== 1
+            ) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
             }
             $options = [];
@@ -134,7 +137,10 @@ final class QuizSnapshotService
                 ->where(('NOT EXISTS (SELECT 1 FROM #__categories AS p WHERE '
                     . 'p.extension=c.extension AND p.lft<=c.lft AND p.rgt>=c.rgt AND p.published<>1)'))
                 ->bind(':category', $category, ParameterType::INTEGER);
-            if ((int)$row->question_state !== 1 || !in_array($row->language, ['*',$course->language], true) || !(int)$this->db->setQuery($q)->loadResult()) {
+            if (
+                (int)$row->question_state !== 1 || !in_array($row->language, ['*',$course->language], true)
+                || !(int)$this->db->setQuery($q)->loadResult()
+            ) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
             }
         }
@@ -149,7 +155,10 @@ final class QuizSnapshotService
     public function published(int $lesson, int $version): array
     {
         $definition = $this->definition($lesson, $version);
-        if (!is_string($definition[4]['published_pool_hash'] ?? null) || !hash_equals($definition[4]['published_pool_hash'], $definition[3])) {
+        if (
+            !is_string($definition[4]['published_pool_hash'] ?? null)
+            || !hash_equals($definition[4]['published_pool_hash'], $definition[3])
+        ) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         }
         return $definition;

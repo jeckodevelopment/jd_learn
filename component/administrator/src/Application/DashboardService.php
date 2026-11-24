@@ -188,9 +188,15 @@ final class DashboardService
             } else {
                 if ($rules === null) {
                     $reason = 'unavailable';
-                } elseif (($row->starts_at !== null && $row->starts_at > $now) || ($row->edition_starts_at !== null && $row->edition_starts_at > $now)) {
+                } elseif (
+                    ($row->starts_at !== null && $row->starts_at > $now) || ($row->edition_starts_at
+                    !== null && $row->edition_starts_at > $now)
+                ) {
                     $reason = 'not_open';
-                } elseif (($row->ends_at !== null && $row->ends_at <= $now) || ($row->edition_ends_at !== null && $row->edition_ends_at <= $now)) {
+                } elseif (
+                    ($row->ends_at !== null && $row->ends_at <= $now) || ($row->edition_ends_at !== null
+                    && $row->edition_ends_at <= $now)
+                ) {
                     $reason = 'expired';
                 }
             }

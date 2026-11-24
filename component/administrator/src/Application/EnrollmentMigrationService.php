@@ -41,7 +41,10 @@ final class EnrollmentMigrationService
         if (!isset($rows[$source], $rows[$target])) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
-        if (!in_array($rows[$source]->status, ['published', 'retired'], true) || $rows[$target]->status !== 'published' || $source === $target) {
+        if (
+            !in_array($rows[$source]->status, ['published', 'retired'], true) || $rows[$target]->status
+            !== 'published' || $source === $target
+        ) {
             throw new \RuntimeException('COM_JLMS_MIGRATION_VERSION_INVALID', 409);
         }
         $q = $this->db->createQuery()->select('current_version_id')->from('#__jlms_courses')->where('id = :course')
@@ -130,7 +133,10 @@ final class EnrollmentMigrationService
             throw new \RuntimeException('COM_JLMS_MIGRATION_LIMIT', 409);
         }
         if ($mapping === [] && $useSavedMappings) {
-            $completedSet = array_fill_keys(array_map(static fn(object $row): int=>(int)$row->lesson_id, $completed), true);
+            $completedSet = array_fill_keys(array_map(
+                static fn(object $row): int=>(int)$row->lesson_id,
+                $completed
+            ), true);
             $q = $this->db->createQuery()
                 ->select('e.source_lesson_id,e.target_lesson_id')
                 ->from('#__jlms_version_equivalences AS e')
@@ -171,7 +177,10 @@ final class EnrollmentMigrationService
             if ($to === 0) {
                 continue;
             }
-            if (!isset($sourceLessons[$from], $targetLessons[$to]) || !isset($completedIds[$from]) || isset($normal[$from]) || isset($usedTargets[$to])) {
+            if (
+                !isset($sourceLessons[$from], $targetLessons[$to]) || !isset($completedIds[$from])
+                || isset($normal[$from]) || isset($usedTargets[$to])
+            ) {
                 throw new \RuntimeException('COM_JLMS_MIGRATION_MAPPING_INVALID', 422);
             }
             $normal[$from] = $to;
@@ -187,8 +196,10 @@ final class EnrollmentMigrationService
                 continue;
             }
             $dest = $targetLessons[$normal[$id]];
-            $eligible[] = ['source_lesson_id' => $id,'source_title' => $progress->title,'target_lesson_id' => (int)$dest->id,
-                'target_title' => $dest->title,'required' => (bool)$dest->required,'completed_at' => $progress->completed_at];
+            $eligible[] = ['source_lesson_id' => $id,'source_title' => $progress->title,'target_lesson_id'
+                => (int)$dest->id,
+                'target_title' => $dest->title,'required' => (bool)$dest->required,'completed_at' => $progress
+                    ->completed_at];
         }
         $mappingConflict = false;
         foreach ($normal as $from => $to) {
@@ -227,7 +238,8 @@ final class EnrollmentMigrationService
              (int)$source->course_version_id,
             'target_version_id' => $targetVersion,'target_version_no' => (int)$target->version_no
                 ,'source_version_no' => (int)$sourceVersion->version_no,
-            'source_status' => $source->status,'source_revision' => (int)$source->revision,'user_id' => (int)$source->user_id,
+            'source_status' => $source->status,'source_revision' => (int)$source->revision,'user_id'
+                => (int)$source->user_id,
             'target_edition_id' => (int)($targetEdition->id ?? 0),
             'learner_name' => (string)($source->learner_name ?? ''),'mapping' => $normal,'transfers' =>
                  $eligible,'unmapped' => $missing,
@@ -264,13 +276,20 @@ final class EnrollmentMigrationService
     ): int {
         $actor = $this->access($identity, $course);
         if (
-            !$confirmed || $expectedRevision < 1 || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $mutationId)
+            !$confirmed || $expectedRevision < 1
+                || !preg_match(
+                    '/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D',
+                    $mutationId
+                )
             || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)
         ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $reason = trim($reason);
-        if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)) {
+        if (
+            $reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason)
+            || !preg_match('//u', $reason)
+        ) {
             throw new \RuntimeException('COM_JLMS_MIGRATION_REASON', 422);
         }
         if (count($mapping) > 100) {
@@ -354,7 +373,8 @@ final class EnrollmentMigrationService
                 ->from('#__jlms_enrollments')
                 ->where('id=:id')
                 ->bind(':id', $enrollment, ParameterType::INTEGER);
-            $source = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            $source = $this->db->setQuery($q)->loadObject() ?
+                : throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             $editionId = $plan['target_edition_id'];
             if (!$editionId) {
                 throw new \RuntimeException('COM_JLMS_MIGRATION_EDITION_MISSING', 409);
@@ -368,21 +388,30 @@ final class EnrollmentMigrationService
             $completedRequired = count(array_filter($plan['transfers'], static fn(array $row): bool=>$row['required']));
             $targetStatus = $source->status === 'suspended' ? 'suspended' : ($required > 0 &&
                  $completedRequired >= $required ? 'completed' : 'active');
-            $target = (object)['user_id' => (int)$source->user_id,'subject_key' => $source->subject_key,'course_id' => $course,
+            $target = (object)['user_id' => (int)$source->user_id,'subject_key' => $source->subject_key
+                ,'course_id' => $course,
                 'course_version_id' => $plan['target_version_id'],'edition_id' => $editionId,'status' =>
                      $targetStatus,'origin' => 'migration',
-                'required_total' => $required,'completed_total' => $completedRequired,'started_at' => $source->started_at ?: $now,
-                'completed_at' => $targetStatus === 'completed' ? $now : null,'last_activity_at' => $now,'last_lesson_id' => null,
-                'starts_at' => $source->starts_at,'ends_at' => $source->ends_at,'revision' => 1,'created_by' => (int)$actor->id,
+                'required_total' => $required,'completed_total' => $completedRequired,'started_at' => $source
+                    ->started_at ?: $now,
+                'completed_at' => $targetStatus === 'completed' ? $now : null,'last_activity_at' => $now
+                    ,'last_lesson_id' => null,
+                'starts_at' => $source->starts_at,'ends_at' => $source->ends_at,'revision' => 1,'created_by'
+                    => (int)$actor->id,
                 'created_at' => $now,'modified_by' => (int)$actor->id,'modified_at' => $now];
             $this->db->insertObject('#__jlms_enrollments', $target, 'id');
             $targetId = (int)$target->id;
-            $snapshot = ['mapping' => $plan['mapping'],'transfers' => $plan['transfers'],'unmapped' => $plan['unmapped'],
+            $snapshot = ['mapping' => $plan['mapping'],'transfers' => $plan['transfers'],'unmapped'
+                => $plan['unmapped'],
                 'source_version_id' => $plan['source_version_id'],'target_version_id' =>
                      $plan['target_version_id'],'reason' => $reason];
             $job = (object)['kind' => 'enrollment_migration','owner_user_id' => (int)$actor->id,
-                'scope_json' => json_encode(['course_id' => $course,'source_enrollment_id' => $enrollment], JSON_THROW_ON_ERROR),
-                'payload_json' => json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),'status' => 'succeeded',
+                'scope_json' => json_encode(
+                    ['course_id' => $course,'source_enrollment_id' => $enrollment],
+                    JSON_THROW_ON_ERROR
+                ),
+                'payload_json' => json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),'status'
+                    => 'succeeded',
                 'cursor_json' => json_encode(['source_enrollment_id' => $enrollment,
                     'target_enrollment_id' => $targetId], JSON_THROW_ON_ERROR),
                 'progress_done' => 1,'progress_total' => 1,'attempts' => 1,'available_at' => $now,
@@ -390,7 +419,10 @@ final class EnrollmentMigrationService
             $this->db->insertObject('#__jlms_jobs', $job, 'id');
             $idempotency = (object)['scope_hash' => $scopeHash,'request_hash' => $requestHash,'state' =>
                  'completed','result_type' => 'enrollment_migration',
-                'result_id' => $targetId,'result_json' => json_encode(['target_enrollment_id' => $targetId], JSON_THROW_ON_ERROR),
+                'result_id' => $targetId,'result_json' => json_encode(
+                    ['target_enrollment_id' => $targetId],
+                    JSON_THROW_ON_ERROR
+                ),
                 'http_status' => 200,'created_at' => $now,'expires_at' => gmdate('Y-m-d H:i:s', time() + 172800)];
             $this->db->insertObject('#__jlms_idempotency', $idempotency);
             foreach ($plan['mapping'] as $from => $to) {
@@ -410,7 +442,8 @@ final class EnrollmentMigrationService
             foreach ($plan['transfers'] as $row) {
                 $progress = (object)['enrollment_id' => $targetId,'course_version_id' =>
                      $plan['target_version_id'],'lesson_id' => $row['target_lesson_id'],
-                    'source_revision' => 1,'coverage_json' => '[]','covered_ms' => 0,'resume_ms' => 0,'state' => 'completed',
+                    'source_revision' => 1,'coverage_json' => '[]','covered_ms' => 0,'resume_ms' => 0,'state'
+                        => 'completed',
                     'completed_at' => $row['completed_at'] ?: $now,'last_activity_at' => $now,'revision' => 1];
                 $q = $this->db->createQuery()
                     ->select('source_revision')

@@ -18,13 +18,23 @@ final class CourseteachersField extends \Joomla\CMS\Form\Field\ListField
         $actor->clearAccessRights();
         $options = [HTMLHelper::_('select.option', '', 'JNONE')];
         $visible = [];
-        foreach (TeacherProfiles::available(Factory::getContainer()->get(DatabaseInterface::class), $actor, (string) $this->form->getValue('language', null, '*')) as $row) {
+        foreach (
+            TeacherProfiles::available(
+                Factory::getContainer()->get(DatabaseInterface::class),
+                $actor,
+                (string) $this->form->getValue('language', null, '*')
+            ) as $row
+        ) {
             $visible[] = (int) $row->id;
             $options[] = HTMLHelper::_('select.option', (int) $row->id, $row->title . ' (#' . (int) $row->id . ')');
         }
         foreach ((array) $this->value as $selected) {
             if ((int) $selected > 0 && !in_array((int) $selected, $visible, true)) {
-                $options[] = HTMLHelper::_('select.option', (int) $selected, \Joomla\CMS\Language\Text::_('COM_JLMS_TEACHER_UNAVAILABLE') . ' (#' . (int)$selected . ')');
+                $options[] = HTMLHelper::_(
+                    'select.option',
+                    (int) $selected,
+                    \Joomla\CMS\Language\Text::_('COM_JLMS_TEACHER_UNAVAILABLE') . ' (#' . (int)$selected . ')'
+                );
             }
         }
         return array_merge(parent::getOptions(), $options);

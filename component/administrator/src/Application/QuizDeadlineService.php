@@ -125,10 +125,19 @@ final class QuizDeadlineService
         bool $confirmed
     ): int {
         $reason = trim($reason);
-        if (!$confirmed || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key) || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash) || $minutes < 1 || $minutes > 1440) {
+        if (
+            !$confirmed ||
+             !preg_match(
+                 '/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D',
+                 $key
+             ) || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash) || $minutes < 1 || $minutes > 1440
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
-        if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)) {
+        if (
+            $reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) ||
+             !preg_match('//u', $reason)
+        ) {
             throw new \RuntimeException('COM_JLMS_QUIZ_TIME_REASON', 422);
         }
         $this->time->managementContext($identity, $course, $lesson, $enrollment);
@@ -173,7 +182,10 @@ final class QuizDeadlineService
             if ($p['blocked'] !== null) {
                 throw new \RuntimeException($p['blocked'], 409);
             }
-            if ((int)$e->revision !== $enrollmentRevision || (int)$a->revision !== $attemptRevision || !hash_equals($p['hash'], $impactHash)) {
+            if (
+                (int)$e->revision !== $enrollmentRevision || (int)$a->revision !== $attemptRevision ||
+                 !hash_equals($p['hash'], $impactHash)
+            ) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_CONFLICT', 409);
             }
             $now = gmdate('Y-m-d H:i:s', ($this->clock)());

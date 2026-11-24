@@ -32,7 +32,10 @@ final class EnrollmentstateController extends BaseController
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
             }
             $raw = $this->input->post->get('jform', [], 'array');
-            foreach (['course_id','enrollment_id','enrollment_revision','target_status','reason','mutation_id','impact_hash','confirmation'] as $key) {
+            foreach (
+                ['course_id','enrollment_id','enrollment_revision','target_status','reason','mutation_id'
+                ,'impact_hash','confirmation'] as $key
+            ) {
                 if (!is_string($raw[$key] ?? null)) {
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
@@ -68,7 +71,17 @@ final class EnrollmentstateController extends BaseController
                 $key = 'COM_JLMS_INVALID_INPUT';
                 $code = 400;
             }
-            if (in_array($code, [400,401,403,404,409,413,422,503], true) && in_array($key, ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED','COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_ENROLLMENT_STATE_BLOCKED','COM_JLMS_ENROLLMENT_STATE_REASON','COM_JLMS_ENROLLMENT_STATE_CONFLICT','COM_JLMS_ENROLLMENT_STATE_AUDIT_FAILED'], true)) {
+            if (
+                in_array($code, [400,401,403,404,409,413,422,503], true) && in_array(
+                    $key,
+                    ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED'
+                    ,'COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_ENROLLMENT_STATE_BLOCKED'
+                    ,'COM_JLMS_ENROLLMENT_STATE_REASON','COM_JLMS_ENROLLMENT_STATE_CONFLICT'
+                    ,
+                    'COM_JLMS_ENROLLMENT_STATE_AUDIT_FAILED'],
+                    true
+                )
+            ) {
                 throw new \RuntimeException(Text::_($key), $code);
             }
             \Joomla\CMS\Log\Log::add('Enrollment state change failed; correlation=' .

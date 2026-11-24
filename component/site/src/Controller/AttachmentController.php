@@ -14,7 +14,10 @@ final class AttachmentController extends BaseController
 {
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['download', 'audio', 'preview', 'inline', 'publicpreview', 'publiclessonpreview'], true)) {
+        if (
+            !in_array(strtolower($task), ['download', 'audio', 'preview', 'inline', 'publicpreview'
+            , 'publiclessonpreview'], true)
+        ) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);

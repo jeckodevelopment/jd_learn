@@ -51,7 +51,9 @@ final class HtmlView extends BaseHtmlView
         }
         $app = Factory::getApplication();
         $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh($app->getIdentity());
-        $this->canDuplicateCourse = $version && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor, (int) $course->catid);
+        $this->canDuplicateCourse = $version
+        && \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()
+        ->get(\Joomla\Database\DatabaseInterface::class), $actor, (int) $course->catid);
         $publication = $app->bootComponent('com_jlms')->getPublicationService();
         $this->inReview = $publication->isInReview((int) $course->id);
         $locked = ($course->checked_out && (int) $course->checked_out !== (int) $actor->id);
@@ -139,9 +141,13 @@ final class HtmlView extends BaseHtmlView
         }
         if ($this->editable) {
             $actor = $app->getIdentity();
-            $this->canConfigureVideo = $actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms');
+            $this->canConfigureVideo = $actor->authorise('core.options', 'com_jlms') || $actor
+            ->authorise('core.admin', 'com_jlms');
             $this->canManagePlugins = $actor->authorise('core.manage', 'com_plugins');
-            $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
+            $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get(
+                'video_external_policy',
+                'blocked'
+            );
             $providers = [];
             foreach ($app->bootComponent('com_jlms')->getCurriculumService()->providers() as $provider) {
                 $providers[$provider->key] = $provider;
@@ -196,7 +202,10 @@ final class HtmlView extends BaseHtmlView
                 $this->editorMode = 'lesson';
             }
             $action = $app->getInput()->getCmd('item_action', '');
-            if ($action !== '' && !in_array($action, ['copy_module','copy_lesson','delete_module','delete_lesson','move_lesson','order_module','order_lesson'], true)) {
+            if (
+                $action !== '' && !in_array($action, ['copy_module','copy_lesson','delete_module'
+                ,'delete_lesson','move_lesson','order_module','order_lesson'], true)
+            ) {
                 throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
             }
             $this->itemAction = $action;
@@ -209,7 +218,10 @@ final class HtmlView extends BaseHtmlView
             $field = new \SimpleXMLElement('<field name="module_id" type="list" label="COM_JLMS_MODULE" ' .
                 'required="true" />');
             foreach ($this->outline['modules'] as $module) {
-                $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))->addAttribute('value', (string) $module->id);
+                $field->addChild('option', htmlspecialchars($module->title, ENT_XML1))->addAttribute(
+                    'value',
+                    (string) $module->id
+                );
                 if (!$this->selectedModule) {
                     $this->selectedModule = (int) $module->id;
                 }
@@ -223,7 +235,10 @@ final class HtmlView extends BaseHtmlView
                     $foundModule = true;
                 }
             }
-            if ($this->selectedModule && !in_array($this->selectedModule, array_map(static fn($m): int => (int) $m->id, $this->outline['modules']), true)) {
+            if (
+                $this->selectedModule && !in_array($this->selectedModule, array_map(static fn($m): int
+                => (int) $m->id, $this->outline['modules']), true)
+            ) {
                 throw new \RuntimeException(Text::_('COM_JLMS_RESOURCE_NOT_FOUND'), 404);
             }
             $lessonData['module_id'] = $this->selectedModule;
@@ -255,9 +270,15 @@ final class HtmlView extends BaseHtmlView
                     foreach (\Joomla\Component\Fields\Administrator\Helper\FieldsHelper::getFields('com_jlms.lesson', $lesson, true) as $customField) {
                         $customFields[$customField->name] = $customField->value;
                     }
-                    $source = $lesson->source_json ? json_decode($lesson->source_json, true, 32, JSON_THROW_ON_ERROR) : [];
+                    $source = $lesson->source_json ? json_decode(
+                        $lesson->source_json,
+                        true,
+                        32,
+                        JSON_THROW_ON_ERROR
+                    ) : [];
                     $lessonParams = json_decode((string)$lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
-                    $lessonThreshold = is_array($lessonParams) && is_int($lessonParams['video_threshold_basis_points'] ?? null)
+                    $lessonThreshold = is_array($lessonParams)
+                    && is_int($lessonParams['video_threshold_basis_points'] ?? null)
                         ? \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($lessonParams['video_threshold_basis_points']) : '';
                     $audioTranscript = is_array($lessonParams) && is_string($lessonParams['audio_transcript'] ?? null)
                         ? $lessonParams['audio_transcript'] : '';
@@ -267,16 +288,27 @@ final class HtmlView extends BaseHtmlView
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
                         'audio_transcript' => $audioTranscript, 'video_transcript' => $videoTranscript,
                         'public_preview' => (int) $lesson->preview,
-                        'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
+                        'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson
+                        ->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' :
                              ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
                         'video_threshold_percent' => $lessonThreshold, 'duration_mode' => 'auto'
                             , 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
-                        'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0',
+                        'duration_confirmed' => (json_decode(
+                            $lesson->params_json,
+                            true
+                        )['video_duration_confirmed'] ?? false) ? '1' : '0',
                         'required_lesson_ids' => $this->outline['prerequisites'][(int) $lesson->id] ?? [],
-                        'publish_up' => LessonAvailability::editor($lesson->publish_up, CourseSchedule::read($course)['timezone']),
-                        'publish_down' => LessonAvailability::editor($lesson->publish_down, CourseSchedule::read($course)['timezone']),
-                        'release_after_days' => $lesson->release_after_days === null ? '' : (string) $lesson->release_after_days,
+                        'publish_up' => LessonAvailability::editor(
+                            $lesson->publish_up,
+                            CourseSchedule::read($course)['timezone']
+                        ),
+                        'publish_down' => LessonAvailability::editor(
+                            $lesson->publish_down,
+                            CourseSchedule::read($course)['timezone']
+                        ),
+                        'release_after_days' => $lesson->release_after_days === null ? '' : (string) $lesson
+                        ->release_after_days,
                         'com_fields' => $customFields]);
                     $foundLesson = true;
                 }
@@ -295,8 +327,15 @@ final class HtmlView extends BaseHtmlView
             // can restore edits using the same whitelist as existing lessons.
             if ($this->editorMode === 'lesson' && !is_array($lessonData['com_fields'] ?? null)) {
                 $lessonData['com_fields'] = [];
-                $fieldSubject = (object) ['id' => 0, 'catid' => (int) $course->catid, 'language' => (string) $course->language];
-                foreach (\Joomla\Component\Fields\Administrator\Helper\FieldsHelper::getFields('com_jlms.lesson', $fieldSubject, true) as $field) {
+                $fieldSubject = (object) ['id' => 0, 'catid' => (int) $course->catid, 'language'
+                => (string) $course->language];
+                foreach (
+                    \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::getFields(
+                        'com_jlms.lesson',
+                        $fieldSubject,
+                        true
+                    ) as $field
+                ) {
                     $lessonData['com_fields'][$field->name] = $field->value;
                 }
             }
@@ -304,7 +343,8 @@ final class HtmlView extends BaseHtmlView
             if (in_array($this->editorMode, ['module','lesson'], true)) {
                 $saved = $app->getUserState($stateKey, []);
                 $app->setUserState($stateKey, null);
-                $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0) : (int) ($lessonData['id'] ?? 0);
+                $expectedId = $this->editorMode === 'module' ? (int) ($moduleData['id'] ?? 0)
+                : (int) ($lessonData['id'] ?? 0);
                 if (is_array($saved) && (int) ($saved['id'] ?? -1) === $expectedId) {
                     // Preserve native Joomla field edits after a failed lesson
                     // submission. Only fields already resolved for this lesson
@@ -380,7 +420,8 @@ final class HtmlView extends BaseHtmlView
                 $this->getDocument()->addScriptOptions('com_jlms.videoMetadata', [
                     'url' => \Joomla\CMS\Router\Route::link('administrator', ('index.php?option=' .
                         'com_jlms&task=lesson.metadata&format=json'), false),
-                    'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
+                    'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+                    ->get('video_external_policy', 'blocked'),
                     'labels' => array_map(static fn($key): string=>Text::_($key), [
                         'detected' => 'COM_JLMS_VIDEO_DURATION_DETECTED','loading' =>
                              'COM_JLMS_VIDEO_DURATION_LOADING','play' => 'COM_JLMS_VIDEO_DURATION_PLAY',
@@ -388,7 +429,8 @@ final class HtmlView extends BaseHtmlView
                              'COM_JLMS_VIDEO_DURATION_CONSENT','manual' => 'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
                         'local' => 'COM_JLMS_VIDEO_DURATION_LOCAL','source' => 'COM_JLMS_VIDEO_DURATION_SOURCE',
                         'youtube_csp' => 'COM_JLMS_VIDEO_YOUTUBE_CSP','youtube_sdk' => 'COM_JLMS_VIDEO_YOUTUBE_SDK',
-                        'youtube_referrer' => 'COM_JLMS_VIDEO_YOUTUBE_REFERRER','youtube_embed' => 'COM_JLMS_VIDEO_YOUTUBE_EMBED',
+                        'youtube_referrer' => 'COM_JLMS_VIDEO_YOUTUBE_REFERRER','youtube_embed'
+                        => 'COM_JLMS_VIDEO_YOUTUBE_EMBED',
                         'youtube_timeout' => 'COM_JLMS_VIDEO_YOUTUBE_TIMEOUT',
                         'server_unavailable' => 'COM_JLMS_VIDEO_METADATA_SERVER_UNAVAILABLE',
                         'network_error' => 'COM_JLMS_VIDEO_METADATA_NETWORK_ERROR',
@@ -436,8 +478,12 @@ final class HtmlView extends BaseHtmlView
             ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' .
                      (int) $course->id . '&version_id=' . (int) $version->id .
                      '&edit_rules=1#jlms-teaching-rules'), 'COM_JLMS_TEACHING_RULES', 'sliders-h');
-            ToolbarHelper::link(Route::link('administrator', ('index.php?option=com_jlms&view=' .
-                'coursepreview&id=') . (int) $course->id . '&version_id=' . (int) $version->id), 'COM_JLMS_COURSE_PREVIEW', 'eye');
+            ToolbarHelper::link(
+                Route::link('administrator', ('index.php?option=com_jlms&view=' .
+                'coursepreview&id=') . (int) $course->id . '&version_id=' . (int) $version->id),
+                'COM_JLMS_COURSE_PREVIEW',
+                'eye'
+            );
         }
         ToolbarHelper::help('curriculum', true);
         parent::display($tpl);

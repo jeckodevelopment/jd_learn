@@ -36,7 +36,10 @@ final class QuiztimeController extends BaseController
             $form = $model->getForm();
             $raw = $this->input->post->get('jform', [], 'array');
             // Validate scalar shape before native string/integer filters can coerce malicious arrays.
-            foreach (['course_id','lesson_id','enrollment_id','revision','extra_minutes','reason','mutation_id'] as $key) {
+            foreach (
+                ['course_id','lesson_id','enrollment_id','revision','extra_minutes','reason'
+                ,'mutation_id'] as $key
+            ) {
                 if (!is_string($raw[$key] ?? null)) {
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
@@ -68,7 +71,10 @@ final class QuiztimeController extends BaseController
                 $key = 'COM_JLMS_INVALID_INPUT';
                 $code = 400;
             }
-            if (in_array($code, [400,401,403,404,409,413,422,503], true) && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {
+            if (
+                in_array($code, [400,401,403,404,409,413,422,503], true)
+                && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)
+            ) {
                 throw new \RuntimeException(Text::_($key), $code);
             }
             \Joomla\CMS\Log\Log::add('Quiz time adjustment failed; correlation=' .

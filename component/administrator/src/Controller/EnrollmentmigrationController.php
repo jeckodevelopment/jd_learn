@@ -32,7 +32,10 @@ final class EnrollmentmigrationController extends BaseController
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
             }
             $raw = $this->input->post->get('jform', [], 'array');
-            foreach (['course_id','enrollment_id','source_revision','impact_hash','mutation_id','reason','confirmation'] as $key) {
+            foreach (
+                ['course_id','enrollment_id','source_revision','impact_hash','mutation_id','reason'
+                ,'confirmation'] as $key
+            ) {
                 if (!is_string($raw[$key] ?? null)) {
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
@@ -45,7 +48,10 @@ final class EnrollmentmigrationController extends BaseController
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
             foreach ($mapping as $from => $to) {
-                if (!is_string($to) || !preg_match('/\A[1-9][0-9]{0,18}\z/D', (string)$from) || !preg_match('/\A[1-9][0-9]{0,18}\z/D', $to)) {
+                if (
+                    !is_string($to) || !preg_match('/\A[1-9][0-9]{0,18}\z/D', (string)$from)
+                    || !preg_match('/\A[1-9][0-9]{0,18}\z/D', $to)
+                ) {
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             }

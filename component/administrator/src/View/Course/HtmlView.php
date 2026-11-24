@@ -84,7 +84,10 @@ final class HtmlView extends BaseHtmlView
             }
             $this->form->setFieldAttribute('teacher_ids', 'disabled', 'true');
             $this->form->setFieldAttribute('certificate_enabled', 'disabled', 'true');
-            foreach (['title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary'] as $field) {
+            foreach (
+                ['title', 'alias', 'catid', 'language', 'catalog_access', 'content_access'
+                , 'enrollment_mode', 'summary'] as $field
+            ) {
                 $this->form->setFieldAttribute($field, 'disabled', 'true');
             }
             foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) {

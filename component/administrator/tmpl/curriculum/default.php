@@ -170,7 +170,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                     ?><strong><?= $this->escape($lesson->title) ?></strong><?php
                 endif; ?>
        <div class="small text-muted"><?= Text::_(match ($lesson->kind) {
-            'text'=>'COM_JLMS_LESSON_TEXT','document'=>'COM_JLMS_LESSON_DOCUMENT','audio'=>'COM_JLMS_LESSON_AUDIO','video'=>'COM_JLMS_LESSON_VIDEO',default=>'COM_JLMS_LESSON_QUIZ'
+            'text'=>'COM_JLMS_LESSON_TEXT','document'=>'COM_JLMS_LESSON_DOCUMENT','audio'
+                =>'COM_JLMS_LESSON_AUDIO','video'=>'COM_JLMS_LESSON_VIDEO',default=>'COM_JLMS_LESSON_QUIZ'
                                      }) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></div>
       </div>
                 <?php if ($this->editable) :
@@ -431,7 +432,10 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                 ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
             elseif ($transitionAction($this->transitions[0]) === 'return') :
                 ?><?= Text::_('COM_JLMS_RETURN_TO_DRAFT') ?><?php
-            elseif ($version->status === 'draft' && $course->current_version_id !== null && $transitionAction($this->transitions[0]) === 'publish') :
+            elseif (
+                $version->status === 'draft' && $course->current_version_id !== null
+                && $transitionAction($this->transitions[0]) === 'publish'
+            ) :
                 ?><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') ?><?php
             else :
                 ?><?= $this->escape($transitionDisplay($this->transitions[0])) ?><?php

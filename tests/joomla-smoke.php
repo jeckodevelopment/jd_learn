@@ -11,7 +11,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Set fixture plugin state before Joomla caches its enabled-plugin list.
 // The retained-data mode must not alter state, so it can detect upgrade regressions.
 if (($argv[2] ?? '') !== 'retained') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND "
         . "(folder='jlmsvideo' OR (folder='privacy' AND element='jdlearn') OR "
         . "(folder='user' AND element='jdlearnconsent'))"));
@@ -200,7 +205,10 @@ if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMe
 }
 $reassignSystemLanguage = parse_ini_file(JPATH_ADMINISTRATOR
     . '/language/en-GB/com_jlms.sys.ini', false, INI_SCANNER_RAW);
-if (!is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CATEGORY_REASSIGN_TITLE'] ?? null) !== 'Category dependency cleanup') {
+if (
+    !is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CATEGORY_REASSIGN_TITLE'] ?? null)
+    !== 'Category dependency cleanup'
+) {
     throw new \RuntimeException(('Category reassignment title must be installed in the administrator '
         . 'system language catalog.'));
 }
@@ -231,7 +239,10 @@ foreach ($mailTemplateIds as $templateId) {
     if ($mailTemplate === null || !($mailTemplate->params instanceof \Joomla\Registry\Registry)) {
         throw new \RuntimeException('JD Learn mail template is not registered in Joomla: ' . $templateId);
     }
-    if (trim((string) $mailTemplate->subject) === '' || trim((string) $mailTemplate->body) === '' || trim((string) $mailTemplate->htmlbody) === '') {
+    if (
+        trim((string) $mailTemplate->subject) === '' || trim((string) $mailTemplate->body) === ''
+        || trim((string) $mailTemplate->htmlbody) === ''
+    ) {
         throw new \RuntimeException('JD Learn mail template must include subject, ' .
             'plain-text and HTML content: ' . $templateId);
     }
@@ -506,7 +517,8 @@ if (!$hasPrivacyCapabilities) {
     throw new \RuntimeException('JD Learn privacy capabilities were not collected by Joomla.');
 }
 $privacyRequest = new RequestTable($db);
-$privacyExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $app->getIdentity()]);
+$privacyExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $app
+    ->getIdentity()]);
 $app->getDispatcher()->dispatch('onPrivacyExportRequest', $privacyExport);
 $privacyExportData = $privacyExport->getArgument('result', []);
 $privacyDomainNames = [];
@@ -545,7 +557,8 @@ if (!$privacyUserId) {
 }
 $privacyUser = new \Joomla\CMS\User\User($privacyUserId);
 $db->setQuery("DELETE FROM #__jlms_jobs WHERE kind='privacy-fixture' AND owner_user_id=" . $privacyUserId)->execute();
-$privacyCheck = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyCheck = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user'
+    => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyCheck);
 $privacyCheckData = $privacyCheck->getArgument('result', []);
 if (count($privacyCheckData) !== 1 || !$privacyCheckData[0]->canRemove) {
@@ -554,13 +567,15 @@ if (count($privacyCheckData) !== 1 || !$privacyCheckData[0]->canRemove) {
 $db->setQuery(("INSERT INTO #__jlms_jobs (kind, owner_user_id, scope_json, "
     . "payload_json, status, available_at, created_at) VALUES ('privacy-fixture', ") . $privacyUserId .
          ", '{}', '{}', 'complete', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))")->execute();
-$privacyBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user'
+    => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyBlocked);
 $privacyBlockedData = $privacyBlocked->getArgument('result', []);
 $privacyRejected = false;
 try {
     // Direct event dispatch must never bypass the same retention gate.
-    $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]));
+    $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest
+        , 'user' => $privacyUser]));
 } catch (\RuntimeException $expected) {
     $privacyRejected = str_contains($expected->getMessage(), 'blocked by retained records');
 }
@@ -575,9 +590,11 @@ if (count($privacyBlockedData) !== 1 || $privacyBlockedData[0]->canRemove || !$p
 $privacyCampaignFixtureId = 900000000000 + $privacyUserId;
 $db->setQuery($db->createQuery()->insert('#__jlms_course_announcement_campaigns')
     ->columns(['course_id', 'requested_by', 'recipient_count', 'state', 'requested_at'])
-    ->values(implode(',', [$privacyCampaignFixtureId, $privacyUserId, 0, $db->quote('queued'), 'UTC_TIMESTAMP(6)'])))->execute();
+    ->values(implode(',', [$privacyCampaignFixtureId, $privacyUserId, 0, $db->quote('queued')
+        , 'UTC_TIMESTAMP(6)'])))->execute();
 try {
-    $immutableAuditBlock = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+    $immutableAuditBlock = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest
+        , 'user' => $privacyUser]);
     $privacyPlugin->onPrivacyCanRemoveData($immutableAuditBlock);
     if (($immutableAuditBlock->getArgument('result', []))[0]->canRemove) {
         throw new \RuntimeException('Immutable audit reference did not block privacy removal.');
@@ -607,7 +624,8 @@ foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
             $privacyUserId, $db->quote($consentFixtureState),
             $db->quote('dashboard'), $db->quote('ci-test'), 'UTC_TIMESTAMP(6)'
         ])))->execute();
-    $consentExportEvent = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+    $consentExportEvent = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest
+        , 'user' => $privacyUser]);
     $privacyPlugin->onPrivacyExportRequest($consentExportEvent);
     $foundConsentDomain = false;
     foreach ($consentExportEvent->getArgument('result', []) as $contribution) {
@@ -683,9 +701,11 @@ $db->setQuery($db->createQuery()->insert('#__jlms_mail_queue')
     ->values(implode(',', [
         $db->quote($otherPrivacyMailKey), $db->quote('ci.privacy.other'), $otherPrivacyUserId,
         $db->quote('other-privacy-fixture@example.invalid'), $db->quote('Other Privacy Fixture'),
-        $db->quote('{"fixture":"other-account"}'), $db->quote('sent'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)', $privacyUserId
+        $db->quote('{"fixture":"other-account"}'), $db->quote('sent'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)'
+            , $privacyUserId
     ])))->execute();
-$privacySubjectExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacySubjectExport = new ExportRequestEvent('onPrivacyExportRequest', ['subject' => $privacyRequest, 'user'
+    => $privacyUser]);
 $privacyPlugin->onPrivacyExportRequest($privacySubjectExport);
 $privacySubjectDomains = $privacySubjectExport->getArgument('result', []);
 $privacyMailDomains = [];
@@ -702,14 +722,16 @@ foreach ($privacySubjectDomains as $privacyContribution) {
 if (count($privacyMailDomains) !== 1 || count($privacyMailDomains[0]->getItems()) !== 1) {
     throw new \RuntimeException('Privacy mail export leaked or lost the requested user scope.');
 }
-$privacyQueueBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
+$privacyQueueBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user'
+    => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyQueueBlocked);
 if (($privacyQueueBlocked->getArgument('result', []))[0]->canRemove) {
     throw new \RuntimeException('Active privacy mail queue did not block erasure.');
 }
 $queueRemoveRejected = false;
 try {
-    $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]));
+    $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest
+        , 'user' => $privacyUser]));
 } catch (\RuntimeException $expected) {
     $queueRemoveRejected = str_contains($expected->getMessage(), 'blocked by retained records');
 }
@@ -724,7 +746,11 @@ $privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $priv
 $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
 $sanitizedMail = $db->setQuery(("SELECT recipient_user_id,recipient_email,recipient_name,template_" .
     "data,last_error FROM #__jlms_mail_queue WHERE event_key=") . $db->quote($privacyMailId))->loadObject();
-if (!$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== '' || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}' || $sanitizedMail->last_error !== null) {
+if (
+    !$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== ''
+    || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}' || $sanitizedMail
+    ->last_error !== null
+) {
     throw new \RuntimeException('Privacy removal did not redact completed mail queue evidence.');
 }
 $retainedPrivacyConsent = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')
@@ -763,10 +789,16 @@ parse_str((string) parse_url((string) $linkOne, PHP_URL_QUERY), $linkQueryOne);
 parse_str((string) parse_url((string) $linkTwo, PHP_URL_QUERY), $linkQueryTwo);
 $tokenOne = (string) ($linkQueryOne['token'] ?? '');
 $tokenTwo = (string) ($linkQueryTwo['token'] ?? '');
-if (!$linkOne || !$linkTwo || $tokenOne === '' || $tokenTwo === '' || array_key_exists('user_id', $linkQueryOne) || array_key_exists('email', $linkQueryOne)) {
+if (
+    !$linkOne || !$linkTwo || $tokenOne === '' || $tokenTwo === '' || array_key_exists(
+        'user_id',
+        $linkQueryOne
+    ) || array_key_exists('email', $linkQueryOne)
+) {
     throw new \RuntimeException('Unsubscribe link did not contain an opaque token or exposed the user id.');
 }
-$db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), ' .
+$db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')
+    ->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), ' .
     'INTERVAL 1 SECOND)')
     ->where('token_hash = ' . $db->quote(hash('sha256', $tokenOne))))->execute();
 if ($mailConsent->revokeByToken($tokenOne) || $mailConsent->state((int) $userId) !== 'confirmed') {
@@ -795,9 +827,19 @@ try {
         'diagnosis' => static fn() => $certificateService->adminUnissuedCompletions($staleCertificateActor, 1),
         'detail' => static fn() => $certificateService->adminDetail($staleCertificateActor, 1),
         'download' => static fn() => $certificateService->adminDownload($staleCertificateActor, 1),
-        'regenerate' => static fn() => $certificateService->adminRegenerate($staleCertificateActor, 1, 1, 'Security denial check'),
-        'recover missing' => static fn() => $certificateService->adminRecoverMissing($staleCertificateActor, 1, 'Security denial check'),
-        'recover historical' => static fn() => $certificateService->adminRecoverHistorical($staleCertificateActor, 1, 'Security denial check'),
+        'regenerate' => static fn() => $certificateService->adminRegenerate(
+            $staleCertificateActor,
+            1,
+            1,
+            'Security denial check'
+        ),
+        'recover missing' => static fn() => $certificateService->adminRecoverMissing(
+            $staleCertificateActor,
+            1,
+            'Security denial check'
+        ),
+        'recover historical' => static fn() => $certificateService
+            ->adminRecoverHistorical($staleCertificateActor, 1, 'Security denial check'),
     ];
     foreach ($blockedCertificateOperations as $operation => $invoke) {
         try {
@@ -842,7 +884,10 @@ try {
 $auditActorId = (int) $userId;
 $auditAction = 'admin_list';
 $auditCount = (int) $db->setQuery($db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_audit')
-    ->where('actor_user_id = :actor')->where('action = :action')->bind(':actor', $auditActorId)->bind(':action', $auditAction))->loadResult();
+    ->where('actor_user_id = :actor')->where('action = :action')->bind(':actor', $auditActorId)->bind(
+        ':action',
+        $auditAction
+    ))->loadResult();
 if ($auditCount < 1) {
     throw new \RuntimeException('Certificate administrator list access was not audited.');
 }
@@ -958,8 +1003,15 @@ $lessonTemplate = \Joomla\CMS\Mail\MailTemplate::getTemplate('com_jlms.lesson.av
 if (!$lessonTemplate || !str_contains((string) $lessonTemplate->subject, '{LESSON_TITLE}')) {
     throw new \RuntimeException('Lesson release Mail Template not registered in Joomla.');
 }
-$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel('Category', 'Administrator', ['ignore_request' => true]);
-if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'CI Courses','alias' => 'ci-courses','published' => 1,'language' => '*','access' => 1])) {
+$categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel(
+    'Category',
+    'Administrator',
+    ['ignore_request' => true]
+);
+if (
+    !$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'CI Courses'
+    ,'alias' => 'ci-courses','published' => 1,'language' => '*','access' => 1])
+) {
     throw new \RuntimeException('Native Joomla category save failed: ' . $categoryModel->getError());
 }
 $catid = (int) $categoryModel->getState('category.id');

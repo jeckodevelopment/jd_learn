@@ -179,7 +179,14 @@ final class VideoProgressService
                 'next_sequence' => null, 'resume_ms' => 0, 'duration_ms' => null, 'provider' => $descriptor->provider,
                 'options' => $descriptor->playerOptions, 'expires_at' => $descriptor->expiresAt?->getTimestamp()];
         }
-        return $this->transaction(function () use ($identity, $language, $enrollmentId, $lessonId, $fingerprint, $descriptor): array {
+        return $this->transaction(function () use (
+            $identity,
+            $language,
+            $enrollmentId,
+            $lessonId,
+            $fingerprint,
+            $descriptor
+): array {
             [
                 $actor,
                 ,
@@ -204,8 +211,10 @@ final class VideoProgressService
             if (!$progress) {
                 $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $lesson
                     ->course_version_id,
-                    'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision, 'coverage_json' => '[]',
-                    'covered_ms' => 0, 'resume_ms' => 0, 'state' => 'started', 'last_activity_at' => $date, 'revision' => 1];
+                    'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision
+                        , 'coverage_json' => '[]',
+                    'covered_ms' => 0, 'resume_ms' => 0, 'state' => 'started', 'last_activity_at' => $date
+                        , 'revision' => 1];
                 $this->db->insertObject('#__jlms_lesson_progress', $progress);
             }
             $state = ['_schema' => 1, 'issued_ms' => $now, 'spent_wall_ms' => 0, 'last_event_id' => 0,
@@ -213,10 +222,12 @@ final class VideoProgressService
             $state = self::playbackState($state, $descriptor, $now);
             $session = (object) ['id' => self::uuid(), 'enrollment_id' => $enrollmentId, 'lesson_id' => $lessonId,
                 'source_revision' => (int) $lesson->source_revision, 'sequence_no' => 0,
-                'player_state_json' => json_encode($state, JSON_THROW_ON_ERROR), 'expires_at' => self::date($now + 7200000)];
+                'player_state_json' => json_encode($state, JSON_THROW_ON_ERROR), 'expires_at'
+                    => self::date($now + 7200000)];
             $this->db->insertObject('#__jlms_progress_sessions', $session);
             $update = (object) ['id' => $enrollmentId, 'started_at' => $enrollment->started_at ?: $date,
-                'last_activity_at' => $date, 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
+                'last_activity_at' => $date, 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment
+                    ->revision + 1,
                 'modified_at' => $date, 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
             return ['tracking' => true, 'session_id' => $session->id, 'source_revision' => (int) $lesson
@@ -265,7 +276,8 @@ final class VideoProgressService
     ): array {
         return ['next_sequence' => $next, 'replay' => $replay, 'resume_conflict' => $conflict,
             'covered_ms' => (int) $progress->covered_ms, 'resume_ms' => (int) $progress->resume_ms,
-            'lesson_completed' => $progress->state === 'completed', 'course_completed' => $enrollment->completed_at !== null,
+            'lesson_completed' => $progress->state === 'completed', 'course_completed' => $enrollment
+                ->completed_at !== null,
             'course_percent' => (int) $enrollment->required_total > 0 ? min(
                 $enrollment->completed_at ? 100 : 99,
                 (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)
@@ -313,7 +325,12 @@ final class VideoProgressService
             if ((int) $lesson->source_revision !== $sourceRevision) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
             }
-            if (!\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, $reportedDuration)) {
+            if (
+                !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible(
+                    (int)$lesson->duration_ms,
+                    $reportedDuration
+                )
+            ) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_DURATION_MISMATCH', 422);
             }
             $progress = $this->progress($enrollmentId, $lesson);
@@ -343,7 +360,8 @@ final class VideoProgressService
                 $coverage = Coverage::merge(
                     json_decode($progress->coverage_json, true, 32, JSON_THROW_ON_ERROR),
                     $telemetry['intervals'],
-                    min(\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::MAX, (int)$lesson->duration_ms + \Jlms\Component\Jlms\Administrator\Domain\VideoDuration::tolerance((int)$lesson->duration_ms))
+                    min(\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::MAX, (int)$lesson
+                        ->duration_ms + \Jlms\Component\Jlms\Administrator\Domain\VideoDuration::tolerance((int)$lesson->duration_ms))
                 );
             } catch (\InvalidArgumentException $error) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 422);
@@ -360,7 +378,11 @@ final class VideoProgressService
                 }
                 $threshold = $override;
             }
-            $completed = !$consultation && Coverage::isComplete(min($covered, $reportedDuration), $reportedDuration, $threshold);
+            $completed = !$consultation && Coverage::isComplete(
+                min($covered, $reportedDuration),
+                $reportedDuration,
+                $threshold
+            );
             $newCompletion = $completed && $progress->state !== 'completed';
             $resumeConflict = (int) $progress->revision !== $state['progress_revision'];
             $progress->coverage_json = json_encode($coverage, JSON_THROW_ON_ERROR);
@@ -368,7 +390,8 @@ final class VideoProgressService
             if (!$resumeConflict) {
                 $progress->resume_ms = $telemetry['resume_ms'];
             }
-            $progress->state = !$consultation && ($completed || $progress->state === 'completed') ? 'completed' : 'started';
+            $progress->state = !$consultation && ($completed || $progress->state === 'completed') ? 'completed'
+                : 'started';
             $progress->completed_at = $consultation ? null : ($progress->completed_at ?? ($completed ?
                  self::date($now) : null));
             $progress->last_activity_at = self::date($now);
@@ -463,7 +486,8 @@ final class VideoProgressService
         $session = $this->session($sessionId, $enrollmentId, $lessonId, $sourceRevision, ($this->clock)(), false);
         $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
         if (
-            $preflight[3]->provider_key !== 'cloudflarestream' || (int) $preflight[3]->source_revision !== $sourceRevision
+            $preflight[3]->provider_key !== 'cloudflarestream' || (int) $preflight[3]->source_revision
+                !== $sourceRevision
             || !isset($state['playback_renew_at']) || $state['playback_renew_at'] > ($this->clock)()
         ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
@@ -486,7 +510,10 @@ final class VideoProgressService
             $now = ($this->clock)();
             $session = $this->session($sessionId, $enrollmentId, $lessonId, $sourceRevision, $now);
             $state = json_decode($session->player_state_json, true, 16, JSON_THROW_ON_ERROR);
-            if (!hash_equals($fingerprint, self::fingerprint($lesson)) || $state['playback_generation'] !== $generation) {
+            if (
+                !hash_equals($fingerprint, self::fingerprint($lesson)) || $state['playback_generation']
+                !== $generation
+            ) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
             }
             $state = self::playbackState($state, $descriptor, $now);

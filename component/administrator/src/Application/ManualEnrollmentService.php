@@ -77,7 +77,8 @@ final class ManualEnrollmentService
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
             $course = $this->catalog->course($learner, $language, $courseId);
-            $hasAccess = in_array((int) $course->content_access, array_map('intval', $learner->getAuthorisedViewLevels()), true);
+            $hasAccess = in_array((int) $course->content_access, array_map('intval', $learner->
+                getAuthorisedViewLevels()), true);
             if (!$hasAccess) {
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
             }
@@ -95,7 +96,11 @@ final class ManualEnrollmentService
             $hasAccess = false;
             try {
                 $visible = $this->catalog->course($learner, $language, $courseId);
-                $hasAccess = $languageAllowed && in_array((int) $visible->content_access, array_map('intval', $learner->getAuthorisedViewLevels()), true);
+                $hasAccess = $languageAllowed && in_array(
+                    (int) $visible->content_access,
+                    array_map('intval', $learner->getAuthorisedViewLevels()),
+                    true
+                );
             } catch (\RuntimeException $error) {
                 if ($error->getCode() !== 404 || $error->getMessage() !== 'JERROR_LAYOUT_PAGE_NOT_FOUND') {
                     throw $error;
@@ -126,9 +131,13 @@ final class ManualEnrollmentService
             ->where('course_id = :course')->where('course_version_id = :version')->where('code = :code')
             ->bind(':course', $courseId, ParameterType::INTEGER)
                 ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':code', $code);
-        $edition = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $edition = $this->db->setQuery($q)->loadObject() ?:
+             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $now = (new \DateTimeImmutable('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s.u');
-        if ($edition->status !== 'open' || ($edition->starts_at !== null && $edition->starts_at > $now) || ($edition->ends_at !== null && $edition->ends_at <= $now)) {
+        if (
+            $edition->status !== 'open' || ($edition->starts_at !== null && $edition->starts_at > $now) ||
+             ($edition->ends_at !== null && $edition->ends_at <= $now)
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
         }
         $editionId = (int) $edition->id;
@@ -212,10 +221,19 @@ final class ManualEnrollmentService
         bool $preassignment = false
     ): int {
         $reason = trim($reason);
-        if (!$confirmed || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key) || !preg_match('/\A[a-f0-9]{64}\z/D', $impact)) {
+        if (
+            !$confirmed ||
+             !preg_match(
+                 '/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D',
+                 $key
+             ) || !preg_match('/\A[a-f0-9]{64}\z/D', $impact)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
-        if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)) {
+        if (
+            $reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) ||
+             !preg_match('//u', $reason)
+        ) {
             throw new \RuntimeException('COM_JLMS_MANUAL_REASON', 422);
         }
         [, , , $pre] = $this->context($identity, $course, $user, $language, $preassignment);
@@ -279,7 +297,10 @@ final class ManualEnrollmentService
                 $this->db->transactionCommit();
                 return (int) $receipt->enrollment_id;
             }
-            if (!hash_equals($receipt->claim_token, $nonce) || $p['blocked'] !== null || !hash_equals($p['hash'], $impact)) {
+            if (
+                !hash_equals($receipt->claim_token, $nonce) || $p['blocked'] !== null ||
+                 !hash_equals($p['hash'], $impact)
+            ) {
                 throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409);
             }
             $hex = bin2hex(random_bytes(16));

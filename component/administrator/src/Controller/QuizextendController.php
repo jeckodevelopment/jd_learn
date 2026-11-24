@@ -32,7 +32,10 @@ final class QuizextendController extends BaseController
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 413);
             }
             $raw = $this->input->post->get('jform', [], 'array');
-            foreach (['course_id','lesson_id','enrollment_id','attempt_id','enrollment_revision','attempt_revision','impact_hash','minutes','reason','mutation_id','confirmation'] as $key) {
+            foreach (
+                ['course_id','lesson_id','enrollment_id','attempt_id','enrollment_revision'
+                ,'attempt_revision','impact_hash','minutes','reason','mutation_id','confirmation'] as $key
+            ) {
                 if (!is_string($raw[$key] ?? null)) {
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
@@ -74,7 +77,10 @@ final class QuizextendController extends BaseController
                 $key = 'COM_JLMS_INVALID_INPUT';
                 $code = 400;
             }
-            if (in_array($code, [400,401,403,404,409,413,422,503], true) && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {
+            if (
+                in_array($code, [400,401,403,404,409,413,422,503], true)
+                && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)
+            ) {
                 throw new \RuntimeException(Text::_($key), $code);
             }
             \Joomla\CMS\Log\Log::add('Quiz deadline extension failed; correlation=' .

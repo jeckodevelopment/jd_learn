@@ -417,3 +417,12 @@ A full pinned PHPCS 4.0.4 PSR-12 audit measured **813 → 770**, net **-43** fin
 
 - Exact string values for JSON, HTML, URLs, filenames, SQL and email templates and matching normalized PHP AST.
 - Full Joomla 6.2 CI, source contracts, ACL, PHP lint, security and installed package.
+
+### PR #1019 consolidated source-wide audit (24 November 2026)
+
+**Full pinned PHPCS PSR12 4.0.4 against original main baseline: 811 → 431, net −380 findings over 98 PHP files**, zero introduced file/rule findings, PHP lint and source contracts passed. Includes AST-equivalent literal concatenations, PHP operator statement layout and attribute-whitespace-only template refactoring. The intermediate report 813 → 770 counted two formatting violations in a new AST verification helper; those helper header errors were corrected, and this consolidated baseline starts at the genuine 811 from main. Source contract repair restored any incompatible files; no security or lint check was disabled. **SECDEV-02 remains partial pending any residuals, separate CORE/API evidence and manual Joomla collaudo.** Functional coverage percentages unchanged.
+
+### Comportamenti da testare
+
+- Complete Joomla courses, class sessions, ACL, curriculum, email, certificates, lesson media and frontend templates.
+- Verify PHP AST equivalence for split literals, HTML attribute values and valid semantic token stream, PHP lint, PHPCS, SAST and Joomla integration suites.

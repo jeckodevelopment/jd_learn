@@ -62,7 +62,10 @@ final class MediaController extends BaseController
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = (int) $error->getCode();
-            if (in_array($code, [400,401,403,404,405,409,416,422,503], true) && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {
+            if (
+                in_array($code, [400,401,403,404,405,409,416,422,503], true)
+                && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)
+            ) {
                 throw new \RuntimeException(Text::_($key), $code);
             }
             Log::add('Local video delivery failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');

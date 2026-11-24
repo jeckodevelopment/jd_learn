@@ -144,9 +144,15 @@ $actor = $app->getIdentity();
 $student = new NativeUser((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult());
 $other = new NativeUser((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerother'")->loadResult());
 $now = time();
-$service = new JdQuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
-    return $now;
-}, $component->getQuizTimeService());
+$service = new JdQuizAttemptService(
+    $db,
+    $learning,
+    $component->getQuizSnapshotService(),
+    static function () use (&$now): int {
+        return $now;
+    },
+    $component->getQuizTimeService()
+);
 $fixturePath = dirname($root) . '/quiz-attempts-fixture.json';
 if (($argv[2] ?? '') === 'worker') {
     echo "ready\n";
@@ -186,7 +192,12 @@ $group = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI learni
 $catid = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND " .
     "alias='ci-courses'"))->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Quiz runtime fixture','alias' => 'quiz-runtime-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Quiz runtime'])) {
+if (
+    !$model->save(['id' => 0,'revision' => 1,'title' => 'Quiz runtime fixture','alias' => 'quiz-runtime-fixture'
+    ,'catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode'
+    => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>'
+    , 'summary' => 'Quiz runtime'])
+) {
     throw new \RuntimeException($model->getError());
 }
 $course = (int)$model->getState('course.id');

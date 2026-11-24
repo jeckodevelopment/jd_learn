@@ -22,7 +22,10 @@ final class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $actor = Factory::getApplication()->getIdentity();
-        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.quiz.manage', 'com_jlms')) {
+        if (
+            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms') || !$actor
+            ->authorise('jlms.quiz.manage', 'com_jlms')
+        ) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
         $this->bank = $this->get('Bank');

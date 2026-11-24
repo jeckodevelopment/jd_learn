@@ -112,7 +112,10 @@ final class EnrollmentStateService
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $reason = trim($reason);
-        if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)) {
+        if (
+            $reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason)
+            || !preg_match('//u', $reason)
+        ) {
             throw new \RuntimeException('COM_JLMS_ENROLLMENT_STATE_REASON', 422);
         }
         $this->scope($identity, $course, $enrollment);

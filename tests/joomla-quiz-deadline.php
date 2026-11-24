@@ -156,12 +156,23 @@ $audit = static function (NativeUser $actor, array $message) use ($db): void {
         'quizextend'
     );
 };
-$deadline = new JdQuizDeadlineService($db, $component->getQuizTimeService(), $audit, static function () use (&$now): int {
-    return $now;
-});
-$runtime = new JdQuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
-    return $now;
-}, $component->getQuizTimeService());
+$deadline = new JdQuizDeadlineService(
+    $db,
+    $component->getQuizTimeService(),
+    $audit,
+    static function () use (&$now): int {
+        return $now;
+    }
+);
+$runtime = new JdQuizAttemptService(
+    $db,
+    $learning,
+    $component->getQuizSnapshotService(),
+    static function () use (&$now): int {
+        return $now;
+    },
+    $component->getQuizTimeService()
+);
 $f = json_decode(file_get_contents(dirname($root) . '/quiz-attempts-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $course = $f['course_id'];
 $lesson = $f['lesson_id'];
@@ -395,7 +406,12 @@ $cat = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jl
     "alias='ci-courses'"))->loadResult();
 $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning access'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Untimed extension fixture','alias' => 'untimed-extension-fixture','catid' => $cat,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Untimed guard'])) {
+if (
+    !$model->save(['id' => 0,'revision' => 1,'title' => 'Untimed extension fixture','alias'
+    => 'untimed-extension-fixture','catid' => $cat,'language' => '*','catalog_access' => 1,'content_access'
+    => $level,'enrollment_mode' => 'auto','presentation_description'
+    => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Untimed guard'])
+) {
     throw new \RuntimeException($model->getError());
 }
 $uc = (int)$model->getState('course.id');

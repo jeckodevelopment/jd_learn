@@ -215,7 +215,10 @@ editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision
     'com_fields' => ['history-reference' => 'HISTORY_FIELD_ORIGINAL']]), 'Course field revision can be saved into ' .
         'native editorial history');
 $targetHistory = null;
-foreach ($db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course . "' ORDER BY version_id DESC")->loadObjectList() as $candidate) {
+foreach (
+    $db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course
+    . "' ORDER BY version_id DESC")->loadObjectList() as $candidate
+) {
     $snapshot = json_decode($candidate->version_data, true, 64, JSON_THROW_ON_ERROR);
     if (($snapshot['com_fields']['history-reference'] ?? null) === 'HISTORY_FIELD_ORIGINAL') {
         $targetHistory = $candidate;

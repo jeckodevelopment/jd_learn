@@ -120,13 +120,19 @@ final class EnrollmentApprovalService
                     ->getLanguage()->getTag()) : (string) $course->language;
                 // Publication, category hierarchy and Joomla access levels are rechecked for the learner.
                 $visible = $this->catalog->course($learner, $lang, $courseId);
-                if (!in_array((int) $visible->content_access, array_map('intval', $learner->getAuthorisedViewLevels()), true)) {
+                if (
+                    !in_array((int) $visible->content_access, array_map('intval', $learner
+                    ->getAuthorisedViewLevels()), true)
+                ) {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
                 $q = $this->db->createQuery()->select('COUNT(*)')->from('#__jlms_enrollments')
                     ->where('edition_id = :edition')->where("status <> 'cancelled'")
                     ->bind(':edition', $editionId, ParameterType::INTEGER);
-                if ($edition->capacity !== null && (int) $this->db->setQuery($q)->loadResult() >= (int) $edition->capacity) {
+                if (
+                    $edition->capacity !== null && (int) $this->db->setQuery($q)->loadResult() >= (int) $edition
+                    ->capacity
+                ) {
                     throw new \RuntimeException('COM_JLMS_EDITION_FULL', 409);
                 }
                 $subjectKey = (string) $request->subject_key;

@@ -201,7 +201,10 @@ $service->moveLesson($actor, $move);
 $new = builderRow('lessons', $l1);
 builderExpect((int)$new->module_id === $m2 && (int)$new->revision === (int)$old
     ->revision + 1, 'Move preserves identity and bumps lesson revision');
-foreach (['logical_key','course_version_id','body','kind','required','source_revision','source_json','media_asset_id'] as $key) {
+foreach (
+    ['logical_key','course_version_id','body','kind','required','source_revision','source_json'
+    ,'media_asset_id'] as $key
+) {
     builderExpect($new->$key === $old->$key, 'Move preserves ' . $key);
 }
 builderDenied(fn()=>$service->moveLesson($actor, $move), 'COM_JLMS_REVISION_CONFLICT');

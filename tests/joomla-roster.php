@@ -218,7 +218,10 @@ rosterDenied(
     404,
     'version cannot cross course'
 );
-foreach ([['status' => "active' OR 1=1 --"],['progress' => ['completed']],['user' => '1 OR 1=1'],['version' => -1],['user' => 1.5]] as $filters) {
+foreach (
+    [['status' => "active' OR 1=1 --"],['progress' => ['completed']],['user' => '1 OR 1=1'],['version'
+    => -1],['user' => 1.5]] as $filters
+) {
     rosterDenied(fn()=>$service->query($actor, $course, $filters), 400, 'invalid filters fail closed');
 }
 $payload = json_encode($rows, JSON_THROW_ON_ERROR);

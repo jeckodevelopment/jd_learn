@@ -318,7 +318,13 @@ final class CurriculumService
         $sourceId = self::id($input['version_id'] ?? null);
         $courseRevision = self::id($input['revision'] ?? null);
         $sourceRevision = self::id($input['expected_version_revision'] ?? null);
-        return $this->transaction(function () use ($identity, $courseId, $sourceId, $courseRevision, $sourceRevision): int {
+        return $this->transaction(function () use (
+            $identity,
+            $courseId,
+            $sourceId,
+            $courseRevision,
+            $sourceRevision
+): int {
             $course = $this->row('courses', $courseId, true);
             $actor = new User((int)$identity->id);
             $actor->clearAccessRights();
@@ -351,7 +357,8 @@ final class CurriculumService
             $this->update('courses', $course, [], $actor);
             (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($this->db))->record(
                 $actor,
-                ['id' => $courseId, 'title' => $course->title, 'source_version_id' => $sourceId, 'target_version_id' => $target,
+                ['id' => $courseId, 'title' => $course->title, 'source_version_id' => $sourceId
+                , 'target_version_id' => $target,
                  'source_version_no' => (int)$source->version_no, 'target_version_no' => $number,
                  'link' => 'index.php?option=com_jlms&view=curriculum&id=' . $courseId . '&version_id=' . $target,
                 'correlation_id' => bin2hex(random_bytes(16))],
@@ -397,7 +404,13 @@ final class CurriculumService
                 $rules['certificate_enabled'] = false;
             }
             $publicPreviews = $input['public_previews'] ?? ($rules['public_previews'] ? '1' : '0');
-            if ((!is_string($publicPreviews) && !is_int($publicPreviews)) || !in_array((string) $publicPreviews, ['0', '1'], true)) {
+            if (
+                (!is_string($publicPreviews) && !is_int($publicPreviews)) || !in_array(
+                    (string) $publicPreviews,
+                    ['0', '1'],
+                    true
+                )
+            ) {
                 throw new \DomainException('COM_JLMS_INVALID_INPUT');
             }
             $rules['public_previews'] = (string) $publicPreviews === '1';
@@ -405,7 +418,10 @@ final class CurriculumService
                 $rules['video_threshold_basis_points'] =
                     \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold']);
             }
-            $this->update('course_versions', $record, ['rules_json' => json_encode($rules, JSON_THROW_ON_ERROR)], $actor);
+            $this->update('course_versions', $record, ['rules_json' => json_encode(
+                $rules,
+                JSON_THROW_ON_ERROR
+            )], $actor);
         });
     }
 
@@ -416,7 +432,15 @@ final class CurriculumService
         $versionRevision = self::id($input['expected_version_revision'] ?? null);
         $id = self::id($input['id'] ?? 0, true);
         $title = self::title($input['title'] ?? null);
-        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $id, $title): int {
+        return $this->transaction(function () use (
+            $actor,
+            $input,
+            $courseId,
+            $versionId,
+            $versionRevision,
+            $id,
+            $title
+): int {
             $version = $this->draft($actor, $courseId, $versionId, $versionRevision);
             if ($id) {
                 $module = $this->row('modules', $id, true);
@@ -445,14 +469,29 @@ final class CurriculumService
     {
         $actor = CourseEditorAccess::fresh($identity);
         $table = match ($kind) {
-            'module' => 'modules', 'lesson' => 'lessons', default => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
+            'module' => 'modules', 'lesson' => 'lessons', default
+            => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
         };
         $courseId = self::id($input['course_id'] ?? null);
         $versionId = self::id($input['version_id'] ?? null);
         $id = self::id($input['id'] ?? null);
         $title = self::title($input['title'] ?? null);
-        return $this->transaction(function () use ($actor, $kind, $table, $input, $courseId, $versionId, $id, $title): int {
-            $version = $this->draft($actor, $courseId, $versionId, self::id($input['expected_version_revision'] ?? null));
+        return $this->transaction(function () use (
+            $actor,
+            $kind,
+            $table,
+            $input,
+            $courseId,
+            $versionId,
+            $id,
+            $title
+): int {
+            $version = $this->draft(
+                $actor,
+                $courseId,
+                $versionId,
+                self::id($input['expected_version_revision'] ?? null)
+            );
             $course = $this->row('courses', $courseId);
             if (
                 ($course->checked_out && (int) $course->checked_out !== (int) $actor->id)
@@ -521,7 +560,10 @@ final class CurriculumService
         if ((int)$version->revision !== self::id($input['expected_version_revision'] ?? null)) {
             throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
-        if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) {
+        if (
+            ($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out
+            && (int)$version->checked_out !== (int)$actor->id)
+        ) {
             throw new \DomainException('JERROR_ALERTNOAUTHOR');
         }
         $id = self::id($input['id'] ?? 0, true);
@@ -574,7 +616,10 @@ final class CurriculumService
         if (!in_array($policy, ['embed','site_consent'], true)) {
             throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
         }
-        $source = $provider->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]));
+        $source = $provider->normaliseSource(new SourceInput(
+            $input['source_reference'],
+            empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]
+        ));
         $duration = null;
         if ($key === 'cloudflarestream') {
             $metadata = $provider->fetchMetadata($source, new \Jlms\Contracts\Video\MetadataContext((int)$actor
@@ -622,11 +667,15 @@ final class CurriculumService
             'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
-            'params_json' => in_array($kind, ['audio', 'video'], true) ? LessonTranscript::encode($transcript, $kind) : '{}',
+            'params_json' => in_array($kind, ['audio', 'video'], true) ? LessonTranscript::encode(
+                $transcript,
+                $kind
+            ) : '{}',
             'publish_up' => null, 'publish_down' => null, 'release_after_days' => null];
         $publicPreview = $input['public_preview'] ?? '0';
         if (
-            (!is_string($publicPreview) && !is_int($publicPreview)) || !in_array((string) $publicPreview, ['0', '1'], true)
+            (!is_string($publicPreview) && !is_int($publicPreview)) || !in_array((string) $publicPreview, ['0'
+            , '1'], true)
             || ((string) $publicPreview === '1' && $kind !== 'text')
         ) {
             throw new \DomainException('COM_JLMS_INVALID_INPUT');
@@ -646,7 +695,10 @@ final class CurriculumService
                  ($input['duration_confirmed'] ?? '') === '1');
             if ($durationProof !== null) {
                 if (
-                    $mode !== 'auto' || !hash_equals($this->durationFingerprint($actor, $input), (string)($durationProof['fingerprint'] ?? ''))
+                    $mode !== 'auto' || !hash_equals(
+                        $this->durationFingerprint($actor, $input),
+                        (string)($durationProof['fingerprint'] ?? '')
+                    )
                     || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($durationProof['duration_ms'] ?? null)
                     || !in_array($durationProof['origin'] ?? '', ['author_sdk','provider_api'], true)
                 ) {
@@ -693,7 +745,20 @@ final class CurriculumService
         if (count(array_unique($requiredLessons)) !== count($requiredLessons)) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
-        return $this->transaction(function () use ($actor, $input, $courseId, $versionId, $versionRevision, $moduleId, $id, $fields, $durationProof, $requiredLessons, $thresholdSubmitted, $threshold): int {
+        return $this->transaction(function () use (
+            $actor,
+            $input,
+            $courseId,
+            $versionId,
+            $versionRevision,
+            $moduleId,
+            $id,
+            $fields,
+            $durationProof,
+            $requiredLessons,
+            $thresholdSubmitted,
+            $threshold
+): int {
             $version = $this->draft($actor, $courseId, $versionId, $versionRevision);
             $course = $this->row('courses', $courseId);
             $timezone = CourseSchedule::read($course)['timezone'];
@@ -721,13 +786,17 @@ final class CurriculumService
                 $releaseDays = array_key_exists('release_after_days', $input) ?
                      $input['release_after_days'] : $lesson->release_after_days;
                 $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($releaseDays);
-                if ($fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key === 'html5') {
+                if (
+                    $fields['kind'] === 'video' && $fields['provider_key'] === 'html5' && $lesson->provider_key
+                    === 'html5'
+                ) {
                     foreach (['source_json', 'media_asset_id', 'duration_ms', 'params_json'] as $field) {
                         $fields[$field] = $lesson->$field;
                     }
                 }
                 if (
-                    $fields['kind'] === 'video' && $fields['provider_key'] !== 'html5' && ($input['duration_mode'] ?? '') === 'auto'
+                    $fields['kind'] === 'video' && $fields['provider_key'] !== 'html5'
+                    && ($input['duration_mode'] ?? '') === 'auto'
                     && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson
                         ->source_json === $fields['source_json']
                 ) {
@@ -749,7 +818,8 @@ final class CurriculumService
                     $fields['params_json'] = '{}';
                 }
                 $changedSource = $lesson->kind !== $fields['kind'] || $lesson->provider_key !== $fields['provider_key']
-                    || $lesson->source_json !== $fields['source_json'] || $lesson->duration_ms != $fields['duration_ms'];
+                    || $lesson->source_json !== $fields['source_json'] || $lesson->duration_ms
+                    != $fields['duration_ms'];
                 $fields['source_revision'] = (int) $lesson->source_revision + (int) $changedSource;
                 if ($fields['kind'] === 'video') {
                     $params = json_decode((string) $fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
@@ -779,8 +849,14 @@ final class CurriculumService
                 }
                 $lessons = $this->listRows('lessons', 'module_id', $moduleId, 5001);
                 $order = $lessons ? max(array_map(static fn ($l): int => (int) $l->ordering, $lessons)) + 1 : 0;
-                $id = $this->insert('lessons', $fields + ['course_version_id' => $versionId, 'logical_key' => self::uuid(),
-                    'alias' => \Joomla\String\StringHelper::substr(ApplicationHelper::stringURLSafe($fields['title']), 0, 140) ?: 'lesson',
+                $id = $this->insert('lessons', $fields + ['course_version_id' => $versionId, 'logical_key'
+                => self::uuid(),
+                    'alias'
+                    => \Joomla\String\StringHelper::substr(
+                        ApplicationHelper::stringURLSafe($fields['title']),
+                        0,
+                        140
+                    ) ?: 'lesson',
                     'ordering' => $order, 'source_revision' => 1, 'preview' => 0,
                     'params_json' => '{}', 'fields_snapshot_json' => '{}'], $actor);
             }
@@ -799,7 +875,12 @@ final class CurriculumService
         if (in_array($lessonId, $requiredLessons, true)) {
             throw new \DomainException('COM_JLMS_PREREQUISITE_CYCLE');
         }
-        $ids = array_map('intval', array_column($this->listRows('lessons', 'course_version_id', $versionId, 5001), 'id'));
+        $ids = array_map('intval', array_column($this->listRows(
+            'lessons',
+            'course_version_id',
+            $versionId,
+            5001
+        ), 'id'));
         if (count($ids) > 5000 || !in_array($lessonId, $ids, true)) {
             throw new \DomainException('COM_JLMS_OUTLINE_LIMIT');
         }
@@ -918,18 +999,23 @@ final class CurriculumService
     public function deleteItem(User $actor, string $kind, array $input): void
     {
         $table = match ($kind) {
-            'module' => 'modules', 'lesson' => 'lessons', default => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
+            'module' => 'modules', 'lesson' => 'lessons', default
+            => throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT')
         };
         $courseId = self::id($input['course_id'] ?? null);
         $versionId = self::id($input['version_id'] ?? null);
         $id = self::id($input['id'] ?? null);
         $this->transaction(function () use ($actor, $input, $courseId, $versionId, $id, $table, $kind): void {
-            $version = $this->draft($actor, $courseId, $versionId, self::id($input['expected_version_revision'] ?? null), 'core.delete');
+            $version = $this->draft($actor, $courseId, $versionId, self::id($input['expected_version_revision']
+            ?? null), 'core.delete');
             $row = $this->row($table, $id, true);
             if ((int) $row->course_version_id !== $versionId) {
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
             }
-            if ((int) $row->revision !== self::id($input['revision'] ?? null) || ($input['confirmation'] ?? '') !== '1') {
+            if (
+                (int) $row->revision !== self::id($input['revision'] ?? null) || ($input['confirmation']
+                ?? '') !== '1'
+            ) {
                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
             }
             $dependencies = $kind === 'module' ? [['lessons', 'module_id']]
@@ -1057,7 +1143,12 @@ final class CurriculumService
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $this->transaction(function () use ($actor, $input, $courseId, $versionId, $id, $direction, $kind): void {
-            $version = $this->draft($actor, $courseId, $versionId, self::id($input['expected_version_revision'] ?? null));
+            $version = $this->draft(
+                $actor,
+                $courseId,
+                $versionId,
+                self::id($input['expected_version_revision'] ?? null)
+            );
             $item = $this->row($kind === 'module' ? 'modules' : 'lessons', $id, true);
             if ((int) $item->course_version_id !== $versionId) {
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');

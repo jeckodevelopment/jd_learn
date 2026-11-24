@@ -86,7 +86,13 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             ];
             $data = array_intersect_key($input, array_flip($allowed));
             foreach (['id','revision','catid','access','state'] as $key) {
-                if (array_key_exists($key, $data) && ((!is_int($data[$key]) && !is_string($data[$key])) || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))) {
+                if (
+                    array_key_exists($key, $data) && ((!is_int($data[$key]) && !is_string($data[$key]))
+                    || !preg_match(
+                        $key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D',
+                        (string) $data[$key]
+                    ))
+                ) {
                     throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
                 }
             }
@@ -133,13 +139,21 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 }
             }
             $catid = (int) ($data['catid'] ?? $record->catid ?? 0);
-            if ((!$id || $catid !== (int) $record->catid) && !$actor->authorise('core.create', 'com_jlms.teacher.category.' . $catid)) {
+            if (
+                (!$id || $catid !== (int) $record->catid) && !$actor->authorise(
+                    'core.create',
+                    'com_jlms.teacher.category.' . $catid
+                )
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             if ($record && (int) $record->state === -2 && isset($data['state']) && (int) $data['state'] === 1) {
                 throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
             }
-            if (array_key_exists('state', $data) && (int) $data['state'] !== (int) ($record->state ?? 0) && !$actor->authorise('core.edit.state', $scope)) {
+            if (
+                array_key_exists('state', $data) && (int) $data['state'] !== (int) ($record->state ?? 0)
+                && !$actor->authorise('core.edit.state', $scope)
+            ) {
                 throw new \DomainException('JERROR_ALERTNOAUTHOR');
             }
             foreach (['title', 'alias', 'bio', 'image', 'image_alt', 'website', 'language'] as $key) {
@@ -185,10 +199,16 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             $params['website'] = $website;
             $data['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
             if (array_key_exists('user_id', $data)) {
-                if ($data['user_id'] === '' || $data['user_id'] === null || $data['user_id'] === '0' || $data['user_id'] === 0) {
+                if (
+                    $data['user_id'] === '' || $data['user_id'] === null || $data['user_id'] === '0'
+                    || $data['user_id'] === 0
+                ) {
                     $data['user_id'] = null;
                 } else {
-                    if ((!is_int($data['user_id']) && !is_string($data['user_id'])) || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $data['user_id'])) {
+                    if (
+                        (!is_int($data['user_id']) && !is_string($data['user_id']))
+                        || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $data['user_id'])
+                    ) {
                         throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
                     }
                     $user = new User((int) $data['user_id']);

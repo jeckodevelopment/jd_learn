@@ -38,7 +38,9 @@ foreach ($this->preview['lessons'] as $entry) {
             <fieldset><legend><?= Text::_('COM_JLMS_ACCESS_PREVIEW_LEVELS') ?></legend>
             <?php foreach ($access['levels'] as $level) :
                 $levelId = (int) $level->id; ?>
-                <label class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="access_levels[]" value="<?= $levelId ?>"<?= in_array($levelId, $access['selected'], true) ? ' checked' : '' ?>> <span class="form-check-label"><?= $this->escape($level->title) ?></span></label>
+                <label class="form-check form-check-inline"><input class="form-check-input"
+                type="checkbox" name="access_levels[]"
+                value="<?= $levelId ?>"<?= in_array($levelId, $access['selected'], true) ? ' checked' : '' ?>> <span class="form-check-label"><?= $this->escape($level->title) ?></span></label>
             <?php endforeach; ?>
             </fieldset>
             <button class="btn btn-secondary mt-2"
@@ -77,7 +79,8 @@ foreach ($this->preview['lessons'] as $entry) {
                                 ?><p><?= $this->escape($file->description) ?></p><?php
                             endif; ?>
                             <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
-                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
+                            <a
+                            href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
                         </article>
                     <?php endforeach; ?>
                 </section>
@@ -92,7 +95,8 @@ foreach ($this->preview['lessons'] as $entry) {
                         <select id="jlms-video-speed"
     aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">
                             <?php foreach ([0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] as $speed) : ?>
-                                <option value="<?= $speed ?>"<?= $speed === 1 ? ' selected' : '' ?>><?= $speed ?>×</option>
+                                <option
+                            value="<?= $speed ?>"<?= $speed === 1 ? ' selected' : '' ?>><?= $speed ?>×</option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -126,7 +130,10 @@ foreach ($this->preview['lessons'] as $entry) {
                     ?><section id="jlms-preview-lesson-materials" class="jlms-material-list">
                     <h3><?= Text::_('COM_JLMS_LESSON_MATERIALS') ?></h3>
                     <?php foreach ($lessonFiles as $file) :
-                        if ($lesson->kind === 'audio' && in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true)) {
+                        if (
+                            $lesson->kind === 'audio' && in_array($file->mime_type, ['audio/mpeg'
+                            , 'audio/ogg'], true)
+                        ) {
                             continue;
                         } ?>
                         <?php $url = 'index.php?option=com_jlms&task=material.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
@@ -135,7 +142,8 @@ foreach ($this->preview['lessons'] as $entry) {
                                 ?><p><?= $this->escape($file->description) ?></p><?php
                             endif; ?>
                             <p><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
-                            <a href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
+                            <a
+                            href="<?= $this->escape(\Joomla\CMS\Router\Route::link('administrator', $url, false)) ?>"<?= in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'text/csv'], true) ? ' target="_blank" rel="noopener"' : '' ?>><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
                         </article>
                     <?php endforeach; ?>
                 </section>

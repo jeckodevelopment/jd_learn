@@ -126,7 +126,10 @@ final class CourseOperationsService
                 ->where('mutation_id=:mutation')->bind(':mutation', $mutation);
             $prior = $this->db->setQuery($q)->loadObject();
             if ($prior) {
-                if ((int)$prior->actor_user_id === (int)$actor->id && $prior->operation === $operation && hash_equals($prior->impact_hash, $impactHash) && hash_equals($prior->reason, $reason)) {
+                if (
+                    (int)$prior->actor_user_id === (int)$actor->id && $prior->operation === $operation
+                    && hash_equals($prior->impact_hash, $impactHash) && hash_equals($prior->reason, $reason)
+                ) {
                     $this->db->transactionCommit();
                     return;
                 }

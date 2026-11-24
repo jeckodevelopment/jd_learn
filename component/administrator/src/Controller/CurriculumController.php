@@ -83,7 +83,11 @@ class CurriculumController extends BaseController
                     $versionId = $service->restoreVersion($actor, $input);
                     break;
                 case 'version':
-                    $versionId = $service->createDraft($actor, $courseId, CurriculumService::id($input['revision'] ?? null));
+                    $versionId = $service->createDraft(
+                        $actor,
+                        $courseId,
+                        CurriculumService::id($input['revision'] ?? null)
+                    );
                     break;
                 case 'duplicatecourse':
                     $model = $this->app->bootComponent('com_jlms')->getMVCFactory()->
@@ -143,7 +147,10 @@ class CurriculumController extends BaseController
                 'COM_JLMS_VIDEO_PROVIDER_BUSY', 'COM_JLMS_VIDEO_REMOTE_UNPROTECTED',
                 'COM_JLMS_VIDEO_REMOTE_NOT_READY', 'COM_JLMS_VIDEO_ORIGIN_REJECTED',
             ];
-            if ($operation === 'transition' && $error instanceof \RuntimeException && in_array($error->getMessage(), $videoErrors, true)) {
+            if (
+                $operation === 'transition' && $error instanceof \RuntimeException && in_array($error
+                ->getMessage(), $videoErrors, true)
+            ) {
                 $this->setMessage(Text::_($error->getMessage()), 'error');
             } else {
                 Log::add('Curriculum mutation failed; correlation=' . bin2hex(random_bytes(8)), Log::ERROR, 'com_jlms');
@@ -206,7 +213,10 @@ class CurriculumController extends BaseController
 
     public function execute($task)
     {
-        if (static::class === self::class && !in_array(strtolower($task), ['createversion', 'restoreversion', 'saveteachingrules', 'transition', 'duplicatecourse', 'saveorder'], true)) {
+        if (
+            static::class === self::class && !in_array(strtolower($task), ['createversion', 'restoreversion'
+            , 'saveteachingrules', 'transition', 'duplicatecourse', 'saveorder'], true)
+        ) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);
