@@ -68,8 +68,14 @@ final class HtmlView extends BaseHtmlView
             }
         }
         foreach ($this->item['files']['items'] as $file) {
-            $file->publish_up_editor = \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_up, $this->item['schedule_timezone']);
-            $file->publish_down_editor = \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_down, $this->item['schedule_timezone']);
+            $file->publish_up_editor = \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor(
+                $file->publish_up,
+                $this->item['schedule_timezone']
+            );
+            $file->publish_down_editor = \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor(
+                $file->publish_down,
+                $this->item['schedule_timezone']
+            );
         }
         $this->scheduleTimezone = $this->item['schedule_timezone'];
         $this->dateValues = ['publish_up' => $data['publish_up'], 'publish_down' => $data['publish_down']];

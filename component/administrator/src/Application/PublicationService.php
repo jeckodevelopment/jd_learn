@@ -117,7 +117,14 @@ final class PublicationService
         $currentState = (int) $course->state;
         $returnState = $course->current_version_id === null ? 0 : 1;
         $currentVersionId = (int) ($course->current_version_id ?? 0);
-        return array_values(array_filter($transitions, function ($transition) use ($actor, $version, $currentState, $returnState, $reviewStage, $currentVersionId): bool {
+        return array_values(array_filter($transitions, function ($transition) use (
+            $actor,
+            $version,
+            $currentState,
+            $returnState,
+            $reviewStage,
+            $currentVersionId
+        ): bool {
             $options = new Registry($transition->options);
             $state = $options->get('publishing');
             $action = (string) $options->get('jlms_action', (string) $state === '1' ? 'publish' : 'unpublish');
@@ -276,17 +283,22 @@ final class PublicationService
                     throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                 }
                 if (
-                    !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)
-                    || !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validReleaseDays($lesson->release_after_days)
+                    !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored(
+                        $lesson->publish_up,
+                        $lesson->publish_down
+                    )
+                    || !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validReleaseDays($lesson
+                        ->release_after_days)
                 ) {
                     throw new \DomainException('COM_JLMS_LESSON_SCHEDULE_INVALID');
                 }
                 if (
-                    (int) $lesson->required === 1 && !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::reachable(
-                        $lesson->publish_up,
-                        $lesson->publish_down,
-                        CourseSchedule::read($course),
-                    )
+                    (int) $lesson->required === 1
+                        && !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::reachable(
+                            $lesson->publish_up,
+                            $lesson->publish_down,
+                            CourseSchedule::read($course),
+                        )
                 ) {
                     throw new \DomainException('COM_JLMS_LESSON_UNREACHABLE');
                 }
@@ -310,7 +322,11 @@ final class PublicationService
                         $lesson->completion_rule !== 'manual'
                             || $lesson->source_json !== null
                             || $lesson->provider_key !== null
-                        || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === ''
+                        || trim(html_entity_decode(
+                            strip_tags((string) $lesson->body),
+                            ENT_QUOTES | ENT_HTML5,
+                            'UTF-8'
+                        )) === ''
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
                     }
@@ -359,12 +375,17 @@ final class PublicationService
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
                     if (
                         !is_array($params) || (array_key_exists('video_threshold_basis_points', $params)
-                        && (!is_int($params['video_threshold_basis_points']) || $params['video_threshold_basis_points'] < 1 || $params['video_threshold_basis_points'] > 10000))
+                        && (!is_int($params['video_threshold_basis_points'])
+                            || $params['video_threshold_basis_points'] < 1
+                            || $params['video_threshold_basis_points'] > 10000))
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                     if (
-                        !is_string($lesson->provider_key) || !preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson->provider_key)
+                        !is_string($lesson->provider_key) || !preg_match(
+                            '/\A[a-z][a-z0-9_]{1,63}\z/D',
+                            $lesson->provider_key
+                        )
                         || $lesson->completion_rule !== 'video_coverage'
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
@@ -396,7 +417,8 @@ final class PublicationService
                             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                         }
                     }
-                    $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider($lesson->provider_key);
+                    $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()
+                        ->videoProvider($lesson->provider_key);
                     $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
                     $normal = $provider->normaliseSource(new
                         \Jlms\Contracts\Video\SourceInput($source['reference'], $source['options'] ?? []));
@@ -420,16 +442,19 @@ final class PublicationService
                     $initialRequired++;
                 }
                 $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
-                    'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
+                    'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering'
+                        => (int) $lesson->ordering,
                     'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'quiz_sha256' => $quizHash
                         , 'duration_ms' => $lesson->duration_ms,
                     'publish_up' => $lesson->publish_up, 'publish_down' => $lesson->publish_down,
-                    'release_after_days' => $lesson->release_after_days === null ? null : (int) $lesson->release_after_days,
+                    'release_after_days' => $lesson->release_after_days === null ? null : (int) $lesson
+                        ->release_after_days,
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
                     'fields_sha256' => hash('sha256', $lesson->fields_snapshot_json),
                     'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' =>
                          hash('sha256', (string) $lesson->body)];
-                $lessonSnapshot = (object) ['id' => (int) $lesson->id, 'fields_snapshot_json' => $lesson->fields_snapshot_json];
+                $lessonSnapshot = (object) ['id' => (int) $lesson->id, 'fields_snapshot_json' => $lesson
+                    ->fields_snapshot_json];
                 $this->db->updateObject('#__jlms_lessons', $lessonSnapshot, 'id');
                 $lastId = (int) $lesson->id;
             }
@@ -521,7 +546,10 @@ final class PublicationService
                 ($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
                 || $attachment['status'] !== 'ready' || !in_array($preview, [0, 1], true)
                 || ($preview === 1 && $attachment['lesson_id'] !== null)
-                || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored($attachment['publish_up'], $attachment['publish_down'])
+                || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored(
+                    $attachment['publish_up'],
+                    $attachment['publish_down']
+                )
             ) {
                 throw new \DomainException('COM_JLMS_MATERIAL_NOT_READY');
             }
@@ -642,10 +670,19 @@ final class PublicationService
             }
             foreach ($remoteLessons as $lesson) {
                 $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
-                $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider('cloudflarestream');
+                $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()
+                    ->videoProvider('cloudflarestream');
                 $metadata = $provider->fetchMetadata(
-                    new \Jlms\Contracts\Video\VideoSource('cloudflarestream', $source['reference'], (int) $lesson->source_revision),
-                    new \Jlms\Contracts\Video\MetadataContext((int) $actor->id, $this->app->getLanguage()->getTag(), true)
+                    new \Jlms\Contracts\Video\VideoSource(
+                        'cloudflarestream',
+                        $source['reference'],
+                        (int) $lesson->source_revision
+                    ),
+                    new \Jlms\Contracts\Video\MetadataContext(
+                        (int) $actor->id,
+                        $this->app->getLanguage()->getTag(),
+                        true
+                    )
                 );
                 $remoteChecks[(int) $lesson->id] = ['hash' => hash('sha256', $lesson->source_json),
                     'source_revision' => (int) $lesson->source_revision, 'duration_ms' => $metadata->durationMs];
@@ -704,7 +741,10 @@ final class PublicationService
                 && (int) $course->current_version_id === $versionId && $state === 1
             ) {
                 // Republish the current immutable version without rebuilding its snapshot.
-            } elseif ($action === 'unpublish' && $version->status === 'published' && (int) $course->current_version_id === $versionId && $state === 0) {
+            } elseif (
+                $action === 'unpublish' && $version->status === 'published' && (int) $course
+                ->current_version_id === $versionId && $state === 0
+            ) {
                 // The current teaching version stays immutable; workflow withdrawal
                 // only changes whether a new learner can find or start the course.
             } elseif (
@@ -735,7 +775,8 @@ final class PublicationService
                 throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
             }
             $update = (object) ['id' => $courseId,
-                'revision' => (int) $course->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
+                'revision' => (int) $course->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at'
+                    => gmdate('Y-m-d H:i:s')];
             if ($version->status === 'draft' && $action === 'publish') {
                 $update->current_version_id = $versionId;
             }
