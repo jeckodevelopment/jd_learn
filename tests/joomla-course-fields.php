@@ -86,7 +86,8 @@ $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => t
 fieldsExpect($model->save(['id' => 0,'revision' => 1,'title' => 'Native course fields fixture','alias'
     => 'native-course-fields-fixture','catid' => $catid,'language' => '*','catalog_access'
         => 1,'content_access' => 2,'enrollment_mode' => 'auto','summary' => 'Fields fixture','com_fields'
-            => ['course-editorial-reference' => 'Initial native course value']]), 'Create course through native model with custom value');
+            => ['course-editorial-reference' =>
+                 'Initial native course value']]), 'Create course through native model with custom value');
 $course = (int)$model->getState('course.id');
 $value = static fn(): string => (string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id='
     . $field . ' AND item_id=' . $db->quote((string)$course))->loadResult();

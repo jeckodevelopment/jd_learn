@@ -148,7 +148,8 @@ $hidden = static function () use ($catalog, $guest, $course): bool {
 pubExpect($hidden(), 'draft absent from public direct lookup');
 pubDenied(fn()=>pubTransition(), 'empty structure rejected');
 pubExpect(!(int)$db->setQuery(('SELECT COUNT(*) FROM #__workflow_associations WHERE '
-    . 'extension=\'com_jlms.course\' AND item_id=') . $course)->loadResult(), 'failed publish has no workflow side effects');
+    . 'extension=\'com_jlms.course\' AND item_id=') . $course)
+        ->loadResult(), 'failed publish has no workflow side effects');
 $module = $authoring->saveModule($actor, pubScope() + ['id' => 0,'title' => 'Published chapter']);
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system', 'fields');
 $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()
@@ -315,7 +316,9 @@ pubExpect(
     (bool)$courseFieldModel->setFieldValue($courseField, $course, 'COURSE_FIELD_CURRENT_VALUE'),
     'course editorial field can change after publishing'
 );
-$unchangedCourseSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $version)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
+$unchangedCourseSnapshot = json_decode((string)$db
+    ->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $version)
+    ->loadResult(), true, 32, JSON_THROW_ON_ERROR);
 pubExpect(
     ($unchangedCourseSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
     'later editorial field changes do not rewrite the frozen course snapshot'
@@ -443,8 +446,12 @@ $publication->transition(
     (int)$publishChoice->id,
     (string)$nextImpact['fingerprint']
 );
-$nextSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $nextVersion)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
-$oldSnapshot = json_decode((string)$db->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $version)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
+$nextSnapshot = json_decode((string)$db
+    ->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $nextVersion)
+    ->loadResult(), true, 32, JSON_THROW_ON_ERROR);
+$oldSnapshot = json_decode((string)$db
+    ->setQuery('SELECT fields_snapshot_json FROM #__jlms_course_versions WHERE id=' . $version)
+    ->loadResult(), true, 32, JSON_THROW_ON_ERROR);
 pubExpect(
     ($nextSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_CURRENT_VALUE'
     && ($oldSnapshot['fields']['course-reference']['values'][0] ?? '') === 'COURSE_FIELD_SNAPSHOT',
@@ -452,7 +459,8 @@ pubExpect(
 );
 pubExpect(
     (int)$db->setQuery(('SELECT ed.course_version_id FROM #__jlms_enrollments AS e INNER '
-        . 'JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id=') . (int)$learnerEnrollment)->loadResult() === $version,
+        . 'JOIN #__jlms_editions AS ed ON ed.id=e.edition_id WHERE e.id=') . (int)$learnerEnrollment)
+            ->loadResult() === $version,
     'existing learner remains assigned to the original teaching version after update publication'
 );
 // CAT-01: bound literal search patterns must preserve visible '%' and '_'

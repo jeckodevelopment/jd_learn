@@ -100,9 +100,11 @@ $fixture = dirname($root) . '/teachers-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
     teacherExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
-        . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen teacher projection survives upgrade');
+        . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() ===
+             $f['snapshot'], 'Frozen teacher projection survives upgrade');
     $outline = $catalog->outline(new \Joomla\CMS\User\User(), 'en-GB', (int)$f['course']);
-    teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] === 'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection ' .
+    teacherExpect(count($outline['teachers']) === 2 && $outline['teachers'][0]['title'] ===
+         'Updated public teacher', 'Current teacher projection survives upgrade while the frozen projection ' .
         'is unchanged');
     teacherExpect(
         TeacherProfiles::selected($db, (int)$f['course']) === $f['ids'],
@@ -123,7 +125,9 @@ $teacherBase = ['id' => 0,'revision' => 1,'title' => 'Original public teacher','
         => ('<p>Public <strong>biography</strong> '
             . '<script>alert(1)</script><iframe '
             . 'src="https://example.invalid"></iframe><a '
-            . 'href="javascript:alert(2)" onclick="alert(3)">read</a></p>'),'image' => '','image_alt' => '','image_decorative' => '0','website' => 'https://example.invalid/teacher','language' => '*','access' => 1,'state' => 1,'user_id' => (int)$actor->id];
+            . 'href="javascript:alert(2)" onclick="alert(3)">read</a></p>'),'image' => '','image_alt' =>
+                 '','image_decorative' => '0','website' => 'https://example.invalid/teacher','language' =>
+                 '*','access' => 1,'state' => 1,'user_id' => (int)$actor->id];
 $groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY user_id,group_id')
     ->loadAssocList();
 teacherExpect($teacherModel->save($teacherBase + ['params_json' => '{"injected":true}','created_by'
@@ -359,7 +363,8 @@ teacherExpect(!$teacherModel->save(array_replace($edit, ['revision'
 $teacherModel->setCurrentUser($actor);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$learner->id, 2);
 teacherExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__user_usergroup_map WHERE user_id=' . (int)$learner
-    ->id . ' AND group_id=2')->loadResult() === 0, 'Native group revocation actually persisted before checking cached identity');
+    ->id . ' AND group_id=2')->loadResult() ===
+         0, 'Native group revocation actually persisted before checking cached identity');
 teacherExpect(
     count($catalog->outline($learner, 'en-GB', $course)['teachers']) === 2,
     'The current public profiles remain visible without registered access'
@@ -384,7 +389,8 @@ teacherExpect($courseModel->save(array_replace($courseData, ['revision' => (int)
     ->revision,'teacher_ids' => [$public,$private]])), ('Teachers can be updated on a published course while '
         . 'preserving the teaching snapshot'));
 teacherExpect($snapshot === $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
-    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc(), 'All profile changes preserve course snapshot hash and timestamp');
+    . '#__jlms_course_versions WHERE id=') . $version)->
+        loadAssoc(), 'All profile changes preserve course snapshot hash and timestamp');
 // LCM-04: reversible teacher trash preserves Joomla users, course links and frozen snapshots.
 $beforeCourseTeachers = TeacherProfiles::selected($db, $course);
 $beforeUsers = $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc();

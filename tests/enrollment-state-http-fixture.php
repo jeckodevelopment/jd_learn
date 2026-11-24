@@ -38,7 +38,8 @@ if ($mode === 'snapshot') {
         $q = $db->prepare('UPDATE joomla_users SET block=? WHERE id=?');
         $q->execute([$mode === 'block' ? 1 : 0,$f['manager']]);
     } else {
-        $sql = $mode === 'revoke' ? 'DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?' : 'INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)';
+        $sql = $mode === 'revoke' ? 'DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?' :
+             'INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)';
         $q = $db->prepare($sql);
         $q->execute([$f['manager'],$f['manager_group']]);
     }

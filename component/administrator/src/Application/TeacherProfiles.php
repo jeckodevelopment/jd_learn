@@ -48,13 +48,15 @@ final class TeacherProfiles
         if (!$levels) {
             return [];
         }
-        $q = $db->createQuery()->select($details ? 't.id,t.title,t.bio,t.image,t.params_json,t.access,t.language,t.catid' : 't.id,t.title,t.access,t.language,t.catid')
+        $q = $db->createQuery()->
+            select($details ? 't.id,t.title,t.bio,t.image,t.params_json,t.access,t.language,t.catid' : 't.id,t.title,t.access,t.language,t.catid')
             ->from('#__jlms_teachers AS t')->innerJoin('#__categories AS cat ON cat.id=t.catid')
             ->where('t.state=1')->where('cat.published=1')->where("cat.extension='com_jlms.teacher'")
             ->where('t.access IN (' . implode(',', $levels) . ')')
             ->where(("NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE "
                 . "ancestor.lft<=cat.lft AND ancestor.rgt>=cat.rgt AND "
-                . "ancestor.level>0 AND (ancestor.published<>1 OR ancestor.access NOT IN (") . implode(',', $levels) . "))) ")
+                . "ancestor.level>0 AND (ancestor.published<>1 OR ancestor.access NOT IN (") .
+                     implode(',', $levels) . "))) ")
             ->order('t.title,t.id');
         if ($language !== '*') {
             $q->where("(t.language='*' OR t.language=:language)")->bind(':language', $language);
@@ -147,7 +149,9 @@ final class TeacherProfiles
                     => (bool) ($params['image_decorative'] ?? false),
                 'website' => (string) ($params['website'] ?? ''), 'access' => (int) $row->access, 'language'
                     => (string) $row->language,
-                'category_access' => array_map('intval', array_column($categories, 'access')), 'category_language' => array_column($categories, 'language')];
+                'category_access' =>
+                     array_map('intval', array_column($categories, 'access')), 'category_language' =>
+                     array_column($categories, 'language')];
         }
         $data = json_decode($presentation, true, 32, JSON_THROW_ON_ERROR);
         $data['teachers'] = $profiles;

@@ -34,7 +34,8 @@ final class ConfigurationDiagnostics
                 'kind' => 'scheduler',
                 'labelKey' => self::safeLabel($entry['label'] ?? null),
                 'severity' => $severity,
-                'guidanceKey' => \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::guidanceKey($state, $duplicates),
+                'guidanceKey' =>
+                     \Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth::guidanceKey($state, $duplicates),
                 'stateKey' => self::schedulerStateKey($state),
             ];
         }
@@ -135,7 +136,8 @@ final class ConfigurationDiagnostics
             'labelKey' => 'COM_JLMS_CONFIG_MAIL_TEMPLATES_LABEL',
             'severity' => $ok ? 'ok' : 'error',
             'stateKey' => $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_MISSING',
-            'guidanceKey' => $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_MISSING',
+            'guidanceKey' =>
+                 $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_MISSING',
         ];
     }
 
@@ -169,7 +171,8 @@ final class ConfigurationDiagnostics
                 'labelKey' => 'COM_JLMS_CONFIG_SCAN_LABEL',
                 'severity' => $scannerConfigured ? 'warning' : 'error',
                 'stateKey' => $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_MISSING',
-                'guidanceKey' => $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_GUIDANCE_MISSING',
+                'guidanceKey' =>
+                     $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_GUIDANCE_MISSING',
             ];
         } else {
             $add(
@@ -314,15 +317,19 @@ final class ConfigurationDiagnostics
                 'kind' => 'video_storage',
                 'labelKey' => 'COM_JLMS_CONFIG_VIDEO_ROOT_LABEL',
                 'severity' => $readyStorage ? 'ok' : 'error',
-                'stateKey' => $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_UNAVAILABLE',
-                'guidanceKey' => $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_UNAVAILABLE',
+                'stateKey' =>
+                     $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_UNAVAILABLE',
+                'guidanceKey' =>
+                     $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_UNAVAILABLE',
             ],
             [
                 'kind' => 'video_probe',
                 'labelKey' => 'COM_JLMS_CONFIG_VIDEO_PROBE_LABEL',
                 'severity' => $probeValid ? 'warning' : 'error',
-                'stateKey' => $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_UNAVAILABLE',
-                'guidanceKey' => $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNAVAILABLE',
+                'stateKey' =>
+                     $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_UNAVAILABLE',
+                'guidanceKey' =>
+                     $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNAVAILABLE',
             ],
         ];
     }

@@ -250,7 +250,8 @@ final class CatalogService
     public function course(User $actor, string $language, int $id): object
     {
         $q = $this->query($actor, $language)->where('c.id = :course')->bind(':course', $id, ParameterType::INTEGER);
-        return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        return $this->db->setQuery($q)
+            ->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
     /** An enrolled learner may outlive promotional windows, not withdrawal/archive/trash or ACL. */
@@ -258,7 +259,8 @@ final class CatalogService
     {
         $q = $this->courseQuery($actor, $language, 0, true)->where('c.id = :course')
             ->bind(':course', $id, ParameterType::INTEGER);
-        return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        return $this->db->setQuery($q)
+            ->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
     /** Native taxonomy only; never expose child counts or teaching records. */
@@ -292,7 +294,8 @@ final class CatalogService
     {
         $q = $this->categoryQuery($actor, $language)->where('cat.id = :categoryId')
             ->bind(':categoryId', $id, ParameterType::INTEGER);
-        return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        return $this->db->setQuery($q)
+            ->loadObject() ?: throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
     }
 
     public function categoryPath(User $actor, string $language, int $id): array

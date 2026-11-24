@@ -204,7 +204,8 @@ $expect((int)$row->state === 2 && (int)$row->current_version_id === $version
 $expect($finderLifecycle !== [] && (int)end($finderLifecycle)['state'] === 2
     && (int)end($finderLifecycle)['event_state'] === 2 && (int)end($finderLifecycle)['admissions_open'] === 0
         &&
-        (int)end($finderLifecycle)['delivery_enabled'] === 0, 'archive publishes committed Finder refresh with gates closed');
+        (int)end($finderLifecycle)['delivery_enabled'] ===
+             0, 'archive publishes committed Finder refresh with gates closed');
 try {
     $component->getCatalogService()->course($guest, 'en-GB', $course);
     throw new RuntimeException('Archived course remained in the public catalog');
@@ -241,7 +242,8 @@ $expect((int)$row->state === 1 && (int)$row->current_version_id === $version
 $expect($finderLifecycle !== [] && (int)end($finderLifecycle)['state'] === 1
     && (int)end($finderLifecycle)['event_state'] === 1 && (int)end($finderLifecycle)['admissions_open'] === 0
         &&
-        (int)end($finderLifecycle)['delivery_enabled'] === 0, 'restore publishes committed Finder refresh while both gates remain closed');
+        (int)end($finderLifecycle)['delivery_enabled'] ===
+             0, 'restore publishes committed Finder refresh while both gates remain closed');
 $app->getDispatcher()->removeListener('onFinderAfterSave', $finderLifecycleWitness);
 $beforeAccess = $db->setQuery(('SELECT state,current_version_id,catalog_access,content_access FROM '
     . '#__jlms_courses WHERE id=') . $course)->loadAssoc();

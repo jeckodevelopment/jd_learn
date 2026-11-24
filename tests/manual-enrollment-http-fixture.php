@@ -28,7 +28,10 @@ if ($mode === 'snapshot') {
         . "a.extension='com_jlms.manualenrollment' AND e.course_id=? AND e.user_id=?"));
     $q->execute([$f['course'],$f['http_user']]);
     $audit = (int)$q->fetchColumn();
-    echo json_encode(['enrollments' => $rows,'subjects' => $subjects,'receipts' => $receipts,'audit' => $audit,'groups' => $db->query('SELECT user_id,group_id FROM joomla_user_usergroup_map ORDER BY user_id,group_id')->fetchAll(\PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR);
+    echo json_encode(['enrollments' => $rows,'subjects' => $subjects,'receipts' => $receipts,'audit' =>
+         $audit,'groups' => $db->
+        query('SELECT user_id,group_id FROM joomla_user_usergroup_map ORDER BY user_id,group_id')->
+        fetchAll(\PDO::FETCH_ASSOC)], JSON_THROW_ON_ERROR);
 } elseif (in_array($mode, ['revoke_operator','grant_operator','revoke_learner','grant_learner','block_operator','unblock_operator','restore'], true)) {
     foreach ($mode === 'restore' ? ['grant_operator','grant_learner','unblock_operator'] : [$mode] as $action) {
         $operator = str_contains($action, 'operator');

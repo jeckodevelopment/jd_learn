@@ -45,7 +45,8 @@ final class MaterialAvailability
 
     public static function editor(?string $value, string $timezone): string
     {
-        return $value === null || $value === '' ? '' : str_replace(' ', 'T', CourseSchedule::display($value, $timezone));
+        return $value === null || $value ===
+             '' ? '' : str_replace(' ', 'T', CourseSchedule::display($value, $timezone));
     }
 
     private static function wall(mixed $value): mixed

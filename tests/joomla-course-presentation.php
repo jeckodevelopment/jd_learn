@@ -260,7 +260,8 @@ $authoring->saveLesson($actor, ['course_id' => $course, 'version_id' => $version
 // Presentation edited after draft creation must be frozen from the latest saved course data.
 $item = $model->getItem($course);
 presentationExpect($model->save(array_replace($update, ['revision' => (int) $item
-    ->revision, 'presentation_objectives' => 'Latest objectives before publication'])), 'Presentation remains editable while programme is a draft');
+    ->revision, 'presentation_objectives' =>
+         'Latest objectives before publication'])), 'Presentation remains editable while programme is a draft');
 $item = $model->getItem($course);
 unlink($root . '/' . $coverPath);
 try {
@@ -274,7 +275,8 @@ file_put_contents($root . '/' . $coverPath, $coverBytes);
 $originalParams = $item->params_json;
 $beforeVersionCheck = $db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM ' .
     '#__jlms_course_versions WHERE id=' . $version)->loadAssoc();
-$beforeDescriptionCheck = $db->setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id=' . $course)->loadAssoc();
+$beforeDescriptionCheck = $db->
+    setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id=' . $course)->loadAssoc();
 foreach ([null, '', "<p>&nbsp; \t<br></p>", '<p>&#8203;</p>'] as $description) {
     $params = json_decode($originalParams, true, 32, JSON_THROW_ON_ERROR);
     if ($description === null) {
@@ -297,7 +299,8 @@ foreach ([null, '', "<p>&nbsp; \t<br></p>", '<p>&#8203;</p>'] as $description) {
     presentationExpect($db->setQuery('SELECT state,current_version_id,revision FROM #__jlms_courses WHERE id='
         . $course)->loadAssoc() === $beforeDescriptionCheck, 'Denied publication leaves course and revision unchanged');
     presentationExpect($db->setQuery('SELECT status,revision,presentation_json,structure_hash,published_at FROM ' .
-        '#__jlms_course_versions WHERE id=' . $version)->loadAssoc() === $beforeVersionCheck, 'Denied publication leaves the draft version unchanged');
+        '#__jlms_course_versions WHERE id=' . $version)->loadAssoc() ===
+             $beforeVersionCheck, 'Denied publication leaves the draft version unchanged');
     presentationExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_editions WHERE course_version_id='
         . $version)->loadResult() === 0, 'Denied publication creates no edition');
 }
@@ -328,24 +331,28 @@ presentationExpect(!str_contains(json_encode($outline), 'PRESENTATION_PRIVATE_LE
 $baseline = $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
     . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc();
 presentationExpect($model->save(array_replace($update, ['revision' => (int) $model->getItem($course)
-    ->revision, 'presentation_objectives' => 'Published editorial correction'])), 'Published editorial metadata can be updated through the normal editor');
+    ->revision, 'presentation_objectives' =>
+         'Published editorial correction'])), 'Published editorial metadata can be updated through the normal editor');
 presentationExpect(
     $catalog->outline($guest, 'en-GB', $course)['presentation']['objectives'] === 'Published editorial correction',
     'Current public course shows the editorial correction'
 );
 presentationExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
-    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() === $baseline, 'Editorial correction leaves frozen history unchanged');
+    . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() ===
+         $baseline, 'Editorial correction leaves frozen history unchanged');
 foreach ([0, 1] as $expectedState) {
     $choices = $publication->transitions($actor, $course);
     $publication->transition($actor, $course, $version, (int) $model->getItem($course)
         ->revision, $revision(), (int) $choices[0]->id);
     presentationExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
-        . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() === $baseline, 'Withdrawal/republication retains presentation and hash');
+        . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() ===
+             $baseline, 'Withdrawal/republication retains presentation and hash');
 }
 $oldPresentation = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy","details":{"_schema":1,"description":"<p>Existing 0.21 ' .
     'presentation</p>"}}');
 presentationExpect($oldPresentation['image'] === '' && !$oldPresentation['image_decorative']
-    && $oldPresentation['seo_title'] === '', '0.21 snapshots gain only empty optional defaults without database mutation');
+    && $oldPresentation['seo_title'] ===
+         '', '0.21 snapshots gain only empty optional defaults without database mutation');
 $legacy = CoursePresentation::fromSnapshot('{"_schema":1,"summary":"Legacy public summary"}');
 presentationExpect($legacy === [], 'Legacy published snapshots do not require backfilling');
 file_put_contents($fixture, json_encode(['course' => $course, 'version' => $version, 'details' => $catalog

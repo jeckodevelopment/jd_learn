@@ -17,7 +17,8 @@ $f = json_decode(file_get_contents(dirname($root) . '/categories-fixture.json'),
 $mode = $argv[2] ?? '';
 if ($mode === 'enable') {
     file_put_contents($state, json_encode($pdo->query(("SELECT enabled,params FROM joomla_extensions WHERE "
-        . "type='plugin' AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
+        . "type='plugin' AND folder='system' AND element='languagefilter'"))
+            ->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
     $pdo->exec(("UPDATE joomla_extensions SET "
         . "enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1,'$.detect_browser',0,'$.remove_default_prefix',0) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
 } elseif ($mode === 'disable') {
