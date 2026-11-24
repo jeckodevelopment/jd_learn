@@ -41,7 +41,8 @@ $schedulerHealthKeys = [
                     <?php foreach ($shortcuts as $shortcut) : ?>
                         <li>
                             <a id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key']))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
-                                <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
+                                <span
+ class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
                                 <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
                             </a>
                         </li>
@@ -98,7 +99,9 @@ $schedulerHealthKeys = [
         <?php else : ?>
             <ul>
                 <?php foreach ($this->providers as $provider) : ?>
-                    <li data-jlms-provider="<?= $this->escape($provider['key']) ?>"><span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $this->escape(Text::_(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey((string) $provider['stateKey']))) ?></p></li>
+                    <li data-jlms-provider="<?= $this->escape($provider['key']) ?>">
+<span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span
+ class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $this->escape(Text::_(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey((string) $provider['stateKey']))) ?></p></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
