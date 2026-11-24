@@ -311,7 +311,7 @@ I **1.149 rilievi residui** non sono considerati chiusi: le sole trasformazioni 
 **Comportamenti da testare:** equivalenza delle chiamate Joomla, mantenimento degli attributi HTML, navigazione curriculum, ACL, sessioni, CSRF, corsi, quiz, attestati, materiali, video; PHP lint, PHPCS integrale, generazione pacchetto e CI Joomla 6.2.0 con compat6 disabilitato. I collaudi manuali rimangono separati.
 
 
-## Riduzione coordinata dei rilievi residui e classificazione delle esclusioni (PR #1013)
+## Riduzione coordinata dei rilievi residui e classificazione delle esclusioni (PR #1014)
 
 Baseline del ramo dopo PR #1012: **1.149** violazioni reali del gate PHPCS PSR-12. Tutte le modifiche sono state sviluppate su un solo ramo `style/secdev02-consolidated-1149-remediation`, senza alterare la configurazione PHPCS, i controlli di sicurezza o il perimetro dei file verificati.
 
