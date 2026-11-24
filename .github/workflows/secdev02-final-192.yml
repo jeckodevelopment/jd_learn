@@ -1,0 +1,76 @@
+name: SECDEV-02 consolidated 192 findings remediation
+on:
+  push:
+    branches:
+      - style/secdev02-192-final-consolidated
+    paths:
+      - .github/workflows/secdev02-final-192.yml
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PSR-12 checker
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Apply guarded source transformations in one batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHECKER="$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs"
+          FIXER="$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcbf"
+          python3 tools/secdev02_coordinated_bulk.py --phpcs "$CHECKER" --pass 1
+          python3 tools/secdev02_coordinated_bulk.py --phpcs "$CHECKER" --pass 2
+          python3 tools/secdev02_incremental_line_reflow.py --phpcs "$CHECKER" --max-files 150
+          python3 tools/secdev02_mass_html_reflow.py --phpcs "$CHECKER"
+          python3 tools/secdev02_mass_html_attributes.py --phpcs "$CHECKER" --max-files 200
+          python3 tools/secdev02_calls_reflow_bulk.py --phpcs "$CHECKER"
+          python3 tools/secdev02_array_reflow_bulk.py --phpcs "$CHECKER"
+          python3 tools/secdev02_literal_reflow_bulk.py --phpcs "$CHECKER"
+          python3 tools/secdev02_mass_mixed_echo.py --phpcs "$CHECKER" --phpcbf "$FIXER"
+          git diff --check
+          git diff --name-only -- '*.php' | while IFS= read -r file; do
+            php -l "$file" >/dev/null
+          done
+      - name: Record exact remaining PSR-12 debt and publish changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHECKER="$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs"
+          python3 - <<'PY'
+          import json, subprocess
+          from collections import Counter
+          files=subprocess.check_output(['git','ls-files','-z','--','*.php']).decode().split('\0')
+          files=[x for x in files if x]
+          p=subprocess.run(['.runtime/secdev02-phpcs/vendor/bin/phpcs','--standard=PSR12','--report=json','--runtime-set','ignore_warnings_on_exit','1',*files],capture_output=True,text=True)
+          try:
+              report=json.loads(p.stdout)
+          except Exception as exc:
+              raise SystemExit(f'PSR12 report could not be parsed: {exc}')
+          total=sum(len(v.get('messages',[])) for v in report['files'].values())
+          rules=Counter(m.get('source','unknown') for v in report['files'].values() for m in v.get('messages',[]))
+          print('SECDEV-02 FINAL BATCH: findings='+str(total),flush=True)
+          for k,v in rules.most_common(): print(f'  {k}: {v}')
+          with open('docs/SECDEV_02_FINAL_192_BATCH.md','w') as fp:
+              fp.write('# SECDEV-02 — Consolidated 192-finding remediation\n\n')
+              fp.write('Starting baseline: 192 PSR-12 findings from merged PR #1023.\n\n')
+              fp.write(f'Final measured PHPCS 4.0.4 PSR12 findings: **{total}**.\n\n')
+              fp.write('## Residual inventory by PHPCS rule\n\n')
+              for k,v in rules.most_common(): fp.write(f'- `{k}`: {v}\n')
+              fp.write('\nNo exclusion of PHPCS rules is authorized. A nonzero result does not certify SECDEV-02 closure. CORE/API verification and manual acceptance are separate.\n')
+          PY
+          git rm .github/workflows/secdev02-final-192.yml
+          git add component libraries plugins tests docs
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'style(SECDEV-02): consolidated guarded remediation of remaining PSR12 findings'
+          git push origin HEAD:style/secdev02-192-final-consolidated
