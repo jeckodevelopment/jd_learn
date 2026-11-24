@@ -33,7 +33,8 @@ $p = $i['impact'];
   <p><?= Text::_('COM_JLMS_ENROLLMENT_STATE_RETAINED') ?>: <?=
        (int) $p['completed_total'] ?>/<?=
        (int) $p['required_total'] ?> · <?=
-       $p['completed_at'] === null ? Text::_('COM_JLMS_ENROLLMENT_STATE_NO_COMPLETION') : $this->escape($p['completed_at']) . ' UTC' ?></p>
+       $p['completed_at'] === null ? Text::_('COM_JLMS_ENROLLMENT_STATE_NO_COMPLETION') : $this
+           ->escape($p['completed_at']) . ' UTC' ?></p>
   <?php if ($p['blocked'] !== null) :
         ?><p id="jlms-enrollment-state-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
   <?php else :
@@ -45,7 +46,8 @@ $p = $i['impact'];
           name="task"
           value="enrollmentstate.apply"><?= HTMLHelper::_('form.token') ?>
    <button type="submit" class="btn btn-primary"><?=
-        Text::_($p['target_status'] === 'cancelled' ? 'COM_JLMS_ENROLLMENT_STATE_CANCEL' : ($p['target_status'] === 'active' ? 'COM_JLMS_ENROLLMENT_STATE_REACTIVATE' : 'COM_JLMS_ENROLLMENT_STATE_SUSPEND')) ?></button>
+        Text::_($p['target_status'] === 'cancelled' ? 'COM_JLMS_ENROLLMENT_STATE_CANCEL' : ($p['target_status']
+            === 'active' ? 'COM_JLMS_ENROLLMENT_STATE_REACTIVATE' : 'COM_JLMS_ENROLLMENT_STATE_SUSPEND')) ?></button>
   </form>
   <?php endif; ?>
  </section>

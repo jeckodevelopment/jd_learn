@@ -32,7 +32,8 @@ use Joomla\CMS\Router\Route;
     max="100"
     value="<?= (int) $item['percent'] ?>"><?= (int) $item['percent'] ?>%</progress>
         <?php else :
-            ?><p><?= Text::_(!empty($item['progress_applicable']) ? 'COM_JLMS_DASHBOARD_PROGRESS_UNKNOWN' : 'COM_JLMS_DASHBOARD_PROGRESS_NOT_APPLICABLE') ?></p><?php
+            ?><p><?= Text::_(!empty($item['progress_applicable']) ? 'COM_JLMS_DASHBOARD_PROGRESS_UNKNOWN'
+                : 'COM_JLMS_DASHBOARD_PROGRESS_NOT_APPLICABLE') ?></p><?php
         endif; ?>
         <?php if ($item['access'] === 'available') :
             ?><a id="jlms-my-course-resume-<?=

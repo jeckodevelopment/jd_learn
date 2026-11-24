@@ -53,7 +53,8 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
             . (int) $item['id']) ?>"><?= $this->escape($item['student_name']) ?></a></th>
         <td><?= $this->escape($item['course_title']) ?></td>
         <td><?= $this->escape($item['serial']) ?></td>
-        <td><?= Text::_($item['status'] === 'revoked' ? 'COM_JLMS_CERTIFICATE_STATE_REVOKED' : ($item['status'] === 'ready' ? 'COM_JLMS_CERTIFICATE_STATE_READY' : 'COM_JLMS_CERTIFICATE_STATE_PENDING')) ?></td>
+        <td><?= Text::_($item['status'] === 'revoked' ? 'COM_JLMS_CERTIFICATE_STATE_REVOKED' : ($item['status']
+            === 'ready' ? 'COM_JLMS_CERTIFICATE_STATE_READY' : 'COM_JLMS_CERTIFICATE_STATE_PENDING')) ?></td>
         <td><?= $this->escape($item['issued_at']) ?></td>
         <td><?= (int) $item['id'] ?></td>
        </tr>
@@ -95,12 +96,14 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
                    aria-label="<?= Text::_('COM_JLMS_CERTIFICATE_HISTORICAL_REASON') ?>"
                        placeholder="<?= Text::_('COM_JLMS_CERTIFICATE_HISTORICAL_REASON') ?>">
             <label><input type="checkbox" form="<?= $recoveryFormId ?>" name="confirmation" value="1" required>
-                <?= Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_CONFIRM' : 'COM_JLMS_CERTIFICATE_HISTORICAL_CONFIRM') ?></label>
+                <?= Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_CONFIRM'
+                    : 'COM_JLMS_CERTIFICATE_HISTORICAL_CONFIRM') ?></label>
             <button type="submit"
                 class="btn btn-sm btn-outline-primary"
                 form="<?=
                      $recoveryFormId ?>"><?=
-                     Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_ACTION' : 'COM_JLMS_CERTIFICATE_HISTORICAL_ACTION') ?></button>
+                     Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_ACTION'
+                         : 'COM_JLMS_CERTIFICATE_HISTORICAL_ACTION') ?></button>
             <?php endif; ?>
           </td>
          </tr>
@@ -121,7 +124,8 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
 <?php foreach ($this->unissuedCompletions as $missing) : ?>
     <?php if (in_array($missing['reason'], ['version_disabled', 'eligible_missing'], true)) : ?>
   <form id="jlms-recover-<?= (int) $missing['enrollment_id'] ?>"
-      action="<?= Route::_('index.php?option=com_jlms&task=certificate.' . ($missing['reason'] === 'eligible_missing' ? 'recoverMissing' : 'recoverHistorical')) ?>"
+      action="<?= Route::_('index.php?option=com_jlms&task=certificate.' . ($missing['reason']
+          === 'eligible_missing' ? 'recoverMissing' : 'recoverHistorical')) ?>"
       method="post">
    <input type="hidden" name="enrollment_id" value="<?= (int) $missing['enrollment_id'] ?>">
         <?= HTMLHelper::_('form.token') ?>

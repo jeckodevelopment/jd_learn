@@ -12,11 +12,13 @@ $draft = $this->item['version']->status === 'draft';
  <p><a href="<?= Route::_('index.php?option=com_jlms&view=questionbank') ?>"
  target="_blank"
  rel="noopener"><?= Text::_('COM_JLMS_QUESTION_BANK') ?></a> · <a href="<?=
-      Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int)$data['course_id'] . '&version_id=' . (int)$data['version_id']) ?>"><?=
+      Route::_('index.php?option=com_jlms&view=curriculum&id=' . (int)$data['course_id'] . '&version_id='
+          . (int)$data['version_id']) ?>"><?=
       Text::_('COM_JLMS_CURRICULUM') ?></a></p>
  <?php if ($this->canManageQuizTime) :
         ?><p><a id="jlms-quiz-time-link"
-        href="<?= Route::_('index.php?option=com_jlms&view=quiztime&id=' . (int)$data['course_id'] . '&lesson_id=' . (int)$data['lesson_id']) ?>"><?=
+        href="<?= Route::_('index.php?option=com_jlms&view=quiztime&id=' . (int)$data['course_id']
+            . '&lesson_id=' . (int)$data['lesson_id']) ?>"><?=
              Text::_('COM_JLMS_QUIZ_TIME_TITLE') ?></a></p><?php
  endif; ?>
  <?php if ($draft) : ?>

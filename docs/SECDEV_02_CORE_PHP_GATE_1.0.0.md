@@ -426,3 +426,12 @@ A full pinned PHPCS 4.0.4 PSR-12 audit measured **813 → 770**, net **-43** fin
 
 - Complete Joomla courses, class sessions, ACL, curriculum, email, certificates, lesson media and frontend templates.
 - Verify PHP AST equivalence for split literals, HTML attribute values and valid semantic token stream, PHP lint, PHPCS, SAST and Joomla integration suites.
+
+### PR #1019 second structural batch: complete arrays and inline PHP (24 November 2026)
+
+The full unchanged pinned PSR12 4.0.4 audit against the main baseline measured **811 → 322 (−489)** findings over **119 PHP files**. Changes include semantic-preserving constant literals, operator statements, whitespace-only HTML attributes, PHP expressions embedded in Joomla views, and whole PHP arrays with PHPCBF normalization. Original source contracts, PHP lint, PHP significant token identity where applicable and zero introduced per-file/per-rule findings were enforced. No waived sniffs, no security relaxation. **SECDEV-02 remains Parziale** until the complete PSR12 debt and separate CORE/API criteria are cleared; manual Joomla acceptance remains distinct. Functional requirement coverage percentages remain unchanged.
+
+### Comportamenti da testare
+
+- PHP array keys/order and values, dynamic HTML attributes and Joomla templates, PHP echo outputs, course and lesson logic, certificates, ACL and emails.
+- Complete PHP/DB Joomla integration matrices, Chromium, SAST, PHPCS and generated installable extension package.

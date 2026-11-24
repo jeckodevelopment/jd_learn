@@ -26,7 +26,8 @@ HTMLHelper::_('behavior.formvalidator');
                  $task ?>"><input type="hidden" name="jform[id]" value="<?=
                  (int)$this->item['id'] ?>"><?=
                  HTMLHelper::_('form.token') ?><button class="btn btn-secondary" type="submit"><?=
-                 Text::_($task === 'checkout' ? 'COM_JLMS_QUESTION_CHECKOUT' : 'COM_JLMS_QUESTION_CHECKIN') ?></button></form><?php
+                 Text::_($task === 'checkout' ? 'COM_JLMS_QUESTION_CHECKOUT'
+                     : 'COM_JLMS_QUESTION_CHECKIN') ?></button></form><?php
         endforeach; ?>
  <?php endif; ?>
 </div>

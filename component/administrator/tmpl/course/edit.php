@@ -86,7 +86,12 @@ $id = (int) $this->item->id;
   endif; ?>
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
- <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-access-publication', Text::_('COM_JLMS_COURSE_ACCESS_PUBLICATION_TAB')) ?>
+ <?= HTMLHelper::_(
+     'uitab.addTab',
+     'jlms-course-tabs',
+     'jlms-course-access-publication',
+     Text::_('COM_JLMS_COURSE_ACCESS_PUBLICATION_TAB')
+ ) ?>
  <section id="jlms-course-access-settings" class="row">
   <div class="col-lg-6"><?= $this->form->renderField('state') ?><?= $this->form
       ->renderField('catid') ?><?= $this->form->renderField('language') ?></div>
@@ -99,7 +104,12 @@ $id = (int) $this->item->id;
   <div id="jlms-course-calendar"><?= $this->form->renderFieldset('calendar') ?></div>
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
- <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-certificates', Text::_('COM_JLMS_CERTIFICATE_SETTINGS')) ?>
+ <?= HTMLHelper::_(
+     'uitab.addTab',
+     'jlms-course-tabs',
+     'jlms-course-certificates',
+     Text::_('COM_JLMS_CERTIFICATE_SETTINGS')
+ ) ?>
  <section id="jlms-course-certificate-settings" aria-label="<?= Text::_('COM_JLMS_CERTIFICATE_SETTINGS') ?>">
   <?= $this->form->renderField('certificate_enabled') ?>
   <?php if ($this->canConfigure) : ?>
@@ -110,7 +120,12 @@ $id = (int) $this->item->id;
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
  <?php if ($this->form->getFieldsets('com_fields')) : ?>
-        <?= HTMLHelper::_('uitab.addTab', 'jlms-course-tabs', 'jlms-course-fields-tab', Text::_('COM_JLMS_COURSE_CUSTOM_FIELDS')) ?>
+        <?= HTMLHelper::_(
+            'uitab.addTab',
+            'jlms-course-tabs',
+            'jlms-course-fields-tab',
+            Text::_('COM_JLMS_COURSE_CUSTOM_FIELDS')
+        ) ?>
  <section id="jlms-course-custom-fields">
         <?php foreach ($this->form->getFieldsets('com_fields') as $fieldset) : ?>
   <fieldset><legend><?= $this->escape(Text::_($fieldset->label)) ?></legend><?= $this->form
