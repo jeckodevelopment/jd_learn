@@ -382,7 +382,8 @@ final class VideoProgressService
                 $enrollment->completed_at = $enrollment->completed_at ?: self::date($now);
             }
             $enrollment->completed_total = $total;
-            $update = (object) ['id' => $enrollmentId, 'completed_total' => $total, 'completed_at' => $enrollment->completed_at,
+            $update = (object) ['id' => $enrollmentId, 'completed_total' => $total, 'completed_at' =>
+                 $enrollment->completed_at,
                 'last_activity_at' => self::date($now), 'last_lesson_id' => $lessonId, 'revision' =>
                      (int) $enrollment->revision + 1,
                 'modified_at' => self::date($now), 'modified_by' => (int) $actor->id];
@@ -408,7 +409,8 @@ final class VideoProgressService
                         'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')],
                     (int) $actor->id
                 );
-                $versionRules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
+                $versionRules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string)
+                    $version->rules_json);
                 if ($versionRules['certificate_enabled']) {
                     (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollmentId, (int)
                         $version->id, (string) $enrollment->completed_at);

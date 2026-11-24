@@ -355,7 +355,8 @@ final class MaterialService
                     throw new \RuntimeException('COM_JLMS_OUTLINE_LIMIT', 409);
                 }
                 $attachment = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
-                    'asset_id' => (int) $asset->id, 'title' => trim($title), 'description' => $description, 'ordering' => $count,
+                    'asset_id' => (int) $asset->id, 'title' => trim($title), 'description' => $description
+                        , 'ordering' => $count,
                     'state' => 1, 'preview' => $preview, 'publish_up' => $availability['publish_up']
                         , 'publish_down' => $availability['publish_down'],
                     'revision' => 1, 'created_by' => (int) $actor->id,

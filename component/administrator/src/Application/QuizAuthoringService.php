@@ -62,7 +62,8 @@ final class QuizAuthoringService
         $modules = $this->db->setQuery($q, 0, 1000)->loadObjectList();
         $data = ['course_id' => $course, 'version_id' => $version, 'expected_version_revision' => (int) $v
             ->revision, 'lesson_id' => 0,
-            'revision' => 1, 'required' => '1', 'threshold' => '70', 'max_attempts' => 3, 'time_minutes' => 0, 'retry_minutes' => 0,
+            'revision' => 1, 'required' => '1', 'threshold' => '70', 'max_attempts' => 3, 'time_minutes' => 0
+                , 'retry_minutes' => 0,
             'assessment' => 'graded', 'selection_mode' => 'fixed', 'feedback_policy' => 'pass_or_exhausted', 'questions' => []];
         if ($lesson) {
             $l = $this->row('lessons', $lesson);
@@ -139,7 +140,8 @@ final class QuizAuthoringService
         if (!is_array($rows) || count($rows) < 1 || count($rows) > 200) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         }
-        $draw = $selectionMode === 'fixed' ? count($rows) : QuestionDefinition::integer($input['draw_count'] ?? 0, 1, count($rows));
+        $draw = $selectionMode === 'fixed' ? count($rows) :
+             QuestionDefinition::integer($input['draw_count'] ?? 0, 1, count($rows));
         $selection = ['_schema' => 1, 'assessment' => $assessment, 'mode' => $selectionMode, 'draw_count' => $draw,
             'shuffle_questions' => self::flag($input['shuffle_questions'] ?? '0'), 'shuffle_options' =>
                  self::flag($input['shuffle_options'] ?? '0'), 'retry_delay_seconds' => $retry * 60];
@@ -172,7 +174,8 @@ final class QuizAuthoringService
                 }
                 $category = $this->row('categories', (int) $question->catid);
                 if (
-                    (int) $question->state !== 1 || (int) $category->published !== 1 || $category->extension !== 'com_jlms.question'
+                    (int) $question->state !== 1 || (int) $category->published !== 1 || $category->
+                        extension !== 'com_jlms.question'
                     || !in_array($question->language, ['*', $c->language], true)
                 ) {
                     throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
@@ -247,7 +250,8 @@ final class QuizAuthoringService
             $this->db->setQuery($q)->execute();
             $order = 0;
             foreach ($pool as $id => $points) {
-                $link = (object) ['quiz_id' => $quizId, 'question_revision_id' => $id, 'ordering' => $order++, 'points' => $points];
+                $link = (object) ['quiz_id' => $quizId, 'question_revision_id' => $id, 'ordering' => $order++
+                    , 'points' => $points];
                 $this->db->insertObject('#__jlms_quiz_questions', $link);
             }
             $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' =>

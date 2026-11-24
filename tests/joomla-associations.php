@@ -257,7 +257,8 @@ try {
 }
 // Deny the target asset even when the actor can edit the source course.
 $restricted = new \Joomla\CMS\User\User();
-$userData = ['name' => 'Association editor', 'username' => 'association-editor', 'email' => 'association-editor@example.invalid',
+$userData = ['name' => 'Association editor', 'username' => 'association-editor', 'email' =>
+     'association-editor@example.invalid',
     'password' => 'Ci-only-Association-Password-2026','password2' => 'Ci-only-Association-Password-2026'
         ,'groups' => [2,6],'block' => 0,'activation' => ''];
 if (!$restricted->bind($userData) || !$restricted->save()) {

@@ -32,7 +32,8 @@ use Joomla\CMS\Uri\Uri;
     <h2 class="jlms-teacher-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=teacher&id='
         . (int) $teacher->id) ?>"><?= $this->escape($teacher->title) ?></a></h2>
         <?php if ($summary !== '') :
-            ?><p class="jlms-teacher-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr(strip_tags($summary), 0, 300)) ?></p><?php
+            ?><p class="jlms-teacher-card__summary"><?= $this
+                ->escape(\Joomla\String\StringHelper::substr(strip_tags($summary), 0, 300)) ?></p><?php
         endif; ?>
    </div>
   </article>

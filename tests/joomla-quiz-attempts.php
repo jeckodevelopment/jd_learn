@@ -173,7 +173,8 @@ if (($argv[2] ?? '') === 'retained') {
         'public and private attempt snapshots and grades survive upgrade'
     );
     attemptExpect(
-        (int)$db->setQuery("SELECT enabled FROM #__extensions WHERE folder='task' AND element='jlms'")->loadResult() === 1,
+        (int)$db->setQuery("SELECT enabled FROM #__extensions WHERE folder='task' AND element='jlms'")
+            ->loadResult() === 1,
         'task plugin enablement survives upgrade'
     );
     echo json_encode(['quiz_runtime_upgrade' => 'passed','checks' => $checks]) . PHP_EOL;
@@ -208,7 +209,8 @@ $tfQuestion = $component->getQuestionBankService()->save($actor, ['id' => 0,'rev
      $bank['category_id'],'language' => '*','state' => '1','kind' => 'true_false','prompt' =>
      'True or false?','options' => [['option_id' => 'first','label' => 'True','correct' => '1'],
     ['option_id' => 'second','label' => 'False','correct' => '0']],'default_points' => '7','explanation' => 'True.']);
-$tfRevision = (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $tfQuestion)->loadResult();
+$tfRevision = (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $tfQuestion)
+    ->loadResult();
 $tfLesson = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'True false exercise',
     'required' => '0','assessment' => 'practice','feedback_policy' => 'after_submit','max_attempts' =>
      '1','retry_minutes' => '0','selection_mode' => 'fixed','questions' => [['revision_id' =>
@@ -286,7 +288,8 @@ foreach (
         'STA-02 refuses a truncated attempt for ' . $table . '.' . $column
     );
     attemptExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id=' . $enrollment)->loadResult() === 0,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts WHERE enrollment_id=' . $enrollment)
+            ->loadResult() === 0,
         'STA-02 refused start consumes no attempt for ' . $table . '.' . $column
     );
     $setWindow($table, $recordId, $column, $original);
@@ -547,7 +550,8 @@ attemptReject(
     'attempt limit enforced'
 );
 attemptExpect(
-    $db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult() === $completedAt,
+    $db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->
+        loadResult() === $completedAt,
     'first course completion timestamp immutable'
 );
 $a = $service->start($student, 'en-GB', $enrollment, $practice, attemptKey());
@@ -704,7 +708,8 @@ attemptExpect(
     'native task event executes the plugin successfully'
 );
 attemptExpect(
-    $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->loadResult() === 'expired',
+    $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->
+        loadResult() === 'expired',
     'scheduled routine closes due attempt without browser'
 );
 $httpUser = new NativeUser((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());

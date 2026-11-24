@@ -383,7 +383,8 @@ final class PublicationService
                     'release_after_days' => $lesson->release_after_days === null ? null : (int) $lesson->release_after_days,
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
                     'fields_sha256' => hash('sha256', $lesson->fields_snapshot_json),
-                    'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' => hash('sha256', (string) $lesson->body)];
+                    'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' =>
+                         hash('sha256', (string) $lesson->body)];
                 $lessonSnapshot = (object) ['id' => (int) $lesson->id, 'fields_snapshot_json' => $lesson->fields_snapshot_json];
                 $this->db->updateObject('#__jlms_lessons', $lessonSnapshot, 'id');
                 $lastId = (int) $lesson->id;

@@ -516,7 +516,8 @@ final class MailQueue
             if (
                 !$record || !\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
                     'lesson_release',
-                    (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('mail_lesson_release_enabled', false),
+                    (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+                        ->get('mail_lesson_release_enabled', false),
                     (string) $record->params_json
                 )
             ) {

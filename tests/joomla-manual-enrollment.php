@@ -535,7 +535,8 @@ if (proc_close($worker) !== 0) {
 manualExpect($result === 'ok:' . $winner->id, ('Automatic start sees the admission committed while its edition '
     . 'lock was blocked'));
 manualExpect(
-    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $snapshotUser . ' AND edition_id=' . $edition)->loadResult() === 1,
+    (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . $snapshotUser .
+         ' AND edition_id=' . $edition)->loadResult() === 1,
     'Blocked automatic retry retains one enrollment'
 );
 

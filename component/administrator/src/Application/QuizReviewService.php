@@ -133,7 +133,8 @@ final class QuizReviewService
         }
         $courseAt = (int)$e->required_total > 0 && $total === (int)$e->required_total ? $latest : null;
         $beforeBest = $p ? json_decode($p->coverage_json, true, 16, JSON_THROW_ON_ERROR) : null;
-        $impact = ['attempt_id' => (int)$a->id,'enrollment_revision' => (int)$e->revision,'attempt_revision' => (int)$a->revision,'return_attempt' => $refund,
+        $impact = ['attempt_id' => (int)$a->id,'enrollment_revision' => (int)$e->revision,
+            'attempt_revision' => (int)$a->revision,'return_attempt' => $refund,
             'before_status' => $a->status,'after_status' => 'invalidated','before_counted' => (int)$a->counted_for_limit,'after_counted' => $refund ? 0 : 1,
             'before_best' => $beforeBest ?: null,'after_best' => $best,'before_lesson_completed' => $p?->
                 state === 'completed','after_lesson_completed' => $completedAt !== null,
@@ -261,7 +262,8 @@ final class QuizReviewService
                         ,'completed_at' => $completed,'last_activity_at' => $now,'revision' => 1];
                 $this->db->insertObject('#__jlms_lesson_progress', $row);
             }
-            $update = (object)['id' => $enrollment,'completed_total' => $impact['after_completed_total'],'completed_at' => $impact['after_course_completed_at'],
+            $update = (object)['id' => $enrollment,'completed_total' => $impact['after_completed_total']
+                ,'completed_at' => $impact['after_course_completed_at'],
                 'revision' => (int)$e->revision + 1,'modified_by' => (int)$actor->id,'modified_at' => $now];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
             if ($e->completed_at === null && $impact['after_course_completed_at'] !== null) {
@@ -274,7 +276,8 @@ final class QuizReviewService
                      'invalidated','return_attempt' => $refund,'before_counted' => (int)$a->
                     counted_for_limit,'after_counted' => $refund ? 0 : 1,
                 'before_completed_total' => $impact['before_completed_total'],'after_completed_total' => $impact['after_completed_total'],
-                'before_completed_at' => $e->completed_at,'after_completed_at' => $impact['after_course_completed_at'],'correlation_id' => bin2hex(random_bytes(16))]);
+                'before_completed_at' => $e->completed_at,'after_completed_at' =>
+                     $impact['after_course_completed_at'],'correlation_id' => bin2hex(random_bytes(16))]);
             $ledger = (object)['scope_hash' => $scope,'request_hash' => $hash,'state' => 'completed'
                 ,'result_type' => 'quiz_cancel','result_id' => $attempt,'http_status' => 200,
                 'created_at' => $now,'expires_at' => gmdate('Y-m-d H:i:s', time() + 604800)];

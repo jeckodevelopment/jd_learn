@@ -342,3 +342,12 @@ I workflow preparatori precedenti della stessa PR sono falliti per argomenti CLI
 - `php -l` e PHPCS integrale: base 1.096, dopo 1.066, nessun nuovo rilievo; gate PSR-4 e package build superati nel batch.
 - CI della PR su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, browser Chromium, Joomla 6.2.0 con compat6 disabilitato.
 - Collaudi manuali frontend/backend, iscrizioni, curriculum, quiz, media e attestati rinviati alla sessione separata di accettazione.
+
+## Consolidated mass remediation (24 November 2026; PR pending)
+
+On the checked-out main baseline the pinned PHPCS 4.0.4 PSR12 full tracked-PHP scan measured **1066 → 1018**, a net reduction of **48 findings**, across **21 modified PHP files**. No new findings for any file/rule. PHP lint passed on every modified PHP file. Existing guarded tools were run in one job (comment, assertions, fluent chains, lexer positions and two prioritized expression batches); non-improving candidates were rejected. The complete CI gates remain mandatory before merge. **SECDEV-02 criterion 01 remains incomplete while findings remain, and CORE-01–23 and the Joomla API audit retain their independent acceptance gates. No percentage promotion without complete evidence.** Manual Joomla acceptance remains separate.
+
+### Comportamenti da testare
+
+- Identical significant PHP tokens, source contracts, PHP lint, complete PHPCS PSR-12 and full CI.
+- Joomla backend/frontend course and lesson workflows, authorization, CSRF, media, certificates and notifications in separate manual acceptance.

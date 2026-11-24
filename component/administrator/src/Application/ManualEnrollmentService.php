@@ -162,7 +162,8 @@ final class ManualEnrollmentService
              $versionId, 'version_revision' => (int) $version->revision,
             'edition_id' => $editionId, 'edition_revision' => (int) $edition->revision, 'starts_at' => $edition
                 ->starts_at, 'ends_at' => $edition->ends_at,
-            'capacity' => $edition->capacity === null ? null : (int) $edition->capacity, 'used' => $used, 'required_total' => $total,
+            'capacity' => $edition->capacity === null ? null : (int) $edition->capacity, 'used' => $used
+                , 'required_total' => $total,
             'existing_id' => $existing ? (int) $existing->id : null, 'existing_status' => $existing->status ?? null,
             'blocked' => $existing ? 'COM_JLMS_MANUAL_EXISTS' : ($edition->capacity !== null &&
                  $used >= (int) $edition->capacity ? 'COM_JLMS_EDITION_FULL' : null)];
@@ -283,7 +284,8 @@ final class ManualEnrollmentService
             $subject = (string) $this->db->setQuery($q)->loadResult();
             $record = (object) ['user_id' => $user, 'subject_key' => $subject, 'course_id' => $course
                 , 'course_version_id' => $p['version_id'], 'edition_id' => $edition,
-                'status' => 'active', 'origin' => 'manual', 'required_total' => $p['required_total'], 'completed_total' => 0, 'revision' => 1,
+                'status' => 'active', 'origin' => 'manual', 'required_total' => $p['required_total']
+                    , 'completed_total' => 0, 'revision' => 1,
                 'created_by' => $actorId, 'modified_by' => $actorId, 'created_at' => $now, 'modified_at' => $now];
             $this->db->insertObject('#__jlms_enrollments', $record, 'id');
             $id = (int) $record->id;
@@ -309,7 +311,8 @@ final class ManualEnrollmentService
                     trim((string) $learner->name),
                     ['USER_FULLNAME' => trim((string) $learner->name), 'COURSE_TITLE' => (string) $courseRecord
                         ->title, 'ENROLLMENT_DATE' => $now,
-                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id,
+                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() .
+                             'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id,
                         'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')],
                     (int) $learner->id
                 );

@@ -29,7 +29,9 @@ $base = 'index.php?option=com_jlms&view=quiztime&id=' . (int)$i['course_id'] . '
  <h2><?= $this->escape($i['enrollment']->learner_name) ?> · #<?= (int)$i['enrollment']->id ?></h2>
         <?php if ($i['active']) :
             ?><p id="jlms-quiz-time-active"
-                class="alert alert-warning"><?= Text::_('COM_JLMS_QUIZ_TIME_ACTIVE') ?> #<?= (int)$i['active']->id ?> · <?= (int)$i['active']->time_seconds ?> s · <?= $this->escape($i['active']->deadline_at ?? Text::_('COM_JLMS_QUIZ_UNLIMITED')) ?> UTC</p><?php
+                class="alert alert-warning"><?= Text::_('COM_JLMS_QUIZ_TIME_ACTIVE') ?> #<?= (int)$i['active']
+                    ->id ?> · <?= (int)$i['active']->time_seconds ?> s · <?= $this->escape($i['active']
+                    ->deadline_at ?? Text::_('COM_JLMS_QUIZ_UNLIMITED')) ?> UTC</p><?php
         endif; ?>
  <form id="jlms-quiz-time-form"
     method="post"

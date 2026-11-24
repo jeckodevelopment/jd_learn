@@ -129,7 +129,8 @@ function restoreTree(int $id): array
     global $db;
     $out = ['version' => (array)restoreRow('course_versions', $id)];
     foreach (['modules','lessons','quizzes','attachments'] as $table) {
-        $out[$table] = $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE course_version_id=' . $id . ' ORDER BY id')->loadAssocList();
+        $out[$table] = $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE course_version_id=' .
+             $id . ' ORDER BY id')->loadAssocList();
     }
     $out['questions'] = $db->setQuery(('SELECT qq.* FROM #__jlms_quiz_questions AS qq JOIN #__jlms_quizzes '
         . 'AS q ON q.id=qq.quiz_id WHERE ' .
@@ -256,7 +257,8 @@ $before = restoreLearning();
 $courseBefore = restoreRow('courses', $course);
 $input = ['course_id' => $course,'version_id' => $historical,'revision' => $courseBefore->revision
     ,'expected_version_revision' => restoreRow('course_versions', $historical)->revision,'confirmation' => '1'];
-restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['confirmation' => '0'])), 'COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED');
+restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['confirmation' =>
+     '0'])), 'COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED');
 restoreDenied(fn()=>$authoring->restoreVersion(new \Joomla\CMS\User\User(0), $input), 'JERROR_ALERTNOAUTHOR');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' => $original->id
     ,'expected_version_revision' => $original->revision])), 'COM_JLMS_RESOURCE_NOT_FOUND');
@@ -308,7 +310,8 @@ foreach ($trees[$historical]['questions'] as $i => $question) {
     unset($question['quiz_id'], $new['quiz_id']);
     restoreExpect($question === $new, 'Immutable question revision and ordering preserved');
 }
-restoreExpect(count(array_filter($restored['lessons'], static fn($l)=>$l['kind'] === 'video')) === 3, 'All three external video providers are ' .
+restoreExpect(count(array_filter($restored['lessons'], static fn($l)=>$l['kind'] ===
+     'video')) === 3, 'All three external video providers are ' .
     'represented');
 $courseAfter = restoreRow('courses', $course);
 foreach (['revision','modified_at','modified_by'] as $field) {
@@ -323,7 +326,8 @@ restoreExpect(
     && (array)restoreRow('certificate_documents', (int)$historyDocument->id) === $documentBefore,
     'Restore does not alter original certificate, serial or document snapshots'
 );
-restoreExpect($authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision) === $target, 'Edit programme deterministically reuses ' .
+restoreExpect($authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision) ===
+     $target, 'Edit programme deterministically reuses ' .
     'newest draft');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, $input), 'COM_JLMS_REVISION_CONFLICT');
 restoreExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions ' .
@@ -331,7 +335,8 @@ restoreExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions '
 $audit = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
     . "extension='com_jlms.programmerestore' AND item_id=") . $course . ' ORDER BY id DESC')->loadResult();
 $audit = json_decode($audit, true, 32, JSON_THROW_ON_ERROR);
-restoreExpect((int)$audit['source_version_id'] === $historical && (int)$audit['target_version_id'] === $target, 'Native audit records historical source and ' .
+restoreExpect((int)$audit['source_version_id'] === $historical && (int)$audit['target_version_id'] ===
+     $target, 'Native audit records historical source and ' .
     'new draft');
 $vimeoEnabled = false;
 restoreDenied(fn()=>$publish($target), 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
@@ -346,5 +351,6 @@ restoreExpect((int)restoreRow('courses', $course)->current_version_id === $targe
 restoreExpect(restoreTree($existing) === $trees[$existing], 'Publishing recovered programme preserves ' .
     'another open draft');
 restoreExpect(count($remote->calls) > 0, 'Cloudflare privacy and metadata validation uses controlled transport');
-file_put_contents($fixture, json_encode(['course' => $course,'historical' => $historical,'current' => $target,'existing' => $existing], JSON_THROW_ON_ERROR));
+file_put_contents($fixture, json_encode(['course' => $course,'historical' => $historical,'current' => $target
+    ,'existing' => $existing], JSON_THROW_ON_ERROR));
 echo json_encode(['programme_restore_native_checks' => $checks,'status' => 'passed']) . PHP_EOL;
