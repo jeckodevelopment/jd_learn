@@ -325,3 +325,20 @@ Baseline del ramo dopo PR #1012: **1.149** violazioni reali del gate PHPCS PSR-1
 **Classificazione del residuo:** il debito non può essere dichiarato chiuso attraverso ulteriori lanci degli stessi formatter. Rimangono soprattutto righe lunghe che richiedono refactoring delle espressioni, dei servizi e dei template HTML/PHP, oltre a casi PSR1/PSR2 (script con dichiarazioni ed effetti collaterali, convenzioni sui nomi, classi multiple). Richiedono modifiche strutturali esplicite e test specifici: nessuna soppressione o esclusione dai controlli è autorizzata. Lo stato di SECDEV-02 resta **Parziale**.
 
 **Comportamenti da testare:** risoluzione delle classi dopo gli import, equivalenza del contenuto delle stringhe SQL/testo, regressioni delle query, permessi, CSRF, notifiche, iscrizioni, quiz e video; matrice PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium. I collaudi manuali Joomla sono separati.
+
+## Remediation verificata dopo #1014 — PR #1013 (24 novembre 2026)
+
+La PR #1014 ha già ridotto la baseline da **1.149 a 1.096** rilievi PSR-12 sul ramo `main`. La PR #1013 riparte dalla nuova baseline, senza riutilizzare patch prodotte su revisioni precedenti e senza alterare le regole PHPCS.
+
+Il [workflow preparatorio #45374911302](https://github.com/jeckodevelopment/jd_learn/actions/runs/45374911302) ha eseguito due passate coordinate sul codice PHP tracciato: una su 250 file prioritari e una estesa fino a 430 file. Il primo passaggio ha accettato 24 espressioni, il secondo 6: **30 rilievi rimossi in 19 file PHP**, da **1.096 a 1.066** (riduzione del 2,74% sulla baseline della PR, del 7,22% rispetto ai 1.149 precedenti #1014), **zero rilievi introdotti per file/regola**. Le trasformazioni ammesse conservano i token PHP significativi, sono sottoposte a `php -l`, all'audit PHPCS PSR12 4.0.4, al gate PSR-4 e ai controlli di build/pacchetto.
+
+I workflow preparatori precedenti della stessa PR sono falliti per argomenti CLI, una baseline contemporaneamente aggiornata da #1014 e un tentativo di push non fast-forward. Questi run **non** sono evidenza di correzioni acquisite; soltanto #45374911302 documenta il commit del nuovo lotto. Il workflow temporaneo deve essere rimosso prima del merge, e la CI applicativa finale deve essere verde.
+
+**Stato requisito:** SECDEV-02/criterion_01 ancora parziale: **1.066 rilievi** rimasti, principalmente righe oltre 120 caratteri e casi strutturali PSR-1/PSR-2; il completamento di CORE-01–23 e dell'audit esaustivo delle API Joomla rimane distinto. La riduzione di debito PSR12 **non modifica il numero di criteri implementati, verificabili o accettati**, né le percentuali di copertura funzionale: la matrice va aggiornata nell'evidenza, non promossa artificiosamente.
+
+### Comportamenti da testare (PR #1013)
+
+- Nessun cambiamento di logica, token PHP significativi, stringhe, permessi, CSRF, cookie, schema, endpoint o dati personali.
+- `php -l` e PHPCS integrale: base 1.096, dopo 1.066, nessun nuovo rilievo; gate PSR-4 e package build superati nel batch.
+- CI della PR su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, browser Chromium, Joomla 6.2.0 con compat6 disabilitato.
+- Collaudi manuali frontend/backend, iscrizioni, curriculum, quiz, media e attestati rinviati alla sessione separata di accettazione.
