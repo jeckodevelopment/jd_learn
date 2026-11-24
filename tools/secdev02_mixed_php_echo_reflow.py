@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Bulk split long mixed PHP/HTML lines *inside* PHP echo regions.
+"""Bulk split long mixed PHP/HTML lines *inside* PHP code regions.
 
-An inserted newline inside <?= ... ?> changes PHP whitespace only: rendered
+An inserted newline inside <?= ... ?> or <?php ... ?> changes PHP whitespace only: rendered
 HTML text/attributes remain unchanged. Every changed file must preserve the
 significant lexer stream, PHP syntax, source contracts, and PHPCS rule counts.
 """
@@ -16,12 +16,12 @@ from secdev02_lexer_bulk_wrap import ROOT, lint, lex, phpcs_counts
 from secdev02_calls_reflow_bulk import required_source_fragments
 
 LIMIT = 120
-ECHO_SPANS = r'''
+PHP_SPANS = r'''
 $s=file_get_contents($argv[1]); $offset=0; $out=[]; $open=null;
 foreach(token_get_all($s) as $t) {
   $id=is_array($t)?$t[0]:0;
   $text=is_array($t)?$t[1]:$t;
-  if ($id===T_OPEN_TAG_WITH_ECHO) $open=$offset+strlen($text);
+  if ($id===T_OPEN_TAG_WITH_ECHO || $id===T_OPEN_TAG) $open=$offset+strlen($text);
   if ($id===T_CLOSE_TAG && $open!==null) {
     $out[]=[$open,$offset]; $open=null;
   }
@@ -32,7 +32,7 @@ echo json_encode($out, JSON_THROW_ON_ERROR);
 
 
 def spans(path: Path) -> list[tuple[int,int]]:
-    p=subprocess.run(['php','-r',ECHO_SPANS,str(path)],check=True,
+    p=subprocess.run(['php','-r',PHP_SPANS,str(path)],check=True,
                      capture_output=True,text=True,timeout=30)
     return [tuple(x) for x in json.loads(p.stdout)]
 
@@ -95,7 +95,7 @@ def main() -> int:
         if not path.is_file():
             continue
         original=path.read_bytes()
-        if b'<?=' not in original or not any(len(line)>LIMIT for line in original.splitlines()):
+        if not any(len(line)>LIMIT for line in original.splitlines()):
             continue
         pairs=spans(path)
         if not pairs:
@@ -125,7 +125,7 @@ def main() -> int:
             removed+=sum(before.values())-score
             print(f'ECHO accepted {name} removed={sum(before.values())-score}',flush=True)
         else: rejected+=1
-    print(f'SECDEV-02 echo whitespace accepted_files={accepted} rejected_files={rejected} net_removed={removed}',flush=True)
+    print(f'SECDEV-02 mixed PHP code whitespace accepted_files={accepted} rejected_files={rejected} net_removed={removed}',flush=True)
     return 0
 
 
