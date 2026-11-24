@@ -444,7 +444,7 @@ After restoring the original protected course-completion notification call and d
 
 ## PR #1021 — guarded logical-expression reflow (24 novembre 2026)
 
-La baseline definitiva validata dopo il merge #1019 è **331 finding PSR-12**, di cui **260 `Generic.Files.LineLength.TooLong`** e 71 strutturali. Il precedente dato intermedio di 322 non rappresenta lo stato finale integrato. Un nuovo lotto interviene su condizioni logiche lunghe nei servizi PHP di pubblicazione, corsi e curriculum, esclusivamente separando su righe diverse gli operatori logici all'esterno dei letterali. Il saldo definitivo sarà quello misurato dalla CI PHPCS 4.0.4; fino a quel momento non si dichiara alcuna riduzione certificata né la chiusura SECDEV-02. La matrice dei requisiti conserva stato e percentuali funzionali.
+La baseline definitiva validata dopo il merge #1019 è **331 finding PSR-12**, di cui **260 `Generic.Files.LineLength.TooLong`** e 71 strutturali. Il precedente dato intermedio di 322 non rappresenta lo stato finale integrato. Un nuovo lotto interviene su condizioni logiche lunghe nei servizi PHP di pubblicazione, corsi e curriculum, esclusivamente separando su righe diverse gli operatori logici all'esterno dei letterali. Il gate PHPCS 4.0.4 completo della CI #4099 certifica **331 → 320 finding (−11)**, senza nuovi rilievi per file/regola; il residuo comprende **249 righe lunghe** e 71 rilievi strutturali. Il primo tentativo è stato respinto per violazioni di spaziatura dei blocchi `if`; le trasformazioni non conformi sono state ripristinate e sostituite con blocchi conformi. Non si dichiara la chiusura SECDEV-02. La matrice dei requisiti conserva stato e percentuali funzionali.
 
 ### Comportamenti da testare
 
