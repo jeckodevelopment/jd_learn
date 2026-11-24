@@ -30,7 +30,7 @@ foreach ([1, 2, 3] as $position) {
             $fieldOutput[1] /* Prepared and rendered by native com_fields layouts. */ ?></div><?php
  endif; ?>
  <?php if (!empty($presentation['image'])) : ?>
- <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(Uri::root() . 
+ <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(Uri::root() .
     implode('/', array_map('rawurlencode', explode('/', $presentation['image'])))) ?>" alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
  <?php endif; ?>
  <?php if (trim($fieldOutput[2]) !== '') :
@@ -76,8 +76,8 @@ foreach ([1, 2, 3] as $position) {
  <?php endif; ?>
 
  <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
-  <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' . 
-    base64_encode('index.php?option=com_jlms&view=course&id=' . 
+  <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' .
+    base64_encode('index.php?option=com_jlms&view=course&id=' .
     (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
                                                               <?php elseif ($this->enrollmentState !== null) : ?>
                                                                   <?php if ($this->enrollmentState['access'] === 'available' && (int) $course->delivery_enabled === 1) : ?>
@@ -124,7 +124,7 @@ foreach ([1, 2, 3] as $position) {
                 Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?=
                 $this->escape($teacher['title']) ?></a></h3>
             <?php if ($teacher['image'] !== '') :
-                ?><img src="<?= $this->escape(Uri::root() . 
+                ?><img src="<?= $this->escape(Uri::root() .
     implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php
             endif; ?>
  <p><?= nl2br($this->escape($teacher['bio'])) ?></p><?php if ($teacher['website'] !== '') :
@@ -196,11 +196,11 @@ foreach ([1, 2, 3] as $position) {
     <?php if ($this->item['public_materials']['page'] > 0 || ($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) :
         ?><nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
         <?php if ($this->item['public_materials']['page'] > 0) :
-            ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id . 
+            ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id .
     '&course_material_page=' . ($this->item['public_materials']['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php
         endif; ?>
         <?php if (($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) :
-            ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id . 
+            ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id .
     '&course_material_page=' . ($this->item['public_materials']['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php
         endif; ?>
  </nav>
