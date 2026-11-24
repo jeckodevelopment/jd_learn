@@ -25,7 +25,7 @@ $offset = 0; $items = [];
 foreach (token_get_all($source) as $token) {
     $id = is_array($token) ? $token[0] : 0;
     $text = is_array($token) ? $token[1] : $token;
-    if ($id === T_NAME_FULLY_QUALIFIED && (str_starts_with($text, '\\\\Joomla\\\\') || str_starts_with($text, '\\\\Jlms\\\\'))) {
+    if ($id === T_NAME_FULLY_QUALIFIED && (str_starts_with($text, chr(92) . 'Joomla' . chr(92)) || str_starts_with($text, chr(92) . 'Jlms' . chr(92)))) {
         $items[] = [$offset, strlen($text), $text];
     }
     $offset += strlen($text);
