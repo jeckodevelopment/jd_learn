@@ -107,7 +107,9 @@ def proposed(original: bytes, manifest: dict, basename: str):
         if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",name):
             return None
         filename=f"{basename}.{name}.php"
-        header=b"<?php\n\ndeclare(strict_types=1);\n\n"
+        header=b"<?php\n\n"
+        if re.search(rb"(?m)^\s*declare\s*\(\s*strict_types\s*=\s*1\s*\)\s*;",original[:300]):
+            header+=b"declare(strict_types=1);\n\n"
         if aliases:
             header+=aliases.encode()+b"\n\n"
         body=original[begin:end].strip(b" \r\n\t")
