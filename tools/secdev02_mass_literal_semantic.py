@@ -142,7 +142,7 @@ def main() -> int:
         changed=split_plain_literal(sample,64,90,4,False)
         assert changed is not None and b" .\n" in changed
         assert split_plain_literal(b"'short'",40,90,4,False) is None
-        assert split_plain_literal(b"'\\\\path ' + b'a'*90+b"'",40,90,4,False) is None
+        assert split_plain_literal(b"'\\path '" + b"a" * 90 + b"'", 40, 90, 4, False) is None
         print("SECDEV-02 AST-guarded long PHP literal self-test OK")
         return 0
     if not args.phpcs or not args.phpcs.is_file():
