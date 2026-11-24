@@ -32,6 +32,7 @@ jobs:
         run: |
           git diff --name-only -z -- '*.php' | xargs -0 -r -n1 php -l
           python3 tests/secdev02-psr12-phpcs.py --base-ref HEAD
+          python3 tools/build.py
           python3 tools/check.py
       - name: Commit verified fixes and remove privileged one-shot workflow
         run: |
