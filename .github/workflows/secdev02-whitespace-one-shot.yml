@@ -27,6 +27,7 @@ jobs:
       - name: Project and validate original-token PHP whitespace
         run: |
           python3 tools/secdev02_prettier_whitespace_project.py --self-test
+          echo 'Protect all source-gate literal contracts'
           python3 tools/secdev02_prettier_whitespace_project.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --prettier .runtime/secdev02-prettier/node_modules/.bin/prettier
           git diff --check
       - name: Gate full repository PHP and PSR12 source contracts
