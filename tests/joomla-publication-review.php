@@ -53,7 +53,9 @@ $reviewStageCount = (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_stages
     . "#__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult();
 $reviewTransitionCount = (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN "
     .
-            "('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))
+            ("('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_" .
+                "INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=" .
+                "(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)")))
     ->loadResult();
 $archiveCount = (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' "
     . "AND workflow_id=(SELECT id FROM #__workflows WHERE "
@@ -71,7 +73,10 @@ if (
         . "#__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))->loadResult()
     || $reviewTransitionCount !== (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_transitions WHERE title IN "
         .
-                    "('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND title='JD Learn' LIMIT 1)"))
+                    ("('COM_JLMS_SUBMIT_REVIEW_DRAFT','COM_JLMS_SUBMIT_REVIEW_UPDATE','COM_JLMS_" .
+                        "RETURN_INITIAL_DRAFT','COM_JLMS_RETURN_PUBLISHED_DRAFT','COM_JLMS_APPROVE_REVIEW') " .
+                        "AND workflow_id=(SELECT id FROM #__workflows WHERE extension='com_jlms.course' AND " .
+                        "title='JD Learn' LIMIT 1)")))
             ->loadResult()
     || $archiveCount !== (int)$db->setQuery(("SELECT COUNT(*) FROM #__workflow_stages WHERE title='JARCHIVED' "
         . "AND workflow_id=(SELECT id FROM #__workflows WHERE "

@@ -119,7 +119,10 @@ final class QuizAuthoringService
         $revision = CurriculumService::id($input['revision'] ?? 1);
         $this->scope($identity, $course, $version);
         $title = $input['title'] ?? null;
-        if (!is_string($title) || trim($title) === '' || strlen($title) > 255 || preg_match('/[\x00-\x1f\x7f<>]/', $title)) {
+        if (
+            !is_string($title) || trim($title) === '' || strlen($title) > 255
+            || preg_match('/[\x00-\x1f\x7f<>]/', $title)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $required = self::flag($input['required'] ?? '1');
@@ -132,7 +135,8 @@ final class QuizAuthoringService
         }
         $threshold = (int) $match[1] * 100 + (int) str_pad($match[2] ?? '', 2, '0');
         if (
-            $threshold > 10000 || !in_array($assessment, ['graded', 'practice'], true) || ($required && ($assessment !== 'graded' || $threshold === 0))
+            $threshold > 10000 || !in_array($assessment, ['graded', 'practice'], true) || ($required
+                && ($assessment !== 'graded' || $threshold === 0))
             || !in_array($selectionMode, ['fixed', 'random'], true) || !in_array($feedback, ['pass_or_exhausted'
                 , 'never', 'after_submit'], true)
             || ($assessment === 'graded' && $feedback === 'after_submit')
@@ -194,7 +198,10 @@ final class QuizAuthoringService
             $quiz = null;
             if ($lesson) {
                 $l = $this->row('lessons', $lesson, true);
-                if ((int) $l->course_version_id !== $version || $l->kind !== 'quiz' || (int) $l->module_id !== $module) {
+                if (
+                    (int) $l->course_version_id !== $version || $l->kind !== 'quiz' || (int) $l->module_id
+                    !== $module
+                ) {
                     throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 }
                 $q = $this->db->createQuery()
@@ -226,7 +233,15 @@ final class QuizAuthoringService
                     ->where('module_id = :module')
                     ->bind(':module', $module, ParameterType::INTEGER);
                 $order = (int) $this->db->setQuery($q)->loadResult() + 1;
-                $l = (object) ['course_version_id' => $version, 'module_id' => $module, 'logical_key' => sprintf('%s-%s-4%s-a%s-%s', bin2hex(random_bytes(4)), bin2hex(random_bytes(2)), substr(bin2hex(random_bytes(2)), 1), substr(bin2hex(random_bytes(2)), 1), bin2hex(random_bytes(6))), 'alias' => 'quiz-' . bin2hex(random_bytes(8)),
+                $l = (object) ['course_version_id' => $version, 'module_id' => $module, 'logical_key'
+                    => sprintf(
+                        '%s-%s-4%s-a%s-%s',
+                        bin2hex(random_bytes(4)),
+                        bin2hex(random_bytes(2)),
+                        substr(bin2hex(random_bytes(2)), 1),
+                        substr(bin2hex(random_bytes(2)), 1),
+                        bin2hex(random_bytes(6))
+                    ), 'alias' => 'quiz-' . bin2hex(random_bytes(8)),
                     'title' => trim($title), 'kind' => 'quiz', 'required' => (int) $required,
                          'ordering' => $order, 'completion_rule' => 'quiz_pass',
                     'params_json' => '{}', 'fields_snapshot_json' => '{}', 'revision' => 1,
@@ -239,7 +254,8 @@ final class QuizAuthoringService
                  'pass_basis_points' => $threshold, 'max_attempts' => $attempts,
                 'time_limit_seconds' => $minutes ? $minutes * 60 : null, 'feedback_policy' => $feedback
                     , 'selection_json' => QuestionDefinition::canonical($selection),
-                'revision' => $quiz ? (int) $quiz->revision + 1 : 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
+                'revision' => $quiz ? (int) $quiz->revision + 1 : 1, 'modified_by' => (int) $actor->id
+                    , 'modified_at' => $now];
             if ($quiz) {
                 $config->id = (int) $quiz->id;
                 $this->db->updateObject('#__jlms_quizzes', $config, 'id', true);
@@ -294,7 +310,10 @@ final class QuizAuthoringService
                 ->where('lesson_id = :lesson')
                 ->bind(':lesson', $lesson, ParameterType::INTEGER);
             $quiz = (int) $this->db->setQuery($q)->loadResult();
-            foreach ([['attempts','quiz_id',$quiz],['attachments','lesson_id',$lesson],['prerequisites','lesson_id',$lesson],['prerequisites','required_lesson_id',$lesson]] as [$table,$column,$id]) {
+            foreach (
+                [['attempts','quiz_id',$quiz],['attachments','lesson_id',$lesson],['prerequisites'
+                ,'lesson_id',$lesson],['prerequisites','required_lesson_id',$lesson]] as [$table,$column,$id]
+            ) {
                 $q = $this->db->createQuery()
                     ->select('COUNT(*)')
                     ->from('#__jlms_' . $table)
@@ -304,7 +323,10 @@ final class QuizAuthoringService
                     throw new \RuntimeException('COM_JLMS_ITEM_HAS_DEPENDENCIES', 409);
                 }
             }
-            foreach ([['quiz_questions','quiz_id',$quiz],['quizzes','id',$quiz],['lessons','id',$lesson]] as [$table,$column,$id]) {
+            foreach (
+                [['quiz_questions','quiz_id',$quiz],['quizzes','id',$quiz],['lessons','id'
+                ,$lesson]] as [$table,$column,$id]
+            ) {
                 $q = $this->db->createQuery()
                     ->delete('#__jlms_' . $table)
                     ->where($column . ' = :id')

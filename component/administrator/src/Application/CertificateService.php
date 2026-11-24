@@ -103,7 +103,10 @@ final class CertificateService
             $reason = 'eligible_missing';
             try {
                 $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $record->rules_json);
-                if (($rules['mode'] ?? 'learning') !== 'learning' || ($rules['certificate_enabled'] ?? false) !== true) {
+                if (
+                    ($rules['mode'] ?? 'learning') !== 'learning' || ($rules['certificate_enabled'] ?? false)
+                    !== true
+                ) {
                     $reason = 'version_disabled';
                 } elseif (!CertificatePreferences::enabled($globalEnabled, (string) $record->params_json)) {
                     $reason = 'preferences_disabled';

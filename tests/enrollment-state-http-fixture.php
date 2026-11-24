@@ -11,7 +11,9 @@ $db = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_T
 $f = json_decode(file_get_contents(dirname($root) . '/enrollment-state-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $mode = $argv[2] ?? '';
 if ($mode === 'snapshot') {
-    $q = $db->prepare('SELECT user_id,subject_key,course_id,course_version_id,edition_id,required_total,completed_total,started_at,completed_at,last_activity_at,last_lesson_id,starts_at,ends_at FROM joomla_jlms_enrollments WHERE id=?');
+    $q = $db->prepare(('SELECT user_id,subject_key,course_id,course_version_id,edition_id,' .
+        'required_total,completed_total,started_at,completed_at,last_activity_at,last_lesson_id,' .
+        'starts_at,ends_at FROM joomla_jlms_enrollments WHERE id=?'));
     $q->execute([$f['http_enrollment']]);
     $stable = $q->fetch(\PDO::FETCH_ASSOC);
     $q = $db->prepare('SELECT status,revision FROM joomla_jlms_enrollments WHERE id=?');

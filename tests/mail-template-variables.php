@@ -255,8 +255,14 @@ foreach (
 }
 foreach (['it-IT', 'en-GB'] as $locale) {
     if (
-        MailTemplateVariableCatalog::forTemplate('com_jlms.enrollment.confirmed', $locale)['ENROLLMENT_DATE']['type'] !== 'date'
-        || MailTemplateVariableCatalog::forTemplate('com_jlms.course.completed', $locale)['COMPLETION_DATE']['type'] !== 'date'
+        MailTemplateVariableCatalog::forTemplate(
+            'com_jlms.enrollment.confirmed',
+            $locale
+        )['ENROLLMENT_DATE']['type'] !== 'date'
+        || MailTemplateVariableCatalog::forTemplate(
+            'com_jlms.course.completed',
+            $locale
+        )['COMPLETION_DATE']['type'] !== 'date'
     ) {
         throw new RuntimeException('Missing typed localized date variables: ' . $locale);
     }
@@ -274,7 +280,10 @@ $migrated = MailTemplateTagUpdater::migratePlaceholders($legacy);
 if ($migrated !== $canonical || MailTemplateTagUpdater::migratePlaceholders($migrated) !== $canonical) {
     throw new RuntimeException('Installed mail placeholder migration must preserve content and be idempotent.');
 }
-if (MailTemplateTagUpdater::migratePlaceholders('{COURSE_TITLE} {NAME_SUFFIX} {NAME}') !== '{COURSE_TITLE} {NAME_SUFFIX} {USER_FULLNAME}') {
+if (
+    MailTemplateTagUpdater::migratePlaceholders('{COURSE_TITLE} {NAME_SUFFIX} {NAME}')
+    !== '{COURSE_TITLE} {NAME_SUFFIX} {USER_FULLNAME}'
+) {
     throw new RuntimeException('Mail placeholder migration must match exact legacy tokens only.');
 }
 
@@ -446,13 +455,22 @@ if (MailTemplateVariableCatalog::forTemplate('unknown.template') !== []) {
 
 $data = ['USER_FULLNAME' => 'Ada', 'COURSE_TITLE' => 'Intro', 'SITE_NAME' => 'Academy'];
 $validator = MailTemplatePlaceholderValidator::class;
-if ($validator::unresolved('com_jlms.course.completed', $data, 'Ciao {USER_FULLNAME} - {COURSE_TITLE} - {SITE_NAME}') !== []) {
+if (
+    $validator::unresolved('com_jlms.course.completed', $data, ('Ciao {USER_FULLNAME} - {COURSE_' .
+    'TITLE} - {SITE_NAME}')) !== []
+) {
     throw new RuntimeException('Registered, provided tags should resolve.');
 }
-if ($validator::unresolved('com_jlms.course.completed', $data, '{UNKNOWN} {COURSE_URL} {USER_FULLNAME} {UNKNOWN}') !== ['COURSE_URL', 'UNKNOWN']) {
+if (
+    $validator::unresolved('com_jlms.course.completed', $data, ('{UNKNOWN} {COURSE_URL} {USER_' .
+    'FULLNAME} {UNKNOWN}')) !== ['COURSE_URL', 'UNKNOWN']
+) {
     throw new RuntimeException('Unsupported and unprovided tags must be detected.');
 }
-if ($validator::unresolved('com_jlms.course.completed', ['USER_FULLNAME' => ['invalid']], '{USER_FULLNAME}') !== ['USER_FULLNAME']) {
+if (
+    $validator::unresolved('com_jlms.course.completed', ['USER_FULLNAME' => ['invalid']], '{USER_FULLNAME}')
+    !== ['USER_FULLNAME']
+) {
     throw new RuntimeException('Non scalar tag values must not pass validation.');
 }
 if ($validator::unresolved('com_jlms.course.completed', $data, 'A literal {lowercase} and JSON {"x":1}') !== []) {

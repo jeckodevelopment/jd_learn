@@ -82,7 +82,8 @@ function manualDenied(callable $fn, int $code, string $message): void
 function manualKey(): string
 {
     $k = bin2hex(random_bytes(16));
-    return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3) . '-' . substr($k, 20);
+    return substr($k, 0, 8) . '-' . substr($k, 8, 4) . '-4' . substr($k, 13, 3) . '-a' . substr($k, 17, 3)
+        . '-' . substr($k, 20);
 }
 function manualCommand(array $i): array
 {
@@ -128,7 +129,10 @@ if (($argv[2] ?? '') === 'retained') {
     manualExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
         . "extension='com_jlms.manualenrollment' AND item_id=")
             . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
-    echo json_encode(['manual_enrollment_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
+    echo json_encode(
+        ['manual_enrollment_retention_checks' => $checks,'status' => 'passed'],
+        JSON_THROW_ON_ERROR
+    ) . PHP_EOL;
     exit;
 }
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
@@ -138,7 +142,12 @@ $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learni
 $catid = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND "
     . "alias='ci-courses'"))->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Manual admission fixture','alias' => 'manual-admission-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'explicit','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Manual admission'])) {
+if (
+    !$model->save(['id' => 0,'revision' => 1,'title' => 'Manual admission fixture','alias'
+    => 'manual-admission-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access'
+    => $level,'enrollment_mode' => 'explicit','presentation_description'
+    => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Manual admission'])
+) {
     throw new \RuntimeException($model->getError());
 }
 $course = (int)$model->getState('course.id');
@@ -151,7 +160,8 @@ $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Manua
 $lesson = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' =>
      'Manual admission lesson','kind' => 'text','required' => '1','body' => '<p>MANUAL_PRIVATE_BODY</p>']);
 $pub = $component->getPublicationService();
-$pub->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$pub->transitions($actor, $course)[0]->id);
+$pub->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id='
+    . $course)->loadResult(), $scope()['expected_version_revision'], (int)$pub->transitions($actor, $course)[0]->id);
 $users = [];
 foreach (['one','failure','race','capacity1','capacity2','automatic','snapshot','http','denied'] as $name) {
     $u = new NativeUser();
@@ -174,7 +184,15 @@ $asset->store();
 $operations = $component->getCourseOperationsService();
 $closed = $operations->editor($manager, $course, 'admissions_close');
 $closedKey = manualKey();
-$operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Fixture closure', $closedKey, $closed['impact']['hash']);
+$operations->apply(
+    $manager,
+    $course,
+    'admissions_close',
+    $closed['impact']['revision'],
+    'Fixture closure',
+    $closedKey,
+    $closed['impact']['hash']
+);
 manualDenied(
     fn()=>$service->editor($manager, $course, (int)$users['one']->id, 'en-GB'),
     409,
@@ -182,13 +200,29 @@ manualDenied(
 );
 $staleKey = manualKey();
 manualDenied(
-    fn()=>$operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Stale closure', $staleKey, $closed['impact']['hash']),
+    fn()=>$operations->apply(
+        $manager,
+        $course,
+        'admissions_close',
+        $closed['impact']['revision'],
+        'Stale closure',
+        $staleKey,
+        $closed['impact']['hash']
+    ),
     409,
     'stale course operation preview is rejected'
 );
 $operationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
     'course_id=' . $course)->loadResult();
-$operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Fixture closure', $closedKey, $closed['impact']['hash']);
+$operations->apply(
+    $manager,
+    $course,
+    'admissions_close',
+    $closed['impact']['revision'],
+    'Fixture closure',
+    $closedKey,
+    $closed['impact']['hash']
+);
 manualExpect(
     (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
         'course_id=' . $course)->loadResult() === $operationCount,
@@ -201,7 +235,15 @@ try {
         $blocked = $operations->editor($manager, $course, $blockedOperation);
         manualExpect($blocked['impact']['blocked'] === true, 'archived course cannot pre-arm ' . $blockedOperation);
         manualDenied(
-            fn()=>$operations->apply($manager, $course, $blockedOperation, $blocked['impact']['revision'], 'Archive gate negative fixture', manualKey(), $blocked['impact']['hash']),
+            fn()=>$operations->apply(
+                $manager,
+                $course,
+                $blockedOperation,
+                $blocked['impact']['revision'],
+                'Archive gate negative fixture',
+                manualKey(),
+                $blocked['impact']['hash']
+            ),
             409,
             'archived course operation denied ' . $blockedOperation
         );
@@ -215,11 +257,23 @@ try {
     $db->setQuery('UPDATE #__jlms_courses SET state=1, delivery_enabled=1 WHERE id=' . (int)$course)->execute();
 }
 $opened = $operations->editor($manager, $course, 'admissions_open');
-$brokenOperations = new JdCourseOperationsService($db, $component->getEnrollmentRosterService(), static function (): void {
-    throw new \RuntimeException('COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED', 503);
-});
+$brokenOperations = new JdCourseOperationsService(
+    $db,
+    $component->getEnrollmentRosterService(),
+    static function (): void {
+        throw new \RuntimeException('COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED', 503);
+    }
+);
 manualDenied(
-    fn()=>$brokenOperations->apply($manager, $course, 'admissions_open', $opened['impact']['revision'], 'Fixture reopening', manualKey(), $opened['impact']['hash']),
+    fn()=>$brokenOperations->apply(
+        $manager,
+        $course,
+        'admissions_open',
+        $opened['impact']['revision'],
+        'Fixture reopening',
+        manualKey(),
+        $opened['impact']['hash']
+    ),
     503,
     'course operation audit failure is not successful'
 );
@@ -231,7 +285,15 @@ manualExpect(
     'audit failure rolls back course and history'
 );
 $opened = $operations->editor($manager, $course, 'admissions_open');
-$operations->apply($manager, $course, 'admissions_open', $opened['impact']['revision'], 'Fixture reopening', manualKey(), $opened['impact']['hash']);
+$operations->apply(
+    $manager,
+    $course,
+    'admissions_open',
+    $opened['impact']['revision'],
+    'Fixture reopening',
+    manualKey(),
+    $opened['impact']['hash']
+);
 $groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
     'user_id,group_id')->loadAssocList();
 $counts = static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' .
@@ -305,7 +367,8 @@ manualExpect($counts() === $before, 'invalid confirmations and stale preview hav
 $id = $service->apply($manager, ...$command);
 $record = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE id=' . $id)->loadObject();
 manualExpect(
-    $record->origin === 'manual' && (int)$record->created_by === (int)$manager->id && (int)$record->user_id === (int)$users['one']->id,
+    $record->origin === 'manual' && (int)$record->created_by === (int)$manager->id && (int)$record->user_id
+        === (int)$users['one']->id,
     'manual creation has operator and learner provenance'
 );
 manualExpect(
@@ -317,14 +380,30 @@ manualExpect(
     'manual learner can enter published classroom'
 );
 $delivery = $operations->editor($manager, $course, 'delivery_suspend');
-$operations->apply($manager, $course, 'delivery_suspend', $delivery['impact']['revision'], 'Fixture delivery suspension', manualKey(), $delivery['impact']['hash']);
+$operations->apply(
+    $manager,
+    $course,
+    'delivery_suspend',
+    $delivery['impact']['revision'],
+    'Fixture delivery suspension',
+    manualKey(),
+    $delivery['impact']['hash']
+);
 manualDenied(
     fn()=>$learning->classroom($users['one'], 'en-GB', $id),
     403,
     'course delivery suspension blocks the active enrollment'
 );
 $resume = $operations->editor($manager, $course, 'delivery_resume');
-$operations->apply($manager, $course, 'delivery_resume', $resume['impact']['revision'], 'Fixture delivery resumed', manualKey(), $resume['impact']['hash']);
+$operations->apply(
+    $manager,
+    $course,
+    'delivery_resume',
+    $resume['impact']['revision'],
+    'Fixture delivery resumed',
+    manualKey(),
+    $resume['impact']['hash']
+);
 manualExpect(
     $learning->resumeTarget($users['one'], 'en-GB', $id)['lesson_id'] === $lesson,
     'resuming delivery preserves learner progress and access'
@@ -338,7 +417,8 @@ $changed = $command;
 $changed[3] = 'Changed reason';
 manualDenied(fn()=>$service->apply($manager, ...$changed), 409, 'same UUID different payload rejected');
 manualExpect(
-    $service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['blocked'] === 'COM_JLMS_MANUAL_EXISTS',
+    $service->editor($manager, $course, (int)$users['one']->id, 'en-GB')['impact']['blocked']
+        === 'COM_JLMS_MANUAL_EXISTS',
     'existing assignment blocks distinct creation'
 );
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$manager->id, (int)$rf['group']);
@@ -367,9 +447,10 @@ try {
 } finally {
     $update('users', (int)$users['failure']->id, ['block' => 0]);
 }
-$broken = new JdManualEnrollmentService($db, $learning, $component->getCatalogService(), $component->getEnrollmentRosterService(), static function (): void {
-    throw new \RuntimeException('COM_JLMS_MANUAL_AUDIT_FAILED', 503);
-});
+$broken = new JdManualEnrollmentService($db, $learning, $component->getCatalogService(), $component
+    ->getEnrollmentRosterService(), static function (): void {
+        throw new \RuntimeException('COM_JLMS_MANUAL_AUDIT_FAILED', 503);
+    });
 $beforeFailure = $counts();
 $fail = manualCommand($service->editor($actor, $course, (int)$users['failure']->id, 'en-GB'));
 manualDenied(fn()=>$broken->apply($actor, ...$fail), 503, 'audit failure is not a successful admission');
@@ -406,20 +487,44 @@ try {
 }
 $state = $component->getEnrollmentStateService();
 $si = $state->editor($actor, $course, $id, 'suspended');
-$state->apply($actor, $course, $id, $si['impact']['enrollment_revision'], 'suspended', 'Fixture suspension', manualKey(), $si['impact']['hash'], true);
+$state->apply(
+    $actor,
+    $course,
+    $id,
+    $si['impact']['enrollment_revision'],
+    'suspended',
+    'Fixture suspension',
+    manualKey(),
+    $si['impact']['hash'],
+    true
+);
 manualExpect(
     $service->apply($manager, ...$command) === $id && $service->editor($manager, $course, (int)$users['one']->
             id, 'en-GB')['impact']['existing_status'] === 'suspended',
     'creation replay never reactivates an existing enrollment'
 );
 $si = $state->editor($actor, $course, $id, 'active');
-$state->apply($actor, $course, $id, $si['impact']['enrollment_revision'], 'active', 'Fixture reactivation', manualKey(), $si['impact']['hash'], true);
+$state->apply(
+    $actor,
+    $course,
+    $id,
+    $si['impact']['enrollment_revision'],
+    'active',
+    'Fixture reactivation',
+    manualKey(),
+    $si['impact']['hash'],
+    true
+);
 $runRace = static function (array $commands, array $modes) use ($db, $root, $edition, $course): array {
-    file_put_contents(dirname($root) . '/manual-enrollment-race.json', json_encode(['commands' => $commands], JSON_THROW_ON_ERROR));
+    file_put_contents(dirname($root) . '/manual-enrollment-race.json', json_encode(
+        ['commands' => $commands],
+        JSON_THROW_ON_ERROR
+    ));
     $workers = [];
     foreach ($modes as $index => $mode) {
         $pipes = [];
-        $proc = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode,(string)$index], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+        $proc = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode,(string)$index], [0 => ['pipe','r'],1
+            => ['pipe','w'],2 => ['pipe','w']], $pipes);
         if (!is_resource($proc)) {
             throw new \RuntimeException('Worker failed');
         }
@@ -467,7 +572,8 @@ manualExpect(
     'simultaneous capacity boundary cannot overbook'
 );
 manualExpect(
-    $service->editor($actor, $course, (int)$users['failure']->id, 'en-GB')['impact']['blocked'] === 'COM_JLMS_EDITION_FULL',
+    $service->editor($actor, $course, (int)$users['failure']->id, 'en-GB')['impact']['blocked']
+        === 'COM_JLMS_EDITION_FULL',
     'full edition has no admission action'
 );
 $update('jlms_editions', $edition, ['capacity' => null]);
@@ -485,11 +591,14 @@ manualExpect(
 // no timing-only assertion or privileged server instrumentation is required.
 $snapshotUser = (int) $users['snapshot']->id;
 $subject = manualKey();
-$subjectRecord = (object) ['subject_key' => $subject, 'user_id' => $snapshotUser, 'created_at' => gmdate('Y-m-d H:i:s')];
+$subjectRecord = (object) ['subject_key' => $subject, 'user_id' => $snapshotUser, 'created_at'
+    => gmdate('Y-m-d H:i:s')];
 $db->insertObject('#__jlms_subjects', $subjectRecord);
-file_put_contents(dirname($root) . '/manual-enrollment-race.json', json_encode(['commands' => [[$course, $snapshotUser]]], JSON_THROW_ON_ERROR));
+file_put_contents(dirname($root) . '/manual-enrollment-race.json', json_encode(['commands' => [[$course
+    , $snapshotUser]]], JSON_THROW_ON_ERROR));
 $pipes = [];
-$worker = proc_open([PHP_BINARY, __FILE__, $root, 'worker', 'auto', '0'], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+$worker = proc_open([PHP_BINARY, __FILE__, $root, 'worker', 'auto', '0'], [0 => ['pipe', 'r'], 1 => ['pipe'
+    , 'w'], 2 => ['pipe', 'w']], $pipes);
 if (!is_resource($worker)) {
     throw new RuntimeException('Snapshot worker failed');
 }
@@ -505,7 +614,10 @@ try {
     $waiting = false;
     for ($poll = 0; $poll < 100; $poll++) {
         foreach ($db->setQuery('SHOW FULL PROCESSLIST')->loadAssocList() as $process) {
-            if (str_contains((string) $process['Info'], 'jlms_editions') && str_contains((string) $process['Info'], 'FOR UPDATE')) {
+            if (
+                str_contains((string) $process['Info'], 'jlms_editions')
+                && str_contains((string) $process['Info'], 'FOR UPDATE')
+            ) {
                 $waiting = true;
                 break;
             }

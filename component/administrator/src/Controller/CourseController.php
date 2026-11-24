@@ -12,7 +12,10 @@ final class CourseController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme', 'programmerules', 'trash', 'restore', 'purge'], true)) {
+        if (
+            !in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'loadhistory', 'programme'
+            , 'programmerules', 'trash', 'restore', 'purge'], true)
+        ) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         if (in_array(strtolower($task), ['programme', 'programmerules'], true)) {

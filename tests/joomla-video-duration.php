@@ -72,7 +72,10 @@ $factory = $component->getMVCFactory();
 require __DIR__ . '/cloudflare-fixture.php';
 [$config,$secrets,$transport,$remote] = cloudflareFixture();
 $registry = new VideoProviderRegistry();
-foreach ([new JdProvider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
+foreach (
+    [new JdProvider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true)
+    ,new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider
+) {
     $registry->register($provider->getDescriptor(), static fn()=>$provider);
 }
 $authoring = new JdCurriculumService($db, static fn(string $body): string
@@ -236,7 +239,17 @@ $event = static fn(int $id, string $type, int $p, int $time, bool $playing = tru
     => $type,'position_ms' => $p,'client_ms' => $time,'rate_milli' => 1000,'playing' => $playing];
 $now += 1000;
 $save = static fn(int $seq, array $events, int $duration)=>$video
-    ->save($actor, 'en-GB', $enrollment, $lesson, $grant['session_id'], $grant['source_revision'], $seq, $duration, json_encode($events, JSON_THROW_ON_ERROR));
+    ->save(
+        $actor,
+        'en-GB',
+        $enrollment,
+        $lesson,
+        $grant['session_id'],
+        $grant['source_revision'],
+        $seq,
+        $duration,
+        json_encode($events, JSON_THROW_ON_ERROR)
+    );
 $r = $save(1, [$event(1, 'play', 0, 0),$event(2, 'seeking', 8000, 1, false),$event(3, 'ended', 8000, 2, false)], 8000);
 durationExpect(!$r['lesson_completed'] && $r['covered_ms'] ===
      0, 'Minor duration difference and ended event never count skipped content');
@@ -247,7 +260,12 @@ durationExpect($r['lesson_completed'] && $r['course_completed']
         . 'without rewriting frozen lesson'));
 durationExpect(durationRow('lessons', $lesson) == $frozen, 'Tolerated metadata never rewrites historical source');
 durationDenied(fn()=>$save(3, [$event(7, 'position', 7500, 7504)], 20000), 'COM_JLMS_VIDEO_DURATION_MISMATCH');
-durationExpect($save(2, [$event(4, 'seeked', 0, 3, false),$event(5, 'play', 0, 4),$event(6, 'position', 7200, 7204)], 8000)['replay'], 'Duration-tolerant completion replay is idempotent');
+durationExpect($save(2, [$event(4, 'seeked', 0, 3, false),$event(5, 'play', 0, 4),$event(
+    6,
+    'position',
+    7200,
+    7204
+)], 8000)['replay'], 'Duration-tolerant completion replay is idempotent');
 $draft = $authoring->createDraft($actor, $course, (int)durationRow('courses', $course)->revision);
 $outline = $authoring->outline($actor, $course, $draft);
 $newLesson = (int)array_values(array_filter($outline['lessons'], static fn($l)=>$l->provider_key === 'youtube'))[0]->id;

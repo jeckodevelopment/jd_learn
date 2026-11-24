@@ -14,7 +14,8 @@ $i = $this->item;
      ->escape($i['serial']) ?></dd>
  <dt class="col-sm-3"><?=
       Text::_('JSTATUS') ?></dt><dd class="col-sm-9"><?=
-      Text::_($i['status'] === 'revoked' ? 'COM_JLMS_CERTIFICATE_STATE_REVOKED' : ($i['status'] === 'ready' ? 'COM_JLMS_CERTIFICATE_STATE_READY' : 'COM_JLMS_CERTIFICATE_STATE_PENDING')) ?></dd>
+      Text::_($i['status'] === 'revoked' ? 'COM_JLMS_CERTIFICATE_STATE_REVOKED' : ($i['status'] === 'ready'
+          ? 'COM_JLMS_CERTIFICATE_STATE_READY' : 'COM_JLMS_CERTIFICATE_STATE_PENDING')) ?></dd>
  <dt class="col-sm-3"><?= Text::_('COM_JLMS_CERTIFICATE_ISSUED') ?></dt><dd class="col-sm-9"><?= $this
      ->escape($i['issued_at']) ?></dd>
  <dt class="col-sm-3"><?= Text::_('COM_JLMS_CERTIFICATE_COMPLETED') ?></dt><dd class="col-sm-9"><?= $this

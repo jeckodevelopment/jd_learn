@@ -192,7 +192,10 @@ final class CategoryReassignmentService
         $actor->clearAccessRights();
         $asset = $category->extension . '.category.' . (int) $category->id;
         $allowed = $actor->authorise($action, $asset);
-        if (in_array($action, ['core.edit', 'core.delete'], true) && (int) $category->created_user_id === (int) $actor->id) {
+        if (
+            in_array($action, ['core.edit', 'core.delete'], true) && (int) $category->created_user_id
+            === (int) $actor->id
+        ) {
             $allowed = $allowed || $actor->authorise($action . '.own', $asset);
         }
         if (

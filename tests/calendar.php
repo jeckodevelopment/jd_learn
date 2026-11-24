@@ -28,7 +28,10 @@ calendarCheck(
     Schedule::display('2027-10-31 01:30:00', 'Europe/Rome', true) === '2027-10-31 02:30:00 +01:00',
     'Second autumn instant is explicit'
 );
-foreach (['2027-02-30 10:00:00','2027-01-01','2027-01-01 24:00:00','2027-01-01 12:00:00+02:00','0000-00-00 00:00:00','2027-01-01 12:00:00 trailing',['bad'],true] as $value) {
+foreach (
+    ['2027-02-30 10:00:00','2027-01-01','2027-01-01 24:00:00','2027-01-01 12:00:00+02:00'
+    ,'0000-00-00 00:00:00','2027-01-01 12:00:00 trailing',['bad'],true] as $value
+) {
     calendarReject(fn()=>Schedule::toUtc($value, 'UTC'), 'Malformed dates not normalised');
 }
 calendarReject(fn()=>Schedule::toUtc('2030-01-01 00:00:00', 'Not/A_Zone'), 'Unknown zone rejected');

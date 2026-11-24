@@ -28,7 +28,10 @@ cfExpect((new Provider(
     $secret,
     $transport
 ))->getDescriptor()->configured, 'legacy local signing mode is ignored');
-foreach (['account_id' => 'evil/../account','playback_domain' => 'attacker.example','site_host' => 'https://school.example','token_ttl_seconds' => 10] as $field => $value) {
+foreach (
+    ['account_id' => 'evil/../account','playback_domain' => 'attacker.example','site_host'
+    => 'https://school.example','token_ttl_seconds' => 10] as $field => $value
+) {
     cfExpect(
         !(new Provider(array_replace($config, [$field => $value]), $secret, $transport))->getDescriptor()->configured,
         'bad config closed: ' . $field
@@ -54,7 +57,11 @@ $state->ready = true;
 $state->origins = ['*'];
 cfDenied(fn()=>$p->fetchMetadata($source, $metadataContext), 'COM_JLMS_VIDEO_ORIGIN_REJECTED');
 $state->origins = ['school.example'];
-foreach ([401 => 'COM_JLMS_VIDEO_CREDENTIAL_REJECTED',404 => 'COM_JLMS_VIDEO_REMOTE_NOT_FOUND',429 => 'COM_JLMS_VIDEO_PROVIDER_BUSY',302 => 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE',500 => 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE'] as $status => $key) {
+foreach (
+    [401 => 'COM_JLMS_VIDEO_CREDENTIAL_REJECTED',404 => 'COM_JLMS_VIDEO_REMOTE_NOT_FOUND',429
+    => 'COM_JLMS_VIDEO_PROVIDER_BUSY',302 => 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE',500
+    => 'COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE'] as $status => $key
+) {
     $state->status = $status;
     cfDenied(fn()=>$p->fetchMetadata($source, $metadataContext), $key);
 }

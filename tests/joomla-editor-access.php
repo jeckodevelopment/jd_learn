@@ -137,7 +137,11 @@ $categoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createM
 );
 $categories = [];
 foreach (['allowed','other','owned','trash'] as $name) {
-    if (!$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'published' => $name === 'trash' ? -2 : 1,'language' => '*','access' => 1])) {
+    if (
+        !$categoryModel->save(['id' => 0,'parent_id' => 1,'extension' => 'com_jlms.course','title' => 'Editor '
+        . $name,'alias' => 'editor-' . $name,'published' => $name === 'trash' ? -2 : 1,'language' => '*'
+        ,'access' => 1])
+    ) {
         throw new RuntimeException($categoryModel->getError());
     }
     $categories[$name] = (int)$categoryModel->getState('category.id');
@@ -170,7 +174,10 @@ $base = ['id' => 0,'revision' => 1,'title' => '','alias' => '','catid' => 0,'lan
     'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' =>
      '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Editor access fixture'];
 $courses = [];
-foreach (['allowed1' => 'allowed','allowed2' => 'allowed','denied' => 'allowed','foreign' => 'other','own' => 'owned','other_owner' => 'owned','locked' => 'other'] as $name => $category) {
+foreach (
+    ['allowed1' => 'allowed','allowed2' => 'allowed','denied' => 'allowed','foreign' => 'other','own'
+    => 'owned','other_owner' => 'owned','locked' => 'other'] as $name => $category
+) {
     editorExpect($model->save(array_replace(
         $base,
         ['title' => 'Editor ' . $name,'alias' => 'editor-' . $name,'catid' => $categories[$category]]

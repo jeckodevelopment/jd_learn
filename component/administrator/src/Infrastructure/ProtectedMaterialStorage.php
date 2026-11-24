@@ -111,7 +111,13 @@ final class ProtectedMaterialStorage
         if ($root === false || !is_dir($root) || !is_writable($root) || is_link($configured)) {
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
-        foreach ([JPATH_ROOT, defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT, $_SERVER['DOCUMENT_ROOT'] ?? ''] as $public) {
+        foreach (
+            [
+            JPATH_ROOT,
+            defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
+            $_SERVER['DOCUMENT_ROOT'] ?? ''
+            ] as $public
+        ) {
             $base = $public !== '' ? realpath($public) : false;
             if ($base && ($root === $base || str_starts_with($root . DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR))) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);

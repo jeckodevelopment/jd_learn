@@ -218,7 +218,10 @@ rosterDenied(
     404,
     'version cannot cross course'
 );
-foreach ([['status' => "active' OR 1=1 --"],['progress' => ['completed']],['user' => '1 OR 1=1'],['version' => -1],['user' => 1.5]] as $filters) {
+foreach (
+    [['status' => "active' OR 1=1 --"],['progress' => ['completed']],['user' => '1 OR 1=1'],['version'
+    => -1],['user' => 1.5]] as $filters
+) {
     rosterDenied(fn()=>$service->query($actor, $course, $filters), 400, 'invalid filters fail closed');
 }
 $payload = json_encode($rows, JSON_THROW_ON_ERROR);
@@ -330,7 +333,8 @@ try {
         $sensitiveNote = 'Verified SMTP externally; internal reference NOTE-SEC-P1';
         $staleSent = $newStaleMail('sent');
         $mailAudit->reconcile($courseManager, $staleSent, 'sent', $sensitiveNote, true);
-        $sentRow = $db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email,recipient_name,template_data FROM #__jlms_mail_queue WHERE id=' . $staleSent)->loadObject();
+        $sentRow = $db->setQuery(('SELECT state,reconciliation_note,last_error,recipient_email,' .
+            'recipient_name,template_data FROM #__jlms_mail_queue WHERE id=') . $staleSent)->loadObject();
         rosterExpect(
             $sentRow->state === 'sent' && $sentRow->reconciliation_note === $sensitiveNote
             && $sentRow->last_error === 'Manual reconciliation recorded.'

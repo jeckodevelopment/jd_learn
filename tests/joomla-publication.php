@@ -388,7 +388,10 @@ pubDenied(fn()=>$authoring->saveModule($actor, pubScope() + ['id' => 0,'title'
 $ids = [$course];
 pubExpect(!$model->publish($ids, 0), 'direct state change bypass rejected');
 // Current category/access/language/date must be rechecked without a stale shared cache.
-foreach ([['catalog_access',2],['language','it-IT'],['publish_up','2099-01-01 00:00:00'],['publish_down','2000-01-01 00:00:00']] as [$field,$value]) {
+foreach (
+    [['catalog_access',2],['language','it-IT'],['publish_up','2099-01-01 00:00:00'],['publish_down'
+    ,'2000-01-01 00:00:00']] as [$field,$value]
+) {
     $writeFixture('#__jlms_courses', (object)['id' => $course,$field => $value], 'id', true);
     pubExpect($hidden(), 'current ' . $field . ' hides direct lookup');
     $writeFixture('#__jlms_courses', (object)['id' => $course,$field => match ($field) {

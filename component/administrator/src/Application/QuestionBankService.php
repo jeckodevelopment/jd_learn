@@ -101,7 +101,15 @@ final class QuestionBankService
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $definition = QuestionDefinition::normalise($input, $this->filter);
-        return $this->transaction(function () use ($identity, $id, $category, $expected, $language, $state, $definition): int {
+        return $this->transaction(function () use (
+            $identity,
+            $id,
+            $category,
+            $expected,
+            $language,
+            $state,
+            $definition
+): int {
             $actor = $this->learning->freshActor($identity);
             $this->category($actor, $category);
             $table = ($this->tableFactory)();
@@ -113,10 +121,18 @@ final class QuestionBankService
                 if ((int)$record->state === -2) {
                     throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
                 }
-                if ((int) $record->revision !== $expected || ($record->checked_out && (int) $record->checked_out !== (int) $actor->id)) {
+                if (
+                    (int) $record->revision !== $expected || ($record->checked_out && (int) $record
+                    ->checked_out !== (int) $actor->id)
+                ) {
                     throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
                 }
-                if ((int) $record->catid !== $category && !$actor->authorise('core.create', 'com_jlms.question.category.' . $category)) {
+                if (
+                    (int) $record->catid !== $category && !$actor->authorise(
+                        'core.create',
+                        'com_jlms.question.category.' . $category
+                    )
+                ) {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
                 if (!$table->load($id)) {

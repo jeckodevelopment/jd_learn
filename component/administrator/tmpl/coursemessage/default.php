@@ -115,7 +115,8 @@ $mutation = $preview['mutation_id'] ?? '';
     id="jlms-communication-confirm"
     type="checkbox"
     name="jform[confirmation]"
-    value="1" required><label class="form-check-label" for="jlms-communication-confirm"><?= Text::_('COM_JLMS_COMMUNICATION_CONFIRM') ?></label></div>
+    value="1" required><label class="form-check-label" for="jlms-communication-confirm"><?=
+         Text::_('COM_JLMS_COMMUNICATION_CONFIRM') ?></label></div>
         <?= HTMLHelper::_('form.token') ?>
     <button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_COMMUNICATION_QUEUE') ?></button>
    </form>

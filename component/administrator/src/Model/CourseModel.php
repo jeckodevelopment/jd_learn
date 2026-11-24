@@ -251,7 +251,12 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         }
         $this->setState('course.copy_complete', false);
         $this->preparedAsset = (int) $asset->id;
-        $this->copyPlan = ['course' => $id, 'version' => $versionId, 'revision' => $revision, 'version_revision' => $versionRevision];
+        $this->copyPlan = [
+            'course' => $id,
+            'version' => $versionId,
+            'revision' => $revision,
+            'version_revision' => $versionRevision
+        ];
         try {
             $data = (array) $source;
             $data['id'] = 0;
@@ -759,7 +764,18 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             throw new \DomainException('COM_JLMS_INVALID_COURSE');
         }
         $counts = [];
-        foreach (["#__jlms_course_versions","#__jlms_editions","#__jlms_enrollments","#__jlms_course_teachers","#__jlms_pathway_courses","#__jlms_course_operations","#__jlms_mail_queue","#__jlms_course_announcement_campaigns"] as $table) {
+        foreach (
+            [
+            "#__jlms_course_versions",
+            "#__jlms_editions",
+            "#__jlms_enrollments",
+            "#__jlms_course_teachers",
+            "#__jlms_pathway_courses",
+            "#__jlms_course_operations",
+            "#__jlms_mail_queue",
+            "#__jlms_course_announcement_campaigns"
+            ] as $table
+        ) {
             $query = $db->createQuery()->select('COUNT(*)')->from($db->quoteName($table))
                 ->where('course_id=:id')->bind(':id', $id, ParameterType::INTEGER);
             $counts[$table] = (int) $db->setQuery($query)->loadResult();

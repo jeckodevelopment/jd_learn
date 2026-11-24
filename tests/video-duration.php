@@ -6,7 +6,11 @@ require __DIR__ . '/bootstrap.php';
 use Jlms\Component\Jlms\Administrator\Domain\VideoDuration;
 use Jlms\Component\Jlms\Administrator\Domain\Coverage;
 $checks = 0;
-foreach ([[10000,12000,true],[10000,12001,false],[10000,8000,true],[10000,7999,false],[600000,605000,true],[600000,605001,false],[28800000,28800001,false],[10000,0,false],[10000,-1,false]] as [$reference,$actual,$expected]) {
+foreach (
+    [[10000,12000,true],[10000,12001,false],[10000,8000,true],[10000,7999,false],[600000,605000,true]
+    ,[600000,605001,false],[28800000,28800001,false],[10000,0,false],[10000,-1,false]] as [$reference,$actual
+    ,$expected]
+) {
     if (VideoDuration::compatible($reference, $actual) !== $expected) {
         throw new RuntimeException('Duration tolerance boundary');
     }

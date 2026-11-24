@@ -52,13 +52,17 @@ materialReject(
 );
 materialZip($root . '/bomb.zip', ['bomb.txt' => str_repeat('0', 2097152)]);
 materialReject(fn () => MaterialFilePolicy::inspect($root . '/bomb.zip', 'bomb.zip'), 'Expansion ratio bounded');
-$parts = ['[Content_Types].xml' => '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>',
+$parts = ['[Content_Types].xml' => ('<Types xmlns="http://schemas.' .
+    'openxmlformats.org/package/2006/content-types"><Override PartName="/' .
+    'word/document.xml" ContentType="application/vnd.openxmlformats-' .
+    'officedocument.wordprocessingml.document.main+xml"/></Types>'),
     '_rels/.rels' => '<Relationships/>', 'word/document.xml' => '<document/>'];
 materialZip($root . '/document.docx', $parts);
 materialExpect(MaterialFilePolicy::inspect(
     $root . '/document.docx',
     'document.docx'
-)['mime_type'] === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'OpenXML bounded structure accepted');
+)['mime_type'] === ('application/vnd.openxmlformats-officedocument.' .
+    'wordprocessingml.document'), 'OpenXML bounded structure accepted');
 materialZip($root . '/macro.docx', $parts + ['word/vbaProject.bin' => 'macro']);
 materialReject(fn () => MaterialFilePolicy::inspect($root . '/macro.docx', 'macro.docx'), 'Hidden macro rejected');
 materialReject(

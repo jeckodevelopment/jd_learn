@@ -44,7 +44,8 @@ use Joomla\CMS\Router\Route;
         <?php $recent = $this->summary['latest']; ?>
   <section id="jlms-dashboard-latest" class="jlms-dashboard-group" aria-labelledby="jlms-dashboard-latest-title">
    <h2 id="jlms-dashboard-latest-title"><?= Text::_('COM_JLMS_MY_TRAINING_CONTINUE') ?></h2>
-   <p><?= $this->escape($recent['title'] !== '' ? $recent['title'] : Text::_('COM_JLMS_DASHBOARD_HISTORICAL_COURSE')) ?></p>
+   <p><?= $this->escape($recent['title'] !== '' ? $recent['title']
+       : Text::_('COM_JLMS_DASHBOARD_HISTORICAL_COURSE')) ?></p>
         <?php if ($recent['percent'] !== null) : ?>
     <p><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $recent['percent'] ?>%</p>
         <?php endif; ?>
@@ -53,7 +54,10 @@ use Joomla\CMS\Router\Route;
         Text::_('COM_JLMS_DASHBOARD_RESUME') ?></a>
   </section>
  <?php endif; ?>
- <?php if ((int) $this->summary['not_started'] + (int) $this->summary['in_progress'] + (int) $this->summary['completed'] === 0) : ?>
+ <?php if (
+    (int) $this->summary['not_started'] + (int) $this->summary['in_progress'] + (int) $this
+     ->summary['completed'] === 0
+) : ?>
   <p id="jlms-dashboard-empty"><?= Text::_('COM_JLMS_MY_TRAINING_EMPTY') ?></p>
  <?php endif; ?>
  <a id="jlms-dashboard-catalog"

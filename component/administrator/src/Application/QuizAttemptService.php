@@ -136,7 +136,9 @@ final class QuizAttemptService
             $now = self::date(($this->clock)());
             $expires = self::date(($this->clock)() + 604800);
             $q = $this->db->createQuery();$q->setQuery(("INSERT INTO #__jlms_idempotency "
-                . "(scope_hash,request_hash,state,result_type,result_id,http_status,created_at,expires_at) VALUES (:scope,:hash,'completed','quiz_attempt',:result,200,:now,:expires) ON DUPLICATE KEY UPDATE scope_hash=scope_hash"))
+                . ("(scope_hash,request_hash,state,result_type,result_id,http_status,created_at," .
+                    "expires_at) VALUES (:scope,:hash,'completed','quiz_attempt',:result,200,:now,:expires) " .
+                    "ON DUPLICATE KEY UPDATE scope_hash=scope_hash")))
                 ->bind(':scope', $scope)
                     ->bind(':hash', $hash)
                     ->bind(':result', $result, ParameterType::INTEGER)
@@ -215,7 +217,10 @@ final class QuizAttemptService
             [$quiz,$rules,$pool] = $this->snapshots->published($lesson, (int)$l->course_version_id);
             $history = $this->history($enrollment, $quizId);
             $rules = $this->time->rules($rules, $enrollment, $quizId);
-            if (($rules['max_attempts'] > 0 && $history['used'] >= $rules['max_attempts']) || ($history['last_closed'] !== null && $history['last_closed'] + $rules['retry_seconds'] > $now)) {
+            if (
+                ($rules['max_attempts'] > 0 && $history['used'] >= $rules['max_attempts'])
+                || ($history['last_closed'] !== null && $history['last_closed'] + $rules['retry_seconds'] > $now)
+            ) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_LIMIT', 409);
             }
             $this->assertQuizStartWindow($e, $l, $now, (int)$rules['time_seconds']);
@@ -349,7 +354,17 @@ final class QuizAttemptService
         bool $submit
     ): array {
         self::key($key);
-        return $this->transaction(function () use ($identity, $language, $enrollment, $lesson, $attempt, $revision, $key, $json, $submit): array {
+        return $this->transaction(function () use (
+            $identity,
+            $language,
+            $enrollment,
+            $lesson,
+            $attempt,
+            $revision,
+            $key,
+            $json,
+            $submit
+): array {
             [, $e,$l,$quiz] = $this->context($identity, $language, $enrollment, $lesson);
             $a = $this->attempt($attempt, $enrollment, (int)$quiz->id);
             if ($a->status === 'invalidated') {
@@ -536,7 +551,8 @@ final class QuizAttemptService
             $this->db->insertObject('#__jlms_lesson_progress', $record);
         }
         $total = (int)$e->completed_total + (!$wasCompleted && $completed ? (int)$l->required : 0);
-        $finished = $e->completed_at ?: ($total >= (int)$e->required_total && (int)$e->required_total > 0 ? self::date($time) : null);
+        $finished = $e->completed_at ?: ($total >= (int)$e->required_total && (int)$e->required_total > 0
+            ? self::date($time) : null);
         $newCourseCompletion = $e->completed_at === null && $finished !== null;
         $touch = (object)['id' => $enrollment,'completed_total' => $total,'completed_at' => $finished
             ,'last_activity_at' => self::date($time),'last_lesson_id' => $lesson,
@@ -567,7 +583,8 @@ final class QuizAttemptService
                     'SITE_NAME' => (string)\Joomla\CMS\Factory::getApplication()->get('sitename')],
                 (int) $actor->id
             );
-            (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment, (int)$e->course_version_id, $finished);
+            (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment, (int)$e
+                ->course_version_id, $finished);
         }
     }
     public function state(
@@ -578,7 +595,14 @@ final class QuizAttemptService
         int $attempt = 0,
         bool $compact = false
     ): array {
-        return $this->transaction(function () use ($identity, $language, $enrollment, $lesson, $attempt, $compact): array {
+        return $this->transaction(function () use (
+            $identity,
+            $language,
+            $enrollment,
+            $lesson,
+            $attempt,
+            $compact
+): array {
             [, $e,$l,$quiz] = $this->context($identity, $language, $enrollment, $lesson);
             $quizId = (int)$quiz->id;
             $active = $this->active($enrollment, $quizId);
@@ -699,7 +723,12 @@ final class QuizAttemptService
                 $public = json_decode($row->public_snapshot_json, true, 16, JSON_THROW_ON_ERROR);
                 $public['id'] = (int)$row->id;
                 $public['max_points'] = (int)$row->max_points;
-                $public['selected'] = $row->answer_json === null ? [] : json_decode($row->answer_json, true, 16, JSON_THROW_ON_ERROR);
+                $public['selected'] = $row->answer_json === null ? [] : json_decode(
+                    $row->answer_json,
+                    true,
+                    16,
+                    JSON_THROW_ON_ERROR
+                );
                 if ($feedback) {
                     $grading = json_decode($row->grading_snapshot_json, true, 16, JSON_THROW_ON_ERROR);
                     $public['correct'] = $grading['correct'];
@@ -762,7 +791,8 @@ final class QuizAttemptService
                         ->innerJoin('#__jlms_quizzes AS q ON q.lesson_id=l.id')
                         ->where('q.id = :quiz')
                         ->bind(':quiz', $quiz, ParameterType::INTEGER);
-                    $l = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
+                    $l = $this->db->setQuery($q)->loadObject() ?
+                        : throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
                     return $this->expireIfDue($a, $e, $l, ($this->clock)());
                 });
                 if ($changed) {

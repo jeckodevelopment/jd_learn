@@ -62,7 +62,10 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
                 };
     ?>
        <p class="jlms-pathway-timeline__state"><?= Text::_($stateKey) ?></p>
-                <?php if ($course['access'] === 'available' && $course['learning_state'] !== 'not_enrolled' && $course['percent'] !== null) : ?>
+                <?php if (
+                $course['access'] === 'available' && $course['learning_state'] !== 'not_enrolled'
+                    && $course['percent'] !== null
+) : ?>
         <label for="jlms-pathway-course-progress-<?=
              (int) $index ?>"><?=
              Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?=

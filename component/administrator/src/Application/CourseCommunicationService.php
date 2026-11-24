@@ -61,7 +61,10 @@ final class CourseCommunicationService
         $this->authorized($identity, $courseId);
         $subject = trim($subject);
         $body = trim($body);
-        if ($subject === '' || mb_strlen($subject) > 300 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body === '' || mb_strlen($body) > 16000 || count($enrollmentIds) < 1 || count($enrollmentIds) > 2000) {
+        if (
+            $subject === '' || mb_strlen($subject) > 300 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body
+            === '' || mb_strlen($body) > 16000 || count($enrollmentIds) < 1 || count($enrollmentIds) > 2000
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $ids = [];
@@ -214,7 +217,10 @@ final class CourseCommunicationService
         $actor = $this->authorized($identity, $courseId);
         $subject = trim($subject);
         $body = trim($body);
-        if ($subject === '' || mb_strlen($subject) > 300 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body === '' || mb_strlen($body) > 16000 || !filter_var($actor->email, FILTER_VALIDATE_EMAIL)) {
+        if (
+            $subject === '' || mb_strlen($subject) > 300 || preg_match('/[\x00-\x1f\x7f]/', $subject) || $body
+            === '' || mb_strlen($body) > 16000 || !filter_var($actor->email, FILTER_VALIDATE_EMAIL)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $course = $this->editor($actor, $courseId)['course'];
@@ -272,7 +278,16 @@ final class CourseCommunicationService
                         $templateData['__course_message_snapshot'] = $payload['template'];
                     }
                     $key = hash('sha256', 'course-communication:' . (int) $job->id . ':' . (int) $enrollmentId);
-                    (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) $recipient->language, (string) $recipient->email, (string) $recipient->name, $templateData, (int) $recipient->id);
+                    (new MailQueue($this->db))->enqueue(
+                        $courseId,
+                        $key,
+                        'com_jlms.course.message',
+                        (string) $recipient->language,
+                        (string) $recipient->email,
+                        (string) $recipient->name,
+                        $templateData,
+                        (int) $recipient->id
+                    );
                 }
             }
             $next = $offset + count($slice);

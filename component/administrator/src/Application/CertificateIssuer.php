@@ -45,7 +45,10 @@ final class CertificateIssuer
             return false;
         }
         $params = ComponentHelper::getParams('com_jlms');
-        if (!CertificatePreferences::enabled((bool) $params->get('certificate_enabled', 0), (string) $row->params_json)) {
+        if (
+            !CertificatePreferences::enabled((bool) $params->get('certificate_enabled', 0), (string) $row
+            ->params_json)
+        ) {
             return false;
         }
 
@@ -68,7 +71,10 @@ final class CertificateIssuer
         if (!is_array($templateSnapshot)) {
             return false;
         }
-        foreach (['certificate_heading' => 'heading', 'certificate_subheading' => 'subheading', 'certificate_footer' => 'footer'] as $setting => $key) {
+        foreach (
+            ['certificate_heading' => 'heading', 'certificate_subheading' => 'subheading'
+            , 'certificate_footer' => 'footer'] as $setting => $key
+        ) {
             $value = trim((string) $params->get($setting, ''));
             if ($value !== '') {
                 $templateSnapshot[$key] = mb_substr($value, 0, 255);

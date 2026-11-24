@@ -356,9 +356,14 @@ ruleExpect((int)ruleRow('enrollments', $oldEnrollment)->course_version_id === $o
         $newEnrollment
     )->course_version_id === $version, 'New admissions use updated rules while historical assignments remain');
 $now = (int)floor(microtime(true) * 1000);
-$video = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
-    return $now;
-});
+$video = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService(
+    $db,
+    $learning,
+    $authoring,
+    static function () use (&$now): int {
+        return $now;
+    }
+);
 $event = static fn(int $id, int $p, int $time, string $type = 'position'): array=>['id' => $id,'type'
     => $type,'position_ms' => $p,'client_ms' => $time,'rate_milli' => 1000,'playing' => true];
 $oldGrant = $video->playback($actor, 'en-GB', $oldEnrollment, $oldLesson, true);

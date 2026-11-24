@@ -42,7 +42,10 @@ final class CurriculumModel extends FormModel
         );
         $field = new \SimpleXMLElement(('<field name="provider_key" type="list" '
             . 'label="COM_JLMS_VIDEO_PROVIDER" showon="kind:video" />'));
-        foreach (Factory::getApplication()->bootComponent('com_jlms')->getCurriculumService()->providers() as $provider) {
+        foreach (
+            Factory::getApplication()->bootComponent('com_jlms')->getCurriculumService()
+            ->providers() as $provider
+        ) {
             $field->addChild(
                 'option',
                 htmlspecialchars($provider->labelKey, ENT_XML1)

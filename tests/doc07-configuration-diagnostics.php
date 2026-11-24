@@ -213,7 +213,15 @@ if (
 ) {
     throw new RuntimeException('SCR-16 must expose individual inherited email notification flags');
 }
-foreach (array_merge($settings, $settingsInvalid, $settingsConfiguredScan, $invalidGlobalCatalog, $validGlobalCatalog) as $check) {
+foreach (
+    array_merge(
+        $settings,
+        $settingsInvalid,
+        $settingsConfiguredScan,
+        $invalidGlobalCatalog,
+        $validGlobalCatalog
+    ) as $check
+) {
     if (
         array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']
         || !in_array($check['severity'], ['ok', 'warning', 'error'], true)
@@ -339,7 +347,11 @@ if (
 ) {
     throw new RuntimeException('SCR-16 course/menu inheritance classification regression');
 }
-foreach ([$inheritDefault, $inheritBlankMenu, $inheritWrongShape, $inheritOverridden, $inheritInvalid, $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow, $courseOverflowOnly, $menuOverflowOnly] as $checks) {
+foreach (
+    [$inheritDefault, $inheritBlankMenu, $inheritWrongShape, $inheritOverridden, $inheritInvalid
+    , $inheritMalformed, $inheritOverflow, $inheritInvalidOverflow, $courseOverflowOnly
+    , $menuOverflowOnly] as $checks
+) {
     foreach ($checks as $check) {
         if (
             array_keys($check) !== ['kind', 'labelKey', 'severity', 'stateKey', 'guidanceKey']

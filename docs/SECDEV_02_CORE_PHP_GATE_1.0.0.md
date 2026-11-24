@@ -408,3 +408,30 @@ The full pinned PHPCS 4.0.4 PSR12 scan measured **858 → 811 (-47)** on **23 PH
 ### Reconciled PR #1018 result
 
 Two guarded structural batches achieved **867 → 811 PSR-12 findings (−56 net)** across 27 accepted source files (4 HTML/PHP template files and 23 PHP signature files), verified by PHPCS 4.0.4 with no new per-file/per-rule findings. Unsafe and ineffective candidate formatters and test-class extraction experiments were excluded from the final PR. Full CI and Joomla acceptance gates remain independent. The requirements matrix remains **Parziale**, with no functional coverage promotion; **811 style findings remain** and CORE/API verification is not certified complete.
+
+## PR #1019 — AST-equivalent PHP literal refactoring (24 November 2026)
+
+A full pinned PHPCS 4.0.4 PSR-12 audit measured **813 → 770**, net **-43** findings on **34 changed PHP files**. Long plain literals are wrapped into constant concatenations only if nikic/php-parser 5 normalizes both original and modified PHP ASTs identically (folding only adjacent constant strings). PHP lint, existing source contracts, and zero introduced per-file/per-rule warnings are mandatory. No exemptions or changed functional acceptance claims. SECDEV-02 remains partial while findings and CORE/API review remain incomplete. Manual Joomla acceptance is separate.
+
+### Comportamenti da testare
+
+- Exact string values for JSON, HTML, URLs, filenames, SQL and email templates and matching normalized PHP AST.
+- Full Joomla 6.2 CI, source contracts, ACL, PHP lint, security and installed package.
+
+### PR #1019 consolidated source-wide audit (24 November 2026)
+
+**Full pinned PHPCS PSR12 4.0.4 against original main baseline: 811 → 431, net −380 findings over 98 PHP files**, zero introduced file/rule findings, PHP lint and source contracts passed. Includes AST-equivalent literal concatenations, PHP operator statement layout and attribute-whitespace-only template refactoring. The intermediate report 813 → 770 counted two formatting violations in a new AST verification helper; those helper header errors were corrected, and this consolidated baseline starts at the genuine 811 from main. Source contract repair restored any incompatible files; no security or lint check was disabled. **SECDEV-02 remains partial pending any residuals, separate CORE/API evidence and manual Joomla collaudo.** Functional coverage percentages unchanged.
+
+### Comportamenti da testare
+
+- Complete Joomla courses, class sessions, ACL, curriculum, email, certificates, lesson media and frontend templates.
+- Verify PHP AST equivalence for split literals, HTML attribute values and valid semantic token stream, PHP lint, PHPCS, SAST and Joomla integration suites.
+
+### PR #1019 second structural batch: complete arrays and inline PHP (24 November 2026)
+
+The full unchanged pinned PSR12 4.0.4 audit against the main baseline measured **811 → 322 (−489)** findings over **119 PHP files**. Changes include semantic-preserving constant literals, operator statements, whitespace-only HTML attributes, PHP expressions embedded in Joomla views, and whole PHP arrays with PHPCBF normalization. Original source contracts, PHP lint, PHP significant token identity where applicable and zero introduced per-file/per-rule findings were enforced. No waived sniffs, no security relaxation. **SECDEV-02 remains Parziale** until the complete PSR12 debt and separate CORE/API criteria are cleared; manual Joomla acceptance remains distinct. Functional requirement coverage percentages remain unchanged.
+
+### Comportamenti da testare
+
+- PHP array keys/order and values, dynamic HTML attributes and Joomla templates, PHP echo outputs, course and lesson logic, certificates, ACL and emails.
+- Complete PHP/DB Joomla integration matrices, Chromium, SAST, PHPCS and generated installable extension package.

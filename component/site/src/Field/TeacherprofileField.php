@@ -12,7 +12,10 @@ final class TeacherprofileField extends \Joomla\CMS\Form\Field\ListField
         $app = \Joomla\CMS\Factory::getApplication();
         $db = \Joomla\CMS\Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class);
         $options = parent::getOptions();
-        foreach (\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::available($db, $app->getIdentity()) as $profile) {
+        foreach (
+            \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::available($db, $app
+            ->getIdentity()) as $profile
+        ) {
             $options[] = \Joomla\CMS\HTML\HTMLHelper::_('select.option', $profile->id, $profile->title);
         }
         return $options;

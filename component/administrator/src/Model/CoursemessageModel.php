@@ -32,7 +32,15 @@ final class CoursemessageModel extends BaseDatabaseModel
                         \Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::create();
                     $app->getSession()->set($key, $preview);
                 }
-                $data['preview'] = $app->bootComponent('com_jlms')->getCourseCommunicationService()->preview($app->getIdentity(), $courseId, (string)$preview['subject'], (string)$preview['body'], $preview['enrollment_ids'], $preview['template'] ?? []);
+                $data['preview'] = $app->bootComponent('com_jlms')->getCourseCommunicationService()
+                    ->preview(
+                        $app->getIdentity(),
+                        $courseId,
+                        (string)$preview['subject'],
+                        (string)$preview['body'],
+                        $preview['enrollment_ids'],
+                        $preview['template'] ?? []
+                    );
                 $data['preview']['mutation_id'] = $preview['mutation_id'];
                 $data['template'] = $data['preview']['template'];
             }
@@ -45,7 +53,10 @@ final class CoursemessageModel extends BaseDatabaseModel
             if ($error instanceof \InvalidArgumentException) {
                 throw new \RuntimeException(Text::_('COM_JLMS_INVALID_INPUT'), 400);
             }
-            if (in_array($error->getCode(), [400,401,403,404,409,422], true) && str_starts_with($error->getMessage(), 'COM_JLMS_')) {
+            if (
+                in_array($error->getCode(), [400,401,403,404,409,422], true) && str_starts_with($error
+                ->getMessage(), 'COM_JLMS_')
+            ) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);

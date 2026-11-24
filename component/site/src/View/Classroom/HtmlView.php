@@ -51,7 +51,10 @@ final class HtmlView extends BaseHtmlView
             ]);
             $this->getDocument()->getWebAssetManager()->useScript('com_jlms.lessonProgress');
         }
-        if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked) && $this->item['lesson']->kind === 'audio') {
+        if (
+            empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']
+            ->schedule_blocked) && $this->item['lesson']->kind === 'audio'
+        ) {
             $this->getDocument()->addScriptOptions('com_jlms.audio', [
                 'enrollment' => (int) $this->item['enrollment_id'],
                 'lesson' => (int) $this->item['lesson']->id,
@@ -64,9 +67,16 @@ final class HtmlView extends BaseHtmlView
             ]);
             $this->getDocument()->getWebAssetManager()->useScript('com_jlms.audio');
         }
-        if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked) && $this->item['lesson']->kind === 'video') {
+        if (
+            empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']
+            ->schedule_blocked) && $this->item['lesson']->kind === 'video'
+        ) {
             $labels = [];
-            foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider', 'saving', 'saved', 'youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed'] as $key) {
+            foreach (
+                ['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration'
+                , 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider'
+                , 'saving', 'saved', 'youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed'] as $key
+            ) {
                 $labels[$key] = \Joomla\CMS\Language\Text::_(implode(
                     '_',
                     ['COM', 'JLMS', 'VIDEO', strtoupper($key === 'consent' ? 'consent_required' : $key)]

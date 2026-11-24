@@ -23,7 +23,12 @@ final class QuizTimeService
     {
         $actor = $this->learning->freshActor($identity);
         $asset = 'com_jlms.course.' . $course;
-        if (!$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('jlms.enrollments.manage', $asset) || !$actor->authorise('jlms.assessment.correct', $asset)) {
+        if (
+            !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise(
+                'jlms.enrollments.manage',
+                $asset
+            ) || !$actor->authorise('jlms.assessment.correct', $asset)
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $q = $this->db->createQuery()->select(('q.*, l.title AS lesson_title, c.title AS course_title, c.id AS '
@@ -155,11 +160,17 @@ final class QuizTimeService
         string $reason,
         string $key
     ): int {
-        if ($expected < 0 || $expected > 10000 || $minutes < 0 || $minutes > 1440 || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key)) {
+        if (
+            $expected < 0 || $expected > 10000 || $minutes < 0 || $minutes > 1440
+            || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
         $reason = trim($reason);
-        if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)) {
+        if (
+            $reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason)
+            || !preg_match('//u', $reason)
+        ) {
             throw new \RuntimeException('COM_JLMS_QUIZ_TIME_REASON', 422);
         }
         $this->scope($identity, $course, $lesson, $enrollment);

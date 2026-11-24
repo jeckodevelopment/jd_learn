@@ -74,7 +74,8 @@ final class HtmlView extends BaseHtmlView
                 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION',
                 'COM_JLMS_MAIL_TEMPLATES',
                 'fas fa-envelope',
-                'index.php?option=com_mails&view=templates&filter[extension]=com_jlms&filter[search]=&filter[language]=&limitstart=0'
+                ('index.php?option=com_mails&view=templates&filter[extension]=com_jlms&' .
+                    'filter[search]=&filter[language]=&limitstart=0')
             );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {

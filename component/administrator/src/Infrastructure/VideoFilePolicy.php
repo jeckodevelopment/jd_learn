@@ -23,7 +23,10 @@ final class VideoFilePolicy
         ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }
-        if (!function_exists('proc_open') || $binary === '' || $binary[0] !== '/' || !is_file($binary) || !is_executable($binary) || is_link($binary)) {
+        if (
+            !function_exists('proc_open') || $binary === '' || $binary[0] !== '/' || !is_file($binary)
+            || !is_executable($binary) || is_link($binary)
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROBE_UNAVAILABLE', 503);
         }
         $pipes = [];

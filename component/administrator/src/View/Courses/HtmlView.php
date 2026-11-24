@@ -45,7 +45,10 @@ final class HtmlView extends BaseHtmlView
         $this->filterForm = $this->get('FilterForm');
         $this->activeFilters = $this->get('ActiveFilters');
         ToolbarHelper::title(\Joomla\CMS\Language\Text::_('COM_JLMS_COURSES'), 'graduation-cap');
-        if (\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()->get(\Joomla\Database\DatabaseInterface::class), $actor)) {
+        if (
+            \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canCreate(Factory::getContainer()
+            ->get(\Joomla\Database\DatabaseInterface::class), $actor)
+        ) {
             ToolbarHelper::addNew('course.add');
         }
         if ($this->items) {

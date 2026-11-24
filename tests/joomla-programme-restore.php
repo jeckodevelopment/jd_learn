@@ -73,13 +73,17 @@ require __DIR__ . '/cloudflare-fixture.php';
 $vimeoEnabled = true;
 $registryFactory = static function () use ($config, $secrets, $transport, &$vimeoEnabled): VideoProviderRegistry {
     $registry = new VideoProviderRegistry();
-    foreach ([new JdProvider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider($vimeoEnabled),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
+    foreach (
+        [new JdProvider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider($vimeoEnabled)
+        ,new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider
+    ) {
         $registry->register($provider->getDescriptor(), static fn()=>$provider);
     }
     return $registry;
 };
 NativeComponentHelper::getParams('com_jlms')->set('video_external_policy', 'embed');
-$authoring = new JdCurriculumService($db, static fn(string $body): string=>NativeComponentHelper::filterText($body), $registryFactory);
+$authoring = new JdCurriculumService($db, static fn(string $body): string
+    =>NativeComponentHelper::filterText($body), $registryFactory);
 $component->setCurriculumService($authoring);
 $publication = $component->getPublicationService();
 $actor = $app->getIdentity();
@@ -196,7 +200,12 @@ $scope = static function () use ($course, &$version): array {
         restoreRow('course_versions', $version)->revision];
 };
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
-foreach (['youtube' => 'dQw4w9WgXcQ','vimeo' => '123456789','cloudflarestream' => str_repeat('b', 32)] as $key => $reference) {
+foreach (
+    ['youtube' => 'dQw4w9WgXcQ','vimeo' => '123456789','cloudflarestream' => str_repeat(
+        'b',
+        32
+    )] as $key => $reference
+) {
     $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' =>
          'Historical ' . $key,'kind' => 'video','required' => '0','body' => '','provider_key' => $key,
         'source_reference' => $reference,'privacy_hash' => $key === 'vimeo' ? 'abcdef1234' : '',
@@ -253,7 +262,8 @@ $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'tit
 $publish($version);
 $current = $version;
 $existing = $authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision);
-$trees = [$historical => restoreTree($historical),$current => restoreTree($current),$existing => restoreTree($existing)];
+$trees = [$historical => restoreTree($historical),$current => restoreTree($current),$existing
+    => restoreTree($existing)];
 $before = restoreLearning();
 $courseBefore = restoreRow('courses', $course);
 $input = ['course_id' => $course,'version_id' => $historical,'revision' => $courseBefore->revision
@@ -297,7 +307,10 @@ foreach (['modules','lessons','quizzes','attachments'] as $table) {
     restoreExpect(count($old) === count($new), 'Complete ' . $table . ' count restored');
     foreach ($old as $i => $row) {
         restoreExpect($row['id'] !== $new[$i]['id'], 'Fresh physical ' . $table . ' identifier');
-        foreach (['asset_id','title','state','logical_key','provider_key','source_json','params_json','duration_ms','required','kind','body','source_revision'] as $field) {
+        foreach (
+            ['asset_id','title','state','logical_key','provider_key','source_json','params_json'
+            ,'duration_ms','required','kind','body','source_revision'] as $field
+        ) {
             if (array_key_exists($field, $row)) {
                 restoreExpect($row[$field] === $new[$i][$field], 'Preserved ' . $table . ' ' . $field);
             }

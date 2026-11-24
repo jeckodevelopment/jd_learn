@@ -144,7 +144,13 @@ final class Provider extends AbstractFoundationProvider
         }
         // Explicit exact hostname restriction; no wildcard/public origin configuration is accepted here.
         $origins = $data['allowedOrigins'] ?? null;
-        if (!is_array($origins) || !$origins || in_array('*', $origins, true) || !in_array($c['site_host'], $origins, true)) {
+        if (
+            !is_array($origins) || !$origins || in_array('*', $origins, true) || !in_array(
+                $c['site_host'],
+                $origins,
+                true
+            )
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_ORIGIN_REJECTED', 503);
         }
         $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
@@ -183,7 +189,10 @@ final class Provider extends AbstractFoundationProvider
         }
         $data = $this->request('POST', $source->reference, ['exp' => $expiry, 'downloadable' => false]);
         $token = $data['token'] ?? null;
-        if (!is_string($token) || strlen($token) > 16384 || !preg_match('/\A([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\z/D', $token, $parts)) {
+        if (
+            !is_string($token) || strlen($token) > 16384
+            || !preg_match('/\A([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\z/D', $token, $parts)
+        ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }
         $header = self::decode($parts[1]);

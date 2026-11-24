@@ -50,7 +50,10 @@ $open = $attempt && $attempt['state'] === 'open';
   <div class="jlms-quiz-question__prompt"><?= $q['prompt'] /* Sanitised core HTML at attempt creation. */ ?></div>
         <?php foreach ($q['options'] as $o) :
             $control = 'jlms-quiz-option-' . (int)$q['id'] . '-' . $o['id']; ?>
-  <div class="jlms-quiz-question__option"><input id="<?= $this->escape($control) ?>" type="<?= $q['kind'] === 'multiple' ? 'checkbox' : 'radio' ?>" name="answer_<?= (int)$q['id'] ?>[]" value="<?= $this->escape($o['id']) ?>"<?= in_array($o['id'], $q['selected'], true) ? ' checked' : '' ?>><label for="<?= $this->escape($control) ?>"><?= $this->escape($o['label']) ?></label></div>
+  <div class="jlms-quiz-question__option"><input id="<?= $this->escape($control) ?>"
+  type="<?= $q['kind'] === 'multiple' ? 'checkbox' : 'radio' ?>" name="answer_<?= (int)$q['id'] ?>[]"
+  value="<?= $this->escape($o['id']) ?>"<?= in_array($o['id'], $q['selected'], true) ? ' checked' : '' ?>><label
+  for="<?= $this->escape($control) ?>"><?= $this->escape($o['label']) ?></label></div>
         <?php endforeach; ?>
         <?php if ($open) :
             ?><button type="button"
@@ -80,7 +83,8 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
     class="btn btn-primary"
     type="button"><?= Text::_('COM_JLMS_QUIZ_START') ?></button>
  <?php elseif (!empty($i['start_window_insufficient'])) : ?>
- <p id="jlms-quiz-window-insufficient" role="status"><?= Text::sprintf('COM_JLMS_QUIZ_WINDOW_INSUFFICIENT', (int)$i['next_time_seconds'], (int)$i['remaining_window_seconds']) ?></p>
+ <p id="jlms-quiz-window-insufficient"
+ role="status"><?= Text::sprintf('COM_JLMS_QUIZ_WINDOW_INSUFFICIENT', (int)$i['next_time_seconds'], (int)$i['remaining_window_seconds']) ?></p>
  <?php else :
         ?><p><?= Text::_('COM_JLMS_QUIZ_UNAVAILABLE') ?></p><?php
  endif; ?>
@@ -97,5 +101,6 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
     ?> · <?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?><?php
         endif; ?></li><?php
      endforeach; ?></ol></section>
- <a id="jlms-quiz-back" href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id']) ?>"><?= Text::_('COM_JLMS_QUIZ_CLASSROOM') ?></a>
+ <a id="jlms-quiz-back"
+ href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id']) ?>"><?= Text::_('COM_JLMS_QUIZ_CLASSROOM') ?></a>
 </section>

@@ -200,7 +200,8 @@ final class MailTemplateInstaller
                 "{MESSAGE_BODY_TEXT}\n\n{SITE_NAME}",
                 ['USER_FULLNAME', 'USER_FULLNAME_HTML', 'COURSE_TITLE', 'COURSE_TITLE_HTML',
                     'MESSAGE_SUBJECT', 'MESSAGE_BODY_TEXT', 'MESSAGE_BODY_HTML', 'SITE_NAME', 'SITE_NAME_HTML'],
-                '<p>Ciao {USER_FULLNAME_HTML},</p><p><strong>{COURSE_TITLE_HTML}</strong></p><p>{MESSAGE_BODY_HTML}</p><p>{SITE_NAME_HTML}</p>',
+                ('<p>Ciao {USER_FULLNAME_HTML},</p><p><strong>{COURSE_TITLE_HTML}</strong></' .
+                    'p><p>{MESSAGE_BODY_HTML}</p><p>{SITE_NAME_HTML}</p>'),
             ],
             'com_jlms.course.published' => [
                 'Nuovo corso disponibile: {COURSE_TITLE}',
@@ -213,7 +214,12 @@ final class MailTemplateInstaller
                         'COURSE_INTRO_TEXT', 'COURSE_INTRO_HTML', 'COURSE_LESSONS_TEXT',
                             'COURSE_LESSONS_HTML', 'COURSE_URL', 'SITE_NAME', 'SITE_NAME_HTML',
                                 'UNSUBSCRIBE_URL', 'UNSUBSCRIBE_URL_HTML', 'UNSUBSCRIBE_URL_TEXT'],
-                '<p>Ciao {USER_FULLNAME},</p>{COURSE_IMAGE_HTML}<h2>{COURSE_TITLE_HTML}</h2><p>{COURSE_DESCRIPTION}</p><p>{COURSE_INTRO_HTML}</p>{COURSE_LESSONS_HTML}<p>Durata stimata: {COURSE_DURATION}<br>Inizio corso: {COURSE_START_DATE}<br>Assistenza: {CONTACT_EMAIL}</p><p><a href="{COURSE_URL}">Scopri il corso</a></p><p>Ricevi questa comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. <a href="{UNSUBSCRIBE_URL_HTML}">Revoca l’adesione</a>.</p><p>{SITE_NAME_HTML}</p>',
+                ('<p>Ciao {USER_FULLNAME},</p>{COURSE_IMAGE_HTML}<h2>{COURSE_TITLE_HTML}</' .
+                    'h2><p>{COURSE_DESCRIPTION}</p><p>{COURSE_INTRO_HTML}</p>{COURSE_LESSONS_HTML}<p>Durata ' .
+                    'stimata: {COURSE_DURATION}<br>Inizio corso: {COURSE_START_DATE}<br>Assistenza: {CONTACT_' .
+                    'EMAIL}</p><p><a href="{COURSE_URL}">Scopri il corso</a></p><p>Ricevi questa ' .
+                    'comunicazione perché hai scelto di ricevere notizie sui nuovi corsi. <a href=' .
+                    '"{UNSUBSCRIBE_URL_HTML}">Revoca l’adesione</a>.</p><p>{SITE_NAME_HTML}</p>'),
             ],
             'com_jlms.course.consent' => [
                 'Conferma l’adesione alle novità di {SITE_NAME}',

@@ -13,7 +13,8 @@ $f = json_decode(file_get_contents(dirname($root) . "/manual-enrollment-fixture.
 $mode = $argv[2] ?? "";
 if ($mode === "snapshot") {
     $q = $db->prepare(
-        "SELECT id,status,origin,required_total,completed_total,completed_at,created_by,course_version_id,edition_id FROM joomla_jlms_enrollments WHERE course_id=? AND user_id=? ORDER BY id",
+        ("SELECT id,status,origin,required_total,completed_total,completed_at,created_by,course_version_" .
+            "id,edition_id FROM joomla_jlms_enrollments WHERE course_id=? AND user_id=? ORDER BY id"),
     );
     $q->execute([$f["course"], $f["http_user"]]);
     $rows = $q->fetchAll(\PDO::FETCH_ASSOC);

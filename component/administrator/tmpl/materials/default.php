@@ -89,7 +89,8 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
       ->byte_size ?> B · <?= $this->escape($file->status) ?> · <?= Text::_((int) $file
           ->preview === 1 ? 'COM_JLMS_MATERIAL_PUBLIC_PREVIEW' : 'COM_JLMS_MATERIAL_PRIVATE') ?> · ID <?=
                (int) $file->id ?> · <?=
-               $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
+               $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id
+                   : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
         <?php if ($file->status === 'ready') :
             ?><a href="<?= $link('index.php?option=com_jlms&task=material.download&format=raw&course_id='
                 . (int) $course->id . '&version_id=' . (int) $version->id . '&id=' . (int) $file

@@ -38,7 +38,10 @@ final class LocalVideoService
         $actor = $this->learning->freshActor($identity);
         $courseRow = $this->row('courses', $course, $lock);
         if (
-            !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise('core.edit', 'com_jlms.course.' . $course)
+            !$actor->authorise('core.manage', 'com_jlms') || !$actor->authorise(
+                'core.edit',
+                'com_jlms.course.' . $course
+            )
             || !$actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $course)
         ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
@@ -223,7 +226,12 @@ final class LocalVideoService
     ): array {
         $actor = CourseEditorAccess::fresh($identity);
         $course = $this->row('courses', $courseId);
-        if (!CourseEditorAccess::canEdit($actor, $course) || !$actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $courseId)) {
+        if (
+            !CourseEditorAccess::canEdit($actor, $course) || !$actor->authorise(
+                'jlms.materials.manage',
+                'com_jlms.course.' . $courseId
+            )
+        ) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
         $version = $this->row('course_versions', $versionId);

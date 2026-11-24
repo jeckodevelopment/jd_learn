@@ -85,7 +85,8 @@ final class QuizReviewService
         $after = 0;
         do {
             $q = $this->db->createQuery()
-                ->select('id,status,attempt_no,counted_for_limit,score_points,max_points,passed,submitted_at,rules_snapshot_json')->from('#__jlms_attempts')
+                ->select(('id,status,attempt_no,counted_for_limit,score_points,max_points,passed,' .
+                    'submitted_at,rules_snapshot_json'))->from('#__jlms_attempts')
                 ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')->where('id > :after')
                 ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
                     ->bind(':quiz', $quizId, ParameterType::INTEGER)
@@ -99,14 +100,20 @@ final class QuizReviewService
                 if ($target || !in_array($row->status, ['submitted','expired'], true)) {
                     continue;
                 }
-                if ($row->score_points === null || $row->passed === null || (int)$row->max_points < 1 || (int)$row->score_points > (int)$row->max_points) {
+                if (
+                    $row->score_points === null || $row->passed === null || (int)$row->max_points < 1 ||
+                     (int)$row->score_points > (int)$row->max_points
+                ) {
                     throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
                 }
                 $rules = json_decode($row->rules_snapshot_json, true, 16, JSON_THROW_ON_ERROR);
                 if (!in_array($rules['assessment'] ?? '', ['graded','practice'], true) || $row->submitted_at === null) {
                     throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
                 }
-                if (!$best || (int)$row->score_points * $best['max_points'] >= $best['score_points'] * (int)$row->max_points) {
+                if (
+                    !$best || (int)$row->
+                    score_points * $best['max_points'] >= $best['score_points'] * (int)$row->max_points
+                ) {
                     $best = ['_schema' => 1,'kind' => 'quiz','best_attempt_id' => (int)$row->id,
                         'score_points' => (int)$row->score_points,'max_points' => (int)$row->max_points];
                 }
@@ -144,8 +151,10 @@ final class QuizReviewService
                 state === 'completed','after_lesson_completed' => $completedAt !== null,
             'before_lesson_completed_at' => $p?->completed_at,'after_lesson_completed_at' => $completedAt
                 ,'before_completed_total' => (int)$e->completed_total,'after_completed_total' => $total,
-            'before_course_completed_at' => $e->completed_at,'after_course_completed_at' => $courseAt,'used_after' => $used,'last_number' => $last,
-            'certificate_count' => $certificates,'correction_count' => $corrections,'blocked' => $certificates > 0 || $corrections > 0];
+            'before_course_completed_at' => $e->completed_at,'after_course_completed_at' => $courseAt,
+                'used_after' => $used,'last_number' => $last,
+            'certificate_count' => $certificates,'correction_count' => $corrections,'blocked' =>
+                 $certificates > 0 || $corrections > 0];
         $impact['hash'] = hash('sha256', QuestionDefinition::canonical($impact));
         return [$impact,$p,$l];
     }
@@ -170,7 +179,8 @@ final class QuizReviewService
         }
         $quiz = (int)$base['quiz']->id;
         $q = $this->db->createQuery()
-            ->select('id,attempt_no,status,score_points,max_points,passed,counted_for_limit,revision,invalidation_reason,invalidated_by,invalidated_at')->from('#__jlms_attempts')
+            ->select(('id,attempt_no,status,score_points,max_points,passed,counted_for_limit,' .
+                'revision,invalidation_reason,invalidated_by,invalidated_at'))->from('#__jlms_attempts')
             ->where('enrollment_id = :enrollment')
                 ->where('quiz_id = :quiz')
                 ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
@@ -204,10 +214,19 @@ final class QuizReviewService
         bool $confirmed
     ): int {
         $reason = trim($reason);
-        if (!$confirmed || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key) || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)) {
+        if (
+            !$confirmed ||
+             !preg_match(
+                 '/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D',
+                 $key
+             ) || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)
+        ) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
-        if ($reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) || !preg_match('//u', $reason)) {
+        if (
+            $reason === '' || strlen($reason) > 500 || preg_match('/[\x00-\x1f\x7f<>]/', $reason) ||
+             !preg_match('//u', $reason)
+        ) {
             throw new \RuntimeException('COM_JLMS_QUIZ_TIME_REASON', 422);
         }
         $this->time->managementContext($identity, $course, $lesson, $enrollment);
@@ -240,7 +259,13 @@ final class QuizReviewService
                 $this->db->transactionCommit();
                 return(int)$old->result_id;
             }
-            if ($a->status === 'invalidated' || !in_array($a->status, ['open','submitted','expired'], true) || (int)$e->revision !== $enrollmentRevision || (int)$a->revision !== $attemptRevision) {
+            if (
+                $a->status === 'invalidated' || !in_array(
+                    $a->status,
+                    ['open','submitted','expired'],
+                    true
+                ) || (int)$e->revision !== $enrollmentRevision || (int)$a->revision !== $attemptRevision
+            ) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_CONFLICT', 409);
             }
             [$impact,$progress,$l] = $this->plan($e, $quiz, $a, $refund);
@@ -292,14 +317,19 @@ final class QuizReviewService
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
             if ($e->completed_at === null && $impact['after_course_completed_at'] !== null) {
                 (new CertificateIssuer($this->db)
-                )->issueForCompletedEnrollment($enrollment, (int)$e->course_version_id, (string)$impact['after_course_completed_at']);
+                )->issueForCompletedEnrollment(
+                    $enrollment,
+                    (int)$e->course_version_id,
+                    (string)$impact['after_course_completed_at']
+                );
             }
             ($this->audit)($actor, ['id' => $attempt,'actor_id' => (int)$actor->id,'enrollment_id' =>
                  $enrollment,'quiz_id' => (int)$quiz->id,'reason_code' => 'quiz_attempt_invalidated',
                 'reason_reference' => $attempt,'before_status' => $a->status,'after_status' =>
                      'invalidated','return_attempt' => $refund,'before_counted' => (int)$a->
                     counted_for_limit,'after_counted' => $refund ? 0 : 1,
-                'before_completed_total' => $impact['before_completed_total'],'after_completed_total' => $impact['after_completed_total'],
+                'before_completed_total' => $impact['before_completed_total'],'after_completed_total' =>
+                     $impact['after_completed_total'],
                 'before_completed_at' => $e->completed_at,'after_completed_at' =>
                      $impact['after_course_completed_at'],'correlation_id' => bin2hex(random_bytes(16))]);
             $ledger = (object)['scope_hash' => $scope,'request_hash' => $hash,'state' => 'completed'

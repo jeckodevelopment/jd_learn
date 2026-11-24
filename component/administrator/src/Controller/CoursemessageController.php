@@ -118,8 +118,17 @@ final class CoursemessageController extends BaseController
             if ($raw['confirmation'] !== '1') {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
             }
-            $job = $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->queue($this->app
-                ->getIdentity(), $course, $raw['subject'], $raw['body'], $ids, $raw['impact_hash'], $raw['mutation_id'], $raw['template'] ?? []);
+            $job = $this->app->bootComponent('com_jlms')->getCourseCommunicationService()->queue(
+                $this->app
+                ->getIdentity(),
+                $course,
+                $raw['subject'],
+                $raw['body'],
+                $ids,
+                $raw['impact_hash'],
+                $raw['mutation_id'],
+                $raw['template'] ?? []
+            );
             $key = 'com_jlms.coursemessage.' . (int)$this->app->getIdentity()->id . '.' . $course;
             $this->app->getSession()->clear($key);
             $this->setMessage(Text::sprintf('COM_JLMS_COMMUNICATION_JOB_QUEUED', $job));

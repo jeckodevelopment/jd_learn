@@ -816,7 +816,11 @@ expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://vimeo.com/1
     ->options === ['privacy_hash' => 'abc123'], 'Vimeo private hash preserved');
 expect(SourceNormalizer::normalise('vimeo', new SourceInput('https://player.vimeo.com/video/12345?h=abc123'))
     ->options === ['privacy_hash' => 'abc123'], 'Vimeo player URL hash preserved');
-foreach (['https://youtube.com.evil.test/watch?v=dQw4w9WgXcQ', 'https://127.0.0.1/video', 'https://user:pass@youtube.com/watch?v=dQw4w9WgXcQ', 'https://youtube.com/playlist?list=123', 'https://youtube.com:443/watch?v=dQw4w9WgXcQ'] as $bad) {
+foreach (
+    ['https://youtube.com.evil.test/watch?v=dQw4w9WgXcQ', 'https://127.0.0.1/video'
+    , 'https://user:pass@youtube.com/watch?v=dQw4w9WgXcQ', 'https://youtube.com/playlist?list=123'
+    , 'https://youtube.com:443/watch?v=dQw4w9WgXcQ'] as $bad
+) {
     rejects(
         fn () => SourceNormalizer::normalise('youtube', new SourceInput($bad)),
         'unsafe/unsupported YouTube URL rejected'

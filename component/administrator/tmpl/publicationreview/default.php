@@ -17,22 +17,27 @@ $changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed'
 <section id="jlms-publication-review">
  <h1><?= $this->escape($course->title) ?></h1>
  <h2><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_HEADING') ?></h2>
- <p><?= Text::sprintf('COM_JLMS_PUBLICATION_REVIEW_VERSIONS', (int)$item['source']->version_no, (int)$version->version_no) ?></p>
+ <p><?= Text::sprintf('COM_JLMS_PUBLICATION_REVIEW_VERSIONS', (int)$item['source']
+     ->version_no, (int)$version->version_no) ?></p>
  <p class="alert alert-info"><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_EFFECT') ?></p>
  <div class="table-responsive"><table class="table" id="jlms-publication-changes">
   <caption><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_CHANGES') ?></caption>
-  <thead><tr><th scope="col"><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_CONTENT') ?></th><?php foreach ($changeLabels as $label) :
-        ?><th scope="col"><?= Text::_($label) ?></th><?php
-                             endforeach; ?></tr></thead>
+  <thead><tr><th scope="col"><?=
+       Text::_('COM_JLMS_PUBLICATION_REVIEW_CONTENT') ?></th><?php foreach ($changeLabels as $label) :
+    ?><th scope="col"><?= Text::_($label) ?></th><?php
+       endforeach; ?></tr></thead>
   <tbody><?php foreach ($labels as $kind => $label) :
         ?><tr><th scope="row"><?= Text::_($label) ?></th><?php foreach ($changeLabels as $change => $unused) :
     ?><td data-kind="<?= $kind ?>" data-change="<?= $change ?>"><?= (int)$item['changes'][$kind][$change] ?></td><?php
         endforeach; ?></tr><?php
          endforeach; ?></tbody>
  </table></div>
- <p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_RULES') ?>: <strong><?= Text::_($item['rules_changed'] ? 'JYES' : 'JNO') ?></strong></p>
+ <p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_RULES') ?>: <strong><?=
+      Text::_($item['rules_changed'] ? 'JYES' : 'JNO') ?></strong></p>
  <?php if ($item['video_threshold_change']) :
-        ?><p id="jlms-publication-threshold-change"><?= Text::sprintf('COM_JLMS_TEACHING_THRESHOLD_CHANGE', $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['before'])), $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['after']))) ?></p><?php
+        ?><p id="jlms-publication-threshold-change"><?=
+             Text::sprintf('COM_JLMS_TEACHING_THRESHOLD_CHANGE', $this
+            ->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['before'])), $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['after']))) ?></p><?php
  endif; ?>
  <?php foreach ($labels as $kind => $label) :
         if (!$item['changes'][$kind]['details']) {
@@ -51,7 +56,11 @@ $changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed'
  <p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_COUNTS_NOTICE') ?></p>
  <?php if ($item['enrollments']) :
         ?><ul><?php foreach ($item['enrollments'] as $row) :
-    ?><li><?= Text::sprintf('COM_JLMS_PUBLICATION_REVIEW_ASSIGNED', (int)$row['version_no'], (int)$row['total']) ?></li><?php
+    ?><li><?= Text::sprintf(
+        'COM_JLMS_PUBLICATION_REVIEW_ASSIGNED',
+        (int)$row['version_no'],
+        (int)$row['total']
+    ) ?></li><?php
         endforeach; ?></ul>
  <?php else :
         ?><p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_NO_ENROLLMENTS') ?></p><?php
@@ -60,7 +69,11 @@ $changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed'
  <form method="post"
     id="jlms-publication-confirm-form"
     action="<?= Route::link('administrator', 'index.php?option=com_jlms') ?>">
-  <?php foreach (['course_id' => $course->id,'version_id' => $version->id,'revision' => $course->revision,'expected_version_revision' => $version->revision,'transition_id' => $item['transition_id'],'review_ticket' => $item['ticket']] as $name => $value) : ?>
+  <?php foreach (
+    ['course_id' => $course->id,'version_id' => $version->id
+      ,'revision' => $course->revision,'expected_version_revision' => $version
+      ->revision,'transition_id' => $item['transition_id'],'review_ticket' => $item['ticket']] as $name => $value
+) : ?>
   <input type="hidden" name="jform[<?= $name ?>]" value="<?= $this->escape((string)$value) ?>">
   <?php endforeach; ?>
   <div class="form-check mb-3"><input class="form-check-input"

@@ -146,7 +146,12 @@ $edit = array_replace($base, ['id' => $course]);
 scheduleExpect($model->save($edit), 'Legacy client can save without calendar fields');
 $before = $model->getItem($course);
 scheduleExpect($before->calendar_starts_at === $values['calendar_starts_at'], 'Old client retains calendar');
-foreach ([['calendar_timezone' => ['UTC']],['calendar_timezone' => 'bad/zone'],['calendar_starts_at' => '2027-03-28 02:30:00'],['calendar_starts_at' => '2027-10-31 02:30:00'],['calendar_ends_at' => '1999-01-01 00:00:00'],['calendar_publish_down' => '1999-01-01 00:00:00'],['calendar_starts_at' => '2001-02-30 12:00:00'],['calendar_ends_at' => ['bad']]] as $invalid) {
+foreach (
+    [['calendar_timezone' => ['UTC']],['calendar_timezone' => 'bad/zone'],['calendar_starts_at'
+    => '2027-03-28 02:30:00'],['calendar_starts_at' => '2027-10-31 02:30:00'],['calendar_ends_at'
+    => '1999-01-01 00:00:00'],['calendar_publish_down' => '1999-01-01 00:00:00'],['calendar_starts_at'
+    => '2001-02-30 12:00:00'],['calendar_ends_at' => ['bad']]] as $invalid
+) {
     scheduleExpect(
         !$model->save(array_replace($edit, $values, ['revision' => 2], $invalid)),
         'Invalid calendar rejected'

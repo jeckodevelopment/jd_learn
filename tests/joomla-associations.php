@@ -90,7 +90,8 @@ function assocExpect(bool $condition, string $message): void
 function assocData(int $id): array
 {
     global $db;
-    return (array) $db->setQuery('SELECT id,title,alias,catid,language,catalog_access,content_access,enrollment_mode,summary,revision FROM #__jlms_courses WHERE id=' . $id)->loadObject();
+    return (array) $db->setQuery(('SELECT id,title,alias,catid,language,catalog_access,content_' .
+        'access,enrollment_mode,summary,revision FROM #__jlms_courses WHERE id=') . $id)->loadObject();
 }
 function assocSave(array $data): bool
 {
@@ -208,7 +209,10 @@ assocExpect(
          assocData($en)['title'] !== 'Changed with graph',
     'metadata and translation changes must not enter native implicit asset commit'
 );
-foreach ([['it-IT' => $otherEn], ['en-GB' => $otherEn], ['not-a-language' => $it], ['it-IT' => -1], ['it-IT' => '1 OR 1=1'], ['it-IT' => 999999999], ['it-IT' => $en]] as $invalid) {
+foreach (
+    [['it-IT' => $otherEn], ['en-GB' => $otherEn], ['not-a-language' => $it], ['it-IT'
+    => -1], ['it-IT' => '1 OR 1=1'], ['it-IT' => 999999999], ['it-IT' => $en]] as $invalid
+) {
     assocExpect(
         !assocSave(assocData($en) + ['associations' => $invalid]) && assocRows() === $baseline,
         'invalid target/language rejected atomically'
@@ -425,7 +429,8 @@ $baseline = assocRows();
 $livePointers = json_encode($db->
     setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->
     loadObjectList(), JSON_THROW_ON_ERROR);
-$versionCount = (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult();
+$versionCount = (int) $db
+    ->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult();
 assocExpect(
     assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]),
     'authorized editor can detach a published translation group'
@@ -452,6 +457,7 @@ assocExpect(
     (int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult() === 2,
     'native association graph remains valid after published relink'
 );
-file_put_contents($fixturePath, json_encode(['en' => $en,'it' => $it,'other_en' => $otherEn,'other_it' => $otherIt,'all' => $all,
+file_put_contents($fixturePath, json_encode(['en' => $en,'it' => $it,'other_en' => $otherEn
+    ,'other_it' => $otherIt,'all' => $all,
     'version' => $versions[$en],'catid' => $catid,'rows' => $baseline], JSON_THROW_ON_ERROR));
 echo json_encode(['native_association_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

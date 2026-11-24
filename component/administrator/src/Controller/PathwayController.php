@@ -13,7 +13,10 @@ final class PathwayController extends FormController
 
     public function execute($task)
     {
-        if (!in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'trash', 'restore', 'archive', 'publish', 'unpublish', 'purge'], true)) {
+        if (
+            !in_array(strtolower($task), ['add', 'edit', 'apply', 'save', 'cancel', 'trash', 'restore'
+            , 'archive', 'publish', 'unpublish', 'purge'], true)
+        ) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         return parent::execute($task);

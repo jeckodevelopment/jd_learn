@@ -61,7 +61,10 @@ final class QuizController extends BaseController
         } catch (\Throwable $error) {
             $code = (int)$error->getCode();
             $key = $error->getMessage();
-            if (!in_array($code, [400,401,403,404,405,409,413,422,429], true) || (!preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) && $key !== 'JINVALID_TOKEN')) {
+            if (
+                !in_array($code, [400,401,403,404,405,409,413,422,429], true)
+                || (!preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key) && $key !== 'JINVALID_TOKEN')
+            ) {
                 Log::add('Quiz operation failed; correlation=' . $request, Log::ERROR, 'com_jlms');
                 $key = 'COM_JLMS_SAVE_FAILED';
                 $code = 500;
