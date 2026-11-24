@@ -70,7 +70,7 @@ function learningWorkers(array $lessonIds): void
         $process = proc_open(
             [
                 PHP_BINARY,
-                __FILE__,
+                dirname(__DIR__) . '/joomla-learning.php',
                 $root,
                 "worker",
                 (string) $student->id,
