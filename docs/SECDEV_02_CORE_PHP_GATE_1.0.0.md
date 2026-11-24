@@ -478,3 +478,16 @@ Baseline PHPCS PSR-12 4.0.4 sul merge #1022: **258 finding**. Più passate coord
 - Ordine e scope delle costanti `JPATH_*`, `_JEXEC`, import necessari alle funzioni di prova, dichiarazioni di closure, compatibilità senza plugin compat6.
 - PHPCS PSR-12 4.0.4 sull'intero codice, PHP lint su tutti i file, source contracts, SAST e CSV integrity.
 - Collaudi manuali dell'utente separati: corsi, iscrizioni, quiz, curriculum, allegati, attestati, video e email.
+
+
+## PR #1024 — Batch consolidato sui 192 finding (24 novembre 2026)
+
+Il workflow preparatorio monouso #45492312216 ha eseguito sullo stesso ramo e nella stessa PR nove trasformatori conservativi già presenti. Gli esiti sono misurati con PHP_CodeSniffer **4.0.4**, senza escludere regole: **192 → 166 (−26)**; rimangono **137** righe lunghe e **29** rilievi strutturali. I cambiamenti sono limitati a cinque file PHP, lint e `git diff --check` verdi nel workflow di preparazione; il workflow temporaneo è stato rimosso. La **CI applicativa del commit finale rimane da certificare**. Le metriche 166/26 sono quelle del batch preparatorio e non un attestato finale di accettazione.
+
+Dei 29 finding strutturali, 15 riguardano membri con underscore potenzialmente vincolati ai contratti delle API Joomla: non possono essere rinominati automaticamente per ottenere uno zero artificiale. Gli altri sono sei file con effetti collaterali associati a simboli, cinque classi multiple, uno senza namespace, uno con nome classe fuori convenzione e uno di ordine dell'header. Nessuna regola PHPCS è stata disabilitata o attenuata. **SECDEV-02 resta Parziale**, CORE/API e collaudi manuali rimangono distinti; percentuali funzionali invariate.
+
+### Comportamenti da testare
+
+- PHPCS integrale e confronto con baseline 192; lint PHP e source contracts dei cinque PHP modificati.
+- Renderizzazione catalogo, dashboard e servizi amministrativi su Joomla 6.2; CI PHP/DB, Chromium, SAST e pacchetto installabile.
+- Riconciliazione separata dei 166 finding residui, dei contratti convenzionali Joomla e dei criteri CORE/API.
