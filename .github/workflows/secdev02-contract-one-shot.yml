@@ -25,6 +25,7 @@ jobs:
         run: |
           git fetch origin main
           python3 tools/build.py
+          echo 'Reconcile only PHP files modified relative to main'
           python3 tools/secdev02_source_contract_repair.py --self-test
           python3 tools/secdev02_source_contract_repair.py --base-ref origin/main
           git diff --check
