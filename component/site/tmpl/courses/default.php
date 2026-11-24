@@ -244,9 +244,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
                 ->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->available === '1'
                 || $this->teacherId > 0 || $this->pathwayId > 0)
 ) : ?>
-   <p id="jlms-catalog-clear-filters"><a href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this
-       ->categoryId ? '&catid=' . (int) $this->categoryId : '')) ?>"><?=
-        Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
+   <p id="jlms-catalog-clear-filters"><a href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . (int) $this->categoryId : '')) ?>"><?= Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
             <?php endif; ?>
      <?php endif; ?>
  </div>
