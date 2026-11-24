@@ -85,7 +85,7 @@ def main() -> int:
         name = item.decode()
         # CAT-04 checks exact SEO metadata string literals and quoting.
         # This file must be changed by a separately reviewed refactor.
-        if name == 'component/site/src/Helper/PublicMetadataHelper.php':
+        if name == 'component/site/src/Helper/PublicMetadataHelper.php' or name.startswith('component/administrator/src/View/'):
             continue
         path = ROOT / name
         if not path.is_file():
