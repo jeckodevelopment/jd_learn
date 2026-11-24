@@ -104,8 +104,7 @@ final class HtmlView extends BaseHtmlView
             if ($actor->authorise('jlms.audit.view', 'com_jlms')) {
                 $addShortcut(
                     'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION',
-                    'COM_JLMS_MAIL_QUEUE',
-                    'icon-envelope',
+                    'COM_JLMS_MAIL_QUEUE', 'icon-envelope',
                     'index.php?option=com_jlms&view=mailqueue'
                 );
             }
@@ -151,8 +150,7 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut(
                 'COM_JLMS_DASHBOARD_GROUP_CONFIGURATION',
-                'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES',
-                'icon-folder',
+                'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder',
                 'index.php?option=com_jlms&view=categoryreassignment'
             );
         }
