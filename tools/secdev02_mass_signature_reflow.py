@@ -94,11 +94,16 @@ def reflow(original: bytes, entries: list, offset: int) -> bytes:
         while start>opener and original[start-1:start] in (b" ",b"\t"):
             start-=1
         edits.append((start,closer,b"\n"+base))
-        if brace is not None and closer<brace<line_end:
+        if brace is not None and brace>closer:
             head=brace
-            while head>closer and original[head-1:head] in (b" ",b"\t"):
+            # PSR-12 requires the closing parenthesis of a multiline
+            # declaration and the opening brace on the SAME line:
+            #     ) {
+            # This also applies when a return type follows the parentheses.
+            while head>closer and original[head-1:head] in (b" ",b"\t",b"\r",b"\n"):
                 head-=1
-            edits.append((head,brace,b"\n"+base))
+            if head>closer:
+                edits.append((head,brace,b" "))
         selected.append((begin,closer))
     out=bytearray(original)
     for start,stop,value in sorted(set(edits),reverse=True):
