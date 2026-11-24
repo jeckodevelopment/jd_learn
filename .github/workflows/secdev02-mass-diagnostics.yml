@@ -1,0 +1,53 @@
+name: SECDEV02 mass structural diagnostics
+on:
+  push:
+    branches: [style/secdev02-867-mass-refactor]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - run: |
+          mkdir -p .runtime/psr12
+          composer require --working-dir=.runtime/psr12 --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Classify long lines and prioritize files
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import subprocess,json,collections,pathlib
+          limit=120
+          kinds=collections.Counter()
+          files=collections.Counter()
+          examples=collections.defaultdict(list)
+          contents=subprocess.check_output(['git','ls-files','-z','--','*.php']).split(b'\0')
+          for raw in contents:
+              if not raw: continue
+              name=raw.decode()
+              path=pathlib.Path(name)
+              if not path.is_file():continue
+              lines=path.read_text(encoding='utf-8',errors='replace').splitlines()
+              for index,line in enumerate(lines,1):
+                  if len(line)<=120:continue
+                  stripped=line.lstrip()
+                  if stripped.startswith(('* ','//','#','/*','*','<!--')):
+                      kind='comment'
+                  elif stripped.startswith(('<','</','<!')) or ('<?' in stripped and not stripped.startswith('<?php') and not stripped.startswith('<?= ')):
+                      kind='mixed_html'
+                  elif stripped.startswith(('echo ','print ')) and '<' in stripped:
+                      kind='generated_html'
+                  elif len(stripped)>=80 and ("'" in stripped or '"' in stripped):
+                      kind='php_string_or_expr'
+                  else:
+                      kind='php_code'
+                  kinds[kind]+=1
+                  files[name]+=1
+                  if len(examples[kind])<12:
+                      examples[kind].append(f'{name}:{index} {line[:180]}')
+          print('CLASSIFICATION',dict(kinds))
+          print('HOTSPOTS',files.most_common(45))
+          for kind,rows in examples.items():
+              print('EXAMPLES',kind)
+              for row in rows:print(row)
+          PY
