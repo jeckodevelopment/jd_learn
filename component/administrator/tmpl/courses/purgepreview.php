@@ -14,12 +14,15 @@ $impact = $this->purgeImpact;
  <p class="alert alert-warning"><?= Text::_('COM_JLMS_PURGE_IRREVERSIBLE') ?></p>
  <table class="table">
  <caption><?= Text::_('COM_JLMS_PURGE_DEPENDENCIES') ?></caption>
- <thead><tr><th scope="col"><?= Text::_('COM_JLMS_PURGE_REFERENCE') ?></th><th scope="col"><?= Text::_('COM_JLMS_PURGE_COUNT') ?></th></tr></thead>
+ <thead><tr><th scope="col"><?= Text::_('COM_JLMS_PURGE_REFERENCE') ?></th>
+   <th scope="col"><?= Text::_('COM_JLMS_PURGE_COUNT') ?></th>
+   </tr></thead>
  <tbody>
  <?php foreach ($impact['references'] as $table => $count) : ?>
   <tr><th scope="row"><?= $this->escape($table) ?></th><td><?= (int) $count ?></td></tr>
  <?php endforeach; ?>
-  <tr><th scope="row"><?= Text::_('COM_JLMS_PURGE_EDITORIAL_HISTORY') ?></th><td><?= (int) $impact['editorial_history'] ?></td></tr>
+  <tr><th scope="row"><?= Text::_('COM_JLMS_PURGE_EDITORIAL_HISTORY') ?></th>
+    <td><?= (int) $impact['editorial_history'] ?></td></tr>
  </tbody></table>
  <?php if ($impact['eligible']) : ?>
  <p class="alert alert-warning"><?= Text::_('COM_JLMS_PURGE_ELIGIBLE') ?></p>

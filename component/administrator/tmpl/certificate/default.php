@@ -48,7 +48,14 @@ $i = $this->item;
  <?php if (!$i['audit']) :
         ?><p><?= Text::_('JGLOBAL_NO_MATCHING_RESULTS') ?></p><?php
  else :
-        ?><table class="table"><thead><tr><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTION') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTOR') ?></th><th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_DATE') ?></th></tr></thead><tbody>
+        ?><table class="table">
+          <thead>
+          <tr>
+          <th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTION') ?></th>
+          <th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_ACTOR') ?></th>
+          <th><?= Text::_('COM_JLMS_CERTIFICATE_AUDIT_DATE') ?></th>
+          </tr>
+          </thead><tbody>
      <?php foreach ($i['audit'] as $event) :
             ?><tr><td><?= $this->escape($event->action) ?></td><td><?= (int) $event
                 ->actor_user_id ?></td><td><?= $this->escape($event->created_at) ?></td></tr><?php

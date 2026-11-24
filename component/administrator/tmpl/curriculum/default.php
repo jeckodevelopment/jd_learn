@@ -61,7 +61,8 @@ $lessonUrl = static fn (object $lesson): string => $lesson->kind === 'quiz'
     ? $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id)
     : $link($view . '&edit_lesson=' . (int) $lesson->id) . '#jlms-lesson-form';
 $actions = function (string $kind, object $item, int $position, int $total) use ($actionUrl): void {
-    ?><details class="jlms-item-menu"><summary><?= Text::_('COM_JLMS_PROGRAMME_ACTIONS') ?><span class="visually-hidden">: <?= $this->escape($item->title) ?></span></summary><ul>
+    ?><details class="jlms-item-menu">
+        <summary><?= Text::_('COM_JLMS_PROGRAMME_ACTIONS') ?><span class="visually-hidden">: <?= $this->escape($item->title) ?></span></summary><ul>
     <li><a href="<?= $actionUrl('copy_' . $kind, (int) $item->id) ?>"><?= Text::_($kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON') ?></a></li>
     <?php if ($kind === 'lesson') :
         ?><li><a href="<?= $actionUrl('move_lesson', (int) $item->id) ?>"><?= Text::_('COM_JLMS_PROGRAMME_MOVE_LESSON') ?></a></li><?php
@@ -391,7 +392,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
             ?><p><a id="jlms-manage-materials" class="btn btn-secondary"
   href="<?= $link('index.php?option=com_jlms&view=materials&id=' . (int) $course->id . '&version_id=' . (int) $version->id) ?>"><?= Text::_('COM_JLMS_MATERIALS') ?></a></p><?php
      endif; ?>
- <details class="jlms-programme-versions"><summary><?= Text::_('COM_JLMS_VERSIONS') ?></summary><nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>"><ul>
+ <details class="jlms-programme-versions"><summary><?= Text::_('COM_JLMS_VERSIONS') ?>
+     </summary>
+     <nav aria-label="<?= Text::_('COM_JLMS_VERSIONS') ?>"><ul>
      <?php foreach ($this->outline['versions'] as $entry) :
             ?><li><a href="<?= $link($base . '&version_id=' . (int) $entry->id) ?>"<?= (int) $entry->id === (int) $version->id ? ' aria-current="page"' : '' ?>>v<?= (int) $entry->version_no ?> · <?= Text::_($this->inReview && (int) $entry->id === (int) $version->id ? 'COM_JLMS_IN_REVIEW' : ($entry->status === 'draft' ? 'COM_JLMS_DRAFT' : ($entry->status === 'published' ? 'JPUBLISHED' : 'JARCHIVED'))) ?></a></li><?php
      endforeach; ?>

@@ -14,7 +14,10 @@ use Joomla\CMS\Router\Route;
   <h2 id="jlms-pending-title"><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_PENDING') ?> (<?= count($this->pendingRequests) ?>)</h2>
   <p><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_POLICY') ?></p>
   <div class="table-responsive"><table class="table">
-   <thead><tr><th scope="col"><?= Text::_('JGLOBAL_USERNAME') ?></th><th scope="col"><?= Text::_('JDATE') ?></th><th scope="col"><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_ACTIONS') ?></th></tr></thead>
+   <thead><tr><th scope="col"><?= Text::_('JGLOBAL_USERNAME') ?></th>
+     <th scope="col"><?= Text::_('JDATE') ?></th>
+     <th scope="col"><?= Text::_('COM_JLMS_ENROLLMENT_APPROVAL_ACTIONS') ?></th>
+     </tr></thead>
    <tbody><?php foreach ($this->pendingRequests as $request) : ?>
    <tr id="jlms-pending-request-<?= (int) $request->id ?>">
     <th scope="row"><?= $this->escape($request->name ?? '') ?> (<?= $this->escape($request->username ?? '') ?>) · #<?= (int) $request->id ?></th>

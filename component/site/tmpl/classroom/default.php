@@ -31,7 +31,9 @@ foreach ($item['outline'] as $entry) {
 }
 ?>
 <section id="jlms-classroom" class="jlms-classroom" data-enrollment-id="<?= (int) $item['enrollment_id'] ?>">
- <header id="jlms-classroom-header"><div class="jlms-classroom-header__heading"><h1><?= $this->escape($item['title']) ?></h1>
+ <header id="jlms-classroom-header">
+   <div class="jlms-classroom-header__heading">
+   <h1><?= $this->escape($item['title']) ?></h1>
  <?php if (!empty($item['teachers'])) :
         ?><p id="jlms-classroom-teachers" class="jlms-classroom-teachers">
         <?= Text::_('COM_JLMS_TEACHERS') ?>:
@@ -70,7 +72,9 @@ foreach ($item['outline'] as $entry) {
             endif;
             $currentModule = (int) $entry->module_id; ?>
    <details id="jlms-classroom-module-<?= $currentModule ?>"
-     class="jlms-classroom-module"<?= $selectedModule === $currentModule ? ' open' : '' ?>><summary class="jlms-classroom-module__summary"><span class="jlms-classroom-module__title"><?= $this->escape($entry->module_title) ?></span></summary><ol>
+     class="jlms-classroom-module"<?= $selectedModule === $currentModule ? ' open' : '' ?>>
+       <summary class="jlms-classroom-module__summary"><span class="jlms-classroom-module__title"><?= $this->escape($entry->module_title) ?></span>
+       </summary><ol>
         <?php endif; ?>
   <li id="jlms-classroom-lesson-<?= (int) $entry->id ?>" class="jlms-classroom-lesson">
    <a href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $entry->id) ?>"<?= (int) $selected->id === (int) $entry->id ? ' aria-current="page"' : '' ?>><?= $this->escape($entry->title) ?></a>
@@ -136,7 +140,10 @@ foreach ($item['outline'] as $entry) {
     </div>
             <?php endif; ?>
             <?php if (!empty($selected->video_transcript)) :
-                ?><details id="jlms-video-transcript"><summary><?= Text::_('COM_JLMS_LESSON_TRANSCRIPT') ?></summary><div class="jlms-lesson-transcript__content"><?= $selected->video_transcript ?></div></details><?php
+                ?><details id="jlms-video-transcript">
+                  <summary><?= Text::_('COM_JLMS_LESSON_TRANSCRIPT') ?></summary>
+                  <div class="jlms-lesson-transcript__content"><?= $selected->video_transcript ?></div>
+                  </details><?php
             endif; ?>
    <div id="jlms-video-speed-control" hidden>
     <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
@@ -162,7 +169,10 @@ foreach ($item['outline'] as $entry) {
    </audio>
    <p id="jlms-audio-progress-status" role="status" aria-live="polite"></p>
           <?php if (!empty($selected->audio_transcript)) :
-                ?><details id="jlms-audio-transcript"><summary><?= Text::_('COM_JLMS_AUDIO_TRANSCRIPT') ?></summary><div class="jlms-audio-transcript__content"><?= $selected->audio_transcript ?></div></details><?php
+                ?><details id="jlms-audio-transcript">
+                  <summary><?= Text::_('COM_JLMS_AUDIO_TRANSCRIPT') ?></summary>
+                  <div class="jlms-audio-transcript__content"><?= $selected->audio_transcript ?></div>
+                  </details><?php
           endif; ?>
           <?php if ($item['progress_applicable']) :
                 ?><form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
@@ -194,10 +204,12 @@ foreach ($item['outline'] as $entry) {
       <?php foreach (['course' => 'jlms-classroom-course-materials', 'lesson' => 'jlms-lesson-resources'] as $scope => $region) :
             $files = $this->materials[$scope]; ?>
  <section id="<?= $region ?>"
-   class="jlms-material-list"><h3><?= Text::_($scope === 'course' ? 'COM_JLMS_COURSE_MATERIALS' : 'COM_JLMS_LESSON_MATERIALS') ?></h3>
+   class="jlms-material-list">
+     <h3><?= Text::_($scope === 'course' ? 'COM_JLMS_COURSE_MATERIALS' : 'COM_JLMS_LESSON_MATERIALS') ?></h3>
             <?php foreach ($files['items'] as $file) : ?>
   <article id="jlms-material-<?= (int) $file->id ?>" class="jlms-material">
-   <h4 class="jlms-material__title"><?= $this->escape($file->title) ?></h4><p><?= $this->escape($file->description ?? '') ?></p>
+   <h4 class="jlms-material__title"><?= $this->escape($file->title) ?></h4>
+     <p><?= $this->escape($file->description ?? '') ?></p>
    <p class="jlms-material__meta"><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
                 <?php if (in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) : ?>
                     <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>

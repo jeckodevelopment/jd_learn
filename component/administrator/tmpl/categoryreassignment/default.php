@@ -31,7 +31,10 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
   <form action="<?= Route::_('index.php?option=com_jlms&task=categoryreassignment.reassign', false) ?>" method="post">
    <input type="hidden" name="category_id" value="<?= $categoryId ?>">
    <table class="table table-striped">
-    <thead><tr><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_REFERENCE') ?></th><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_COUNT') ?></th><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_TARGET') ?></th></tr></thead>
+    <thead><tr><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_REFERENCE') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_COUNT') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_TARGET') ?></th>
+      </tr></thead>
     <tbody>
         <?php foreach ($this->inspection['references'] as $key => $count) : ?>
      <tr><th scope="row"><?= Text::_($key === 'questions' ? 'COM_JLMS_QUESTION_BANK' : 'COM_JLMS_'

@@ -25,7 +25,18 @@ else : ?>
 <button type="submit"
     class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_CONFIRM_BUTTON') ?></button></form><?php
 endif; ?>
-<h3><?= Text::_('COM_JLMS_COURSE_OPERATIONS_HISTORY') ?></h3><div class="table-responsive"><table class="table"><thead><tr><th>#</th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_COURSE_OPERATIONS_REASON') ?></th><th><?= Text::_('JAUTHOR') ?></th><th><?= Text::_('JDATE') ?> UTC</th></tr></thead><tbody>
+<h3><?= Text::_('COM_JLMS_COURSE_OPERATIONS_HISTORY') ?></h3>
+  <div class="table-responsive">
+  <table class="table">
+  <thead>
+  <tr>
+  <th>#</th>
+  <th><?= Text::_('JSTATUS') ?></th>
+  <th><?= Text::_('COM_JLMS_COURSE_OPERATIONS_REASON') ?></th>
+  <th><?= Text::_('JAUTHOR') ?></th>
+  <th><?= Text::_('JDATE') ?> UTC</th>
+  </tr>
+  </thead><tbody>
 <?php foreach ($i['history'] as $h) :
     ?><tr><td><?= (int)$h->revision_no ?></td><td><?= Text::_($labels[$h->operation] ?? $h
         ->operation) ?></td><td><?= $this->escape($h->reason) ?></td><td><?= (int)$h

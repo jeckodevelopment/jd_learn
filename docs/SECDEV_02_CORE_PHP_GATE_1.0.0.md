@@ -351,3 +351,12 @@ On the checked-out main baseline the pinned PHPCS 4.0.4 PSR12 full tracked-PHP s
 
 - Identical significant PHP tokens, source contracts, PHP lint, complete PHPCS PSR-12 and full CI.
 - Joomla backend/frontend course and lesson workflows, authorization, CSRF, media, certificates and notifications in separate manual acceptance.
+
+## Structural bulk PHP/HTML remediation, PR #1016 (24 November 2026)
+
+PHPCS 4.0.4 PSR12 full repository comparison: **1018 → 993**, net **25 findings removed** on **15 PHP files**, no new file/rule findings. PHP lint successful on every changed file. Structural HTML boundaries only in T_INLINE_HTML plus guarded tag/attribute, literal and whitespace transformations. Any candidate failing source contracts, PHP syntax or per-rule PHPCS was restored. No standards relaxed. **SECDEV-02 remains partial until its CORE services, Joomla API audit and PSR12 residual are fully covered. Functional requirement percentages unchanged; manual acceptance separately pending.**
+
+### Comportamenti da testare
+
+- Verify HTML templates in frontend/backend across desktop/mobile; exact title, link, attribute and field data; confirm no unexpected whitespace-sensitive DOM nodes.
+- Verify PHP syntax, PHPCS PSR12 (zero regressions), contract gates, package build and full Joomla CI.

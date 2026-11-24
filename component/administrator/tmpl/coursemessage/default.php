@@ -25,9 +25,15 @@ $mutation = $preview['mutation_id'] ?? '';
   <div class="card mt-3 mb-3"><div class="card-body">
    <h2 class="h5 mb-2"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_EDIT') ?></h2>
     <p class="text-muted small"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_LOCAL') ?> <code>com_jlms.course.message</code></p>
-    <label class="form-label" for="jlms-template-subject"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_SUBJECT') ?></label>
-    <input id="jlms-template-subject" name="jform[template][subject]" type="text" maxlength="300" required class="form-control mb-3" value="<?= $this->escape($template['subject']) ?>">
-    <label class="form-label" for="jlms-template-htmlbody"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_HTML') ?></label>
+    <label class="form-label"
+    for="jlms-template-subject"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_SUBJECT') ?></label>
+    <input id="jlms-template-subject"
+    name="jform[template][subject]"
+    type="text"
+    maxlength="300" required class="form-control mb-3"
+    value="<?= $this->escape($template['subject']) ?>">
+    <label class="form-label"
+    for="jlms-template-htmlbody"><?= Text::_('COM_JLMS_COMMUNICATION_TEMPLATE_HTML') ?></label>
     <?php
     $editorName = (string) Factory::getApplication()->getIdentity()
         ->getParam('editor', Factory::getApplication()->get('editor'));
@@ -66,7 +72,12 @@ $mutation = $preview['mutation_id'] ?? '';
    <h2><?= Text::_('COM_JLMS_COMMUNICATION_PREVIEW') ?></h2>
    <p><strong><?= $this->escape($preview['rendered']['subject']) ?></strong></p>
         <?php if ($preview['rendered']['htmlbody'] !== '') : ?>
-    <iframe sandbox="" title="<?= $this->escape(Text::_('COM_JLMS_COMMUNICATION_RENDERED_HTML')) ?>" loading="lazy" class="w-100 border rounded" style="height:260px" srcdoc="<?= $this->escape($preview['rendered']['htmlbody']) ?>"></iframe>
+    <iframe sandbox=""
+    title="<?= $this->escape(Text::_('COM_JLMS_COMMUNICATION_RENDERED_HTML')) ?>"
+    loading="lazy"
+    class="w-100 border rounded"
+    style="height:260px"
+    srcdoc="<?= $this->escape($preview['rendered']['htmlbody']) ?>"></iframe>
         <?php else : ?>
     <p><?= nl2br($this->escape($preview['rendered']['body'])) ?></p>
         <?php endif; ?>
@@ -94,7 +105,12 @@ $mutation = $preview['mutation_id'] ?? '';
     <input type="hidden" name="jform[impact_hash]" value="<?= $this
         ->escape($preview['hash']) ?>"><input type="hidden" name="jform[mutation_id]" value="<?= $this
             ->escape($mutation) ?>">
-    <div class="form-check mb-3"><input class="form-check-input" id="jlms-communication-confirm" type="checkbox" name="jform[confirmation]" value="1" required><label class="form-check-label" for="jlms-communication-confirm"><?= Text::_('COM_JLMS_COMMUNICATION_CONFIRM') ?></label></div>
+    <div class="form-check mb-3"><input class="form-check-input"
+    id="jlms-communication-confirm"
+    type="checkbox"
+    name="jform[confirmation]"
+    value="1" required><label class="form-check-label"
+    for="jlms-communication-confirm"><?= Text::_('COM_JLMS_COMMUNICATION_CONFIRM') ?></label></div>
         <?= HTMLHelper::_('form.token') ?>
     <button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_COMMUNICATION_QUEUE') ?></button>
    </form>

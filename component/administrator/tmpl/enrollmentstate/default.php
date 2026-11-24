@@ -43,7 +43,12 @@ $p = $i['impact'];
  </section>
  <div class="table-responsive"><table id="jlms-enrollment-state-history"
     class="table"><caption><?= Text::_('COM_JLMS_ENROLLMENT_STATE_HISTORY') ?></caption>
-  <thead><tr><th scope="col">#</th><th scope="col"><?= Text::_('COM_JLMS_ROSTER_STATUS') ?></th><th scope="col"><?= Text::_('COM_JLMS_ENROLLMENT_STATE_REASON_LABEL') ?></th><th scope="col"><?= Text::_('JAUTHOR') ?></th><th scope="col"><?= Text::_('JDATE') ?> UTC</th></tr></thead>
+  <thead><tr><th scope="col">#</th>
+    <th scope="col"><?= Text::_('COM_JLMS_ROSTER_STATUS') ?></th>
+    <th scope="col"><?= Text::_('COM_JLMS_ENROLLMENT_STATE_REASON_LABEL') ?></th>
+    <th scope="col"><?= Text::_('JAUTHOR') ?></th>
+    <th scope="col"><?= Text::_('JDATE') ?> UTC</th>
+    </tr></thead>
   <tbody><?php foreach ($i['history'] as $h) :
         ?><tr><td><?= (int) $h->revision_no ?></td><td><?= $statusLabel($h
             ->previous_status) ?> → <?= $statusLabel($h->target_status) ?></td><td><?= $this->escape($h

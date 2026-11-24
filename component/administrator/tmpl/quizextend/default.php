@@ -49,7 +49,15 @@ $p = $i['impact'];
  endif; ?>
  </section>
  <table id="jlms-quiz-extend-history"
-     class="table"><caption><?= Text::_('COM_JLMS_QUIZ_EXTEND_HISTORY') ?></caption><thead><tr><th>#</th><th><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?></th><th><?= Text::_('COM_JLMS_QUIZ_TIME_REASON_LABEL') ?></th><th><?= Text::_('JAUTHOR') ?></th></tr></thead><tbody>
+     class="table"><caption><?= Text::_('COM_JLMS_QUIZ_EXTEND_HISTORY') ?></caption>
+       <thead>
+       <tr>
+       <th>#</th>
+       <th><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?></th>
+       <th><?= Text::_('COM_JLMS_QUIZ_TIME_REASON_LABEL') ?></th>
+       <th><?= Text::_('JAUTHOR') ?></th>
+       </tr>
+       </thead><tbody>
  <?php foreach ($i['history'] as $h) :
         ?><tr><td><?= (int)$h->revision_no ?></td><td><?= $this->escape($h->previous_deadline) ?> → <?= $this
             ->escape($h->new_deadline) ?> UTC</td><td><?= $this->escape($h->reason) ?></td><td><?= (int)$h

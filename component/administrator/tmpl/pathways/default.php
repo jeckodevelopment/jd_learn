@@ -19,7 +19,11 @@ use Joomla\CMS\Router\Route;
   </select>
   <table class="table">
    <caption class="visually-hidden"><?= Text::_('COM_JLMS_PATHWAYS') ?></caption>
-   <thead><tr><th scope="col" class="w-1 text-center"><?= HTMLHelper::_('grid.checkall') ?></th><th scope="col"><?= Text::_('JGLOBAL_TITLE') ?></th><th scope="col"><?= Text::_('JSTATUS') ?></th><th scope="col"><?= Text::_('COM_JLMS_REVISION') ?></th></tr></thead>
+   <thead><tr><th scope="col" class="w-1 text-center"><?= HTMLHelper::_('grid.checkall') ?></th>
+     <th scope="col"><?= Text::_('JGLOBAL_TITLE') ?></th>
+     <th scope="col"><?= Text::_('JSTATUS') ?></th>
+     <th scope="col"><?= Text::_('COM_JLMS_REVISION') ?></th>
+     </tr></thead>
    <tbody><?php foreach ($this->items as $i => $item) : ?>
     <tr><td class="text-center"><?= HTMLHelper::_('grid.id', $i, (int) $item
         ->id) ?></td><td><a href="<?= Route::_('index.php?option=com_jlms&task=pathway.edit&id=' . (int) $item

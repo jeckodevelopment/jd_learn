@@ -12,7 +12,14 @@ $base = 'index.php?option=com_jlms&view=quiztime&id=' . (int)$i['course_id'] . '
  <p class="alert alert-info" id="jlms-quiz-time-policy"><?= Text::_('COM_JLMS_QUIZ_TIME_POLICY') ?></p>
  <p><?= Text::_('COM_JLMS_QUIZ_TIME_BASE') ?>: <?= (int)$i['quiz']->time_limit_seconds ?> s</p>
  <table id="jlms-quiz-time-enrollments"
-     class="table"><caption><?= Text::_('COM_JLMS_QUIZ_TIME_SELECT') ?></caption><thead><tr><th><?= Text::_('JGLOBAL_USERNAME') ?></th><th>ID</th><th><?= Text::_('JSTATUS') ?></th></tr></thead><tbody>
+     class="table"><caption><?= Text::_('COM_JLMS_QUIZ_TIME_SELECT') ?></caption>
+       <thead>
+       <tr>
+       <th><?= Text::_('JGLOBAL_USERNAME') ?></th>
+       <th>ID</th>
+       <th><?= Text::_('JSTATUS') ?></th>
+       </tr>
+       </thead><tbody>
  <?php foreach ($i['candidates'] as $e) :
         ?><tr><td><a href="<?= Route::_($base . '&enrollment_id=' . (int)$e->id) ?>"><?= $this->escape($e
             ->learner_name) ?></a></td><td><?= (int)$e->id ?></td><td><?= $this->escape($e->status) ?></td></tr><?php
@@ -42,7 +49,16 @@ $base = 'index.php?option=com_jlms&view=quiztime&id=' . (int)$i['course_id'] . '
             value="quiztime.save"><?= HTMLHelper::_('form.token') ?><button type="submit"
             class="btn btn-primary"><?= Text::_('JSAVE') ?></button></form>
  <table id="jlms-quiz-time-history"
-     class="table"><caption><?= Text::_('COM_JLMS_QUIZ_TIME_HISTORY') ?></caption><thead><tr><th><?= Text::_('COM_JLMS_QUIZ_TIME_REVISION') ?></th><th><?= Text::_('COM_JLMS_QUIZ_TIME_MINUTES') ?></th><th><?= Text::_('COM_JLMS_QUIZ_TIME_REASON_LABEL') ?></th><th><?= Text::_('JAUTHOR') ?></th><th><?= Text::_('JDATE') ?></th></tr></thead><tbody>
+     class="table"><caption><?= Text::_('COM_JLMS_QUIZ_TIME_HISTORY') ?></caption>
+       <thead>
+       <tr>
+       <th><?= Text::_('COM_JLMS_QUIZ_TIME_REVISION') ?></th>
+       <th><?= Text::_('COM_JLMS_QUIZ_TIME_MINUTES') ?></th>
+       <th><?= Text::_('COM_JLMS_QUIZ_TIME_REASON_LABEL') ?></th>
+       <th><?= Text::_('JAUTHOR') ?></th>
+       <th><?= Text::_('JDATE') ?></th>
+       </tr>
+       </thead><tbody>
         <?php foreach ($i['history'] as $h) :
             ?><tr><td><?= (int)$h->revision_no ?></td><td><?= intdiv((int)$h
                 ->extra_seconds, 60) ?></td><td><?= $this->escape($h->reason) ?></td><td><?= (int)$h
