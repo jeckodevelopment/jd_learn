@@ -180,7 +180,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
        <div class="small text-muted"><?= Text::_(match ($lesson->kind) {
             'text'=>'COM_JLMS_LESSON_TEXT','document'=>'COM_JLMS_LESSON_DOCUMENT','audio'
                 =>'COM_JLMS_LESSON_AUDIO','video'=>'COM_JLMS_LESSON_VIDEO',default=>'COM_JLMS_LESSON_QUIZ'
-                                     }) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></div>
+                                     }) ?> · <?=
+                                         Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL')
+                                     ?></div>
       </div>
                 <?php if ($this->editable) :
                     $actions('lesson', $lesson, $position, count($lessons));
@@ -450,7 +452,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                      $this->escape($transitionDisplay($transition)) ?></option><?php
             endforeach; ?>
   </select>
-            <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
+            <?=
+                HTMLHelper::_('form.token')
+            ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
                 ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
             elseif ($transitionAction($this->transitions[0]) === 'review') :
                 ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
