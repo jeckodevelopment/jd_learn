@@ -387,7 +387,7 @@ The bounded lexical whitespace pass reduced the pinned PHPCS PSR12 4.0.4 invento
 - Exact PHP syntax and tokens, no changed string literals, business logic, ACL, CSRF, SQL or runtime API contracts.
 - Full Joomla 6.2 CI matrix, browser fixtures and package build.
 
-## SECDEV-02 mass statement reflow, PR #1018 (24 November 2026)
+## SECDEV-02 structural HTML and PHP signature remediation, PR #1018 (24 November 2026)
 
 Measured using pinned PHPCS 4.0.4 PSR12 on every tracked PHP file: **867 → 858** (net **-9** violations) across **4 PHP files**. Long PHP function signatures and mixed HTML block/attribute layout were reflowed, preserving PHP tokens and literal HTML attribute values; source contracts, lint and PHPCS per-file/per-rule nonregression were enforced. Any incompatible candidate was rolled back. No PHPCS rule relaxed. Full CI and Joomla integration remain required. **SECDEV-02 is not closed while findings and separate CORE/API criteria remain. The functional coverage percentage is unchanged; manual Joomla acceptance remains pending.**
 
@@ -398,9 +398,13 @@ Measured using pinned PHPCS 4.0.4 PSR12 on every tracked PHP file: **867 → 858
 
 ### SECDEV-02/PR #1018 full multiline method signature batch
 
-The full pinned PHPCS 4.0.4 PSR12 scan measured **858 → 811 (-47)** on **23 PHP files**, without any per-file/per-rule regressions. Named function declarations use PSR12-conformant one-parameter-per-line layout and a separate opening-brace line; significant lexer tokens, PHP lint and original source contracts are retained. No PHPCS rules or limits were relaxed. Functional requirement coverage remains unchanged. **SECDEV-02 is still partial** while findings, CORE/API reviews and manual acceptance remain outstanding.
+The full pinned PHPCS 4.0.4 PSR12 scan measured **858 → 811 (-47)** on **23 PHP files**, without any per-file/per-rule regressions. Named function declarations use PSR12-conformant one-parameter-per-line layout, with the closing parenthesis and opening brace together as required by the standard; significant lexer tokens, PHP lint and original source contracts are retained. No PHPCS rules or limits were relaxed. Functional requirement coverage remains unchanged. **SECDEV-02 is still partial** while findings, CORE/API reviews and manual acceptance remain outstanding.
 
 ### Comportamenti da testare
 
 - Joomla backend/front-end functionality, class methods and services, signatures of public APIs, ACL, CSRF, enrollment, quiz, videos, certificates and email.
 - Full PHPCS PSR12, code contracts, security scanner, Joomla integration matrix and packaged release.
+
+### Reconciled PR #1018 result
+
+Two guarded structural batches achieved **867 → 811 PSR-12 findings (−56 net)** across 27 accepted source files (4 HTML/PHP template files and 23 PHP signature files), verified by PHPCS 4.0.4 with no new per-file/per-rule findings. Unsafe and ineffective candidate formatters and test-class extraction experiments were excluded from the final PR. Full CI and Joomla acceptance gates remain independent. The requirements matrix remains **Parziale**, with no functional coverage promotion; **811 style findings remain** and CORE/API verification is not certified complete.
