@@ -506,3 +506,14 @@ La CI leggera [#45495755340](https://github.com/jeckodevelopment/jd_learn/action
 ### Baseline definitiva dopo i ripristini di sicurezza della PR #1024
 
 La CI completa [#45497952357](https://github.com/jeckodevelopment/jd_learn/actions/runs/45497952357) risulta **interamente verde**: controlli statici, Chromium, Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Il saldo PHPCS 4.0.4 dopo tutti i ripristini dei contratti e del template dashboard è **192 → 168 (−24)**, con **zero nuovi rilievi**: 145 righe lunghe e 23 strutturali. I numeri 161, 159 e 158 erano misure intermedie prima dei ripristini necessari per l'integrazione; **non** rappresentano il saldo definitivo approvato dalla suite. I 168 rilievi rimangono aperti e la PR non deve essere considerata conclusiva; SECDEV-02 resta Parziale. L'accettazione manuale Joomla resta distinta.
+
+
+## Lotto mirato successivo alla PR #1024 — 24 novembre 2026
+
+Baseline certificata dalla CI #45502399210: **125 finding PSR-12**, di cui 102 `Generic.Files.LineLength.TooLong`, 12 nomi di metodi con underscore, 3 proprietà con underscore e 8 altri finding strutturali. La presente PR tratta in modo circoscritto le espressioni PHP lunghe di `CourseMessageTemplate.php`, `CoursemessageController.php` e `CurriculumController.php`: esclusivamente disposizione su più righe degli argomenti, senza modificare valori, condizioni, classi o firme Joomla. Questi interventi sono candidati alla riduzione di tre finding `LineLength`; **il risultato netto dev'essere misurato dalla CI completa** e non è certificato in anticipo. Non vengono rinominati metodi o proprietà Joomla; zero nuove violazioni è un vincolo. Le percentuali funzionali restano invariate e SECDEV-02 rimane Parziale finché non siano chiusi i criteri PSR-12, CORE/API e i collaudi applicabili.
+
+### Comportamenti da testare
+- PHPCS 4.0.4 PSR12 completo, confronto per file/regola e zero rilievi introdotti.
+- PHP lint, conservazione degli argomenti e delle condizioni di revisione, messaggistica e sanificazione HTML.
+- `tools/check.py`, source contracts, test mail, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, Chromium, pacchetto Joomla.
+- Collaudo manuale Joomla: invio/anteprima comunicazioni, pubblicazione del curriculum, gestione dei conflitti di revisione e comportamento del filtro HTML.
