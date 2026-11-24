@@ -16,8 +16,10 @@ final class HtmlView extends BaseHtmlView
     {
         $this->item = $this->get('Item');
         $app = \Joomla\CMS\Factory::getApplication();
-        $this->materials = (!empty($this->item['lesson']->prerequisite_blocked) || !empty($this->item['lesson']->schedule_blocked))
-            ? ['course' => ['items' => [], 'page' => 0, 'total' => 0], 'lesson' => ['items' => [], 'page' => 0, 'total' => 0]]
+        $this->materials = (!empty($this->item['lesson']->prerequisite_blocked) || !empty($this->item['lesson']
+            ->schedule_blocked))
+            ? ['course' => ['items' => [], 'page' => 0, 'total' => 0], 'lesson' => ['items' => [], 'page' => 0
+                , 'total' => 0]]
             : $app->bootComponent('com_jlms')->getMaterialService()->learnerLists(
                 $app->getIdentity(),
                 $app->getLanguage()->getTag(),

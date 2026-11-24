@@ -240,7 +240,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         }
         $asset = new \Joomla\CMS\Table\Asset($db);
         $asset->setLocation((int) $category->asset_id, 'last-child');
-        $asset->bind(['name' => 'com_jlms.copy.' . bin2hex(random_bytes(16)), 'title' => \Joomla\String\StringHelper::substr($title, 0, 100), 'rules' => '{}']);
+        $asset->bind(['name' => 'com_jlms.copy.' . bin2hex(random_bytes(16)), 'title' =>
+             \Joomla\String\StringHelper::substr($title, 0, 100), 'rules' => '{}']);
         if (!$asset->check() || !$asset->store()) {
             throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
         }
@@ -513,7 +514,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                     $relation = (object) ['course_id' => $newId, 'teacher_id' => $teacher, 'ordering' => $ordering];
                     $db->insertObject('#__jlms_course_teachers', $relation);
                 }
-                $fieldModel = Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
+                $fieldModel = Factory::getApplication()->bootComponent('com_fields')->getMVCFactory()
+                    ->createModel('Field', 'Administrator', ['ignore_request' => true]);
                 $sourceItem = (string) $copySource->course->id;
                 $q = $db->createQuery()->select('v.field_id,v.value')->from('#__fields_values AS v')
                     ->innerJoin('#__fields AS f ON f.id=v.field_id')->where("f.context='com_jlms.course'")
@@ -563,7 +565,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             if (!in_array($error->getMessage(), $known, true)) {
                 // Private diagnostics omit SQL, values and exception messages.
                 try {
-                    \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+                    \Joomla\CMS\Log\Log::add($error::class . ' at ' . basename($error->getFile()) . ':' . $error
+                        ->getLine(), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
                 } catch (\Throwable) {
                 }
             }

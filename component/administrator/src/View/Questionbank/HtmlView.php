@@ -29,7 +29,9 @@ final class HtmlView extends BaseHtmlView
         $this->filterForm = $this->get('FilterForm');
         $this->state = $this->get('State');
         $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $this->questionCategories = $db->setQuery($db->createQuery()->select('id,title')->from('#__categories')->where('extension=' . $db->quote('com_jlms.question'))->where('published=1')->order('lft ASC'))->loadObjectList();
+        $this->questionCategories = $db->setQuery($db->createQuery()->select('id,title')->from('#__categories')
+            ->where('extension=' . $db->quote('com_jlms.question'))->where('published=1')->order('lft ASC'))
+            ->loadObjectList();
         foreach (['search','published','catid','language'] as $key) {
             $value = $this->state->get('filter.' . $key);
             if ($value !== null && $value !== '') {

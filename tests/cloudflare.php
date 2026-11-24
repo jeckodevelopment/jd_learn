@@ -72,7 +72,8 @@ foreach ([401 => 'COM_JLMS_VIDEO_CREDENTIAL_REJECTED',404 => 'COM_JLMS_VIDEO_REM
 }
 $state->status = 200;
 $grant = $p->createPlaybackDescriptor($source, $context);
-cfExpect($grant->expiresAt->getTimestamp() === $now->getTimestamp() + 60 && $grant->playerOptions['renew_after_seconds'] === 40, 'bounded lifetime and early renewal');
+cfExpect($grant->expiresAt->getTimestamp() === $now->getTimestamp() + 60 && $grant
+    ->playerOptions['renew_after_seconds'] === 40, 'bounded lifetime and early renewal');
 cfExpect(
     !str_contains(json_encode($grant, JSON_THROW_ON_ERROR), 'ci-disposable-not-a-real-secret'),
     'server secret absent from browser descriptor'

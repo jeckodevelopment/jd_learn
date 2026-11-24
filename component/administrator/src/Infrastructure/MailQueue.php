@@ -133,7 +133,8 @@ final class MailQueue
             $this->db->setQuery($query)->execute();
             return true;
         } catch (\Throwable $error) {
-            $check = $this->db->createQuery()->select('id')->from('#__jlms_mail_queue')->where('event_key = :key')->bind(':key', $key);
+            $check = $this->db->createQuery()->select('id')->from('#__jlms_mail_queue')
+                ->where('event_key = :key')->bind(':key', $key);
             if ((int) $this->db->setQuery($check)->loadResult()) {
                 return false;
             }
@@ -320,7 +321,8 @@ final class MailQueue
                     : 'Delivery failed; transport details are withheld.';
                 $update = $this->db->createQuery()->update('#__jlms_mail_queue')
                     ->set($retry ? "state = 'retry'" : "state = 'failed'")
-                    ->set($retry ? 'available_at = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ' . $delay . ' SECOND)' : 'available_at = available_at')
+                    ->set($retry ? 'available_at = DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ' . $delay .
+                         ' SECOND)' : 'available_at = available_at')
                     // Transport exceptions can contain addresses, SMTP responses, or provider details.
                     // Keep the outbox diagnostic useful without persisting them.
                     ->set('last_error = :error')->set('claimed_at = NULL')->where('id = :id')

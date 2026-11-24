@@ -64,7 +64,9 @@ final class QuizreviewController extends BaseController
                 true
             );
             $this->setMessage(Text::_('COM_JLMS_QUIZ_REVIEW_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=quizreview&id=' . $course . '&lesson_id=' . $lesson . '&enrollment_id=' . $enrollment . '&attempt_id=' . $attempt, false));
+            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=quizreview&id=' .
+                     $course . '&lesson_id=' . $lesson . '&enrollment_id=' . $enrollment . '&attempt_id=' .
+                     $attempt, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = (int)$error->getCode();
@@ -75,7 +77,8 @@ final class QuizreviewController extends BaseController
             if (in_array($code, [400,401,403,404,409,413,422,503], true) && preg_match('/\ACOM_JLMS_[A-Z_]+\z/D', $key)) {
                 throw new \RuntimeException(Text::_($key), $code);
             }
-            \Joomla\CMS\Log\Log::add('Quiz cancellation failed; correlation=' . bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+            \Joomla\CMS\Log\Log::add('Quiz cancellation failed; correlation=' .
+                 bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

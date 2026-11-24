@@ -9,7 +9,8 @@ require __DIR__ . '/../component/administrator/src/Application/MailPreferences.p
 
 use Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics;
 
-$states = ['missing', 'invalid_rules', 'disabled', 'duplicates', 'failed', 'overdue', 'waiting', 'operational', 'unknown'];
+$states = ['missing', 'invalid_rules', 'disabled', 'duplicates', 'failed', 'overdue', 'waiting', 'operational'
+    , 'unknown'];
 $scheduler = [];
 foreach ($states as $state) {
     $scheduler[] = ['label' => 'COM_JLMS_SCHEDULER_MAIL', 'state' => $state, 'duplicates' => false];

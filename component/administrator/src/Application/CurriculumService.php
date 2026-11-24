@@ -717,7 +717,8 @@ final class CurriculumService
                 }
                 if (
                     $fields['kind'] === 'video' && $fields['provider_key'] !== 'html5' && ($input['duration_mode'] ?? '') === 'auto'
-                    && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson->source_json === $fields['source_json']
+                    && $durationProof === null && $lesson->provider_key === $fields['provider_key'] && $lesson
+                        ->source_json === $fields['source_json']
                 ) {
                     $fields['duration_ms'] = $lesson->duration_ms;
                     $fields['params_json'] = $lesson->params_json;
@@ -757,7 +758,8 @@ final class CurriculumService
                     $params['video_threshold_basis_points'] = $threshold;
                     $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
                 }
-                $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ?? null, $input['publish_down'] ?? null, $timezone));
+                $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ??
+                     null, $input['publish_down'] ?? null, $timezone));
                 $fields['release_after_days'] = LessonAvailability::normalizeReleaseDays($input['release_after_days'] ?? null);
                 $q = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName('#__jlms_lessons'))
                     ->where('course_version_id = :version')->bind(':version', $versionId, ParameterType::INTEGER);

@@ -156,7 +156,8 @@ final class CourseCommunicationService
                     'scope_json' => json_encode(['course_id' => $courseId,'mutation_id' => $mutationId], JSON_THROW_ON_ERROR),
                     'payload_json' => $expectedPayload,
                     'status' => 'queued','cursor_json' => json_encode(['offset' => 0], JSON_THROW_ON_ERROR),
-                    'progress_done' => 0,'progress_total' => $plan['count'],'attempts' => 0,'available_at' => $now,'created_at' => $now,
+                    'progress_done' => 0,'progress_total' => $plan['count'],'attempts' => 0,
+                        'available_at' => $now,'created_at' => $now,
                 ];
                 $this->db->insertObject('#__jlms_jobs', $job, 'id');
                 $jobId = (int) $job->id;
@@ -266,7 +267,8 @@ final class CourseCommunicationService
                     ->id)
                     ->where('lease_token=' . $this->db->quote($token));
             if ($next >= count($all)) {
-                $update->set("status='succeeded'")->set('payload_json=' . $this->db->quote('{}'))->set('finished_at=UTC_TIMESTAMP(6)');
+                $update->set("status='succeeded'")->set('payload_json=' . $this->db->quote('{}'))
+                    ->set('finished_at=UTC_TIMESTAMP(6)');
             } else {
                 $update->set("status='queued'")->set('available_at=UTC_TIMESTAMP(6)');
             }

@@ -163,7 +163,8 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
         return;
     }
     if ($mode === 'retained') {
-        restoreExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) === $state, 'Recovered programmes, provider references, native audit and learning ' .
+        restoreExpect(json_decode(file_get_contents($fixture . '.snapshot'), true, 64, JSON_THROW_ON_ERROR) ===
+                 $state, 'Recovered programmes, provider references, native audit and learning ' .
             'survive upgrade');
         echo json_encode(['programme_restore_retained_checks' => $checks,'status' => 'passed']) . PHP_EOL;
         return;
@@ -178,7 +179,8 @@ $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => t
 $course = $model->duplicate(['course_id' => $source,'version_id' => $original->id,'revision' => $record
     ->revision,'expected_version_revision' => $original->revision,'title' => 'Historical programme fixture']);
 $copy = $model->getItem($course);
-restoreExpect($model->save(['id' => $course,'revision' => $copy->revision,'catalog_access' => 1,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent fixture has explicit learner access');
+restoreExpect($model->save(['id' => $course,'revision' => $copy->revision,'catalog_access' => 1
+    ,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent fixture has explicit learner access');
 $version = (int)$authoring->outline($actor, $course)['version']->id;
 $scope = static function () use ($course, &$version): array {
     return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => restoreRow('course_versions', $version)->revision];
@@ -246,7 +248,8 @@ $input = ['course_id' => $course,'version_id' => $historical,'revision' => $cour
     ,'expected_version_revision' => restoreRow('course_versions', $historical)->revision,'confirmation' => '1'];
 restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['confirmation' => '0'])), 'COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED');
 restoreDenied(fn()=>$authoring->restoreVersion(new \Joomla\CMS\User\User(0), $input), 'JERROR_ALERTNOAUTHOR');
-restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' => $original->id,'expected_version_revision' => $original->revision])), 'COM_JLMS_RESOURCE_NOT_FOUND');
+restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' => $original->id
+    ,'expected_version_revision' => $original->revision])), 'COM_JLMS_RESOURCE_NOT_FOUND');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' =>
      $current,'expected_version_revision' => restoreRow('course_versions', $current)->
     revision])), 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
@@ -319,7 +322,8 @@ restoreExpect(restoreRow('course_versions', $target)->status === 'draft' &&
      restoreLearning() === $before, 'Unavailable provider blocks publication without activating recovery');
 $vimeoEnabled = true;
 $publish($target);
-restoreExpect((int)restoreRow('courses', $course)->current_version_id === $target && restoreLearning() === $before, 'Normal impact-confirmed publication activates recovery without migrating ' .
+restoreExpect((int)restoreRow('courses', $course)->current_version_id === $target &&
+     restoreLearning() === $before, 'Normal impact-confirmed publication activates recovery without migrating ' .
     'learners');
 restoreExpect(restoreTree($existing) === $trees[$existing], 'Publishing recovered programme preserves another open draft');
 restoreExpect(count($remote->calls) > 0, 'Cloudflare privacy and metadata validation uses controlled transport');

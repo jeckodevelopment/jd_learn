@@ -92,7 +92,9 @@ if (($argv[2] ?? '') === 'worker') {
     $race = json_decode(file_get_contents(dirname($root) . '/manual-enrollment-race.json'), true, 16, JSON_THROW_ON_ERROR);
     $command = $race['commands'][(int)($argv[4] ?? 0)];
     try {
-        $id = ($argv[3] ?? '') === 'auto' ? $learning->start(new \Joomla\CMS\User\User($command[1]), 'en-GB', $command[0], bin2hex(random_bytes(16))) : $service->apply($actor, ...$command);
+        $id = ($argv[3] ?? '') === 'auto' ? $learning->start(new
+            \Joomla\CMS\User\User($command[1]), 'en-GB', $command[0], bin2hex(random_bytes(16)))
+            : $service->apply($actor, ...$command);
         echo 'ok:' . $id . "\n";
     } catch (\RuntimeException $e) {
         if ($e->getCode() !== 409) {
@@ -448,7 +450,8 @@ $c1 = manualCommand($service->editor($actor, $course, (int)$users['capacity1']->
 $c2 = manualCommand($service->editor($actor, $course, (int)$users['capacity2']->id, 'en-GB'));
 $result = $runRace([$c1,$c2], ['manual','manual']);
 manualExpect(
-    count(array_filter($result, static fn($v)=>$v === 'conflict')) === 1 && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE edition_id=' . $edition)->loadResult() === $used + 1,
+    count(array_filter($result, static fn($v)=>$v === 'conflict')) === 1 && (int)$db
+        ->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE edition_id=' . $edition)->loadResult() === $used + 1,
     'simultaneous capacity boundary cannot overbook'
 );
 manualExpect(

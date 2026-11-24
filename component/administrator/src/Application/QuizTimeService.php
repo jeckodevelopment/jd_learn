@@ -27,7 +27,8 @@ final class QuizTimeService
             . 'course_id, v.status AS version_status'))
             ->from('#__jlms_quizzes AS q')->innerJoin(('#__jlms_lessons AS l ON l.id=q.lesson_id AND '
                 . 'l.course_version_id=q.course_version_id'))
-            ->innerJoin('#__jlms_course_versions AS v ON v.id=q.course_version_id')->innerJoin('#__jlms_courses AS c ON c.id=v.course_id')
+            ->innerJoin('#__jlms_course_versions AS v ON v.id=q.course_version_id')
+                ->innerJoin('#__jlms_courses AS c ON c.id=v.course_id')
             ->where("l.kind = 'quiz' AND v.status = 'published'")
                 ->where('c.id = :course')->where('q.lesson_id = :lesson')
             ->bind(':course', $course, ParameterType::INTEGER)->bind(':lesson', $lesson, ParameterType::INTEGER);
@@ -43,7 +44,8 @@ final class QuizTimeService
                 ->bind(':id', $enrollment, ParameterType::INTEGER)
                     ->bind(':course', $course, ParameterType::INTEGER)
                     ->bind(':version', $version, ParameterType::INTEGER);
-            $e = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            $e = $this->db->setQuery($q)->loadObject() ?
+                : throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         return [$actor,$quiz,$e];
     }

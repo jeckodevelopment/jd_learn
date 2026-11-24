@@ -246,7 +246,8 @@ deadlineExpect(
 $raw = $db->setQuery('SELECT rules_snapshot_json FROM #__jlms_attempts WHERE id=' . $attempt)->loadResult();
 deadlineExpect($raw === $original->rules_snapshot_json, 'frozen rules remain byte-for-byte unchanged');
 $compact = $runtime->state($u, 'en-GB', $enrollment, $lesson, $attempt, true);
-deadlineExpect($compact['questions'] === [] && $compact['attempt']['deadline'] === $r['attempt']['deadline'], 'compact synchronization carries the current deadline without question ' .
+deadlineExpect($compact['questions'] === [] && $compact['attempt']['deadline'] ===
+     $r['attempt']['deadline'], 'compact synchronization carries the current deadline without question ' .
     'bodies');
 $answers = [];
 foreach ($a['questions'] as $q) {
@@ -509,5 +510,6 @@ file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $les
     'sha256',
     json_encode($raw, JSON_THROW_ON_ERROR)
 ),
- 'http_enrollment' => $httpEnrollment,'http_lesson' => $f['practice_id'],'http_attempt' => $httpA['attempt']['id']], JSON_THROW_ON_ERROR));
+ 'http_enrollment' => $httpEnrollment,'http_lesson' => $f['practice_id'],'http_attempt' =>
+      $httpA['attempt']['id']], JSON_THROW_ON_ERROR));
 echo json_encode(['quiz_deadline_checks' => $checks,'status' => 'passed']) . PHP_EOL;

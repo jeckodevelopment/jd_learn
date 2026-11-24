@@ -185,7 +185,8 @@ $rules['core.edit'][(string)$group] = false;
 $rules['core.edit.own'][(string)$group] = false;
 $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
 $asset->store();
-$change = (object)['id' => $courses['locked'],'checked_out' => (int)$user->id,'checked_out_time' => gmdate('Y-m-d H:i:s')];
+$change = (object)['id' => $courses['locked'],'checked_out' => (int)$user->id,'checked_out_time' =>
+     gmdate('Y-m-d H:i:s')];
 $db->updateObject('#__jlms_courses', $change, 'id');
 $list = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
 $list->setCurrentUser($user);
@@ -274,7 +275,8 @@ editorExpect(
     'Alias can be reused in another category'
 );
 $legacy = str_repeat('è', 501) . "\nLegacy";
-$legacyRecord = (object) ['id' => $validationId, 'presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => $legacy];
+$legacyRecord = (object) ['id' => $validationId, 'presentation_description' =>
+     '<p>Course presentation for the publication fixture.</p>', 'summary' => $legacy];
 $db->updateObject('#__jlms_courses', $legacyRecord, 'id');
 $validation['summary'] = str_replace("\n", "\r\n", $legacy);
 editorExpect(

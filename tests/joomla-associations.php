@@ -203,7 +203,8 @@ $baseline = assocRows();
 $titleChange = assocData($en);
 $titleChange['title'] = 'Changed with graph';
 assocExpect(
-    !assocSave($titleChange + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline && assocData($en)['title'] !== 'Changed with graph',
+    !assocSave($titleChange + ['associations' => ['it-IT' => $otherIt]]) && assocRows() === $baseline &&
+         assocData($en)['title'] !== 'Changed with graph',
     'metadata and translation changes must not enter native implicit asset commit'
 );
 foreach ([['it-IT' => $otherEn], ['en-GB' => $otherEn], ['not-a-language' => $it], ['it-IT' => -1], ['it-IT' => '1 OR 1=1'], ['it-IT' => 999999999], ['it-IT' => $en]] as $invalid) {
@@ -256,7 +257,8 @@ try {
 // Deny the target asset even when the actor can edit the source course.
 $restricted = new \Joomla\CMS\User\User();
 $userData = ['name' => 'Association editor', 'username' => 'association-editor', 'email' => 'association-editor@example.invalid',
-    'password' => 'Ci-only-Association-Password-2026','password2' => 'Ci-only-Association-Password-2026','groups' => [2,6],'block' => 0,'activation' => ''];
+    'password' => 'Ci-only-Association-Password-2026','password2' => 'Ci-only-Association-Password-2026'
+        ,'groups' => [2,6],'block' => 0,'activation' => ''];
 if (!$restricted->bind($userData) || !$restricted->save()) {
     throw new \RuntimeException('Editor fixture failed');
 }

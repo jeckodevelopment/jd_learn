@@ -104,7 +104,8 @@ final class QuizReviewService
                     throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
                 }
                 if (!$best || (int)$row->score_points * $best['max_points'] >= $best['score_points'] * (int)$row->max_points) {
-                    $best = ['_schema' => 1,'kind' => 'quiz','best_attempt_id' => (int)$row->id,'score_points' => (int)$row->score_points,'max_points' => (int)$row->max_points];
+                    $best = ['_schema' => 1,'kind' => 'quiz','best_attempt_id' => (int)$row->id,
+                        'score_points' => (int)$row->score_points,'max_points' => (int)$row->max_points];
                 }
                 if ((int)$row->passed || $rules['assessment'] === 'practice') {
                     $completedAt = $completedAt === null ? ($row->submitted_at) : min($completedAt, $row->submitted_at);
@@ -134,7 +135,8 @@ final class QuizReviewService
         $beforeBest = $p ? json_decode($p->coverage_json, true, 16, JSON_THROW_ON_ERROR) : null;
         $impact = ['attempt_id' => (int)$a->id,'enrollment_revision' => (int)$e->revision,'attempt_revision' => (int)$a->revision,'return_attempt' => $refund,
             'before_status' => $a->status,'after_status' => 'invalidated','before_counted' => (int)$a->counted_for_limit,'after_counted' => $refund ? 0 : 1,
-            'before_best' => $beforeBest ?: null,'after_best' => $best,'before_lesson_completed' => $p?->state === 'completed','after_lesson_completed' => $completedAt !== null,
+            'before_best' => $beforeBest ?: null,'after_best' => $best,'before_lesson_completed' => $p?->
+                state === 'completed','after_lesson_completed' => $completedAt !== null,
             'before_lesson_completed_at' => $p?->completed_at,'after_lesson_completed_at' => $completedAt
                 ,'before_completed_total' => (int)$e->completed_total,'after_completed_total' => $total,
             'before_course_completed_at' => $e->completed_at,'after_course_completed_at' => $courseAt,'used_after' => $used,'last_number' => $last,
@@ -254,7 +256,8 @@ final class QuizReviewService
             } elseif ($impact['after_best'] !== null) {
                 $row = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$e->course_version_id
                     ,'lesson_id' => $lesson,'source_revision' => (int)$l->source_revision,
-                    'coverage_json' => $coverage,'state' => $completed === null ? 'started' : 'completed','completed_at' => $completed,'last_activity_at' => $now,'revision' => 1];
+                    'coverage_json' => $coverage,'state' => $completed === null ? 'started' : 'completed'
+                        ,'completed_at' => $completed,'last_activity_at' => $now,'revision' => 1];
                 $this->db->insertObject('#__jlms_lesson_progress', $row);
             }
             $update = (object)['id' => $enrollment,'completed_total' => $impact['after_completed_total'],'completed_at' => $impact['after_course_completed_at'],

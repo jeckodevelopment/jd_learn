@@ -46,7 +46,9 @@ final class AttachmentController extends BaseController
                 ->current_version_id, $attachmentId);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
-            $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
+            $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND'
+                , 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED'
+                , 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
@@ -82,7 +84,9 @@ final class AttachmentController extends BaseController
                 ->current_version_id, $ids[1], $ids[2]);
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
-            $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND', 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
+            $known = ['COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT', 'JERROR_LAYOUT_PAGE_NOT_FOUND'
+                , 'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED'
+                , 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }
@@ -139,8 +143,10 @@ final class AttachmentController extends BaseController
             );
             MaterialDownload::send($this->app, $file);
         } catch (\Throwable $error) {
-            $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW', 'COM_JLMS_RESOURCE_NOT_FOUND',
-                'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED', 'COM_JLMS_RANGE_INVALID'];
+            $known = ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_LEARNING_WINDOW'
+                , 'COM_JLMS_RESOURCE_NOT_FOUND',
+                'COM_JLMS_STORAGE_UNAVAILABLE', 'COM_JLMS_MATERIAL_NOT_READY', 'COM_JLMS_DELIVERY_DISABLED'
+                    , 'COM_JLMS_RANGE_INVALID'];
             if (in_array($error->getMessage(), $known, true)) {
                 throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
             }

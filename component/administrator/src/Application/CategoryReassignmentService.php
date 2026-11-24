@@ -77,7 +77,8 @@ final class CategoryReassignmentService
                     $asset = $reference['extension'] . '.category.' . (int) $target->id;
                     return (empty($target->checked_out) || (int) $target->checked_out === (int) $actor->id)
                         && ($actor->authorise('core.edit', $asset)
-                            || ((int) $target->created_user_id === (int) $actor->id && $actor->authorise('core.edit.own', $asset)));
+                            || ((int) $target->created_user_id === (int) $actor->id && $actor
+                            ->authorise('core.edit.own', $asset)));
                 },
             ));
         }
@@ -97,7 +98,8 @@ final class CategoryReassignmentService
             if ($count === 0) {
                 continue;
             }
-            $destinationId = filter_var($destinations[$key] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 2]]);
+            $destinationId = filter_var($destinations[$key] ?? null, FILTER_VALIDATE_INT, ['options' =>
+                 ['min_range' => 2]]);
             if (!$destinationId || $destinationId === $categoryId) {
                 throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_TARGET_REQUIRED');
             }

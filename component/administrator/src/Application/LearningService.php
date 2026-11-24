@@ -631,7 +631,8 @@ final class LearningService
                 ->release_after_days, $enrollment->started_at);
             $entry->schedule_blocked = $entry->schedule_state !== 'available';
             $entry->schedule_available_at = $entry->schedule_state === 'upcoming'
-                ? LessonAvailability::displayEffectiveStart($entry->publish_up, $entry->release_after_days, $enrollment->started_at, $timezone) : '';
+                ? LessonAvailability::displayEffectiveStart($entry->publish_up, $entry->
+                    release_after_days, $enrollment->started_at, $timezone) : '';
             $entry->schedule_after_days = $entry->schedule_state === 'awaiting_start' ? (int) $entry->release_after_days : 0;
         }
         $lessonId = $lessonId ?: (int) ($enrollment->last_lesson_id ?: $outline[0]->id);
@@ -653,12 +654,14 @@ final class LearningService
                 continue;
             }
             $customFields[] = ['name' => (string) $name, 'label' => (string) ($field['label'] ?? $name),
-                'values' => array_values(array_filter($field['values'] ?? [], static fn($value): bool => is_string($value) || is_numeric($value)))];
+                'values' => array_values(array_filter($field['values'] ?? [], static fn($value): bool =>
+                     is_string($value) || is_numeric($value)))];
         }
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
         $progressApplicable = $rules['mode'] === 'learning' && (int) $enrollment->required_total > 0;
         $percent = $progressApplicable
-            ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment->completed_total / (int) $enrollment->required_total)) : null;
+            ? min($enrollment->completed_at ? 100 : 99, (int) floor(100 * (int) $enrollment
+                ->completed_total / (int) $enrollment->required_total)) : null;
         if (!$blocker && !$scheduleBlocked && $lesson->kind === 'audio') {
             $resumeQuery = $this->db->createQuery()->select('resume_ms')->from('#__jlms_lesson_progress')
                 ->where('enrollment_id = :resumeEnrollment')->where('lesson_id = :resumeLesson')

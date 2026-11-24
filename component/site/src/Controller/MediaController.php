@@ -36,7 +36,8 @@ final class MediaController extends BaseController
                         throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                     }
                 }
-                $file = $this->app->bootComponent('com_jlms')->getLocalVideoService()->previewDelivery($this->app->getIdentity(), ...$ids);
+                $file = $this->app->bootComponent('com_jlms')->getLocalVideoService()->previewDelivery($this
+                    ->app->getIdentity(), ...$ids);
                 if ($file['mode'] === 'php_bounded') {
                     MaterialDownload::send($this->app, $file);
                     return;
@@ -51,7 +52,8 @@ final class MediaController extends BaseController
                     throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
                 }
             }
-            $file = $this->app->bootComponent('com_jlms')->getLocalVideoService()->delivery($this->app->getIdentity(), $this->app->getLanguage()->getTag(), ...$ids);
+            $file = $this->app->bootComponent('com_jlms')->getLocalVideoService()->delivery($this->app
+                ->getIdentity(), $this->app->getLanguage()->getTag(), ...$ids);
             if ($file['mode'] === 'php_bounded') {
                 MaterialDownload::send($this->app, $file);
                 return;

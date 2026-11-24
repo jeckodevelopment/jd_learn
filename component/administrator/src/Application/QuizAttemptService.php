@@ -227,7 +227,8 @@ final class QuizAttemptService
             $rules['lesson_required'] = (int)$l->required;
             $rules['source_revision'] = (int)$l->source_revision;
             $max = array_sum(array_map(static fn($row): int=>(int)$row->points, $pool));
-            $a = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$l->course_version_id,'quiz_id' => $quizId,'attempt_no' => $history['last_no'] + 1,
+            $a = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$l->course_version_id
+                ,'quiz_id' => $quizId,'attempt_no' => $history['last_no'] + 1,
                 'status' => 'open','score_points' => null,'passed' => null,'submitted_at' => null
                     ,'rules_snapshot_json' => QuestionDefinition::canonical($rules),'max_points' => $max
                     ,'started_at' => self::date($now),
@@ -251,7 +252,8 @@ final class QuizAttemptService
             }
             $slot = (object)['enrollment_id' => $enrollment,'quiz_id' => $quizId,'attempt_id' => (int)$a->id];
             $this->db->insertObject('#__jlms_active_attempts', $slot);
-            $touch = (object)['id' => $enrollment,'started_at' => $e->started_at ?: self::date($now),'last_activity_at' => self::date($now),'last_lesson_id' => $lesson,
+            $touch = (object)['id' => $enrollment,'started_at' => $e->started_at ?: self::date($now)
+                ,'last_activity_at' => self::date($now),'last_lesson_id' => $lesson,
                 'revision' => (int)$e->revision + 1,'modified_at' => self::date($now),'modified_by' => (int)$actor->id];
             $this->db->updateObject('#__jlms_enrollments', $touch, 'id');
             $this->startLedger((int)$actor->id, $key, $enrollment, $lesson, (int)$a->id);
@@ -490,7 +492,8 @@ final class QuizAttemptService
         }
         $wasCompleted = $progress && $progress->state === 'completed';
         $completed = $wasCompleted || $passed || $rules['assessment'] === 'practice';
-        $fields = ['coverage_json' => QuestionDefinition::canonical($best),'state' => $completed ? 'completed' : 'started','last_activity_at' => self::date($time),
+        $fields = ['coverage_json' => QuestionDefinition::canonical($best),'state' => $completed ?
+             'completed' : 'started','last_activity_at' => self::date($time),
             'completed_at' => $progress?->completed_at ?: ($completed ? self::date($time) : null),'revision' => $progress ? (int)$progress->revision + 1 : 1];
         if ($progress) {
             $q = $this->db->createQuery()

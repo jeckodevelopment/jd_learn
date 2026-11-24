@@ -27,7 +27,10 @@ final class DisplayController extends BaseController
     private function setNavigationContext(string $view): void
     {
         $groups = [
-            'courses' => ['courses', 'course', 'curriculum', 'publicationreview', 'coursepreview', 'courseannouncement', 'materials', 'enrollments', 'enrollmentstate', 'enrollmentmigration', 'courseoperations', 'manualenrollment', 'coursemessage', 'quiz', 'quiztime', 'quizreview', 'quizextend'],
+            'courses' => ['courses', 'course', 'curriculum', 'publicationreview', 'coursepreview'
+                , 'courseannouncement', 'materials', 'enrollments', 'enrollmentstate', 'enrollmentmigration'
+                , 'courseoperations', 'manualenrollment', 'coursemessage', 'quiz', 'quiztime', 'quizreview'
+                , 'quizextend'],
             'pathways' => ['pathways', 'pathway'],
             'teachers' => ['teachers', 'teacher'],
             'questionbank' => ['questionbank', 'question'],

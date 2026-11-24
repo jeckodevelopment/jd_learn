@@ -174,7 +174,8 @@ final class QuestionBankService
             ->from('#__jlms_question_revisions')
             ->where('id = :id')->where('question_id = :question')
             ->bind(':id', $revision, ParameterType::INTEGER)->bind(':question', $id, ParameterType::INTEGER);
-        $content = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $content = $this->db->setQuery($q)->loadObject() ?
+            : throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $options = json_decode($content->options_json, true, 16, JSON_THROW_ON_ERROR)['items'];
         $grading = json_decode($content->grading_json, true, 16, JSON_THROW_ON_ERROR);
         $rows = [];
@@ -187,7 +188,8 @@ final class QuestionBankService
         }
         return ['id' => $id, 'revision' => (int) $question->revision, 'catid' => (int) $question->catid
             , 'language' => $question->language,
-            'state' => (int) $question->state, 'kind' => $content->kind, 'prompt' => $content->prompt, 'options' => $rows,
+            'state' => (int) $question->state, 'kind' => $content->kind, 'prompt' => $content->prompt
+                , 'options' => $rows,
             'explanation' => json_decode($content->feedback_json, true, 16, JSON_THROW_ON_ERROR)['explanation']
                 , 'default_points' => $grading['default_points'],
             'checked_out' => (int) $question->checked_out];

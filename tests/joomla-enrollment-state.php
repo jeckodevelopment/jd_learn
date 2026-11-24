@@ -130,7 +130,8 @@ $seedPlayerSession = static function (int $enrollmentId, int $lessonId) use ($db
     $db->insertObject('#__jlms_progress_sessions', $row);
     return $sessionId;
 };
-$playerSessionExists = static fn(string $id): bool=>(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE id=' . $db->quote($id))->loadResult() === 1;
+$playerSessionExists = static fn(string $id): bool=>(int)$db
+    ->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE id=' . $db->quote($id))->loadResult() === 1;
 
 $stable = static fn(int $id)=>$db->setQuery('SELECT user_id,subject_key,course_id,course_version_id,edition_id,required_total,completed_total,started_at,completed_at,last_activity_at,last_lesson_id,starts_at,ends_at FROM #__jlms_enrollments WHERE id=' . $id)->loadAssoc();
 if (($argv[2] ?? '') === 'retained') {
@@ -525,7 +526,8 @@ try {
         'request grants no learning access'
     );
     stateExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.requested:' . $requestId) . "'")->loadResult() === 1,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" .
+             hash('sha256', 'enrollment.requested:' . $requestId) . "'")->loadResult() === 1,
         'request notifies once'
     );
     stateDenied(
@@ -584,7 +586,8 @@ try {
     $enrollmentApproved = $approval->decide($actor, $course, $requestId, 1, 'approved', 'CI-only approval reason');
     stateExpect($enrollmentApproved > 0, 'approved request creates enrollment');
     stateExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=" . $enrollmentApproved . " AND status='active' AND origin='approval'")->loadResult() === 1,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=" . $enrollmentApproved .
+             " AND status='active' AND origin='approval'")->loadResult() === 1,
         'approved admission active exactly once'
     );
     stateExpect(
@@ -623,7 +626,8 @@ try {
         'rejection audit state saved'
     );
     stateExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" . hash('sha256', 'enrollment.decision:' . $rejectRequestId) . "'")->loadResult() === 1,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key='" .
+             hash('sha256', 'enrollment.decision:' . $rejectRequestId) . "'")->loadResult() === 1,
         'single rejection email queued'
     );
     // The approval fixture is not part of the pre-existing roster retention baseline.
