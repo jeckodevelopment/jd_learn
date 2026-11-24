@@ -1,0 +1,22 @@
+name: SECDEV-02 PSR1 rejected candidate analysis
+on:
+  push:
+    branches: [style/secdev02-914-structural-closure]
+permissions:
+  contents: read
+jobs:
+  examine:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Install pinned PHPCS 4.0.4
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Diagnose rejected test fixture extractions
+        run: |
+          set -euo pipefail
+          python3 tools/secdev02_psr1_helper_extraction.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs" --phpcbf "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcbf"
