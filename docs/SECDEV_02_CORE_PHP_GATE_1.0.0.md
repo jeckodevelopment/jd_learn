@@ -386,3 +386,12 @@ The bounded lexical whitespace pass reduced the pinned PHPCS PSR12 4.0.4 invento
 
 - Exact PHP syntax and tokens, no changed string literals, business logic, ACL, CSRF, SQL or runtime API contracts.
 - Full Joomla 6.2 CI matrix, browser fixtures and package build.
+
+## SECDEV-02 mass statement reflow, PR #1018 (24 November 2026)
+
+Measured using pinned PHPCS 4.0.4 PSR12 on every tracked PHP file: **867 → 858** (net **-9** violations) across **4 PHP files**. Long PHP function signatures and mixed HTML block/attribute layout were reflowed, preserving PHP tokens and literal HTML attribute values; source contracts, lint and PHPCS per-file/per-rule nonregression were enforced. Any incompatible candidate was rolled back. No PHPCS rule relaxed. Full CI and Joomla integration remain required. **SECDEV-02 is not closed while findings and separate CORE/API criteria remain. The functional coverage percentage is unchanged; manual Joomla acceptance remains pending.**
+
+### Comportamenti da testare
+
+- Joomla backend/frontend including curriculum, course publication, classroom, email, certificates, ACL and media.
+- PHP lint, source contract tests, SAST, PHPCS PSR-12 full scan, package build, Chromium, PHP 8.3/MySQL 8.4 and PHP 8.4/MariaDB 10.6.

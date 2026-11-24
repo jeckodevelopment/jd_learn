@@ -135,7 +135,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
               ->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_NOTE') ?></label>
           <textarea class="form-control mb-2" id="jlms-mail-queue-sent-note-<?= (int) $row
               ->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
-          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-sent-confirm-<?=
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+            id="jlms-mail-queue-sent-confirm-<?=
                (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-sent-confirm-<?=
                (int) $row->id ?>"><?=
                Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_SENT_CONFIRM') ?></label></div>
@@ -150,7 +151,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
               ->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_NOTE') ?></label>
           <textarea class="form-control mb-2" id="jlms-mail-queue-retry-note-<?= (int) $row
               ->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
-          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-retry-confirm-<?=
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+            id="jlms-mail-queue-retry-confirm-<?=
                (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-retry-confirm-<?=
                (int) $row->id ?>"><?=
                Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
@@ -177,7 +179,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
               ->id ?>"><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_NOTE') ?></label>
           <textarea class="form-control mb-2" id="jlms-mail-queue-template-note-<?= (int) $row
               ->id ?>" name="jform[note]" minlength="10" maxlength="1000" required></textarea>
-          <div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="jlms-mail-queue-template-confirm-<?=
+          <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+            id="jlms-mail-queue-template-confirm-<?=
                (int) $row->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-template-confirm-<?=
                (int) $row->id ?>"><?=
                Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
