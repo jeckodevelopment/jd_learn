@@ -24,7 +24,7 @@ jobs:
           npm install --prefix .runtime/secdev02-prettier --no-save --ignore-scripts --no-audit --no-fund --package-lock=false prettier@3.6.0 @prettier/plugin-php@0.26.0
       - name: Apply AST-equivalent structural formatting to all eligible PHP
         run: |
-          echo 'AST source-contract protected rerun'
+          echo 'AST source-contract protected rerun on non-view PHP'
           python3 tools/secdev02_ast_prettier_bulk.py --self-test
           python3 tools/secdev02_ast_prettier_bulk.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --parser-dir .runtime/secdev02-ast --prettier .runtime/secdev02-prettier/node_modules/.bin/prettier
           git diff --check
