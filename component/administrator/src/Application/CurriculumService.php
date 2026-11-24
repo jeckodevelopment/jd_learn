@@ -394,7 +394,8 @@ final class CurriculumService
             }
             $rules['public_previews'] = (string) $publicPreviews === '1';
             if (array_key_exists('video_threshold', $input)) {
-                $rules['video_threshold_basis_points'] = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold']);
+                $rules['video_threshold_basis_points'] =
+                    \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold']);
             }
             $this->update('course_versions', $record, ['rules_json' => json_encode($rules, JSON_THROW_ON_ERROR)], $actor);
         });
@@ -536,7 +537,9 @@ final class CurriculumService
         ) {
             throw new \DomainException('COM_JLMS_SOURCE_INVALID');
         }
-        $source = ($this->registryFactory)()->get($provider)->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]));
+        $source = ($this->registryFactory)()->get($provider)->
+            normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ?
+             [] : ['privacy_hash' => $input['privacy_hash']]));
         return hash('sha256', json_encode([
             (int)$actor->id,
             (int)$course->id,
@@ -566,7 +569,8 @@ final class CurriculumService
         $source = $provider->normaliseSource(new SourceInput($input['source_reference'], empty($input['privacy_hash']) ? [] : ['privacy_hash' => $input['privacy_hash']]));
         $duration = null;
         if ($key === 'cloudflarestream') {
-            $metadata = $provider->fetchMetadata($source, new \Jlms\Contracts\Video\MetadataContext((int)$actor->id, \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag(), true));
+            $metadata = $provider->fetchMetadata($source, new \Jlms\Contracts\Video\MetadataContext((int)$actor
+                ->id, \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag(), true));
             $duration = $metadata->durationMs;
             if (!\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($duration)) {
                 throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
@@ -576,7 +580,8 @@ final class CurriculumService
             throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         return ['fingerprint' => $fingerprint,'duration_ms' => $duration,'origin' => $duration === null ? 'author_sdk' : 'provider_api',
-            'provider' => $key,'options' => ['reference' => $source->reference,'locale' => \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag()] + $source->options];
+            'provider' => $key,'options' => ['reference' => $source->reference,'locale' =>
+                 \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag()] + $source->options];
     }
 
     public function saveLesson(User $actor, array $input, ?array $durationProof = null): int

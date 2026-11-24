@@ -158,11 +158,13 @@ final class ManualEnrollmentService
         if ($total < 1 && $rules['mode'] !== 'consultation') {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
         }
-        $p = ['course_id' => $courseId, 'user_id' => $userId, 'language' => $language, 'version_id' => $versionId, 'version_revision' => (int) $version->revision,
+        $p = ['course_id' => $courseId, 'user_id' => $userId, 'language' => $language, 'version_id' =>
+             $versionId, 'version_revision' => (int) $version->revision,
             'edition_id' => $editionId, 'edition_revision' => (int) $edition->revision, 'starts_at' => $edition->starts_at, 'ends_at' => $edition->ends_at,
             'capacity' => $edition->capacity === null ? null : (int) $edition->capacity, 'used' => $used, 'required_total' => $total,
             'existing_id' => $existing ? (int) $existing->id : null, 'existing_status' => $existing->status ?? null,
-            'blocked' => $existing ? 'COM_JLMS_MANUAL_EXISTS' : ($edition->capacity !== null && $used >= (int) $edition->capacity ? 'COM_JLMS_EDITION_FULL' : null)];
+            'blocked' => $existing ? 'COM_JLMS_MANUAL_EXISTS' : ($edition->capacity !== null &&
+                 $used >= (int) $edition->capacity ? 'COM_JLMS_EDITION_FULL' : null)];
         $hashPlan = $p;
         if ($preassignment) {
             $hashPlan['preassignment'] = ['requested' => true, 'has_current_access' => $hasAccess];
@@ -277,7 +279,8 @@ final class ManualEnrollmentService
                 ->bind(':user', $user, ParameterType::INTEGER);
             $q->setQuery((string) $q . ' FOR UPDATE');
             $subject = (string) $this->db->setQuery($q)->loadResult();
-            $record = (object) ['user_id' => $user, 'subject_key' => $subject, 'course_id' => $course, 'course_version_id' => $p['version_id'], 'edition_id' => $edition,
+            $record = (object) ['user_id' => $user, 'subject_key' => $subject, 'course_id' => $course
+                , 'course_version_id' => $p['version_id'], 'edition_id' => $edition,
                 'status' => 'active', 'origin' => 'manual', 'required_total' => $p['required_total'], 'completed_total' => 0, 'revision' => 1,
                 'created_by' => $actorId, 'modified_by' => $actorId, 'created_at' => $now, 'modified_at' => $now];
             $this->db->insertObject('#__jlms_enrollments', $record, 'id');
@@ -289,7 +292,9 @@ final class ManualEnrollmentService
             ];
             $this->db->updateObject('#__jlms_manual_enrollments', $update, 'id');
             ($this->audit)($actor, ['id' => (int) $receipt->id, 'actor_id' => $actorId, 'enrollment_id' => $id, 'reason_reference' => (int) $receipt->id,
-                'reason_code' => 'manual_enrollment_created', 'preassignment_requested' => $preassignment, 'access_at_assignment' => $p['has_current_access'], 'correlation_id' => bin2hex(random_bytes(16))]);
+                'reason_code' => 'manual_enrollment_created', 'preassignment_requested' =>
+                     $preassignment, 'access_at_assignment' => $p['has_current_access'],
+                     'correlation_id' => bin2hex(random_bytes(16))]);
             // A preassignment does not grant course access, so it must not look like a confirmed admission.
             if (!$preassignment || $p['has_current_access']) {
                 (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($this->db))->enqueue(

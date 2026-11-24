@@ -152,7 +152,8 @@ final class CertificateService
             if ($rules['mode'] !== 'learning' || $rules['certificate_enabled'] !== false) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
-            $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('certificate_enabled', 0);
+            $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+                ->get('certificate_enabled', 0);
             if (!CertificatePreferences::enabled($globalEnabled, (string) $row->params_json)) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
@@ -380,7 +381,8 @@ final class CertificateService
                 return;
             }
             $now = gmdate('Y-m-d H:i:s');
-            $asset = (object) ($staged + ['asset_revision' => 1, 'status' => 'ready', 'scan_json' => '{"engine":"generated","result":"trusted"}',
+            $asset = (object) ($staged + ['asset_revision' => 1, 'status' => 'ready', 'scan_json' =>
+                 '{"engine":"generated","result":"trusted"}',
                 'created_by' => $userId, 'modified_by' => $userId, 'created_at' => $now, 'modified_at' => $now]);
             $this->db->insertObject('#__jlms_assets', $asset, 'id');
             $update = (object) ['id' => (int) $record->document_id, 'status' => 'ready', 'pdf_asset_id' => (int) $asset->id,
@@ -497,7 +499,8 @@ final class CertificateService
                 'issued_at' => (string) $row->issued_at, 'student_name' => (string) ($snapshot['name'] ?? ''),
                 'course_title' => (string) ($snapshot['course_title'] ?? '')];
         }
-        $this->recordCertificateAudit(null, null, (int) $identity->id, 'admin_list', ['result_count' => count($items), 'status' => $status]);
+        $this->recordCertificateAudit(null, null, (int) $identity->id, 'admin_list', ['result_count' =>
+             count($items), 'status' => $status]);
         return ['items' => $items, 'total' => $total, 'limit' => $limit, 'offset' => $offset,
             'filters' => ['q' => $search, 'status' => $status]];
     }
@@ -518,7 +521,8 @@ final class CertificateService
         if (!is_array($identitySnapshot) || !is_array($templateSnapshot)) {
             throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 503);
         }
-        $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity->id, 'admin_view');
+        $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity
+            ->id, 'admin_view');
         $certificateId = (int) $record->certificate_id;
         $auditQuery = $this->db->createQuery()->select('action, actor_user_id, created_at')
             ->from('#__jlms_certificate_audit')->where('certificate_id = :certificate')
@@ -527,9 +531,12 @@ final class CertificateService
         return ['id' => (int) $record->certificate_id, 'document_id' => (int) $record->document_id,
             'serial' => (string) $record->serial, 'status' => $record->revoked_at ? 'revoked' : (string) $record->status,
             'issued_at' => (string) $record->issued_at, 'revoked_at' => (string) ($record->revoked_at ?? ''),
-            'revocation_reason' => (string) ($record->revocation_reason ?? ''), 'student_name' => (string) ($identitySnapshot['name'] ?? ''),
-            'course_title' => (string) ($identitySnapshot['course_title'] ?? ''), 'completed_at' => (string) ($identitySnapshot['completed_at'] ?? ''),
-            'course_version_id' => (int) ($identitySnapshot['course_version_id'] ?? 0), 'revision' => (int) $record->revision, 'template' => $templateSnapshot,
+            'revocation_reason' => (string) ($record->revocation_reason ?? ''), 'student_name' =>
+                 (string) ($identitySnapshot['name'] ?? ''),
+            'course_title' => (string) ($identitySnapshot['course_title'] ?? ''), 'completed_at' =>
+                 (string) ($identitySnapshot['completed_at'] ?? ''),
+            'course_version_id' => (int) ($identitySnapshot['course_version_id'] ?? 0), 'revision' =>
+                 (int) $record->revision, 'template' => $templateSnapshot,
             'audit' => $audit];
     }
 
@@ -559,7 +566,8 @@ final class CertificateService
             throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
         }
         $handle = $this->storage->open($asset);
-        $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity->id, 'admin_download');
+        $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity
+            ->id, 'admin_download');
         return ['handle' => $handle, 'size' => (int) $asset->byte_size, 'mime' => 'application/pdf',
             'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset->sha256 . '"'];
     }
@@ -702,7 +710,8 @@ final class CertificateService
     private function recordCertificateAudit(?int $certificateId, ?int $documentId, int $actorId, string $action, array $context = []): void
     {
         $row = (object) ['certificate_id' => $certificateId, 'document_id' => $documentId, 'actor_user_id' => $actorId,
-            'action' => $action, 'context_json' => json_encode($context, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE), 'created_at' => gmdate('Y-m-d H:i:s')];
+            'action' => $action, 'context_json' => json_encode($context, JSON_THROW_ON_ERROR |
+                JSON_UNESCAPED_UNICODE), 'created_at' => gmdate('Y-m-d H:i:s')];
         try {
             $this->db->insertObject('#__jlms_certificate_audit', $row, 'id');
         } catch (\Throwable $error) {

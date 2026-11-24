@@ -410,7 +410,9 @@ final class LearningService
                     (string) ($actor->getParam('language', '') ?: $current->language),
                     (string) $actor->email,
                     $name,
-                    ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title, 'ENROLLMENT_DATE' => $now, 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
+                    ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title,
+                         'ENROLLMENT_DATE' => $now, 'SITE_NAME' =>
+                         (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
                         'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id],
                     (int) $actor->id
                 );
@@ -625,7 +627,8 @@ final class LearningService
             $entry->prerequisite_blocked = $blocker !== null;
             $entry->blocked_by_id = $blocker ? (int) $blocker->required_id : 0;
             $entry->blocked_by_title = $blocker ? (string) $blocker->required_title : '';
-            $entry->schedule_state = LessonAvailability::state($entry->publish_up, $entry->publish_down, $entry->release_after_days, $enrollment->started_at);
+            $entry->schedule_state = LessonAvailability::state($entry->publish_up, $entry->publish_down, $entry
+                ->release_after_days, $enrollment->started_at);
             $entry->schedule_blocked = $entry->schedule_state !== 'available';
             $entry->schedule_available_at = $entry->schedule_state === 'upcoming'
                 ? LessonAvailability::displayEffectiveStart($entry->publish_up, $entry->release_after_days, $enrollment->started_at, $timezone) : '';
@@ -702,14 +705,17 @@ final class LearningService
             'lesson' => (object) ['id' => (int) $lesson->id, 'title' => $lesson->title, 'kind' => $lesson->kind,
                 'prerequisite_blocked' => $blocker !== null, 'schedule_blocked' => $scheduleBlocked,
                 'schedule_state' => $selectedScheduleState,
-                'schedule_available_at' => $selectedScheduleState === 'upcoming' ? LessonAvailability::displayEffectiveStart($lesson->publish_up, $lesson->release_after_days, $enrollment->started_at, $timezone) : '',
+                'schedule_available_at' => $selectedScheduleState === 'upcoming' ?
+                     LessonAvailability::displayEffectiveStart($lesson->publish_up, $lesson->
+                    release_after_days, $enrollment->started_at, $timezone) : '',
                 'schedule_after_days' => $selectedScheduleState === 'awaiting_start' ? (int) $lesson->release_after_days : 0,
                 'blocked_by_id' => $blocker ? (int) $blocker->required_id : 0,
                 'blocked_by_title' => $blocker ? (string) $blocker->required_title : '',
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
                 'resume_ms' => (int) ($lesson->resume_ms ?? 0), 'audio_transcript' => $audioTranscript,
                 'video_transcript' => $videoTranscript,
-                'body' => EditorialLinkSafety::secure(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean((string) ($lesson->body ?? ''), 'HTML')),
+                'body' => EditorialLinkSafety::secure(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)
+                    ->clean((string) ($lesson->body ?? ''), 'HTML')),
                 'custom_fields' => $customFields],
             'outline' => $outline, 'percent' => $percent, 'progress_applicable' => $progressApplicable,
             'consultation_mode' => $rules['mode'] === 'consultation', 'completed_at' => $enrollment->completed_at];
@@ -818,7 +824,8 @@ final class LearningService
                 'started_at' => $enrollment->started_at ?: $now, 'completed_at' => $enrollment->completed_at,
                 'last_activity_at' => $now, 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
                 'modified_by' => (int) $actor->id, 'modified_at' => $now];
-            $newCourseCompletion = $enrollment->completed_at === null && $total >= (int) $enrollment->required_total && (int) $enrollment->required_total > 0;
+            $newCourseCompletion = $enrollment->completed_at === null && $total >= (int) $enrollment
+                ->required_total && (int) $enrollment->required_total > 0;
             if ($newCourseCompletion) {
                 $update->completed_at = $enrollment->completed_at ?: $now;
             }
@@ -846,7 +853,9 @@ final class LearningService
             (string) ($actor->getParam('language', '') ?: $language),
             (string) $actor->email,
             $name,
-            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'COMPLETION_DATE' => $completedAt, 'DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard', 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')],
+            ['USER_FULLNAME' => $name, 'COURSE_TITLE' => $course, 'COMPLETION_DATE' => $completedAt
+                , 'DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard'
+                , 'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')],
             (int) $actor->id
         );
     }

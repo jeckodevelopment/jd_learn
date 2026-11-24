@@ -50,7 +50,8 @@ final class EnrollmentmigrationController extends BaseController
                 }
             }
             $form = $this->getModel('Enrollmentmigration', 'Administrator', ['ignore_request' => true])->getForm();
-            $fields = array_intersect_key($raw, array_flip(['course_id','enrollment_id','source_revision','impact_hash','mutation_id','reason','confirmation']));
+            $fields = array_intersect_key($raw, array_flip(['course_id','enrollment_id','source_revision'
+                ,'impact_hash','mutation_id','reason','confirmation']));
             if (!$form->validate($form->filter($fields))) {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 422);
             }
@@ -68,7 +69,8 @@ final class EnrollmentmigrationController extends BaseController
                 true
             );
             $this->setMessage(Text::_('COM_JLMS_MIGRATION_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollments&id=' . $course, false));
+            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollments&id=' .
+                     $course, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = (int)$error->getCode();
@@ -78,16 +80,20 @@ final class EnrollmentmigrationController extends BaseController
             }
             if (
                 in_array($code, [400,401,403,404,409,413,422,503], true) && in_array($key, [
-                'COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED','COM_JLMS_RESOURCE_NOT_FOUND',
-                'COM_JLMS_MIGRATION_VERSION_INVALID','COM_JLMS_MIGRATION_TARGET_NOT_CURRENT','COM_JLMS_MIGRATION_SOURCE_INVALID',
+                'COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED'
+                    ,'COM_JLMS_RESOURCE_NOT_FOUND',
+                'COM_JLMS_MIGRATION_VERSION_INVALID','COM_JLMS_MIGRATION_TARGET_NOT_CURRENT'
+                    ,'COM_JLMS_MIGRATION_SOURCE_INVALID',
                 'COM_JLMS_MIGRATION_LIMIT','COM_JLMS_MIGRATION_MAPPING_INVALID','COM_JLMS_MIGRATION_MAPPING_CONFLICT',
                 'COM_JLMS_MIGRATION_TARGET_EXISTS','COM_JLMS_MIGRATION_OPEN_ATTEMPT','COM_JLMS_MIGRATION_CONFLICT',
-                'COM_JLMS_MIGRATION_EDITION_MISSING','COM_JLMS_MIGRATION_EDITION_UNAVAILABLE','COM_JLMS_MIGRATION_EDITION_FULL',
+                'COM_JLMS_MIGRATION_EDITION_MISSING','COM_JLMS_MIGRATION_EDITION_UNAVAILABLE'
+                    ,'COM_JLMS_MIGRATION_EDITION_FULL',
                 'COM_JLMS_COURSE_DELIVERY_SUSPENDED','COM_JLMS_MIGRATION_REASON','COM_JLMS_MIGRATION_AUDIT_FAILED'], true)
             ) {
                 throw new \RuntimeException(Text::_($key), $code);
             }
-            \Joomla\CMS\Log\Log::add('Enrollment migration failed; correlation=' . bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+            \Joomla\CMS\Log\Log::add('Enrollment migration failed; correlation=' .
+                 bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

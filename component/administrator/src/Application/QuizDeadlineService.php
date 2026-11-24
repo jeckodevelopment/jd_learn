@@ -71,8 +71,11 @@ final class QuizDeadlineService
                 throw new \RuntimeException('COM_JLMS_QUIZ_EXTEND_INCONSISTENT', 422);
             }
         }
-        $p = ['attempt_id' => (int)$a->id,'enrollment_revision' => (int)$e->revision,'attempt_revision' => (int)$a->revision,'extension_revision' => $last ? (int)$last->revision_no : 0,
-            'status' => $a->status,'original_seconds' => $original,'previous_deadline' => $old,'new_deadline' => $new,'added_seconds' => $minutes * 60,'effective_seconds' => $new === null ? 0 : $new - $started,
+        $p = ['attempt_id' => (int)$a->id,'enrollment_revision' => (int)$e->revision,
+            'attempt_revision' => (int)$a->revision,'extension_revision' => $last ? (int)$last->revision_no : 0,
+            'status' => $a->status,'original_seconds' => $original,'previous_deadline' => $old,
+                'new_deadline' => $new,'added_seconds' => $minutes * 60,'effective_seconds' => $new ===
+                 null ? 0 : $new - $started,
             'rules_hash' => $hash,'blocked' => $block];
         $p['hash'] = hash('sha256', QuestionDefinition::canonical($p));
         return $p;
@@ -153,7 +156,8 @@ final class QuizDeadlineService
             }
             $now = gmdate('Y-m-d H:i:s', ($this->clock)());
             $new = gmdate('Y-m-d H:i:s', $p['new_deadline']);
-            $record = (object)['attempt_id' => $attempt,'revision_no' => $p['extension_revision'] + 1,'previous_deadline' => $a->deadline_at,'new_deadline' => $new,'added_seconds' => $minutes * 60,
+            $record = (object)['attempt_id' => $attempt,'revision_no' => $p['extension_revision'] + 1
+                ,'previous_deadline' => $a->deadline_at,'new_deadline' => $new,'added_seconds' => $minutes * 60,
                 'rules_hash' => $p['rules_hash'],'reason' => $reason,'actor_user_id' => (int)$actor->id,'mutation_id' => $key,'request_hash' => $hash,'created_at' => $now];
             $this->db->insertObject('#__jlms_quiz_deadline_extensions', $record, 'id');
             $update = (object)['id' => $attempt,'deadline_at' => $new];
@@ -165,7 +169,9 @@ final class QuizDeadlineService
                 'modified_at' => $now
             ];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
-            ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,'attempt_id' => $attempt,'enrollment_id' => $enrollment,'previous_deadline' => $a->deadline_at,'new_deadline' => $new,
+            ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,
+                'attempt_id' => $attempt,'enrollment_id' => $enrollment,'previous_deadline' => $a->
+                deadline_at,'new_deadline' => $new,
                 'added_seconds' => $minutes * 60,'reason_reference' => (int)$record->id,'reason_code' => 'quiz_deadline_extended','correlation_id' => bin2hex(random_bytes(16))]);
             $this->db->transactionCommit();
             return(int)$record->id;

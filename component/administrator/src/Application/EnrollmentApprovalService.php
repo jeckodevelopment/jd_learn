@@ -97,7 +97,8 @@ final class EnrollmentApprovalService
             if ($decision === 'approved') {
                 if (
                     $course->enrollment_mode !== 'approval' || (int) $course->state !== 1
-                    || (int) $course->admissions_open !== 1 || (int) $course->current_version_id !== (int) $edition->course_version_id
+                    || (int) $course->admissions_open !== 1 || (int) $course->current_version_id !==
+                         (int) $edition->course_version_id
                     || $edition->status !== 'open'
                 ) {
                     throw new \RuntimeException('COM_JLMS_ENROLLMENT_APPROVAL_CONFLICT', 409);
@@ -109,7 +110,8 @@ final class EnrollmentApprovalService
                 ) {
                     throw new \RuntimeException('COM_JLMS_LEARNING_WINDOW', 403);
                 }
-                $lang = (string) $course->language === '*' ? (string) (\Joomla\CMS\Factory::getApplication()->getLanguage()->getTag()) : (string) $course->language;
+                $lang = (string) $course->language === '*' ? (string) (\Joomla\CMS\Factory::getApplication()
+                    ->getLanguage()->getTag()) : (string) $course->language;
                 // Publication, category hierarchy and Joomla access levels are rechecked for the learner.
                 $visible = $this->catalog->course($learner, $lang, $courseId);
                 if (!in_array((int) $visible->content_access, array_map('intval', $learner->getAuthorisedViewLevels()), true)) {
@@ -144,7 +146,8 @@ final class EnrollmentApprovalService
                 if ($total < 1 && $rules['mode'] !== 'consultation') {
                     throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);
                 }
-                $this->learning->assertEnrollmentScheduleReachable($courseId, (int) $edition->course_version_id, $editionId, $edition->starts_at, $edition->ends_at);
+                $this->learning->assertEnrollmentScheduleReachable($courseId, (int) $edition->
+                    course_version_id, $editionId, $edition->starts_at, $edition->ends_at);
                 $enrollment = (object) [
                     'user_id' => (int) $learner->id, 'subject_key' => (string) $request->subject_key,
                     'course_id' => $courseId, 'course_version_id' => (int) $edition->course_version_id,

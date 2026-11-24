@@ -95,7 +95,8 @@ final class VideoProgressService
     private static function uuid(): string
     {
         $hex = bin2hex(random_bytes(16));
-        return substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) . '-a' . substr($hex, 17, 3) . '-' . substr($hex, 20);
+        return substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) . '-a' .
+             substr($hex, 17, 3) . '-' . substr($hex, 20);
     }
 
     private static function fingerprint(object $lesson): string
@@ -108,7 +109,8 @@ final class VideoProgressService
     {
         [$actor, , $enrollment, $lesson, $provider] = $context;
         $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
-        $video = new VideoSource($lesson->provider_key, $source['reference'], (int) $lesson->source_revision, $source['options'] ?? []);
+        $video = new VideoSource($lesson->provider_key, $source['reference'], (int) $lesson->
+            source_revision, $source['options'] ?? []);
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $context[1]->rules_json);
         $trackingRequired = $rules['mode'] !== 'consultation';
         $capabilities = $provider->getCapabilities($video);
@@ -207,7 +209,8 @@ final class VideoProgressService
                 'last_activity_at' => $date, 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
                 'modified_at' => $date, 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id');
-            return ['tracking' => true, 'session_id' => $session->id, 'source_revision' => (int) $lesson->source_revision, 'next_sequence' => 1,
+            return ['tracking' => true, 'session_id' => $session->id, 'source_revision' => (int) $lesson
+                ->source_revision, 'next_sequence' => 1,
                 'resume_ms' => $progress->state === 'completed' ? 0 : (int) $progress->resume_ms,
                 'lesson_completed' => $progress->state === 'completed', 'duration_ms' => (int) $lesson->duration_ms,
                 'provider' => $descriptor->provider, 'options' => $descriptor->playerOptions,
@@ -349,7 +352,8 @@ final class VideoProgressService
             $progress->last_activity_at = self::date($now);
             $progress->revision = (int) $progress->revision + 1;
             $q = $this->db->createQuery()->update('#__jlms_lesson_progress')->set('coverage_json = :coverage')
-                ->set('covered_ms = :covered')->set('resume_ms = :resume')->set('state = :state')->set($progress->completed_at === null ? 'completed_at = NULL' : 'completed_at = :completed')
+                ->set('covered_ms = :covered')->set('resume_ms = :resume')->set('state = :state')->set($progress
+                    ->completed_at === null ? 'completed_at = NULL' : 'completed_at = :completed')
                 ->set('last_activity_at = :activity')
                     ->set('revision = :revision')
                     ->where('enrollment_id = :enrollment')->where('lesson_id = :lesson')
@@ -369,7 +373,8 @@ final class VideoProgressService
             }
             $this->db->setQuery($q)->execute();
             $total = (int) $enrollment->completed_total + ($newCompletion ? (int) $lesson->required : 0);
-            $newCourseCompletion = $enrollment->completed_at === null && $total >= (int) $enrollment->required_total && (int) $enrollment->required_total > 0;
+            $newCourseCompletion = $enrollment->completed_at === null && $total >= (int) $enrollment
+                ->required_total && (int) $enrollment->required_total > 0;
             if ($newCourseCompletion) {
                 $enrollment->completed_at = $enrollment->completed_at ?: self::date($now);
             }
@@ -401,7 +406,8 @@ final class VideoProgressService
                 );
                 $versionRules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
                 if ($versionRules['certificate_enabled']) {
-                    (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollmentId, (int) $version->id, (string) $enrollment->completed_at);
+                    (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollmentId, (int)
+                        $version->id, (string) $enrollment->completed_at);
                 }
             }
             $telemetry['state']['progress_revision'] = $resumeConflict
@@ -409,7 +415,8 @@ final class VideoProgressService
                 : (int) $progress->revision;
             $sessionUpdate = (object) ['id' => $sessionId, 'sequence_no' => $sequence, 'last_batch_hash' => $hash,
                 'anchor_media_ms' => $telemetry['resume_ms'], 'anchor_at' => self::date($now),
-                'player_state_json' => json_encode($telemetry['state'], JSON_THROW_ON_ERROR), 'expires_at' => self::date($now + 7200000)];
+                'player_state_json' => json_encode($telemetry['state'], JSON_THROW_ON_ERROR),
+                     'expires_at' => self::date($now + 7200000)];
             $this->db->updateObject('#__jlms_progress_sessions', $sessionUpdate, 'id');
             return self::result($progress, $enrollment, $sequence + 1, false, $resumeConflict);
         });

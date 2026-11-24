@@ -128,7 +128,9 @@ function deadlineKey(): string
 function deadlineUser(string $name, int $group): \Joomla\CMS\User\User
 {
     $u = new \Joomla\CMS\User\User();
-    $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
+    $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' =>
+         'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,
+        $group],'block' => 0,'activation' => ''];
     if (!$u->bind($d) || !$u->save()) {
         throw new \RuntimeException((string)$u->getError());
     }
@@ -136,7 +138,9 @@ function deadlineUser(string $name, int $group): \Joomla\CMS\User\User
 }
 function deadlineCommand(array $i, string $reason = 'PRIVATE_DEADLINE_REASON'): array
 {
-    return [$i['course_id'],$i['lesson_id'],(int)$i['enrollment']->id,(int)$i['attempt']->id,$i['impact']['enrollment_revision'],$i['impact']['attempt_revision'],$i['minutes'],$reason,deadlineKey(),$i['impact']['hash'],true];
+    return [$i['course_id'],$i['lesson_id'],(int)$i['enrollment']->id,(int)$i['attempt']->id
+        ,$i['impact']['enrollment_revision'],$i['impact']['attempt_revision'],$i['minutes'],$reason
+        ,deadlineKey(),$i['impact']['hash'],true];
 }
 $actor = $app->getIdentity();
 $learning = $component->getLearningService();
@@ -192,7 +196,9 @@ if (($argv[2] ?? '') === 'retained') {
         hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'],
         'frozen rules and effective deadline survive upgrade'
     );
-    deadlineExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.quizextend' AND item_id=" . (int)$t['extension_id'])->loadResult() === 1, 'native extension audit survives upgrade');
+    deadlineExpect((int)$db->
+            setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.quizextend' AND item_id=" .
+             (int)$t['extension_id'])->loadResult() === 1, 'native extension audit survives upgrade');
     echo json_encode(['quiz_deadline_upgrade_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit(0);
 }
@@ -231,7 +237,8 @@ $bad = $command;
 $bad[7] = 'Changed reason';
 deadlineReject(fn()=>$deadline->extend($actor, ...$bad), 409, 'changed replay body rejected');
 $r = $runtime->state($u, 'en-GB', $enrollment, $lesson);
-deadlineExpect($r['time_seconds'] === 180 && $r['original_time_seconds'] === 60 && $r['extension_seconds'] === 120 && $r['attempt']['revision'] === 1, 'effective time changes without changing answer CAS revision');
+deadlineExpect($r['time_seconds'] === 180 && $r['original_time_seconds'] === 60 && $r['extension_seconds'] ===
+         120 && $r['attempt']['revision'] === 1, 'effective time changes without changing answer CAS revision');
 deadlineExpect(
     !str_contains(json_encode($r, JSON_THROW_ON_ERROR), 'PRIVATE_DEADLINE_REASON'),
     'learner never receives internal extension reason'
@@ -385,9 +392,14 @@ if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Untimed extension fixtu
 }
 $uc = (int)$model->getState('course.id');
 $uv = $author->createDraft($actor, $uc, 1);
-$scope = static fn(): array=>['course_id' => $uc,'version_id' => $uv,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $uv)->loadResult()];
+$scope = static fn(): array=>['course_id' => $uc,'version_id' => $uv,'expected_version_revision' => (int)$db
+    ->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $uv)->loadResult()];
 $um = $author->saveModule($actor, $scope() + ['id' => 0,'title' => 'Untimed module']);
-$ul = $quizzes->save($actor, $scope() + ['lesson_id' => 0,'revision' => 1,'module_id' => $um,'title' => 'Untimed quiz','required' => '1','assessment' => 'graded','threshold' => '70','max_attempts' => '1','time_minutes' => '0','retry_minutes' => '0','selection_mode' => 'fixed','shuffle_questions' => '0','shuffle_options' => '0','feedback_policy' => 'never','questions' => [['revision_id' => $bank['first_revision'],'points' => '1']]]);
+$ul = $quizzes->save($actor, $scope() + ['lesson_id' => 0,'revision' => 1,'module_id' => $um,'title' =>
+     'Untimed quiz','required' => '1','assessment' => 'graded','threshold' => '70','max_attempts' => '1',
+    'time_minutes' => '0','retry_minutes' => '0','selection_mode' => 'fixed','shuffle_questions' => '0',
+    'shuffle_options' => '0','feedback_policy' => 'never','questions' => [['revision_id' =>
+     $bank['first_revision'],'points' => '1']]]);
 $publication = $component->getPublicationService();
 $publication->transition(
     $actor,
@@ -476,7 +488,9 @@ $runRace = static function (
         }
         $results[] = $out;
     }sort($results);
-    deadlineExpect($results === ($expiry ? ['conflict','expired'] : ['conflict','ok']), $expiry ? 'expiry and extension cannot reopen an elapsed attempt' : 'two concurrent extensions from one preview add time once');
+    deadlineExpect($results === ($expiry ? ['conflict','expired'] : ['conflict','ok']), $expiry ?
+         'expiry and extension cannot reopen an elapsed attempt' :
+         'two concurrent extensions from one preview add time once');
     $status = $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->loadResult();
     deadlineExpect(
         $status === ($expiry ? 'expired' : 'open'),

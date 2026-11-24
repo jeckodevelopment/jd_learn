@@ -120,7 +120,10 @@ final class QuizTimeService
             $active = $this->db->setQuery($q)->loadObject();
             if ($active) {
                 $rules = json_decode($active->rules_snapshot_json, true, 16, JSON_THROW_ON_ERROR);
-                $active = (object)['id' => (int)$active->id,'deadline_at' => $active->deadline_at,'time_seconds' => $active->deadline_at === null ? 0 : (new \DateTimeImmutable($active->deadline_at, new \DateTimeZone('UTC')))->getTimestamp() - (new \DateTimeImmutable($active->started_at, new \DateTimeZone('UTC')))->getTimestamp()];
+                $active = (object)['id' => (int)$active->id,'deadline_at' => $active->deadline_at
+                    ,'time_seconds' => $active->deadline_at === null ? 0 : (new \DateTimeImmutable($active
+                    ->deadline_at, new \DateTimeZone('UTC')))->getTimestamp() - (new \DateTimeImmutable($active
+                    ->started_at, new \DateTimeZone('UTC')))->getTimestamp()];
             }
         }
         return [
@@ -192,11 +195,16 @@ final class QuizTimeService
             if ($seconds > 0 && (int)$quiz->time_limit_seconds === 0) {
                 throw new \RuntimeException('COM_JLMS_QUIZ_TIME_INVALID', 422);
             }
-            $record = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$quiz->course_version_id,'quiz_id' => $quizId,'revision_no' => $revision + 1,
-                'extra_seconds' => $seconds,'reason' => $reason,'actor_user_id' => (int)$actor->id,'mutation_id' => $key,'request_hash' => $hash,'created_at' => gmdate('Y-m-d H:i:s')];
+            $record = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$quiz
+                ->course_version_id,'quiz_id' => $quizId,'revision_no' => $revision + 1,
+                'extra_seconds' => $seconds,'reason' => $reason,'actor_user_id' => (int)$actor->id
+                    ,'mutation_id' => $key,'request_hash' => $hash,'created_at' => gmdate('Y-m-d H:i:s')];
             $this->db->insertObject('#__jlms_quiz_time_adjustments', $record, 'id');
-            ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,'enrollment_id' => $enrollment,'quiz_id' => $quizId,
-                'before_seconds' => $current ? (int)$current->extra_seconds : 0,'after_seconds' => $seconds,'reason_code' => 'individual_quiz_time','reason_reference' => (int)$record->id,'correlation_id' => bin2hex(random_bytes(16))]);
+            ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,
+                'enrollment_id' => $enrollment,'quiz_id' => $quizId,
+                'before_seconds' => $current ? (int)$current->extra_seconds : 0,'after_seconds' => $seconds
+                    ,'reason_code' => 'individual_quiz_time','reason_reference' => (int)$record->id
+                    ,'correlation_id' => bin2hex(random_bytes(16))]);
             $this->db->transactionCommit();
             return(int)$record->id;
         } catch (\Throwable $error) {

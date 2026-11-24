@@ -339,7 +339,8 @@ final class MaterialService
                     throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
                 }
                 $update = (object) ['id' => $replaceId, 'asset_id' => (int) $asset->id, 'title' => trim($title),
-                    'description' => $description, 'preview' => $preview, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
+                    'description' => $description, 'preview' => $preview, 'publish_up' =>
+                         $availability['publish_up'], 'publish_down' => $availability['publish_down'],
                     'revision' => (int) $attachment->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');
                 $id = $replaceId;
@@ -451,7 +452,8 @@ final class MaterialService
                 if ((int) $link->asset_id !== $scannedId) {
                     throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
                 }
-                $asset = (object) (['id' => (int) $link->asset_id] + $scan + ['modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')]);
+                $asset = (object) (['id' => (int) $link->asset_id] + $scan + ['modified_by' => (int) $actor->id
+                    , 'modified_at' => gmdate('Y-m-d H:i:s')]);
                 $this->db->updateObject('#__jlms_assets', $asset, 'id');
             } elseif ($operation === 'save') {
                 $title = $input['title'] ?? null;
@@ -477,9 +479,11 @@ final class MaterialService
                 $availability = array_key_exists('publish_up', $input) || array_key_exists('publish_down', $input)
                     ? MaterialAvailability::normalize($input['publish_up'] ?? $link->publish_up, $input['publish_down'] ?? $link->publish_down, CourseSchedule::read($course)['timezone'])
                     : ['publish_up' => $link->publish_up, 'publish_down' => $link->publish_down];
-                $update = (object) ['id' => $id, 'title' => trim($title), 'description' => $description, 'state' => (int) $state, 'preview' => (int) $preview,
+                $update = (object) ['id' => $id, 'title' => trim($title), 'description' => $description
+                    , 'state' => (int) $state, 'preview' => (int) $preview,
                     'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
-                    'ordering' => (int) $order, 'revision' => (int) $link->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
+                    'ordering' => (int) $order, 'revision' => (int) $link->revision + 1, 'modified_by' =>
+                         (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
                 $this->db->updateObject('#__jlms_attachments', $update, 'id');
             } else {
                 throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);

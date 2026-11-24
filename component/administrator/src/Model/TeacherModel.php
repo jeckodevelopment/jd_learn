@@ -58,7 +58,8 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
         $db = $this->getDatabase();
         $db->transactionStart();
         try {
-            $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult() ?: throw new \DomainException('JERROR_ALERTNOAUTHOR');
+            $db->setQuery("SELECT id FROM #__assets WHERE name='com_jlms' FOR UPDATE")->loadResult() ?
+                : throw new \DomainException('JERROR_ALERTNOAUTHOR');
             $actor = new User((int) $this->getCurrentUser()->id);
             $actor->clearAccessRights();
             $this->setCurrentUser($actor);
@@ -218,7 +219,8 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 'COM_JLMS_COURSE_IMAGE_INVALID',
                 'COM_JLMS_COURSE_IMAGE_ALT_REQUIRED'
             ];
-            $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() :
+                 'COM_JLMS_SAVE_FAILED'));
             return false;
         }
     }

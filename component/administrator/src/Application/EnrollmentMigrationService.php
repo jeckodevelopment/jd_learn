@@ -213,16 +213,25 @@ final class EnrollmentMigrationService
             $editionFull = (int)$this->db->setQuery($q)->loadResult() >= (int)$targetEdition->capacity;
         }
         $editionUnavailable = !$targetEdition || $targetEdition->status !== 'open'
-            || ($targetEdition->starts_at !== null && $targetEdition->starts_at > $now) || ($targetEdition->ends_at !== null && $targetEdition->ends_at <= $now);
+            || ($targetEdition->starts_at !== null && $targetEdition->starts_at > $now) || ($targetEdition
+                ->ends_at !== null && $targetEdition->ends_at <= $now);
         $plan = ['course_id' => $course,'source_enrollment_id' => $enrollment,'source_version_id' => (int)$source->course_version_id,
-            'target_version_id' => $targetVersion,'target_version_no' => (int)$target->version_no,'source_version_no' => (int)$sourceVersion->version_no,
+            'target_version_id' => $targetVersion,'target_version_no' => (int)$target->version_no
+                ,'source_version_no' => (int)$sourceVersion->version_no,
             'source_status' => $source->status,'source_revision' => (int)$source->revision,'user_id' => (int)$source->user_id,
             'target_edition_id' => (int)($targetEdition->id ?? 0),
             'learner_name' => (string)($source->learner_name ?? ''),'mapping' => $normal,'transfers' => $eligible,'unmapped' => $missing,
             'open_attempts' => $openAttempts,'existing_target_id' => $existingTarget,
-            'blocked' => (int)$courseRecord->state !== 1 ? 'COM_JLMS_LEARNING_DENIED' : ($openAttempts ? 'COM_JLMS_MIGRATION_OPEN_ATTEMPT' : ($existingTarget ? 'COM_JLMS_MIGRATION_TARGET_EXISTS' : ($mappingConflict ? 'COM_JLMS_MIGRATION_MAPPING_CONFLICT' : (!$courseRecord->delivery_enabled ? 'COM_JLMS_COURSE_DELIVERY_SUSPENDED' : ($editionUnavailable ? 'COM_JLMS_MIGRATION_EDITION_UNAVAILABLE' : ($editionFull ? 'COM_JLMS_MIGRATION_EDITION_FULL' : null))))))];
+            'blocked' => (int)$courseRecord->state !== 1 ? 'COM_JLMS_LEARNING_DENIED' : ($openAttempts ?
+                 'COM_JLMS_MIGRATION_OPEN_ATTEMPT' : ($existingTarget ?
+                 'COM_JLMS_MIGRATION_TARGET_EXISTS' : ($mappingConflict ?
+                 'COM_JLMS_MIGRATION_MAPPING_CONFLICT' : (!$courseRecord->delivery_enabled ?
+                 'COM_JLMS_COURSE_DELIVERY_SUSPENDED' : ($editionUnavailable ?
+                 'COM_JLMS_MIGRATION_EDITION_UNAVAILABLE' : ($editionFull ?
+                 'COM_JLMS_MIGRATION_EDITION_FULL' : null))))))];
         $plan['hash'] = hash('sha256', QuestionDefinition::canonical($plan));
-        $plan['completed_source_lessons'] = array_map(static fn(object $row): array=>['id' => (int)$row->lesson_id,'title' => $row->title], $completed);
+        $plan['completed_source_lessons'] = array_map(static fn(object $row): array=>['id' => (int)$row
+            ->lesson_id,'title' => $row->title], $completed);
         $plan['target_lessons'] = array_map(static fn(object $row): array=>[
             'id' => (int)$row->id,
             'title' => $row->title,
@@ -346,7 +355,8 @@ final class EnrollmentMigrationService
                 ->bind(':version', $plan['target_version_id'], ParameterType::INTEGER);
             $required = (int)$this->db->setQuery($q)->loadResult();
             $completedRequired = count(array_filter($plan['transfers'], static fn(array $row): bool=>$row['required']));
-            $targetStatus = $source->status === 'suspended' ? 'suspended' : ($required > 0 && $completedRequired >= $required ? 'completed' : 'active');
+            $targetStatus = $source->status === 'suspended' ? 'suspended' : ($required > 0 &&
+                 $completedRequired >= $required ? 'completed' : 'active');
             $target = (object)['user_id' => (int)$source->user_id,'subject_key' => $source->subject_key,'course_id' => $course,
                 'course_version_id' => $plan['target_version_id'],'edition_id' => $editionId,'status' => $targetStatus,'origin' => 'migration',
                 'required_total' => $required,'completed_total' => $completedRequired,'started_at' => $source->started_at ?: $now,
@@ -363,7 +373,8 @@ final class EnrollmentMigrationService
                 'cursor_json' => json_encode(['source_enrollment_id' => $enrollment,'target_enrollment_id' => $targetId], JSON_THROW_ON_ERROR),
                 'progress_done' => 1,'progress_total' => 1,'attempts' => 1,'available_at' => $now,'created_at' => $now,'finished_at' => $now];
             $this->db->insertObject('#__jlms_jobs', $job, 'id');
-            $idempotency = (object)['scope_hash' => $scopeHash,'request_hash' => $requestHash,'state' => 'completed','result_type' => 'enrollment_migration',
+            $idempotency = (object)['scope_hash' => $scopeHash,'request_hash' => $requestHash,'state' =>
+                 'completed','result_type' => 'enrollment_migration',
                 'result_id' => $targetId,'result_json' => json_encode(['target_enrollment_id' => $targetId], JSON_THROW_ON_ERROR),
                 'http_status' => 200,'created_at' => $now,'expires_at' => gmdate('Y-m-d H:i:s', time() + 172800)];
             $this->db->insertObject('#__jlms_idempotency', $idempotency);
@@ -382,7 +393,8 @@ final class EnrollmentMigrationService
                 }
             }
             foreach ($plan['transfers'] as $row) {
-                $progress = (object)['enrollment_id' => $targetId,'course_version_id' => $plan['target_version_id'],'lesson_id' => $row['target_lesson_id'],
+                $progress = (object)['enrollment_id' => $targetId,'course_version_id' =>
+                     $plan['target_version_id'],'lesson_id' => $row['target_lesson_id'],
                     'source_revision' => 1,'coverage_json' => '[]','covered_ms' => 0,'resume_ms' => 0,'state' => 'completed',
                     'completed_at' => $row['completed_at'] ?: $now,'last_activity_at' => $now,'revision' => 1];
                 $q = $this->db->createQuery()

@@ -137,7 +137,8 @@ final class ConfigurationDiagnostics
             'severity' => $ok ? 'ok' : 'error',
             'stateKey' => $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_MISSING',
             'guidanceKey' =>
-                 $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_READY' : 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_MISSING',
+                 $ok ? 'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_READY' :
+                      'COM_JLMS_CONFIG_MAIL_TEMPLATES_GUIDANCE_MISSING',
         ];
     }
 
@@ -172,7 +173,8 @@ final class ConfigurationDiagnostics
                 'severity' => $scannerConfigured ? 'warning' : 'error',
                 'stateKey' => $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_MISSING',
                 'guidanceKey' =>
-                     $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_SCAN_GUIDANCE_MISSING',
+                     $scannerConfigured ? 'COM_JLMS_CONFIG_SCAN_GUIDANCE_UNVERIFIED' :
+                          'COM_JLMS_CONFIG_SCAN_GUIDANCE_MISSING',
             ];
         } else {
             $add(
@@ -320,7 +322,8 @@ final class ConfigurationDiagnostics
                 'stateKey' =>
                      $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_UNAVAILABLE',
                 'guidanceKey' =>
-                     $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_READY' : 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_UNAVAILABLE',
+                     $readyStorage ? 'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_READY' :
+                          'COM_JLMS_CONFIG_VIDEO_ROOT_GUIDANCE_UNAVAILABLE',
             ],
             [
                 'kind' => 'video_probe',
@@ -329,7 +332,8 @@ final class ConfigurationDiagnostics
                 'stateKey' =>
                      $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_UNAVAILABLE',
                 'guidanceKey' =>
-                     $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNVERIFIED' : 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNAVAILABLE',
+                     $probeValid ? 'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNVERIFIED' :
+                          'COM_JLMS_CONFIG_VIDEO_PROBE_GUIDANCE_UNAVAILABLE',
             ],
         ];
     }

@@ -115,7 +115,8 @@ $read = static fn(
 // SEC-P1: the original session identity must lose roster read access as soon
 // as an administrator blocks the Joomla account in another session.
 $originalBlock = (int) $db->setQuery('SELECT block FROM #__users WHERE id=' . $userId)->loadResult();
-$enrollmentCountBeforeBlock = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult();
+$enrollmentCountBeforeBlock = (int) $db->
+    setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult();
 try {
     $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $userId)->execute();
     rosterDenied(fn() => $service->query($actor, $course), 403, 'stale actor cannot query roster after account block');
@@ -128,7 +129,8 @@ try {
     $db->setQuery('UPDATE #__users SET block=' . $originalBlock . ' WHERE id=' . $userId)->execute();
 }
 rosterExpect(count($read($actor)) > 0, 'roster read restored after account unblock');
-rosterExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult() === $enrollmentCountBeforeBlock, 'blocking actor does not alter enrollments');
+rosterExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)
+    ->loadResult() === $enrollmentCountBeforeBlock, 'blocking actor does not alter enrollments');
 $path = dirname($root) . '/roster-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
@@ -207,7 +209,8 @@ rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'in_progre
 rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'not_started'])) === 23, 'not started filter');
 rosterExpect(count($read($actor, ['user' => $f['empty']])) === 0, 'empty filter has no writes');
 rosterExpect(count($read($actor, ['version' => $version])) === count($rows), 'version filter');
-$foreignVersion = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])->loadResult();
+$foreignVersion = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' .
+     (int)$f['italian'])->loadResult();
 rosterDenied(
     fn()=>$service->query($actor, $course, ['version' => $foreignVersion]),
     404,
@@ -255,7 +258,9 @@ $permissions['jlms.enrollments.manage'][(string)$group] = true;
 $asset->rules = json_encode($permissions, JSON_THROW_ON_ERROR);
 $asset->store();
 $user = new \Joomla\CMS\User\User();
-$data = ['name' => 'CI Roster Reader','username' => 'cirosterreader','email' => 'cirosterreader@example.invalid','password' => 'Ci-only-Roster-Password-2026','password2' => 'Ci-only-Roster-Password-2026','groups' => [2,$group,$backendGroup],'block' => 0,'sendEmail' => 0];
+$data = ['name' => 'CI Roster Reader','username' => 'cirosterreader','email' => 'cirosterreader@example.invalid'
+    ,'password' => 'Ci-only-Roster-Password-2026','password2' => 'Ci-only-Roster-Password-2026','groups' => [2
+    ,$group,$backendGroup],'block' => 0,'sendEmail' => 0];
 if (!$user->bind($data) || !$user->save()) {
     throw new \RuntimeException($user->getError());
 }
@@ -557,7 +562,8 @@ try {
         'conflicting replay does not replace immutable message payload'
     );
     rosterExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore + 1,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->
+            loadResult() === $jobsBefore + 1,
         'duplicate and conflicting replays never create additional jobs'
     );
 } finally {
@@ -622,5 +628,8 @@ $q = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :i
 $db->setQuery($q)->execute();
 rosterExpect($before === $db->setQuery(('SELECT id,revision,completed_total,completed_at,last_activity_at '
     . 'FROM #__jlms_enrollments ORDER BY id'))->loadAssocList(), 'roster reads do not mutate learning history');
-file_put_contents($path, json_encode(['manager' => (int)$user->id,'group' => $group,'course' => $course,'other_course' => $otherCourse,'version' => $version,'total' => count($rows),'owner' => $f['owner'],'original_name' => $originalName,'completed' => $f['completed'],'suspended' => $f['suspended'],'active' => $f['active'],'foreign_enrollment' => $f['italian']], JSON_THROW_ON_ERROR));
+file_put_contents($path, json_encode(['manager' => (int)$user->id,'group' => $group,'course' => $course,
+    'other_course' => $otherCourse,'version' => $version,'total' => count($rows),'owner' => $f['owner'],
+    'original_name' => $originalName,'completed' => $f['completed'],'suspended' => $f['suspended'],
+    'active' => $f['active'],'foreign_enrollment' => $f['italian']], JSON_THROW_ON_ERROR));
 echo json_encode(['roster_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

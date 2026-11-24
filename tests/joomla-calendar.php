@@ -94,7 +94,8 @@ if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
     scheduleExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
         . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen calendar survives reinstall');
-    scheduleExpect($db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' . (int)$f['edition'])->loadAssoc() === $f['window'], 'Edition window survives reinstall');
+    scheduleExpect($db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' .
+         (int)$f['edition'])->loadAssoc() === $f['window'], 'Edition window survives reinstall');
     scheduleExpect($catalog->outline(
         new \Joomla\CMS\User\User(),
         'en-GB',
@@ -119,8 +120,13 @@ scheduleExpect(
     preg_match('/<option(?=[^>]*\\bvalue="")(?=[^>]*\\bselected(?:="selected")?)[^>]*>/i', $timezoneInput) === 1,
     'Global timezone option is rendered and selected by the native Joomla field'
 );
-$base = ['id' => 0,'revision' => 1,'title' => 'Calendar course fixture','alias' => 'calendar-course-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Calendar fixture'];
-$values = ['calendar_timezone' => '','calendar_publish_up' => '2000-01-01 01:00:00','calendar_publish_down' => '2099-01-01 01:00:00','calendar_starts_at' => '2000-01-01 01:00:00','calendar_ends_at' => '2099-01-01 01:00:00'];
+$base = ['id' => 0,'revision' => 1,'title' => 'Calendar course fixture','alias' =>
+     'calendar-course-fixture','catid' => $catid,'language' => '*','catalog_access' => 1,
+    'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' =>
+     '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Calendar fixture'];
+$values = ['calendar_timezone' => '','calendar_publish_up' => '2000-01-01 01:00:00',
+    'calendar_publish_down' => '2099-01-01 01:00:00','calendar_starts_at' => '2000-01-01 01:00:00',
+    'calendar_ends_at' => '2099-01-01 01:00:00'];
 scheduleExpect(
     $model->save($base + $values + ['publish_up' => '2200-01-01 00:00:00','params_json' => '{"injected":true}']),
     'Typed calendar saved with mass assignment ignored'
@@ -144,12 +150,15 @@ foreach ([['calendar_timezone' => ['UTC']],['calendar_timezone' => 'bad/zone'],[
         'Invalid calendar rejected'
     );
     $after = $model->getItem($course);
-    scheduleExpect((int)$after->revision === 2 && $after->params_json === $before->params_json && $after->publish_up === $before->publish_up, 'Invalid calendar preserves revision and stored values');
+    scheduleExpect((int)$after->revision === 2 && $after->params_json === $before->params_json && $after
+        ->publish_up === $before->publish_up, 'Invalid calendar preserves revision and stored values');
 }
 $version = $authoring->createDraft($actor, $course, 2);
 $rev = static fn(): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
 $module = $authoring->saveModule($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev(),'title' => 'Calendar chapter']);
-$lesson = $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev(),'module_id' => $module,'title' => 'Calendar lesson','kind' => 'text','required' => '1','body' => '<p>CALENDAR_PRIVATE_BODY</p>']);
+$lesson = $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $version
+    ,'expected_version_revision' => $rev(),'module_id' => $module,'title' => 'Calendar lesson','kind' => 'text'
+    ,'required' => '1','body' => '<p>CALENDAR_PRIVATE_BODY</p>']);
 $edit['revision'] = (int)$model->getItem($course)->revision;
 scheduleExpect(
     $model->save($edit + ['calendar_ends_at' => '2098-01-01 01:00:00']),
@@ -180,7 +189,9 @@ scheduleExpect($outline['calendar']['timezone'] === 'Europe/Rome' && str_starts_
     '2098-01-01 00:00:00'
 ) && $outline['start_window_open'], 'Public calendar comes from frozen publication');
 $learner = new \Joomla\CMS\User\User();
-$userData = ['name' => 'CI calendar viewer','username' => 'cicalendarviewer','email' => 'cicalendarviewer@example.invalid','password' => 'Ci-only-Calendar-Viewer-2026','password2' => 'Ci-only-Calendar-Viewer-2026','groups' => [2],'block' => 0,'activation' => ''];
+$userData = ['name' => 'CI calendar viewer','username' => 'cicalendarviewer','email' =>
+     'cicalendarviewer@example.invalid','password' => 'Ci-only-Calendar-Viewer-2026','password2' =>
+     'Ci-only-Calendar-Viewer-2026','groups' => [2],'block' => 0,'activation' => ''];
 if (!$learner->bind($userData) || !$learner->save()) {
     throw new RuntimeException('Calendar viewer fixture failed');
 }
@@ -248,7 +259,9 @@ foreach ([0,1] as $state) {
         (int)$publication->transitions($actor, $course)[0]->id
     );
     scheduleExpect($snapshot === $db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
-        . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() && $window === $db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' . $edition)->loadAssoc(), 'Withdrawal/republication preserves snapshot and edition window');
+        . '#__jlms_course_versions WHERE id=') . $version)->loadAssoc() && $window === $db
+            ->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' . $edition)
+            ->loadAssoc(), 'Withdrawal/republication preserves snapshot and edition window');
 }
 $legacy = json_decode(file_get_contents(dirname($root) . '/legacy-time-fixture.json'), true, 32, JSON_THROW_ON_ERROR);
 scheduleExpect(

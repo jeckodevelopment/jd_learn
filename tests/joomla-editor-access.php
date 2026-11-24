@@ -93,7 +93,8 @@ if (($argv[2] ?? '') === 'retained') {
         in_array($f['allowed'], $ids, true) && !in_array($f['denied'], $ids, true),
         'Category grants and record denies survive reinstall'
     );
-    editorExpect((int)$db->setQuery('SELECT checked_out FROM #__jlms_courses WHERE id=' . (int)$f['locked'])->loadResult() === $f['user'], 'Other-operator checkout preserved');
+    editorExpect((int)$db->setQuery('SELECT checked_out FROM #__jlms_courses WHERE id=' . (int)$f['locked'])
+        ->loadResult() === $f['user'], 'Other-operator checkout preserved');
     echo json_encode(['editor_access_retention_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit;
 }
@@ -122,7 +123,9 @@ $rules['core.manage'][(string)$backend] = true;
 $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
 $asset->store();
 $user = new \Joomla\CMS\User\User();
-$userData = ['name' => 'CI category editor','username' => 'cieditor','email' => 'cieditor@example.invalid','password' => 'Ci-only-Editor-Password-2026','password2' => 'Ci-only-Editor-Password-2026','groups' => [2,$group,$backend],'block' => 0,'activation' => ''];
+$userData = ['name' => 'CI category editor','username' => 'cieditor','email' => 'cieditor@example.invalid'
+    ,'password' => 'Ci-only-Editor-Password-2026','password2' => 'Ci-only-Editor-Password-2026','groups' => [2
+    ,$group,$backend],'block' => 0,'activation' => ''];
 if (!$user->bind($userData) || !$user->save()) {
     throw new RuntimeException('Editor user failed');
 }
@@ -163,7 +166,9 @@ editorExpect(EditorAccess::canCreate(
     $categories['other']
 ), 'Create scope remains category specific');
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-$base = ['id' => 0,'revision' => 1,'title' => '','alias' => '','catid' => 0,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Editor access fixture'];
+$base = ['id' => 0,'revision' => 1,'title' => '','alias' => '','catid' => 0,'language' => '*',
+    'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' =>
+     '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Editor access fixture'];
 $courses = [];
 foreach (['allowed1' => 'allowed','allowed2' => 'allowed','denied' => 'allowed','foreign' => 'other','own' => 'owned','other_owner' => 'owned','locked' => 'other'] as $name => $category) {
     editorExpect($model->save(array_replace(
@@ -215,9 +220,13 @@ editorExpect(!$model->save(array_replace(
     $base,
     ['id' => $courses['locked'],'revision' => 1,'title' => 'Forbidden lock overwrite','catid' => $categories['other']]
 )), 'Other-operator checkout cannot be bypassed even by direct model save');
-editorExpect($model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_CHECKED_OUT') && $db->setQuery('SELECT revision,title FROM #__jlms_courses WHERE id=' . $courses['locked'])->loadAssoc() === $before, 'Checkout refusal is specific and preserves course');
+editorExpect($model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_CHECKED_OUT') && $db->
+    setQuery('SELECT revision,title FROM #__jlms_courses WHERE id=' . $courses['locked'])->
+    loadAssoc() === $before, 'Checkout refusal is specific and preserves course');
 $model->setCurrentUser($user);
-editorExpect($model->save(array_replace($base, ['title' => 'Editor delegated save','alias' => 'editor-delegated-save','catid' => $categories['allowed'],'presentation_description' => ''])), 'Native save accepts category delegate without global create');
+editorExpect($model->save(array_replace($base, ['title' => 'Editor delegated save','alias' =>
+     'editor-delegated-save','catid' => $categories['allowed'],'presentation_description' =>
+     ''])), 'Native save accepts category delegate without global create');
 $delegated = (int)$model->getState('course.id');
 editorExpect(!$model->save(array_replace(
     $base,
@@ -228,7 +237,9 @@ editorExpect(!$model->save(array_replace(
     $base,
     ['title' => 'Trash category','alias' => 'trash-category','catid' => $categories['trash']]
 )), 'Trashed category cannot accept course creation');
-$imageEdit = array_replace($base, ['id' => $courses['allowed1'],'revision' => 1,'title' => 'Editor allowed1','alias' => 'editor-allowed1','catid' => $categories['allowed'],'presentation_image' => 'https://example.invalid/image.png','presentation_image_alt' => 'Cover']);
+$imageEdit = array_replace($base, ['id' => $courses['allowed1'],'revision' => 1,'title' =>
+     'Editor allowed1','alias' => 'editor-allowed1','catid' => $categories['allowed'],
+    'presentation_image' => 'https://example.invalid/image.png','presentation_image_alt' => 'Cover']);
 editorExpect(
     !$model->save($imageEdit) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_IMAGE_INVALID'),
     'Image validation retains actionable error'
@@ -246,7 +257,8 @@ editorExpect($model->save($validation), '500 Unicode characters accepted without
 $validationId = (int) $model->getState('course.id');
 $validation['id'] = $validationId;
 editorExpect($model->getItem($validationId)->summary === $validation['summary'], 'Unicode summary stored verbatim');
-$tooLong = array_replace($validation, ['presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => $validation['summary'] . 'è']);
+$tooLong = array_replace($validation, ['presentation_description' =>
+     '<p>Course presentation for the publication fixture.</p>', 'summary' => $validation['summary'] . 'è']);
 editorExpect(
     !$model->save($tooLong) && $model->getError() === \Joomla\CMS\Language\Text::_('COM_JLMS_COURSE_SUMMARY_TOO_LONG'),
     '501 characters rejected with actionable message'
@@ -315,5 +327,8 @@ try {
 } catch (RuntimeException $error) {
     editorExpect($error->getCode() === 403, 'Anonymous administration denied');
 }
-file_put_contents($fixture, json_encode(['user' => (int)$user->id,'group' => $group,'backend' => $backend,'allowed' => $courses['allowed1'],'denied' => $courses['denied'],'owned' => $courses['own'],'locked' => $courses['locked'],'allowed_category' => $categories['allowed'],'other_category' => $categories['other'],'delegated' => $delegated], JSON_THROW_ON_ERROR));
+file_put_contents($fixture, json_encode(['user' => (int)$user->id,'group' => $group,'backend' =>
+     $backend,'allowed' => $courses['allowed1'],'denied' => $courses['denied'],'owned' =>
+     $courses['own'],'locked' => $courses['locked'],'allowed_category' => $categories['allowed'],
+    'other_category' => $categories['other'],'delegated' => $delegated], JSON_THROW_ON_ERROR));
 echo json_encode(['editor_access_checks' => $checks,'status' => 'passed']) . PHP_EOL;

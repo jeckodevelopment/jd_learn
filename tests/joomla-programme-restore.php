@@ -175,7 +175,8 @@ $source = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-r
 $record = restoreRow('courses', $source);
 $original = restoreRow('course_versions', (int)$record->current_version_id);
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
-$course = $model->duplicate(['course_id' => $source,'version_id' => $original->id,'revision' => $record->revision,'expected_version_revision' => $original->revision,'title' => 'Historical programme fixture']);
+$course = $model->duplicate(['course_id' => $source,'version_id' => $original->id,'revision' => $record
+    ->revision,'expected_version_revision' => $original->revision,'title' => 'Historical programme fixture']);
 $copy = $model->getItem($course);
 restoreExpect($model->save(['id' => $course,'revision' => $copy->revision,'catalog_access' => 1,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent fixture has explicit learner access');
 $version = (int)$authoring->outline($actor, $course)['version']->id;
@@ -184,12 +185,16 @@ $scope = static function () use ($course, &$version): array {
 };
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
 foreach (['youtube' => 'dQw4w9WgXcQ','vimeo' => '123456789','cloudflarestream' => str_repeat('b', 32)] as $key => $reference) {
-    $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Historical ' . $key,'kind' => 'video','required' => '0','body' => '','provider_key' => $key,'source_reference' => $reference,'privacy_hash' => $key === 'vimeo' ? 'abcdef1234' : '','duration_seconds' => '10','duration_confirmed' => '1']);
+    $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' =>
+         'Historical ' . $key,'kind' => 'video','required' => '0','body' => '','provider_key' => $key,
+        'source_reference' => $reference,'privacy_hash' => $key === 'vimeo' ? 'abcdef1234' : '',
+        'duration_seconds' => '10','duration_confirmed' => '1']);
 }
 $publish = static function (int $target) use ($publication, $actor, $course): void {
     $transition = (int)$publication->transitions($actor, $course, $target)[0]->id;
     $impact = $publication->updateImpact($actor, $course, $target, $transition);
-    $publication->transition($actor, $course, $target, (int)restoreRow('courses', $course)->revision, (int)restoreRow('course_versions', $target)->revision, $transition, $impact['fingerprint'] ?? null);
+    $publication->transition($actor, $course, $target, (int)restoreRow('courses', $course)->
+        revision, (int)restoreRow('course_versions', $target)->revision, $transition, $impact['fingerprint'] ?? null);
 };
 $attachment = $db->setQuery(("SELECT a.* FROM #__jlms_attachments AS a JOIN #__jlms_assets AS f "
     . "ON f.id=a.asset_id WHERE f.status='ready' AND a.state=1 ORDER BY a.id"), 0, 1)->loadAssoc();
@@ -237,12 +242,17 @@ $existing = $authoring->createDraft($actor, $course, (int)restoreRow('courses', 
 $trees = [$historical => restoreTree($historical),$current => restoreTree($current),$existing => restoreTree($existing)];
 $before = restoreLearning();
 $courseBefore = restoreRow('courses', $course);
-$input = ['course_id' => $course,'version_id' => $historical,'revision' => $courseBefore->revision,'expected_version_revision' => restoreRow('course_versions', $historical)->revision,'confirmation' => '1'];
+$input = ['course_id' => $course,'version_id' => $historical,'revision' => $courseBefore->revision
+    ,'expected_version_revision' => restoreRow('course_versions', $historical)->revision,'confirmation' => '1'];
 restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['confirmation' => '0'])), 'COM_JLMS_PROGRAMME_RESTORE_CONFIRM_REQUIRED');
 restoreDenied(fn()=>$authoring->restoreVersion(new \Joomla\CMS\User\User(0), $input), 'JERROR_ALERTNOAUTHOR');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' => $original->id,'expected_version_revision' => $original->revision])), 'COM_JLMS_RESOURCE_NOT_FOUND');
-restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' => $current,'expected_version_revision' => restoreRow('course_versions', $current)->revision])), 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
-restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' => $existing,'expected_version_revision' => restoreRow('course_versions', $existing)->revision])), 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
+restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' =>
+     $current,'expected_version_revision' => restoreRow('course_versions', $current)->
+    revision])), 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
+restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['version_id' =>
+     $existing,'expected_version_revision' => restoreRow('course_versions', $existing)->
+    revision])), 'COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, array_replace($input, ['expected_version_revision' => (int)$input['expected_version_revision'] + 1])), 'COM_JLMS_REVISION_CONFLICT');
 $otherId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult();
 foreach ([['courses',$course],['course_versions',$historical]] as [$table,$id]) {
@@ -258,7 +268,8 @@ foreach ([['courses',$course],['course_versions',$historical]] as [$table,$id]) 
 }
 $target = $authoring->restoreVersion($actor, $input);
 $restored = restoreTree($target);
-restoreExpect($restored['version']['status'] === 'draft' && (int)$restored['version']['version_no'] === 4 && $restored['version']['structure_hash'] === null, 'Recovery creates the next independent unfrozen draft');
+restoreExpect($restored['version']['status'] === 'draft' && (int)$restored['version']['version_no'] ===
+     4 && $restored['version']['structure_hash'] === null, 'Recovery creates the next independent unfrozen draft');
 foreach ($trees as $id => $tree) {
     restoreExpect(restoreTree($id) === $tree, 'Historical, active and preexisting draft programme remain unchanged: ' . $id);
 }
@@ -303,7 +314,9 @@ $audit = json_decode($audit, true, 32, JSON_THROW_ON_ERROR);
 restoreExpect((int)$audit['source_version_id'] === $historical && (int)$audit['target_version_id'] === $target, 'Native audit records historical source and new draft');
 $vimeoEnabled = false;
 restoreDenied(fn()=>$publish($target), 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
-restoreExpect(restoreRow('course_versions', $target)->status === 'draft' && (int)restoreRow('courses', $course)->current_version_id === $current && restoreLearning() === $before, 'Unavailable provider blocks publication without activating recovery');
+restoreExpect(restoreRow('course_versions', $target)->status === 'draft' &&
+     (int)restoreRow('courses', $course)->current_version_id === $current &&
+     restoreLearning() === $before, 'Unavailable provider blocks publication without activating recovery');
 $vimeoEnabled = true;
 $publish($target);
 restoreExpect((int)restoreRow('courses', $course)->current_version_id === $target && restoreLearning() === $before, 'Normal impact-confirmed publication activates recovery without migrating ' .

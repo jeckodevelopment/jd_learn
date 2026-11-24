@@ -48,11 +48,14 @@ final class CourseoperationsController extends BaseController
             $this->setMessage(Text::_('COM_JLMS_COURSE_OPERATIONS_SAVED'));
             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=courseoperations&id=' . $course . '&operation=' . $raw['operation'], false));
         } catch (\Throwable $e) {
-            $allowed = ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED','COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_COURSE_OPERATION_REASON','COM_JLMS_COURSE_OPERATION_CONFLICT','COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED'];
+            $allowed = ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED'
+                ,'COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_COURSE_OPERATION_REASON'
+                ,'COM_JLMS_COURSE_OPERATION_CONFLICT','COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED'];
             if (in_array($e->getMessage(), $allowed, true) && in_array((int)$e->getCode(), [400,401,403,404,409,422,503], true)) {
                 throw new \RuntimeException(Text::_($e->getMessage()), (int)$e->getCode());
             }
-            \Joomla\CMS\Log\Log::add('Course operation failed; correlation=' . bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+            \Joomla\CMS\Log\Log::add('Course operation failed; correlation=' .
+                 bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
             throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
         }
     }

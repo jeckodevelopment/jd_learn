@@ -163,7 +163,10 @@ if (($argv[2] ?? '') === 'retained') {
         'quiz completion and best score survive upgrade'
     );
     attemptExpect(
-        hash('sha256', json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' . (int)$f['passed_attempt'] . ' ORDER BY id')->loadAssocList(), JSON_THROW_ON_ERROR)) === $f['snapshot_hash'],
+        hash('sha256', json_encode($db->
+            setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' .
+             (int)$f['passed_attempt'] . ' ORDER BY id')->loadAssocList(), JSON_THROW_ON_ERROR)) ===
+             $f['snapshot_hash'],
         'public and private attempt snapshots and grades survive upgrade'
     );
     attemptExpect(
@@ -185,14 +188,28 @@ $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
 $scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Quiz runtime chapter']);
-$base = ['lesson_id' => 0,'revision' => 1,'module_id' => $module,'title' => 'Graded quiz','required' => '1','assessment' => 'graded','threshold' => '60.01','max_attempts' => '3','time_minutes' => '1','retry_minutes' => '1','selection_mode' => 'random','draw_count' => '2','shuffle_questions' => '1','shuffle_options' => '1','feedback_policy' => 'pass_or_exhausted','questions' => [['revision_id' => $bank['first_revision'],'points' => '3'],['revision_id' => $bank['other_revision'],'points' => '2']]];
+$base = ['lesson_id' => 0,'revision' => 1,'module_id' => $module,'title' => 'Graded quiz','required' =>
+     '1','assessment' => 'graded','threshold' => '60.01','max_attempts' => '3','time_minutes' => '1',
+    'retry_minutes' => '1','selection_mode' => 'random','draw_count' => '2','shuffle_questions' => '1',
+    'shuffle_options' => '1','feedback_policy' => 'pass_or_exhausted','questions' => [['revision_id' =>
+     $bank['first_revision'],'points' => '3'],['revision_id' => $bank['other_revision'],'points' => '2']]];
 $lesson = $quizzes->save($actor, $scope() + $base);
-$practice = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Practice quiz','required' => '0','assessment' => 'practice','threshold' => '0','feedback_policy' => 'after_submit','max_attempts' => '1','retry_minutes' => '0']));
+$practice = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Practice quiz','required' => '0'
+    ,'assessment' => 'practice','threshold' => '0','feedback_policy' => 'after_submit','max_attempts' => '1'
+    ,'retry_minutes' => '0']));
 $never = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Hidden feedback quiz','required' => '0','feedback_policy' => 'never','max_attempts' => '1','retry_minutes' => '0']));
-$tfQuestion = $component->getQuestionBankService()->save($actor, ['id' => 0,'revision' => 1,'catid' => $bank['category_id'],'language' => '*','state' => '1','kind' => 'true_false','prompt' => 'True or false?','options' => [['option_id' => 'first','label' => 'True','correct' => '1'],['option_id' => 'second','label' => 'False','correct' => '0']],'default_points' => '7','explanation' => 'True.']);
+$tfQuestion = $component->getQuestionBankService()->save($actor, ['id' => 0,'revision' => 1,'catid' =>
+     $bank['category_id'],'language' => '*','state' => '1','kind' => 'true_false','prompt' =>
+     'True or false?','options' => [['option_id' => 'first','label' => 'True','correct' => '1'],
+    ['option_id' => 'second','label' => 'False','correct' => '0']],'default_points' => '7','explanation' => 'True.']);
 $tfRevision = (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $tfQuestion)->loadResult();
-$tfLesson = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'True false exercise','required' => '0','assessment' => 'practice','feedback_policy' => 'after_submit','max_attempts' => '1','retry_minutes' => '0','selection_mode' => 'fixed','questions' => [['revision_id' => $tfRevision,'points' => '7']]]));
-$subset = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Subset quiz','required' => '0','max_attempts' => '0','retry_minutes' => '0','questions' => [...$base['questions'],['revision_id' => $tfRevision,'points' => '7']]]));
+$tfLesson = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'True false exercise',
+    'required' => '0','assessment' => 'practice','feedback_policy' => 'after_submit','max_attempts' =>
+     '1','retry_minutes' => '0','selection_mode' => 'fixed','questions' => [['revision_id' =>
+     $tfRevision,'points' => '7']]]));
+$subset = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Subset quiz','required' =>
+     '0','max_attempts' => '0','retry_minutes' => '0','questions' => [...$base['questions'],
+    ['revision_id' => $tfRevision,'points' => '7']]]));
 $publication->transition(
     $actor,
     $course,
@@ -681,13 +698,17 @@ $httpUser = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__user
 $httpEnrollment = $learning->start($httpUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 // Concurrency uses one enrollment and two independent database connections/processes.
 $concurrentUser = new \Joomla\CMS\User\User();
-$userData = ['name' => 'CI Concurrent quiz','username' => 'ciquizconcurrent','email' => 'ciquizconcurrent@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
+$userData = ['name' => 'CI Concurrent quiz','username' => 'ciquizconcurrent','email' =>
+     'ciquizconcurrent@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' =>
+     'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
 if (!$concurrentUser->bind($userData) || !$concurrentUser->save()) {
     throw new \RuntimeException($concurrentUser->getError());
 }
 $concurrentUser = new \Joomla\CMS\User\User((int)$concurrentUser->id);
 $concurrentEnrollment = $learning->start($concurrentUser, 'en-GB', $course, bin2hex(random_bytes(16)));
-$f = ['course_id' => $course,'lesson_id' => $lesson,'practice_id' => $practice,'never_id' => $never,'enrollment_id' => $enrollment,'http_enrollment' => $httpEnrollment,'passed_attempt' => $passedAttempt,'concurrent_user' => (int)$concurrentUser->id,'concurrent_enrollment' => $concurrentEnrollment];
+$f = ['course_id' => $course,'lesson_id' => $lesson,'practice_id' => $practice,'never_id' => $never
+    ,'enrollment_id' => $enrollment,'http_enrollment' => $httpEnrollment,'passed_attempt' => $passedAttempt
+    ,'concurrent_user' => (int)$concurrentUser->id,'concurrent_enrollment' => $concurrentEnrollment];
 $snapshotHash = hash('sha256', json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' . $passedAttempt . ' ORDER BY id')->loadAssocList(), JSON_THROW_ON_ERROR));
 $f['snapshot_hash'] = $snapshotHash;
 file_put_contents($fixturePath, json_encode($f, JSON_THROW_ON_ERROR));

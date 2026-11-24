@@ -286,7 +286,9 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                 'order_'
             ) ? 'reorder' : 'move'));
             $heading = match ($operation) {
-                'duplicate' => $kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON', 'delete'=>'JACTION_DELETE', 'reorder'=>'COM_JLMS_PROGRAMME_REORDER', default=>'COM_JLMS_PROGRAMME_MOVE_LESSON'
+                'duplicate' => $kind === 'module' ? 'COM_JLMS_DUPLICATE_MODULE' : 'COM_JLMS_DUPLICATE_LESSON'
+                    , 'delete'=>'JACTION_DELETE', 'reorder'=>'COM_JLMS_PROGRAMME_REORDER', default
+                    =>'COM_JLMS_PROGRAMME_MOVE_LESSON'
             };
     ?>
  <section class="jlms-focused-editor"

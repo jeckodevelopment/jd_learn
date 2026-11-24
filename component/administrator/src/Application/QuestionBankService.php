@@ -144,10 +144,14 @@ final class QuestionBankService
                 throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
             }
             $id = (int) $table->id;
-            $revision = (object) ['question_id' => $id, 'version_no' => $version, 'kind' => $definition['kind'], 'prompt' => $definition['prompt'],
-                'options_json' => QuestionDefinition::canonical($definition['options']), 'grading_json' => QuestionDefinition::canonical($definition['grading']),
-                'feedback_json' => QuestionDefinition::canonical($definition['feedback']), 'content_hash' => hash('sha256', QuestionDefinition::canonical($definition)),
-                'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id, 'created_at' => $now, 'modified_at' => $now];
+            $revision = (object) ['question_id' => $id, 'version_no' => $version, 'kind' => $definition['kind']
+                , 'prompt' => $definition['prompt'],
+                'options_json' => QuestionDefinition::canonical($definition['options']),
+                     'grading_json' => QuestionDefinition::canonical($definition['grading']),
+                'feedback_json' => QuestionDefinition::canonical($definition['feedback']),
+                     'content_hash' => hash('sha256', QuestionDefinition::canonical($definition)),
+                'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id, 'created_at' => $now
+                    , 'modified_at' => $now];
             $this->db->insertObject('#__jlms_question_revisions', $revision, 'id');
             $update = (object) ['id' => $id, 'current_revision_id' => (int) $revision->id];
             $this->db->updateObject('#__jlms_questions', $update, 'id');
@@ -181,9 +185,11 @@ final class QuestionBankService
                 'correct' => in_array($option['id'], $grading['correct'], true) ? '1' : '0'
             ];
         }
-        return ['id' => $id, 'revision' => (int) $question->revision, 'catid' => (int) $question->catid, 'language' => $question->language,
+        return ['id' => $id, 'revision' => (int) $question->revision, 'catid' => (int) $question->catid
+            , 'language' => $question->language,
             'state' => (int) $question->state, 'kind' => $content->kind, 'prompt' => $content->prompt, 'options' => $rows,
-            'explanation' => json_decode($content->feedback_json, true, 16, JSON_THROW_ON_ERROR)['explanation'], 'default_points' => $grading['default_points'],
+            'explanation' => json_decode($content->feedback_json, true, 16, JSON_THROW_ON_ERROR)['explanation']
+                , 'default_points' => $grading['default_points'],
             'checked_out' => (int) $question->checked_out];
     }
 
@@ -316,7 +322,8 @@ final class QuestionBankService
                 if (!$actor->authorise('jlms.quiz.manage', $asset)) {
                     continue;
                 }
-                $row->can_duplicate = (int)$row->state !== -2 && $actor->authorise('core.create', 'com_jlms.question.category.' . (int)$row->catid);
+                $row->can_duplicate = (int)$row->state !== -2 && $actor->
+                    authorise('core.create', 'com_jlms.question.category.' . (int)$row->catid);
                 $row->can_change_state = $actor->authorise('core.edit.state', $asset);
                 $row->can_delete = $actor->authorise('core.delete', $asset);
                 if ($total >= $start && count($items) < $limit) {
@@ -462,6 +469,7 @@ final class QuestionBankService
             }
         }
         return array_map(static fn ($row): array => ['id' => (int) $row->id,
-            'label' => $row->category_title . ' — ' . \Joomla\String\StringHelper::substr(strip_tags($row->prompt), 0, 100) . ' (v' . (int) $row->version_no . ')'], array_values($rows));
+            'label' => $row->category_title . ' — ' . \Joomla\String\StringHelper::substr(strip_tags($row
+                ->prompt), 0, 100) . ' (v' . (int) $row->version_no . ')'], array_values($rows));
     }
 }

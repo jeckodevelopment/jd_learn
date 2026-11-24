@@ -31,7 +31,8 @@ final class CourseOperationsService
         $q = $this->db->createQuery()
             ->select('id,title,state,revision,' . $field . ' AS current_value')->from('#__jlms_courses')
             ->where('id=:course')->bind(':course', $courseId, ParameterType::INTEGER);
-        $course = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $course = $this->db->setQuery($q)->loadObject() ?
+            : throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $q = $this->db->createQuery()
             ->select('COUNT(*)')
             ->from('#__jlms_enrollments')
@@ -164,8 +165,10 @@ final class CourseOperationsService
                 'created_at' => $now
             ];
             $this->db->insertObject('#__jlms_course_operations', $record, 'id');
-            ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,'course_id' => $courseId,'operation' => $operation,
-                'previous_value' => (int)$p['current'],'target_value' => $target,'reason_reference' => (int)$record->id,'correlation_id' => bin2hex(random_bytes(16))]);
+            ($this->audit)($actor, ['id' => (int)$record->id,'actor_id' => (int)$actor->id,'course_id' =>
+                 $courseId,'operation' => $operation,
+                'previous_value' => (int)$p['current'],'target_value' => $target,'reason_reference' =>
+                     (int)$record->id,'correlation_id' => bin2hex(random_bytes(16))]);
             $this->db->transactionCommit();
         } catch (\Throwable $e) {
             $this->db->transactionRollback();

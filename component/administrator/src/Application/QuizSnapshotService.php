@@ -27,7 +27,8 @@ final class QuizSnapshotService
         $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         $selection = json_decode($quiz->selection_json, true, 16, JSON_THROW_ON_ERROR);
         if (
-            ($selection['_schema'] ?? 0) !== 1 || !in_array($selection['mode'] ?? '', ['fixed','random'], true) || !in_array($selection['assessment'] ?? '', ['graded','practice'], true)
+            ($selection['_schema'] ?? 0) !== 1 || !in_array($selection['mode'] ?? '', ['fixed'
+                ,'random'], true) || !in_array($selection['assessment'] ?? '', ['graded','practice'], true)
             || !is_bool($selection['shuffle_questions'] ?? null) || !is_bool($selection['shuffle_options'] ?? null)
             || !in_array($quiz->feedback_policy, ['pass_or_exhausted','never','after_submit'], true)
             || ($selection['assessment'] === 'graded' && $quiz->feedback_policy === 'after_submit')
@@ -35,9 +36,13 @@ final class QuizSnapshotService
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         }
         $rules = ['_schema' => 1,'threshold' => QuestionDefinition::integer((int)$quiz->pass_basis_points, 0, 10000),
-            'max_attempts' => QuestionDefinition::integer((int)$quiz->max_attempts, 0, 100),'time_seconds' => $quiz->time_limit_seconds === null ? 0 : QuestionDefinition::integer((int)$quiz->time_limit_seconds, 60, 86400),
-            'retry_seconds' => QuestionDefinition::integer($selection['retry_delay_seconds'] ?? null, 0, 604800),'feedback' => $quiz->feedback_policy,
-            'assessment' => $selection['assessment'],'mode' => $selection['mode'],'shuffle_questions' => $selection['shuffle_questions'],'shuffle_options' => $selection['shuffle_options']];
+            'max_attempts' => QuestionDefinition::integer((int)$quiz->max_attempts, 0, 100),
+                'time_seconds' => $quiz->time_limit_seconds === null ? 0 :
+                 QuestionDefinition::integer((int)$quiz->time_limit_seconds, 60, 86400),
+            'retry_seconds' => QuestionDefinition::integer($selection['retry_delay_seconds'] ?? null, 0, 604800)
+                ,'feedback' => $quiz->feedback_policy,
+            'assessment' => $selection['assessment'],'mode' => $selection['mode'],'shuffle_questions' =>
+                 $selection['shuffle_questions'],'shuffle_options' => $selection['shuffle_options']];
         $id = (int)$quiz->id;
         $budget = $this->db->createQuery()
             ->select('SUM(OCTET_LENGTH(r.prompt)+OCTET_LENGTH(r.options_json)+OCTET_LENGTH(r.grading_json)+OCTET_LENGTH(r.feedback_json))')
@@ -58,7 +63,8 @@ final class QuizSnapshotService
         if (!$pool || count($pool) > 200) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
         }
-        $rules['draw_count'] = $selection['mode'] === 'fixed' ? count($pool) : QuestionDefinition::integer($selection['draw_count'] ?? null, 1, count($pool));
+        $rules['draw_count'] = $selection['mode'] === 'fixed' ? count($pool) :
+             QuestionDefinition::integer($selection['draw_count'] ?? null, 1, count($pool));
         $seen = [];
         $manifest = [];
         foreach ($pool as $row) {
@@ -132,7 +138,8 @@ final class QuizSnapshotService
             }
         }
         $selection['published_pool_hash'] = $hash;
-        $update = (object)['id' => (int)$quiz->id,'selection_json' => QuestionDefinition::canonical($selection),'revision' => (int)$quiz->revision + 1,
+        $update = (object)['id' => (int)$quiz->id,'selection_json' => QuestionDefinition::canonical($selection)
+            ,'revision' => (int)$quiz->revision + 1,
             'modified_by' => (int)$actor->id,'modified_at' => gmdate('Y-m-d H:i:s')];
         $this->db->updateObject('#__jlms_quizzes', $update, 'id');
         return $hash;

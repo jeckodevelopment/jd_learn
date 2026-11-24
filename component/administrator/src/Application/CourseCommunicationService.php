@@ -202,7 +202,8 @@ final class CourseCommunicationService
             $data
         );
         $key = CourseMessageMutation::testEventKey($courseId, (int) $actor->id, $mutationId);
-        (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data, (int) $actor->id);
+        (new MailQueue($this->db))->enqueue($courseId, $key, 'com_jlms.course.message', (string) ($actor
+            ->getParam('language') ?: '*'), (string) $actor->email, (string) $actor->name, $data, (int) $actor->id);
     }
 
     /** Add queued outbox rows in small Scheduler batches; current course ACL and enrollment state are rechecked. */
@@ -242,7 +243,8 @@ final class CourseCommunicationService
             foreach ($slice as $enrollmentId) {
                 $recipient = $this->recipient($courseId, (int) $enrollmentId);
                 if ($recipient) {
-                    $templateData = $this->templateData((string) $recipient->name, (string) $recipient->course_title, (string) $payload['subject'], (string) $payload['body']);
+                    $templateData = $this->templateData((string) $recipient->name, (string) $recipient
+                        ->course_title, (string) $payload['subject'], (string) $payload['body']);
                     if (isset($payload['template']) && is_array($payload['template'])) {
                         $templateData['__course_message_snapshot'] = $payload['template'];
                     }
@@ -338,7 +340,8 @@ final class CourseCommunicationService
             return null;
         }
         $params = json_decode((string) $row->user_params, true);
-        $row->language = is_array($params) && is_string($params['language'] ?? null) && $params['language'] !== '' ? $params['language'] : '*';
+        $row->language = is_array($params) && is_string($params['language'] ?? null) &&
+             $params['language'] !== '' ? $params['language'] : '*';
         return $row;
     }
 }

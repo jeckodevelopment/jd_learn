@@ -62,7 +62,8 @@ final class EnrollmentStateService
         $revision = $last ? (int) $last->revision_no : 0;
         $allowed = match ($target) {
             'suspended' => in_array($e->status, ['active', 'completed'], true),
-            'active' => $e->status === 'suspended' && (int) $e->course_state === 1 && (int) $e->course_delivery_enabled === 1,
+            'active' => $e->status === 'suspended' && (int) $e->course_state === 1 && (int) $e
+                ->course_delivery_enabled === 1,
             'cancelled' => in_array($e->status, ['active', 'suspended'], true)
                 && $e->completed_at === null && count($attempts) === 0,
         };
@@ -70,7 +71,8 @@ final class EnrollmentStateService
             'previous_status' => $e->status, 'target_status' => $target, 'completed_at' => $e->completed_at,
             'completed_total' => (int) $e->completed_total, 'required_total' => (int) $e->required_total,
             'starts_at' => $e->starts_at, 'ends_at' => $e->ends_at, 'open_attempts' => count($attempts),
-            'blocked' => !$allowed || $revision >= 10000 || count($attempts) > 1000 ? 'COM_JLMS_ENROLLMENT_STATE_BLOCKED' : null];
+            'blocked' => !$allowed || $revision >= 10000 || count($attempts) > 1000 ?
+                 'COM_JLMS_ENROLLMENT_STATE_BLOCKED' : null];
         $p['hash'] = hash('sha256', QuestionDefinition::canonical(['impact' => $p, 'attempts' => $attempts]));
         return $p;
     }
@@ -134,7 +136,8 @@ final class EnrollmentStateService
                 throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             }
             [$actor, , $e] = $this->scope($identity, $course, $enrollment);
-            $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int) $actor->id, 'course' => $course, 'enrollment' => $enrollment,
+            $hash = hash('sha256', QuestionDefinition::canonical(['actor' => (int) $actor->id,
+                 'course' => $course, 'enrollment' => $enrollment,
                 'revision' => $expected, 'target' => $target, 'reason' => $reason, 'impact' => $impactHash]));
             $q = $this->db->createQuery()->select('id, request_hash')->from('#__jlms_enrollment_state_changes')
                 ->where('enrollment_id = :enrollment')
@@ -159,7 +162,8 @@ final class EnrollmentStateService
             $record = (object) ['enrollment_id' => $enrollment, 'course_version_id' => (int) $e->course_version_id,
                 'revision_no' => $p['history_revision'] + 1, 'enrollment_revision' => $expected,
                 'previous_status' => $e->status, 'target_status' => $target, 'impact_hash' => $impactHash,
-                'reason' => $reason, 'actor_user_id' => (int) $actor->id, 'mutation_id' => $key, 'request_hash' => $hash, 'created_at' => $now];
+                'reason' => $reason, 'actor_user_id' => (int) $actor->id, 'mutation_id' => $key,
+                     'request_hash' => $hash, 'created_at' => $now];
             $this->db->insertObject('#__jlms_enrollment_state_changes', $record, 'id');
             $update = (object) [
                 'id' => $enrollment,
@@ -178,7 +182,8 @@ final class EnrollmentStateService
                     ->bind(':enrollment', $enrollment, ParameterType::INTEGER);
                 $this->db->setQuery($sessions)->execute();
             }
-            ($this->audit)($actor, ['id' => (int) $record->id, 'actor_id' => (int) $actor->id, 'enrollment_id' => $enrollment,
+            ($this->audit)($actor, ['id' => (int) $record->id, 'actor_id' => (int) $actor->id,
+                 'enrollment_id' => $enrollment,
                 'previous_status' => $e->status, 'target_status' => $target, 'reason_reference' => (int) $record->id,
                 'reason_code' => 'enrollment_state_changed', 'correlation_id' => bin2hex(random_bytes(16))]);
             $template = match ($target) {
@@ -196,7 +201,8 @@ final class EnrollmentStateService
                 $name,
                 ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $e->course_title,
                     'SITE_NAME' => (string) \Joomla\CMS\Factory::getApplication()->get('sitename')]
-                    + ($target === 'active' ? ['DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=dashboard'] : []),
+                    + ($target === 'active' ? ['DASHBOARD_URL' => \Joomla\CMS\Uri\Uri::root() .
+                         'index.php?option=com_jlms&view=dashboard'] : []),
                 (int) $e->user_id
             );
             $this->db->transactionCommit();
