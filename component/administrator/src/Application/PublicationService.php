@@ -128,7 +128,9 @@ final class PublicationService
                 if ($action === 'review' && (int) $state !== $currentState) {
                     return false;
                 }
-                if ($action === 'return' && ((int) $transition->jlms_source_stage_id !== $reviewStage || (int) $state !== $returnState)) {
+                if ($action === 'return'
+                    && ((int) $transition->jlms_source_stage_id !== $reviewStage
+                    || (int) $state !== $returnState)) {
                     return false;
                 }
                 if ($action === 'publish' && (int) $state !== 1) {
@@ -198,11 +200,16 @@ final class PublicationService
         if ($version->status !== 'draft' || $course->current_version_id === null || $action !== 'publish') {
             return null;
         }
-        if (($course->checked_out && (int)$course->checked_out !== (int)$actor->id) || ($version->checked_out && (int)$version->checked_out !== (int)$actor->id)) {
+        if (($course->checked_out
+            && (int)$course->checked_out !== (int)$actor->id)
+            || ($version->checked_out
+            && (int)$version->checked_out !== (int)$actor->id)) {
             throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
         $source = $this->row('course_versions', (int)$course->current_version_id);
-        if ((int)$source->course_id !== $courseId || $source->status !== 'published' || (int)$source->id === $versionId) {
+        if ((int)$source->course_id !== $courseId
+            || $source->status !== 'published'
+            || (int)$source->id === $versionId) {
             throw new \DomainException('COM_JLMS_VERSION_IMMUTABLE');
         }
         return (new PublicationImpact($this->db))->build($course, $source, $version, $transitionId, (int)$actor->id);
@@ -258,7 +265,8 @@ final class PublicationService
                 }
                 if (
                     !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validStored($lesson->publish_up, $lesson->publish_down)
-                    || !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validReleaseDays($lesson->release_after_days)
+
+                        || !\Jlms\Component\Jlms\Administrator\Domain\LessonAvailability::validReleaseDays($lesson->release_after_days)
                 ) {
                     throw new \DomainException('COM_JLMS_LESSON_SCHEDULE_INVALID');
                 }
@@ -281,14 +289,19 @@ final class PublicationService
                     $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze($actor, $course, $lesson);
                 } elseif ($lesson->kind === 'text') {
                     if (
-                        $lesson->completion_rule !== 'manual' || $lesson->source_json !== null || $lesson->provider_key !== null
-                        || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === ''
+                        $lesson->completion_rule !== 'manual'
+                            || $lesson->source_json !== null
+                            || $lesson->provider_key !== null
+
+                            || trim(html_entity_decode(strip_tags((string) $lesson->body), ENT_QUOTES | ENT_HTML5, 'UTF-8')) === ''
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
                     }
                 } elseif ($lesson->kind === 'document') {
                     if (
-                        $lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
+                        $lesson->completion_rule !== 'manual'
+                            || $lesson->provider_key !== null
+                            || $lesson->source_json !== null
                         || $lesson->media_asset_id !== null || $lesson->duration_ms !== null
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
@@ -304,7 +317,9 @@ final class PublicationService
                     }
                 } elseif ($lesson->kind === 'audio') {
                     if (
-                        $lesson->completion_rule !== 'manual' || $lesson->provider_key !== null || $lesson->source_json !== null
+                        $lesson->completion_rule !== 'manual'
+                            || $lesson->provider_key !== null
+                            || $lesson->source_json !== null
                         || $lesson->media_asset_id !== null || $lesson->duration_ms !== null
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
@@ -324,7 +339,10 @@ final class PublicationService
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
                     if (
                         !is_array($params) || (array_key_exists('video_threshold_basis_points', $params)
-                        && (!is_int($params['video_threshold_basis_points']) || $params['video_threshold_basis_points'] < 1 || $params['video_threshold_basis_points'] > 10000))
+
+                            && (!is_int($params['video_threshold_basis_points'])
+                            || $params['video_threshold_basis_points'] < 1
+                            || $params['video_threshold_basis_points'] > 10000))
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
@@ -338,7 +356,9 @@ final class PublicationService
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_POLICY_BLOCKED');
                     }
                     if (
-                        $rules['mode'] !== 'consultation' && ((int) $lesson->duration_ms < 1000 || (int) $lesson->duration_ms > 28800000
+                        $rules['mode'] !== 'consultation'
+                            && ((int) $lesson->duration_ms < 1000
+                            || (int) $lesson->duration_ms > 28800000
                         || ($params['video_duration_confirmed'] ?? false) !== true)
                     ) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_DURATION_REQUIRED');
@@ -349,7 +369,9 @@ final class PublicationService
                     if ($lesson->provider_key === 'cloudflarestream') {
                         $proof = $remoteChecks[(int) $lesson->id] ?? null;
                         if (
-                            $rules['mode'] !== 'consultation' && (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
+                            $rules['mode'] !== 'consultation'
+                                && (!$proof
+                                || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
                             || $proof['source_revision'] !== (int) $lesson->source_revision
                             || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson
                             ->duration_ms, (int)$proof['duration_ms']))
@@ -364,7 +386,10 @@ final class PublicationService
                     if (!$provider->getDescriptor()->configured) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
                     }
-                    if ($rules['mode'] !== 'consultation' && !(($capabilities = $provider->getCapabilities($normal))->position && $capabilities->duration && $capabilities->seek)) {
+                    if ($rules['mode'] !== 'consultation'
+                        && !(($capabilities = $provider->getCapabilities($normal))->position
+                        && $capabilities->duration
+                        && $capabilities->seek)) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
                 } else {
@@ -474,7 +499,8 @@ final class PublicationService
                 ($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
                 || $attachment['status'] !== 'ready' || !in_array($preview, [0, 1], true)
                 || ($preview === 1 && $attachment['lesson_id'] !== null)
-                || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored($attachment['publish_up'], $attachment['publish_down'])
+
+                    || !\Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::validStored($attachment['publish_up'], $attachment['publish_down'])
             ) {
                 throw new \DomainException('COM_JLMS_MATERIAL_NOT_READY');
             }
