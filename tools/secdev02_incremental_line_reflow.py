@@ -89,7 +89,7 @@ def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--phpcs",type=Path)
     ap.add_argument("--self-test",action="store_true")
-    ap.add_argument("--max-files",type=int,default=350)
+    ap.add_argument("--max-files",type=int,default=180)
     args=ap.parse_args()
     if args.self_test:
         example=b"    $value = functionCall("+b"$argument, "*14+b"$last);\n"
@@ -133,7 +133,7 @@ def main() -> int:
         attempts=0
         # Progressively repair one long source line per pass; do not alter
         # any other line when considering a candidate.
-        while attempts<120:
+        while attempts<36:
             data=path.read_bytes()
             offsets=spaces(path)
             before=phpcs_counts(args.phpcs,path)
@@ -165,9 +165,9 @@ def main() -> int:
                         changed=True
                         break
                     path.write_bytes(data)
-                    if attempts>=120:
+                    if attempts>=36:
                         break
-                if changed or attempts>=120:
+                if changed or attempts>=36:
                     break
             if not changed:
                 path.write_bytes(data)
