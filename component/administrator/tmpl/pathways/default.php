@@ -14,7 +14,9 @@ use Joomla\CMS\Router\Route;
     name="filter_pathway_state"
     class="form-select w-auto"
     onchange="this.form.submit()">
-   <option value="active"<?= $this->stateFilter === 'active' ? ' selected' : '' ?>><?= Text::_('JGLOBAL_FILTER_SELECT_STATUS') ?></option>
+   <option value="active"<?=
+        $this->stateFilter === 'active' ? ' selected' : '' ?>><?=
+        Text::_('JGLOBAL_FILTER_SELECT_STATUS') ?></option>
    <option value="trashed"<?= $this->stateFilter === 'trashed' ? ' selected' : '' ?>><?= Text::_('JTRASHED') ?></option>
   </select>
   <table class="table">

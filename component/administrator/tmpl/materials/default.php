@@ -25,7 +25,10 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
  <h1><?= $this->escape($course->title) ?> · <?= Text::_('COM_JLMS_MATERIALS') ?></h1>
  <a href="<?= $link('index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id='
      . (int) $version->id) ?>"><?= Text::_('COM_JLMS_CURRICULUM') ?></a>
- <p class="alert alert-info"><?= Text::_('COM_JLMS_MATERIALS_NOTICE') ?> <?= Text::_('COM_JLMS_EFFECTIVE_LIMIT') ?>: <?= number_format($item['limit'] / 1048576, 2) ?> MiB.</p>
+ <p class="alert alert-info"><?=
+      Text::_('COM_JLMS_MATERIALS_NOTICE') ?> <?=
+      Text::_('COM_JLMS_EFFECTIVE_LIMIT') ?>: <?=
+      number_format($item['limit'] / 1048576, 2) ?> MiB.</p>
  <p><?= Text::_($item['scan_required'] ? 'COM_JLMS_SCAN_REQUIRED' : 'COM_JLMS_SCAN_NOT_CONFIGURED') ?></p>
  <?php if ($editable) : ?>
  <p class="small text-muted"><?= Text::_('COM_JLMS_MATERIAL_SCHEDULE_ZONE') ?>: <?= $this->escape($this
@@ -66,8 +69,11 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
     value="<?= (int) $version->id ?>">
   <label for="jlms-material-scope"><?= Text::_('COM_JLMS_MATERIAL_SCOPE_FILTER') ?></label>
   <select id="jlms-material-scope" name="material_scope">
-   <option value="0"<?= $this->selectedScope === 0 ? ' selected' : '' ?>><?= Text::_('COM_JLMS_MATERIAL_SCOPE_ALL') ?></option>
-   <option value="-1"<?= $this->selectedScope === -1 ? ' selected' : '' ?>><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></option>
+   <option value="0"<?= $this->selectedScope === 0 ? ' selected' : '' ?>><?=
+        Text::_('COM_JLMS_MATERIAL_SCOPE_ALL') ?></option>
+   <option value="-1"<?=
+        $this->selectedScope === -1 ? ' selected' : '' ?>><?=
+        Text::_('COM_JLMS_COURSE_MATERIALS') ?></option>
    <?php foreach ($item['lessons'] as $lesson) :
         ?><option value="<?= (int) $lesson->id ?>"<?= $this->selectedScope === (int) $lesson
             ->id ? ' selected' : '' ?>><?= $this->escape($lesson->title) ?></option><?php
@@ -81,7 +87,9 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
   <h2><?= $this->escape($file->title) ?></h2>
   <p><?= $this->escape($file->original_name) ?> · <?= $this->escape($file->mime_type) ?> · <?= (int) $file
       ->byte_size ?> B · <?= $this->escape($file->status) ?> · <?= Text::_((int) $file
-          ->preview === 1 ? 'COM_JLMS_MATERIAL_PUBLIC_PREVIEW' : 'COM_JLMS_MATERIAL_PRIVATE') ?> · ID <?= (int) $file->id ?> · <?= $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
+          ->preview === 1 ? 'COM_JLMS_MATERIAL_PUBLIC_PREVIEW' : 'COM_JLMS_MATERIAL_PRIVATE') ?> · ID <?=
+               (int) $file->id ?> · <?=
+               $file->lesson_id ? Text::_('COM_JLMS_MODULE_LESSON') . ' ' . (int) $file->lesson_id : Text::_('COM_JLMS_COURSE_MATERIALS') ?></p>
         <?php if ($file->status === 'ready') :
             ?><a href="<?= $link('index.php?option=com_jlms&task=material.download&format=raw&course_id='
                 . (int) $course->id . '&version_id=' . (int) $version->id . '&id=' . (int) $file
@@ -99,7 +107,11 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
    <label><?= Text::_('JSTATUS') ?><select name="jform[state]"><option value="1"<?= (int) $file
        ->state === 1 ? ' selected' : '' ?>><?= Text::_('JPUBLISHED') ?></option><option value="0"<?= (int) $file
            ->state === 0 ? ' selected' : '' ?>><?= Text::_('JUNPUBLISHED') ?></option></select></label>
-   <label><?= Text::_('COM_JLMS_MATERIAL_PUBLIC_PREVIEW') ?><select name="jform[preview]"><option value="0"<?= (int) $file->preview === 0 ? ' selected' : '' ?>><?= Text::_('JNO') ?></option><option value="1"<?= (int) $file->preview === 1 ? ' selected' : '' ?>><?= Text::_('JYES') ?></option></select></label>
+   <label><?= Text::_('COM_JLMS_MATERIAL_PUBLIC_PREVIEW') ?><select name="jform[preview]"><option value="0"<?=
+        (int) $file->preview === 0 ? ' selected' : '' ?>><?=
+        Text::_('JNO') ?></option><option value="1"<?=
+        (int) $file->preview === 1 ? ' selected' : '' ?>><?=
+        Text::_('JYES') ?></option></select></label>
    <label><?= Text::_('JFIELD_ORDERING_LABEL') ?><input type="number"
     name="jform[ordering]"
     value="<?= (int) $file->ordering ?>"

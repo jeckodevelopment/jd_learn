@@ -23,25 +23,35 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
      <th scope="col"
     class="w-10"><?= HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $order) ?></th>
      <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $direction, $order) ?></th>
-     <th scope="col" class="d-none d-md-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $direction, $order) ?></th>
-     <th scope="col" class="d-none d-md-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $direction, $order) ?></th>
+     <th scope="col" class="d-none d-md-table-cell"><?=
+          HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $direction, $order) ?></th>
+     <th scope="col" class="d-none d-md-table-cell"><?=
+          HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $direction, $order) ?></th>
      <th scope="col" class="text-center"><?= Text::_('COM_JLMS_TEACHER_COURSE_COUNT') ?></th>
-     <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort', 'COM_JLMS_COURSES_MODIFIED', 'a.modified_at', $direction, $order) ?></th>
-     <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $direction, $order) ?></th>
+     <th scope="col" class="d-none d-lg-table-cell"><?=
+          HTMLHelper::_('searchtools.sort', 'COM_JLMS_COURSES_MODIFIED', 'a.modified_at', $direction, $order) ?></th>
+     <th scope="col" class="d-none d-lg-table-cell"><?=
+          HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ID', 'a.id', $direction, $order) ?></th>
     </tr></thead>
     <tbody>
        <?php foreach ($this->items as $i => $item) : ?>
      <tr class="row<?= $i % 2 ?>" data-teacher-id="<?= (int) $item->id ?>">
       <td class="text-center"><?= HTMLHelper::_('grid.id', $i, (int) $item->id) ?></td>
-      <td class="text-center"><?= (int) $item->state === -2 ? Text::_('JTRASHED') : HTMLHelper::_('jgrid.published', (int) $item->state, $i, 'teachers.', false) ?></td>
-      <th scope="row" class="has-context"><a href="<?= Route::_('index.php?option=com_jlms&task=teacher.edit&id=' . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a>
+      <td class="text-center"><?=
+           (int) $item->state === -2 ? Text::_('JTRASHED') : HTMLHelper::_('jgrid.published', (int) $item->state, $i, 'teachers.', false) ?></td>
+      <th scope="row" class="has-context"><a href="<?=
+           Route::_('index.php?option=com_jlms&task=teacher.edit&id=' . (int) $item->id) ?>"><?=
+           $this->escape($item->title) ?></a>
        <div class="small text-body-secondary"><?= Text::_('COM_JLMS_REVISION') ?>: <?= (int) $item->revision ?></div>
       </th>
       <td class="d-none d-md-table-cell"><?= $this->escape($item->author_name ?? Text::_('JNONE')) ?></td>
       <td class="d-none d-md-table-cell"><?= $item->language === '*' ? Text::_('JALL') : $this->escape($item
           ->language_title ?? $item->language) ?></td>
       <td class="text-center btns itemnumber"><a class="btn <?= (int) $item
-          ->course_count > 0 ? 'btn-success' : 'btn-secondary' ?>" href="<?= Route::_('index.php?option=com_jlms&view=courses&filter[teacher_id]=' . (int) $item->id) ?>" aria-label="<?= $this->escape(Text::sprintf('COM_JLMS_TEACHER_COURSE_COUNT_FOR', $item->title, (int) $item->course_count)) ?>"><?= (int) $item->course_count ?></a></td>
+          ->course_count > 0 ? 'btn-success' : 'btn-secondary' ?>" href="<?=
+               Route::_('index.php?option=com_jlms&view=courses&filter[teacher_id]=' . (int) $item->id) ?>" aria-label="<?=
+               $this->escape(Text::sprintf('COM_JLMS_TEACHER_COURSE_COUNT_FOR', $item->title, (int) $item->course_count)) ?>"><?=
+               (int) $item->course_count ?></a></td>
       <td class="d-none d-lg-table-cell"><?= $item->modified_at ? HTMLHelper::_('date', $item
           ->modified_at, Text::_('DATE_FORMAT_LC4')) : '' ?></td>
       <td class="d-none d-lg-table-cell"><?= (int) $item->id ?></td>

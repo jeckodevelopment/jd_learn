@@ -36,5 +36,6 @@ $impact = $this->purgeImpact;
  <?php else : ?>
  <p class="alert alert-danger"><?= Text::_('COM_JLMS_PURGE_BLOCKED') ?></p>
  <?php endif; ?>
- <p><a href="<?= Route::_('index.php?option=com_jlms&view=courses&filter[published]=-2') ?>"><?= Text::_('COM_JLMS_BACK_TO_COURSES') ?></a></p>
+ <p><a href="<?= Route::_('index.php?option=com_jlms&view=courses&filter[published]=-2') ?>"><?=
+      Text::_('COM_JLMS_BACK_TO_COURSES') ?></a></p>
 </section>

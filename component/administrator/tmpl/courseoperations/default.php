@@ -14,7 +14,13 @@ HTMLHelper::_('behavior.formvalidator');
 <section id="jlms-course-operations"><h1><?= Text::_('COM_JLMS_COURSE_OPERATIONS_TITLE') ?></h1>
 <h2><?= $this->escape($i['course']->title) ?></h2>
 <h3><?= Text::_($labels[$p['operation']]) ?></h3>
-<p><?= Text::_('COM_JLMS_COURSE_OPERATIONS_IMPACT') ?>: <?= (int)$p['learners'] ?> · <?= Text::_('COM_JLMS_COURSE_OPERATIONS_OPEN_QUIZZES') ?>: <?= (int)$p['open_attempts'] ?></p>
+<p><?= Text::_('COM_JLMS_COURSE_OPERATIONS_IMPACT')
+?>: <?=
+ (int)$p['learners']
+?> · <?=
+ Text::_('COM_JLMS_COURSE_OPERATIONS_OPEN_QUIZZES')
+?>: <?=
+ (int)$p['open_attempts'] ?></p>
 <?php if ($p['blocked']) :
     ?><p class="alert alert-info"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_ALREADY_SET') ?></p><?php
 else : ?>

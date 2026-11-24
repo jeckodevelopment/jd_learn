@@ -18,7 +18,8 @@ use Jlms\Component\Jlms\Administrator\Application\PathwayArtwork;
   <article id="jlms-pathway-<?= (int) $item->id ?>" class="jlms-card jlms-course-card jlms-pathway-card">
         <?php if ($cover['image'] !== '') : ?>
    <div class="jlms-pathway-card__cover">
-    <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover['image'])))) ?>" alt="<?= $this->escape($cover['alt']) ?>" loading="lazy" decoding="async">
+    <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover['image'])))) ?>" alt="<?=
+       $this->escape($cover['alt']) ?>" loading="lazy" decoding="async">
    </div>
         <?php endif; ?>
    <div class="jlms-pathway-card__content">
@@ -26,7 +27,8 @@ use Jlms\Component\Jlms\Administrator\Application\PathwayArtwork;
     <h2 class="jlms-pathway-card__title"><a href="<?= Route::_('index.php?option=com_jlms&view=pathway&id='
         . (int) $item->id) ?>"><?= $this->escape($item->title) ?></a></h2>
         <?php if (trim(strip_tags((string) $item->description)) !== '') : ?>
-     <p class="jlms-pathway-card__summary"><?= $this->escape(\Joomla\String\StringHelper::substr(trim(strip_tags((string) $item->description)), 0, 300)) ?></p>
+     <p class="jlms-pathway-card__summary"><?=
+        $this->escape(\Joomla\String\StringHelper::substr(trim(strip_tags((string) $item->description)), 0, 300)) ?></p>
         <?php endif; ?>
    </div>
   </article>

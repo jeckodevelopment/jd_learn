@@ -28,7 +28,9 @@ $id = (int) $this->item->id;
    <section id="jlms-course-presentation">
     <?= $this->form->renderField('summary') ?><?= $this->form->renderField('presentation_description') ?>
     <details id="jlms-course-learning-description">
-      <summary><?= Text::_('COM_JLMS_COURSE_OBJECTIVES') ?>, <?= Text::_('COM_JLMS_COURSE_AUDIENCE') ?>, <?= Text::_('COM_JLMS_COURSE_PREREQUISITE_TEXT') ?></summary>
+      <summary><?= Text::_('COM_JLMS_COURSE_OBJECTIVES') ?>, <?=
+           Text::_('COM_JLMS_COURSE_AUDIENCE') ?>, <?=
+           Text::_('COM_JLMS_COURSE_PREREQUISITE_TEXT') ?></summary>
      <?= $this->form->renderField('presentation_objectives') ?><?= $this->form
          ->renderField('presentation_audience') ?><?= $this->form->renderField('presentation_prerequisite_text') ?>
     </details>
@@ -101,7 +103,9 @@ $id = (int) $this->item->id;
  <section id="jlms-course-certificate-settings" aria-label="<?= Text::_('COM_JLMS_CERTIFICATE_SETTINGS') ?>">
   <?= $this->form->renderField('certificate_enabled') ?>
   <?php if ($this->canConfigure) : ?>
-   <p class="small"><a href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('COM_JLMS_CERTIFICATE_GLOBAL_DESC') ?></a></p>
+   <p class="small"><a href="<?=
+        Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?=
+        Text::_('COM_JLMS_CERTIFICATE_GLOBAL_DESC') ?></a></p>
   <?php endif; ?>
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>
@@ -129,7 +133,9 @@ $id = (int) $this->item->id;
         ?><dt><?= Text::_($label) ?></dt><dd><?= Text::_($allowed ? 'JYES' : 'JNO') ?></dd><?php
   endforeach; ?></dl>
   <?php if ($this->canConfigure) :
-        ?><a id="jlms-course-options-link" href="<?= Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?= Text::_('JOPTIONS') ?></a><?php
+        ?><a id="jlms-course-options-link" href="<?=
+             Route::_('index.php?option=com_config&view=component&component=com_jlms') ?>"><?=
+             Text::_('JOPTIONS') ?></a><?php
   endif; ?>
   </details>
   <?php if ($this->canManageCourseRules) : ?>

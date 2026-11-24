@@ -27,13 +27,19 @@ $i = $this->item;
         $p = $v['impact']; ?>
  <section id="jlms-manual-impact"><h2><?= Text::_('COM_JLMS_MANUAL_PREVIEW') ?></h2>
   <p><?= $this->escape($v['learner_name']) ?> (<?= $this->escape($v['username']) ?>)</p>
-  <p><?= Text::_('COM_JLMS_ROSTER_VERSION') ?> #<?= (int) $p['version_id'] ?> · <?= Text::_('COM_JLMS_ROSTER_EDITION') ?> #<?= (int) $p['edition_id'] ?> · <?= $this->escape($p['language']) ?></p>
+  <p><?= Text::_('COM_JLMS_ROSTER_VERSION') ?> #<?=
+       (int) $p['version_id'] ?> · <?=
+       Text::_('COM_JLMS_ROSTER_EDITION') ?> #<?=
+       (int) $p['edition_id'] ?> · <?=
+       $this->escape($p['language']) ?></p>
         <?php if (!$p['has_current_access']) :
             ?><p id="jlms-manual-access-warning"
     class="alert alert-warning"
     role="status"><?= Text::_('COM_JLMS_PREASSIGN_WARNING') ?></p><?php
         endif; ?>
-  <p><?= Text::_('COM_JLMS_MANUAL_CAPACITY') ?>: <?= (int) $p['used'] ?> / <?= $p['capacity'] === null ? Text::_('COM_JLMS_MANUAL_UNLIMITED') : (int) $p['capacity'] ?></p>
+  <p><?= Text::_('COM_JLMS_MANUAL_CAPACITY') ?>: <?=
+       (int) $p['used'] ?> / <?=
+       $p['capacity'] === null ? Text::_('COM_JLMS_MANUAL_UNLIMITED') : (int) $p['capacity'] ?></p>
         <?php if ($p['blocked'] !== null) :
             ?><p id="jlms-manual-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
             <?php if ($p['existing_id']) :
@@ -52,7 +58,12 @@ $i = $this->item;
   </form>
         <?php endif; ?>
         <?php if ($v['receipt']) :
-            $h = $v['receipt']; ?><section id="jlms-manual-receipt"><h3><?= Text::_('COM_JLMS_MANUAL_RECEIPT') ?> #<?= (int) $h->id ?></h3><p><?= $this->escape($h->reason) ?> · <?= (int) $h->actor_user_id ?> · <?= $this->escape($h->created_at) ?> UTC</p></section><?php
+            $h = $v['receipt']; ?><section id="jlms-manual-receipt"><h3><?=
+                 Text::_('COM_JLMS_MANUAL_RECEIPT') ?> #<?=
+                 (int) $h->id ?></h3><p><?=
+                 $this->escape($h->reason) ?> · <?=
+                 (int) $h->actor_user_id ?> · <?=
+                 $this->escape($h->created_at) ?> UTC</p></section><?php
         endif; ?>
  </section>
  <?php endif; ?>

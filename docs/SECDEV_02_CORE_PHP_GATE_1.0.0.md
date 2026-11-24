@@ -360,3 +360,7 @@ PHPCS 4.0.4 PSR12 full repository comparison: **1018 → 993**, net **25 finding
 
 - Verify HTML templates in frontend/backend across desktop/mobile; exact title, link, attribute and field data; confirm no unexpected whitespace-sensitive DOM nodes.
 - Verify PHP syntax, PHPCS PSR12 (zero regressions), contract gates, package build and full Joomla CI.
+
+### Second batch within PR #1016: PHP echo boundaries
+
+The pinned PHPCS 4.0.4 full tracked-PHP audit measured **993 → 914** (-79) across **23 PHP files** with zero per-file/per-rule regressions. Newlines are inserted only inside `<?= ... ?>` code regions, leaving rendered markup and PHP significant tokens identical; PHP lint, source contracts and complete CI remain mandatory. **No functional coverage percentage promotion.** SECDEV-02 remains partial while findings remain and CORE/API reviews are pending.

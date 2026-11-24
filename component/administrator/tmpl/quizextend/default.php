@@ -20,7 +20,8 @@ $p = $i['impact'];
     value="<?= (int)$i['lesson_id'] ?>">
  <input type="hidden" name="enrollment_id" value="<?= (int)$i['enrollment']
      ->id ?>"><input type="hidden" name="attempt_id" value="<?= (int)$i['attempt']->id ?>">
- <label for="jlms-quiz-extend-minutes"><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?></label><input id="jlms-quiz-extend-minutes"
+ <label for="jlms-quiz-extend-minutes"><?=
+      Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?></label><input id="jlms-quiz-extend-minutes"
      type="number"
      name="minutes"
      min="1"
@@ -34,7 +35,10 @@ $p = $i['impact'];
          'Y-m-d H:i:s',
          $p['previous_deadline']
      )) ?> → <?= $p['new_deadline'] === null ? '—' : $this->escape(gmdate('Y-m-d H:i:s', $p['new_deadline'])) ?> UTC</p>
- <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?>: <?= (int)$i['minutes'] ?> · <?= Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?>: <?= (int)$p['effective_seconds'] ?> s</p>
+ <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?>: <?=
+      (int)$i['minutes'] ?> · <?=
+      Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?>: <?=
+      (int)$p['effective_seconds'] ?> s</p>
  <?php if ($p['blocked'] !== null) :
         ?><p id="jlms-quiz-extend-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
  <?php else :
