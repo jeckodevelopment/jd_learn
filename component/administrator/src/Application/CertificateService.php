@@ -94,7 +94,8 @@ final class CertificateService
         $activeTemplate = $this->db->createQuery()->select('id')->from('#__jlms_certificate_templates')
             ->where('state = 1')->order('id ASC');
         $templateExists = (int) $this->db->setQuery($activeTemplate, 0, 1)->loadResult() > 0;
-        $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('certificate_enabled', 0);
+        $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+            ->get('certificate_enabled', 0);
         $result = [];
         foreach ($records as $record) {
             $reason = 'eligible_missing';
@@ -228,7 +229,8 @@ final class CertificateService
             if ($rules['mode'] !== 'learning' || $rules['certificate_enabled'] !== true) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
-            $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('certificate_enabled', 0);
+            $globalEnabled = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
+                ->get('certificate_enabled', 0);
             if (!CertificatePreferences::enabled($globalEnabled, (string) $row->params_json)) {
                 throw new \RuntimeException('COM_JLMS_CERTIFICATE_UNAVAILABLE', 409);
             }
@@ -304,7 +306,8 @@ final class CertificateService
         }
         $handle = $this->storage->open($asset);
         return ['handle' => $handle, 'size' => (int) $asset->byte_size, 'mime' => 'application/pdf',
-            'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset->sha256 . '"'];
+            'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset
+                ->sha256 . '"'];
     }
 
     private function document(int $userId, int $enrollmentId): ?object
@@ -385,7 +388,8 @@ final class CertificateService
                  '{"engine":"generated","result":"trusted"}',
                 'created_by' => $userId, 'modified_by' => $userId, 'created_at' => $now, 'modified_at' => $now]);
             $this->db->insertObject('#__jlms_assets', $asset, 'id');
-            $update = (object) ['id' => (int) $record->document_id, 'status' => 'ready', 'pdf_asset_id' => (int) $asset->id,
+            $update = (object) ['id' => (int) $record->document_id, 'status' => 'ready',
+                 'pdf_asset_id' => (int) $asset->id,
                 'revision' => (int) $record->revision + 1];
             $this->db->updateObject('#__jlms_certificate_documents', $update, 'id');
             $this->db->transactionCommit();
@@ -529,7 +533,8 @@ final class CertificateService
             ->bind(':certificate', $certificateId, ParameterType::INTEGER)->order('id DESC');
         $audit = $this->db->setQuery($auditQuery, 0, 50)->loadObjectList();
         return ['id' => (int) $record->certificate_id, 'document_id' => (int) $record->document_id,
-            'serial' => (string) $record->serial, 'status' => $record->revoked_at ? 'revoked' : (string) $record->status,
+            'serial' => (string) $record->serial, 'status' => $record->revoked_at ? 'revoked' :
+                 (string) $record->status,
             'issued_at' => (string) $record->issued_at, 'revoked_at' => (string) ($record->revoked_at ?? ''),
             'revocation_reason' => (string) ($record->revocation_reason ?? ''), 'student_name' =>
                  (string) ($identitySnapshot['name'] ?? ''),
@@ -569,7 +574,8 @@ final class CertificateService
         $this->recordCertificateAudit((int) $record->certificate_id, (int) $record->document_id, (int) $identity
             ->id, 'admin_download');
         return ['handle' => $handle, 'size' => (int) $asset->byte_size, 'mime' => 'application/pdf',
-            'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset->sha256 . '"'];
+            'name' => 'certificate-' . (string) $record->serial . '.pdf', 'etag' => '"' . (string) $asset
+                ->sha256 . '"'];
     }
 
     /**

@@ -124,7 +124,8 @@ final class QuizAuthoringService
         $threshold = (int) $match[1] * 100 + (int) str_pad($match[2] ?? '', 2, '0');
         if (
             $threshold > 10000 || !in_array($assessment, ['graded', 'practice'], true) || ($required && ($assessment !== 'graded' || $threshold === 0))
-            || !in_array($selectionMode, ['fixed', 'random'], true) || !in_array($feedback, ['pass_or_exhausted', 'never', 'after_submit'], true)
+            || !in_array($selectionMode, ['fixed', 'random'], true) || !in_array($feedback, ['pass_or_exhausted'
+                , 'never', 'after_submit'], true)
             || ($assessment === 'graded' && $feedback === 'after_submit')
         ) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
@@ -195,7 +196,8 @@ final class QuizAuthoringService
                 if (!$quiz || (int) $quiz->revision !== $revision) {
                     throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
                 }
-                $update = (object) ['id' => $lesson, 'title' => trim($title), 'required' => (int) $required, 'revision' => (int) $l->revision + 1,
+                $update = (object) ['id' => $lesson, 'title' => trim($title), 'required' => (int) $required
+                    , 'revision' => (int) $l->revision + 1,
                     'modified_by' => (int) $actor->id, 'modified_at' => $now];
                 $this->db->updateObject('#__jlms_lessons', $update, 'id');
             } else {
@@ -214,14 +216,16 @@ final class QuizAuthoringService
                     ->bind(':module', $module, ParameterType::INTEGER);
                 $order = (int) $this->db->setQuery($q)->loadResult() + 1;
                 $l = (object) ['course_version_id' => $version, 'module_id' => $module, 'logical_key' => sprintf('%s-%s-4%s-a%s-%s', bin2hex(random_bytes(4)), bin2hex(random_bytes(2)), substr(bin2hex(random_bytes(2)), 1), substr(bin2hex(random_bytes(2)), 1), bin2hex(random_bytes(6))), 'alias' => 'quiz-' . bin2hex(random_bytes(8)),
-                    'title' => trim($title), 'kind' => 'quiz', 'required' => (int) $required, 'ordering' => $order, 'completion_rule' => 'quiz_pass',
+                    'title' => trim($title), 'kind' => 'quiz', 'required' => (int) $required,
+                         'ordering' => $order, 'completion_rule' => 'quiz_pass',
                     'params_json' => '{}', 'fields_snapshot_json' => '{}', 'revision' => 1,
                          'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
                          'created_at' => $now, 'modified_at' => $now];
                 $this->db->insertObject('#__jlms_lessons', $l, 'id');
                 $lesson = (int) $l->id;
             }
-            $config = (object) ['lesson_id' => $lesson, 'course_version_id' => $version, 'pass_basis_points' => $threshold, 'max_attempts' => $attempts,
+            $config = (object) ['lesson_id' => $lesson, 'course_version_id' => $version,
+                 'pass_basis_points' => $threshold, 'max_attempts' => $attempts,
                 'time_limit_seconds' => $minutes ? $minutes * 60 : null, 'feedback_policy' => $feedback
                     , 'selection_json' => QuestionDefinition::canonical($selection),
                 'revision' => $quiz ? (int) $quiz->revision + 1 : 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
@@ -244,7 +248,8 @@ final class QuizAuthoringService
                 $link = (object) ['quiz_id' => $quizId, 'question_revision_id' => $id, 'ordering' => $order++, 'points' => $points];
                 $this->db->insertObject('#__jlms_quiz_questions', $link);
             }
-            $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
+            $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' =>
+                 (int) $actor->id, 'modified_at' => $now];
             $this->db->updateObject('#__jlms_course_versions', $touch, 'id');
             $this->db->transactionCommit();
             return $lesson;

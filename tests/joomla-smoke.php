@@ -423,7 +423,8 @@ if (
 ) {
     throw new \RuntimeException('Upgrade regression: tags, editor content or idempotency lost.');
 }
-$menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
+$menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db
+    ->quoteName('#__menu'))->where($db->quoteName('id') . ' = ' . $menuParent))->loadResult();
 if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') {
     throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.');
 }
@@ -541,7 +542,8 @@ if (count($privacyCheckData) !== 1 || !$privacyCheckData[0]->canRemove) {
     throw new \RuntimeException('JD Learn privacy plugin blocked removal for a user without JD Learn data.');
 }
 $db->setQuery(("INSERT INTO #__jlms_jobs (kind, owner_user_id, scope_json, "
-    . "payload_json, status, available_at, created_at) VALUES ('privacy-fixture', ") . $privacyUserId . ", '{}', '{}', 'complete', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))")->execute();
+    . "payload_json, status, available_at, created_at) VALUES ('privacy-fixture', ") . $privacyUserId .
+         ", '{}', '{}', 'complete', UTC_TIMESTAMP(6), UTC_TIMESTAMP(6))")->execute();
 $privacyBlocked = new CanRemoveDataEvent('onPrivacyCanRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyCanRemoveData($privacyBlocked);
 $privacyBlockedData = $privacyBlocked->getArgument('result', []);
@@ -664,7 +666,8 @@ if ($otherPrivacyUserId <= 0 || $otherPrivacyUserId === $privacyUserId) {
 $otherPrivacyMailKey = hash('sha256', 'privacy-mail-other-user-ci-' . $privacyUserId);
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
 $db->setQuery($db->createQuery()->insert('#__jlms_mail_queue')
-    ->columns(['event_key', 'template_id', 'recipient_user_id', 'recipient_email', 'recipient_name', 'template_data', 'state', 'available_at', 'created_at', 'reconciliation_by'])
+    ->columns(['event_key', 'template_id', 'recipient_user_id', 'recipient_email', 'recipient_name'
+        , 'template_data', 'state', 'available_at', 'created_at', 'reconciliation_by'])
     ->values(implode(',', [
         $db->quote($otherPrivacyMailKey), $db->quote('ci.privacy.other'), $otherPrivacyUserId,
         $db->quote('other-privacy-fixture@example.invalid'), $db->quote('Other Privacy Fixture'),
@@ -923,7 +926,8 @@ if (($argv[2] ?? '') === 'retained') {
     if (!$record || $record->title !== 'Updated course' || (int) $record->revision !== 2 || $enabled !== 4) {
         throw new \RuntimeException('Package update lost draft data or plugin state.');
     }
-    echo json_encode(['admin_menu_install_checks' => 1, 'package_upgrade' => 'passed', 'draft_revision' => 2, 'enabled_providers' => $enabled], JSON_THROW_ON_ERROR) . PHP_EOL;
+    echo json_encode(['admin_menu_install_checks' => 1, 'package_upgrade' => 'passed', 'draft_revision' => 2
+        , 'enabled_providers' => $enabled], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit(0);
 }
 

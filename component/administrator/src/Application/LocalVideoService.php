@@ -167,7 +167,8 @@ final class LocalVideoService
         $metadata = $params['local_video'] ?? [];
         if (
             $asset->storage !== 'local_video' || $asset->mime_type !== 'video/mp4' || $asset->status !== 'ready'
-            || ($source['reference'] ?? '') !== (string) $asset->id || ($source['asset_sha256'] ?? '') !== $asset->sha256
+            || ($source['reference'] ?? '') !== (string) $asset->id || ($source['asset_sha256'] ??
+                 '') !== $asset->sha256
             || ($metadata['sha256'] ?? '') !== $asset->sha256 || ($metadata['duration_ms'] ?? 0) !==
                  (int) $lesson->duration_ms
             || ($metadata['video_codec'] ?? '') !== 'h264'

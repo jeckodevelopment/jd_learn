@@ -117,7 +117,8 @@ final class VideoProgressService
         if ($trackingRequired && !($capabilities->position && $capabilities->duration && $capabilities->seek)) {
             throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
         }
-        $expiry = $lesson->access_expires_at ? new \DateTimeImmutable($lesson->access_expires_at, new \DateTimeZone('UTC')) : null;
+        $expiry = $lesson->access_expires_at ? new \DateTimeImmutable($lesson->
+            access_expires_at, new \DateTimeZone('UTC')) : null;
         // Remote work is always outside the write transaction. A second current-access check follows it.
         $descriptor = $provider->createPlaybackDescriptor($video, new PlaybackContext(
             (int) $actor->id,
@@ -348,7 +349,8 @@ final class VideoProgressService
                 $progress->resume_ms = $telemetry['resume_ms'];
             }
             $progress->state = !$consultation && ($completed || $progress->state === 'completed') ? 'completed' : 'started';
-            $progress->completed_at = $consultation ? null : ($progress->completed_at ?? ($completed ? self::date($now) : null));
+            $progress->completed_at = $consultation ? null : ($progress->completed_at ?? ($completed ?
+                 self::date($now) : null));
             $progress->last_activity_at = self::date($now);
             $progress->revision = (int) $progress->revision + 1;
             $q = $this->db->createQuery()->update('#__jlms_lesson_progress')->set('coverage_json = :coverage')
@@ -380,7 +382,8 @@ final class VideoProgressService
             }
             $enrollment->completed_total = $total;
             $update = (object) ['id' => $enrollmentId, 'completed_total' => $total, 'completed_at' => $enrollment->completed_at,
-                'last_activity_at' => self::date($now), 'last_lesson_id' => $lessonId, 'revision' => (int) $enrollment->revision + 1,
+                'last_activity_at' => self::date($now), 'last_lesson_id' => $lessonId, 'revision' =>
+                     (int) $enrollment->revision + 1,
                 'modified_at' => self::date($now), 'modified_by' => (int) $actor->id];
             $this->db->updateObject('#__jlms_enrollments', $update, 'id', true);
             if ($newCourseCompletion) {

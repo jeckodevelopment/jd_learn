@@ -356,7 +356,8 @@ final class MaterialService
                 }
                 $attachment = (object) ['course_version_id' => $versionId, 'lesson_id' => $lessonId ?: null,
                     'asset_id' => (int) $asset->id, 'title' => trim($title), 'description' => $description, 'ordering' => $count,
-                    'state' => 1, 'preview' => $preview, 'publish_up' => $availability['publish_up'], 'publish_down' => $availability['publish_down'],
+                    'state' => 1, 'preview' => $preview, 'publish_up' => $availability['publish_up']
+                        , 'publish_down' => $availability['publish_down'],
                     'revision' => 1, 'created_by' => (int) $actor->id,
                     'modified_by' => (int) $actor->id, 'created_at' => $now, 'modified_at' => $now];
                 $this->db->insertObject('#__jlms_attachments', $attachment, 'id');

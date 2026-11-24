@@ -102,8 +102,10 @@ function rosterDenied(callable $fn, int $code, string $message): void
 }
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $course = (int)$f['course'];
-$otherCourse = (int)$db->setQuery('SELECT course_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])->loadResult();
-$version = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . (int)$f['active'])->loadResult();
+$otherCourse = (int)$db->setQuery('SELECT course_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])
+    ->loadResult();
+$version = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . (int)$f['active'])
+    ->loadResult();
 $read = static fn(
     $who,
     array $filters = []
@@ -376,7 +378,8 @@ try {
             }
             $db->transactionStart();
             try {
-                $db->setQuery('SELECT id FROM #__jlms_mail_queue WHERE id=' . (int)$parallelId . ' FOR UPDATE')->loadResult();
+                $db->setQuery('SELECT id FROM #__jlms_mail_queue WHERE id=' . (int)$parallelId . ' FOR UPDATE')
+                    ->loadResult();
                 foreach ($workers as [$child, $pipes]) {
                     fwrite($pipes[0], "go\n");
                     fclose($pipes[0]);
@@ -515,7 +518,8 @@ rosterExpect(
     'denied course messages do not enqueue mail'
 );
 rosterExpect(
-    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->
+        loadResult() === $jobsBefore,
     'denied course messages do not enqueue jobs'
 );
 
@@ -558,7 +562,8 @@ try {
         $replayKey
     ), 409, 'changed message with reused mutation ID must conflict');
     rosterExpect(
-        (string)$db->setQuery('SELECT payload_json FROM #__jlms_jobs WHERE id=' . $replayJob)->loadResult() === $savedPayload,
+        (string)$db->setQuery('SELECT payload_json FROM #__jlms_jobs WHERE id=' . $replayJob)->
+            loadResult() === $savedPayload,
         'conflicting replay does not replace immutable message payload'
     );
     rosterExpect(
@@ -574,7 +579,8 @@ try {
     }
 }
 rosterExpect(
-    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult() === $jobsBefore,
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->
+        loadResult() === $jobsBefore,
     'SEC-P1 replay fixture leaves no queued communication job'
 );
 

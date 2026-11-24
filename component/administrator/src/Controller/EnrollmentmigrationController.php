@@ -88,7 +88,8 @@ final class EnrollmentmigrationController extends BaseController
                 'COM_JLMS_MIGRATION_TARGET_EXISTS','COM_JLMS_MIGRATION_OPEN_ATTEMPT','COM_JLMS_MIGRATION_CONFLICT',
                 'COM_JLMS_MIGRATION_EDITION_MISSING','COM_JLMS_MIGRATION_EDITION_UNAVAILABLE'
                     ,'COM_JLMS_MIGRATION_EDITION_FULL',
-                'COM_JLMS_COURSE_DELIVERY_SUSPENDED','COM_JLMS_MIGRATION_REASON','COM_JLMS_MIGRATION_AUDIT_FAILED'], true)
+                'COM_JLMS_COURSE_DELIVERY_SUSPENDED','COM_JLMS_MIGRATION_REASON'
+                    ,'COM_JLMS_MIGRATION_AUDIT_FAILED'], true)
             ) {
                 throw new \RuntimeException(Text::_($key), $code);
             }

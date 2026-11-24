@@ -160,7 +160,8 @@ final class ManualEnrollmentService
         }
         $p = ['course_id' => $courseId, 'user_id' => $userId, 'language' => $language, 'version_id' =>
              $versionId, 'version_revision' => (int) $version->revision,
-            'edition_id' => $editionId, 'edition_revision' => (int) $edition->revision, 'starts_at' => $edition->starts_at, 'ends_at' => $edition->ends_at,
+            'edition_id' => $editionId, 'edition_revision' => (int) $edition->revision, 'starts_at' => $edition
+                ->starts_at, 'ends_at' => $edition->ends_at,
             'capacity' => $edition->capacity === null ? null : (int) $edition->capacity, 'used' => $used, 'required_total' => $total,
             'existing_id' => $existing ? (int) $existing->id : null, 'existing_status' => $existing->status ?? null,
             'blocked' => $existing ? 'COM_JLMS_MANUAL_EXISTS' : ($edition->capacity !== null &&
@@ -266,7 +267,8 @@ final class ManualEnrollmentService
                 throw new \RuntimeException('COM_JLMS_MANUAL_CONFLICT', 409);
             }
             $hex = bin2hex(random_bytes(16));
-            $subject = substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) . '-a' . substr($hex, 17, 3) . '-' . substr($hex, 20);
+            $subject = substr($hex, 0, 8) . '-' . substr($hex, 8, 4) . '-4' . substr($hex, 13, 3) .
+                 '-a' . substr($hex, 17, 3) . '-' . substr($hex, 20);
             $q = $this->db->createQuery();
             $q->setQuery(('INSERT INTO #__jlms_subjects (subject_key,user_id,created_at) VALUES '
             . '(:subject,:user,:now) ON DUPLICATE KEY UPDATE user_id=user_id'))
@@ -291,7 +293,8 @@ final class ManualEnrollmentService
                 'course_version_id' => $p['version_id']
             ];
             $this->db->updateObject('#__jlms_manual_enrollments', $update, 'id');
-            ($this->audit)($actor, ['id' => (int) $receipt->id, 'actor_id' => $actorId, 'enrollment_id' => $id, 'reason_reference' => (int) $receipt->id,
+            ($this->audit)($actor, ['id' => (int) $receipt->id, 'actor_id' => $actorId, 'enrollment_id' => $id
+                , 'reason_reference' => (int) $receipt->id,
                 'reason_code' => 'manual_enrollment_created', 'preassignment_requested' =>
                      $preassignment, 'access_at_assignment' => $p['has_current_access'],
                      'correlation_id' => bin2hex(random_bytes(16))]);

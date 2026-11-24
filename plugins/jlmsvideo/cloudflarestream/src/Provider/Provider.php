@@ -35,7 +35,8 @@ final class Provider extends AbstractFoundationProvider
         if (
             (int) ($c['playback_enabled'] ?? 0) !== 1
             || !preg_match('/\A[a-f0-9]{32}\z/D', (string) ($c['account_id'] ?? ''))
-            || !preg_match('/\Acustomer-[a-z0-9]{1,80}\.cloudflarestream\.com\z/D', (string) ($c['playback_domain'] ?? ''))
+            || !preg_match('/\Acustomer-[a-z0-9]{1,80}\.cloudflarestream\.com\z/D', (string)
+                ($c['playback_domain'] ?? ''))
             || !preg_match('/\A(?=.{1,253}\z)[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?\z/D', (string) ($c['site_host'] ?? ''))
             || str_contains($c['site_host'], '..') || !$this->secrets || !$this->transport
         ) {
@@ -74,7 +75,8 @@ final class Provider extends AbstractFoundationProvider
         $c = $this->configuration();
         $this->normaliseSource(new SourceInput($uid));
         $secret = ($this->secrets)((string) ($c['api_token_ref'] ?? ''));
-        $url = 'https://api.cloudflare.com/client/v4/accounts/' . $c['account_id'] . '/stream/' . $uid . ($method === 'POST' ? '/token' : '');
+        $url = 'https://api.cloudflare.com/client/v4/accounts/' . $c['account_id'] . '/stream/' . $uid .
+             ($method === 'POST' ? '/token' : '');
         try {
             $response = ($this->transport)(
                 $method,
@@ -187,8 +189,10 @@ final class Provider extends AbstractFoundationProvider
         $header = self::decode($parts[1]);
         $claims = self::decode($parts[2]);
         if (
-            ($header['alg'] ?? '') !== 'RS256' || ($claims['sub'] ?? '') !== $source->reference || !is_int($claims['exp'] ?? null)
-            || $claims['exp'] > $expiry || $claims['exp'] <= $now + 5 || (isset($claims['downloadable']) && $claims['downloadable'] !== false)
+            ($header['alg'] ?? '') !== 'RS256' || ($claims['sub'] ?? '') !== $source->
+                reference || !is_int($claims['exp'] ?? null)
+            || $claims['exp'] > $expiry || $claims['exp'] <= $now + 5 || (isset($claims['downloadable'])
+                    && $claims['downloadable'] !== false)
         ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
         }

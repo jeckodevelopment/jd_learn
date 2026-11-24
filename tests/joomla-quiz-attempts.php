@@ -186,7 +186,9 @@ if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Quiz runtime fixture','
 }
 $course = (int)$model->getState('course.id');
 $version = $authoring->createDraft($actor, $course, 1);
-$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
+$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,
+    'expected_version_revision' => (int)$db->
+    setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Quiz runtime chapter']);
 $base = ['lesson_id' => 0,'revision' => 1,'module_id' => $module,'title' => 'Graded quiz','required' =>
      '1','assessment' => 'graded','threshold' => '60.01','max_attempts' => '3','time_minutes' => '1',
@@ -197,7 +199,8 @@ $lesson = $quizzes->save($actor, $scope() + $base);
 $practice = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Practice quiz','required' => '0'
     ,'assessment' => 'practice','threshold' => '0','feedback_policy' => 'after_submit','max_attempts' => '1'
     ,'retry_minutes' => '0']));
-$never = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Hidden feedback quiz','required' => '0','feedback_policy' => 'never','max_attempts' => '1','retry_minutes' => '0']));
+$never = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Hidden feedback quiz',
+    'required' => '0','feedback_policy' => 'never','max_attempts' => '1','retry_minutes' => '0']));
 $tfQuestion = $component->getQuestionBankService()->save($actor, ['id' => 0,'revision' => 1,'catid' =>
      $bank['category_id'],'language' => '*','state' => '1','kind' => 'true_false','prompt' =>
      'True or false?','options' => [['option_id' => 'first','label' => 'True','correct' => '1'],
@@ -440,12 +443,14 @@ try {
         'current access checked on start replay'
     );
     attemptExpect(
-        $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)->loadAssoc() === $beforeRevokeAttempt,
+        $db->setQuery('SELECT status,revision,score_points FROM #__jlms_attempts WHERE id=' . (int)$aid)
+            ->loadAssoc() === $beforeRevokeAttempt,
         'revoked quiz operations preserve score revision and attempt state'
     );
     attemptExpect(
         $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN #__jlms_attempt_questions AS '
-        . 'q ON q.id=aa.attempt_question_id WHERE q.attempt_id=') . (int)$aid . ' ORDER BY aa.attempt_question_id')->loadAssocList() === $beforeRevokeAnswers,
+        . 'q ON q.id=aa.attempt_question_id WHERE q.attempt_id=') . (int)$aid .
+             ' ORDER BY aa.attempt_question_id')->loadAssocList() === $beforeRevokeAnswers,
         'previously saved answers survive access revocation'
     );
 } finally {
@@ -471,7 +476,8 @@ $failed = $service->mutate(
     true
 );
 attemptExpect(
-    $failed['attempt']['score_points'] === 3 && !$failed['attempt']['passed'] && !$failed['feedback_available'] && !$failed['course_completed'],
+    $failed['attempt']['score_points'] === 3 && !$failed['attempt']['passed'] &&
+         !$failed['feedback_available'] && !$failed['course_completed'],
     '60 percent fails exact 60.01 threshold; partial multiple selection earns zero and feedback stays closed'
 );
 attemptReject(
@@ -498,7 +504,8 @@ attemptExpect(
 );
 // Quiz is the last required lesson: completion mail must be queued exactly once.
 $completionKey = hash('sha256', 'course.completed:' . $enrollment);
-$completionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($completionKey))->loadResult();
+$completionCount = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue WHERE event_key=" . $db
+    ->quote($completionKey))->loadResult();
 attemptExpect($completionCount === 1, 'quiz completion enqueues exactly one course.completed message');
 $passedAttempt = $a['attempt']['id'];
 $completedAt = $db->setQuery('SELECT completed_at FROM #__jlms_enrollments WHERE id=' . $enrollment)->loadResult();
@@ -709,7 +716,9 @@ $concurrentEnrollment = $learning->start($concurrentUser, 'en-GB', $course, bin2
 $f = ['course_id' => $course,'lesson_id' => $lesson,'practice_id' => $practice,'never_id' => $never
     ,'enrollment_id' => $enrollment,'http_enrollment' => $httpEnrollment,'passed_attempt' => $passedAttempt
     ,'concurrent_user' => (int)$concurrentUser->id,'concurrent_enrollment' => $concurrentEnrollment];
-$snapshotHash = hash('sha256', json_encode($db->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' . $passedAttempt . ' ORDER BY id')->loadAssocList(), JSON_THROW_ON_ERROR));
+$snapshotHash = hash('sha256', json_encode($db
+    ->setQuery('SELECT * FROM #__jlms_attempt_questions WHERE attempt_id=' . $passedAttempt . ' ORDER BY id')
+    ->loadAssocList(), JSON_THROW_ON_ERROR));
 $f['snapshot_hash'] = $snapshotHash;
 file_put_contents($fixturePath, json_encode($f, JSON_THROW_ON_ERROR));
 $workers = [];

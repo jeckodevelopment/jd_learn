@@ -191,7 +191,8 @@ if (($argv[2] ?? '') === 'retained') {
     $t = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     $i = $deadline->editor($actor, $course, $lesson, $t['enrollment_id'], $t['attempt_id']);
     deadlineExpect(count($i['history']) === 2, 'append-only deadline history survives upgrade');
-    $raw = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . (int)$t['attempt_id'])->loadObject();
+    $raw = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' .
+         (int)$t['attempt_id'])->loadObject();
     deadlineExpect(
         hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'],
         'frozen rules and effective deadline survive upgrade'
@@ -246,7 +247,8 @@ deadlineExpect(
 $raw = $db->setQuery('SELECT rules_snapshot_json FROM #__jlms_attempts WHERE id=' . $attempt)->loadResult();
 deadlineExpect($raw === $original->rules_snapshot_json, 'frozen rules remain byte-for-byte unchanged');
 $compact = $runtime->state($u, 'en-GB', $enrollment, $lesson, $attempt, true);
-deadlineExpect($compact['questions'] === [] && $compact['attempt']['deadline'] === $r['attempt']['deadline'], 'compact synchronization carries the current deadline without question ' .
+deadlineExpect($compact['questions'] === [] && $compact['attempt']['deadline'] ===
+     $r['attempt']['deadline'], 'compact synchronization carries the current deadline without question ' .
     'bodies');
 $answers = [];
 foreach ($a['questions'] as $q) {
@@ -509,5 +511,6 @@ file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $les
     'sha256',
     json_encode($raw, JSON_THROW_ON_ERROR)
 ),
- 'http_enrollment' => $httpEnrollment,'http_lesson' => $f['practice_id'],'http_attempt' => $httpA['attempt']['id']], JSON_THROW_ON_ERROR));
+ 'http_enrollment' => $httpEnrollment,'http_lesson' => $f['practice_id'],'http_attempt' =>
+      $httpA['attempt']['id']], JSON_THROW_ON_ERROR));
 echo json_encode(['quiz_deadline_checks' => $checks,'status' => 'passed']) . PHP_EOL;

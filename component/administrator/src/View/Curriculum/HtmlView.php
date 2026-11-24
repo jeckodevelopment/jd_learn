@@ -61,7 +61,8 @@ final class HtmlView extends BaseHtmlView
             && (int)$course->current_version_id !== (int)$version->id && in_array($version->status, ['published','retired'], true);
         if ($version) {
             try {
-                $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()->teachingRules($actor, (int)$course->id, (int)$version->id);
+                $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()
+                    ->teachingRules($actor, (int)$course->id, (int)$version->id);
             } catch (\DomainException $error) {
                 if ($error->getMessage() !== 'COM_JLMS_PUBLICATION_UNSUPPORTED') {
                     throw $error;
@@ -375,8 +376,10 @@ final class HtmlView extends BaseHtmlView
                     'url' => \Joomla\CMS\Router\Route::link('administrator', 'index.php?option=com_jlms&task=lesson.metadata&format=json', false),
                     'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
                     'labels' => array_map(static fn($key): string=>Text::_($key), [
-                        'detected' => 'COM_JLMS_VIDEO_DURATION_DETECTED','loading' => 'COM_JLMS_VIDEO_DURATION_LOADING','play' => 'COM_JLMS_VIDEO_DURATION_PLAY',
-                        'failed' => 'COM_JLMS_VIDEO_METADATA_FAILED','consent' => 'COM_JLMS_VIDEO_DURATION_CONSENT','manual' => 'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
+                        'detected' => 'COM_JLMS_VIDEO_DURATION_DETECTED','loading' =>
+                             'COM_JLMS_VIDEO_DURATION_LOADING','play' => 'COM_JLMS_VIDEO_DURATION_PLAY',
+                        'failed' => 'COM_JLMS_VIDEO_METADATA_FAILED','consent' =>
+                             'COM_JLMS_VIDEO_DURATION_CONSENT','manual' => 'COM_JLMS_VIDEO_DURATION_MANUAL_HELP',
                         'local' => 'COM_JLMS_VIDEO_DURATION_LOCAL','source' => 'COM_JLMS_VIDEO_DURATION_SOURCE',
                         'youtube_csp' => 'COM_JLMS_VIDEO_YOUTUBE_CSP','youtube_sdk' => 'COM_JLMS_VIDEO_YOUTUBE_SDK',
                         'youtube_referrer' => 'COM_JLMS_VIDEO_YOUTUBE_REFERRER','youtube_embed' => 'COM_JLMS_VIDEO_YOUTUBE_EMBED',

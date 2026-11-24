@@ -81,7 +81,8 @@ final class VideoFilePolicy
         $streams = $data['streams'] ?? null;
         if (
             !is_string($duration) || !preg_match('/\A[0-9]{1,5}(?:\.[0-9]{1,6})?\z/D', $duration)
-            || (float) $duration < 1 || (float) $duration > 28800 || !is_array($streams) || count($streams) < 1 || count($streams) > 2
+            || (float) $duration < 1 || (float) $duration > 28800 || !is_array($streams) || count($streams)
+                < 1 || count($streams) > 2
         ) {
             throw new \RuntimeException('COM_JLMS_VIDEO_FILE_INVALID', 422);
         }

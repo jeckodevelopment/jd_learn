@@ -463,7 +463,8 @@ echo "Mail template canonical variable checks passed\\n";
 
 // The video-only course completion path must populate all placeholders in the
 // installed com_jlms.course.completed Joomla template, just like text lessons.
-$videoCompletionSource = file_get_contents(__DIR__ . '/../component/administrator/src/Application/VideoProgressService.php');
+$videoCompletionSource = file_get_contents(__DIR__ .
+     '/../component/administrator/src/Application/VideoProgressService.php');
 if ($videoCompletionSource === false) {
     throw new RuntimeException('Missing video course completion source.');
 }

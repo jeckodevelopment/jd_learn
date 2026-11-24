@@ -109,7 +109,8 @@ foreach ($quizzes as $quiz) {
 }
 $revision = static fn(): int => (int) $db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult();
 $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $draft,'expected_version_revision' => $revision(),
-    'module_id' => (int)$outline['modules'][0]->id,'title' => 'New lesson in working copy','kind' => 'text','required' => '0','body' => '<p>New content</p>']);
+    'module_id' => (int)$outline['modules'][0]->id,'title' => 'New lesson in working copy','kind' => 'text'
+        ,'required' => '0','body' => '<p>New content</p>']);
 $current = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadObject();
 editorialExpect(
     $authoring->createDraft($actor, $course, (int) $current->revision) === $draft,
@@ -165,7 +166,8 @@ editorialExpect($model->save([
     'revision' => (int)$item->revision,
     'title' => 'Editorially updated course'
 ]), 'Normal save updates a published course');
-$history = $db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course . "' ORDER BY version_id DESC")->loadObjectList();
+$history = $db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course .
+     "' ORDER BY version_id DESC")->loadObjectList();
 editorialExpect(count($history) > 0, 'Native Joomla history stores course revisions');
 editorialExpect((int)$model->getItem($course)->state === 1, 'Normal save preserves publication state');
 $oldHistory = end($history);
@@ -193,7 +195,8 @@ $historyFieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createM
     ['ignore_request' => true]
 );
 if (
-    !$historyFieldModel->save(['id' => 0,'context' => 'com_jlms.course','title' => 'History reference','name' => 'history-reference','type' => 'text',
+    !$historyFieldModel->save(['id' => 0,'context' => 'com_jlms.course','title' => 'History reference',
+        'name' => 'history-reference','type' => 'text',
     'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'default_value' => '','description' => ''
         ,'params' => [],'fieldparams' => ['filter' => 'string']])
 ) {
@@ -227,7 +230,8 @@ editorialExpect(
 editorialExpect($fieldValue() === 'HISTORY_FIELD_ORIGINAL', 'Content History restores the custom field value');
 editorialExpect(
     (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $assignedVersion
-    && $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList() === $assignedLearners,
+    && $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')
+        ->loadAssocList() === $assignedLearners,
     'Content History field restore preserves the active teaching version and learner assignments'
 );
 $item = $model->getItem($course);
@@ -260,13 +264,16 @@ $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel(
     'Administrator',
     ['ignore_request' => true]
 );
-$field = ['id' => 0,'context' => 'com_jlms.teacher','title' => 'Public teaching contact','name' => 'teaching-contact','type' => 'text',
-    'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'required' => 0,'default_value' => '','description' => '','note' => '','ordering' => 0,
+$field = ['id' => 0,'context' => 'com_jlms.teacher','title' => 'Public teaching contact','name' =>
+     'teaching-contact','type' => 'text',
+    'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'required' => 0,'default_value' => ''
+        ,'description' => '','note' => '','ordering' => 0,
     'params' => ['display' => 2],'fieldparams' => ['filter' => 'string']];
 editorialExpect($fieldModel->save($field), 'Joomla creates a custom field in the teacher context');
 $fieldId = (int)$fieldModel->getState('field.id');
 $teacher = $factory->createModel('Teacher', 'Administrator', ['ignore_request' => true]);
-$data = ['id' => 0,'revision' => 1,'title' => 'Editorial teacher profile','alias' => 'editorial-teacher-profile','state' => 1,'access' => 1,'language' => '*',
+$data = ['id' => 0,'revision' => 1,'title' => 'Editorial teacher profile','alias' => 'editorial-teacher-profile'
+    ,'state' => 1,'access' => 1,'language' => '*',
     'bio' => 'Teacher presentation','image' => '','user_id' => '','com_fields' => ['teaching-contact' => 'contact@example.invalid']];
 editorialExpect($teacher->save($data), 'Teacher creation needs no category choice');
 $teacherId = (int)$teacher->getState('teacher.id');

@@ -359,7 +359,8 @@ final class PublicationService
                     }
                     $provider = $this->app->bootComponent('com_jlms')->getCurriculumService()->videoProvider($lesson->provider_key);
                     $source = json_decode($lesson->source_json, true, 16, JSON_THROW_ON_ERROR);
-                    $normal = $provider->normaliseSource(new \Jlms\Contracts\Video\SourceInput($source['reference'], $source['options'] ?? []));
+                    $normal = $provider->normaliseSource(new
+                        \Jlms\Contracts\Video\SourceInput($source['reference'], $source['options'] ?? []));
                     if (!$provider->getDescriptor()->configured) {
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
                     }
@@ -376,7 +377,8 @@ final class PublicationService
                 }
                 $lessons[] = ['id' => (int) $lesson->id, 'module_id' => (int) $lesson->module_id,
                     'logical_key' => $lesson->logical_key, 'title' => $lesson->title, 'ordering' => (int) $lesson->ordering,
-                    'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'quiz_sha256' => $quizHash, 'duration_ms' => $lesson->duration_ms,
+                    'required' => (int) $lesson->required, 'kind' => $lesson->kind, 'quiz_sha256' => $quizHash
+                        , 'duration_ms' => $lesson->duration_ms,
                     'publish_up' => $lesson->publish_up, 'publish_down' => $lesson->publish_down,
                     'release_after_days' => $lesson->release_after_days === null ? null : (int) $lesson->release_after_days,
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,

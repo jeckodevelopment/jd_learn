@@ -295,3 +295,17 @@ Baseline PHPCS reale su `main` dopo PR #1010: **1.563** violazioni dello standar
 **Residuo:** i 1.305 rilievi ancora presenti richiedono ulteriore refactoring, in particolare righe lunghe non risolvibili con spaziatura/token e questioni PSR1/PSR2. Il criterio SECDEV-02/criterion_01 resta incompleto; i criteri CORE/API non sono promossi per effetto di questo intervento. La CI applicativa completa della PR deve essere verde prima del merge. I collaudi manuali Joomla restano separati.
 
 **Comportamenti da testare:** aspetto HTML e selettori nel curriculum, nella scheda corso e negli altri template modificati; equivalenza PHP delle espressioni e delle chiamate Joomla; integrità dei form e dei token CSRF, autorizzazioni, video, iscrizioni, quiz e attestati; controllo PHPCS, PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium.
+
+
+## Intervento PSR-12 coordinato sui 1.305 rilievi (PR #1012)
+
+Il ramo unico `style/secdev02-1305-bulk-cleanup` ha eseguito due lotti coordinati di refactoring per espressione, senza PR intermedie, a partire dalla baseline reale **1.305** violazioni dopo il merge della PR #1011.
+
+- [Workflow #45358579717](https://github.com/jeckodevelopment/jd_learn/actions/runs/45358579717): analisi dei 100 file con maggior debito, **121 espressioni corrette in 51 file**, rimozione netta di **121** rilievi PSR-12. Confronto dei token PHP, `php -l`, conteggio PHPCS per regola e controlli strutturali: zero violazioni introdotte e zero file ripristinati.
+- [Workflow #45360484880](https://github.com/jeckodevelopment/jd_learn/actions/runs/45360484880): analisi ampliata ai 175 file con maggior debito residuo, **35 espressioni corrette in 26 file**, ulteriore rimozione di **35** rilievi. Stesse protezioni, nessun ripristino richiesto dai contratti sorgente.
+
+**Totale: 1.305 → 1.149 rilevazioni PSR-12 (−156; circa −12,0%)**, nessuna nuova violazione. I workflow temporanei con `contents: write` sono stati eliminati al termine di ciascun lotto; lo strumento di orchestrazione resta nel repository. I controlli completi PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium saranno verificati con la CI della PR prima del merge.
+
+I **1.149 rilievi residui** non sono considerati chiusi: le sole trasformazioni di whitespace/token stanno esaurendo le opportunità; è necessario intervenire manualmente sulla struttura di espressioni e template con righe molto lunghe, nonché sulle violazioni PSR1/PSR2 (effetti collaterali e convenzioni di nomi), senza aggirare le API Joomla. Nessuna promozione SECDEV-02/criterion_01 o degli altri CORE/API in assenza di evidenza di conformità completa.
+
+**Comportamenti da testare:** equivalenza delle chiamate Joomla, mantenimento degli attributi HTML, navigazione curriculum, ACL, sessioni, CSRF, corsi, quiz, attestati, materiali, video; PHP lint, PHPCS integrale, generazione pacchetto e CI Joomla 6.2.0 con compat6 disabilitato. I collaudi manuali rimangono separati.

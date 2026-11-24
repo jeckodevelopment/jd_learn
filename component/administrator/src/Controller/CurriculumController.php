@@ -46,7 +46,8 @@ class CurriculumController extends BaseController
                             ) {
                                 throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
                             }
-                            $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' => $transition, 'expires' => time() + 900,
+                            $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' =>
+                             $transition, 'expires' => time() + 900,
                                 'ticket' => bin2hex(random_bytes(32)), 'fingerprint' => $impact['fingerprint']]);
                             $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=publicationreview&id=' . $courseId . '&version_id=' . $versionId, false));
                             return;
@@ -82,7 +83,8 @@ class CurriculumController extends BaseController
                     $versionId = $service->createDraft($actor, $courseId, CurriculumService::id($input['revision'] ?? null));
                     break;
                 case 'duplicatecourse':
-                    $model = $this->app->bootComponent('com_jlms')->getMVCFactory()->createModel('Course', 'Administrator', ['ignore_request' => true]);
+                    $model = $this->app->bootComponent('com_jlms')->getMVCFactory()->
+                        createModel('Course', 'Administrator', ['ignore_request' => true]);
                     $courseId = $model->duplicate($input);
                     $versionId = 0;
                     break;
@@ -105,7 +107,8 @@ class CurriculumController extends BaseController
                 default:
                     throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
             }
-            $this->setMessage(Text::_($operation === 'restore' ? 'COM_JLMS_PROGRAMME_RESTORE_SAVED' : 'COM_JLMS_CURRICULUM_SAVED'));
+            $this->setMessage(Text::_($operation === 'restore' ? 'COM_JLMS_PROGRAMME_RESTORE_SAVED' :
+                 'COM_JLMS_CURRICULUM_SAVED'));
         } catch (\DomainException | \InvalidArgumentException $error) {
             $failed = true;
             $key = match ($error->getMessage()) {
@@ -158,7 +161,8 @@ class CurriculumController extends BaseController
                  '&new_lesson=1&module_id=' . (int) ($input['module_id'] ?? 0);
         } elseif (!$failed && $operation === 'save') {
             $this->app->setUserState('com_jlms.curriculum.' . $courseId . '.' . $versionId . '.' . $kind, null);
-            $target .= '&module_id=' . ($kind === 'module' ? $resultId : (int) ($input['module_id'] ?? 0)) . '#jlms-' . $kind . '-' . $resultId;
+            $target .= '&module_id=' . ($kind === 'module' ? $resultId : (int) ($input['module_id'] ??
+                 0)) . '#jlms-' . $kind . '-' . $resultId;
         }
         if (!$failed && in_array($operation, ['move', 'duplicate'], true)) {
             $target .= '&module_id=' . ($kind === 'module' ? $resultId : (int) ($input['module_id'] ??
@@ -180,7 +184,8 @@ class CurriculumController extends BaseController
         $proof = is_string($ticket) ? ($plans[$ticket] ?? null) : null;
         if (
             !is_array($proof) || ($proof['expires'] ?? 0) < time()
-            || !hash_equals($proof['fingerprint'], $this->app->bootComponent('com_jlms')->getCurriculumService()->durationFingerprint($actor, $input))
+            || !hash_equals($proof['fingerprint'], $this->app->bootComponent('com_jlms')->getCurriculumService()
+                ->durationFingerprint($actor, $input))
         ) {
             throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
         }
@@ -218,7 +223,8 @@ class CurriculumController extends BaseController
                 throw new \RuntimeException('JINVALID_TOKEN', 403);
             }
             $input = $this->input->post->get('jform', [], 'array');
-            $data = ['revision' => $this->app->bootComponent('com_jlms')->getCurriculumService()->saveOrder($this->app->getIdentity(), $input)];
+            $data = ['revision' => $this->app->bootComponent('com_jlms')->getCurriculumService()
+                ->saveOrder($this->app->getIdentity(), $input)];
         } catch (\Throwable $exception) {
             $error = true;
             $key = $exception->getMessage();

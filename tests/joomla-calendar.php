@@ -93,7 +93,8 @@ $fixture = dirname($root) . '/calendar-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
     scheduleExpect($db->setQuery(('SELECT presentation_json,structure_hash,published_at FROM '
-        . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() === $f['snapshot'], 'Frozen calendar survives reinstall');
+        . '#__jlms_course_versions WHERE id=') . (int)$f['version'])->loadAssoc() ===
+             $f['snapshot'], 'Frozen calendar survives reinstall');
     scheduleExpect($db->setQuery('SELECT starts_at,ends_at FROM #__jlms_editions WHERE id=' .
          (int)$f['edition'])->loadAssoc() === $f['window'], 'Edition window survives reinstall');
     scheduleExpect($catalog->outline(
@@ -136,7 +137,8 @@ $item = $model->getItem($course);
 scheduleExpect(str_starts_with(
     $item->publish_up,
     '2000-01-01 00:00:00'
-) && $item->calendar_publish_up === $values['calendar_publish_up'] && $item->calendar_timezone === 'Europe/Rome', 'UTC persisted and editor round-trips local values');
+) && $item->calendar_publish_up === $values['calendar_publish_up'] && $item->calendar_timezone ===
+     'Europe/Rome', 'UTC persisted and editor round-trips local values');
 scheduleExpect(!str_contains($item->params_json, 'injected'), 'Raw calendar JSON not accepted');
 $siteConfig->set('offset', $previousOffset);
 $values['calendar_timezone'] = 'Europe/Rome';
@@ -154,8 +156,10 @@ foreach ([['calendar_timezone' => ['UTC']],['calendar_timezone' => 'bad/zone'],[
         ->publish_up === $before->publish_up, 'Invalid calendar preserves revision and stored values');
 }
 $version = $authoring->createDraft($actor, $course, 2);
-$rev = static fn(): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
-$module = $authoring->saveModule($actor, ['course_id' => $course,'version_id' => $version,'expected_version_revision' => $rev(),'title' => 'Calendar chapter']);
+$rev = static fn(): int=>(int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)
+    ->loadResult();
+$module = $authoring->saveModule($actor, ['course_id' => $course,'version_id' => $version
+    ,'expected_version_revision' => $rev(),'title' => 'Calendar chapter']);
 $lesson = $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $version
     ,'expected_version_revision' => $rev(),'module_id' => $module,'title' => 'Calendar lesson','kind' => 'text'
     ,'required' => '1','body' => '<p>CALENDAR_PRIVATE_BODY</p>']);

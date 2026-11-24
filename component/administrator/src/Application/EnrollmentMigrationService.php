@@ -127,7 +127,8 @@ final class EnrollmentMigrationService
             $q = $this->db->createQuery()
                 ->select('e.source_lesson_id,e.target_lesson_id')
                 ->from('#__jlms_version_equivalences AS e')
-                ->innerJoin('#__jlms_lessons AS s ON s.id=e.source_lesson_id')->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')
+                ->innerJoin('#__jlms_lessons AS s ON s.id=e.source_lesson_id')
+                    ->innerJoin('#__jlms_lessons AS t ON t.id=e.target_lesson_id')
                 ->where('s.course_version_id=:source')->where('t.course_version_id=:target')
                 ->bind(':source', $source
                     ->course_version_id, ParameterType::INTEGER)
@@ -278,7 +279,8 @@ final class EnrollmentMigrationService
         }
         $mapping = $validatedMapping;
         ksort($mapping, SORT_NUMERIC);
-        $requestHash = hash('sha256', QuestionDefinition::canonical(['actor' => (int)$actor->id,'course' => $course,'enrollment' => $enrollment,
+        $requestHash = hash('sha256', QuestionDefinition::canonical(['actor' => (int)$actor->id,
+            'course' => $course,'enrollment' => $enrollment,
             'revision' => $expectedRevision,'mapping' => $mapping,'reason' => $reason,'impact_hash' => $impactHash]));
         $scopeHash = hash('sha256', 'enrollment-migration:' . $actor->id . ':' . $course . ':' . $enrollment);
         $this->db->transactionStart();
@@ -358,7 +360,8 @@ final class EnrollmentMigrationService
             $targetStatus = $source->status === 'suspended' ? 'suspended' : ($required > 0 &&
                  $completedRequired >= $required ? 'completed' : 'active');
             $target = (object)['user_id' => (int)$source->user_id,'subject_key' => $source->subject_key,'course_id' => $course,
-                'course_version_id' => $plan['target_version_id'],'edition_id' => $editionId,'status' => $targetStatus,'origin' => 'migration',
+                'course_version_id' => $plan['target_version_id'],'edition_id' => $editionId,'status' =>
+                     $targetStatus,'origin' => 'migration',
                 'required_total' => $required,'completed_total' => $completedRequired,'started_at' => $source->started_at ?: $now,
                 'completed_at' => $targetStatus === 'completed' ? $now : null,'last_activity_at' => $now,'last_lesson_id' => null,
                 'starts_at' => $source->starts_at,'ends_at' => $source->ends_at,'revision' => 1,'created_by' => (int)$actor->id,
@@ -370,8 +373,10 @@ final class EnrollmentMigrationService
             $job = (object)['kind' => 'enrollment_migration','owner_user_id' => (int)$actor->id,
                 'scope_json' => json_encode(['course_id' => $course,'source_enrollment_id' => $enrollment], JSON_THROW_ON_ERROR),
                 'payload_json' => json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),'status' => 'succeeded',
-                'cursor_json' => json_encode(['source_enrollment_id' => $enrollment,'target_enrollment_id' => $targetId], JSON_THROW_ON_ERROR),
-                'progress_done' => 1,'progress_total' => 1,'attempts' => 1,'available_at' => $now,'created_at' => $now,'finished_at' => $now];
+                'cursor_json' => json_encode(['source_enrollment_id' => $enrollment,
+                    'target_enrollment_id' => $targetId], JSON_THROW_ON_ERROR),
+                'progress_done' => 1,'progress_total' => 1,'attempts' => 1,'available_at' => $now,
+                    'created_at' => $now,'finished_at' => $now];
             $this->db->insertObject('#__jlms_jobs', $job, 'id');
             $idempotency = (object)['scope_hash' => $scopeHash,'request_hash' => $requestHash,'state' =>
                  'completed','result_type' => 'enrollment_migration',
