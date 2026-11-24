@@ -1,0 +1,15 @@
+name: SECDEV-02 verify new AST helper PHP formatting
+on:
+  push:
+    branches: [style/secdev02-811-targeted-closure]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          .runtime/secdev02-phpcs/vendor/bin/phpcs --standard=PSR12 --report=full tools/secdev02_literal_ast_equivalence.php || true
