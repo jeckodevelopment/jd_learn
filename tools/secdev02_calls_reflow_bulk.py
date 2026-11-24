@@ -8,7 +8,9 @@ otherwise every changed file is restored byte-for-byte.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
+import re
 from pathlib import Path
 import subprocess
 
@@ -95,6 +97,52 @@ def propose(data: bytes, pairs: list, max_width: int) -> bytes:
     return bytes(updated)
 
 
+
+def required_source_fragments() -> dict[str, set[bytes]]:
+    """Preserve raw PHP fragments enforced by existing structural check.py.
+
+    The syntax-preserving formatter must not break byte-exact contracts relied
+    upon by the existing safety suite. Never relax these test assertions.
+    """
+    checks = (ROOT / "tools/check.py").read_text(encoding="utf-8")
+    bindings = {}
+    for found in re.finditer(
+        r'(?m)^\s*(\w+)\s*=\s*\(\s*ROOT\s*/\s*[\'"]([^\'"]+)[\'"]\s*\)\.read_text\(',
+        checks,
+    ):
+        bindings[found.group(1)] = found.group(2)
+    snippets: dict[str, set[bytes]] = {}
+    for node in ast.walk(ast.parse(checks)):
+        if not isinstance(node, ast.Assert):
+            continue
+        for expr in ast.walk(node.test):
+            if isinstance(expr, ast.Compare):
+                if (
+                    isinstance(expr.left, ast.Constant)
+                    and isinstance(expr.left.value, str)
+                    and expr.ops and isinstance(expr.ops[0], ast.In)
+                    and expr.comparators and isinstance(expr.comparators[0], ast.Name)
+                ):
+                    name = expr.comparators[0].id
+                    if name in bindings:
+                        snippets.setdefault(bindings[name], set()).add(
+                            expr.left.value.encode("utf-8")
+                        )
+            if (
+                isinstance(expr, ast.Call)
+                and isinstance(expr.func, ast.Attribute)
+                and expr.func.attr == "count"
+                and isinstance(expr.func.value, ast.Name)
+                and expr.func.value.id in bindings
+                and expr.args and isinstance(expr.args[0], ast.Constant)
+                and isinstance(expr.args[0].value, str)
+            ):
+                snippets.setdefault(bindings[expr.func.value.id], set()).add(
+                    expr.args[0].value.encode("utf-8")
+                )
+    return snippets
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--self-test", action="store_true")
@@ -115,6 +163,7 @@ def main() -> int:
         ["git", "ls-files", "-z", "--", "*.php"], cwd=ROOT
     ).split(b"\0")
     accepted = rejected = removed = 0
+    protected = required_source_fragments()
     for item in entries:
         if not item:
             continue
@@ -122,6 +171,7 @@ def main() -> int:
         if not path.is_file():
             continue
         original = path.read_bytes()
+        required = protected.get(item.decode(), set())
         if not any(len(line) > LIMIT for line in original.splitlines()):
             continue
         matches = scan(path)
@@ -132,7 +182,10 @@ def main() -> int:
         best, best_score = original, sum(old.values())
         for width in (120, 110):
             candidate = propose(original, matches, width)
-            if candidate == original:
+            if candidate == original or any(
+                fragment in original and fragment not in candidate
+                for fragment in required
+            ):
                 continue
             path.write_bytes(candidate)
             if not lint(path) or lex(path)["hash"] != old_tokens:
