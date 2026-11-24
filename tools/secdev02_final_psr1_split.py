@@ -77,6 +77,8 @@ def main():
         helper_dir = path.parent / "helpers"
         function_name = f"{path.stem}.functions.php"
         new_helpers = dict(declaration_helpers)
+        keep = False
+        created = []
         if entry != original:
             path.write_bytes(entry)
         try:
@@ -102,6 +104,7 @@ def main():
             for name, content in new_helpers.items():
                 helper = helper_dir / name
                 helper.write_bytes(content)
+                created.append(name)
                 if name == function_name:
                     subprocess.run(
                         [str(args.phpcbf), "--standard=PSR12", "--no-cache", str(helper)],
@@ -118,6 +121,7 @@ def main():
                             for name in new_helpers)
                 )
             if valid:
+                keep = True
                 accepted += 1
                 delta = sum(original_counts.values()) - sum(after.values())
                 removed += delta
@@ -129,16 +133,9 @@ def main():
             rejected += 1
             print(f"PSR1 SAFE rejected {rel}: {type(exc).__name__}", flush=True)
         finally:
-            # Keep each accepted rewrite, restore every other file exactly.
-            now = path.read_bytes()
-            if now != original:
-                newscore = phpcs_counts(args.phpcs, path)
-                if newscore["PSR1.Files.SideEffects.FoundWithSymbols"] > 0:
-                    path.write_bytes(original)
-                    for name in new_helpers:
-                        (helper_dir / name).unlink(missing_ok=True)
-            else:
-                for name in new_helpers:
+            if not keep:
+                path.write_bytes(original)
+                for name in created:
                     (helper_dir / name).unlink(missing_ok=True)
     print(f"PSR1 SAFE RESULT accepted_files={accepted} rejected={rejected} removed={removed}", flush=True)
     return 0
