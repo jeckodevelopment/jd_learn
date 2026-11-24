@@ -1,0 +1,48 @@
+name: SECDEV-02 granular expressions one-shot bulk
+on:
+  push:
+    branches:
+      - style/secdev02-psr12-targeted-bulk-1011
+    paths:
+      - .github/workflows/secdev02-granular-one-shot.yml
+permissions:
+  contents: write
+jobs:
+  granular:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-psr12-targeted-bulk-1011
+          persist-credentials: true
+      - name: Install pinned PHP_CodeSniffer
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Fix highest-debt files per expression under strict PSR12 gates
+        run: |
+          python3 tools/secdev02_granular_expression_batch.py --self-test
+          python3 tools/secdev02_granular_expression_batch.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --top-files 65 --max-examined 14 --max-fixes 9
+          git diff --check
+      - name: Reconcile all PHP source contracts and verify complete PHPCS inventory
+        run: |
+          python3 tools/build.py
+          python3 tools/secdev02_source_contract_repair.py --base-ref HEAD
+          git diff --check
+          git diff --name-only -z -- '*.php' | xargs -0 -r -n1 php -l
+          python3 tests/secdev02-psr12-phpcs.py --base-ref HEAD
+          python3 tools/build.py
+          python3 tools/check.py
+      - name: Commit safe source batch and remove privileged workflow
+        run: |
+          rm .github/workflows/secdev02-granular-one-shot.yml
+          git add -A -- component libraries plugins packages tests tools .github/workflows/secdev02-granular-one-shot.yml
+          if git diff --cached --quiet; then
+            echo 'No granular remediation accepted'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'style(SECDEV-02): granular mass expression refactor'
+          git push origin HEAD:style/secdev02-psr12-targeted-bulk-1011
