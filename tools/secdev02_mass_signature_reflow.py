@@ -76,13 +76,13 @@ def reflow(original: bytes, entries: list, offset: int) -> bytes:
         base=b" " * indent
         for place in [opener+1]+list(commas):
             stop=place
-            while stop<closer and original[stop:stop+1] in (b" ",b"\\t"):
+            while stop<closer and original[stop:stop+1] in (b" ",b"\t"):
                 stop+=1
-            edits.append((place,stop,b"\\n"+pad))
+            edits.append((place,stop,b"\n"+pad))
         start=closer
-        while start>opener and original[start-1:start] in (b" ",b"\\t"):
+        while start>opener and original[start-1:start] in (b" ",b"\t"):
             start-=1
-        edits.append((start,closer,b"\\n"+base))
+        edits.append((start,closer,b"\n"+base))
         selected.append((begin,closer))
     out=bytearray(original)
     for start,stop,value in sorted(set(edits),reverse=True):
