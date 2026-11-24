@@ -523,7 +523,7 @@ Lotto PR #1025: collegamento a matrice requisiti e metadati GitHub obbligatori (
 
 ## PR conclusiva unica — baseline post #1025 (lavoro aperto)
 
-Il merge #1025 ha misurato un debito PHPCS PSR12 di **122** finding, rispetto ai 125 della baseline precedente; il saldo rimane da ricertificare sul ramo conclusivo. I 122 non rappresentano 122 criteri funzionali. La bonifica viene accorpata in un solo ramo, senza altri merge intermedi. Le prime modifiche sono la disposizione multi-linea delle allowlist del controller pubblico e della condizione di ammissione nel catalogo: preservano l'ordine degli elementi, gli operatori e i valori del codice PHP. La CI integrale deve misurare il saldo netto e respingere violazioni nuove.
+Il merge #1025 ha misurato un debito PHPCS PSR12 di **122** finding, rispetto ai 125 della baseline precedente; il saldo rimane da ricertificare sul ramo conclusivo. I 122 non rappresentano 122 criteri funzionali. La bonifica viene accorpata in un solo ramo, senza altri merge intermedi. Un primo candidato di riformattazione delle allowlist e dei template misti HTML/PHP è stato **ripristinato integralmente** dopo il rifiuto della CI: 108 violazioni nuove di indentazione, quindi nessun indebolimento dei gate. La successiva correzione è limitata alla suddivisione di una costante SQL nella proiezione SELECT di CourseExpiryReminderService.php, preservando letteralmente il testo concatenato della query; l'esito va ricertificato dalla CI. La CI integrale deve misurare il saldo netto e respingere violazioni nuove.
 
 ### Condizioni indispensabili per dichiarare conclusa SECDEV-02
 
