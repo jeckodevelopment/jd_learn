@@ -1,0 +1,55 @@
+name: SECDEV-02 targeted full residual inventory
+on:
+  push:
+    branches: [style/secdev02-811-targeted-closure]
+permissions:
+  contents: read
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Install fixed PHPCS
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Diagnose every long-line with actual PHPCS message and token envelope
+        run: |
+          python3 - <<'PY'
+          import collections,json,subprocess,pathlib
+          paths=subprocess.check_output(['git','ls-files','-z','--','*.php']).split(b'\0')
+          byrule=collections.Counter();byfile=collections.Counter()
+          examples=collections.defaultdict(list);bykind=collections.Counter()
+          for item in paths:
+              if not item:continue
+              p=pathlib.Path(item.decode())
+              if not p.is_file():continue
+              z=subprocess.run(['.runtime/secdev02-phpcs/vendor/bin/phpcs','--standard=PSR12','--no-cache','--report=json',str(p)],capture_output=True,text=True)
+              rep=json.loads(z.stdout)
+              errs=next(iter(rep['files'].values()))['messages']
+              ls=p.read_text(encoding='utf8',errors='replace').splitlines()
+              for x in errs:
+                  rule=x['source'];byrule[rule]+=1;byfile[str(p)]+=1
+                  line=ls[x['line']-1] if x['line']<=len(ls) else ''
+                  if rule=='Generic.Files.LineLength.TooLong':
+                      z=line.lstrip()
+                      if z.startswith(('#','//','/*','*','<!--')):type='comment'
+                      elif z.startswith('<'):type='html_start'
+                      elif '<?' in z or '?>' in z:type='mixed_php_html'
+                      elif "'" in z or '"' in z:
+                          type='php_with_strings'
+                      else:type='php_operators'
+                      bykind[type]+=1
+                      if len(examples[type])<55:
+                          examples[type].append(f'{p}:{x["line"]} ({len(line)}c) {line[:210]}')
+                  else:
+                      if len(examples[rule])<45:
+                          examples[rule].append(f'{p}:{x["line"]} {line[:180]}')
+          print('COUNT',sum(byrule.values()),'RULES',dict(byrule),flush=True)
+          print('LONGLINE_TYPES',dict(bykind),flush=True)
+          print('TOP_FILES',byfile.most_common(60),flush=True)
+          for kind,items in examples.items():
+              print('CATEGORY',kind,'COUNT',len(items))
+              for item in items:print(item)
+          PY
