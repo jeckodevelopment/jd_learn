@@ -105,7 +105,7 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
     (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' .
     (int)$entry['id']) ?>"><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?> <?= (int)$entry['attempt_no'] ?></a><?php if ($entry['status'] === 'invalidated') :
     ?> · <?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?><?php
-        endif; ?></li><?php
+    endif; ?></li><?php
      endforeach; ?></ol></section>
  <a id="jlms-quiz-back"
  href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] .
