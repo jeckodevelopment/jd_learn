@@ -119,9 +119,7 @@ final class ProtectedMaterialStorage
             ] as $public
         ) {
             $base = $public !== '' ? realpath($public) : false;
-            if ($base
-                && ($root === $base
-                || str_starts_with($root . DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR))) {
+            if ($base && ($root === $base || str_starts_with($root . DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR))) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         }
