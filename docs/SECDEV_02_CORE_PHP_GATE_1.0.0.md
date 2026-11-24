@@ -223,3 +223,12 @@ Questo è soltanto un sottoinsieme delle chiamate su istanza. Il contatore delle
 Sono state riformattate **17 righe di attributi HTML** superiori a 120 caratteri: 14 nel curriculum amministrativo e 3 nella scheda pubblica del corso. Le modifiche si limitano all'inserimento di spazi bianchi **tra attributi HTML**, senza cambiare valori, chiamate PHP, tag, URL, classi CSS o condizioni. Non vengono spezzate stringhe PHP, espressioni o valori degli attributi. La riduzione PSR-12 definitiva deve essere confermata dall'audit PHPCS in CI; il residuo precedente è 2.654 e non viene dichiarato azzerato.
 
 **Comportamenti da testare:** invarianti dei form e token CSRF, controlli di pubblicazione e gestione lezioni nel curriculum, presentazione del corso e consenso nel frontend, parsing HTML/browser, lint PHP, test integrati e PHPCS senza violazioni introdotte. I collaudi manuali dell'utente restano separati; SECDEV-02 continua a richiedere gli altri criteri CORE/API e PSR-12.
+
+
+## Remediation HTML massiva a rischio contenuto invariato (PR #1007)
+
+Il workflow monouso [45336153577](https://github.com/jeckodevelopment/jd_learn/actions/runs/45336153577), sul solo ramo `style/secdev02-template-attribute-bulk-v2`, ha controllato i template PHP del frontend e del backend e applicato esclusivamente interruzioni di riga **tra gli attributi HTML**, senza modificare espressioni PHP o valori degli attributi. L'esecuzione ha accettato **36 file**, riformattato **102 righe** e rimosso **101 rilievi PHPCS PSR12 netti**; zero file respinti dal gate per-file e nessuna regressione per singola regola. Ogni file modificato ha superato il lint PHP e `git diff --check`. Il workflow monouso con privilegi di scrittura è stato rimosso; rimane lo strumento riutilizzabile `tools/secdev02_html_attribute_reflow.py`.
+
+La baseline certificata su `main` dopo la PR #1006 era **2.637 rilievi**: il residuo atteso è **2.536**, da confermare con la scansione completa PHPCS della PR corrente e la CI PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium. L'intervento non riguarda la logica applicativa, non elimina il restante debito e non dichiara chiuso SECDEV-02. I collaudi manuali restano separati.
+
+**Comportamenti da testare:** equivalenza di attributi HTML, valori, interfacce e percorsi di navigazione in tutte le viste modificate; validazione form, autorizzazioni e token; controlli CI di regressione PHP e Chromium.
