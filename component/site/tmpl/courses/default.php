@@ -241,7 +241,8 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
                 || $this->teacherId > 0 || $this->pathwayId > 0)
 ) : ?>
    <p id="jlms-catalog-clear-filters"><a
- href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . (int) $this->categoryId : '')) ?>"><?= Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
+ href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . 
+    (int) $this->categoryId : '')) ?>"><?= Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
             <?php endif; ?>
      <?php endif; ?>
  </div>
