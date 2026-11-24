@@ -21,7 +21,10 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns');
 $order = $this->escape((string) $this->state->get('list.ordering', 'd.issued_at'));
 $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'));
 ?>
-<form action="<?= Route::_('index.php?option=com_jlms&view=certificates') ?>" method="post" id="adminForm" name="adminForm">
+<form action="<?= Route::_('index.php?option=com_jlms&view=certificates') ?>"
+    method="post"
+    id="adminForm"
+    name="adminForm">
  <div id="j-main-container" class="j-main-container">
   <section id="jlms-admin-certificates" aria-label="<?= Text::_('COM_JLMS_CERTIFICATES') ?>">
    <p><?= Text::_('COM_JLMS_CERTIFICATE_LIST_INTRO') ?></p>
@@ -79,7 +82,12 @@ $direction = $this->escape((string) $this->state->get('list.direction', 'DESC'))
           <td>
             <?php if (in_array($missing['reason'], ['version_disabled', 'eligible_missing'], true)) : ?>
                 <?php $recoveryFormId = 'jlms-recover-' . (int) $missing['enrollment_id']; ?>
-            <input type="text" class="form-control form-control-sm mb-1" form="<?= $recoveryFormId ?>" name="reason" minlength="8" maxlength="500" required
+            <input type="text"
+    class="form-control form-control-sm mb-1"
+    form="<?= $recoveryFormId ?>"
+    name="reason"
+    minlength="8"
+    maxlength="500" required
                    aria-label="<?= Text::_('COM_JLMS_CERTIFICATE_HISTORICAL_REASON') ?>" placeholder="<?= Text::_('COM_JLMS_CERTIFICATE_HISTORICAL_REASON') ?>">
             <label><input type="checkbox" form="<?= $recoveryFormId ?>" name="confirmation" value="1" required>
                 <?= Text::_($missing['reason'] === 'eligible_missing' ? 'COM_JLMS_CERTIFICATE_MISSING_CONFIRM' : 'COM_JLMS_CERTIFICATE_HISTORICAL_CONFIRM') ?></label>

@@ -31,7 +31,12 @@ $i = $this->item;
    <input type="hidden" name="id" value="<?= (int) $i['id'] ?>">
    <input type="hidden" name="revision" value="<?= (int) $i['revision'] ?>">
    <label for="jlms-regenerate-reason"><?= Text::_('COM_JLMS_CERTIFICATE_REGENERATE_REASON') ?></label>
-   <textarea class="form-control" id="jlms-regenerate-reason" name="reason" minlength="8" maxlength="500" rows="2" required></textarea>
+   <textarea class="form-control"
+    id="jlms-regenerate-reason"
+    name="reason"
+    minlength="8"
+    maxlength="500"
+    rows="2" required></textarea>
    <label class="d-block mt-2"><input type="checkbox" name="confirmation" value="1" required>
         <?= Text::_('COM_JLMS_CERTIFICATE_REGENERATE_CONFIRM') ?></label>
         <?= \Joomla\CMS\HTML\HTMLHelper::_('form.token') ?>
@@ -50,5 +55,6 @@ $i = $this->item;
      endforeach; ?>
  </tbody></table>
  <?php endif; ?>
- <a class="btn btn-secondary" href="<?= Route::_('index.php?option=com_jlms&view=certificates') ?>"><?= Text::_('JTOOLBAR_BACK') ?></a>
+ <a class="btn btn-secondary"
+    href="<?= Route::_('index.php?option=com_jlms&view=certificates') ?>"><?= Text::_('JTOOLBAR_BACK') ?></a>
 </section>

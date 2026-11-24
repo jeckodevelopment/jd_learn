@@ -14,7 +14,8 @@ $courseId = (int) $this->preview['course_id'];
  <h1><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_TITLE') ?>: <?= htmlspecialchars((string) $this
      ->preview['course_title'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></h1>
  <?php if (empty($this->preview['eligible'])) : ?>
-  <div class="alert alert-warning" role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_NOT_ELIGIBLE') ?></div>
+  <div class="alert alert-warning"
+    role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_NOT_ELIGIBLE') ?></div>
  <?php else : ?>
   <p><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_HELP') ?></p>
   <div class="alert alert-info" role="status"><?= Text::sprintf('COM_JLMS_COURSE_ANNOUNCEMENT_PREVIEW_RECIPIENTS', (int) $this->preview['eligible_count']) ?></div>
@@ -35,11 +36,14 @@ $courseId = (int) $this->preview['course_id'];
    <div class="alert alert-success" role="status"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_ALREADY_QUEUED') ?></div>
      <?php elseif ((int) $this->preview['eligible_count'] > 0) : ?>
    <p><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_QUEUE_HELP') ?></p>
-   <form action="<?= Route::_('index.php?option=com_jlms&task=courseannouncement.notify') ?>" method="post" class="card card-body">
+   <form action="<?= Route::_('index.php?option=com_jlms&task=courseannouncement.notify') ?>"
+    method="post"
+    class="card card-body">
     <input type="hidden" name="id" value="<?= $courseId ?>">
     <div class="form-check mb-3">
      <input class="form-check-input" type="checkbox" name="confirm" id="jlms-announcement-confirm" value="1" required>
-     <label class="form-check-label" for="jlms-announcement-confirm"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_CONFIRM') ?></label>
+     <label class="form-check-label"
+    for="jlms-announcement-confirm"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_CONFIRM') ?></label>
     </div>
     <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ANNOUNCEMENT_CONFIRM_BUTTON') ?></button>
          <?= HTMLHelper::_('form.token') ?>

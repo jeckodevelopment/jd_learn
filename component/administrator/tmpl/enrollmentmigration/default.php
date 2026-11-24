@@ -20,7 +20,11 @@ foreach ($p['target_lessons'] as $lesson) {
  <p><?= Text::sprintf('COM_JLMS_MIGRATION_VERSIONS', (int)$p['source_version_no'], (int)$p['target_version_no']) ?></p>
  <form id="jlms-migration-map" method="get" action="<?= Route::_('index.php') ?>">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="enrollmentmigration">
-  <input type="hidden" name="id" value="<?= (int)$i['course_id'] ?>"><input type="hidden" name="enrollment_id" value="<?= (int)$p['source_enrollment_id'] ?>">
+  <input type="hidden"
+    name="id"
+    value="<?= (int)$i['course_id'] ?>"><input type="hidden"
+    name="enrollment_id"
+    value="<?= (int)$p['source_enrollment_id'] ?>">
   <fieldset><legend><?= Text::_('COM_JLMS_MIGRATION_MAP_TITLE') ?></legend>
    <?php if (!$p['completed_source_lessons']) :
         ?><p><?= Text::_('COM_JLMS_MIGRATION_NO_COMPLETIONS') ?></p><?php

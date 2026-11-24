@@ -22,6 +22,7 @@ use Joomla\CMS\Router\Route;
  <nav id="jlms-dashboard-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination
      ->getPagesLinks() ?></nav>
  <?php if ($this->items) :
-        ?><a id="jlms-dashboard-catalog" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a><?php
+        ?><a id="jlms-dashboard-catalog"
+    href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a><?php
  endif; ?>
 </section>

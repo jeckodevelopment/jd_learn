@@ -31,5 +31,6 @@ use Joomla\CMS\Router\Route;
         ?><a id="jlms-categories-parent" href="<?= Route::_('index.php?option=com_jlms&view=category&id='
             . (int) $this->parent->id) ?>"><?= $this->escape($this->parent->title) ?></a><?php
  endif; ?>
- <a id="jlms-categories-catalog" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
+ <a id="jlms-categories-catalog"
+    href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
 </section>

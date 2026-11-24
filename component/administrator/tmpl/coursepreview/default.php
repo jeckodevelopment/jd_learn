@@ -27,7 +27,11 @@ foreach ($this->preview['lessons'] as $entry) {
         <p><?= Text::_('COM_JLMS_ACCESS_PREVIEW_NOTICE') ?></p>
         <form method="get" action="<?= Route::_('index.php') ?>">
             <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="coursepreview">
-            <input type="hidden" name="id" value="<?= (int) $course->id ?>"><input type="hidden" name="version_id" value="<?= (int) $version->id ?>">
+            <input type="hidden"
+    name="id"
+    value="<?= (int) $course->id ?>"><input type="hidden"
+    name="version_id"
+    value="<?= (int) $version->id ?>">
             <?php if ($lesson) :
                 ?><input type="hidden" name="lesson_id" value="<?= (int) $lesson->id ?>"><?php
             endif; ?>
@@ -37,7 +41,8 @@ foreach ($this->preview['lessons'] as $entry) {
                 <label class="form-check form-check-inline"><input class="form-check-input" type="checkbox" name="access_levels[]" value="<?= $levelId ?>"<?= in_array($levelId, $access['selected'], true) ? ' checked' : '' ?>> <span class="form-check-label"><?= $this->escape($level->title) ?></span></label>
             <?php endforeach; ?>
             </fieldset>
-            <button class="btn btn-secondary mt-2" type="submit"><?= Text::_('COM_JLMS_ACCESS_PREVIEW_CHECK') ?></button>
+            <button class="btn btn-secondary mt-2"
+    type="submit"><?= Text::_('COM_JLMS_ACCESS_PREVIEW_CHECK') ?></button>
         </form>
         <ul class="mt-3">
             <li><?= Text::_('COM_JLMS_ACCESS_PREVIEW_CATALOG') ?>: <strong><?= Text::_($access['catalog_visible'] ? 'JYES' : 'JNO') ?></strong></li>
@@ -84,7 +89,8 @@ foreach ($this->preview['lessons'] as $entry) {
                     <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($lesson->title) ?>"></div>
                     <div id="jlms-video-speed-control" hidden>
                         <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
-                        <select id="jlms-video-speed" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">
+                        <select id="jlms-video-speed"
+    aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">
                             <?php foreach ([0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] as $speed) : ?>
                                 <option value="<?= $speed ?>"<?= $speed === 1 ? ' selected' : '' ?>><?= $speed ?>×</option>
                             <?php endforeach; ?>
@@ -92,7 +98,8 @@ foreach ($this->preview['lessons'] as $entry) {
                     </div>
                     <div id="jlms-video-language-control" hidden>
                         <label for="jlms-video-language"><?= Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE') ?></label>
-                        <select id="jlms-video-language" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE')) ?>"></select>
+                        <select id="jlms-video-language"
+    aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE')) ?>"></select>
                     </div>
                 </section>
             <?php elseif (in_array($lesson->kind, ['document', 'audio'], true)) : ?>
@@ -101,10 +108,12 @@ foreach ($this->preview['lessons'] as $entry) {
                     <?php $audioFiles = array_values(array_filter($materials['lesson']['items'] ?? [], static fn ($file): bool => in_array($file->mime_type, ['audio/mpeg', 'audio/ogg'], true))); ?>
                     <section id="jlms-preview-audio-region" aria-label="<?= $this->escape($lesson->title) ?>">
                         <?php if ($audioFiles) :
-                            ?><audio id="jlms-preview-audio" controls preload="metadata" aria-label="<?= $this->escape($lesson->title) ?>">
+                            ?><audio id="jlms-preview-audio" controls preload="metadata"
+    aria-label="<?= $this->escape($lesson->title) ?>">
                             <?php foreach ($audioFiles as $file) : ?>
                                 <?php $src = 'index.php?option=com_jlms&task=attachment.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
-                                <source src="<?= $this->escape(\Joomla\CMS\Router\Route::link('site', $src, false)) ?>" type="<?= $this->escape($file->mime_type) ?>">
+                                <source src="<?= $this->escape(\Joomla\CMS\Router\Route::link('site', $src, false)) ?>"
+    type="<?= $this->escape($file->mime_type) ?>">
                             <?php endforeach; ?>
                         </audio>
                         <?php else :

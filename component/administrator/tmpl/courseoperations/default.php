@@ -20,7 +20,8 @@ HTMLHelper::_('behavior.formvalidator');
 else : ?>
 <form method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
     <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="courseoperations.apply"><?= HTMLHelper::_('form.token') ?>
-<button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_CONFIRM_BUTTON') ?></button></form><?php
+<button type="submit"
+    class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_CONFIRM_BUTTON') ?></button></form><?php
 endif; ?>
 <h3><?= Text::_('COM_JLMS_COURSE_OPERATIONS_HISTORY') ?></h3><div class="table-responsive"><table class="table"><thead><tr><th>#</th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_COURSE_OPERATIONS_REASON') ?></th><th><?= Text::_('JAUTHOR') ?></th><th><?= Text::_('JDATE') ?> UTC</th></tr></thead><tbody>
 <?php foreach ($i['history'] as $h) :

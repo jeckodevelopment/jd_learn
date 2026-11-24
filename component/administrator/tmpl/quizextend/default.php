@@ -13,7 +13,11 @@ $p = $i['impact'];
  <p id="jlms-quiz-extend-policy" class="alert alert-info"><?= Text::_('COM_JLMS_QUIZ_EXTEND_POLICY') ?></p>
  <form id="jlms-quiz-extend-preview-form" method="get" action="<?= Route::_('index.php') ?>">
  <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="quizextend">
- <input type="hidden" name="id" value="<?= (int)$i['course_id'] ?>"><input type="hidden" name="lesson_id" value="<?= (int)$i['lesson_id'] ?>">
+ <input type="hidden"
+    name="id"
+    value="<?= (int)$i['course_id'] ?>"><input type="hidden"
+    name="lesson_id"
+    value="<?= (int)$i['lesson_id'] ?>">
  <input type="hidden" name="enrollment_id" value="<?= (int)$i['enrollment']
      ->id ?>"><input type="hidden" name="attempt_id" value="<?= (int)$i['attempt']->id ?>">
  <label for="jlms-quiz-extend-minutes"><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?></label><input id="jlms-quiz-extend-minutes" type="number" name="minutes" min="1" max="1440" step="1" value="<?= (int)$i['minutes'] ?>" required>
@@ -25,7 +29,10 @@ $p = $i['impact'];
  <?php if ($p['blocked'] !== null) :
         ?><p id="jlms-quiz-extend-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>
  <?php else :
-        ?><form id="jlms-quiz-extend-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
+        ?><form id="jlms-quiz-extend-form"
+    method="post"
+    class="form-validate"
+    action="<?= Route::_('index.php?option=com_jlms') ?>">
      <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="quizextend.apply"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_QUIZ_EXTEND_APPLY') ?></button></form><?php
  endif; ?>
  </section>

@@ -22,7 +22,8 @@ use Joomla\CMS\Router\Route;
     <div><dt><?= Text::_('COM_JLMS_DASHBOARD_IN_PROGRESS') ?></dt><dd><?= (int) $this->summary['in_progress'] ?></dd></div>
     <div><dt><?= Text::_('COM_JLMS_DASHBOARD_COMPLETED') ?></dt><dd><?= (int) $this->summary['completed'] ?></dd></div>
    </dl>
-   <a id="jlms-dashboard-my-courses-link" href="<?= Route::_('index.php?option=com_jlms&view=mycourses') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a>
+   <a id="jlms-dashboard-my-courses-link"
+    href="<?= Route::_('index.php?option=com_jlms&view=mycourses') ?>"><?= Text::_('COM_JLMS_MY_COURSES') ?></a>
   </section>
   <section class="jlms-card jlms-my-course" aria-labelledby="jlms-summary-certificates-title">
    <h2 id="jlms-summary-certificates-title"><?= Text::_('COM_JLMS_MY_CERTIFICATES') ?></h2>
@@ -31,7 +32,8 @@ use Joomla\CMS\Router\Route;
   </section>
   <section class="jlms-card jlms-my-course" aria-labelledby="jlms-summary-preferences-title">
    <h2 id="jlms-summary-preferences-title"><?= Text::_('COM_JLMS_PREFERENCES') ?></h2>
-   <a id="jlms-dashboard-preferences-link" href="<?= Route::_('index.php?option=com_jlms&view=preferences') ?>"><?= Text::_('COM_JLMS_PREFERENCES') ?></a>
+   <a id="jlms-dashboard-preferences-link"
+    href="<?= Route::_('index.php?option=com_jlms&view=preferences') ?>"><?= Text::_('COM_JLMS_PREFERENCES') ?></a>
   </section>
  </div>
  <?php if ($this->summary['latest'] !== null) : ?>
@@ -48,5 +50,6 @@ use Joomla\CMS\Router\Route;
  <?php if ((int) $this->summary['not_started'] + (int) $this->summary['in_progress'] + (int) $this->summary['completed'] === 0) : ?>
   <p id="jlms-dashboard-empty"><?= Text::_('COM_JLMS_MY_TRAINING_EMPTY') ?></p>
  <?php endif; ?>
- <a id="jlms-dashboard-catalog" href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
+ <a id="jlms-dashboard-catalog"
+    href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a>
 </section>

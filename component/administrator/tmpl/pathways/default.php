@@ -10,7 +10,10 @@ use Joomla\CMS\Router\Route;
 <form action="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>" method="post" id="adminForm" name="adminForm">
  <section id="jlms-admin-pathways">
   <label for="jlms-pathway-state-filter"><?= Text::_('JSTATUS') ?></label>
-  <select id="jlms-pathway-state-filter" name="filter_pathway_state" class="form-select w-auto" onchange="this.form.submit()">
+  <select id="jlms-pathway-state-filter"
+    name="filter_pathway_state"
+    class="form-select w-auto"
+    onchange="this.form.submit()">
    <option value="active"<?= $this->stateFilter === 'active' ? ' selected' : '' ?>><?= Text::_('JGLOBAL_FILTER_SELECT_STATUS') ?></option>
    <option value="trashed"<?= $this->stateFilter === 'trashed' ? ' selected' : '' ?>><?= Text::_('JTRASHED') ?></option>
   </select>
@@ -28,5 +31,9 @@ use Joomla\CMS\Router\Route;
   </table>
   <?= $this->pagination->getListFooter() ?>
  </section>
- <input type="hidden" name="task" value=""><input type="hidden" name="boxchecked" value="0"><?= HTMLHelper::_('form.token') ?>
+ <input type="hidden"
+    name="task"
+    value=""><input type="hidden"
+    name="boxchecked"
+    value="0"><?= HTMLHelper::_('form.token') ?>
 </form>

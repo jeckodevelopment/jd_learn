@@ -24,7 +24,9 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
   <p id="jlms-pathway-course-count"><?= Text::sprintf('COM_JLMS_PATHWAY_COURSE_COUNT', (int) $this->item['required_courses']) ?></p>
   <?php if (!$this->isGuest && $this->item['progress'] !== null) : ?>
    <label for="jlms-pathway-progress"><?= Text::_('COM_JLMS_PATHWAY_PROGRESS') ?>: <?= (int) $this->item['progress'] ?>%</label>
-   <progress id="jlms-pathway-progress" max="100" value="<?= (int) $this->item['progress'] ?>"><?= (int) $this->item['progress'] ?>%</progress>
+   <progress id="jlms-pathway-progress"
+    max="100"
+    value="<?= (int) $this->item['progress'] ?>"><?= (int) $this->item['progress'] ?>%</progress>
         <?php if ($this->item['has_unavailable_courses']) :
             ?><p id="jlms-pathway-unavailable"><?= Text::_('COM_JLMS_PATHWAY_HAS_UNAVAILABLE') ?></p><?php
         endif; ?>
@@ -54,7 +56,9 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
        <p class="jlms-pathway-timeline__state"><?= Text::_($stateKey) ?></p>
                 <?php if ($course['access'] === 'available' && $course['learning_state'] !== 'not_enrolled' && $course['percent'] !== null) : ?>
         <label for="jlms-pathway-course-progress-<?= (int) $index ?>"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $course['percent'] ?>%</label>
-        <progress id="jlms-pathway-course-progress-<?= (int) $index ?>" max="100" value="<?= (int) $course['percent'] ?>"><?= (int) $course['percent'] ?>%</progress>
+        <progress id="jlms-pathway-course-progress-<?= (int) $index ?>"
+    max="100"
+    value="<?= (int) $course['percent'] ?>"><?= (int) $course['percent'] ?>%</progress>
                 <?php elseif ($course['access'] === 'unavailable' && !empty($course['delivery_suspended'])) : ?>
         <p><?= Text::_('COM_JLMS_COURSE_DELIVERY_SUSPENDED') ?></p>
                 <?php elseif ($course['access'] !== 'available') : ?>
@@ -72,5 +76,6 @@ $cover = PathwayArtwork::fromParams((string) ($pathway->params_json ?? '{}'));
         ?><p id="jlms-pathway-empty"><?= Text::_('COM_JLMS_PATHWAY_NO_COURSES') ?></p><?php
   endif; ?>
  </section>
- <a id="jlms-pathway-catalog" href="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>"><?= Text::_('COM_JLMS_PATHWAYS') ?></a>
+ <a id="jlms-pathway-catalog"
+    href="<?= Route::_('index.php?option=com_jlms&view=pathways') ?>"><?= Text::_('COM_JLMS_PATHWAYS') ?></a>
 </article>

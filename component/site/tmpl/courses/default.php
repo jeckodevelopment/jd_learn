@@ -32,7 +32,11 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
   </select>
             <?php endif; ?>
   <label for="jlms-catalog-search"><?= Text::_('COM_JLMS_CATALOG_SEARCH') ?></label>
-  <input id="jlms-catalog-search" type="search" name="filter[search]" value="<?= $this->escape($this->search) ?>" maxlength="100">
+  <input id="jlms-catalog-search"
+    type="search"
+    name="filter[search]"
+    value="<?= $this->escape($this->search) ?>"
+    maxlength="100">
             <?php if ($this->showOrder) : ?>
   <label for="jlms-catalog-order"><?= Text::_('COM_JLMS_CATALOG_ORDER') ?></label>
   <select id="jlms-catalog-order" name="filter[order]"><option value="editorial"<?= $this->order === 'editorial' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_EDITORIAL') ?></option><option value="recent"<?= $this->order === 'recent' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_RECENT') ?></option><option value="title"<?= $this->order === 'title' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_TITLE') ?></option><option value="duration"<?= $this->order === 'duration' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_DURATION') ?></option><option value="published"<?= $this->order === 'published' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_ORDER_PUBLISHED') ?></option></select>
@@ -46,7 +50,10 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
   <label for="jlms-catalog-duration"><?= Text::_('COM_JLMS_CATALOG_DURATION') ?></label>
   <select id="jlms-catalog-duration" name="filter[duration]"><option value=""><?= Text::_('COM_JLMS_CATALOG_ANY_DURATION') ?></option><option value="under-30"<?= $this->duration === 'under-30' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_UNDER_30') ?></option><option value="30-60"<?= $this->duration === '30-60' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_30_60') ?></option><option value="61-120"<?= $this->duration === '61-120' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_61_120') ?></option><option value="over-120"<?= $this->duration === 'over-120' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_DURATION_OVER_120') ?></option></select>
   <label for="jlms-catalog-available"><?= Text::_('COM_JLMS_CATALOG_AVAILABLE_ONLY') ?></label>
-  <input id="jlms-catalog-available" type="checkbox" name="filter[available]" value="1"<?= $this->available === '1' ? ' checked' : '' ?>>
+  <input id="jlms-catalog-available"
+    type="checkbox"
+    name="filter[available]"
+    value="1"<?= $this->available === '1' ? ' checked' : '' ?>>
   <label for="jlms-catalog-layout"><?= Text::_('COM_JLMS_CATALOG_LAYOUT') ?></label>
   <select id="jlms-catalog-layout" name="filter[layout]"><option value="grid"<?= $this->layout === 'grid' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_LAYOUT_GRID') ?></option><option value="list"<?= $this->layout === 'list' ? ' selected' : '' ?>><?= Text::_('COM_JLMS_CATALOG_LAYOUT_LIST') ?></option></select>
   <label for="jlms-catalog-teacher"><?= Text::_('COM_JLMS_CATALOG_TEACHER') ?></label>
@@ -63,7 +70,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
      <?php if ($this->categoryId) :
             ?><p id="jlms-category-filter"><?= Text::_('COM_JLMS_CATEGORY_FILTER_ACTIVE') ?> <a href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php
      endif; ?>
- <div id="jlms-course-grid" class="jlms-course-grid<?= $this->layout === 'list' ? ' jlms-course-grid--list' : '' ?>" data-layout="<?= $this->escape($this->layout) ?>">
+ <div id="jlms-course-grid"
+    class="jlms-course-grid<?= $this->layout === 'list' ? ' jlms-course-grid--list' : '' ?>"
+    data-layout="<?= $this->escape($this->layout) ?>">
      <?php foreach ($this->items as $item) :
             $presentation = [];
             try {
@@ -80,11 +89,16 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
             'advanced' => 'COM_JLMS_COURSE_ADVANCED',
             ][$difficulty] ?? '';
             ?>
-  <article id="jlms-course-card-<?= (int) $item->id ?>" class="jlms-card jlms-course-card" data-course-id="<?= (int) $item->id ?>">
+  <article id="jlms-course-card-<?= (int) $item->id ?>"
+    class="jlms-card jlms-course-card"
+    data-course-id="<?= (int) $item->id ?>">
             <?php if ($this->showCover) : ?>
     <div class="jlms-course-card__cover">
                 <?php if ($cover !== '') : ?>
-      <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover)))) ?>" alt="<?= $this->escape((string) ($presentation['image_alt'] ?? '')) ?>" loading="lazy" decoding="async">
+      <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover)))) ?>"
+    alt="<?= $this->escape((string) ($presentation['image_alt'] ?? '')) ?>"
+    loading="lazy"
+    decoding="async">
                 <?php else :
                     ?><span class="jlms-course-card__cover-placeholder" aria-hidden="true"></span><?php
                 endif; ?>
@@ -159,6 +173,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
             <?php endif; ?>
      <?php endif; ?>
  </div>
- <nav id="jlms-catalog-pagination" aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
+ <nav id="jlms-catalog-pagination"
+    aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>"><?= $this->pagination->getPagesLinks() ?></nav>
  <?php endif; ?>
 </section>

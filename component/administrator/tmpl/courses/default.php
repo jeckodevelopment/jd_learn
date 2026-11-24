@@ -23,7 +23,8 @@ $direction = $this->escape($this->state->get('list.direction', 'DESC'));
     <caption class="visually-hidden"><?= Text::_('COM_JLMS_COURSES') ?></caption>
     <thead><tr>
      <td class="w-1 text-center"><?= HTMLHelper::_('grid.checkall') ?></td>
-     <th scope="col" class="w-10"><?= HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $order) ?></th>
+     <th scope="col"
+    class="w-10"><?= HTMLHelper::_('searchtools.sort', 'JSTATUS', 'a.state', $direction, $order) ?></th>
      <th scope="col"><?= HTMLHelper::_('searchtools.sort', 'JGLOBAL_TITLE', 'a.title', $direction, $order) ?></th>
      <th scope="col" class="d-none d-md-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JCATEGORY', 'category_title', $direction, $order) ?></th>
      <th scope="col" class="d-none d-lg-table-cell"><?= HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_ACCESS', 'access_title', $direction, $order) ?></th>
