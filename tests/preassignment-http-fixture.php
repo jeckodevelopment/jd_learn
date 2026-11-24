@@ -43,7 +43,9 @@ if ($mode === 'snapshot') {
         if ($q->fetchColumn() !== $username) {
             throw new \RuntimeException('Unexpected fixture user');
         }
-        $sql = str_starts_with($action, 'revoke') ? 'DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?' : 'INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)';
+        $sql = str_starts_with($action, 'revoke') ?
+             'DELETE FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?' :
+             'INSERT IGNORE INTO joomla_user_usergroup_map(user_id,group_id) VALUES(?,?)';
         $q = $db->prepare($sql);
         $q->execute([$id,$group]);
     }
