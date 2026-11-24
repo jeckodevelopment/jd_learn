@@ -28,3 +28,7 @@ Full PSR12 4.0.4 count after second sweep: **161**. No change of SECDEV-02 statu
 - `PSR1.Classes.ClassDeclaration.MissingNamespace`: 1
 - `Squiz.Classes.ValidClassName.NotPascalCase`: 1
 - `PSR12.Files.FileHeader.IncorrectOrder`: 1
+
+## Third atomic HTML sweep
+
+PHPCS 4.0.4 total after this guarded sweep: **163**. CI full validation must certify this preliminary measure; no change to manual acceptance or requirement status.
