@@ -517,3 +517,5 @@ Baseline certificata dalla CI #45502399210: **125 finding PSR-12**, di cui 102 `
 - PHP lint, conservazione degli argomenti e delle condizioni di revisione, messaggistica e sanificazione HTML.
 - `tools/check.py`, source contracts, test mail, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, Chromium, pacchetto Joomla.
 - Collaudo manuale Joomla: invio/anteprima comunicazioni, pubblicazione del curriculum, gestione dei conflitti di revisione e comportamento del filtro HTML.
+
+Lotto PR #1025: collegamento a matrice requisiti e metadati GitHub obbligatori (milestone 1.0.0, priorità P1, collaudo in attesa) verificati; esiti PHPCS e collaudi non ancora anticipati. Questo aggiornamento richiede nuova CI sull'HEAD, distinta dal rerun di un evento antecedente ai metadati.
