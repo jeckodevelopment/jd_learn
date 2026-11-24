@@ -22,6 +22,7 @@ jobs:
           composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
       - name: Normalize all eligible HTML attribute lengths in PHP templates
         run: |
+          echo 'Preserve communication consent source contract'
           python3 tools/secdev02_template_tag_reflow.py --self-test
           python3 tools/secdev02_template_tag_reflow.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs
           git diff --check
