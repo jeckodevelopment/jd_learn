@@ -1,11 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Normalize PHP ASTs for safe splitting of a plain literal into a concatenation
  * of plain literal fragments. No other PHP AST changes are accepted.
  */
+
+declare(strict_types=1);
+
 require $argv[1] . '/vendor/autoload.php';
 
 $parser = (new \PhpParser\ParserFactory())->createForNewestSupportedVersion();
