@@ -59,7 +59,6 @@ def transform(source: bytes, spans: list[tuple[int, int]], indent_step: int) -> 
     if not candidates:
         return source, 0
     edits = []
-    last_line_start = -1
     for cursor in sorted(set(candidates)):
         start_line = source.rfind(b"\n", 0, cursor) + 1
         end_line = source.find(b"\n", cursor)
@@ -80,9 +79,6 @@ def transform(source: bytes, spans: list[tuple[int, int]], indent_step: int) -> 
             raise AssertionError("HTML attribute boundary drift")
         output[cursor:cursor + 1] = text
     result = bytes(output)
-    check = bytearray(result)
-    for _, spacer in reversed(edits):
-        pass
     # Lossless restoring is guaranteed by positions and an exact single-space
     # replacement; do not attempt to normalize other HTML whitespace.
     assert len(edits) > 0
@@ -125,10 +121,6 @@ def main() -> int:
             candidate, count = transform(initial, inline, extra)
             if count == 0:
                 continue
-            if candidate.replace(b"\n" + b" " * extra, b" ") != initial and extra == 4:
-                # Only safe if every inserted HTML break can be reversed.
-                # The mixed indentation case is checked by transform itself.
-                pass
             path.write_bytes(candidate)
             if not lint(path):
                 continue
