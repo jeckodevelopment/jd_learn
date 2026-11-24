@@ -377,3 +377,12 @@ Pinned PHPCS 4.0.4 full tracked-PHP audit: **914 → 903**, **11 findings remove
 
 - Same runtime test assertions, fixtures, isolation, error paths and CLI exit codes.
 - All PHP lint, PHPCS PSR12, original source contracts, Joomla integration matrix and Chromium.
+
+### Incremental PHP line reflow in PR #1017
+
+The bounded lexical whitespace pass reduced the pinned PHPCS PSR12 4.0.4 inventory from **903 to 867**, **-36** across **22 PHP sources**, without new file/rule violations. Each candidate preserved significant tokens, lint and protected source fragments; a strictly improving, file-scoped PHPCS audit gated every edit. Full source contract checks, integrated Joomla CI and manual acceptance remain independent. Functional requirement percentages are unchanged; **SECDEV-02 is still partial** until all other findings/CORE/API review are complete.
+
+### Comportamenti da testare
+
+- Exact PHP syntax and tokens, no changed string literals, business logic, ACL, CSRF, SQL or runtime API contracts.
+- Full Joomla 6.2 CI matrix, browser fixtures and package build.

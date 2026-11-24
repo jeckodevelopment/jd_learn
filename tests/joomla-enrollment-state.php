@@ -92,7 +92,8 @@ if (($argv[2] ?? '') === 'worker') {
     echo "ready\n";
     fflush(STDOUT);
     fgets(STDIN);
-    $command = json_decode(file_get_contents(dirname($root) . '/enrollment-state-race.json'), true, 16, JSON_THROW_ON_ERROR);
+    $command = json_decode(file_get_contents(dirname($root)
+        . '/enrollment-state-race.json'), true, 16, JSON_THROW_ON_ERROR);
     if (($argv[3] ?? '') === 'different') {
         $command[5] = stateKey();
     }

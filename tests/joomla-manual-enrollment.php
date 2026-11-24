@@ -94,7 +94,8 @@ if (($argv[2] ?? '') === 'worker') {
     echo "ready\n";
     fflush(STDOUT);
     fgets(STDIN);
-    $race = json_decode(file_get_contents(dirname($root) . '/manual-enrollment-race.json'), true, 16, JSON_THROW_ON_ERROR);
+    $race = json_decode(file_get_contents(dirname($root)
+        . '/manual-enrollment-race.json'), true, 16, JSON_THROW_ON_ERROR);
     $command = $race['commands'][(int)($argv[4] ?? 0)];
     try {
         $id = ($argv[3] ?? '') === 'auto' ? $learning->start(new
@@ -125,7 +126,8 @@ if (($argv[2] ?? '') === 'retained') {
         'single manual receipt retained'
     );
     manualExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
-        . "extension='com_jlms.manualenrollment' AND item_id=") . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
+        . "extension='com_jlms.manualenrollment' AND item_id=")
+            . (int)$f['receipt'])->loadResult() === 1, 'native manual audit retained');
     echo json_encode(['manual_enrollment_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }

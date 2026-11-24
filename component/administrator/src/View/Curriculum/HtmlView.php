@@ -58,7 +58,8 @@ final class HtmlView extends BaseHtmlView
         $locked = $locked || ($version && $version->checked_out && (int) $version->checked_out !== (int) $actor->id);
         $this->editable = $version && $version->status === 'draft' && !$locked && !$this->inReview;
         $this->canRestoreProgramme = $version && !$locked && $course->current_version_id !== null
-            && (int)$course->current_version_id !== (int)$version->id && in_array($version->status, ['published','retired'], true);
+            && (int)$course->current_version_id !== (int)$version->id
+                && in_array($version->status, ['published','retired'], true);
         if ($version) {
             try {
                 $this->teachingRules = $app->bootComponent('com_jlms')->getCurriculumService()
@@ -95,7 +96,8 @@ final class HtmlView extends BaseHtmlView
                             is_array($source['options'] ?? null) ? $source['options'] : []
                         ));
                         $capabilities = $provider->getCapabilities($normal);
-                        $providerChecks[$id]['trackable'] = $capabilities->position && $capabilities->duration && $capabilities->seek;
+                        $providerChecks[$id]['trackable'] = $capabilities->position
+                            && $capabilities->duration && $capabilities->seek;
                     } catch (\Throwable) {
                         // Keep incomplete drafts visible. Publication performs
                         // its own authoritative validation and remains fail-closed.
@@ -106,7 +108,8 @@ final class HtmlView extends BaseHtmlView
                     $this->outline['modules'],
                     $this->outline['lessons'],
                     $this->outline['attachments'],
-                    (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false),
+                    (bool)
+                    \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false),
                     $this->teachingRules ?? [],
                     $providerChecks,
                 );

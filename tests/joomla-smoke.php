@@ -192,12 +192,14 @@ $expectedLinks = ['index.php?option=com_jlms&view=dashboard', 'index.php?option=
 $menuTitles = $db->setQuery($db->getQuery(true)->select($db->quoteName('title'))->from($db->
     quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->
     quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
-$expectedMenuTitles = ['COM_JLMS_DASHBOARD_MENU', 'COM_JLMS_COURSES', 'COM_JLMS_PATHWAYS', 'COM_JLMS_TEACHERS', 'COM_JLMS_QUESTION_BANK'];
+$expectedMenuTitles = ['COM_JLMS_DASHBOARD_MENU', 'COM_JLMS_COURSES', 'COM_JLMS_PATHWAYS',
+    'COM_JLMS_TEACHERS', 'COM_JLMS_QUESTION_BANK'];
 if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMenuTitles) {
     throw new \RuntimeException(('Native administrator menu must include Dashboard first with the '
         . 'localized label and without duplicates.'));
 }
-$reassignSystemLanguage = parse_ini_file(JPATH_ADMINISTRATOR . '/language/en-GB/com_jlms.sys.ini', false, INI_SCANNER_RAW);
+$reassignSystemLanguage = parse_ini_file(JPATH_ADMINISTRATOR
+    . '/language/en-GB/com_jlms.sys.ini', false, INI_SCANNER_RAW);
 if (!is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CATEGORY_REASSIGN_TITLE'] ?? null) !== 'Category dependency cleanup') {
     throw new \RuntimeException(('Category reassignment title must be installed in the administrator '
         . 'system language catalog.'));

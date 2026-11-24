@@ -130,7 +130,8 @@ final class MaterialService
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }
         $lessonFilter = $scope === -1 ? null : $scope;
-        return ['course' => $course, 'version' => $version, 'files' => $this->listing($versionId, $lessonFilter, $page, true),
+        return ['course' => $course, 'version' => $version,
+            'files' => $this->listing($versionId, $lessonFilter, $page, true),
             'lessons' => $lessons, 'scope' => $scope, 'limit' => $this->storage->limit(),
             'scan_required' => (bool) $this->storage->config()->get('material_scan_required', false),
             'schedule_timezone' => CourseSchedule::read($course)['timezone']];

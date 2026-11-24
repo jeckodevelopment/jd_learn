@@ -64,7 +64,8 @@ final class QuizAuthoringService
             ->revision, 'lesson_id' => 0,
             'revision' => 1, 'required' => '1', 'threshold' => '70', 'max_attempts' => 3, 'time_minutes' => 0
                 , 'retry_minutes' => 0,
-            'assessment' => 'graded', 'selection_mode' => 'fixed', 'feedback_policy' => 'pass_or_exhausted', 'questions' => []];
+            'assessment' => 'graded', 'selection_mode' => 'fixed',
+                'feedback_policy' => 'pass_or_exhausted', 'questions' => []];
         if ($lesson) {
             $l = $this->row('lessons', $lesson);
             if ((int) $l->course_version_id !== $version || $l->kind !== 'quiz') {
@@ -75,22 +76,27 @@ final class QuizAuthoringService
                 ->from('#__jlms_quizzes')
                 ->where('lesson_id = :lesson')
                 ->bind(':lesson', $lesson, ParameterType::INTEGER);
-            $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+            $quiz = $this->db->setQuery($q)->loadObject()
+                ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
             $selection = json_decode($quiz->selection_json, true, 16, JSON_THROW_ON_ERROR);
             $quizId = (int) $quiz->id;
             $q = $this->db->createQuery()
                 ->select('question_revision_id AS revision_id, points')
                 ->from('#__jlms_quiz_questions')->where('quiz_id = :quiz')
                 ->bind(':quiz', $quizId, ParameterType::INTEGER)->order('ordering');
-            $data = array_replace($data, ['lesson_id' => $lesson, 'revision' => (int) $quiz->revision, 'title' => $l->title,
+            $data = array_replace($data, ['lesson_id' => $lesson, 'revision' => (int) $quiz->revision,
+                'title' => $l->title,
                 'module_id' => (int) $l->module_id, 'required' => (string) $l->required, 'threshold' =>
                      (string) ((int) $quiz->pass_basis_points / 100),
-                'max_attempts' => (int) $quiz->max_attempts, 'time_minutes' => intdiv((int) $quiz->time_limit_seconds, 60),
-                'retry_minutes' => intdiv($selection['retry_delay_seconds'], 60), 'assessment' => $selection['assessment'],
+                'max_attempts' => (int) $quiz->max_attempts,
+                    'time_minutes' => intdiv((int) $quiz->time_limit_seconds, 60),
+                'retry_minutes' => intdiv($selection['retry_delay_seconds'], 60),
+                    'assessment' => $selection['assessment'],
                 'selection_mode' => $selection['mode'], 'draw_count' => $selection['draw_count'],
                 'shuffle_questions' => (int) $selection['shuffle_questions'], 'shuffle_options' =>
                      (int) $selection['shuffle_options'],
-                'feedback_policy' => $quiz->feedback_policy, 'questions' => $this->db->setQuery($q, 0, 200)->loadAssocList()]);
+                'feedback_policy' => $quiz->feedback_policy,
+                    'questions' => $this->db->setQuery($q, 0, 200)->loadAssocList()]);
         }
         return ['course' => $c, 'version' => $v, 'modules' => $modules, 'data' => $data];
     }

@@ -528,7 +528,8 @@ ruleExpect(
     is_string($serviceSource) && $temporaryCalls === [],
     'Certificate creation and regeneration do not depend on global PHP temporary paths'
 );
-$storageForCertificates = new \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn()=>$certificateParams);
+$storageForCertificates = new
+    \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage(static fn()=>$certificateParams);
 try {
     $storageForCertificates->stageGeneratedPdf('invalid PDF');
     throw new \RuntimeException('Invalid generated PDF accepted');

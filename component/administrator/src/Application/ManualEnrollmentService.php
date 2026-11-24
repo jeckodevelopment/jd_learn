@@ -108,7 +108,8 @@ final class ManualEnrollmentService
         $q = $this->db->createQuery()->select('id, version_no, revision, rules_json')->from('#__jlms_course_versions')
             ->where('id = :version')->where('course_id = :course')->where("status = 'published'")
             ->bind(':version', $versionId, ParameterType::INTEGER)->bind(':course', $courseId, ParameterType::INTEGER);
-        $version = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $version = $this->db->setQuery($q)->loadObject()
+            ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         try {
             $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $version->rules_json);
         } catch (\DomainException) {

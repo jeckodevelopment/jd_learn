@@ -332,7 +332,8 @@ final class CurriculumService
             if (
                 $course->current_version_id === null || (int)$course->current_version_id === $sourceId
                 || !in_array($source->status, ['published', 'retired'], true) || !$source->published_at
-                || !is_string($source->structure_hash) || preg_match('/\A[a-f0-9]{64}\z/D', $source->structure_hash) !== 1
+                || !is_string($source->structure_hash)
+                    || preg_match('/\A[a-f0-9]{64}\z/D', $source->structure_hash) !== 1
             ) {
                 throw new \DomainException('COM_JLMS_PROGRAMME_RESTORE_SOURCE_INVALID');
             }

@@ -192,7 +192,8 @@ restoreExpect($model->save(['id' => $course,'revision' => $copy->revision,'catal
     ,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent fixture has explicit learner access');
 $version = (int)$authoring->outline($actor, $course)['version']->id;
 $scope = static function () use ($course, &$version): array {
-    return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => restoreRow('course_versions', $version)->revision];
+    return ['course_id' => $course,'version_id' => $version,'expected_version_revision' =>
+        restoreRow('course_versions', $version)->revision];
 };
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
 foreach (['youtube' => 'dQw4w9WgXcQ','vimeo' => '123456789','cloudflarestream' => str_repeat('b', 32)] as $key => $reference) {
