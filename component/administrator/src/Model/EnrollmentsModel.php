@@ -11,25 +11,27 @@ use Joomla\CMS\MVC\Model\ListModel;
 
 final class EnrollmentsModel extends ListModel
 {
-    protected function populateState($ordering = 'e.id', $direction = 'DESC')
+    protected function populateState($ordering = "e.id", $direction = "DESC")
     {
         parent::populateState($ordering, $direction);
         $input = Factory::getApplication()->getInput();
-        $this->setState('filter.course', $input->getInt('id', 0));
-        $this->setState('filter.roster', $input->get('filter', [], 'array'));
-        $this->setState('list.limit', max(1, min(50, (int) $this->state->get('list.limit', 20))));
+        $this->setState("filter.course", $input->getInt("id", 0));
+        $this->setState("filter.roster", $input->get("filter", [], "array"));
+        $this->setState("list.limit", max(1, min(50, (int) $this->state->get("list.limit", 20))));
     }
 
     private function service()
     {
-        return Factory::getApplication()->bootComponent('com_jlms')->getEnrollmentRosterService();
+        return Factory::getApplication()->bootComponent("com_jlms")->getEnrollmentRosterService();
     }
 
     public function getCourse(): object
     {
         try {
-            return $this->service()->course(Factory::getApplication()->getIdentity(), (int) $this
-                ->getState('filter.course'));
+            return $this->service()->course(
+                Factory::getApplication()->getIdentity(),
+                (int) $this->getState("filter.course"),
+            );
         } catch (\Throwable $error) {
             $this->fail($error);
         }
@@ -37,14 +39,24 @@ final class EnrollmentsModel extends ListModel
 
     protected function getListQuery()
     {
-        return $this->service()->query(Factory::getApplication()->getIdentity(), (int) $this
-            ->getState('filter.course'), $this->getState('filter.roster', []));
+        return $this->service()->query(
+            Factory::getApplication()->getIdentity(),
+            (int) $this->getState("filter.course"),
+            $this->getState("filter.roster", []),
+        );
     }
 
-    protected function getStoreId($id = '')
+    protected function getStoreId($id = "")
     {
-        return parent::getStoreId($id . ':' . (int) Factory::getApplication()->getIdentity()->id . ':' . $this
-            ->getState('filter.course') . ':' . json_encode($this->getState('filter.roster', [])));
+        return parent::getStoreId(
+            $id .
+                ":" .
+                (int) Factory::getApplication()->getIdentity()->id .
+                ":" .
+                $this->getState("filter.course") .
+                ":" .
+                json_encode($this->getState("filter.roster", [])),
+        );
     }
 
     public function getItems()
@@ -54,7 +66,7 @@ final class EnrollmentsModel extends ListModel
             $this->getListQuery();
             $items = parent::getItems();
             if (!is_array($items)) {
-                throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+                throw new \RuntimeException("COM_JLMS_SAVE_FAILED", 500);
             }
             return $items;
         } catch (\Throwable $error) {
@@ -68,7 +80,7 @@ final class EnrollmentsModel extends ListModel
             $this->getListQuery();
             $total = parent::getTotal();
             if ($total === false) {
-                throw new \RuntimeException('COM_JLMS_SAVE_FAILED', 500);
+                throw new \RuntimeException("COM_JLMS_SAVE_FAILED", 500);
             }
             return $total;
         } catch (\Throwable $error) {
@@ -78,38 +90,66 @@ final class EnrollmentsModel extends ListModel
 
     private function fail(\Throwable $error): never
     {
-        if (in_array($error->getMessage(), ['COM_JLMS_LOGIN_REQUIRED', 'COM_JLMS_LEARNING_DENIED', 'COM_JLMS_RESOURCE_NOT_FOUND', 'COM_JLMS_INVALID_INPUT'], true)) {
+        if (
+            in_array(
+                $error->getMessage(),
+                [
+                    "COM_JLMS_LOGIN_REQUIRED",
+                    "COM_JLMS_LEARNING_DENIED",
+                    "COM_JLMS_RESOURCE_NOT_FOUND",
+                    "COM_JLMS_INVALID_INPUT",
+                ],
+                true,
+            )
+        ) {
             throw new \RuntimeException(Text::_($error->getMessage()), $error->getCode());
         }
-        throw new \RuntimeException(Text::_('COM_JLMS_SAVE_FAILED'), 500);
+        throw new \RuntimeException(Text::_("COM_JLMS_SAVE_FAILED"), 500);
     }
 
     public function getRosterForm(): Form
     {
-        $form = Form::getInstance('com_jlms.enrollments.filters', JPATH_ADMINISTRATOR
-            . '/components/com_jlms/forms/enrollments.xml', ['control' => 'filter']);
-        $options = $this->service()->filterOptions(Factory::getApplication()->getIdentity(), (int) $this
-            ->getState('filter.course'));
-        $versionField = new \SimpleXMLElement(('<field name="version" type="list" '
-            . 'label="COM_JLMS_ROSTER_VERSION_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>'));
-        $versionField->addChild('option', 'JALL')->addAttribute('value', '0');
-        foreach ($options['versions'] as $version) {
-            $label = (string) $version->title_snapshot . ' · v' . (int) $version->version_no . ' · '
-                . (string) $version->status . ' · #' . (int) $version->id;
-            $versionField->addChild('option', htmlspecialchars($label, ENT_XML1))
-                ->addAttribute('value', (string) $version->id);
+        $form = Form::getInstance(
+            "com_jlms.enrollments.filters",
+            JPATH_ADMINISTRATOR . "/components/com_jlms/forms/enrollments.xml",
+            ["control" => "filter"],
+        );
+        $options = $this->service()->filterOptions(
+            Factory::getApplication()->getIdentity(),
+            (int) $this->getState("filter.course"),
+        );
+        $versionField = new \SimpleXMLElement(
+            '<field name="version" type="list" ' .
+                'label="COM_JLMS_ROSTER_VERSION_FILTER" description="COM_JLMS_ROSTER_ID_HINT"/>',
+        );
+        $versionField->addChild("option", "JALL")->addAttribute("value", "0");
+        foreach ($options["versions"] as $version) {
+            $label =
+                (string) $version->title_snapshot .
+                " · v" .
+                (int) $version->version_no .
+                " · " .
+                (string) $version->status .
+                " · #" .
+                (int) $version->id;
+            $versionField
+                ->addChild("option", htmlspecialchars($label, ENT_XML1))
+                ->addAttribute("value", (string) $version->id);
         }
-        $userField = new \SimpleXMLElement(('<field name="user" type="list" label="COM_JLMS_ROSTER_USER_FILTER" '
-            . 'description="COM_JLMS_ROSTER_ID_HINT"/>'));
-        $userField->addChild('option', 'JALL')->addAttribute('value', '0');
-        foreach ($options['users'] as $user) {
-            $label = (string) $user->name . ' (' . (string) $user->username . ') · #' . (int) $user->id;
-            $userField->addChild('option', htmlspecialchars($label, ENT_XML1))
-                ->addAttribute('value', (string) $user->id);
+        $userField = new \SimpleXMLElement(
+            '<field name="user" type="list" label="COM_JLMS_ROSTER_USER_FILTER" ' .
+                'description="COM_JLMS_ROSTER_ID_HINT"/>',
+        );
+        $userField->addChild("option", "JALL")->addAttribute("value", "0");
+        foreach ($options["users"] as $user) {
+            $label = (string) $user->name . " (" . (string) $user->username . ") · #" . (int) $user->id;
+            $userField
+                ->addChild("option", htmlspecialchars($label, ENT_XML1))
+                ->addAttribute("value", (string) $user->id);
         }
-        $form->setField($versionField, null, true, 'filters');
-        $form->setField($userField, null, true, 'filters');
-        $form->bind($this->getState('filter.roster', []));
+        $form->setField($versionField, null, true, "filters");
+        $form->setField($userField, null, true, "filters");
+        $form->bind($this->getState("filter.roster", []));
         return $form;
     }
 }

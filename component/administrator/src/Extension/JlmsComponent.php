@@ -9,7 +9,12 @@ use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
 use Joomla\CMS\Categories\CategoryServiceInterface;
 use Joomla\CMS\Categories\CategoryServiceTrait;
 
-final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\FieldsServiceInterface, \Joomla\CMS\Association\AssociationServiceInterface, CategoryServiceInterface, \Joomla\CMS\Component\Router\RouterServiceInterface, \Joomla\CMS\Workflow\WorkflowServiceInterface
+final class JlmsComponent extends MVCComponent implements
+    \Joomla\CMS\Fields\FieldsServiceInterface,
+    \Joomla\CMS\Association\AssociationServiceInterface,
+    CategoryServiceInterface,
+    \Joomla\CMS\Component\Router\RouterServiceInterface,
+    \Joomla\CMS\Workflow\WorkflowServiceInterface
 {
     use CategoryServiceTrait;
     use \Joomla\CMS\Association\AssociationServiceTrait;
@@ -18,19 +23,22 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
 
     public function validateSection($section, $item = null)
     {
-        return in_array($section, ['teacher', 'course', 'lesson', 'pathway'], true) ? $section : null;
+        return in_array($section, ["teacher", "course", "lesson", "pathway"], true) ? $section : null;
     }
 
     public function getContexts(): array
     {
-        return ['com_jlms.teacher' => \Joomla\CMS\Language\Text::_('COM_JLMS_TEACHERS'),
-            'com_jlms.course' => \Joomla\CMS\Language\Text::_('COM_JLMS_COURSES'),
-            'com_jlms.lesson' => \Joomla\CMS\Language\Text::_('COM_JLMS_LESSONS')];
+        return [
+            "com_jlms.teacher" => \Joomla\CMS\Language\Text::_("COM_JLMS_TEACHERS"),
+            "com_jlms.course" => \Joomla\CMS\Language\Text::_("COM_JLMS_COURSES"),
+            "com_jlms.lesson" => \Joomla\CMS\Language\Text::_("COM_JLMS_LESSONS"),
+        ];
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService $categoryReassignmentService;
-    public function setCategoryReassignmentService(\Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService $service): void
-    {
+    public function setCategoryReassignmentService(
+        \Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService $service,
+    ): void {
         $this->categoryReassignmentService = $service;
     }
     public function getCategoryReassignmentService(): \Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService
@@ -59,8 +67,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService $enrollmentApprovalService;
-    public function setEnrollmentApprovalService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService $service): void
-    {
+    public function setEnrollmentApprovalService(
+        \Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService $service,
+    ): void {
         $this->enrollmentApprovalService = $service;
     }
     public function getEnrollmentApprovalService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService
@@ -69,8 +78,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $enrollmentRosterService;
-    public function setEnrollmentRosterService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $service): void
-    {
+    public function setEnrollmentRosterService(
+        \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService $service,
+    ): void {
         $this->enrollmentRosterService = $service;
     }
     public function getEnrollmentRosterService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentRosterService
@@ -79,8 +89,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService $courseCommunicationService;
-    public function setCourseCommunicationService(\Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService $service): void
-    {
+    public function setCourseCommunicationService(
+        \Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService $service,
+    ): void {
         $this->courseCommunicationService = $service;
     }
     public function getCourseCommunicationService(): \Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService
@@ -89,8 +100,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService $enrollmentStateService;
-    public function setEnrollmentStateService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService $service): void
-    {
+    public function setEnrollmentStateService(
+        \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService $service,
+    ): void {
         $this->enrollmentStateService = $service;
     }
     public function getEnrollmentStateService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService
@@ -99,8 +111,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService $enrollmentMigrationService;
-    public function setEnrollmentMigrationService(\Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService $service): void
-    {
+    public function setEnrollmentMigrationService(
+        \Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService $service,
+    ): void {
         $this->enrollmentMigrationService = $service;
     }
     public function getEnrollmentMigrationService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService
@@ -109,8 +122,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService $courseOperationsService;
-    public function setCourseOperationsService(\Jlms\Component\Jlms\Administrator\Application\CourseOperationsService $service): void
-    {
+    public function setCourseOperationsService(
+        \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService $service,
+    ): void {
         $this->courseOperationsService = $service;
     }
     public function getCourseOperationsService(): \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService
@@ -119,8 +133,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService $manualEnrollmentService;
-    public function setManualEnrollmentService(\Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService $service): void
-    {
+    public function setManualEnrollmentService(
+        \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService $service,
+    ): void {
         $this->manualEnrollmentService = $service;
     }
     public function getManualEnrollmentService(): \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService
@@ -128,10 +143,10 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->manualEnrollmentService;
     }
 
-
     private \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $quizDeadlineService;
-    public function setQuizDeadlineService(\Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $service): void
-    {
+    public function setQuizDeadlineService(
+        \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService $service,
+    ): void {
         $this->quizDeadlineService = $service;
     }
     public function getQuizDeadlineService(): \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService
@@ -139,8 +154,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->quizDeadlineService;
     }
     private \Jlms\Component\Jlms\Administrator\Application\QuizReviewService $quizReviewService;
-    public function setQuizReviewService(\Jlms\Component\Jlms\Administrator\Application\QuizReviewService $service): void
-    {
+    public function setQuizReviewService(
+        \Jlms\Component\Jlms\Administrator\Application\QuizReviewService $service,
+    ): void {
         $this->quizReviewService = $service;
     }
     public function getQuizReviewService(): \Jlms\Component\Jlms\Administrator\Application\QuizReviewService
@@ -157,8 +173,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->quizTimeService;
     }
     private \Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService $quizSnapshotService;
-    public function setQuizSnapshotService(\Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService $service): void
-    {
+    public function setQuizSnapshotService(
+        \Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService $service,
+    ): void {
         $this->quizSnapshotService = $service;
     }
     public function getQuizSnapshotService(): \Jlms\Component\Jlms\Administrator\Application\QuizSnapshotService
@@ -166,8 +183,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->quizSnapshotService;
     }
     private \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService $quizAttemptService;
-    public function setQuizAttemptService(\Jlms\Component\Jlms\Administrator\Application\QuizAttemptService $service): void
-    {
+    public function setQuizAttemptService(
+        \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService $service,
+    ): void {
         $this->quizAttemptService = $service;
     }
     public function getQuizAttemptService(): \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService
@@ -175,8 +193,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->quizAttemptService;
     }
     private \Jlms\Component\Jlms\Administrator\Application\QuestionBankService $questionBankService;
-    public function setQuestionBankService(\Jlms\Component\Jlms\Administrator\Application\QuestionBankService $service): void
-    {
+    public function setQuestionBankService(
+        \Jlms\Component\Jlms\Administrator\Application\QuestionBankService $service,
+    ): void {
         $this->questionBankService = $service;
     }
     public function getQuestionBankService(): \Jlms\Component\Jlms\Administrator\Application\QuestionBankService
@@ -184,8 +203,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->questionBankService;
     }
     private \Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService $quizAuthoringService;
-    public function setQuizAuthoringService(\Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService $service): void
-    {
+    public function setQuizAuthoringService(
+        \Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService $service,
+    ): void {
         $this->quizAuthoringService = $service;
     }
     public function getQuizAuthoringService(): \Jlms\Component\Jlms\Administrator\Application\QuizAuthoringService
@@ -194,8 +214,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\LocalVideoService $localVideoService;
-    public function setLocalVideoService(\Jlms\Component\Jlms\Administrator\Application\LocalVideoService $service): void
-    {
+    public function setLocalVideoService(
+        \Jlms\Component\Jlms\Administrator\Application\LocalVideoService $service,
+    ): void {
         $this->localVideoService = $service;
     }
     public function getLocalVideoService(): \Jlms\Component\Jlms\Administrator\Application\LocalVideoService
@@ -205,8 +226,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
 
     private \Jlms\Component\Jlms\Administrator\Application\VideoProgressService $videoProgressService;
 
-    public function setVideoProgressService(\Jlms\Component\Jlms\Administrator\Application\VideoProgressService $service): void
-    {
+    public function setVideoProgressService(
+        \Jlms\Component\Jlms\Administrator\Application\VideoProgressService $service,
+    ): void {
         $this->videoProgressService = $service;
     }
 
@@ -229,8 +251,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
 
     private \Jlms\Component\Jlms\Administrator\Application\CertificateService $certificateService;
 
-    public function setCertificateService(\Jlms\Component\Jlms\Administrator\Application\CertificateService $service): void
-    {
+    public function setCertificateService(
+        \Jlms\Component\Jlms\Administrator\Application\CertificateService $service,
+    ): void {
         $this->certificateService = $service;
     }
 
@@ -240,8 +263,9 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent $courseAnnouncementConsent;
-    public function setCourseAnnouncementConsent(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent $service): void
-    {
+    public function setCourseAnnouncementConsent(
+        \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent $service,
+    ): void {
         $this->courseAnnouncementConsent = $service;
     }
     public function getCourseAnnouncementConsent(): \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent
@@ -250,15 +274,15 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
     }
 
     private \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService $courseAnnouncementService;
-    public function setCourseAnnouncementService(\Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService $service): void
-    {
+    public function setCourseAnnouncementService(
+        \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService $service,
+    ): void {
         $this->courseAnnouncementService = $service;
     }
     public function getCourseAnnouncementService(): \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService
     {
         return $this->courseAnnouncementService;
     }
-
 
     private \Jlms\Component\Jlms\Administrator\Application\LearningService $learningService;
 
@@ -272,7 +296,6 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->learningService;
     }
 
-
     private \Jlms\Component\Jlms\Administrator\Application\CatalogService $catalogService;
 
     public function setCatalogService(\Jlms\Component\Jlms\Administrator\Application\CatalogService $service): void
@@ -285,12 +308,12 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->catalogService;
     }
 
-
-    protected $supportedFunctionality = ['core.state' => ['com_jlms.course']];
+    protected $supportedFunctionality = ["core.state" => ["com_jlms.course"]];
     private \Jlms\Component\Jlms\Administrator\Application\PublicationService $publicationService;
 
-    public function setPublicationService(\Jlms\Component\Jlms\Administrator\Application\PublicationService $service): void
-    {
+    public function setPublicationService(
+        \Jlms\Component\Jlms\Administrator\Application\PublicationService $service,
+    ): void {
         $this->publicationService = $service;
     }
 
@@ -301,31 +324,32 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
 
     public function isWorkflowActive($context): bool
     {
-        return $context === 'com_jlms.course';
+        return $context === "com_jlms.course";
     }
 
     public function getWorkflowContexts(): array
     {
-        return ['com_jlms.course' => 'JD Learn'];
+        return ["com_jlms.course" => "JD Learn"];
     }
 
     public function getCategoryWorkflowContext(?string $section = null): string
     {
-        return $section === 'course' ? 'com_jlms.course' : '';
+        return $section === "course" ? "com_jlms.course" : "";
     }
 
     public function getWorkflowTableBySection(?string $section = null): string
     {
-        return '#__jlms_courses';
+        return "#__jlms_courses";
     }
 
     public function filterTransitions(array $transitions, int $pk): array
     {
-        $allowed = array_column($this->publicationService->transitions(\Joomla\CMS\Factory::getApplication()
-            ->getIdentity(), $pk), 'id');
-        return array_values(array_filter($transitions, static fn ($t): bool => in_array($t->id, $allowed)));
+        $allowed = array_column(
+            $this->publicationService->transitions(\Joomla\CMS\Factory::getApplication()->getIdentity(), $pk),
+            "id",
+        );
+        return array_values(array_filter($transitions, static fn($t): bool => in_array($t->id, $allowed)));
     }
-
 
     private CurriculumService $curriculumService;
 
@@ -339,20 +363,19 @@ final class JlmsComponent extends MVCComponent implements \Joomla\CMS\Fields\Fie
         return $this->curriculumService;
     }
 
-
     protected function getTableNameForSection(?string $section = null)
     {
         return match ($section) {
-            'question' => 'jlms_questions',
-            'teacher' => 'jlms_teachers',
-            'pathway' => 'jlms_pathways',
-            'category' => 'categories',
-            default => 'jlms_courses',
+            "question" => "jlms_questions",
+            "teacher" => "jlms_teachers",
+            "pathway" => "jlms_pathways",
+            "category" => "categories",
+            default => "jlms_courses",
         };
     }
 
     protected function getStateColumnForSection(?string $section = null)
     {
-        return $section === 'category' ? 'published' : 'state';
+        return $section === "category" ? "published" : "state";
     }
 }
