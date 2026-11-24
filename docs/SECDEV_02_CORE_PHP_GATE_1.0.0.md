@@ -496,3 +496,8 @@ Dei 29 finding strutturali, 15 riguardano membri con underscore potenzialmente v
 ### Seconda passata sullo stesso ramo #1024
 
 Workflow monouso #45493592120 completato: ulteriori trasformatori conservativi hanno ridotto il conteggio PHPCS da **166 a 161** (−5), composto da **132** linee lunghe e **29** rilievi strutturali. Lo strumento monouso è stato rimosso prima della CI. Un precedente riflusso del collegamento «Azzera filtri» del catalogo ha infranto un contratto sorgente esatto nel test `tests/frontend-catalog-options.py`; tale frammento è stato ripristinato nel commit successivo senza modificare logica o URL. La CI finale deve attestare il saldo effettivo dopo il ripristino.
+
+
+### Riconciliazione CI del ramo #1024 dopo correzione contratti (24 novembre)
+
+La CI leggera [#45495755340](https://github.com/jeckodevelopment/jd_learn/actions/runs/45495755340) conferma **192 → 159 finding PSR-12 (−33)**, **zero finding introdotti**. L'analisi di non regressione, i controlli sorgente e le verifiche leggere sono verdi. Il ramo era ancora in bozza durante questo run, quindi la matrice applicativa PHP/database e Chromium non è stata eseguita; questo risultato **non** equivale a CI completa o chiusura SECDEV-02. Le 15 firme/proprietà convenzionali Joomla non vanno rinominate per eliminare artificialmente il debito. Collaudi manuali separati e percentuali funzionali invariate.
