@@ -360,7 +360,10 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $this->setCurrentUser($user);
             $copySource = $this->copySource($user);
             if ($copySource !== null && !array_key_exists('tags', $data)) {
-                $tagIds = (new \Joomla\CMS\Helper\TagsHelper())->getTagIds((int) $copySource->course->id, 'com_jlms.course');
+                $tagIds = (new \Joomla\CMS\Helper\TagsHelper())->getTagIds(
+                    (int) $copySource->course->id,
+                    'com_jlms.course'
+                );
                 $data['tags'] = $tagIds ? explode(',', $tagIds) : [];
             }
             $record = null;
@@ -413,7 +416,12 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $teachers = null;
             $previousTeacherIds = $id ? \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id) : [];
             if (array_key_exists('teacher_ids', $data)) {
-                $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment($db, $user, (string) ($data['language'] ?? $record->language ?? '*'), $data['teacher_ids']);
+                $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment(
+                    $db,
+                    $user,
+                    (string) ($data['language'] ?? $record->language ?? '*'),
+                    $data['teacher_ids']
+                );
                 if (!$id && $teachers) {
                     throw new \DomainException('COM_JLMS_TEACHER_SAVE_FIRST');
                 }
@@ -471,7 +479,12 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 ) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }
-                $params = json_decode((string) ($data['params_json'] ?? $record->params_json ?? '{}'), true, 32, JSON_THROW_ON_ERROR);
+                $params = json_decode(
+                    (string) ($data['params_json'] ?? $record->params_json ?? '{}'),
+                    true,
+                    32,
+                    JSON_THROW_ON_ERROR
+                );
                 if (!is_array($params)) {
                     throw new \DomainException('COM_JLMS_INVALID_INPUT');
                 }

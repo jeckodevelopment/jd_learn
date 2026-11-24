@@ -198,7 +198,10 @@ final class PublicationService
             throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
         }
         $options = new Registry($selected->options);
-        $action = (string) $options->get('jlms_action', (string) $options->get('publishing') === '1' ? 'publish' : 'unpublish');
+        $action = (string) $options->get(
+            'jlms_action',
+            (string) $options->get('publishing') === '1' ? 'publish' : 'unpublish'
+        );
         if ($version->status !== 'draft' || $course->current_version_id === null || $action !== 'publish') {
             return null;
         }
@@ -227,7 +230,10 @@ final class PublicationService
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
         // Resolve certificate inheritance once at publication, freezing the effective
         // policy for future enrollments. Already published snapshots are untouched.
-        $globalCertificates = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('certificate_enabled', 0);
+        $globalCertificates = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get(
+            'certificate_enabled',
+            0
+        );
         $rules['certificate_enabled'] = $rules['mode'] === 'learning'
             && CertificatePreferences::enabled($globalCertificates, (string) ($course->params_json ?? '{}'));
         // Prerequisite edges are a supported learner rule; validate the graph before freezing it.
@@ -285,13 +291,20 @@ final class PublicationService
                     throw new \DomainException('COM_JLMS_LESSON_UNREACHABLE');
                 }
                 $lessonFields = $this->snapshotFields($actor, 'com_jlms.lesson', (int) $lesson->id);
-                $lesson->fields_snapshot_json = json_encode(['_schema' => 1, 'fields' => $lessonFields], JSON_THROW_ON_ERROR);
+                $lesson->fields_snapshot_json = json_encode(
+                    ['_schema' => 1, 'fields' => $lessonFields],
+                    JSON_THROW_ON_ERROR
+                );
                 $quizHash = null;
                 if ($lesson->kind === 'quiz') {
                     if ($rules['mode'] === 'consultation') {
                         throw new \DomainException('COM_JLMS_CONSULTATION_QUIZ_UNSUPPORTED');
                     }
-                    $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze($actor, $course, $lesson);
+                    $quizHash = $this->app->bootComponent('com_jlms')->getQuizSnapshotService()->freeze(
+                        $actor,
+                        $course,
+                        $lesson
+                    );
                 } elseif ($lesson->kind === 'text') {
                     if (
                         $lesson->completion_rule !== 'manual'
@@ -339,7 +352,10 @@ final class PublicationService
                         throw new \DomainException('COM_JLMS_AUDIO_MATERIAL_REQUIRED');
                     }
                 } elseif ($lesson->kind === 'video') {
-                    $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
+                    $policy = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get(
+                        'video_external_policy',
+                        'blocked'
+                    );
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
                     if (
                         !is_array($params) || (array_key_exists('video_threshold_basis_points', $params)
@@ -496,7 +512,10 @@ final class PublicationService
         }
         foreach ($attachments as $attachment) {
             $scan = json_decode($attachment['scan_json'] ?? '{}', true);
-            $scanRequired = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('material_scan_required', false);
+            $scanRequired = (bool) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get(
+                'material_scan_required',
+                false
+            );
             $preview = (int) $attachment['preview'];
             if (
                 ($scanRequired && (($scan['engine'] ?? '') !== 'clamd' || ($scan['result'] ?? '') !== 'clean'))
@@ -605,7 +624,10 @@ final class PublicationService
             throw new \DomainException('COM_JLMS_WORKFLOW_REJECTED');
         }
         $preOptions = new Registry($preselected->options);
-        $preAction = (string) $preOptions->get('jlms_action', (string) $preOptions->get('publishing') === '1' ? 'publish' : 'unpublish');
+        $preAction = (string) $preOptions->get(
+            'jlms_action',
+            (string) $preOptions->get('publishing') === '1' ? 'publish' : 'unpublish'
+        );
         if ($version->status === 'draft' && $preAction === 'publish') {
             $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode($version->rules_json);
             $q = $this->db->createQuery()->select('id, source_json, source_revision')->from('#__jlms_lessons')
