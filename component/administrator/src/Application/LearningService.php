@@ -615,7 +615,8 @@ final class LearningService
             $pendingRequired = [];
             foreach ($outline as $entry) {
                 if ($pendingRequired && !isset($blockers[(int) $entry->id])) {
-                    $blockers[(int) $entry->id] = (object) ['required_id' => (int) $pendingRequired[array_key_last($pendingRequired)]->id,
+                    $blockers[(int) $entry->id] = (object) ['required_id' =>
+                         (int) $pendingRequired[array_key_last($pendingRequired)]->id,
                         'required_title' => (string) $pendingRequired[array_key_last($pendingRequired)]->title];
                 }
                 if ((int) $entry->required === 1 && $entry->state !== 'completed') {

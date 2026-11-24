@@ -214,7 +214,8 @@ final class HtmlView extends BaseHtmlView
                     $this->selectedItem = $module;
                 }
                 if ((int) $module->id === $editModule) {
-                    $moduleData = array_replace($common, ['id' => $module->id, 'revision' => $module->revision, 'title' => $module->title]);
+                    $moduleData = array_replace($common, ['id' => $module->id, 'revision' => $module->revision
+                        , 'title' => $module->title]);
                     $this->selectedItem = $module;
                     $foundModule = true;
                 }

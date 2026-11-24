@@ -607,7 +607,8 @@ final class QuizAttemptService
             $rules = array_replace($rules, $nextRules);
         }
         $originalTime = (int)$rules['time_seconds'];
-        $effectiveTime = $a && $a->deadline_at !== null ? max(0, self::timestamp($a->deadline_at) - self::timestamp($a->started_at)) : $originalTime;
+        $effectiveTime = $a && $a->deadline_at !== null ? max(0, self::timestamp($a
+            ->deadline_at) - self::timestamp($a->started_at)) : $originalTime;
         $now = ($this->clock)();
         $next = $history['last_closed'] === null ? $now : $history['last_closed'] + $rules['retry_seconds'];
         $eligible = !$active;
@@ -648,7 +649,8 @@ final class QuizAttemptService
             'remaining_window_seconds' => $closingAt === null ? null : max(0, $closingAt - $now),
             'start_window_insufficient' => $insufficientWindow,
             'can_start' => !$active && $eligible && ($remaining === null || $remaining > 0) && $next <= $now,
-            'active_attempt_id' => $active ? (int)$active->id : null,'attempt' => null,'questions' => [],'feedback_available' => false,
+            'active_attempt_id' => $active ? (int)$active->id : null,'attempt' => null,'questions' => []
+                ,'feedback_available' => false,
             'course_completed' => $e->completed_at !== null,'course_percent' => (int)$e->required_total ? min($e
                 ->completed_at ? 100 : 99, (int)floor(100 * (int)$e->completed_total / (int)$e->required_total)) : 0];
         if ($a) {
@@ -744,7 +746,8 @@ final class QuizAttemptService
                 }
             } catch (\Throwable $error) {
                 $failed++;
-                \Joomla\CMS\Log\Log::add('Quiz expiry failed; correlation=' . bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
+                \Joomla\CMS\Log\Log::add('Quiz expiry failed; correlation=' .
+                     bin2hex(random_bytes(8)), \Joomla\CMS\Log\Log::ERROR, 'com_jlms');
             }
         }
         return ['closed' => $closed,'failed' => $failed,'has_more' => count($due) === $limit];

@@ -581,7 +581,8 @@ try {
     }
     $immutableRemovalRejected = false;
     try {
-        $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]));
+        $privacyPlugin->onPrivacyRemoveData(new RemoveDataEvent('onPrivacyRemoveData', ['subject' =>
+             $privacyRequest, 'user' => $privacyUser]));
     } catch (\RuntimeException $error) {
         $immutableRemovalRejected = str_contains($error->getMessage(), 'blocked by retained records');
     }
@@ -997,7 +998,8 @@ if ($model->save($data)) {
 }
 // The native Joomla registration form receives the optional, unchecked consent field.
 PluginHelper::importPlugin('user');
-$registrationForm = Form::getInstance('com_users.registration', JPATH_SITE . '/components/com_users/forms/registration.xml', ['control' => 'jform']);
+$registrationForm = Form::getInstance('com_users.registration', JPATH_SITE .
+     '/components/com_users/forms/registration.xml', ['control' => 'jform']);
 $app->getDispatcher()->dispatch('onContentPrepareForm', new PrepareFormEvent('onContentPrepareForm', [
     'subject' => $registrationForm,
     'data' => [],

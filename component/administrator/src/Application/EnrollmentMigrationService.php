@@ -216,7 +216,8 @@ final class EnrollmentMigrationService
         $editionUnavailable = !$targetEdition || $targetEdition->status !== 'open'
             || ($targetEdition->starts_at !== null && $targetEdition->starts_at > $now) || ($targetEdition
                 ->ends_at !== null && $targetEdition->ends_at <= $now);
-        $plan = ['course_id' => $course,'source_enrollment_id' => $enrollment,'source_version_id' => (int)$source->course_version_id,
+        $plan = ['course_id' => $course,'source_enrollment_id' => $enrollment,'source_version_id' =>
+             (int)$source->course_version_id,
             'target_version_id' => $targetVersion,'target_version_no' => (int)$target->version_no
                 ,'source_version_no' => (int)$sourceVersion->version_no,
             'source_status' => $source->status,'source_revision' => (int)$source->revision,'user_id' => (int)$source->user_id,
@@ -370,7 +371,8 @@ final class EnrollmentMigrationService
             $this->db->insertObject('#__jlms_enrollments', $target, 'id');
             $targetId = (int)$target->id;
             $snapshot = ['mapping' => $plan['mapping'],'transfers' => $plan['transfers'],'unmapped' => $plan['unmapped'],
-                'source_version_id' => $plan['source_version_id'],'target_version_id' => $plan['target_version_id'],'reason' => $reason];
+                'source_version_id' => $plan['source_version_id'],'target_version_id' =>
+                     $plan['target_version_id'],'reason' => $reason];
             $job = (object)['kind' => 'enrollment_migration','owner_user_id' => (int)$actor->id,
                 'scope_json' => json_encode(['course_id' => $course,'source_enrollment_id' => $enrollment], JSON_THROW_ON_ERROR),
                 'payload_json' => json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),'status' => 'succeeded',
@@ -411,8 +413,10 @@ final class EnrollmentMigrationService
                 $progress->source_revision = (int)$this->db->setQuery($q)->loadResult();
                 $this->db->insertObject('#__jlms_lesson_progress', $progress);
             }
-            $migration = (object)['source_enrollment_id' => $enrollment,'target_enrollment_id' => $targetId,'job_id' => (int)$job->id,
-                'mapping_snapshot_json' => json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),'created_at' => $now];
+            $migration = (object)['source_enrollment_id' => $enrollment,'target_enrollment_id' => $targetId
+                ,'job_id' => (int)$job->id,
+                'mapping_snapshot_json' => json_encode($snapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE)
+                    ,'created_at' => $now];
             $this->db->insertObject('#__jlms_enrollment_migrations', $migration);
             $migratedStatus = 'migrated';
             $actorId = (int)$actor->id;

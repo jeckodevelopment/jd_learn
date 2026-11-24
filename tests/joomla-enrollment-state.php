@@ -148,7 +148,8 @@ if (($argv[2] ?? '') === 'retained') {
     stateExpect($count() === $saved['history_count'], 'state history retained');
     stateExpect($stable($enrollment) === $saved['stable'], 'same enrollment and learning evidence retained');
     stateExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
-        . "extension='com_jlms.enrollmentstate' AND item_id=") . (int)$saved['first_event'])->loadResult() === 1, 'native state audit retained');
+        . "extension='com_jlms.enrollmentstate' AND item_id=") . (int)$saved['first_event'])->
+            loadResult() === 1, 'native state audit retained');
     echo json_encode(['enrollment_state_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
@@ -186,7 +187,8 @@ stateExpect(
 if (($argv[2] ?? '') === 'cancellation') {
 // MAIL-F: only real, not-completed cancellations produce one audited notification.
     $cancelUser = new \Joomla\CMS\User\User();
-    $cancelData = ['name' => 'CI Cancellable Learner','username' => 'cicancellable20261114','email' => 'cicancellable20261114@example.invalid',
+    $cancelData = ['name' => 'CI Cancellable Learner','username' => 'cicancellable20261114','email' =>
+         'cicancellable20261114@example.invalid',
     'password' => 'CI-Only-Long-Password-2026','password2' => 'CI-Only-Long-Password-2026',
     'groups' => [2,$f['group']],'block' => 0,'activation' => ''];
     if (!$cancelUser->bind($cancelData) || !$cancelUser->save()) {
@@ -641,7 +643,8 @@ try {
         'rejection never grants classroom access'
     );
     stateExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" . $rejectRequestId . " AND status='rejected'")->loadResult() === 1,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" .
+             $rejectRequestId . " AND status='rejected'")->loadResult() === 1,
         'rejection audit state saved'
     );
     stateExpect(

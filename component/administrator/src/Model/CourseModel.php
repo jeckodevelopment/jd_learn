@@ -68,7 +68,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
             $item->certificate_enabled = json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['certificate_enabled'] ?? 'inherit';
             $item->catalog_position = (int) (json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['catalog_position'] ?? 0);
-            $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(), (int) $item->id);
+            $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this
+                ->getDatabase(), (int) $item->id);
             $item->tags = new \Joomla\CMS\Helper\TagsHelper();
             $item->tags->getTagIds((int) $item->id, 'com_jlms.course');
             $item->associations = [];
@@ -545,7 +546,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                     ->copy($user, $programme, 1, true, (int) $copySource->version->id);
             }
             $history = $data;
-            $history['teacher_ids'] = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $this->getState('course.id'));
+            $history['teacher_ids'] =
+                \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int)
+                $this->getState('course.id'));
             $history['version_note'] = is_string($inputNote = Factory::getApplication()->getInput()->post
                 ->get('jform', [], 'array')['version_note'] ?? '') ? strip_tags($inputNote) : '';
             $this->persistHistory($history, $this->typeAlias);

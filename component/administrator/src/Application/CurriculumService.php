@@ -579,7 +579,8 @@ final class CurriculumService
         if (!hash_equals($fingerprint, $this->durationFingerprint($actor, $input))) {
             throw new \DomainException('COM_JLMS_REVISION_CONFLICT');
         }
-        return ['fingerprint' => $fingerprint,'duration_ms' => $duration,'origin' => $duration === null ? 'author_sdk' : 'provider_api',
+        return ['fingerprint' => $fingerprint,'duration_ms' => $duration,'origin' => $duration === null ?
+             'author_sdk' : 'provider_api',
             'provider' => $key,'options' => ['reference' => $source->reference,'locale' =>
                  \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag()] + $source->options];
     }
@@ -633,7 +634,8 @@ final class CurriculumService
             }
             $duration = $mode === 'auto' ? null : self::duration($input['duration_seconds'] ?? null);
             $origin = $mode === 'auto' ? 'unmeasured' : 'declared';
-            $confirmed = $mode === 'manual' ? $duration !== null : ($mode === 'legacy' && ($input['duration_confirmed'] ?? '') === '1');
+            $confirmed = $mode === 'manual' ? $duration !== null : ($mode === 'legacy' &&
+                 ($input['duration_confirmed'] ?? '') === '1');
             if ($durationProof !== null) {
                 if (
                     $mode !== 'auto' || !hash_equals($this->durationFingerprint($actor, $input), (string)($durationProof['fingerprint'] ?? ''))
