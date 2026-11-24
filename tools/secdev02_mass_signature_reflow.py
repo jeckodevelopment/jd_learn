@@ -16,7 +16,7 @@ from secdev02_lexer_bulk_wrap import ROOT, lex, lint, phpcs_counts
 from secdev02_calls_reflow_bulk import required_source_fragments
 
 TOKENIZER=r"""
-$s=file_get_contents($argv[1]);$tokens=token_get_all($s);
+$src=file_get_contents($argv[1]);$tokens=token_get_all($src);
 $offsets=[];$off=0;
 foreach($tokens as $token) {
   $offsets[]=$off;
@@ -25,26 +25,37 @@ foreach($tokens as $token) {
 $pairs=[];$n=count($tokens);
 for($i=0;$i<$n;$i++) {
   if(!is_array($tokens[$i]) || $tokens[$i][0]!==T_FUNCTION)continue;
-  $start=$offsets[$i];$open=null;
+  $start=$offsets[$i];$open=null;$named=false;
   for($j=$i+1;$j<$n;$j++) {
     $t=is_array($tokens[$j])?$tokens[$j][1]:$tokens[$j];
+    if(is_array($tokens[$j]) && $tokens[$j][0]===T_STRING)$named=true;
     if($t==='(') {$open=$j;break;}
     if($t===';' || $t==='{')break;
   }
-  if($open===null)continue;
-  $depth=1;$commas=[];$end=null;
+  if($open===null || !$named)continue;
+  $depth=1;$brackets=0;$curly=0;$commas=[];$end=null;
   for($k=$open+1;$k<$n;$k++) {
     $t=is_array($tokens[$k])?$tokens[$k][1]:$tokens[$k];
     if($t==='(')$depth++;
     if($t===')')$depth--;
-    if($depth===1 && $t===',')$commas[]=$offsets[$k]+1;
+    if($t==='[')$brackets++;
+    if($t===']')$brackets--;
+    if($t==='{')$curly++;
+    if($t==='}')$curly--;
+    if($depth===1 && $brackets===0 && $curly===0 && $t===',')$commas[]=$offsets[$k]+1;
     if($depth===0){$end=$offsets[$k];break;}
   }
-  if($end!==null)$pairs[]=[$start,$offsets[$open],$end,$commas];
+  if($end===null)continue;
+  $brace=null;
+  for($z=$k+1;$z<$n;$z++) {
+    $t=is_array($tokens[$z])?$tokens[$z][1]:$tokens[$z];
+    if($t==='{'){$brace=$offsets[$z];break;}
+    if($t===';')break;
+  }
+  $pairs[]=[$start,$offsets[$open],$end,$commas,$brace];
 }
 echo json_encode($pairs, JSON_THROW_ON_ERROR);
 """
-
 
 def scan(path: Path) -> list:
     out=subprocess.run(["php","-r",TOKENIZER,str(path)],capture_output=True,
@@ -55,7 +66,7 @@ def scan(path: Path) -> list:
 def reflow(original: bytes, entries: list, offset: int) -> bytes:
     edits=[]
     selected=[]
-    for begin,opener,closer,commas in entries:
+    for begin,opener,closer,commas,brace in entries:
         line_start=original.rfind(b"\n",0,begin)+1
         line_end=original.find(b"\n",begin)
         if line_end<0:
@@ -83,6 +94,11 @@ def reflow(original: bytes, entries: list, offset: int) -> bytes:
         while start>opener and original[start-1:start] in (b" ",b"\t"):
             start-=1
         edits.append((start,closer,b"\n"+base))
+        if brace is not None and closer<brace<line_end:
+            head=brace
+            while head>closer and original[head-1:head] in (b" ",b"\t"):
+                head-=1
+            edits.append((head,brace,b"\n"+base))
         selected.append((begin,closer))
     out=bytearray(original)
     for start,stop,value in sorted(set(edits),reverse=True):
@@ -101,7 +117,7 @@ def main() -> int:
         opening=data.index(b"(",start)
         closing=data.index(b")",opening)
         commas=[i+1 for i,v in enumerate(data) if v==44]
-        updated=reflow(data,[[start,opening,closing,commas]],4)
+        updated=reflow(data,[[start,opening,closing,commas,data.index(b'{',closing)]],4)
         assert updated!=data and b"(\n" in updated
         print("SECDEV-02 function signature reflow fixtures OK")
         return 0
