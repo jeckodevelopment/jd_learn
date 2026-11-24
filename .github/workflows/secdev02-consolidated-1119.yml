@@ -1,0 +1,96 @@
+name: SECDEV-02 one-shot consolidated 1119 remediation
+on:
+  push:
+    branches: [style/secdev02-1119-consolidated-remediation]
+permissions:
+  contents: write
+jobs:
+  bulk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 105
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PSR-12 verifier
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Execute repository-wide guarded remediation in consolidated batches
+        shell: bash
+        run: |
+          set -euo pipefail
+          PHPCS="$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs"
+          python3 tools/secdev02_comment_wrap.py --self-test
+          python3 tools/secdev02_assertion_wrap.py --self-test
+          python3 tools/secdev02_query_chain_wrap.py --self-test
+          python3 tools/secdev02_coordinated_bulk.py --phpcs "$PHPCS" --pass 1 --self-test
+          python3 tools/secdev02_comment_wrap.py --phpcs "$PHPCS" --apply
+          python3 tools/secdev02_assertion_wrap.py --phpcs "$PHPCS" --apply
+          python3 tools/secdev02_query_chain_wrap.py --phpcs "$PHPCS" --apply
+          python3 tools/secdev02_lexer_bulk_wrap.py --phpcs "$PHPCS" --apply
+          python3 tools/secdev02_coordinated_bulk.py --phpcs "$PHPCS" --pass 1
+          python3 tools/secdev02_coordinated_bulk.py --phpcs "$PHPCS" --pass 2
+      - name: Validate every changed PHP and reconcile full PSR-12 counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import collections, json, pathlib, subprocess
+          from importlib.machinery import SourceFileLoader
+          root=pathlib.Path('.').resolve()
+          phpcs=root/'.runtime/secdev02-phpcs/vendor/bin/phpcs'
+          audit=SourceFileLoader('audit',str(root/'tests/secdev02-psr12-phpcs.py')).load_module()
+          paths=audit.tracked_php(root)
+          after=audit.signatures(phpcs,root,paths)
+          changed=subprocess.check_output(['git','diff','--name-only','--','*.php'],text=True).splitlines()
+          for path in changed:
+              subprocess.run(['php','-l',path],check=True,stdout=subprocess.DEVNULL)
+          base=subprocess.check_output(['git','show','HEAD:docs/SECDEV_02_CORE_PHP_GATE_1.0.0.md'],text=True)
+          import tempfile
+          with tempfile.TemporaryDirectory() as temp:
+              source=pathlib.Path(temp)
+              before=audit.signatures(phpcs,source,audit.baseline(root,'HEAD',source))
+          introduced=audit.diff(after,before)
+          start=sum(before.values()); end=sum(after.values()); removed=start-end
+          assert not introduced, f'Introduced PSR-12 findings: {introduced}'
+          assert removed>0 and changed, f'No verified improvements: {start} -> {end}'
+          print(f'SECDEV-02 verified PSR-12: {start} -> {end} (-{removed}); changed PHP files={len(changed)}; no regressions',flush=True)
+          import datetime
+          doc=root/'docs/SECDEV_02_CORE_PHP_GATE_1.0.0.md'
+          with doc.open('a',encoding='utf-8') as stream:
+              stream.write(f"\n## Consolidated mass remediation (24 November 2026; PR pending)\n\n")
+              stream.write(f"On the checked-out main baseline the pinned PHPCS 4.0.4 PSR12 full tracked-PHP scan measured **{start} → {end}**, a net reduction of **{removed} findings**, across **{len(changed)} modified PHP files**. No new findings for any file/rule. PHP lint passed on every modified PHP file. Existing guarded tools were run in one job (comment, assertions, fluent chains, lexer positions and two prioritized expression batches); non-improving candidates were rejected. The complete CI gates remain mandatory before merge. **SECDEV-02 criterion 01 remains incomplete while findings remain, and CORE-01–23 and the Joomla API audit retain their independent acceptance gates. No percentage promotion without complete evidence.** Manual Joomla acceptance remains separate.\n\n")
+              stream.write("### Comportamenti da testare\n\n- Identical significant PHP tokens, source contracts, PHP lint, complete PHPCS PSR-12 and full CI.\n- Joomla backend/frontend course and lesson workflows, authorization, CSRF, media, certificates and notifications in separate manual acceptance.\n")
+          import csv,io
+          target=root/'docs/REQUIREMENTS_STATUS.csv'
+          content=target.read_text(encoding='utf-8')
+          lines=content.splitlines(keepends=True)
+          matches=[idx for idx,line in enumerate(lines) if line.startswith('SECDEV-02,')]
+          assert len(matches)==1,'SECDEV-02 CSV row not uniquely found'
+          idx=matches[0]
+          header=next(csv.reader([lines[0]]))
+          cells=next(csv.reader([lines[idx]]))
+          assert len(cells)==len(header),'SECDEV-02 CSV row contains multiline fields or invalid columns'
+          evidence=header.index('Evidenza e limiti')
+          cells[evidence] += f' [24/11/2026 mass batch: PHPCS PSR12 {start}->{end} (-{removed}) on {len(changed)} PHP files, no new file/rule violations; SECDEV-02 still incomplete. No coverage percentage change.]'
+          out=io.StringIO()
+          csv.writer(out,lineterminator='\n').writerow(cells)
+          lines[idx]=out.getvalue()
+          target.write_text(''.join(lines),encoding='utf-8')
+          PY
+          git diff --check
+          python3 tests/requirements-status.py
+          python3 tests/secdev02-psr12-phpcs.py --base-ref HEAD
+      - name: Remove disposable workflow and commit measured source and documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/secdev02-consolidated-1119.yml
+          git add component libraries plugins tests tools docs
+          git diff --cached --check
+          git commit -m 'style(SECDEV-02): consolidate verified PHP PSR-12 fixes and evidence'
+          git push origin HEAD:style/secdev02-1119-consolidated-remediation
