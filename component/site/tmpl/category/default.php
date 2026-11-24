@@ -7,7 +7,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 ?>
 <section id="jlms-category" class="jlms-category" data-category-id="<?= (int) $this->category->id ?>">
- <header id="jlms-category-header"><h1 id="jlms-category-title"><?= $this->escape($this->category->title) ?></h1></header>
+ <header id="jlms-category-header">
+   <h1 id="jlms-category-title"><?= $this->escape($this->category->title) ?></h1></header>
  <div id="jlms-category-description"><?= nl2br($this->escape(strip_tags((string) $this->category->description))) ?></div>
  <?php if ($this->showSubcategories) : ?>
  <section id="jlms-subcategories"><h2><?= Text::_('COM_JLMS_SUBCATEGORIES') ?></h2>
@@ -21,7 +22,8 @@ use Joomla\CMS\Router\Route;
  </section>
  <?php endif; ?>
  <?php if ($this->showCourses) : ?>
- <section id="jlms-category-courses"><h2><?= Text::_('COM_JLMS_COURSES') ?></h2><p><?= Text::_('COM_JLMS_CATEGORY_DESCENDANT_COURSES') ?></p>
+ <section id="jlms-category-courses"><h2><?= Text::_('COM_JLMS_COURSES') ?></h2>
+   <p><?= Text::_('COM_JLMS_CATEGORY_DESCENDANT_COURSES') ?></p>
         <?php if ($this->showFilters) : ?>
   <form id="jlms-category-catalog-filters" method="get" action="<?= Route::_('index.php?option=com_jlms&view=category&id=' . (int) $this->category->id) ?>">
    <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="category"><input type="hidden" name="id" value="<?= (int) $this->category->id ?>">

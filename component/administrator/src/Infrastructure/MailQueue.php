@@ -17,8 +17,16 @@ final class MailQueue
     }
 
     /** The unique event key makes repeated domain transitions harmless. */
-    public function enqueue(int $courseId, string $key, string $template, string $language, string $email, string $name, array $data, ?int $recipientUserId = null): void
-    {
+    public function enqueue(
+        int $courseId,
+        string $key,
+        string $template,
+        string $language,
+        string $email,
+        string $name,
+        array $data,
+        ?int $recipientUserId = null
+    ): void {
         $event = match ($template) {
             'com_jlms.enrollment.confirmed' => 'enrollment',
             'com_jlms.enrollment.requested' => 'request',
@@ -95,8 +103,16 @@ final class MailQueue
 
 
     /** Queue one idempotent new-course notice for a confirmed consent revision. */
-    public function enqueueAnnouncement(int $courseId, int $userId, string $consentAt, string $key, string $language, string $email, string $name, array $data): bool
-    {
+    public function enqueueAnnouncement(
+        int $courseId,
+        int $userId,
+        string $consentAt,
+        string $key,
+        string $language,
+        string $email,
+        string $name,
+        array $data
+    ): bool {
         if ($courseId < 1 || $userId < 1 || !preg_match('/^[a-f0-9]{64}$/', $key) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }

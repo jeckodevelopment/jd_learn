@@ -17,8 +17,12 @@ final class CertificateIssuer
     {
     }
 
-    public function issueForCompletedEnrollment(int $enrollmentId, int $courseVersionId, string $completedAt, bool $explicitAdminRecovery = false): bool
-    {
+    public function issueForCompletedEnrollment(
+        int $enrollmentId,
+        int $courseVersionId,
+        string $completedAt,
+        bool $explicitAdminRecovery = false
+    ): bool {
         $q = $this->db->createQuery()->select(('e.id, e.user_id, e.course_id, e.course_version_id, e.completed_at, '
             . 'u.name, u.email, u.params AS user_params, c.title, c.params_json, '
             . 'c.language, v.title_snapshot, v.rules_json'))

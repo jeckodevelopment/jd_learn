@@ -12,8 +12,11 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 /** Append-only individual allowances. Published teaching rules and existing attempts are never edited. */
 final class QuizTimeService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly LearningService $learning, private readonly \Closure $audit)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly LearningService $learning,
+        private readonly \Closure $audit
+    ) {
     }
 
     private function scope(User $identity, int $course, int $lesson, int $enrollment = 0): array
@@ -142,8 +145,16 @@ final class QuizTimeService
         ];
     }
 
-    public function save(User $identity, int $course, int $lesson, int $enrollment, int $expected, int $minutes, string $reason, string $key): int
-    {
+    public function save(
+        User $identity,
+        int $course,
+        int $lesson,
+        int $enrollment,
+        int $expected,
+        int $minutes,
+        string $reason,
+        string $key
+    ): int {
         if ($expected < 0 || $expected > 10000 || $minutes < 0 || $minutes > 1440 || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }

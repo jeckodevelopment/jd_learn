@@ -42,8 +42,13 @@ final class VideoProgressService
         return gmdate('Y-m-d H:i:s', intdiv($ms, 1000)) . sprintf('.%03d000', $ms % 1000);
     }
 
-    private function context(User $identity, string $language, int $enrollmentId, int $lessonId, bool $lock = true): array
-    {
+    private function context(
+        User $identity,
+        string $language,
+        int $enrollmentId,
+        int $lessonId,
+        bool $lock = true
+    ): array {
         $context = $this->learning->videoContext($identity, $language, $enrollmentId, $lessonId, $lock);
         $policy = ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked');
         if ($context[3]->provider_key !== 'html5' && !in_array($policy, ['embed', 'site_consent'], true)) {
@@ -140,8 +145,11 @@ final class VideoProgressService
         return $descriptor;
     }
 
-    private static function playbackState(array $state, \Jlms\Contracts\Video\PlaybackDescriptor $descriptor, int $now): array
-    {
+    private static function playbackState(
+        array $state,
+        \Jlms\Contracts\Video\PlaybackDescriptor $descriptor,
+        int $now
+    ): array {
         if ($descriptor->expiresAt !== null) {
             if ($descriptor->expiresAt->getTimestamp() * 1000 <= $now + 5000) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_PROVIDER_UNAVAILABLE', 503);
@@ -220,8 +228,14 @@ final class VideoProgressService
         });
     }
 
-    private function session(string $id, int $enrollmentId, int $lessonId, int $sourceRevision, int $now, bool $lock = true): object
-    {
+    private function session(
+        string $id,
+        int $enrollmentId,
+        int $lessonId,
+        int $sourceRevision,
+        int $now,
+        bool $lock = true
+    ): object {
         if (!preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $id)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
@@ -242,8 +256,13 @@ final class VideoProgressService
         return $row;
     }
 
-    private static function result(object $progress, object $enrollment, int $next, bool $replay, bool $conflict = false): array
-    {
+    private static function result(
+        object $progress,
+        object $enrollment,
+        int $next,
+        bool $replay,
+        bool $conflict = false
+    ): array {
         return ['next_sequence' => $next, 'replay' => $replay, 'resume_conflict' => $conflict,
             'covered_ms' => (int) $progress->covered_ms, 'resume_ms' => (int) $progress->resume_ms,
             'lesson_completed' => $progress->state === 'completed', 'course_completed' => $enrollment->completed_at !== null,

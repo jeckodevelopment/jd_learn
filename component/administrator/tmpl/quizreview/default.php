@@ -22,12 +22,16 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
  <table id="jlms-quiz-review-attempts"
      class="table"><thead>
          <tr>
-         <th><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?></th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></th><th><?= Text::_('COM_JLMS_QUIZ_REVIEW_COUNTED') ?></th></tr></thead><tbody>
+         <th><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?></th><th><?= Text::_('JSTATUS') ?></th>
+           <th><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></th><th><?= Text::_('COM_JLMS_QUIZ_REVIEW_COUNTED') ?></th>
+           </tr></thead><tbody>
         <?php foreach ($i['attempts'] as $a) :
             ?><tr><td><a href="<?= Route::_($enr . '&attempt_id=' . (int)$a->id) ?>">#<?= (int)$a->attempt_no ?></a></td><td><?= Text::_(match ($a->status) {
             'open'=>'COM_JLMS_QUIZ_STATUS_OPEN','submitted'=>'COM_JLMS_QUIZ_STATUS_SUBMITTED',
                 'expired'=>'COM_JLMS_QUIZ_STATUS_EXPIRED',default=>'COM_JLMS_QUIZ_CANCELLED'
-            }) ?></td><td><?= $a->score_points === null ? '—' : (int)$a->score_points ?>/<?= (int)$a->max_points ?></td><td><?= Text::_((int)$a->counted_for_limit ? 'JYES' : 'JNO') ?></td></tr><?php
+            }) ?></td>
+              <td><?= $a->score_points === null ? '—' : (int)$a->score_points ?>/<?= (int)$a->max_points ?></td>
+              <td><?= Text::_((int)$a->counted_for_limit ? 'JYES' : 'JNO') ?></td></tr><?php
         endforeach; ?></tbody></table>
         <?php if ($i['more_attempts']) :
             $last = end($i['attempts']); ?><a href="<?= Route::_($enr . '&before=' . (int)$last->id) ?>"><?= Text::_('JNEXT') ?></a><?php
@@ -39,7 +43,8 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
                     href="<?= Route::_('index.php?option=com_jlms&view=quizextend&id=' . (int)$i['course_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&enrollment_id=' . (int)$i['enrollment']->id . '&attempt_id=' . (int)$a->id) ?>"><?= Text::_('COM_JLMS_QUIZ_EXTEND_TITLE') ?></a></p><?php
             endif; ?>
             <?php if ($a->status === 'invalidated') : ?>
- <section id="jlms-quiz-review-record"><h3><?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?></h3><p><?= $this->escape($a->invalidation_reason) ?>
+ <section id="jlms-quiz-review-record"><h3><?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?></h3>
+   <p><?= $this->escape($a->invalidation_reason) ?>
      </p>
      <p><?= (int)$a->invalidated_by ?> · <?= $this->escape($a->invalidated_at) ?> UTC</p></section>
             <?php else :

@@ -68,16 +68,27 @@ final class CourseVersionCopy
     }
 
     /** Copy one module subtree or one lesson within the authorized draft. */
-    public function item(User $actor, string $kind, object $source, int $version, string $title, int $destinationModule = 0): int
-    {
+    public function item(
+        User $actor,
+        string $kind,
+        object $source,
+        int $version,
+        string $title,
+        int $destinationModule = 0
+    ): int {
         $modules = $kind === 'module' ? [(array) $source] : [];
         $lessons = $kind === 'module' ? $this->rows('lessons', 'module_id', (int) $source
             ->id, 5000) : [(array) $source];
         return $this->nodes($actor, $version, $version, $modules, $lessons, true, false, $title, $destinationModule);
     }
 
-    public function copy(User $actor, object $source, int $number, bool $newIdentity = false, ?int $sourceVersion = null): int
-    {
+    public function copy(
+        User $actor,
+        object $source,
+        int $number,
+        bool $newIdentity = false,
+        ?int $sourceVersion = null
+    ): int {
         $original = $sourceVersion ?? (int) $source->id;
         $version = (array) $source;
         $version['version_no'] = $number;

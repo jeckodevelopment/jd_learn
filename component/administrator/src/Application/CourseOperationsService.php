@@ -13,8 +13,11 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 final class CourseOperationsService
 {
     private const FIELDS = ['admissions' => 'admissions_open', 'delivery' => 'delivery_enabled'];
-    public function __construct(private readonly DatabaseInterface $db, private readonly EnrollmentRosterService $roster, private readonly \Closure $audit)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly EnrollmentRosterService $roster,
+        private readonly \Closure $audit
+    ) {
     }
 
     private function preview(User $actor, int $courseId, string $operation): array
@@ -76,8 +79,15 @@ final class CourseOperationsService
         return $item;
     }
 
-    public function apply(User $actor, int $courseId, string $operation, int $revision, string $reason, string $mutation, string $impactHash): void
-    {
+    public function apply(
+        User $actor,
+        int $courseId,
+        string $operation,
+        int $revision,
+        string $reason,
+        string $mutation,
+        string $impactHash
+    ): void {
         $this->roster->course($actor, $courseId);
         $reason = trim($reason);
         if (

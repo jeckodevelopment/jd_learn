@@ -337,8 +337,17 @@ final class QuizAttemptService
         }ksort($patch, SORT_NUMERIC);
         return $patch;
     }
-    public function mutate(User $identity, string $language, int $enrollment, int $lesson, int $attempt, int $revision, string $key, string $json, bool $submit): array
-    {
+    public function mutate(
+        User $identity,
+        string $language,
+        int $enrollment,
+        int $lesson,
+        int $attempt,
+        int $revision,
+        string $key,
+        string $json,
+        bool $submit
+    ): array {
         self::key($key);
         return $this->transaction(function () use ($identity, $language, $enrollment, $lesson, $attempt, $revision, $key, $json, $submit): array {
             [, $e,$l,$quiz] = $this->context($identity, $language, $enrollment, $lesson);
@@ -561,8 +570,14 @@ final class QuizAttemptService
             (new CertificateIssuer($this->db))->issueForCompletedEnrollment($enrollment, (int)$e->course_version_id, $finished);
         }
     }
-    public function state(User $identity, string $language, int $enrollment, int $lesson, int $attempt = 0, bool $compact = false): array
-    {
+    public function state(
+        User $identity,
+        string $language,
+        int $enrollment,
+        int $lesson,
+        int $attempt = 0,
+        bool $compact = false
+    ): array {
         return $this->transaction(function () use ($identity, $language, $enrollment, $lesson, $attempt, $compact): array {
             [, $e,$l,$quiz] = $this->context($identity, $language, $enrollment, $lesson);
             $quizId = (int)$quiz->id;
@@ -588,8 +603,15 @@ final class QuizAttemptService
             return $this->dto($a, $e, $l, $quiz, $identity, $language, !$compact);
         });
     }
-    private function dto(?object $a, object $e, object $l, object $quiz, User $identity, string $language, bool $includeQuestions = true): array
-    {
+    private function dto(
+        ?object $a,
+        object $e,
+        object $l,
+        object $quiz,
+        User $identity,
+        string $language,
+        bool $includeQuestions = true
+    ): array {
         $enrollment = (int)$e->id;
         $quizId = (int)$quiz->id;
         $history = $this->history($enrollment, $quizId);

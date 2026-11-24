@@ -61,8 +61,13 @@ final class EnrollmentMigrationService
     }
 
     /** Preview only. Mapping is a list of source_lesson_id => target_lesson_id pairs. */
-    public function preview(User $identity, int $course, int $enrollment, array $mapping = [], bool $useSavedMappings = false): array
-    {
+    public function preview(
+        User $identity,
+        int $course,
+        int $enrollment,
+        array $mapping = [],
+        bool $useSavedMappings = false
+    ): array {
         $actor = $this->access($identity, $course);
         if ($enrollment < 1 || count($mapping) > 100) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);

@@ -50,8 +50,14 @@ final class CourseCommunicationService
     }
 
     /** @param array<int, mixed> $enrollmentIds */
-    public function preview(User $identity, int $courseId, string $subject, string $body, array $enrollmentIds, array $template = []): array
-    {
+    public function preview(
+        User $identity,
+        int $courseId,
+        string $subject,
+        string $body,
+        array $enrollmentIds,
+        array $template = []
+    ): array {
         $this->authorized($identity, $courseId);
         $subject = trim($subject);
         $body = trim($body);
@@ -105,8 +111,16 @@ final class CourseCommunicationService
     }
 
     /** Persist a confirmed job. No email addresses or recipient names are stored in the job payload. */
-    public function queue(User $identity, int $courseId, string $subject, string $body, array $ids, string $hash, string $mutationId, array $template = []): int
-    {
+    public function queue(
+        User $identity,
+        int $courseId,
+        string $subject,
+        string $body,
+        array $ids,
+        string $hash,
+        string $mutationId,
+        array $template = []
+    ): int {
         if (!preg_match('/^[a-f0-9-]{36}$/i', $mutationId)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
@@ -186,8 +200,14 @@ final class CourseCommunicationService
     }
 
     /** Test delivery is restricted to the authorized actor; roster addresses are never accepted. */
-    public function test(User $identity, int $courseId, string $subject, string $body, string $mutationId, array $template = []): void
-    {
+    public function test(
+        User $identity,
+        int $courseId,
+        string $subject,
+        string $body,
+        string $mutationId,
+        array $template = []
+    ): void {
         if (!preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/iD', $mutationId)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }

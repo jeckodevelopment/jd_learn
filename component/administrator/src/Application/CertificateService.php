@@ -15,8 +15,10 @@ use Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage;
 /** Own-certificate listing and protected, on-demand PDF generation/delivery. */
 final class CertificateService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly ProtectedMaterialStorage $storage)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly ProtectedMaterialStorage $storage
+    ) {
     }
 
     /** @return list<array{enrollment_id:int,title:string,serial:string,issued_at:string,status:string}> */
@@ -713,8 +715,13 @@ final class CertificateService
         return $this->db->setQuery($query)->loadObject() ?: null;
     }
 
-    private function recordCertificateAudit(?int $certificateId, ?int $documentId, int $actorId, string $action, array $context = []): void
-    {
+    private function recordCertificateAudit(
+        ?int $certificateId,
+        ?int $documentId,
+        int $actorId,
+        string $action,
+        array $context = []
+    ): void {
         $row = (object) ['certificate_id' => $certificateId, 'document_id' => $documentId, 'actor_user_id' => $actorId,
             'action' => $action, 'context_json' => json_encode($context, JSON_THROW_ON_ERROR |
                 JSON_UNESCAPED_UNICODE), 'created_at' => gmdate('Y-m-d H:i:s')];

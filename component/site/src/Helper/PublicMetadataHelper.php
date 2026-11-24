@@ -10,8 +10,13 @@ use Joomla\CMS\Uri\Uri;
 /** Adds share metadata only for records that the current visitor may discover. */
 final class PublicMetadataHelper
 {
-    public static function apply(object $document, string $title, string $description, string $url, string $image = ''): void
-    {
+    public static function apply(
+        object $document,
+        string $title,
+        string $description,
+        string $url,
+        string $image = ''
+    ): void {
         $title = trim($title);
         $description = mb_substr(trim(strip_tags($description)), 0, 300, 'UTF-8');
         $canonical = Uri::root() . ltrim(Route::_($url, false), '/');
