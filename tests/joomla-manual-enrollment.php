@@ -120,7 +120,8 @@ if (($argv[2] ?? '') === 'retained') {
         'manual learner remains able to resume'
     );
     manualExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id=' . (int)$e->id)->loadResult() === 1,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE ' .
+            'enrollment_id=' . (int)$e->id)->loadResult() === 1,
         'single manual receipt retained'
     );
     manualExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
@@ -183,10 +184,12 @@ manualDenied(
     409,
     'stale course operation preview is rejected'
 );
-$operationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult();
+$operationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
+    'course_id=' . $course)->loadResult();
 $operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Fixture closure', $closedKey, $closed['impact']['hash']);
 manualExpect(
-    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
+        'course_id=' . $course)->loadResult() === $operationCount,
     'identical course operation retry is idempotent'
 );
 // Archived courses must not be pre-armed: restore is editorial only and leaves both gates closed.
@@ -202,7 +205,8 @@ try {
         );
     }
     manualExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
+            'course_id=' . $course)->loadResult() === $operationCount,
         'archived operations leave audit untouched'
     );
 } finally {

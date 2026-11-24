@@ -114,7 +114,9 @@ function durationState(int $course): array
             ->loadAssocList(),'enrollments' => $db->
                 setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->
                 loadAssocList(),'progress' => $db->
-                setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
+                setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN ' .
+                    '#__jlms_enrollments e ON e.id=p.enrollment_id WHERE ' .
+                    'e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
 }
 $fixture = dirname($root) . '/video-duration-fixture.json';
 $mode = $argv[2] ?? '';

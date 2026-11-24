@@ -132,7 +132,8 @@ function restoreTree(int $id): array
         $out[$table] = $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE course_version_id=' . $id . ' ORDER BY id')->loadAssocList();
     }
     $out['questions'] = $db->setQuery(('SELECT qq.* FROM #__jlms_quiz_questions AS qq JOIN #__jlms_quizzes '
-        . 'AS q ON q.id=qq.quiz_id WHERE q.course_version_id=') . $id . ' ORDER BY qq.quiz_id,qq.ordering')->loadAssocList();
+        . 'AS q ON q.id=qq.quiz_id WHERE ' .
+            'q.course_version_id=') . $id . ' ORDER BY qq.quiz_id,qq.ordering')->loadAssocList();
     return $out;
 }
 $fixture = dirname($root) . '/programme-restore-fixture.json';
@@ -159,7 +160,8 @@ if ($mode === 'tamper') {
 if (in_array($mode, ['state','checkpoint','retained'], true)) {
     $f = json_decode(file_get_contents($fixture), true, 32, JSON_THROW_ON_ERROR);
     $course = $f['course'];
-    $ids = $db->setQuery('SELECT id FROM #__jlms_course_versions WHERE course_id=' . $course . ' ORDER BY version_no')->loadColumn();
+    $ids = $db->setQuery('SELECT id FROM #__jlms_course_versions WHERE ' .
+        'course_id=' . $course . ' ORDER BY version_no')->loadColumn();
     $state = ['course' => (array)restoreRow('courses', $course),'versions' => array_map(static fn($id)=>restoreTree((int)$id), $ids),'learning' => restoreLearning(),
     'audit' => $db->setQuery(("SELECT * FROM #__action_logs WHERE "
         . "extension='com_jlms.programmerestore' AND item_id=") . $course . ' ORDER BY id')->loadAssocList()];
@@ -225,7 +227,8 @@ $historyCertificate = (object)['enrollment_id' => $enrollment,'course_version_id
 $db->insertObject('#__jlms_certificates', $historyCertificate, 'id');
 $identityJson = json_encode(['user_id' => (int)$actor->id,'course_id' => $course,
  'course_version_id' => $historical,'historical_restore_test' => true], JSON_THROW_ON_ERROR);
-$templateJson = (string)$db->setQuery('SELECT template_json FROM #__jlms_certificate_templates WHERE id=' . $templateId)->loadResult();
+$templateJson = (string)$db->setQuery('SELECT template_json FROM ' .
+    '#__jlms_certificate_templates WHERE id=' . $templateId)->loadResult();
 $historyDocument = (object)['certificate_id' => (int)$historyCertificate->id,'document_no' => 1,
  'serial' => 'AUT04-RESTORE-' . strtoupper(bin2hex(random_bytes(12))),
  'identity_snapshot_json' => $identityJson,'template_snapshot_json' => $templateJson,
@@ -281,7 +284,8 @@ $restored = restoreTree($target);
 restoreExpect($restored['version']['status'] === 'draft' && (int)$restored['version']['version_no'] ===
      4 && $restored['version']['structure_hash'] === null, 'Recovery creates the next independent unfrozen draft');
 foreach ($trees as $id => $tree) {
-    restoreExpect(restoreTree($id) === $tree, 'Historical, active and preexisting draft programme remain unchanged: ' . $id);
+    restoreExpect(restoreTree($id) === $tree, 'Historical, active and preexisting draft ' .
+        'programme remain unchanged: ' . $id);
 }
 foreach (['modules','lessons','quizzes','attachments'] as $table) {
     $old = $trees[$historical][$table];
@@ -302,7 +306,8 @@ foreach ($trees[$historical]['questions'] as $i => $question) {
     unset($question['quiz_id'], $new['quiz_id']);
     restoreExpect($question === $new, 'Immutable question revision and ordering preserved');
 }
-restoreExpect(count(array_filter($restored['lessons'], static fn($l)=>$l['kind'] === 'video')) === 3, 'All three external video providers are represented');
+restoreExpect(count(array_filter($restored['lessons'], static fn($l)=>$l['kind'] === 'video')) === 3, 'All three external video providers are ' .
+    'represented');
 $courseAfter = restoreRow('courses', $course);
 foreach (['revision','modified_at','modified_by'] as $field) {
     unset($courseBefore->$field, $courseAfter->$field);
@@ -315,13 +320,16 @@ restoreExpect(
     && (array)restoreRow('certificate_documents', (int)$historyDocument->id) === $documentBefore,
     'Restore does not alter original certificate, serial or document snapshots'
 );
-restoreExpect($authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision) === $target, 'Edit programme deterministically reuses newest draft');
+restoreExpect($authoring->createDraft($actor, $course, (int)restoreRow('courses', $course)->revision) === $target, 'Edit programme deterministically reuses ' .
+    'newest draft');
 restoreDenied(fn()=>$authoring->restoreVersion($actor, $input), 'COM_JLMS_REVISION_CONFLICT');
-restoreExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id=' . $course)->loadResult() === 4, 'Stale replay creates no second recovery');
+restoreExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions ' .
+    'WHERE course_id=' . $course)->loadResult() === 4, 'Stale replay creates no second recovery');
 $audit = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
     . "extension='com_jlms.programmerestore' AND item_id=") . $course . ' ORDER BY id DESC')->loadResult();
 $audit = json_decode($audit, true, 32, JSON_THROW_ON_ERROR);
-restoreExpect((int)$audit['source_version_id'] === $historical && (int)$audit['target_version_id'] === $target, 'Native audit records historical source and new draft');
+restoreExpect((int)$audit['source_version_id'] === $historical && (int)$audit['target_version_id'] === $target, 'Native audit records historical source and ' .
+    'new draft');
 $vimeoEnabled = false;
 restoreDenied(fn()=>$publish($target), 'COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
 restoreExpect(restoreRow('course_versions', $target)->status === 'draft' &&
@@ -332,7 +340,8 @@ $publish($target);
 restoreExpect((int)restoreRow('courses', $course)->current_version_id === $target &&
      restoreLearning() === $before, 'Normal impact-confirmed publication activates recovery without migrating ' .
     'learners');
-restoreExpect(restoreTree($existing) === $trees[$existing], 'Publishing recovered programme preserves another open draft');
+restoreExpect(restoreTree($existing) === $trees[$existing], 'Publishing recovered programme preserves ' .
+    'another open draft');
 restoreExpect(count($remote->calls) > 0, 'Cloudflare privacy and metadata validation uses controlled transport');
 file_put_contents($fixture, json_encode(['course' => $course,'historical' => $historical,'current' => $target,'existing' => $existing], JSON_THROW_ON_ERROR));
 echo json_encode(['programme_restore_native_checks' => $checks,'status' => 'passed']) . PHP_EOL;

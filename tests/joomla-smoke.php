@@ -230,7 +230,8 @@ foreach ($mailTemplateIds as $templateId) {
         throw new \RuntimeException('JD Learn mail template is not registered in Joomla: ' . $templateId);
     }
     if (trim((string) $mailTemplate->subject) === '' || trim((string) $mailTemplate->body) === '' || trim((string) $mailTemplate->htmlbody) === '') {
-        throw new \RuntimeException('JD Learn mail template must include subject, plain-text and HTML content: ' . $templateId);
+        throw new \RuntimeException('JD Learn mail template must include subject, ' .
+            'plain-text and HTML content: ' . $templateId);
     }
     $tags = (array) $mailTemplate->params->get('tags', []);
     $requiredTags = match ($templateId) {
@@ -240,7 +241,8 @@ foreach ($mailTemplateIds as $templateId) {
     };
     foreach ($requiredTags as $requiredTag) {
         if (!in_array($requiredTag, $tags, true)) {
-            throw new \RuntimeException('JD Learn mail template does not document its variable ' . $requiredTag . ': ' . $templateId);
+            throw new \RuntimeException('JD Learn mail template does not document its ' .
+                'variable ' . $requiredTag . ': ' . $templateId);
         }
     }
 }
@@ -747,7 +749,8 @@ $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId
 $db->setQuery(('INSERT INTO #__jlms_mail_consents '
     . '(user_id,state,origin,policy_version,requested_at,confirmed_at) VALUES (')
     . (int) $userId . ",'confirmed','dashboard','ci-test',UTC_TIMESTAMP(),UTC_TIMESTAMP())")->execute();
-$confirmedAt = (string) $db->setQuery('SELECT confirmed_at FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->loadResult();
+$confirmedAt = (string) $db->setQuery('SELECT confirmed_at FROM ' .
+    '#__jlms_mail_consents WHERE user_id=' . (int) $userId)->loadResult();
 $linkOne = $mailConsent->createUnsubscribeUrl((int) $userId);
 $linkTwo = $mailConsent->createUnsubscribeUrl((int) $userId);
 parse_str((string) parse_url((string) $linkOne, PHP_URL_QUERY), $linkQueryOne);
@@ -757,7 +760,8 @@ $tokenTwo = (string) ($linkQueryTwo['token'] ?? '');
 if (!$linkOne || !$linkTwo || $tokenOne === '' || $tokenTwo === '' || array_key_exists('user_id', $linkQueryOne) || array_key_exists('email', $linkQueryOne)) {
     throw new \RuntimeException('Unsubscribe link did not contain an opaque token or exposed the user id.');
 }
-$db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 SECOND)')
+$db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), ' .
+    'INTERVAL 1 SECOND)')
     ->where('token_hash = ' . $db->quote(hash('sha256', $tokenOne))))->execute();
 if ($mailConsent->revokeByToken($tokenOne) || $mailConsent->state((int) $userId) !== 'confirmed') {
     throw new \RuntimeException('Expired unsubscribe token revoked consent.');

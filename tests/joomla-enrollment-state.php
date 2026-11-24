@@ -112,16 +112,21 @@ $course = (int)$f['course'];
 $enrollment = (int)$f['active'];
 $owner = new \Joomla\CMS\User\User($f['owner']);
 $manager = new \Joomla\CMS\User\User($rf['manager']);
-$count = static fn()=>(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_state_changes WHERE enrollment_id=' . $enrollment)->loadResult();
+$count = static fn()=>(int)$db->setQuery('SELECT COUNT(*) FROM ' .
+    '#__jlms_enrollment_state_changes WHERE ' .
+    'enrollment_id=' . $enrollment)->loadResult();
 
 $seedPlayerSession = static function (int $enrollmentId, int $lessonId) use ($db): string {
     $sessionId = stateKey();
-    $sourceRevision = (int)$db->setQuery('SELECT source_revision FROM #__jlms_lessons WHERE id=' . $lessonId)->loadResult();
-    $exists = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHERE enrollment_id=' . $enrollmentId . ' AND lesson_id=' . $lessonId)->loadResult();
+    $sourceRevision = (int)$db->setQuery('SELECT source_revision FROM #__jlms_lessons ' .
+        'WHERE id=' . $lessonId)->loadResult();
+    $exists = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress ' .
+        'WHERE enrollment_id=' . $enrollmentId . ' AND lesson_id=' . $lessonId)->loadResult();
     if (!$exists) {
         // The schema deliberately requires a persisted lesson-progress parent
         // before a player session can be issued; mirror real playback setup.
-        $versionId = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . $enrollmentId)->loadResult();
+        $versionId = (int)$db->setQuery('SELECT course_version_id FROM ' .
+            '#__jlms_enrollments WHERE id=' . $enrollmentId)->loadResult();
         $progress = (object)['enrollment_id' => $enrollmentId,'course_version_id' => $versionId,
             'lesson_id' => $lessonId,'source_revision' => $sourceRevision,'coverage_json' => '[]',
             'covered_ms' => 0,'resume_ms' => 0,'state' => 'started',
@@ -204,7 +209,8 @@ if (($argv[2] ?? '') === 'cancellation') {
         'replayed cancellation does not duplicate event'
     );
     stateExpect(
-        (string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE id=' . $cancelEnrollment)->loadResult() === 'cancelled',
+        (string) $db->setQuery('SELECT status FROM #__jlms_enrollments WHERE ' .
+            'id=' . $cancelEnrollment)->loadResult() === 'cancelled',
         'cancellation persisted'
     );
     stateExpect(
@@ -265,7 +271,8 @@ stateDenied(
     'suspension denies new learning writes'
 );
 // Reactivation of an individual enrollment cannot pre-arm an archived or suspended course.
-$courseBefore = $db->setQuery('SELECT state,delivery_enabled FROM #__jlms_courses WHERE id=' . (int)$course)->loadAssoc();
+$courseBefore = $db->setQuery('SELECT state,delivery_enabled FROM ' .
+    '#__jlms_courses WHERE id=' . (int)$course)->loadAssoc();
 $historyBefore = $count();
 try {
     foreach ([['state' => 2,'delivery_enabled' => 0],['state' => 0,'delivery_enabled' => 1],['state' => 1,'delivery_enabled' => 0],['state' => -2,'delivery_enabled' => 0]] as $blockedCourse) {
@@ -494,7 +501,8 @@ stateDenied(
 );
 $service->apply($actor, ...stateCommand($service->editor($actor, $qf['course_id'], $qe, 'active')));
 stateExpect($quizBefore === $db->setQuery(('SELECT status,revision,rules_snapshot_json,deadline_at FROM '
-    . '#__jlms_attempts WHERE id=') . $aid)->loadAssoc(), 'reactivation never resets quiz status revision snapshot or deadline');
+    . '#__jlms_attempts WHERE id=') . $aid)->loadAssoc(), 'reactivation never resets quiz status ' .
+        'revision snapshot or deadline');
 stateExpect($savedAnswers === $db->setQuery(('SELECT aa.* FROM #__jlms_attempt_answers AS aa INNER JOIN '
     . '#__jlms_attempt_questions AS q ON q.id=aa.attempt_question_id '
     . 'WHERE q.attempt_id=') . $aid)->loadAssocList(), 'saved quiz responses retained');
@@ -522,11 +530,13 @@ try {
         'request replay reuses pending record'
     );
     stateExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=' . $requestId . " AND status='pending'")->loadResult() === 1,
+        (int)$db->setQuery('SELECT COUNT(*) FROM ' .
+            '#__jlms_enrollment_requests WHERE id=' . $requestId . " AND status='pending'")->loadResult() === 1,
         'request remains pending'
     );
     stateExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$requestUser->id . ' AND course_id=' . $course)->loadResult() === 0,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments ' .
+            'WHERE user_id=' . (int)$requestUser->id . ' AND course_id=' . $course)->loadResult() === 0,
         'request grants no learning access'
     );
     stateExpect(
@@ -568,7 +578,8 @@ try {
             'blocked stale operator cannot approve enrollment'
         );
         stateExpect(
-            (string)$db->setQuery('SELECT status FROM #__jlms_enrollment_requests WHERE id=' . $requestId)->loadResult() === 'pending',
+            (string)$db->setQuery('SELECT status FROM ' .
+                '#__jlms_enrollment_requests WHERE id=' . $requestId)->loadResult() === 'pending',
             'blocked approval leaves request pending'
         );
         stateExpect(
@@ -640,7 +651,8 @@ try {
     // compare the original roster snapshot without unrelated test pollution.
     $db->setQuery('DELETE FROM #__jlms_enrollments WHERE id=' . $enrollmentApproved)->execute();
     stateExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE id=' . $enrollmentApproved)->loadResult() === 0,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments ' .
+            'WHERE id=' . $enrollmentApproved)->loadResult() === 0,
         'approval fixture cleanup preserves roster retention baseline'
     );
 } finally {
