@@ -280,3 +280,18 @@ I file che contengono formati testuali contrattualizzati (ad esempio i metadati 
 **Comportamenti da testare:** integrità dei pacchetti, coerenza degli alberi sintattici, contratti sorgente, nessuna nuova violazione PHPCS, nessun cambiamento di ACL/CSRF/API, suite PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium prima del merge.
 
 Il [workflow di riconciliazione #45351580497](https://github.com/jeckodevelopment/jd_learn/actions/runs/45351580497) ha verificato, oltre a `tools/check.py`, i test di regressione PHP e i test frontend basati sui sorgenti, ripristinando i due file `CoursemessageModel.php` e `DashboardModel.php` che violavano contratti testuali esistenti. Il controllo completo PHPCS dopo tale riconciliazione conferma **1.563 rilievi, zero introdotti**. Le modifiche definitive restano tutte nella medesima PR, senza abbassare alcun gate.
+
+
+## Remediation massiva per espressione, PHP e template (PR #1011)
+
+Baseline PHPCS reale su `main` dopo PR #1010: **1.563** violazioni dello standard PSR-12. Questo intervento è stato eseguito su un unico ramo, `style/secdev02-psr12-targeted-bulk-1011`, in tre lotti senza PR intermedie:
+
+- [Workflow #45353844783](https://github.com/jeckodevelopment/jd_learn/actions/runs/45353844783): impaginazione sicura degli attributi HTML nei template misti PHP/HTML (solo whitespace tra attributi, stesso valore degli attributi). **17 rilievi eliminati** in 11 file, con test strutturali verdi; il template comunicazioni protetto da un contratto testuale è stato escluso.
+- [Workflow #45354063337](https://github.com/jeckodevelopment/jd_learn/actions/runs/45354063337): ulteriori varianti di formato dei file PHP puri verificate sull'AST. Nove candidati sono stati ripristinati dalla suite dei contratti sorgente, **nessuna riduzione netta**; non sono stati indeboliti i controlli.
+- [Workflow #45354938520](https://github.com/jeckodevelopment/jd_learn/actions/runs/45354938520): analisi granulare delle espressioni sui **65 file PHP a maggiore concentrazione di righe lunghe**. Sono state selezionate e accettate **241 correzioni individuali in 46 file**, eliminando **241 rilievi** con lint PHP, identità dei token significativi e PHPCS per-regola. Il gate esteso dei contratti sorgente non ha richiesto alcun ripristino.
+
+**Risultato netto certificato dalla scansione completa del ramo: 1.563 → 1.305 rilievi (−258, circa −16,5%), zero nuove violazioni PSR-12 per file/regola.** Non è stato cambiato lo standard, non sono stati esclusi file dal gate e i workflow monouso privilegiati sono stati rimossi dopo il commit.
+
+**Residuo:** i 1.305 rilievi ancora presenti richiedono ulteriore refactoring, in particolare righe lunghe non risolvibili con spaziatura/token e questioni PSR1/PSR2. Il criterio SECDEV-02/criterion_01 resta incompleto; i criteri CORE/API non sono promossi per effetto di questo intervento. La CI applicativa completa della PR deve essere verde prima del merge. I collaudi manuali Joomla restano separati.
+
+**Comportamenti da testare:** aspetto HTML e selettori nel curriculum, nella scheda corso e negli altri template modificati; equivalenza PHP delle espressioni e delle chiamate Joomla; integrità dei form e dei token CSRF, autorizzazioni, video, iscrizioni, quiz e attestati; controllo PHPCS, PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium.
