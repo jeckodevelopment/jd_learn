@@ -1,0 +1,82 @@
+name: SECDEV-02 AST-equivalent PHP literal bulk
+on:
+  push:
+    branches: [style/secdev02-811-targeted-closure]
+permissions:
+  contents: write
+jobs:
+  literal-batch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned style and AST parser dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .runtime/secdev02-phpcs .runtime/php-parser
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          composer require --working-dir=.runtime/php-parser --no-interaction --no-progress --no-plugins --no-scripts 'nikic/php-parser:^5.4'
+          python3 -m pip install --user ruff==0.14.6
+      - name: Apply guarded whole-repository constant PHP string reflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m ruff check --select E701,E702 tools/secdev02_mass_literal_semantic.py
+          python3 tools/secdev02_mass_literal_semantic.py --self-test
+          python3 tools/secdev02_mass_literal_semantic.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs" --phpcbf "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcbf" --parser-dir "$PWD/.runtime/php-parser" --max-files 250
+      - name: Full PHP lint, source contracts and PSR-12 baseline comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build.py
+          python3 tools/check.py
+          python3 - <<'PY'
+          import pathlib,subprocess,tempfile,importlib.machinery,csv
+          root=pathlib.Path('.').resolve()
+          phpcs=root/'.runtime/secdev02-phpcs/vendor/bin/phpcs'
+          audit=importlib.machinery.SourceFileLoader('audit',str(root/'tests/secdev02-psr12-phpcs.py')).load_module()
+          now=audit.signatures(phpcs,root,audit.tracked_php(root))
+          with tempfile.TemporaryDirectory() as td:
+              base=pathlib.Path(td)
+              old=audit.signatures(phpcs,base,audit.baseline(root,'HEAD',base))
+          new=audit.diff(now,old)
+          start,end=sum(old.values()),sum(now.values())
+          files=subprocess.check_output(['git','diff','--name-only','--','*.php'],text=True).splitlines()
+          print(f'AST LITERAL MASS FINAL {start}->{end} net={start-end} modified_files={len(files)}',flush=True)
+          assert not new,f'New file/rule violations: {new}'
+          assert end<start and files,'No validated change'
+          for file in files:
+              subprocess.run(['php','-l',file],check=True,stdout=subprocess.DEVNULL)
+          doc=root/'docs/SECDEV_02_CORE_PHP_GATE_1.0.0.md'
+          with doc.open('a',encoding='utf8') as stream:
+              stream.write(f"\n## PR #1019 — AST-equivalent PHP literal refactoring (24 November 2026)\n\nA full pinned PHPCS 4.0.4 PSR-12 audit measured **{start} → {end}**, net **-{start-end}** findings on **{len(files)} changed PHP files**. Long plain literals are wrapped into constant concatenations only if nikic/php-parser 5 normalizes both original and modified PHP ASTs identically (folding only adjacent constant strings). PHP lint, existing source contracts, and zero introduced per-file/per-rule warnings are mandatory. No exemptions or changed functional acceptance claims. SECDEV-02 remains partial while findings and CORE/API review remain incomplete. Manual Joomla acceptance is separate.\n\n### Comportamenti da testare\n\n- Exact string values for JSON, HTML, URLs, filenames, SQL and email templates and matching normalized PHP AST.\n- Full Joomla 6.2 CI, source contracts, ACL, PHP lint, security and installed package.\n")
+          matrix=root/'docs/REQUIREMENTS_STATUS.csv'
+          with matrix.open(newline='',encoding='utf8') as f:
+              records=list(csv.reader(f))
+          header=records[0]
+          row=[r for r in records if r and r[0]=='SECDEV-02']
+          assert len(row)==1
+          row[0][header.index('Evidenza e limiti')]+=f' PR #1019 AST-equivalent literal batch PHPCS {start}->{end} (-{start-end}); no new file/rule findings; coverage unchanged.'
+          col=header.index('PR implementazione')
+          if '1019' not in row[0][col].split(';'):
+              row[0][col]+=';1019'
+          with matrix.open('w',newline='',encoding='utf8') as f:
+              csv.writer(f,lineterminator='\n').writerows(records)
+          PY
+          python3 tests/requirements-status.py
+          git diff --check
+      - name: Remove one-shot workflow and commit guarded source changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/secdev02-811-literals.yml
+          git add component libraries plugins tests tools docs
+          git diff --cached --check
+          git commit -m 'refactor(SECDEV-02): AST-equivalent mass literal reflow and evidence'
+          git push origin HEAD:style/secdev02-811-targeted-closure
