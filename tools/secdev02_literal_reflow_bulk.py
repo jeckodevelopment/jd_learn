@@ -51,7 +51,7 @@ def split_literal(token: bytes, width: int, indentation: int) -> bytes | None:
     remaining = content
     while len(remaining) > width - 2:
         place = remaining.rfind(b" ", 1, width - 2)
-        if place < 20:
+        if place < 14:
             return None
         pieces.append(remaining[:place + 1])
         remaining = remaining[place + 1:]
@@ -127,7 +127,7 @@ def main() -> int:
         if not matches:
             continue
         options = []
-        for width in (104, 90, 76):
+        for width in (76, 64, 56, 48, 40):
             changed = propose(original, matches, width)
             if changed != original and changed not in options:
                 options.append(changed)
