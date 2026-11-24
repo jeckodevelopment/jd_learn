@@ -118,6 +118,9 @@ def main() -> int:
         if not item:
             continue
         path = ROOT / item.decode()
+        # This quiz fixture has spacing-sensitive control statements.
+        if path.as_posix().endswith('/tests/joomla-quiz-attempts.php'):
+            continue
         if not path.is_file():
             continue
         original = path.read_bytes()
