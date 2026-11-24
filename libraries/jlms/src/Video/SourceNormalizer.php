@@ -43,7 +43,11 @@ final class SourceNormalizer
                     }
                     $parameter = preg_replace('/([a-z0-9])([A-Z])/', '$1_$2', $parameter);
                     $parameter = strtolower((string) preg_replace('/[^A-Za-z0-9]+/', '_', $parameter));
-                    if (preg_match('/(?:^|_)(?:token|secret|password|passwd|credential|authorization|auth|api_key|apikey|client_secret|access_key|private_key|signature|signed|jwt)(?:$|_)/D', $parameter)) {
+                    if (
+                        preg_match(('/(?:^|_)(?:token|secret|password|passwd|credential|authorizat' .
+                        'ion|auth|api_key|apikey|client_secret|access_key|private_' .
+                        'key|signature|signed|jwt)(?:$|_)/D'), $parameter)
+                    ) {
                         throw new \InvalidArgumentException('SOURCE_INVALID');
                     }
                 }

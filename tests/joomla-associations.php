@@ -90,7 +90,8 @@ function assocExpect(bool $condition, string $message): void
 function assocData(int $id): array
 {
     global $db;
-    return (array) $db->setQuery('SELECT id,title,alias,catid,language,catalog_access,content_access,enrollment_mode,summary,revision FROM #__jlms_courses WHERE id=' . $id)->loadObject();
+    return (array) $db->setQuery(('SELECT id,title,alias,catid,language,catalog_access,content_' .
+        'access,enrollment_mode,summary,revision FROM #__jlms_courses WHERE id=') . $id)->loadObject();
 }
 function assocSave(array $data): bool
 {

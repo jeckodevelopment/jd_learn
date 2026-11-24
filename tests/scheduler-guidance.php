@@ -35,7 +35,10 @@ foreach (['', '{', 'null', '[]', '{}', '{"rule-type":42}', '{"interval-minutes":
         throw new RuntimeException('Malformed rules accepted: ' . $broken);
     }
 }
-foreach (['{"rule-type":"interval-minutes","interval-minutes":5}', '{"rule-type":"cron-expression","cron-expression":"0 * * * *"}'] as $wellFormed) {
+foreach (
+    ['{"rule-type":"interval-minutes","interval-minutes":5}', ('{"rule-type":"cron-' .
+    'expression","cron-expression":"0 * * * *"}')] as $wellFormed
+) {
     if (!SchedulerHealth::validExecutionRules($wellFormed)) {
         throw new RuntimeException('Valid JSON schedule structure rejected');
     }

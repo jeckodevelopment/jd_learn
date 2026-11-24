@@ -59,7 +59,8 @@ final class EnrollmentstateController extends BaseController
                 true
             );
             $this->setMessage(Text::_('COM_JLMS_ENROLLMENT_STATE_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=enrollmentstate&id=' . $course . '&enrollment_id=' . $enrollment, false));
+            $this->setRedirect(Route::link('administrator', ('index.php?option=com_jlms&view=' .
+                'enrollmentstate&id=') . $course . '&enrollment_id=' . $enrollment, false));
         } catch (\Throwable $error) {
             $key = $error->getMessage();
             $code = (int) $error->getCode();

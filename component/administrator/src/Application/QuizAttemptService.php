@@ -136,7 +136,9 @@ final class QuizAttemptService
             $now = self::date(($this->clock)());
             $expires = self::date(($this->clock)() + 604800);
             $q = $this->db->createQuery();$q->setQuery(("INSERT INTO #__jlms_idempotency "
-                . "(scope_hash,request_hash,state,result_type,result_id,http_status,created_at,expires_at) VALUES (:scope,:hash,'completed','quiz_attempt',:result,200,:now,:expires) ON DUPLICATE KEY UPDATE scope_hash=scope_hash"))
+                . ("(scope_hash,request_hash,state,result_type,result_id,http_status,created_at," .
+                    "expires_at) VALUES (:scope,:hash,'completed','quiz_attempt',:result,200,:now,:expires) " .
+                    "ON DUPLICATE KEY UPDATE scope_hash=scope_hash")))
                 ->bind(':scope', $scope)
                     ->bind(':hash', $hash)
                     ->bind(':result', $result, ParameterType::INTEGER)

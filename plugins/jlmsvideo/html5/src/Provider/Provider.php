@@ -41,7 +41,8 @@ final class Provider extends AbstractFoundationProvider
         }
         $this->normaliseSource(new SourceInput($source->reference));
         $url = $context->preview
-            ? \Joomla\CMS\Router\Route::link('site', 'index.php?option=com_jlms&task=media.stream&format=raw&preview=1&course_id=' .
+            ? \Joomla\CMS\Router\Route::link('site', ('index.php?option=com_jlms&task=media.' .
+                'stream&format=raw&preview=1&course_id=') .
                     $context->courseId
                 . '&version_id=' . $context->versionId . '&lesson_id=' . $context->lessonId
                     . '&source_revision=' . $source->revision, false)

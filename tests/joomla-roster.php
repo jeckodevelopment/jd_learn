@@ -330,7 +330,8 @@ try {
         $sensitiveNote = 'Verified SMTP externally; internal reference NOTE-SEC-P1';
         $staleSent = $newStaleMail('sent');
         $mailAudit->reconcile($courseManager, $staleSent, 'sent', $sensitiveNote, true);
-        $sentRow = $db->setQuery('SELECT state,reconciliation_note,last_error,recipient_email,recipient_name,template_data FROM #__jlms_mail_queue WHERE id=' . $staleSent)->loadObject();
+        $sentRow = $db->setQuery(('SELECT state,reconciliation_note,last_error,recipient_email,' .
+            'recipient_name,template_data FROM #__jlms_mail_queue WHERE id=') . $staleSent)->loadObject();
         rosterExpect(
             $sentRow->state === 'sent' && $sentRow->reconciliation_note === $sensitiveNote
             && $sentRow->last_error === 'Manual reconciliation recorded.'

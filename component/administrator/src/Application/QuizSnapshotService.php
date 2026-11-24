@@ -45,7 +45,8 @@ final class QuizSnapshotService
                  $selection['shuffle_questions'],'shuffle_options' => $selection['shuffle_options']];
         $id = (int)$quiz->id;
         $budget = $this->db->createQuery()
-            ->select('SUM(OCTET_LENGTH(r.prompt)+OCTET_LENGTH(r.options_json)+OCTET_LENGTH(r.grading_json)+OCTET_LENGTH(r.feedback_json))')
+            ->select(('SUM(OCTET_LENGTH(r.prompt)+OCTET_LENGTH(r.options_json)+OCTET_LENGTH(r.' .
+                'grading_json)+OCTET_LENGTH(r.feedback_json))'))
             ->from('#__jlms_quiz_questions AS l')
                 ->innerJoin('#__jlms_question_revisions AS r ON r.id=l.question_revision_id')
             ->where('l.quiz_id = :quiz')->bind(':quiz', $id, ParameterType::INTEGER);

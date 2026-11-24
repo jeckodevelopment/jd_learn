@@ -391,7 +391,8 @@ deadlineReject(
 $author = $component->getCurriculumService();
 $quizzes = $component->getQuizAuthoringService();
 $bank = json_decode(file_get_contents(dirname($root) . '/quiz-authoring-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
-$cat = (int)$db->setQuery("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND alias='ci-courses'")->loadResult();
+$cat = (int)$db->setQuery(("SELECT id FROM #__categories WHERE extension='com_jlms.course' AND " .
+    "alias='ci-courses'"))->loadResult();
 $level = (int)$db->setQuery("SELECT id FROM #__viewlevels WHERE title='CI learning access'")->loadResult();
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Untimed extension fixture','alias' => 'untimed-extension-fixture','catid' => $cat,'language' => '*','catalog_access' => 1,'content_access' => $level,'enrollment_mode' => 'auto','presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Untimed guard'])) {

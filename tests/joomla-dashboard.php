@@ -170,7 +170,8 @@ $update = static function (string $table, int $id, array $fields) use ($db): voi
     $db->updateObject('#__' . $table, $r, 'id', true);
 };
 $snapshot = static fn()=>$db
-    ->setQuery('SELECT revision,started_at,completed_total,last_activity_at,last_lesson_id FROM #__jlms_enrollments WHERE id=' .
+    ->setQuery(('SELECT revision,started_at,completed_total,last_activity_at,last_lesson_id FROM ' .
+        '#__jlms_enrollments WHERE id=') .
             $active)
     ->loadAssoc();
 $before = $snapshot();

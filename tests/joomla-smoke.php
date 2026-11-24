@@ -294,7 +294,8 @@ if ($renderedSubject !== 'Corso: Avviso') {
     throw new \RuntimeException('Course email subject preview differs from Joomla template replacement.');
 }
 $untrusted = JdCourseMessageTemplate::validate(
-    ['subject' => '{COURSE_TITLE}', 'body' => '{COURSE_TITLE}', 'htmlbody' => '<p>{USER_FULLNAME_HTML}</p><script>alert(1)</script>'],
+    ['subject' => '{COURSE_TITLE}', 'body' => '{COURSE_TITLE}', 'htmlbody' => ('<p>{USER_FULLNAME_' .
+        'HTML}</p><script>alert(1)</script>')],
     $sampleVars
 );
 if (str_contains($untrusted['htmlbody'], '<script')) {
@@ -721,7 +722,8 @@ $db->setQuery($db->createQuery()->update('#__jlms_mail_queue')
     ->where('event_key = ' . $db->quote($privacyMailId)))->execute();
 $privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
-$sanitizedMail = $db->setQuery("SELECT recipient_user_id,recipient_email,recipient_name,template_data,last_error FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($privacyMailId))->loadObject();
+$sanitizedMail = $db->setQuery(("SELECT recipient_user_id,recipient_email,recipient_name,template_" .
+    "data,last_error FROM #__jlms_mail_queue WHERE event_key=") . $db->quote($privacyMailId))->loadObject();
 if (!$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== '' || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}' || $sanitizedMail->last_error !== null) {
     throw new \RuntimeException('Privacy removal did not redact completed mail queue evidence.');
 }

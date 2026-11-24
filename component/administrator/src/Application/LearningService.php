@@ -418,7 +418,8 @@ final class LearningService
                     ['USER_FULLNAME' => $name, 'COURSE_TITLE' => (string) $course->title,
                          'ENROLLMENT_DATE' => $now, 'SITE_NAME' =>
                          (string) \Joomla\CMS\Factory::getApplication()->get('sitename'),
-                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . 'index.php?option=com_jlms&view=classroom&enrollment_id=' . $id],
+                        'COURSE_URL' => \Joomla\CMS\Uri\Uri::root() . ('index.php?option=com_jlms&' .
+                            'view=classroom&enrollment_id=') . $id],
                     (int) $actor->id
                 );
             }

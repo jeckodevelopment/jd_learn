@@ -25,7 +25,10 @@ final class EditorialLinkSafety
                     '_',
                     preg_replace('/([a-z0-9])([A-Z])/', '$1_$2', (string) $key)
                 ));
-                if (preg_match('/(?:^|_)(?:token|secret|password|passwd|credential|authorization|auth|api_key|apikey|client_secret|access_key|private_key|signature|signed|jwt)(?:$|_)/D', $normal)) {
+                if (
+                    preg_match(('/(?:^|_)(?:token|secret|password|passwd|credential|authorization|' .
+                    'auth|api_key|apikey|client_secret|access_key|private_key|signature|signed|jwt)(?:$|_)/D'), $normal)
+                ) {
                     return true;
                 }
             }

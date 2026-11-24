@@ -30,11 +30,15 @@ if ($operation === 'material-add') {
     $now = gmdate('Y-m-d H:i:s.u');
     $key = 'readiness-fixture-' . bin2hex(random_bytes(12));
     $q = $db->prepare(("INSERT INTO joomla_jlms_assets "
-        . "(storage,storage_key,sha256,byte_size,mime_type,original_name,asset_revision,status,scan_json,created_by,created_at,modified_by,modified_at) VALUES ('local',?,?,1,'application/pdf','readiness-fixture.pdf',1,'quarantine','{}',?,?,?,?)"));
+        . ("(storage,storage_key,sha256,byte_size,mime_type,original_name,asset_revision,status," .
+            "scan_json,created_by,created_at,modified_by,modified_at) VALUES ('local',?,?,1,'application/" .
+            "pdf','readiness-fixture.pdf',1,'quarantine','{}',?,?,?,?)")));
     $q->execute([$key, hash('sha256', $key), (int) $version['created_by'], $now, (int) $version['created_by'], $now]);
     $assetId = (int) $db->lastInsertId();
     $q = $db->prepare(("INSERT INTO joomla_jlms_attachments "
-        . "(course_version_id,lesson_id,asset_id,title,description,ordering,state,preview,revision,created_by,created_at,modified_by,modified_at) VALUES (?,?,?,'Readiness test material','',0,1,0,1,?,?,?,?)"));
+        . ("(course_version_id,lesson_id,asset_id,title,description,ordering,state,preview," .
+            "revision,created_by,created_at,modified_by,modified_at) VALUES (?,?,?,'Readiness test " .
+            "material','',0,1,0,1,?,?,?,?)")));
     $q->execute([
         (int) $version['version_id'],
         $lessonId,

@@ -49,7 +49,8 @@ class CurriculumController extends BaseController
                             $this->app->setUserState($key, ['actor' => (int)$actor->id, 'transition' =>
                              $transition, 'expires' => time() + 900,
                                 'ticket' => bin2hex(random_bytes(32)), 'fingerprint' => $impact['fingerprint']]);
-                            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=publicationreview&id=' . $courseId . '&version_id=' . $versionId, false));
+                            $this->setRedirect(Route::link('administrator', ('index.php?option=' .
+                            'com_jlms&view=publicationreview&id=') . $courseId . '&version_id=' . $versionId, false));
                             return;
                         }
                         $plan = $this->app->getUserState($key);

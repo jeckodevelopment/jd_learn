@@ -40,7 +40,8 @@ final class HtmlView extends BaseHtmlView
         }
         ToolbarHelper::title(Text::_('COM_JLMS_QUESTION_BANK'), 'list');
         ToolbarHelper::link('index.php?option=com_jlms&view=question', 'JTOOLBAR_NEW', 'new');
-        ToolbarHelper::link('index.php?option=com_categories&view=categories&extension=com_jlms.question', 'JCATEGORIES', 'folder');
+        ToolbarHelper::link(('index.php?option=com_categories&view=categories&extension=com_' .
+            'jlms.question'), 'JCATEGORIES', 'folder');
         ToolbarHelper::help('questionbank', true);
         parent::display($tpl);
     }

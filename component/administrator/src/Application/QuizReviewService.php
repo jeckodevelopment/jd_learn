@@ -85,7 +85,8 @@ final class QuizReviewService
         $after = 0;
         do {
             $q = $this->db->createQuery()
-                ->select('id,status,attempt_no,counted_for_limit,score_points,max_points,passed,submitted_at,rules_snapshot_json')->from('#__jlms_attempts')
+                ->select(('id,status,attempt_no,counted_for_limit,score_points,max_points,passed,' .
+                    'submitted_at,rules_snapshot_json'))->from('#__jlms_attempts')
                 ->where('enrollment_id = :enrollment')->where('quiz_id = :quiz')->where('id > :after')
                 ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
                     ->bind(':quiz', $quizId, ParameterType::INTEGER)
@@ -170,7 +171,8 @@ final class QuizReviewService
         }
         $quiz = (int)$base['quiz']->id;
         $q = $this->db->createQuery()
-            ->select('id,attempt_no,status,score_points,max_points,passed,counted_for_limit,revision,invalidation_reason,invalidated_by,invalidated_at')->from('#__jlms_attempts')
+            ->select(('id,attempt_no,status,score_points,max_points,passed,counted_for_limit,' .
+                'revision,invalidation_reason,invalidated_by,invalidated_at'))->from('#__jlms_attempts')
             ->where('enrollment_id = :enrollment')
                 ->where('quiz_id = :quiz')
                 ->bind(':enrollment', $enrollment, ParameterType::INTEGER)

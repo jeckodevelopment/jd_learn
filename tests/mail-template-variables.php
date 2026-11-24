@@ -446,10 +446,16 @@ if (MailTemplateVariableCatalog::forTemplate('unknown.template') !== []) {
 
 $data = ['USER_FULLNAME' => 'Ada', 'COURSE_TITLE' => 'Intro', 'SITE_NAME' => 'Academy'];
 $validator = MailTemplatePlaceholderValidator::class;
-if ($validator::unresolved('com_jlms.course.completed', $data, 'Ciao {USER_FULLNAME} - {COURSE_TITLE} - {SITE_NAME}') !== []) {
+if (
+    $validator::unresolved('com_jlms.course.completed', $data, ('Ciao {USER_FULLNAME} - {COURSE_' .
+    'TITLE} - {SITE_NAME}')) !== []
+) {
     throw new RuntimeException('Registered, provided tags should resolve.');
 }
-if ($validator::unresolved('com_jlms.course.completed', $data, '{UNKNOWN} {COURSE_URL} {USER_FULLNAME} {UNKNOWN}') !== ['COURSE_URL', 'UNKNOWN']) {
+if (
+    $validator::unresolved('com_jlms.course.completed', $data, ('{UNKNOWN} {COURSE_URL} {USER_' .
+    'FULLNAME} {UNKNOWN}')) !== ['COURSE_URL', 'UNKNOWN']
+) {
     throw new RuntimeException('Unsupported and unprovided tags must be detected.');
 }
 if ($validator::unresolved('com_jlms.course.completed', ['USER_FULLNAME' => ['invalid']], '{USER_FULLNAME}') !== ['USER_FULLNAME']) {

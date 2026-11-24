@@ -143,7 +143,9 @@ $seedPlayerSession = static function (int $enrollmentId, int $lessonId) use ($db
 $playerSessionExists = static fn(string $id): bool=>(int)$db
     ->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE id=' . $db->quote($id))->loadResult() === 1;
 
-$stable = static fn(int $id)=>$db->setQuery('SELECT user_id,subject_key,course_id,course_version_id,edition_id,required_total,completed_total,started_at,completed_at,last_activity_at,last_lesson_id,starts_at,ends_at FROM #__jlms_enrollments WHERE id=' . $id)->loadAssoc();
+$stable = static fn(int $id)=>$db->setQuery(('SELECT user_id,subject_key,course_id,course_version_' .
+    'id,edition_id,required_total,completed_total,started_at,completed_at,last_activity_at,last_' .
+    'lesson_id,starts_at,ends_at FROM #__jlms_enrollments WHERE id=') . $id)->loadAssoc();
 if (($argv[2] ?? '') === 'retained') {
     $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     stateExpect($count() === $saved['history_count'], 'state history retained');

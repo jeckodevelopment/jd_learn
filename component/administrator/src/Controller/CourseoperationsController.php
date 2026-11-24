@@ -46,7 +46,8 @@ final class CourseoperationsController extends BaseController
             $revision = CurriculumService::id($raw['course_revision']);
             $this->app->bootComponent('com_jlms')->getCourseOperationsService()->apply($this->app->getIdentity(), $course, $raw['operation'], $revision, $raw['reason'], $raw['mutation_id'], $raw['impact_hash']);
             $this->setMessage(Text::_('COM_JLMS_COURSE_OPERATIONS_SAVED'));
-            $this->setRedirect(Route::link('administrator', 'index.php?option=com_jlms&view=courseoperations&id=' . $course . '&operation=' . $raw['operation'], false));
+            $this->setRedirect(Route::link('administrator', ('index.php?option=com_jlms&view=' .
+                'courseoperations&id=') . $course . '&operation=' . $raw['operation'], false));
         } catch (\Throwable $e) {
             $allowed = ['COM_JLMS_INVALID_INPUT','COM_JLMS_LOGIN_REQUIRED','COM_JLMS_LEARNING_DENIED'
                 ,'COM_JLMS_RESOURCE_NOT_FOUND','COM_JLMS_COURSE_OPERATION_REASON'
