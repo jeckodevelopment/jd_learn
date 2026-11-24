@@ -1,0 +1,49 @@
+name: SECDEV-02 one-shot reconcile mass refactor against full source tests
+on:
+  push:
+    branches:
+      - style/secdev02-one-pr-bulk-refactor
+    paths:
+      - .github/workflows/secdev02-contract-one-shot.yml
+permissions:
+  contents: write
+jobs:
+  source-contracts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-one-pr-bulk-refactor
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PSR12 checker
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Restore only PHP candidates that break existing source-only tests
+        run: |
+          git fetch origin main
+          python3 tools/build.py
+          python3 tools/secdev02_source_contract_repair.py --self-test
+          python3 tools/secdev02_source_contract_repair.py --base-ref origin/main
+          git diff --check
+      - name: Gate final package contracts and all-PHP PHPCS regression
+        run: |
+          git diff --name-only -z -- '*.php' | xargs -0 -r -n1 php -l
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          python3 tools/build.py
+          python3 tools/check.py
+          php tests/course-message-idempotency.php
+      - name: Commit source-safe result and delete privileged workflow
+        run: |
+          rm .github/workflows/secdev02-contract-one-shot.yml
+          git add -A -- component libraries plugins packages tests tools .github/workflows/secdev02-contract-one-shot.yml
+          if git diff --cached --quiet; then
+            echo 'No contract rollbacks were needed'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test(SECDEV-02): retain only bulk PHP edits passing source contracts'
+          git push origin HEAD:style/secdev02-one-pr-bulk-refactor
