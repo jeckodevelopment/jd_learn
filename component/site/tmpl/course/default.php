@@ -6,6 +6,9 @@ declare(strict_types=1);
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Uri\Uri;
+use Jlms\Component\Jlms\Administrator\Application\CourseSchedule;
+use Jlms\Component\Jlms\Administrator\Domain\TeachingRules;
 $course = $this->item['course'];
 $presentation = $this->item['presentation'] ?? [];
 $fieldOutput = [];
@@ -27,7 +30,7 @@ foreach ([1, 2, 3] as $position) {
             $fieldOutput[1] /* Prepared and rendered by native com_fields layouts. */ ?></div><?php
  endif; ?>
  <?php if (!empty($presentation['image'])) : ?>
- <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $presentation['image'])))) ?>" alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
+ <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $presentation['image'])))) ?>" alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
  <?php endif; ?>
  <?php if (trim($fieldOutput[2]) !== '') :
         ?><div id="jlms-course-fields-before-content" class="jlms-course-fields"><?= $fieldOutput[2] ?></div><?php
@@ -118,7 +121,7 @@ foreach ([1, 2, 3] as $position) {
                 Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?=
                 $this->escape($teacher['title']) ?></a></h3>
             <?php if ($teacher['image'] !== '') :
-                ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php
+                ?><img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php
             endif; ?>
  <p><?= nl2br($this->escape($teacher['bio'])) ?></p><?php if ($teacher['website'] !== '') :
         ?><a href="<?= $this->escape($teacher['website']) ?>"
@@ -136,7 +139,7 @@ foreach ([1, 2, 3] as $position) {
             if ($calendar[$key] === null) {
                 continue;
             } ?>
- <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::display($calendar[$key], $calendar['timezone'], true)) ?></dd><?php
+ <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(CourseSchedule::display($calendar[$key], $calendar['timezone'], true)) ?></dd><?php
         endforeach; ?></dl>
  <p><?= Text::_('COM_JLMS_CALENDAR_POLICY') ?></p></section><?php
  endif; ?>
@@ -149,7 +152,7 @@ foreach ([1, 2, 3] as $position) {
         <?php else : ?>
    <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_COURSE_COMPLETION_ALL_REQUIRED') ?></p>
    <p id="jlms-course-completion-sequence"><?= Text::_($completion['sequence_mode'] === 'sequential' ? 'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL' : 'COM_JLMS_COURSE_COMPLETION_FREE') ?></p>
-   <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent((int)$completion['video_threshold_basis_points'])) ?></p>
+   <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', TeachingRules::percent((int)$completion['video_threshold_basis_points'])) ?></p>
    <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned'] ? 'COM_JLMS_COURSE_CERTIFICATE_PLANNED' : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
             <?php if ($completion['certificate_planned']) :
                 ?>
