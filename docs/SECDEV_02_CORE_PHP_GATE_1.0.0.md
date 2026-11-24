@@ -491,3 +491,8 @@ Dei 29 finding strutturali, 15 riguardano membri con underscore potenzialmente v
 - PHPCS integrale e confronto con baseline 192; lint PHP e source contracts dei cinque PHP modificati.
 - Renderizzazione catalogo, dashboard e servizi amministrativi su Joomla 6.2; CI PHP/DB, Chromium, SAST e pacchetto installabile.
 - Riconciliazione separata dei 166 finding residui, dei contratti convenzionali Joomla e dei criteri CORE/API.
+
+
+### Seconda passata sullo stesso ramo #1024
+
+Workflow monouso #45493592120 completato: ulteriori trasformatori conservativi hanno ridotto il conteggio PHPCS da **166 a 161** (−5), composto da **132** linee lunghe e **29** rilievi strutturali. Lo strumento monouso è stato rimosso prima della CI. Un precedente riflusso del collegamento «Azzera filtri» del catalogo ha infranto un contratto sorgente esatto nel test `tests/frontend-catalog-options.py`; tale frammento è stato ripristinato nel commit successivo senza modificare logica o URL. La CI finale deve attestare il saldo effettivo dopo il ripristino.
