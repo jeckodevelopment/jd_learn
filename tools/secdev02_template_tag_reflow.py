@@ -107,6 +107,9 @@ def main() -> int:
         if not raw:
             continue
         path = ROOT / raw.decode()
+        # Exact communication consent label attributes are enforced bytewise.
+        if path.as_posix().endswith("/coursemessage/default.php"):
+            continue
         if not path.is_file():
             continue
         initial = path.read_bytes()
