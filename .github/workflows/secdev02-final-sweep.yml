@@ -1,0 +1,63 @@
+name: SECDEV-02 complete residual sweep (temporary)
+on:
+  push:
+    branches: [style/secdev02-final-258-bulk-remediation]
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-final-sweep
+  cancel-in-progress: false
+jobs:
+  sweep:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-final-258-bulk-remediation
+          fetch-depth: 0
+      - name: Install pinned PSR-12 checker
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Consolidated source-level remediation without suppressions
+        run: |
+          set -euo pipefail
+          P=.runtime/secdev02-phpcs/vendor/bin/phpcs
+          python3 tools/secdev02_explicit_import_bulk.py --phpcs "$P"
+          python3 tools/secdev02_mixed_php_echo_reflow.py --phpcs "$P"
+          python3 tools/secdev02_template_tag_reflow.py --phpcs "$P"
+          python3 tools/secdev02_whitespace_bulk_refactor.py --phpcs "$P"
+          python3 tools/secdev02_comment_wrap.py --phpcs "$P" --apply
+          python3 tools/secdev02_assertion_wrap.py --phpcs "$P" --apply
+          python3 tools/secdev02_query_chain_wrap.py --phpcs "$P" --apply
+          python3 tools/secdev02_incremental_line_reflow.py --phpcs "$P" --max-files 75
+          python3 tools/secdev02_mass_html_reflow.py --phpcs "$P"
+          python3 tools/secdev02_final_psr1_split.py --phpcs "$P" --phpcbf .runtime/secdev02-phpcs/vendor/bin/phpcbf
+          git add -A
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          git diff --cached --check
+      - name: Print structural residual inventory for manual targeted correction
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, subprocess
+          files=subprocess.check_output(['git','ls-files','--','*.php'],text=True).splitlines()
+          cmd=['.runtime/secdev02-phpcs/vendor/bin/phpcs','--standard=PSR12','--report=json','--no-cache',*files]
+          result=subprocess.run(cmd,capture_output=True,text=True,check=False)
+          report=json.loads(result.stdout)
+          entries=[]
+          for path,info in report['files'].items():
+            for item in info.get('messages',[]):
+              entries.append((path,item['line'],item['source']))
+          print('SECDEV02 FINAL RESIDUAL INVENTORY',len(entries),flush=True)
+          for path,line,rule in entries[:300]:
+            print(f'RESIDUAL {path}:{line} {rule}',flush=True)
+          PY
+      - name: Commit accepted changes and remove temporary tools
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/secdev02-final-sweep.yml tools/secdev02_final_psr1_split.py
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'refactor(SECDEV-02): consolidated longline and PSR1 follow-up sweep'
+          git push origin HEAD:style/secdev02-final-258-bulk-remediation
