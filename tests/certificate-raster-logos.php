@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/certificate-raster-logos.functions.php';
+
+
 require dirname(__DIR__) . '/component/administrator/src/Infrastructure/CertificatePdf.php';
 
 use Jlms\Component\Jlms\Administrator\Infrastructure\CertificatePdf;
 
-function assertPdf(bool $ok, string $message): void
-{
-    if (!$ok) {
-        throw new RuntimeException($message);
-    }
-}
+
 
 $identity = [
     'language' => 'it-IT', 'name' => 'Studente Test', 'course_title' => 'Corso di prova',

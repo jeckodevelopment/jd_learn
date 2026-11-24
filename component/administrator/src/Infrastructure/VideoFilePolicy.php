@@ -91,7 +91,8 @@ final class VideoFilePolicy
         foreach ($streams as $stream) {
             if (
                 ($stream['codec_type'] ?? '') === 'video' && ($stream['codec_name'] ?? '') === 'h264'
-                && ($stream['pix_fmt'] ?? '') === 'yuv420p' && ($stream['width'] ?? 0) >= 16 && ($stream['width'] ?? 8193) <= 8192
+                && ($stream['pix_fmt'] ?? '') === 'yuv420p' && ($stream['width'] ?? 0) >= 16
+                    && ($stream['width'] ?? 8193) <= 8192
                 && ($stream['height'] ?? 0) >= 16 && ($stream['height'] ?? 8193) <= 8192
             ) {
                 $videos++;

@@ -54,8 +54,10 @@ class CurriculumController extends BaseController
                         }
                         $plan = $this->app->getUserState($key);
                         if (
-                            !is_array($plan) || (int)$plan['actor'] !== (int)$actor->id || (int)$plan['transition'] !== $transition
-                            || (int)$plan['expires'] < time() || !is_string($ticket) || !hash_equals($plan['ticket'], $ticket)
+                            !is_array($plan) || (int)$plan['actor'] !== (int)$actor->id
+                            || (int)$plan['transition'] !== $transition
+                            || (int)$plan['expires'] < time() || !is_string($ticket)
+                            || !hash_equals($plan['ticket'], $ticket)
                             || ($input['publication_confirmation'] ?? '') !== '1'
                         ) {
                             throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_REQUIRED');

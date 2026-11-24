@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/certificate-pdf.functions.php';
+
+
 require __DIR__ . '/bootstrap.php';
 use Jlms\Component\Jlms\Administrator\Infrastructure\CertificatePdf;
-function certificatePdfExpect(bool $ok, string $message): void
-{
-    if (!$ok) {
-        throw new RuntimeException($message);
-    }
-}
+
 $identity = ['name' => 'Luca (Test)\\', 'course_title' => 'Rigoletto — Opera', 'serial' => 'ABC123',
     'completed_at' => '2026-11-13 12:00:00', 'language' => 'it-IT'];
 $pdf = CertificatePdf::render($identity, ['heading' => 'Attestato', 'subheading' => 'ha completato',

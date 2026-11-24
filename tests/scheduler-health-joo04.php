@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/scheduler-health-joo04.functions.php';
+
+
 require_once __DIR__ . '/../component/administrator/src/Infrastructure/SchedulerHealth.php';
 
 use Jlms\Component\Jlms\Administrator\Infrastructure\SchedulerHealth;
@@ -10,13 +13,7 @@ $now = new DateTimeImmutable('2026-11-19 12:00:00', new DateTimeZone('UTC'));
 $task = (object) ['id' => 7, 'state' => 1, 'last_execution' => null,
     'next_execution' => '2026-11-19 12:05:00', 'times_executed' => 0, 'times_failed' => 0,
         'last_exit_code' => null, 'execution_rules' => '{"rule-type":"interval-minutes","interval-minutes":5}'];
-function checkState(?object $task, bool $enabled, bool $dup, DateTimeImmutable $now, string $expected): void
-{
-    $got = SchedulerHealth::assess($task, $enabled, $dup, $now)['state'];
-    if ($got !== $expected) {
-        throw new RuntimeException("Scheduler state: expected $expected, got $got");
-    }
-}
+
 if (count(SchedulerHealth::TYPES) !== 3) {
     throw new RuntimeException('Every task routine must be monitored');
 }

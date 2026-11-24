@@ -2,25 +2,14 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/calendar.functions.php';
+
+
 require dirname(__DIR__) . '/component/administrator/src/Application/CourseSchedule.php';
 use Jlms\Component\Jlms\Administrator\Application\CourseSchedule as Schedule;
 $checks = 0;
-function calendarCheck(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    } $checks++;
-}
-function calendarReject(callable $call, string $message): void
-{
-    try {
-        $call();
-    } catch (InvalidArgumentException) {
-        calendarCheck(true, $message);
-        return;
-    } throw new RuntimeException($message);
-}
+
+
 calendarCheck(
     Schedule::toUtc('2030-01-15 10:00:00', 'Europe/Rome') === '2030-01-15 09:00:00',
     'Winter zone conversion'

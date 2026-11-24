@@ -512,7 +512,8 @@ $httpEnrollment = $f['http_enrollment'];
 $now = time();
 $httpA = $runtime->start($http, 'en-GB', $httpEnrollment, $f['practice_id'], deadlineKey());
 $raw = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . $attempt)->loadObject();
-file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $lesson,'enrollment_id' => $enrollment,'attempt_id' => $attempt,'extension_id' => $id,'snapshot_hash' => hash(
+file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $lesson,'enrollment_id' =>
+$enrollment,'attempt_id' => $attempt,'extension_id' => $id,'snapshot_hash' => hash(
     'sha256',
     json_encode($raw, JSON_THROW_ON_ERROR)
 ),

@@ -21,7 +21,9 @@ final class CoursemessageModel extends BaseDatabaseModel
                 getIdentity(), $courseId);
             $key = 'com_jlms.coursemessage.' . (int)$app->getIdentity()->id . '.' . $courseId;
             $preview = $app->getSession()->get($key, null);
-            $data['template'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition((string) $app->getLanguage()->getTag());
+            $data['template'] =
+                \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition((string)
+                $app->getLanguage()->getTag());
             if (is_array($preview)) {
                 // Preserve the same mutation across GET refreshes; migrate older
                 // sessions once, without creating a second test event on reload.

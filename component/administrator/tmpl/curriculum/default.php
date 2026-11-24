@@ -58,7 +58,8 @@ $actionUrl = static fn (
     int $id
 ): string => $link($view . '&item_action=' . $action . '&item_id=' . $id) . '#jlms-item-action';
 $lessonUrl = static fn (object $lesson): string => $lesson->kind === 'quiz'
-    ? $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id)
+    ? $link('index.php?option=com_jlms&view=quiz&id=' . (int) $course->id . '&version_id='
+        . (int) $version->id . '&lesson_id=' . (int) $lesson->id)
     : $link($view . '&edit_lesson=' . (int) $lesson->id) . '#jlms-lesson-form';
 $actions = function (string $kind, object $item, int $position, int $total) use ($actionUrl): void {
     ?><details class="jlms-item-menu">

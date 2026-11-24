@@ -135,7 +135,8 @@ final class QuizReviewService
         $beforeBest = $p ? json_decode($p->coverage_json, true, 16, JSON_THROW_ON_ERROR) : null;
         $impact = ['attempt_id' => (int)$a->id,'enrollment_revision' => (int)$e->revision,
             'attempt_revision' => (int)$a->revision,'return_attempt' => $refund,
-            'before_status' => $a->status,'after_status' => 'invalidated','before_counted' => (int)$a->counted_for_limit,'after_counted' => $refund ? 0 : 1,
+            'before_status' => $a->status,'after_status' => 'invalidated','before_counted' =>
+                (int)$a->counted_for_limit,'after_counted' => $refund ? 0 : 1,
             'before_best' => $beforeBest ?: null,'after_best' => $best,'before_lesson_completed' => $p?->
                 state === 'completed','after_lesson_completed' => $completedAt !== null,
             'before_lesson_completed_at' => $p?->completed_at,'after_lesson_completed_at' => $completedAt

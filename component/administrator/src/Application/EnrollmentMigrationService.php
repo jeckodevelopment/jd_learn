@@ -74,7 +74,8 @@ final class EnrollmentMigrationService
             ->where('e.id=:enrollment')->where('e.course_id=:course')
             ->bind(':enrollment', $enrollment, ParameterType::INTEGER)
                 ->bind(':course', $course, ParameterType::INTEGER);
-        $source = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $source = $this->db->setQuery($q)->loadObject()
+            ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         if (!in_array($source->status, ['active','completed','suspended'], true) || !(int) $source->user_id) {
             throw new \RuntimeException('COM_JLMS_MIGRATION_SOURCE_INVALID', 409);
         }
@@ -82,7 +83,8 @@ final class EnrollmentMigrationService
             ->select('current_version_id, delivery_enabled, state')
             ->from('#__jlms_courses')->where('id=:course')
             ->bind(':course', $course, ParameterType::INTEGER);
-        $courseRecord = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $courseRecord = $this->db->setQuery($q)->loadObject()
+            ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $targetVersion = (int)$courseRecord->current_version_id;
         if (!$targetVersion || $targetVersion === (int)$source->course_version_id) {
             throw new \RuntimeException('COM_JLMS_MIGRATION_TARGET_NOT_CURRENT', 409);

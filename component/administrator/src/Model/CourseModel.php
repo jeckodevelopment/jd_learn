@@ -62,11 +62,13 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                     $item->{'presentation_' . $field} = $value;
                 }
             }
-            $mailPreferences = json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['mail_preferences'] ?? [];
+            $mailPreferences = json_decode((string) ($item->params_json
+                ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['mail_preferences'] ?? [];
             foreach (\Jlms\Component\Jlms\Administrator\Application\MailPreferences::EVENTS as $event) {
                 $item->{'mail_' . $event} = $mailPreferences[$event] ?? 'inherit';
             }
-            $item->certificate_enabled = json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['certificate_enabled'] ?? 'inherit';
+            $item->certificate_enabled = json_decode((string) ($item->params_json
+                ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['certificate_enabled'] ?? 'inherit';
             $item->catalog_position = (int) (json_decode((string) ($item->params_json ?: '{}'), true, 32, JSON_THROW_ON_ERROR)['catalog_position'] ?? 0);
             $item->teacher_ids = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this
                 ->getDatabase(), (int) $item->id);

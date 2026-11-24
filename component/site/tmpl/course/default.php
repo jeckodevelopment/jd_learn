@@ -10,7 +10,8 @@ $course = $this->item['course'];
 $presentation = $this->item['presentation'] ?? [];
 $fieldOutput = [];
 foreach ([1, 2, 3] as $position) {
-    $fieldOutput[$position] = \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::render('com_jlms.course', 'fields.render', [
+    $fieldOutput[$position] =
+        \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::render('com_jlms.course', 'fields.render', [
         'item' => $course, 'context' => 'com_jlms.course', 'fields' => $this->item['fields'][$position] ?? [],
     ]);
 }

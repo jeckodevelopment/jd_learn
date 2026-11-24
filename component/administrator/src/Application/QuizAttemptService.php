@@ -67,7 +67,8 @@ final class QuizAttemptService
             ->where('course_version_id = :version');
         $version = (int)$l->course_version_id;
         $q->bind(':lesson', $lesson, ParameterType::INTEGER)->bind(':version', $version, ParameterType::INTEGER);
-        $quiz = $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
+        $quiz = $this->db->setQuery($q)->loadObject()
+            ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         $selection = json_decode($quiz->selection_json, true, 16, JSON_THROW_ON_ERROR);
         if (!is_string($selection['published_pool_hash'] ?? null)) {
             throw new \RuntimeException('COM_JLMS_QUIZ_INVALID', 422);
@@ -245,7 +246,8 @@ final class QuizAttemptService
                 }
                 $grading = $row->grading;
                 $grading['explanation'] = $filter->clean($grading['explanation'], 'HTML');
-                $snapshot = (object)['attempt_id' => (int)$a->id,'question_revision_id' => (int)$row->id,'display_order' => $order++,
+                $snapshot = (object)['attempt_id' => (int)$a->id,'question_revision_id' =>
+                    (int)$row->id,'display_order' => $order++,
                     'public_snapshot_json' => QuestionDefinition::canonical($public),
                         'grading_snapshot_json' => QuestionDefinition::canonical($grading),
                         'max_points' => (int)$row->points];
