@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-video.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? "");
@@ -42,13 +45,12 @@ $_SERVER["REQUEST_URI"] = "/administrator/index.php?option=com_jlms";
 $_SERVER["SCRIPT_NAME"] = "/administrator/index.php";
 $_SERVER["PHP_SELF"] = "/administrator/index.php";
 $_SERVER["SCRIPT_FILENAME"] = $root . "/administrator/index.php";
-\define("_JEXEC", 1);
-\define("JPATH_BASE", $root . "/administrator");
+
+require_once __DIR__ . '/helpers/joomla-video.bootstrap-defines-01.php';
 require $root . "/administrator/includes/defines.php";
 require $root . "/administrator/includes/framework.php";
-\define("JPATH_COMPONENT", JPATH_ADMINISTRATOR . "/components/com_jlms");
-\define("JPATH_COMPONENT_ADMINISTRATOR", JPATH_COMPONENT);
-\define("JPATH_COMPONENT_SITE", JPATH_SITE . "/components/com_jlms");
+
+require_once __DIR__ . '/helpers/joomla-video.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -122,24 +124,8 @@ if (
     throw new \RuntimeException("Cloudflare Stream must expose only the implemented API signing configuration.");
 }
 $checks = 0;
-function videoExpect(bool $value, string $message): void
-{
-    global $checks;
-    if (!$value) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function videoDenied(callable $work, int $code, string $message): void
-{
-    try {
-        $work();
-    } catch (\RuntimeException $error) {
-        videoExpect($error->getCode() === $code, $message . ": " . $error->getMessage() . " / " . $error->getCode());
-        return;
-    }
-    throw new \RuntimeException($message);
-}
+
+
 // SEC-P1/STORAGE-BOUNDARY: local MP4 is plaintext by design and is safe
 // only when its configured physical root resolves outside every webroot.
 // A missing value may not fall back to managed public material storage.
@@ -169,11 +155,7 @@ try {
     rmdir($goodVideoPath);
 }
 
-function videoFixtureUpdate(string $table, object $record, bool $nulls = false): void
-{
-    global $db;
-    $db->updateObject("#__" . $table, $record, "id", $nulls);
-}
+
 $learning = $component->getLearningService();
 $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();

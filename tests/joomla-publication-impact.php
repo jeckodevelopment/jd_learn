@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-publication-impact.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -17,13 +20,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-publication-impact.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-publication-impact.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -67,34 +69,10 @@ $service = $component->getPublicationService();
 $authoring = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
-function impactExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    } $checks++;
-}
-function impactDenied(callable $work, string $message): void
-{
-    try {
-        $work();
-    } catch (\DomainException $e) {
-        impactExpect($e->getMessage() === $message, 'Expected ' . $message . ', got ' . $e->getMessage());
-        return;
-    } throw new RuntimeException('Expected rejection: ' . $message);
-}
-function impactRow(string $table, int $id): object
-{
-    global $db;
-    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
-}
-function impactLearning(): array
-{
-    global $db;
-    return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db
-        ->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db
-            ->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
-}
+
+
+
+
 $mode = $argv[2] ?? '';
 $fixture = dirname($root) . '/publication-impact-fixture.json';
 if ($mode === 'state') {

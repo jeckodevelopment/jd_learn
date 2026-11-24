@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-publication.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -30,13 +33,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-publication.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-publication.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -93,45 +95,11 @@ $writeFixture = static function (
 ) use ($db): void {
     $db->updateObject($table, $record, $key, $nulls);
 };
-function pubExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function pubDenied(callable $call, string $message): void
-{
-    try {
-        $call();
-    } catch (\DomainException | \InvalidArgumentException $expected) {
-        pubExpect(true, $message);
-        return;
-    }
-    throw new \RuntimeException($message);
-}
-function pubRevision(string $table, int $id): int
-{
-    global $db;
-    return (int) $db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadResult();
-}
-function pubScope(): array
-{
-    global $course,$version;
-    return ['course_id' => $course,'version_id' => $version,'expected_version_revision'
-        => pubRevision('course_versions', $version)];
-}
-function pubTransition(?int $expectedCourse = null): void
-{
-    global $publication,$actor,$course,$version;
-    $choices = $publication->transitions($actor, $course);
-    if (!$choices) {
-        throw new \RuntimeException('Native workflow transition missing');
-    }
-    $publication->transition($actor, $course, $version, $expectedCourse
-        ?? pubRevision('courses', $course), pubRevision('course_versions', $version), (int)$choices[0]->id);
-}
+
+
+
+
+
 $guest = new \Joomla\CMS\User\User();
 pubExpect(
     $catalog->publicTags($guest, 'en-GB', $catid) === [],

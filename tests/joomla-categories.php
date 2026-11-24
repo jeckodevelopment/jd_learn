@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-categories.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? "");
@@ -41,13 +44,12 @@ $_SERVER["REQUEST_URI"] = "/administrator/index.php?option=com_jlms";
 $_SERVER["SCRIPT_NAME"] = "/administrator/index.php";
 $_SERVER["PHP_SELF"] = "/administrator/index.php";
 $_SERVER["SCRIPT_FILENAME"] = $root . "/administrator/index.php";
-\define("_JEXEC", 1);
-\define("JPATH_BASE", $root . "/administrator");
+
+require_once __DIR__ . '/helpers/joomla-categories.bootstrap-defines-01.php';
 require $root . "/administrator/includes/defines.php";
 require $root . "/administrator/includes/framework.php";
-\define("JPATH_COMPONENT", JPATH_ADMINISTRATOR . "/components/com_jlms");
-\define("JPATH_COMPONENT_ADMINISTRATOR", JPATH_COMPONENT);
-\define("JPATH_COMPONENT_SITE", JPATH_SITE . "/components/com_jlms");
+
+require_once __DIR__ . '/helpers/joomla-categories.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -81,14 +83,7 @@ $component = $app->bootComponent("com_jlms");
 $factory = $component->getMVCFactory();
 
 $checks = 0;
-function catExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
+
 
 // Real Joomla class loading, negative dispatch without constructor side effects:
 // unrelated tasks must 404 *before* BaseController can route inherited methods.
@@ -103,16 +98,7 @@ foreach (["display", "save", "delete", "purge", "getModel", "__construct", "reas
     }
     catExpect($denied, "category reassignment exposed unauthorized controller task: " . $badTask);
 }
-function catHidden(int $id, string $language = "en-GB"): bool
-{
-    global $catalog, $guest;
-    try {
-        $catalog->category($guest, $language, $id);
-    } catch (\RuntimeException $e) {
-        return $e->getCode() === 404;
-    }
-    return false;
-}
+
 $catalog = $component->getCatalogService();
 $guest = new \Joomla\CMS\User\User();
 $actor = $app->getIdentity();

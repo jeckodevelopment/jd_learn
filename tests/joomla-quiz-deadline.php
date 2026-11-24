@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-quiz-deadline.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -41,13 +44,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-quiz-deadline.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-quiz-deadline.bootstrap-defines-02.php';
 
 
 use Jlms\Component\Jlms\Administrator\Application\QuizAttemptService as JdQuizAttemptService;
@@ -88,64 +90,11 @@ $factory = $component->getMVCFactory();
 
 
 $checks = 0;
-function deadlineExpect(bool $ok, string $message): void
-{
-    global$checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function deadlineReject(callable $work, int $code, string $message): void
-{
-    try {
-        $work();
-    } catch (\RuntimeException $error) {
-        deadlineExpect($error->getCode() === $code, $message . ': ' . $error->getMessage() . ' / ' . $error->getCode());
-        return;
-    }throw new \RuntimeException($message);
-}
-function deadlineKey(): string
-{
-    $s = bin2hex(random_bytes(16));
-    return substr(
-        $s,
-        0,
-        8
-    ) . '-' . substr(
-        $s,
-        8,
-        4
-    ) . '-4' . substr(
-        $s,
-        13,
-        3
-    ) . '-a' . substr(
-        $s,
-        17,
-        3
-    ) . '-' . substr(
-        $s,
-        20
-    );
-}
-function deadlineUser(string $name, int $group): NativeUser
-{
-    $u = new NativeUser();
-    $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' =>
-         'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,
-        $group],'block' => 0,'activation' => ''];
-    if (!$u->bind($d) || !$u->save()) {
-        throw new \RuntimeException((string)$u->getError());
-    }
-    return new NativeUser((int)$u->id);
-}
-function deadlineCommand(array $i, string $reason = 'PRIVATE_DEADLINE_REASON'): array
-{
-    return [$i['course_id'],$i['lesson_id'],(int)$i['enrollment']->id,(int)$i['attempt']->id
-        ,$i['impact']['enrollment_revision'],$i['impact']['attempt_revision'],$i['minutes'],$reason
-        ,deadlineKey(),$i['impact']['hash'],true];
-}
+
+
+
+
+
 $actor = $app->getIdentity();
 $learning = $component->getLearningService();
 $now = time();
