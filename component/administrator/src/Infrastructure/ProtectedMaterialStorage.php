@@ -119,7 +119,10 @@ final class ProtectedMaterialStorage
             ] as $public
         ) {
             $base = $public !== '' ? realpath($public) : false;
-            if ($base && ($root === $base || str_starts_with($root . DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR))) {
+            if (
+                $base && ($root === $base
+                    || str_starts_with($root . DIRECTORY_SEPARATOR, $base . DIRECTORY_SEPARATOR))
+            ) {
                 throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
             }
         }
@@ -183,7 +186,14 @@ final class ProtectedMaterialStorage
                 }
                 $iv = random_bytes(12);
                 $tag = '';
-                $encrypted = openssl_encrypt($plain, 'aes-256-gcm', $this->encryptionKey(), OPENSSL_RAW_DATA, $iv, $tag);
+                $encrypted = openssl_encrypt(
+                    $plain,
+                    'aes-256-gcm',
+                    $this->encryptionKey(),
+                    OPENSSL_RAW_DATA,
+                    $iv,
+                    $tag
+                );
                 if (!is_string($encrypted) || strlen($tag) !== 16) {
                     throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                 }
@@ -312,7 +322,14 @@ final class ProtectedMaterialStorage
                 ) {
                     throw new \RuntimeException('COM_JLMS_STORAGE_UNAVAILABLE', 503);
                 }
-                $plain = openssl_decrypt($encrypted, 'aes-256-gcm', $this->encryptionKey(), OPENSSL_RAW_DATA, $iv, $tag);
+                $plain = openssl_decrypt(
+                    $encrypted,
+                    'aes-256-gcm',
+                    $this->encryptionKey(),
+                    OPENSSL_RAW_DATA,
+                    $iv,
+                    $tag
+                );
                 if (
                     !is_string($plain) || strlen($plain) !== (int) $asset->byte_size
                     || !hash_equals((string) $asset->sha256, hash('sha256', $plain))
