@@ -37,18 +37,7 @@ final class DisplayController extends BaseController
         // Private teaching and editing routes must never enter public search indexes.
         // Public records (course/category/pathway) decide separately in their view
         // using the actual guest-visible access rules.
-        if (
-            in_array($this->input->getCmd('view'), [
-            'dashboard',
-            'mycourses',
-            'mycertificates',
-            'preferences',
-            'lessonpreview',
-            'teacheredit',
-            'classroom',
-            'quiz'
-            ], true)
-        ) {
+        if (in_array($this->input->getCmd('view'), ['dashboard', 'mycourses', 'mycertificates', 'preferences', 'lessonpreview', 'teacheredit', 'classroom', 'quiz'], true)) {
             $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         }
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
