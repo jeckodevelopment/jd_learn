@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/cloudflare.functions.php';
+
+
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/cloudflare-fixture.php';
 use Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider;
@@ -10,23 +13,8 @@ use Jlms\Contracts\Video\PlaybackContext;
 use Jlms\Contracts\Video\MetadataContext;
 
 $checks = 0;
-function cfExpect(bool $value, string $message): void
-{
-    global $checks;
-    if (!$value) {
-        throw new \RuntimeException($message);
-    } $checks++;
-}
-function cfDenied(callable $work, string $key): void
-{
-    try {
-        $work();
-    } catch (\RuntimeException $error) {
-        cfExpect($error->getMessage() === $key, $key . ': received ' . $error->getMessage());
-        return;
-    }
-    throw new \RuntimeException('Expected: ' . $key);
-}
+
+
 [$config, $secret, $transport, $state] = cloudflareFixture();
 $p = new Provider($config, $secret, $transport);
 $source = new VideoSource('cloudflarestream', str_repeat('b', 32), 1);

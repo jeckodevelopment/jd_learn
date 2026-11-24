@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/course-message-idempotency.functions.php';
+
+
 /* Regression contract: one preview -> one mutation -> one outbox test event. */
 
 require_once __DIR__ . '/../component/administrator/src/Application/CourseMessageMutation.php';
 use Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation;
 
-function mail08Assert(bool $condition, string $error): void
-{
-    if (!$condition) {
-        throw new RuntimeException($error);
-    }
-}
+
 
 $seen = [];
 for ($i = 0; $i < 100; $i++) {

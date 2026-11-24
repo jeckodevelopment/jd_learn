@@ -2,27 +2,15 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/teaching-rules.functions.php';
+
+
 require __DIR__ . '/bootstrap.php';
 use Jlms\Component\Jlms\Administrator\Domain\TeachingRules;
 use Jlms\Component\Jlms\Administrator\Domain\Coverage;
 $checks = 0;
-function rulesExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    }
-    $checks++;
-}
-function rulesReject(callable $work, string $key): void
-{
-    try {
-        $work();
-    } catch (DomainException $error) {
-        rulesExpect($error->getMessage() === $key, 'Expected ' . $key);
-        return;
-    }throw new RuntimeException('Expected rejection');
-}
+
+
 foreach (['0.01' => 1,'0.1' => 10,'50.25' => 5025,'90' => 9000,'100.00' => 10000] as $value => $points) {
     rulesExpect(TeachingRules::basisPoints((string)$value) === $points, 'Exact hundredths');
     rulesExpect(TeachingRules::basisPoints(TeachingRules::percent($points)) === $points, 'Exact display roundtrip');

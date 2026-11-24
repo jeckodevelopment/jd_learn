@@ -368,3 +368,12 @@ The pinned PHPCS 4.0.4 full tracked-PHP audit measured **993 → 914** (-79) acr
 ### Third batch within PR #1016: PHP control tags
 
 The third-pass formatter tentatively reduced PHPCS from 914 to 913, but the CI source contract for the communication confirmation label required restoration of its original contiguous attributes. The **final integrated full PSR-12 baseline remains 914 findings**, with **zero additional net reduction** from this pass and **104 findings eliminated across the two preceding batches (1,018 → 914)**. No finding was suppressed, PHPCS rules remain unchanged, the full Joomla CI matrix passed after the contract repair, and functional requirement percentages remain unchanged. **SECDEV-02 is still partial**, pending the remaining PSR-12 debt and independent CORE/API evidence.
+
+## PSR1 CLI function separation, PR #1017 (24 November 2026)
+
+Pinned PHPCS 4.0.4 full tracked-PHP audit: **914 → 903**, **11 findings removed**. Test scripts were split into executable entry points and declaration-only helper files; functions are preserved, code paths and fixtures unchanged, no rule/filename regressions. Full PHP lint, source contract CI, Joomla integration and package build are separate mandatory gates. **No functional coverage or Joomla acceptance promoted. SECDEV-02 remains partial while any audit or CORE/API gap persists.**
+
+### Comportamenti da testare
+
+- Same runtime test assertions, fixtures, isolation, error paths and CLI exit codes.
+- All PHP lint, PHPCS PSR12, original source contracts, Joomla integration matrix and Chromium.
