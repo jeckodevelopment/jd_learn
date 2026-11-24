@@ -1,0 +1,85 @@
+name: SECDEV-02 structural arrays and mixed PHP echo mass batch
+on:
+  push:
+    branches: [style/secdev02-811-targeted-closure]
+permissions:
+  contents: write
+jobs:
+  consolidated:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 105
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PHPCS and Python style tooling
+        run: |
+          set -euo pipefail
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          python3 -m pip install --user ruff==0.14.6
+      - name: Normalize PHP code within mixed template echo expressions
+        run: |
+          set -euo pipefail
+          python3 -m ruff check --select E701,E702 tools/secdev02_mass_mixed_echo.py
+          python3 tools/secdev02_mass_mixed_echo.py --self-test
+          python3 tools/secdev02_mass_mixed_echo.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs" --phpcbf "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcbf"
+      - name: Reflow complete nested PHP arrays and stabilize indentation
+        run: |
+          set -euo pipefail
+          python3 -m ruff check --select E701,E702 tools/secdev02_mass_array_semantic.py
+          python3 tools/secdev02_mass_array_semantic.py --self-test
+          python3 tools/secdev02_mass_array_semantic.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs" --phpcbf "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcbf" --max-files 170 --passes 2
+      - name: Full unwaived PHPCS audit, Joomla source contracts and requirements evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build.py
+          python3 tools/secdev02_source_contract_repair.py --base-ref origin/main --max-reversions 150
+          python3 tools/check.py
+          python3 - <<'PY'
+          import csv,importlib.machinery,pathlib,subprocess,tempfile
+          root=pathlib.Path('.').resolve()
+          phpcs=root/'.runtime/secdev02-phpcs/vendor/bin/phpcs'
+          audit=importlib.machinery.SourceFileLoader('audit',str(root/'tests/secdev02-psr12-phpcs.py')).load_module()
+          now=audit.signatures(phpcs,root,audit.tracked_php(root))
+          with tempfile.TemporaryDirectory() as td:
+              base=pathlib.Path(td)
+              before=audit.signatures(phpcs,base,audit.baseline(root,'origin/main',base))
+          introduced=audit.diff(now,before)
+          start,end=sum(before.values()),sum(now.values())
+          files=subprocess.check_output(['git','diff','origin/main','--name-only','--','*.php'],text=True).splitlines()
+          print(f'SECDEV02 TOTAL MASS RECONCILIATION {start}->{end} removed={start-end} files={len(files)}',flush=True)
+          assert start==811, f'Main baseline changed unexpectedly: {start}'
+          assert not introduced,f'Introduced PSR12 findings: {introduced}'
+          assert end<start and files,'No net improvement'
+          for file in files:
+              subprocess.run(['php','-l',file],check=True,stdout=subprocess.DEVNULL)
+          doc=root/'docs/SECDEV_02_CORE_PHP_GATE_1.0.0.md'
+          with doc.open('a',encoding='utf-8') as out:
+              out.write(f"\n### PR #1019 second structural batch: complete arrays and inline PHP (24 November 2026)\n\nThe full unchanged pinned PSR12 4.0.4 audit against the main baseline measured **{start} → {end} (−{start-end})** findings over **{len(files)} PHP files**. Changes include semantic-preserving constant literals, operator statements, whitespace-only HTML attributes, PHP expressions embedded in Joomla views, and whole PHP arrays with PHPCBF normalization. Original source contracts, PHP lint, PHP significant token identity where applicable and zero introduced per-file/per-rule findings were enforced. No waived sniffs, no security relaxation. **SECDEV-02 remains Parziale** until the complete PSR12 debt and separate CORE/API criteria are cleared; manual Joomla acceptance remains distinct. Functional requirement coverage percentages remain unchanged.\n\n### Comportamenti da testare\n\n- PHP array keys/order and values, dynamic HTML attributes and Joomla templates, PHP echo outputs, course and lesson logic, certificates, ACL and emails.\n- Complete PHP/DB Joomla integration matrices, Chromium, SAST, PHPCS and generated installable extension package.\n")
+          matrix=root/'docs/REQUIREMENTS_STATUS.csv'
+          with matrix.open(newline='',encoding='utf-8') as f:
+              rows=list(csv.reader(f))
+          hdr=rows[0]
+          rows_sec=[r for r in rows if r and r[0]=='SECDEV-02']
+          assert len(rows_sec)==1
+          rows_sec[0][hdr.index('Evidenza e limiti')]+=f' PR #1019 full semantic PSR12 audit: {start}->{end} (-{start-end}) on {len(files)} PHP files, zero new per-file/per-rule violations. Coverage unchanged; SECDEV-02 incomplete.'
+          with matrix.open('w',newline='',encoding='utf-8') as f:
+              csv.writer(f,lineterminator='\n').writerows(rows)
+          PY
+          python3 tests/requirements-status.py
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          git diff --check
+      - name: Remove disposable workflow and commit all verified modifications
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/secdev02-811-mixed-arrays.yml
+          git add component libraries plugins tests tools docs
+          git diff --cached --check
+          git commit -m 'refactor(SECDEV-02): consolidate mixed PHP and nested array restructuring'
+          git push origin HEAD:style/secdev02-811-targeted-closure
