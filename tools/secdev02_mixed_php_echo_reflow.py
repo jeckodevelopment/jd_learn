@@ -40,13 +40,17 @@ def spans(path: Path) -> list[tuple[int,int]]:
 def transform(source: bytes, items: list[tuple[int,int]], mode: str, extra: int) -> bytes:
     changes=[]
     for opener,closer in items:
-        if opener>=closer: continue
+        if opener>=closer:
+            continue
         line_start=source.rfind(b'\n',0,opener)+1
         line_end=source.find(b'\n',opener)
-        if line_end<0: line_end=len(source)
-        if closer>line_end or line_end-line_start<=LIMIT: continue
+        if line_end<0:
+            line_end=len(source)
+        if closer>line_end or line_end-line_start<=LIMIT:
+            continue
         indent=len(source[line_start:opener])-len(source[line_start:opener].lstrip(b' \t'))
-        if indent>32: continue
+        if indent>32:
+            continue
         pad=b' ' * min(indent+extra,28)
         if mode in ('open','both') and opener-line_start>=24:
             # PHP opening echo token is unchanged, and the inserted whitespace
@@ -84,15 +88,18 @@ def main() -> int:
     required=required_source_fragments()
     accepted=rejected=removed=0
     for raw in paths:
-        if not raw: continue
+        if not raw:
+            continue
         name=raw.decode('utf-8')
         path=ROOT/name
-        if not path.is_file(): continue
+        if not path.is_file():
+            continue
         original=path.read_bytes()
         if b'<?=' not in original or not any(len(line)>LIMIT for line in original.splitlines()):
             continue
         pairs=spans(path)
-        if not pairs: continue
+        if not pairs:
+            continue
         signature=lex(path)['hash']
         before=phpcs_counts(args.phpcs,path)
         protected=required.get(name,set())
@@ -104,9 +111,11 @@ def main() -> int:
                 if candidate==original or any(p in original and p not in candidate for p in protected):
                     continue
                 path.write_bytes(candidate)
-                if not lint(path) or lex(path)['hash']!=signature: continue
+                if not lint(path) or lex(path)['hash']!=signature:
+                    continue
                 new=phpcs_counts(args.phpcs,path)
-                if any(new[k]>before[k] for k in new): continue
+                if any(new[k]>before[k] for k in new):
+                    continue
                 total=sum(new.values())
                 if total<score:
                     score,best=total,candidate
