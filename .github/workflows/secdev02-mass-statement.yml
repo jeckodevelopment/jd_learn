@@ -15,15 +15,17 @@ jobs:
           persist-credentials: true
       - name: Install pinned PHPCS 4.0.4 and Python style verifier
         run: |
-          mkdir -p .runtime/psr12
-          composer require --working-dir=.runtime/psr12 --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
           python3 -m pip install --user ruff==0.14.6
-      - name: Massive expression-level PHP reflow
+      - name: Structural function signatures and HTML template batch
         run: |
           set -euo pipefail
-          python3 -m ruff check --select E701,E702 tools/secdev02_mass_statement_reflow.py
-          python3 tools/secdev02_mass_statement_reflow.py --self-test
-          python3 tools/secdev02_mass_statement_reflow.py --phpcs "$PWD/.runtime/psr12/vendor/bin/phpcs" --max-files=380
+          python3 -m ruff check --select E701,E702 tools/secdev02_mass_signature_reflow.py tools/secdev02_mass_html_reflow.py
+          python3 tools/secdev02_mass_signature_reflow.py --self-test
+          python3 tools/secdev02_mass_html_reflow.py --self-test
+          python3 tools/secdev02_mass_signature_reflow.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs"
+          python3 tools/secdev02_mass_html_reflow.py --phpcs "$PWD/.runtime/secdev02-phpcs/vendor/bin/phpcs"
       - name: Reconcile source contracts without waivers
         run: |
           set -euo pipefail
@@ -37,7 +39,7 @@ jobs:
           python3 - <<'PY'
           import csv,importlib.machinery,pathlib,subprocess,tempfile
           root=pathlib.Path('.').resolve()
-          phpcs=root/'.runtime/psr12/vendor/bin/phpcs'
+          phpcs=root/'.runtime/secdev02-phpcs/vendor/bin/phpcs'
           audit=importlib.machinery.SourceFileLoader('audit',str(root/'tests/secdev02-psr12-phpcs.py')).load_module()
           after=audit.signatures(phpcs,root,audit.tracked_php(root))
           with tempfile.TemporaryDirectory() as td:
@@ -53,7 +55,7 @@ jobs:
               subprocess.run(['php','-l',file],check=True,stdout=subprocess.DEVNULL)
           doc=root/'docs/SECDEV_02_CORE_PHP_GATE_1.0.0.md'
           with doc.open('a',encoding='utf-8') as f:
-              f.write(f"\n## SECDEV-02 mass statement reflow, PR #1018 (24 November 2026)\n\nMeasured using pinned PHPCS 4.0.4 PSR12 on every tracked PHP file: **{count_before} → {count_after}** (net **-{count_before-count_after}** violations) across **{len(changed)} PHP files**. Entire long PHP statements reflowed at lexer-recognized operators and separators while significant PHP tokens, strings, source contracts, lint and PHPCS per-file/per-rule nonregression were enforced. Any incompatible candidate was rolled back. No PHPCS rule relaxed. Full CI and Joomla integration remain required. **SECDEV-02 is not closed while findings and separate CORE/API criteria remain. The functional coverage percentage is unchanged; manual Joomla acceptance remains pending.**\n\n### Comportamenti da testare\n\n- Joomla backend/frontend including curriculum, course publication, classroom, email, certificates, ACL and media.\n- PHP lint, source contract tests, SAST, PHPCS PSR-12 full scan, package build, Chromium, PHP 8.3/MySQL 8.4 and PHP 8.4/MariaDB 10.6.\n")
+              f.write(f"\n## SECDEV-02 mass statement reflow, PR #1018 (24 November 2026)\n\nMeasured using pinned PHPCS 4.0.4 PSR12 on every tracked PHP file: **{count_before} → {count_after}** (net **-{count_before-count_after}** violations) across **{len(changed)} PHP files**. Long PHP function signatures and mixed HTML block/attribute layout were reflowed, preserving PHP tokens and literal HTML attribute values; source contracts, lint and PHPCS per-file/per-rule nonregression were enforced. Any incompatible candidate was rolled back. No PHPCS rule relaxed. Full CI and Joomla integration remain required. **SECDEV-02 is not closed while findings and separate CORE/API criteria remain. The functional coverage percentage is unchanged; manual Joomla acceptance remains pending.**\n\n### Comportamenti da testare\n\n- Joomla backend/frontend including curriculum, course publication, classroom, email, certificates, ACL and media.\n- PHP lint, source contract tests, SAST, PHPCS PSR-12 full scan, package build, Chromium, PHP 8.3/MySQL 8.4 and PHP 8.4/MariaDB 10.6.\n")
           matrix=root/'docs/REQUIREMENTS_STATUS.csv'
           with matrix.open(newline='',encoding='utf-8') as f:
               rows=list(csv.reader(f))
