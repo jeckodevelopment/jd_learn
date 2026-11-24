@@ -171,7 +171,10 @@ final class HtmlView extends BaseHtmlView
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
             $requestedKind = $app->getInput()->getCmd('lesson_kind');
-            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document', 'audio'], true) ? $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '', 'publish_down' => '', 'release_after_days' => '', 'audio_transcript' => '', 'video_transcript' => ''];
+            $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document', 'audio'], true) ?
+                     $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '',
+                     'publish_down' => '', 'release_after_days' => '', 'audio_transcript' => '',
+                     'video_transcript' => ''];
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) {
@@ -260,8 +263,10 @@ final class HtmlView extends BaseHtmlView
                         'audio_transcript' => $audioTranscript, 'video_transcript' => $videoTranscript,
                         'public_preview' => (int) $lesson->preview,
                         'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson->provider_key,
-                        'source_reference' => $lesson->provider_key === 'html5' ? '' : ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
-                        'video_threshold_percent' => $lessonThreshold, 'duration_mode' => 'auto', 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
+                        'source_reference' => $lesson->provider_key === 'html5' ? '' :
+                             ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
+                        'video_threshold_percent' => $lessonThreshold, 'duration_mode' => 'auto'
+                            , 'duration_seconds' => $lesson->duration_ms ? (string) ($lesson->duration_ms / 1000) : '',
                         'duration_confirmed' => (json_decode($lesson->params_json, true)['video_duration_confirmed'] ?? false) ? '1' : '0',
                         'required_lesson_ids' => $this->outline['prerequisites'][(int) $lesson->id] ?? [],
                         'publish_up' => LessonAvailability::editor($lesson->publish_up, CourseSchedule::read($course)['timezone']),
@@ -326,7 +331,11 @@ final class HtmlView extends BaseHtmlView
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
                             && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
-                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key','source_reference','privacy_hash','duration_mode','duration_seconds','duration_confirmed','video_threshold_percent','audio_transcript','video_transcript','required','kind','required_lesson_ids','publish_up','publish_down','release_after_days','public_preview']));
+                    $safe = array_intersect_key($saved, array_flip(['title','body','provider_key'
+                        ,'source_reference','privacy_hash','duration_mode','duration_seconds'
+                        ,'duration_confirmed','video_threshold_percent','audio_transcript','video_transcript'
+                        ,'required','kind','required_lesson_ids','publish_up','publish_down'
+                        ,'release_after_days','public_preview']));
                     if ($this->editorMode === 'module') {
                         $moduleData = array_replace($moduleData, array_intersect_key($safe, ['title' => true]));
                     } else {
@@ -336,7 +345,11 @@ final class HtmlView extends BaseHtmlView
             }
             if ($this->editorMode === 'rules' && $this->teachingRules !== null) {
                 $this->rulesForm = $this->get('RulesForm');
-                $data = $common + ['mode' => $this->teachingRules['mode'], 'sequence_mode' => $this->teachingRules['sequence_mode'], 'video_threshold' => \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->teachingRules['video_threshold_basis_points']), 'public_previews' => $this->teachingRules['public_previews'] ? 1 : 0];
+                $data = $common + ['mode' => $this->teachingRules['mode'], 'sequence_mode' => $this->
+                    teachingRules['sequence_mode'], 'video_threshold' =>
+                     \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($this->
+                    teachingRules['video_threshold_basis_points']), 'public_previews' => $this->
+                    teachingRules['public_previews'] ? 1 : 0];
                 $key = 'com_jlms.curriculum.' . (int)$course->id . '.' . (int)$version->id . '.rules';
                 $saved = $app->getUserState($key, []);
                 $app->setUserState($key, null);
@@ -402,13 +415,17 @@ final class HtmlView extends BaseHtmlView
             ->icon('icon-arrow-left')
             ->url(Route::link('administrator', 'index.php?option=com_jlms&task=course.edit&id=' . (int) $course->id));
         if ($this->editable) {
-            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&new_module=1#jlms-module-form'), 'COM_JLMS_PROGRAMME_ADD_MODULE', 'plus');
+            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' .
+                     (int) $course->id . '&version_id=' . (int) $version->id .
+                     '&new_module=1#jlms-module-form'), 'COM_JLMS_PROGRAMME_ADD_MODULE', 'plus');
         }
         if ($this->canManageFields) {
             ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_fields&view=fields&context=com_jlms.lesson'), 'COM_JLMS_LESSON_FIELDS_MANAGE', 'list');
         }
         if ($version) {
-            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&edit_rules=1#jlms-teaching-rules'), 'COM_JLMS_TEACHING_RULES', 'sliders-h');
+            ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=curriculum&id=' .
+                     (int) $course->id . '&version_id=' . (int) $version->id .
+                     '&edit_rules=1#jlms-teaching-rules'), 'COM_JLMS_TEACHING_RULES', 'sliders-h');
             ToolbarHelper::link(Route::link('administrator', 'index.php?option=com_jlms&view=coursepreview&id=' . (int) $course->id . '&version_id=' . (int) $version->id), 'COM_JLMS_COURSE_PREVIEW', 'eye');
         }
         ToolbarHelper::help('curriculum', true);

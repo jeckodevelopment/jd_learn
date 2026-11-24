@@ -313,7 +313,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
     {
         $db = $this->getDatabase();
         $this->associationWrite = false;
-        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access', 'enrollment_mode', 'summary', 'catalog_position', 'revision', 'associations', 'teacher_ids', 'com_fields', 'tags', 'mail_manager_request', 'mail_course_update', 'mail_lesson_release', 'mail_teacher_assignment', 'mail_enrollment', 'mail_completion', 'mail_suspension', 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
+        $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access'
+            , 'enrollment_mode', 'summary', 'catalog_position', 'revision', 'associations', 'teacher_ids'
+            , 'com_fields', 'tags', 'mail_manager_request', 'mail_course_update', 'mail_lesson_release'
+            , 'mail_teacher_assignment', 'mail_enrollment', 'mail_completion', 'mail_suspension'
+            , 'mail_reactivation', 'mail_certificate', 'mail_communication', 'mail_expiry', 'certificate_enabled'];
         foreach (\Jlms\Component\Jlms\Administrator\Application\CoursePresentation::FIELDS as $field) {
             $allowed[] = 'presentation_' . $field;
         }
@@ -432,7 +436,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             if (($data['calendar_timezone'] ?? null) === '') {
                 $data['calendar_timezone'] = $this->siteTimezone();
             }
-            $calendar = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data, $record ?? (object) [], $data['params_json'] ?? $record->params_json ?? '{}', $this->siteTimezone());
+            $calendar = \Jlms\Component\Jlms\Administrator\Application\CourseSchedule::merge($data, $record ??
+                     (object) [], $data['params_json'] ?? $record->params_json ?? '{}', $this->siteTimezone());
             foreach (\Jlms\Component\Jlms\Administrator\Application\CourseSchedule::FIELDS as $field) {
                 unset($data[$field]);
             }
@@ -537,7 +542,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
             $history = $data;
             $history['teacher_ids'] = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $this->getState('course.id'));
-            $history['version_note'] = is_string($inputNote = Factory::getApplication()->getInput()->post->get('jform', [], 'array')['version_note'] ?? '') ? strip_tags($inputNote) : '';
+            $history['version_note'] = is_string($inputNote = Factory::getApplication()->getInput()->post
+                ->get('jform', [], 'array')['version_note'] ?? '') ? strip_tags($inputNote) : '';
             $this->persistHistory($history, $this->typeAlias);
             $db->transactionCommit();
             if ($copySource !== null) {
@@ -546,7 +552,12 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             return true;
         } catch (\Throwable $error) {
             $db->transactionRollback();
-            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT', 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION', 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID', 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST', 'COM_JLMS_CALENDAR_INVALID', 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST','COM_JLMS_COURSE_CHECKED_OUT','COM_JLMS_COURSE_IMAGE_INVALID','COM_JLMS_COURSE_IMAGE_ALT_REQUIRED',
+            $known = ['JERROR_LAYOUT_PAGE_NOT_FOUND', 'JERROR_ALERTNOAUTHOR', 'COM_JLMS_REVISION_CONFLICT'
+                , 'COM_JLMS_VERSION_IMMUTABLE', 'COM_JLMS_INVALID_ASSOCIATION'
+                , 'COM_JLMS_ASSOCIATION_SAVE_SEPARATELY', 'COM_JLMS_PRESENTATION_INVALID'
+                , 'COM_JLMS_TEACHER_INVALID', 'COM_JLMS_TEACHER_SAVE_FIRST', 'COM_JLMS_CALENDAR_INVALID'
+                , 'COM_JLMS_CALENDAR_RANGE', 'COM_JLMS_CALENDAR_DST','COM_JLMS_COURSE_CHECKED_OUT'
+                ,'COM_JLMS_COURSE_IMAGE_INVALID','COM_JLMS_COURSE_IMAGE_ALT_REQUIRED',
                 'COM_JLMS_COURSE_SUMMARY_TOO_LONG', 'COM_JLMS_COURSE_ALIAS_DUPLICATE', 'COM_JLMS_INVALID_COURSE',
                 'COM_JLMS_INVALID_ACCESS', 'JLIB_DATABASE_ERROR_CATEGORY_REQUIRED', 'COM_JLMS_SAVE_FAILED'];
             if (!in_array($error->getMessage(), $known, true)) {
@@ -875,7 +886,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $success = parent::publish($pks, $value);
         if ($success && $historyIds) {
             $this->setState('course.id', $historyIds[0]);
-            $this->persistHistory(['teacher_ids' => \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->getDatabase(), $historyIds[0])], $this->typeAlias);
+            $this->persistHistory(['teacher_ids' =>
+                 \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($this->
+                getDatabase(), $historyIds[0])], $this->typeAlias);
         }
         $service->recordStateChangeResult($success);
         return $success;

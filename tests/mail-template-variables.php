@@ -155,7 +155,8 @@ foreach (
     'component/administrator/forms/course.xml' => 'mail_cancellation',
     'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.cancelled' => 'cancellation'",
     'component/administrator/src/Application/MailPreferences.php' => "'cancellation'",
-    'component/administrator/src/Application/EnrollmentStateService.php' => "'cancelled' => 'com_jlms.enrollment.cancelled'",
+    'component/administrator/src/Application/EnrollmentStateService.php' =>
+         "'cancelled' => 'com_jlms.enrollment.cancelled'",
     ] as $file => $expected
 ) {
     $contents = file_get_contents(__DIR__ . '/../' . $file);
@@ -209,7 +210,8 @@ foreach (
     'component/administrator/src/Infrastructure/MailQueue.php' => "'com_jlms.enrollment.approved' => 'approval'",
     'component/administrator/src/Application/MailPreferences.php' => "'approval', 'rejection'",
     'component/administrator/src/Application/EnrollmentApprovalService.php' => "FOR UPDATE",
-    'component/administrator/src/Infrastructure/AssessmentAudit.php' => "'enrollmentapproval'=>'COM_JLMS_LOG_ENROLLMENT_APPROVAL'",
+    'component/administrator/src/Infrastructure/AssessmentAudit.php' =>
+         "'enrollmentapproval'=>'COM_JLMS_LOG_ENROLLMENT_APPROVAL'",
     'component/administrator/src/Controller/EnrollmentapprovalController.php' => "checkToken('post', false)",
     'component/administrator/tmpl/enrollments/default.php' => 'enrollmentapproval.decide',
     ] as $file => $needle

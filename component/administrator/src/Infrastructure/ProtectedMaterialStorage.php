@@ -129,7 +129,8 @@ final class ProtectedMaterialStorage
             };
             return (int) ((float) $value * $factor);
         };
-        $limits = [MaterialFilePolicy::MAX_BYTES, max(1, min(20, (int) $this->config()->get('material_max_mib', 20))) * 1048576];
+        $limits = [MaterialFilePolicy::MAX_BYTES, max(1, min(20, (int) $this->config()->
+            get('material_max_mib', 20))) * 1048576];
         foreach (['upload_max_filesize', 'post_max_size'] as $setting) {
             $value = $parse((string) ini_get($setting));
             if ($value > 0) {
@@ -403,7 +404,8 @@ final class ProtectedMaterialStorage
             }
             $write($stream, pack('N', 0));
             $reply = stream_get_line($stream, 1024, "\0");
-            $result = $reply === 'stream: OK' ? 'clean' : (is_string($reply) && str_ends_with($reply, ' FOUND') ? 'infected' : 'unavailable');
+            $result = $reply === 'stream: OK' ? 'clean' : (is_string($reply) &&
+                 str_ends_with($reply, ' FOUND') ? 'infected' : 'unavailable');
         } catch (\Throwable $error) {
             $result = 'unavailable';
         } finally {

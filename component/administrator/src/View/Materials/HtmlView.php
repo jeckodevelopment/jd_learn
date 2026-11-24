@@ -26,7 +26,8 @@ final class HtmlView extends BaseHtmlView
             . 'label="COM_JLMS_MATERIAL_SCOPE" filter="integer" />'));
         $field->addChild('option', Text::_('COM_JLMS_COURSE_MATERIALS'))->addAttribute('value', '0');
         foreach ($this->item['lessons'] as $lesson) {
-            $field->addChild('option', htmlspecialchars($lesson->title, ENT_XML1))->addAttribute('value', (string) $lesson->id);
+            $field->addChild('option', htmlspecialchars($lesson->title, ENT_XML1))
+                ->addAttribute('value', (string) $lesson->id);
         }
         $this->form->setField($field);
         $data = ['course_id' => $this->item['course']->id, 'version_id' => $this->item['version']->id,
@@ -45,9 +46,14 @@ final class HtmlView extends BaseHtmlView
         if ($replaceId) {
             foreach ($this->item['files']['items'] as $file) {
                 if ((int) $file->id === $replaceId && $this->item['version']->status === 'draft') {
-                    $data = array_replace($data, ['title' => $file->title, 'description' => $file->description, 'lesson_id' => (int) $file->lesson_id, 'preview' => (int) $file->preview,
-                        'publish_up' => \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_up, $this->item['schedule_timezone']),
-                        'publish_down' => \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->publish_down, $this->item['schedule_timezone'])]);
+                    $data = array_replace($data, ['title' => $file->title, 'description' => $file->description
+                        , 'lesson_id' => (int) $file->lesson_id, 'preview' => (int) $file->preview,
+                        'publish_up' =>
+                             \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->
+                            publish_up, $this->item['schedule_timezone']),
+                        'publish_down' =>
+                             \Jlms\Component\Jlms\Administrator\Domain\MaterialAvailability::editor($file->
+                            publish_down, $this->item['schedule_timezone'])]);
                     $data['replace_id'] = $replaceId;
                     $this->replacement = $replaceId;
                     $this->replacementLesson = (int) $file->lesson_id;

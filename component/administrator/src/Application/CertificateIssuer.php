@@ -23,7 +23,8 @@ final class CertificateIssuer
             . 'u.name, u.email, u.params AS user_params, c.title, c.params_json, '
             . 'c.language, v.title_snapshot, v.rules_json'))
             ->from('#__jlms_enrollments AS e')->innerJoin('#__users AS u ON u.id = e.user_id')
-            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
+            ->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
+                ->innerJoin('#__jlms_course_versions AS v ON v.id = e.course_version_id')
             ->where('e.id = :enrollment')->where('e.course_version_id = :version')->where('e.completed_at = :completed')
             ->bind(':enrollment', $enrollmentId, ParameterType::INTEGER)
                 ->bind(':version', $courseVersionId, ParameterType::INTEGER)
@@ -74,15 +75,18 @@ final class CertificateIssuer
         $templateSnapshot['logo_path'] = (string) $params->get('certificate_logo', '');
         $templateSnapshotJson = json_encode($templateSnapshot, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         $certificate = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => $courseVersionId,
-            'template_id' => (int) $templateRow->id, 'current_document_id' => null, 'issued_at' => $completedAt, 'revision' => 1];
+            'template_id' => (int) $templateRow->id, 'current_document_id' => null, 'issued_at' => $completedAt
+                , 'revision' => 1];
         $this->db->insertObject('#__jlms_certificates', $certificate, 'id');
         $certificateId = (int) $certificate->id;
-        $serial = strtoupper(substr(hash('sha256', 'jdlearn-certificate:' . $certificateId . ':' . bin2hex(random_bytes(16))), 0, 32));
+        $serial = strtoupper(substr(hash('sha256', 'jdlearn-certificate:' . $certificateId . ':' .
+             bin2hex(random_bytes(16))), 0, 32));
         $document = (object) ['certificate_id' => $certificateId, 'document_no' => 1, 'replaces_document_id' => null,
             'serial' => $serial, 'verification_hash' => null, 'verify_enabled' => 0,
             'identity_snapshot_json' => json_encode(['user_id' => (int) $row->user_id, 'name' => (string) $row->name,
                 'course_id' => (int) $row->course_id, 'course_title' => (string) ($row->title_snapshot ?: $row->title),
-                'course_version_id' => $courseVersionId, 'completed_at' => $completedAt, 'language' => (string) $row->language], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
+                'course_version_id' => $courseVersionId, 'completed_at' => $completedAt, 'language' =>
+                     (string) $row->language], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
             'template_snapshot_json' => $templateSnapshotJson, 'status' => 'pending_render', 'pdf_asset_id' => null,
             'issued_at' => $completedAt, 'revoked_at' => null, 'revocation_reason' => null, 'revision' => 1];
         $this->db->insertObject('#__jlms_certificate_documents', $document, 'id');
@@ -91,7 +95,8 @@ final class CertificateIssuer
 
         // Joomla keeps the frontend language in the user profile parameters.
         $userSettings = json_decode((string) ($row->user_params ?? '{}'), true);
-        $userLanguage = is_array($userSettings) ? (string) ($userSettings['language'] ?? $row->language) : (string) $row->language;
+        $userLanguage = is_array($userSettings) ? (string) ($userSettings['language'] ?? $row->
+            language) : (string) $row->language;
 
         // Certificate issuance and course completion are authoritative even if the mail
         // outbox cannot be written. The worker sends later through Joomla's MailTemplate.

@@ -106,10 +106,12 @@ final class LocalVideoService
                 'sha256'
             ]));
             $fields = array_diff_key($staged, array_flip(['duration_ms', 'video_codec', 'audio_codec']));
-            $asset = (object) ($fields + $scan + ['asset_revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
+            $asset = (object) ($fields + $scan + ['asset_revision' => 1, 'created_by' => (int) $actor->id
+                , 'modified_by' => (int) $actor->id,
                 'created_at' => $now, 'modified_at' => $now]);
             $this->db->insertObject('#__jlms_assets', $asset, 'id');
-            $update = (object) ['id' => $lesson, 'media_asset_id' => (int) $asset->id, 'duration_ms' => $staged['duration_ms'],
+            $update = (object) ['id' => $lesson, 'media_asset_id' => (int) $asset->id, 'duration_ms' =>
+                 $staged['duration_ms'],
                 'source_json' => json_encode([
                     '_schema' => 1,
                     'provider' => 'html5',
@@ -117,7 +119,8 @@ final class LocalVideoService
                     'asset_sha256' => $asset->sha256,
                     'options' => []
                 ], JSON_THROW_ON_ERROR),
-                'params_json' => json_encode(['video_duration_confirmed' => true, 'local_video' => $metadata], JSON_THROW_ON_ERROR),
+                'params_json' => json_encode(['video_duration_confirmed' => true, 'local_video' =>
+                     $metadata], JSON_THROW_ON_ERROR),
                 'source_revision' => (int) $l->source_revision + 1, 'revision' => (int) $l->revision + 1,
                 'modified_by' => (int) $actor->id, 'modified_at' => $now];
             $this->db->updateObject('#__jlms_lessons', $update, 'id');
@@ -144,7 +147,8 @@ final class LocalVideoService
             if ((int) $v->revision !== $expected || (int) $l->media_asset_id !== $id) {
                 throw new \RuntimeException('COM_JLMS_REVISION_CONFLICT', 409);
             }
-            $update = (object) (['id' => $id] + $scan + ['modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')]);
+            $update = (object) (['id' => $id] + $scan + ['modified_by' => (int) $actor->id,
+                 'modified_at' => gmdate('Y-m-d H:i:s')]);
             $this->db->updateObject('#__jlms_assets', $update, 'id');
         });
     }
@@ -164,7 +168,8 @@ final class LocalVideoService
         if (
             $asset->storage !== 'local_video' || $asset->mime_type !== 'video/mp4' || $asset->status !== 'ready'
             || ($source['reference'] ?? '') !== (string) $asset->id || ($source['asset_sha256'] ?? '') !== $asset->sha256
-            || ($metadata['sha256'] ?? '') !== $asset->sha256 || ($metadata['duration_ms'] ?? 0) !== (int) $lesson->duration_ms
+            || ($metadata['sha256'] ?? '') !== $asset->sha256 || ($metadata['duration_ms'] ?? 0) !==
+                 (int) $lesson->duration_ms
             || ($metadata['video_codec'] ?? '') !== 'h264'
         ) {
             throw new \RuntimeException('COM_JLMS_MATERIAL_NOT_READY', 503);
@@ -219,7 +224,8 @@ final class LocalVideoService
         $lesson = $this->row('lessons', $lessonId);
         if (
             (int) $version->course_id !== $courseId || (int) $lesson->course_version_id !== $versionId
-            || $lesson->kind !== 'video' || $lesson->provider_key !== 'html5' || (int) $lesson->source_revision !== $sourceRevision
+            || $lesson->kind !== 'video' || $lesson->provider_key !== 'html5' || (int) $lesson->
+                source_revision !== $sourceRevision
         ) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
         }

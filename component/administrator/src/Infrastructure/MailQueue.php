@@ -75,7 +75,8 @@ final class MailQueue
                 'created_at'
             ])
             ->values(implode(',', [
-                $this->db->quote($key), $this->db->quote($template), (string) $courseId, $recipientUserId ? (string) $recipientUserId : 'NULL', $this->db->quote($language ?: '*'),
+                $this->db->quote($key), $this->db->quote($template), (string) $courseId,
+                     $recipientUserId ? (string) $recipientUserId : 'NULL', $this->db->quote($language ?: '*'),
                 $this->db->quote($email), $this->db->quote($name), $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)),
                 $this->db->quote('pending'), $this->db->quote($now), $this->db->quote($now),
             ]));
@@ -125,7 +126,8 @@ final class MailQueue
             ->values(implode(',', [
                 $this->db->quote($key), $this->db->quote('com_jlms.course.published'), (string) $courseId, (string) $userId,
                 $this->db->quote($consentAt), $this->db->quote($language ?: '*'), $this->db->quote($email), $this->db->quote($name),
-                $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)), $this->db->quote('pending'), 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)',
+                $this->db->quote(json_encode($data, JSON_THROW_ON_ERROR)), $this->db->quote('pending')
+                    , 'UTC_TIMESTAMP(6)', 'UTC_TIMESTAMP(6)',
             ]));
         try {
             $this->db->setQuery($query)->execute();
@@ -562,7 +564,8 @@ final class MailQueue
         if ($enrollmentId < 1) {
             return false;
         }
-        $query = $this->db->createQuery()->select('e.id')->from('#__jlms_enrollments AS e')->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id')
+        $query = $this->db->createQuery()->select('e.id')->from('#__jlms_enrollments AS e')
+            ->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id')
             ->innerJoin('#__users AS u ON u.id = e.user_id')->where('e.id = :id')->where("e.status = 'active'")
             ->where('e.completed_at IS NULL')->where('u.block = 0')->where('LOWER(u.email) = LOWER(:email)')
             ->where('COALESCE(e.ends_at, ed.ends_at) > UTC_TIMESTAMP(6)')

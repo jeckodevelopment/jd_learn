@@ -264,7 +264,8 @@ $courseBefore = $db->setQuery('SELECT state,delivery_enabled FROM #__jlms_course
 $historyBefore = $count();
 try {
     foreach ([['state' => 2,'delivery_enabled' => 0],['state' => 0,'delivery_enabled' => 1],['state' => 1,'delivery_enabled' => 0],['state' => -2,'delivery_enabled' => 0]] as $blockedCourse) {
-        $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$blockedCourse['state'] . ', delivery_enabled=' . (int)$blockedCourse['delivery_enabled'] . ' WHERE id=' . (int)$course)->execute();
+        $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$blockedCourse['state'] .
+             ', delivery_enabled=' . (int)$blockedCourse['delivery_enabled'] . ' WHERE id=' . (int)$course)->execute();
         $blocked = $service->editor($actor, $course, $enrollment, 'active');
         stateExpect(
             $blocked['impact']['blocked'] !== null,
@@ -278,7 +279,8 @@ try {
         stateExpect($count() === $historyBefore, 'blocked individual reactivation does not create history');
     }
 } finally {
-    $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$courseBefore['state'] . ', delivery_enabled=' . (int)$courseBefore['delivery_enabled'] . ' WHERE id=' . (int)$course)->execute();
+    $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$courseBefore['state'] .
+         ', delivery_enabled=' . (int)$courseBefore['delivery_enabled'] . ' WHERE id=' . (int)$course)->execute();
 }
 $changed = $command;
 $changed[4] = 'Changed reason';
@@ -405,13 +407,16 @@ $log = $db->setQuery(("SELECT message FROM #__action_logs WHERE "
     . "extension='com_jlms.enrollmentstate' AND item_id=") . $event)->loadResult();
 $message = json_decode($log, true, 16, JSON_THROW_ON_ERROR);
 stateExpect(
-    $message['previous_status'] === 'active' && $message['target_status'] === 'suspended' && $message['reason_reference'] === $event && !str_contains($log, 'PRIVATE_STATE_REASON'),
+    $message['previous_status'] === 'active' && $message['target_status'] === 'suspended' &&
+         $message['reason_reference'] === $event && !str_contains($log, 'PRIVATE_STATE_REASON'),
     'native audit uses minimal before/after and reason reference'
 );
 // A fresh learner/quiz isolates runtime suspension checks from historical fixtures.
 $qf = json_decode(file_get_contents(dirname($root) . '/quiz-attempts-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $user = new \Joomla\CMS\User\User();
-$data = ['name' => 'CI Enrollment State Quiz','username' => 'cienrollmentstatequiz','email' => 'cienrollmentstatequiz@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,$f['group']],'block' => 0,'activation' => ''];
+$data = ['name' => 'CI Enrollment State Quiz','username' => 'cienrollmentstatequiz','email' =>
+     'cienrollmentstatequiz@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' =>
+     'Ci-only-Learner-Password-2026','groups' => [2,$f['group']],'block' => 0,'activation' => ''];
 if (!$user->bind($data) || !$user->save()) {
     throw new \RuntimeException($user->getError());
 }
@@ -433,7 +438,8 @@ $quizCourseBefore = $db->setQuery('SELECT state, admissions_open, delivery_enabl
     'WHERE id=' . (int)$qf['course_id'])->loadAssoc();
 try {
     foreach ([0, 2, -2] as $inactiveQuizState) {
-        $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$inactiveQuizState . ', admissions_open=1, delivery_enabled=1 WHERE id=' . (int)$qf['course_id'])->execute();
+        $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$inactiveQuizState .
+             ', admissions_open=1, delivery_enabled=1 WHERE id=' . (int)$qf['course_id'])->execute();
         stateDenied(
             fn()=>$runtime->mutate($user, 'en-GB', $qe, $qf['lesson_id'], $aid, 1, stateKey(), $answers, false),
             404,
@@ -459,7 +465,9 @@ try {
         );
     }
 } finally {
-    $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$quizCourseBefore['state'] . ', admissions_open=' . (int)$quizCourseBefore['admissions_open'] . ', delivery_enabled=' . (int)$quizCourseBefore['delivery_enabled'] . ' WHERE id=' . (int)$qf['course_id'])->execute();
+    $db->setQuery('UPDATE #__jlms_courses SET state=' . (int)$quizCourseBefore['state'] .
+         ', admissions_open=' . (int)$quizCourseBefore['admissions_open'] . ', delivery_enabled=' .
+         (int)$quizCourseBefore['delivery_enabled'] . ' WHERE id=' . (int)$qf['course_id'])->execute();
 }
 $qi = $service->editor($actor, $qf['course_id'], $qe, 'suspended');
 stateExpect($qi['impact']['open_attempts'] === 1, 'preview reports an open quiz');
@@ -634,5 +642,9 @@ stateExpect(
     !str_contains($serialized, 'subject_key') && !str_contains($serialized, 'rules_json'),
     'editor excludes internal subject and grading data'
 );
-file_put_contents($path, json_encode(['course' => $course,'enrollment' => $enrollment,'owner' => $f['owner'],'lesson' => $f['lesson'],'first_event' => $event,'history_count' => $count(),'stable' => $stable($enrollment),'manager' => $rf['manager'],'manager_group' => $rf['group'],'http_enrollment' => $f['other_enrollment'],'cancelled' => $f['cancelled'],'foreign_enrollment' => $f['italian'],'other_course' => $rf['other_course']], JSON_THROW_ON_ERROR));
+file_put_contents($path, json_encode(['course' => $course,'enrollment' => $enrollment,'owner' =>
+     $f['owner'],'lesson' => $f['lesson'],'first_event' => $event,'history_count' => $count(),'stable' =>
+     $stable($enrollment),'manager' => $rf['manager'],'manager_group' => $rf['group'],
+    'http_enrollment' => $f['other_enrollment'],'cancelled' => $f['cancelled'],'foreign_enrollment' =>
+     $f['italian'],'other_course' => $rf['other_course']], JSON_THROW_ON_ERROR));
 echo json_encode(['enrollment_state_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

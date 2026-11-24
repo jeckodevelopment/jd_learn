@@ -101,7 +101,8 @@ final class DashboardService
         if (!$courseIds) {
             return [];
         }
-        $courseIds = array_values(array_unique(array_filter(array_map('intval', $courseIds), static fn (int $id): bool => $id > 0)));
+        $courseIds = array_values(array_unique(array_filter(array_map('intval', $courseIds), static fn
+                (int $id): bool => $id > 0)));
         if (!$courseIds || count($courseIds) > 50) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
@@ -156,7 +157,8 @@ final class DashboardService
         $cards = [];
         foreach ($rows as $row) {
             $tag = $row->language === '*' ? $uiLanguage : (string) $row->language;
-            $state = $row->completed_at !== null ? 'completed' : (($row->started_at !== null || $row->last_activity_at !== null || (int) $row->completed_total > 0) ? 'in_progress' : 'not_started');
+            $state = $row->completed_at !== null ? 'completed' : (($row->started_at !== null || $row
+                ->last_activity_at !== null || (int) $row->completed_total > 0) ? 'in_progress' : 'not_started');
             $reason = 'available';
             // Historical teaching mode belongs to the immutable enrolled version,
             // not the current catalog: keep consultation progress inapplicable
@@ -192,9 +194,12 @@ final class DashboardService
             $total = (int) $row->required_total;
             $done = (int) $row->completed_total;
             $consultation = isset($rules) && is_array($rules) && $rules['mode'] === 'consultation';
-            $percent = !$consultation && $total > 0 && $done <= $total ? min($row->completed_at !== null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
-            $cards[] = ['id' => (int) $row->id, 'title' => (string) ($row->title_snapshot ?? ''), 'learning_state' => $state,
-                'access' => $reason, 'percent' => $percent, 'progress_applicable' => !$consultation, 'completed' => $row->completed_at !== null];
+            $percent = !$consultation && $total > 0 && $done <= $total ? min($row->completed_at !==
+                 null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
+            $cards[] = ['id' => (int) $row->id, 'title' => (string) ($row->title_snapshot ?? '')
+                , 'learning_state' => $state,
+                'access' => $reason, 'percent' => $percent, 'progress_applicable' => !$consultation
+                    , 'completed' => $row->completed_at !== null];
         }
         return $cards;
     }

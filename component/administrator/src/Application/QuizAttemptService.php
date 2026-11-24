@@ -228,7 +228,9 @@ final class QuizAttemptService
             $rules['source_revision'] = (int)$l->source_revision;
             $max = array_sum(array_map(static fn($row): int=>(int)$row->points, $pool));
             $a = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$l->course_version_id,'quiz_id' => $quizId,'attempt_no' => $history['last_no'] + 1,
-                'status' => 'open','score_points' => null,'passed' => null,'submitted_at' => null,'rules_snapshot_json' => QuestionDefinition::canonical($rules),'max_points' => $max,'started_at' => self::date($now),
+                'status' => 'open','score_points' => null,'passed' => null,'submitted_at' => null
+                    ,'rules_snapshot_json' => QuestionDefinition::canonical($rules),'max_points' => $max
+                    ,'started_at' => self::date($now),
                 'deadline_at' => $rules['time_seconds'] ? self::date($now + $rules['time_seconds']) : null,'counted_for_limit' => 1,'revision' => 1];
             $this->db->insertObject('#__jlms_attempts', $a, 'id');
             $filter = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1);
@@ -242,7 +244,9 @@ final class QuizAttemptService
                 $grading = $row->grading;
                 $grading['explanation'] = $filter->clean($grading['explanation'], 'HTML');
                 $snapshot = (object)['attempt_id' => (int)$a->id,'question_revision_id' => (int)$row->id,'display_order' => $order++,
-                    'public_snapshot_json' => QuestionDefinition::canonical($public),'grading_snapshot_json' => QuestionDefinition::canonical($grading),'max_points' => (int)$row->points];
+                    'public_snapshot_json' => QuestionDefinition::canonical($public),
+                        'grading_snapshot_json' => QuestionDefinition::canonical($grading),
+                        'max_points' => (int)$row->points];
                 $this->db->insertObject('#__jlms_attempt_questions', $snapshot);
             }
             $slot = (object)['enrollment_id' => $enrollment,'quiz_id' => $quizId,'attempt_id' => (int)$a->id];
@@ -518,7 +522,8 @@ final class QuizAttemptService
         $total = (int)$e->completed_total + (!$wasCompleted && $completed ? (int)$l->required : 0);
         $finished = $e->completed_at ?: ($total >= (int)$e->required_total && (int)$e->required_total > 0 ? self::date($time) : null);
         $newCourseCompletion = $e->completed_at === null && $finished !== null;
-        $touch = (object)['id' => $enrollment,'completed_total' => $total,'completed_at' => $finished,'last_activity_at' => self::date($time),'last_lesson_id' => $lesson,
+        $touch = (object)['id' => $enrollment,'completed_total' => $total,'completed_at' => $finished
+            ,'last_activity_at' => self::date($time),'last_lesson_id' => $lesson,
             'revision' => (int)$e->revision + 1,'modified_at' => self::date($time),'modified_by' => $e->user_id];
         $this->db->updateObject('#__jlms_enrollments', $touch, 'id', true);
         $e->completed_total = $total;
@@ -625,17 +630,27 @@ final class QuizAttemptService
         }
         $remaining = $rules['max_attempts'] === 0 ? null : max(0, $rules['max_attempts'] - $history['used']);
         $dto = ['enrollment_id' => $enrollment,'lesson_id' => (int)$l->id,'title' => $l->title,'server_now' => $now,'assessment' => $rules['assessment'],
-            'base_time_seconds' => $rules['base_time_seconds'] ?? $rules['time_seconds'],'extra_time_seconds' => $rules['extra_time_seconds'] ?? 0,'next_time_seconds' => $nextRules['time_seconds'],'next_extra_time_seconds' => $nextRules['extra_time_seconds'],'original_time_seconds' => $originalTime,'extension_seconds' => max(0, $effectiveTime - $originalTime),'feedback_policy' => $rules['feedback'],'question_count' => $rules['draw_count'],'threshold' => $rules['threshold'],'time_seconds' => $effectiveTime,'used_attempts' => $history['used'],'remaining_attempts' => $remaining,
+            'base_time_seconds' => $rules['base_time_seconds'] ?? $rules['time_seconds'],
+                'extra_time_seconds' => $rules['extra_time_seconds'] ?? 0,'next_time_seconds' =>
+                 $nextRules['time_seconds'],'next_extra_time_seconds' =>
+                 $nextRules['extra_time_seconds'],'original_time_seconds' => $originalTime,
+                'extension_seconds' => max(0, $effectiveTime - $originalTime),'feedback_policy' =>
+                 $rules['feedback'],'question_count' => $rules['draw_count'],'threshold' =>
+                 $rules['threshold'],'time_seconds' => $effectiveTime,'used_attempts' =>
+                 $history['used'],'remaining_attempts' => $remaining,
             'next_attempt_at' => $next,'start_window_close_at' => $closingAt,
             'remaining_window_seconds' => $closingAt === null ? null : max(0, $closingAt - $now),
             'start_window_insufficient' => $insufficientWindow,
             'can_start' => !$active && $eligible && ($remaining === null || $remaining > 0) && $next <= $now,
             'active_attempt_id' => $active ? (int)$active->id : null,'attempt' => null,'questions' => [],'feedback_available' => false,
-            'course_completed' => $e->completed_at !== null,'course_percent' => (int)$e->required_total ? min($e->completed_at ? 100 : 99, (int)floor(100 * (int)$e->completed_total / (int)$e->required_total)) : 0];
+            'course_completed' => $e->completed_at !== null,'course_percent' => (int)$e->required_total ? min($e
+                ->completed_at ? 100 : 99, (int)floor(100 * (int)$e->completed_total / (int)$e->required_total)) : 0];
         if ($a) {
             $closed = $a->status !== 'open';
             $graded = in_array($a->status, ['submitted','expired'], true);
-            $feedback = $graded && !$active && ($rules['feedback'] === 'after_submit' || ($rules['feedback'] === 'pass_or_exhausted' && ($history['passed'] || ($remaining !== null && $remaining === 0))));
+            $feedback = $graded && !$active && ($rules['feedback'] === 'after_submit' ||
+                 ($rules['feedback'] === 'pass_or_exhausted' && ($history['passed'] || ($remaining !==
+                 null && $remaining === 0))));
             $dto['feedback_available'] = $feedback;
             $dto['attempt'] = [
                 'id' => (int)$a->id,
@@ -643,7 +658,10 @@ final class QuizAttemptService
                 'state' => $a->status,
                 'revision' => (int)$a->revision,
                 'deadline' => self::timestamp($a->deadline_at),'started_at' => self::timestamp($a->started_at),'submitted_at' => self::timestamp($a->submitted_at),
-                'valid' => $a->status !== 'invalidated','counted_for_limit' => (bool)($a->counted_for_limit ?? 1),'score_points' => $a->score_points === null ? null : (int)$a->score_points,'max_points' => (int)$a->max_points,'passed' => $a->passed === null ? null : (bool)$a->passed];
+                'valid' => $a->status !== 'invalidated','counted_for_limit' => (bool)($a->
+                    counted_for_limit ?? 1),'score_points' => $a->score_points === null ? null :
+                     (int)$a->score_points,'max_points' => (int)$a->max_points,'passed' => $a->passed ===
+                     null ? null : (bool)$a->passed];
             foreach (($includeQuestions ? $this->questions((int)$a->id) : []) as $row) {
                 $public = json_decode($row->public_snapshot_json, true, 16, JSON_THROW_ON_ERROR);
                 $public['id'] = (int)$row->id;

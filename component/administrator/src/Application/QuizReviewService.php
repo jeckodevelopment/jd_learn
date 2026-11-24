@@ -135,7 +135,8 @@ final class QuizReviewService
         $impact = ['attempt_id' => (int)$a->id,'enrollment_revision' => (int)$e->revision,'attempt_revision' => (int)$a->revision,'return_attempt' => $refund,
             'before_status' => $a->status,'after_status' => 'invalidated','before_counted' => (int)$a->counted_for_limit,'after_counted' => $refund ? 0 : 1,
             'before_best' => $beforeBest ?: null,'after_best' => $best,'before_lesson_completed' => $p?->state === 'completed','after_lesson_completed' => $completedAt !== null,
-            'before_lesson_completed_at' => $p?->completed_at,'after_lesson_completed_at' => $completedAt,'before_completed_total' => (int)$e->completed_total,'after_completed_total' => $total,
+            'before_lesson_completed_at' => $p?->completed_at,'after_lesson_completed_at' => $completedAt
+                ,'before_completed_total' => (int)$e->completed_total,'after_completed_total' => $total,
             'before_course_completed_at' => $e->completed_at,'after_course_completed_at' => $courseAt,'used_after' => $used,'last_number' => $last,
             'certificate_count' => $certificates,'correction_count' => $corrections,'blocked' => $certificates > 0 || $corrections > 0];
         $impact['hash'] = hash('sha256', QuestionDefinition::canonical($impact));
@@ -195,7 +196,10 @@ final class QuizReviewService
             [$actor,$quiz,$e] = $this->time->managementContext($identity, $course, $lesson, $enrollment);
             $a = $this->attempt($attempt, $enrollment, (int)$quiz->id, true);
             $scope = hash('sha256', (int)$actor->id . ':quiz.cancel:' . $key);
-            $hash = hash('sha256', QuestionDefinition::canonical(['course' => $course,'lesson' => $lesson,'enrollment' => $enrollment,'attempt' => $attempt,'enrollment_revision' => $enrollmentRevision,'attempt_revision' => $attemptRevision,'refund' => $refund,'reason' => $reason,'impact' => $impactHash]));
+            $hash = hash('sha256', QuestionDefinition::canonical(['course' => $course,'lesson' =>
+                 $lesson,'enrollment' => $enrollment,'attempt' => $attempt,'enrollment_revision' =>
+                 $enrollmentRevision,'attempt_revision' => $attemptRevision,'refund' => $refund,
+                'reason' => $reason,'impact' => $impactHash]));
             $q = $this->db->createQuery()
                 ->select('request_hash,result_id')
                 ->from('#__jlms_idempotency')
@@ -248,7 +252,8 @@ final class QuizReviewService
                 }
                 $this->db->setQuery($q)->execute();
             } elseif ($impact['after_best'] !== null) {
-                $row = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$e->course_version_id,'lesson_id' => $lesson,'source_revision' => (int)$l->source_revision,
+                $row = (object)['enrollment_id' => $enrollment,'course_version_id' => (int)$e->course_version_id
+                    ,'lesson_id' => $lesson,'source_revision' => (int)$l->source_revision,
                     'coverage_json' => $coverage,'state' => $completed === null ? 'started' : 'completed','completed_at' => $completed,'last_activity_at' => $now,'revision' => 1];
                 $this->db->insertObject('#__jlms_lesson_progress', $row);
             }
@@ -259,8 +264,11 @@ final class QuizReviewService
                 (new CertificateIssuer($this->db)
                 )->issueForCompletedEnrollment($enrollment, (int)$e->course_version_id, (string)$impact['after_course_completed_at']);
             }
-            ($this->audit)($actor, ['id' => $attempt,'actor_id' => (int)$actor->id,'enrollment_id' => $enrollment,'quiz_id' => (int)$quiz->id,'reason_code' => 'quiz_attempt_invalidated',
-                'reason_reference' => $attempt,'before_status' => $a->status,'after_status' => 'invalidated','return_attempt' => $refund,'before_counted' => (int)$a->counted_for_limit,'after_counted' => $refund ? 0 : 1,
+            ($this->audit)($actor, ['id' => $attempt,'actor_id' => (int)$actor->id,'enrollment_id' =>
+                 $enrollment,'quiz_id' => (int)$quiz->id,'reason_code' => 'quiz_attempt_invalidated',
+                'reason_reference' => $attempt,'before_status' => $a->status,'after_status' =>
+                     'invalidated','return_attempt' => $refund,'before_counted' => (int)$a->
+                    counted_for_limit,'after_counted' => $refund ? 0 : 1,
                 'before_completed_total' => $impact['before_completed_total'],'after_completed_total' => $impact['after_completed_total'],
                 'before_completed_at' => $e->completed_at,'after_completed_at' => $impact['after_course_completed_at'],'correlation_id' => bin2hex(random_bytes(16))]);
             $ledger = (object)['scope_hash' => $scope,'request_hash' => $hash,'state' => 'completed','result_type' => 'quiz_cancel','result_id' => $attempt,'http_status' => 200,

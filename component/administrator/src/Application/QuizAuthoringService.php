@@ -81,7 +81,8 @@ final class QuizAuthoringService
                 ->from('#__jlms_quiz_questions')->where('quiz_id = :quiz')
                 ->bind(':quiz', $quizId, ParameterType::INTEGER)->order('ordering');
             $data = array_replace($data, ['lesson_id' => $lesson, 'revision' => (int) $quiz->revision, 'title' => $l->title,
-                'module_id' => (int) $l->module_id, 'required' => (string) $l->required, 'threshold' => (string) ((int) $quiz->pass_basis_points / 100),
+                'module_id' => (int) $l->module_id, 'required' => (string) $l->required, 'threshold' =>
+                     (string) ((int) $quiz->pass_basis_points / 100),
                 'max_attempts' => (int) $quiz->max_attempts, 'time_minutes' => intdiv((int) $quiz->time_limit_seconds, 60),
                 'retry_minutes' => intdiv($selection['retry_delay_seconds'], 60), 'assessment' => $selection['assessment'],
                 'selection_mode' => $selection['mode'], 'draw_count' => $selection['draw_count'],
@@ -137,7 +138,8 @@ final class QuizAuthoringService
         }
         $draw = $selectionMode === 'fixed' ? count($rows) : QuestionDefinition::integer($input['draw_count'] ?? 0, 1, count($rows));
         $selection = ['_schema' => 1, 'assessment' => $assessment, 'mode' => $selectionMode, 'draw_count' => $draw,
-            'shuffle_questions' => self::flag($input['shuffle_questions'] ?? '0'), 'shuffle_options' => self::flag($input['shuffle_options'] ?? '0'), 'retry_delay_seconds' => $retry * 60];
+            'shuffle_questions' => self::flag($input['shuffle_questions'] ?? '0'), 'shuffle_options' =>
+                 self::flag($input['shuffle_options'] ?? '0'), 'retry_delay_seconds' => $retry * 60];
         $this->db->transactionStart();
         try {
             [$actor, $c, $v] = $this->scope($identity, $course, $version, true);
@@ -213,12 +215,15 @@ final class QuizAuthoringService
                 $order = (int) $this->db->setQuery($q)->loadResult() + 1;
                 $l = (object) ['course_version_id' => $version, 'module_id' => $module, 'logical_key' => sprintf('%s-%s-4%s-a%s-%s', bin2hex(random_bytes(4)), bin2hex(random_bytes(2)), substr(bin2hex(random_bytes(2)), 1), substr(bin2hex(random_bytes(2)), 1), bin2hex(random_bytes(6))), 'alias' => 'quiz-' . bin2hex(random_bytes(8)),
                     'title' => trim($title), 'kind' => 'quiz', 'required' => (int) $required, 'ordering' => $order, 'completion_rule' => 'quiz_pass',
-                    'params_json' => '{}', 'fields_snapshot_json' => '{}', 'revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id, 'created_at' => $now, 'modified_at' => $now];
+                    'params_json' => '{}', 'fields_snapshot_json' => '{}', 'revision' => 1,
+                         'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
+                         'created_at' => $now, 'modified_at' => $now];
                 $this->db->insertObject('#__jlms_lessons', $l, 'id');
                 $lesson = (int) $l->id;
             }
             $config = (object) ['lesson_id' => $lesson, 'course_version_id' => $version, 'pass_basis_points' => $threshold, 'max_attempts' => $attempts,
-                'time_limit_seconds' => $minutes ? $minutes * 60 : null, 'feedback_policy' => $feedback, 'selection_json' => QuestionDefinition::canonical($selection),
+                'time_limit_seconds' => $minutes ? $minutes * 60 : null, 'feedback_policy' => $feedback
+                    , 'selection_json' => QuestionDefinition::canonical($selection),
                 'revision' => $quiz ? (int) $quiz->revision + 1 : 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
             if ($quiz) {
                 $config->id = (int) $quiz->id;
@@ -289,7 +294,8 @@ final class QuizAuthoringService
                     ->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($q)->execute();
             }
-            $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
+            $touch = (object) ['id' => $version, 'revision' => (int) $v->revision + 1, 'modified_by' =>
+                 (int) $actor->id, 'modified_at' => gmdate('Y-m-d H:i:s')];
             $this->db->updateObject('#__jlms_course_versions', $touch, 'id');
             $this->db->transactionCommit();
         } catch (\Throwable $error) {

@@ -178,9 +178,15 @@ if ($rendered !== '<p><strong>Allowed</strong></p><p>' . $htmlTitle . '</p>') {
 // Native extension installer must create the submenu once and preserve it on upgrade.
 $menuParent = (int) $db->setQuery(("SELECT id FROM #__menu WHERE client_id=1 AND menutype='main' AND "
     . "link='index.php?option=com_jlms&view=dashboard' AND parent_id=1"))->loadResult();
-$menuLinks = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
-$expectedLinks = ['index.php?option=com_jlms&view=dashboard', 'index.php?option=com_jlms&view=courses', 'index.php?option=com_jlms&view=pathways', 'index.php?option=com_jlms&view=teachers', 'index.php?option=com_jlms&view=questionbank'];
-$menuTitles = $db->setQuery($db->getQuery(true)->select($db->quoteName('title'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
+$menuLinks = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))
+    ->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)
+    ->order($db->quoteName('lft') . ' ASC'))->loadColumn();
+$expectedLinks = ['index.php?option=com_jlms&view=dashboard', 'index.php?option=com_jlms&view=courses'
+    , 'index.php?option=com_jlms&view=pathways', 'index.php?option=com_jlms&view=teachers'
+    , 'index.php?option=com_jlms&view=questionbank'];
+$menuTitles = $db->setQuery($db->getQuery(true)->select($db->quoteName('title'))->from($db->
+    quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->
+    quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
 $expectedMenuTitles = ['COM_JLMS_DASHBOARD_MENU', 'COM_JLMS_COURSES', 'COM_JLMS_PATHWAYS', 'COM_JLMS_TEACHERS', 'COM_JLMS_QUESTION_BANK'];
 if (!$menuParent || $menuLinks !== $expectedLinks || $menuTitles !== $expectedMenuTitles) {
     throw new \RuntimeException(('Native administrator menu must include Dashboard first with the '
@@ -192,7 +198,8 @@ if (!is_array($reassignSystemLanguage) || ($reassignSystemLanguage['COM_JLMS_CAT
         . 'system language catalog.'));
 }
 // Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
-$db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
+$db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db
+    ->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
 require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
 (new \Com_JlmsInstallerScript())->postflight('update', null);
 $defaultCertificateTemplate = $db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_templates')
@@ -420,7 +427,9 @@ $menuRootLink = (string) $db->setQuery($db->getQuery(true)->select($db->quoteNam
 if ($menuRootLink !== 'index.php?option=com_jlms&view=dashboard') {
     throw new \RuntimeException('JD Learn sidebar root must open the dashboard after a component upgrade.');
 }
-$menuLinksAfterUpdate = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
+$menuLinksAfterUpdate = $db->setQuery($db->getQuery(true)->select($db->quoteName('link'))->from($db->
+    quoteName('#__menu'))->where($db->quoteName('client_id') . ' = 1')->where($db->
+    quoteName('parent_id') . ' = ' . $menuParent)->order($db->quoteName('lft') . ' ASC'))->loadColumn();
 if ($menuLinksAfterUpdate !== $expectedLinks) {
     throw new \RuntimeException('Dashboard submenu order or links changed during component upgrade.');
 }
@@ -502,7 +511,9 @@ foreach ($privacyExportData as $contribution) {
     }
 }
 sort($privacyDomainNames);
-$expectedPrivacyDomainNames = ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates', 'jdlearn_course_announcement_consent', 'jdlearn_enrollments', 'jdlearn_enrollment_requests', 'jdlearn_mail_deliveries', 'jdlearn_progress'];
+$expectedPrivacyDomainNames = ['jdlearn_answers', 'jdlearn_attempts', 'jdlearn_certificates'
+    , 'jdlearn_course_announcement_consent', 'jdlearn_enrollments', 'jdlearn_enrollment_requests'
+    , 'jdlearn_mail_deliveries', 'jdlearn_progress'];
 sort($expectedPrivacyDomainNames);
 if ($privacyDomainNames !== $expectedPrivacyDomainNames) {
     throw new \RuntimeException('JD Learn privacy export domains missing: ' . implode(', ', $privacyDomainNames));
@@ -513,7 +524,9 @@ $privacyPlugin->setDatabase($db);
 $privacyUserId = (int) $db->setQuery("SELECT id FROM #__users WHERE username='ciprivacyclean'")->loadResult();
 if (!$privacyUserId) {
     $privacyUser = new \Joomla\CMS\User\User();
-    $privacyUserData = ['name' => 'CI Privacy Clean User', 'username' => 'ciprivacyclean', 'email' => 'ciprivacyclean@example.invalid', 'password' => 'Ci-only-Privacy-Password-2026', 'password2' => 'Ci-only-Privacy-Password-2026', 'groups' => [2], 'block' => 0, 'activation' => ''];
+    $privacyUserData = ['name' => 'CI Privacy Clean User', 'username' => 'ciprivacyclean', 'email' =>
+         'ciprivacyclean@example.invalid', 'password' => 'Ci-only-Privacy-Password-2026', 'password2' =>
+         'Ci-only-Privacy-Password-2026', 'groups' => [2], 'block' => 0, 'activation' => ''];
     if (!$privacyUser->bind($privacyUserData) || !$privacyUser->save()) {
         throw new \RuntimeException('Could not create isolated clean privacy user: ' . $privacyUser->getError());
     }
@@ -936,7 +949,8 @@ $form = $model->getForm([], false);
 if (!$form) {
     throw new \RuntimeException('Joomla course form failed to load.');
 }
-$data = ['id' => 0,'title' => 'Test course','alias' => 'test-course','catid' => $catid,'language' => '*','catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','summary' => 'Summary','revision' => 1];
+$data = ['id' => 0,'title' => 'Test course','alias' => 'test-course','catid' => $catid,'language' => '*'
+    ,'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','summary' => 'Summary','revision' => 1];
 if (!$model->save($data + ['state' => 1,'asset_id' => 999999,'current_version_id' => 999999])) {
     throw new \RuntimeException('Native draft save failed: ' . $model->getError());
 }
@@ -996,4 +1010,6 @@ $categoryService = $component->getCategory([], 'course');
 if (!$categoryService) {
     throw new \RuntimeException('Native category service failed.');
 }
-echo json_encode(['admin_menu_install_checks' => 1,'joomla' => JVERSION,'status' => 'passed','native_course_id' => $id,'providers' => $keys,'draft_revision_conflict' => 'denied','mass_assignment' => 'denied'], JSON_THROW_ON_ERROR) . PHP_EOL;
+echo json_encode(['admin_menu_install_checks' => 1,'joomla' => JVERSION,'status' => 'passed',
+    'native_course_id' => $id,'providers' => $keys,'draft_revision_conflict' => 'denied',
+    'mass_assignment' => 'denied'], JSON_THROW_ON_ERROR) . PHP_EOL;

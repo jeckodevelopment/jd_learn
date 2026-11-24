@@ -351,7 +351,8 @@ final class PublicationService
                         if (
                             $rules['mode'] !== 'consultation' && (!$proof || !hash_equals($proof['hash'], hash('sha256', $lesson->source_json))
                             || $proof['source_revision'] !== (int) $lesson->source_revision
-                            || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson->duration_ms, (int)$proof['duration_ms']))
+                            || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::compatible((int)$lesson
+                            ->duration_ms, (int)$proof['duration_ms']))
                         ) {
                             throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                         }
@@ -490,7 +491,8 @@ final class PublicationService
             'revision' => (int) $version->revision + 1, 'modified_by' => (int) $actor->id, 'modified_at' => $now];
         $this->db->updateObject('#__jlms_course_versions', $update, 'id');
         $calendar = CourseSchedule::read($course);
-        $edition = (object) ['starts_at' => $calendar['starts_at'],'ends_at' => $calendar['ends_at'],'course_id' => (int) $course->id, 'course_version_id' => $versionId,
+        $edition = (object) ['starts_at' => $calendar['starts_at'],'ends_at' => $calendar['ends_at']
+            ,'course_id' => (int) $course->id, 'course_version_id' => $versionId,
             'title' => $course->title, 'code' => 'default-v' . (int) $version->version_no, 'status' => 'open',
             'revision' => 1, 'created_by' => (int) $actor->id, 'modified_by' => (int) $actor->id,
             'created_at' => $now, 'modified_at' => $now];

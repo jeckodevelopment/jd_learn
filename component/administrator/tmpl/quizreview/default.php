@@ -19,7 +19,8 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
  <?php if ($i['enrollment']) :
         $enr = $base . '&enrollment_id=' . (int)$i['enrollment']->id; ?>
  <h2><?= $this->escape($i['enrollment']->learner_name) ?> #<?= (int)$i['enrollment']->id ?></h2>
- <table id="jlms-quiz-review-attempts" class="table"><thead><tr><th><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?></th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></th><th><?= Text::_('COM_JLMS_QUIZ_REVIEW_COUNTED') ?></th></tr></thead><tbody>
+ <table id="jlms-quiz-review-attempts"
+     class="table"><thead><tr><th><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?></th><th><?= Text::_('JSTATUS') ?></th><th><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></th><th><?= Text::_('COM_JLMS_QUIZ_REVIEW_COUNTED') ?></th></tr></thead><tbody>
         <?php foreach ($i['attempts'] as $a) :
             ?><tr><td><a href="<?= Route::_($enr . '&attempt_id=' . (int)$a->id) ?>">#<?= (int)$a->attempt_no ?></a></td><td><?= Text::_(match ($a->status) {
             'open'=>'COM_JLMS_QUIZ_STATUS_OPEN','submitted'=>'COM_JLMS_QUIZ_STATUS_SUBMITTED',
@@ -32,7 +33,8 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
         <?php if ($i['selected']) :
             $a = $i['selected']; ?>
             <?php if ($a->status === 'open') :
-                ?><p><a id="jlms-quiz-extend-link" href="<?= Route::_('index.php?option=com_jlms&view=quizextend&id=' . (int)$i['course_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&enrollment_id=' . (int)$i['enrollment']->id . '&attempt_id=' . (int)$a->id) ?>"><?= Text::_('COM_JLMS_QUIZ_EXTEND_TITLE') ?></a></p><?php
+                ?><p><a id="jlms-quiz-extend-link"
+                    href="<?= Route::_('index.php?option=com_jlms&view=quizextend&id=' . (int)$i['course_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&enrollment_id=' . (int)$i['enrollment']->id . '&attempt_id=' . (int)$a->id) ?>"><?= Text::_('COM_JLMS_QUIZ_EXTEND_TITLE') ?></a></p><?php
             endif; ?>
             <?php if ($a->status === 'invalidated') : ?>
  <section id="jlms-quiz-review-record"><h3><?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?></h3><p><?= $this->escape($a->invalidation_reason) ?></p><p><?= (int)$a->invalidated_by ?> · <?= $this->escape($a->invalidated_at) ?> UTC</p></section>
@@ -46,13 +48,17 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
  <dt><?= Text::_('COM_JLMS_QUIZ_BEST') ?></dt><dd><?= $p['after_best'] ? (int)$p['after_best']['score_points'] . '/' . (int)$p['after_best']['max_points'] : '—' ?></dd>
  <dt><?= Text::_('COM_JLMS_QUIZ_REVIEW_USED_AFTER') ?></dt><dd><?= (int)$p['used_after'] ?></dd></dl>
                 <?php if ($p['blocked']) :
-                    ?><p class="alert alert-warning" id="jlms-quiz-review-blocked"><?= Text::_('COM_JLMS_QUIZ_REVIEW_BLOCKED') ?> · <?= (int)$p['certificate_count'] ?>/<?= (int)$p['correction_count'] ?></p>
+                    ?><p class="alert alert-warning"
+                        id="jlms-quiz-review-blocked"><?= Text::_('COM_JLMS_QUIZ_REVIEW_BLOCKED') ?> · <?= (int)$p['certificate_count'] ?>/<?= (int)$p['correction_count'] ?></p>
                 <?php else :
                     ?><form id="jlms-quiz-review-form"
     method="post"
     class="form-validate"
     action="<?= Route::_('index.php?option=com_jlms') ?>">
-                    <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="quizreview.cancel"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-danger"><?= Text::_('COM_JLMS_QUIZ_REVIEW_CANCEL') ?></button></form><?php
+                    <?= $this->form->renderFieldset('details') ?><input type="hidden"
+                        name="task"
+                        value="quizreview.cancel"><?= HTMLHelper::_('form.token') ?><button type="submit"
+                        class="btn btn-danger"><?= Text::_('COM_JLMS_QUIZ_REVIEW_CANCEL') ?></button></form><?php
                 endif; ?>
  </section>
             <?php endif; ?>

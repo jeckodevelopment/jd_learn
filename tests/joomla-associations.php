@@ -152,7 +152,8 @@ if (($argv[2] ?? '') === 'retained') {
 }
 $language = new \Joomla\CMS\Table\Language($db);
 if (!$language->load(['lang_code' => 'it-IT'])) {
-    $language->bind(['lang_code' => 'it-IT', 'title' => 'Italiano', 'title_native' => 'Italiano', 'sef' => 'it', 'image' => 'it_it', 'description' => '', 'published' => 1, 'access' => 1, 'ordering' => 2]);
+    $language->bind(['lang_code' => 'it-IT', 'title' => 'Italiano', 'title_native' => 'Italiano', 'sef' => 'it'
+        , 'image' => 'it_it', 'description' => '', 'published' => 1, 'access' => 1, 'ordering' => 2]);
     if (!$language->check() || !$language->store()) {
         throw new \RuntimeException('Content language fixture failed');
     }
@@ -168,7 +169,9 @@ $create = static function (string $name, string $tag) use ($catid, $factory): in
     $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
     if (
         !$model->save(['id' => 0, 'title' => $name, 'alias' => $name, 'catid' => $catid, 'language' => $tag,
-        'catalog_access' => 1, 'content_access' => 2, 'enrollment_mode' => 'auto', 'presentation_description' => '<p>Course presentation for the publication fixture.</p>', 'summary' => 'Translation fixture', 'revision' => 1])
+        'catalog_access' => 1, 'content_access' => 2, 'enrollment_mode' => 'auto',
+             'presentation_description' => '<p>Course presentation for the publication fixture.</p>',
+             'summary' => 'Translation fixture', 'revision' => 1])
     ) {
         throw new \RuntimeException('Association draft fixture: ' . $model->getError());
     }
@@ -344,10 +347,12 @@ foreach ([$en,$it,$all] as $course) {
     $authoring = $component->getCurriculumService();
     $version = $authoring->createDraft($actor, $course, $revision);
     $scope = static function () use ($db, $version, $course): array {
-        return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
+        return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db
+            ->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
     };
     $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Translated chapter']);
-    $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Translated lesson','kind' => 'text','required' => '1','body' => '<p>PRIVATE_TRANSLATION_BODY</p>']);
+    $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Translated lesson'
+        ,'kind' => 'text','required' => '1','body' => '<p>PRIVATE_TRANSLATION_BODY</p>']);
     $publication = $component->getPublicationService();
     $choice = $publication->transitions($actor, $course);
     $publication->transition(
@@ -413,7 +418,9 @@ assocExpect(
 );
 $app->loadIdentity($actor);
 $baseline = assocRows();
-$livePointers = json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR);
+$livePointers = json_encode($db->
+    setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->
+    loadObjectList(), JSON_THROW_ON_ERROR);
 $versionCount = (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult();
 assocExpect(
     assocSave(assocData($en) + ['associations' => ['it-IT' => 0]]),

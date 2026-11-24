@@ -113,10 +113,14 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
     step="1"
     name="jform[publish_down]"
     value="<?= $this->escape($file->publish_down_editor) ?>"></label>
-            <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('JSAVE') ?></button>
+            <?= HTMLHelper::_('form.token') ?><button type="submit"
+                class="btn btn-secondary"><?= Text::_('JSAVE') ?></button>
   </form>
   <form method="post" action="<?= $link('index.php?option=com_jlms') ?>"><?php $hidden($scope + ['id' => $file
-      ->id]); ?><input type="hidden" name="task" value="material.delete"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-outline-danger"><?= Text::_('COM_JLMS_UNLINK_MATERIAL') ?></button></form>
+      ->id]); ?><input type="hidden"
+          name="task"
+          value="material.delete"><?= HTMLHelper::_('form.token') ?><button type="submit"
+          class="btn btn-outline-danger"><?= Text::_('COM_JLMS_UNLINK_MATERIAL') ?></button></form>
             <?php $reuseTargets = array_values(array_filter($item['lessons'], static fn ($lesson): bool
                 => (int) $lesson->id !== (int) $file->lesson_id)); ?>
             <?php if ($file->lesson_id || $reuseTargets) : ?>
@@ -130,12 +134,16 @@ $scope = ['course_id' => $course->id, 'version_id' => $version->id, 'expected_ve
                     ?><option value="<?= (int) $lesson->id ?>"><?= $this->escape($lesson->title) ?></option><?php
                 endforeach; ?>
    </select></label>
-                <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_MATERIAL_REUSE') ?></button>
+                <?= HTMLHelper::_('form.token') ?><button type="submit"
+                    class="btn btn-secondary"><?= Text::_('COM_JLMS_MATERIAL_REUSE') ?></button>
   </form>
             <?php endif; ?>
         <?php endif; ?>
   <form method="post" action="<?= $link('index.php?option=com_jlms') ?>"><?php $hidden($scope + ['id' => $file
-      ->id]); ?><input type="hidden" name="task" value="material.scan"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_RESCAN') ?></button></form>
+      ->id]); ?><input type="hidden"
+          name="task"
+          value="material.scan"><?= HTMLHelper::_('form.token') ?><button type="submit"
+          class="btn btn-secondary"><?= Text::_('COM_JLMS_RESCAN') ?></button></form>
  </section>
  <?php endforeach; ?></div>
  <?php if (!$item['files']['items']) :

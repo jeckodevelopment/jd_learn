@@ -134,15 +134,21 @@ if (!$model->save(['id' => 0,'revision' => 1,'title' => 'Manual admission fixtur
 $course = (int)$model->getState('course.id');
 $authoring = $component->getCurriculumService();
 $version = $authoring->createDraft($actor, $course, 1);
-$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'expected_version_revision' => (int)$db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
+$scope = static fn(): array=>['course_id' => $course,'version_id' => $version,
+    'expected_version_revision' => (int)$db->
+    setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult()];
 $module = $authoring->saveModule($actor, $scope() + ['id' => 0,'title' => 'Manual admission chapter']);
-$lesson = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Manual admission lesson','kind' => 'text','required' => '1','body' => '<p>MANUAL_PRIVATE_BODY</p>']);
+$lesson = $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' =>
+     'Manual admission lesson','kind' => 'text','required' => '1','body' => '<p>MANUAL_PRIVATE_BODY</p>']);
 $pub = $component->getPublicationService();
 $pub->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$pub->transitions($actor, $course)[0]->id);
 $users = [];
 foreach (['one','failure','race','capacity1','capacity2','automatic','snapshot','http','denied'] as $name) {
     $u = new \Joomla\CMS\User\User();
-    $data = ['name' => 'CI Manual ' . $name,'username' => 'cimanual' . $name,'email' => 'cimanual' . $name . '@example.invalid','password' => 'Ci-only-Manual-Password-2026','password2' => 'Ci-only-Manual-Password-2026','groups' => $name === 'denied' ? [2] : [2,$group],'block' => 0,'activation' => ''];
+    $data = ['name' => 'CI Manual ' . $name,'username' => 'cimanual' . $name,'email' => 'cimanual' .
+         $name . '@example.invalid','password' => 'Ci-only-Manual-Password-2026','password2' =>
+         'Ci-only-Manual-Password-2026','groups' => $name === 'denied' ? [2] : [2,$group],'block' => 0,
+        'activation' => ''];
     if (!$u->bind($data) || !$u->save()) {
         throw new \RuntimeException($u->getError());
     }
@@ -205,14 +211,19 @@ manualDenied(
     'course operation audit failure is not successful'
 );
 manualExpect(
-    (int)$db->setQuery('SELECT admissions_open FROM #__jlms_courses WHERE id=' . $course)->loadResult() === 0 && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+    (int)$db->setQuery('SELECT admissions_open FROM #__jlms_courses WHERE id=' . $course)->
+        loadResult() === 0 && (int)$db->
+        setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->
+        loadResult() === $operationCount,
     'audit failure rolls back course and history'
 );
 $opened = $operations->editor($manager, $course, 'admissions_open');
 $operations->apply($manager, $course, 'admissions_open', $opened['impact']['revision'], 'Fixture reopening', manualKey(), $opened['impact']['hash']);
 $groups = $db->setQuery('SELECT user_id,group_id FROM #__user_usergroup_map ORDER BY ' .
     'user_id,group_id')->loadAssocList();
-$counts = static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments')->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects')->loadResult()];
+$counts = static fn()=>[(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' .
+     $course)->loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments')->
+    loadResult(),(int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_subjects')->loadResult()];
 $before = $counts();
 $i = $service->editor($manager, $course, (int)$users['one']->id, 'en-GB');
 $edition = $i['impact']['edition_id'];
@@ -538,5 +549,9 @@ $projection = json_encode($service->editor($actor, $course, (int)$users['one']->
 foreach (['subject_key','claim_token','request_hash','rules_json','MANUAL_PRIVATE_BODY','email'] as $secret) {
     manualExpect(!str_contains($projection, $secret), 'preview excludes ' . $secret);
 }
-file_put_contents($path, json_encode(['course' => $course,'version' => $version,'edition' => $edition,'lesson' => $lesson,'enrollment' => $id,'learner' => (int)$users['one']->id,'http_user' => (int)$users['http']->id,'denied_user' => (int)$users['denied']->id,'group' => $group,'manager' => (int)$manager->id,'manager_group' => (int)$rf['group'],'other_course' => (int)$rf['other_course'],'receipt' => $receipt], JSON_THROW_ON_ERROR));
+file_put_contents($path, json_encode(['course' => $course,'version' => $version,'edition' => $edition,
+    'lesson' => $lesson,'enrollment' => $id,'learner' => (int)$users['one']->id,'http_user' =>
+     (int)$users['http']->id,'denied_user' => (int)$users['denied']->id,'group' => $group,'manager' =>
+     (int)$manager->id,'manager_group' => (int)$rf['group'],'other_course' => (int)$rf['other_course'],
+    'receipt' => $receipt], JSON_THROW_ON_ERROR));
 echo json_encode(['manual_enrollment_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;

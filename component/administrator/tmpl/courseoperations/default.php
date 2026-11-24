@@ -19,7 +19,9 @@ HTMLHelper::_('behavior.formvalidator');
     ?><p class="alert alert-info"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_ALREADY_SET') ?></p><?php
 else : ?>
 <form method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
-    <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="courseoperations.apply"><?= HTMLHelper::_('form.token') ?>
+    <?= $this->form->renderFieldset('details') ?><input type="hidden"
+        name="task"
+        value="courseoperations.apply"><?= HTMLHelper::_('form.token') ?>
 <button type="submit"
     class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_OPERATIONS_CONFIRM_BUTTON') ?></button></form><?php
 endif; ?>
