@@ -63,11 +63,9 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
       Text::_('COM_JLMS_CATALOG_ORDER_PUBLISHED') ?></option></select>
             <?php endif; ?>
   <label for="jlms-catalog-tag"><?= Text::_('COM_JLMS_CATALOG_TAG') ?></label>
-  <select id="jlms-catalog-tag" name="filter[tag_id]"><option value="0"><?=
-       Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
-    ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this
-            ->escape($tag->title) ?></option><?php
-       endforeach; ?></select>
+  <select id="jlms-catalog-tag" name="filter[tag_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
+        ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php
+                                                                        endforeach; ?></select>
 <label for="jlms-catalog-difficulty"><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY') ?></label>
   <select id="jlms-catalog-difficulty" name="filter[difficulty]"><option value=""><?=
       Text::_('COM_JLMS_CATALOG_ANY_DIFFICULTY') ?></option><option value="beginner"<?=
@@ -100,24 +98,18 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
       $this->layout === 'list' ? ' selected' : '' ?>><?=
       Text::_('COM_JLMS_CATALOG_LAYOUT_LIST') ?></option></select>
   <label for="jlms-catalog-teacher"><?= Text::_('COM_JLMS_CATALOG_TEACHER') ?></label>
-  <select id="jlms-catalog-teacher" name="filter[teacher_id]"><option value="0"><?=
-       Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
-    ?><option value="<?= (int) $teacher->id ?>"<?= $this->teacherId === (int) $teacher->id ? ' selected'
-            : '' ?>><?= $this->escape($teacher->title) ?></option><?php
-       endforeach; ?></select>
+  <select id="jlms-catalog-teacher" name="filter[teacher_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
+        ?><option value="<?= (int) $teacher->id ?>"<?= $this->teacherId === (int) $teacher->id ? ' selected' : '' ?>><?= $this->escape($teacher->title) ?></option><?php
+                                                                                endforeach; ?></select>
   <label for="jlms-catalog-pathway"><?= Text::_('COM_JLMS_CATALOG_PATHWAY') ?></label>
-  <select id="jlms-catalog-pathway" name="filter[pathway_id]"><option value="0"><?=
-       Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
-    ?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected'
-            : '' ?>><?= $this->escape($pathway->title) ?></option><?php
-       endforeach; ?></select>
+  <select id="jlms-catalog-pathway" name="filter[pathway_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
+        ?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected' : '' ?>><?= $this->escape($pathway->title) ?></option><?php
+                                                                                endforeach; ?></select>
   <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
  </form>
      <?php endif; ?>
      <?php if ($this->categoryId) :
-            ?><p id="jlms-category-filter"><?= Text::_('COM_JLMS_CATEGORY_FILTER_ACTIVE') ?> <a href="<?=
-                 Route::_('index.php?option=com_jlms&view=courses') ?>"><?=
-                 Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php
+            ?><p id="jlms-category-filter"><?= Text::_('COM_JLMS_CATEGORY_FILTER_ACTIVE') ?> <a href="<?= Route::_('index.php?option=com_jlms&view=courses') ?>"><?= Text::_('COM_JLMS_ALL_COURSES') ?></a></p><?php
      endif; ?>
  <div id="jlms-course-grid"
     class="jlms-course-grid<?= $this->layout === 'list' ? ' jlms-course-grid--list' : '' ?>"
@@ -191,23 +183,15 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
                 'not_open' => 'COM_JLMS_DASHBOARD_ACCESS_NOT_OPEN',
                 ][$enrollment['access']] ?? 'COM_JLMS_DASHBOARD_ACCESS_UNAVAILABLE';
                 ?>
-     <p class="jlms-course-card__learning-state"><?= Text::_($learningLabel) ?><?php if (
-        $enrollment['access']
-         !== 'available'
-) :
-    ?> · <?= Text::_($accessLabel) ?><?php
+     <p class="jlms-course-card__learning-state"><?= Text::_($learningLabel) ?><?php if ($enrollment['access'] !== 'available') :
+            ?> · <?= Text::_($accessLabel) ?><?php
                                                  endif; ?></p>
             <?php endif; ?>
             <?php if ($enrollment === null && !empty($this->cardPendingApprovals[(int) $item->id])) : ?>
      <p class="jlms-course-card__pending" role="status"><?= Text::_('COM_JLMS_COURSE_APPROVAL_PENDING') ?></p>
             <?php endif; ?>
-            <?php if (
-            $enrollment === null && empty($this->cardPendingApprovals[(int) $item->id]) && (int) $item
-                ->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item
-                ->enrollment_mode, ['auto', 'approval'], true)
-) : ?>
-     <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval'
-         ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
+            <?php if ($enrollment === null && empty($this->cardPendingApprovals[(int) $item->id]) && (int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
+     <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval' ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
             <?php endif; ?>
             <?php if ($duration > 0 || $difficultyKey !== '') : ?>
      <p class="jlms-course-card__meta">
@@ -222,10 +206,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
                 endif; ?>
      </p>
             <?php endif; ?>
-            <?php if (
-            $enrollment !== null && $enrollment['access'] === 'available' && (int) $item
-                ->delivery_enabled === 1
-) : ?>
+            <?php if ($enrollment !== null && $enrollment['access'] === 'available' && (int) $item->delivery_enabled === 1) : ?>
      <a class="jlms-course-card__action jlms-course-card__resume" href="<?=
          Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $enrollment['id']) ?>"><?=
          Text::_($enrollment['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : 'COM_JLMS_DASHBOARD_RESUME') ?></a>
@@ -239,14 +220,8 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
      <?php endforeach; ?>
      <?php if (!$this->items) : ?>
   <p id="jlms-catalog-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p>
-            <?php if (
-            $this->showFilters && ($this->search !== '' || $this->categoryChoice > 0 || $this
-                ->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->available === '1'
-                || $this->teacherId > 0 || $this->pathwayId > 0)
-) : ?>
-   <p id="jlms-catalog-clear-filters"><a href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this
-       ->categoryId ? '&catid=' . (int) $this->categoryId : '')) ?>"><?=
-        Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
+            <?php if ($this->showFilters && ($this->search !== '' || $this->categoryChoice > 0 || $this->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->available === '1' || $this->teacherId > 0 || $this->pathwayId > 0)) : ?>
+   <p id="jlms-catalog-clear-filters"><a href="<?= Route::_('index.php?option=com_jlms&view=courses' . ($this->categoryId ? '&catid=' . (int) $this->categoryId : '')) ?>"><?= Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
             <?php endif; ?>
      <?php endif; ?>
  </div>
