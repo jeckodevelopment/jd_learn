@@ -28,13 +28,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/materials-fixture.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/materials-fixture.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;

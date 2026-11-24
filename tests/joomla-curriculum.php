@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-curriculum.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -30,13 +33,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-curriculum.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-curriculum.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -78,39 +80,11 @@ if (!$model->save($data)) {
 $course = (int) $model->getState('course.id');
 $version = $service->createDraft($actor, $course, 1);
 $checks = 0;
-function curriculumExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function curriculumDenied(callable $call, string $message): void
-{
-    try {
-        $call();
-    } catch (\DomainException | \InvalidArgumentException $expected) {
-        curriculumExpect(true, $message);
-        return;
-    }
-    throw new \RuntimeException($message);
-}
-function versionRevision(): int
-{
-    global $db, $version;
-    return (int) $db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $version)->loadResult();
-}
-function scopeInput(): array
-{
-    global $course, $version;
-    return ['course_id' => $course,'version_id' => $version,'expected_version_revision' => versionRevision()];
-}
-function recordRevision(string $table, int $id): int
-{
-    global $db;
-    return (int) $db->setQuery('SELECT revision FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadResult();
-}
+
+
+
+
+
 curriculumExpect(
     $service->createDraft($actor, $course, 1) === $version,
     'repeat draft start must reuse existing draft'

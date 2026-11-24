@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-roster.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -17,13 +20,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-roster.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-roster.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -83,23 +85,8 @@ if (($argv[2] ?? '') === 'mail-reconcile-worker') {
     exit(0);
 }
 
-function rosterExpect(bool $ok, string $message): void
-{
-    global$checks;
-    if (!$ok) {
-        throw new \RuntimeException($message);
-    }
-    $checks++;
-}
-function rosterDenied(callable $fn, int $code, string $message): void
-{
-    try {
-        $fn();
-    } catch (\RuntimeException $e) {
-        rosterExpect($e->getCode() === $code, $message . ': ' . $e->getMessage());
-        return;
-    }throw new \RuntimeException($message);
-}
+
+
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $course = (int)$f['course'];
 $otherCourse = (int)$db->setQuery('SELECT course_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])

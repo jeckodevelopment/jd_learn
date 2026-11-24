@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/helpers/joomla-curriculum-builder.functions.php';
+
+
 /* Run after Joomla's CLI installer and extension:install in an isolated CI site. */
 
 $root = realpath($argv[1] ?? '');
@@ -17,13 +20,12 @@ $_SERVER['REQUEST_URI'] = '/administrator/index.php?option=com_jlms';
 $_SERVER['SCRIPT_NAME'] = '/administrator/index.php';
 $_SERVER['PHP_SELF'] = '/administrator/index.php';
 $_SERVER['SCRIPT_FILENAME'] = $root . '/administrator/index.php';
-\define('_JEXEC', 1);
-\define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-curriculum-builder.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-\define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-\define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-\define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-curriculum-builder.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
@@ -66,44 +68,11 @@ $factory = $component->getMVCFactory();
 $service = $component->getCurriculumService();
 $actor = $app->getIdentity();
 $checks = 0;
-function builderExpect(bool $ok, string $message): void
-{
-    global $checks;
-    if (!$ok) {
-        throw new RuntimeException($message);
-    } $checks++;
-}
-function builderDenied(callable $work, string $key): void
-{
-    try {
-        $work();
-    } catch (\Throwable $e) {
-        builderExpect($e->getMessage() === $key, 'Expected ' . $key . ', got ' . $e->getMessage());
-        return;
-    }
-    throw new RuntimeException('Expected rejection: ' . $key);
-}
-function builderRow(string $table, int $id): object
-{
-    global $db;
-    return $db->setQuery('SELECT * FROM #__jlms_' . $table . ' WHERE id=' . $id)->loadObject();
-}
-function builderCheckout(string $table, int $id, ?int $user): void
-{
-    global $db;
-    $row = (object)['id' => $id,'checked_out' => $user];
-    $db->updateObject('#__jlms_' . $table, $row, 'id', true);
-}
-function builderSnapshot(int $course, int $version): array
-{
-    global $db;
-    return [$db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadAssoc(),
-        $db->setQuery('SELECT * FROM #__jlms_course_versions WHERE id=' . $version)->loadAssoc(),
-        $db->setQuery('SELECT * FROM #__jlms_modules WHERE course_version_id=' . $version . ' ORDER BY id')
-            ->loadAssocList(),
-        $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . $version . ' ORDER BY id')
-            ->loadAssocList()];
-}
+
+
+
+
+
 $file = dirname($root) . '/curriculum-builder-fixture.json';
 $mode = $argv[2] ?? '';
 if (in_array($mode, ['checkpoint','retained','state'], true)) {

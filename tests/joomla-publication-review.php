@@ -11,13 +11,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 $_SERVER += ['HTTP_HOST' => 'localhost','SERVER_NAME' => 'localhost','SERVER_PORT' => '80','REQUEST_METHOD' => 'GET',
     'REQUEST_URI' => '/administrator/index.php?option=com_jlms','SCRIPT_NAME' => '/administrator/index.php',
     'PHP_SELF' => '/administrator/index.php','SCRIPT_FILENAME' => $root . '/administrator/index.php'];
-define('_JEXEC', 1);
-define('JPATH_BASE', $root . '/administrator');
+
+require_once __DIR__ . '/helpers/joomla-publication-review.bootstrap-defines-01.php';
 require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
-define('JPATH_COMPONENT', JPATH_ADMINISTRATOR . '/components/com_jlms');
-define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
-define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
+
+require_once __DIR__ . '/helpers/joomla-publication-review.bootstrap-defines-02.php';
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
