@@ -19,12 +19,12 @@ foreach ([1, 2, 3] as $position) {
 <article id="jlms-course" class="jlms-course" data-course-id="<?= (int) $course->id ?>">
  <header id="jlms-course-header"><h1 id="jlms-course-title"><?= $this->escape($course->title) ?></h1>
   <a id="jlms-course-category" href="<?=
-    Route::_('index.php?option=com_jlms&view=category&id=' . (int) $course->catid) ?>"><?=
-    $this->escape($course->category_title) ?></a>
+      Route::_('index.php?option=com_jlms&view=category&id=' . (int) $course->catid) ?>"><?=
+      $this->escape($course->category_title) ?></a>
  </header>
  <?php if (trim($fieldOutput[1]) !== '') :
         ?><div id="jlms-course-fields-after-title" class="jlms-course-fields"><?=
-    $fieldOutput[1] /* Prepared and rendered by native com_fields layouts. */ ?></div><?php
+            $fieldOutput[1] /* Prepared and rendered by native com_fields layouts. */ ?></div><?php
  endif; ?>
  <?php if (!empty($presentation['image'])) : ?>
  <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $presentation['image'])))) ?>" alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
@@ -34,23 +34,23 @@ foreach ([1, 2, 3] as $position) {
  endif; ?>
  <?php if (trim((string) $course->summary) !== "") : ?>
  <section id="jlms-course-summary"><h2><?=
-    Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?=
-    nl2br($this->escape((string) $course->summary)) ?></p></section>
+     Text::_('COM_JLMS_COURSE_PRESENTATION') ?></h2><p><?=
+     nl2br($this->escape((string) $course->summary)) ?></p></section>
  <?php endif; ?>
  <div id="jlms-course-layout" class="jlms-course-layout">
 
  <div id="jlms-course-main" class="jlms-course-main">
  <?php if (!empty($presentation['description'])) : ?>
  <section id="jlms-course-description" class="jlms-course-description"><h2><?=
-    Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?=
-    $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
+     Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?=
+     $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
  <?php endif; ?>
  <?php foreach (['objectives' => 'COM_JLMS_COURSE_OBJECTIVES', 'audience' => 'COM_JLMS_COURSE_AUDIENCE', 'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT'] as $field => $label) : ?>
         <?php if (!empty($presentation[$field])) : ?>
  <section id="jlms-course-<?=
-    str_replace('_', '-', $field) ?>" class="jlms-course-presentation-section"><h2><?=
-    Text::_($label) ?></h2><p><?=
-    nl2br($this->escape($presentation[$field])) ?></p></section>
+     str_replace('_', '-', $field) ?>" class="jlms-course-presentation-section"><h2><?=
+     Text::_($label) ?></h2><p><?=
+     nl2br($this->escape($presentation[$field])) ?></p></section>
         <?php endif; ?>
  <?php endforeach; ?>
  <?php if (trim($fieldOutput[3]) !== '') :
@@ -65,8 +65,8 @@ foreach ([1, 2, 3] as $position) {
         endif; ?>
         <?php if (!empty($presentation['estimated_minutes'])) :
             ?><dt><?=
-    Text::_('COM_JLMS_COURSE_ESTIMATED_MINUTES') ?></dt><dd id="jlms-course-estimated-duration"><?=
-    Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', (int) $presentation['estimated_minutes']) ?></dd><?php
+                Text::_('COM_JLMS_COURSE_ESTIMATED_MINUTES') ?></dt><dd id="jlms-course-estimated-duration"><?=
+                Text::sprintf('COM_JLMS_COURSE_DURATION_VALUE', (int) $presentation['estimated_minutes']) ?></dd><?php
         endif; ?>
  </dl></section>
  <?php endif; ?>
@@ -91,9 +91,7 @@ foreach ([1, 2, 3] as $position) {
     name="jform[course_announcement_consent]"
     value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
                                                                   <?php // COM_JLMS_START_RESUME was the former shared label; new enrollment uses a distinct CTA. ?>
-                                                                  <?=
-    HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?=
-    Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
+                                                                  <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
   </form>
                                                               <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'approval') : ?>
   <form id="jlms-enrollment-request-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
@@ -106,10 +104,9 @@ foreach ([1, 2, 3] as $position) {
   <p><?= Text::_('COM_JLMS_ENROLLMENT_REQUEST_EXPLANATION') ?></p>
                                                               <?php elseif ($this->hasContentAccess && !$this->canStartWindow) :
                                                                     ?><p id="jlms-course-window-closed"><?=
-    Text::_('COM_JLMS_CALENDAR_CLOSED') ?></p>
+                                                                        Text::_('COM_JLMS_CALENDAR_CLOSED') ?></p>
                                                               <?php elseif ($this->hasContentAccess) :
-                                                                    ?><p><?=
-    Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php
+                                                                    ?><p><?= Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING') ?></p><?php
                                                               endif; ?></aside>
  </div></div>
  <div id="jlms-course-supplemental" class="jlms-course-supplemental">
@@ -117,9 +114,9 @@ foreach ([1, 2, 3] as $position) {
         ?><section id="jlms-course-teachers"><h2><?= Text::_('COM_JLMS_TEACHERS') ?></h2>
         <?php foreach ($this->item['teachers'] as $teacher) :
             ?><article id="jlms-course-teacher-<?=
-    (int) $teacher['id'] ?>" class="jlms-course-teacher"><h3><a href="<?=
-    Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?=
-    $this->escape($teacher['title']) ?></a></h3>
+                (int) $teacher['id'] ?>" class="jlms-course-teacher"><h3><a href="<?=
+                Route::_('index.php?option=com_jlms&view=teacher&id=' . (int) $teacher['id']) ?>"><?=
+                $this->escape($teacher['title']) ?></a></h3>
             <?php if ($teacher['image'] !== '') :
                 ?><img src="<?= $this->escape(\Joomla\CMS\Uri\Uri::root() . implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php
             endif; ?>
@@ -132,9 +129,9 @@ foreach ([1, 2, 3] as $position) {
  <?php if (!empty($this->item['calendar'])) :
         $calendar = $this->item['calendar']; ?>
  <section id="jlms-course-calendar"><h2><?=
-    Text::_('COM_JLMS_CALENDAR') ?></h2><p><?=
-    Text::_('COM_JLMS_CALENDAR_ZONE') ?>: <?=
-    $this->escape($calendar['timezone']) ?></p><dl>
+     Text::_('COM_JLMS_CALENDAR') ?></h2><p><?=
+     Text::_('COM_JLMS_CALENDAR_ZONE') ?>: <?=
+     $this->escape($calendar['timezone']) ?></p><dl>
         <?php foreach (['publish_up' => 'COM_JLMS_CALENDAR_PUBLISH_UP','publish_down' => 'COM_JLMS_CALENDAR_PUBLISH_DOWN','starts_at' => 'COM_JLMS_CALENDAR_START','ends_at' => 'COM_JLMS_CALENDAR_END'] as $key => $label) :
             if ($calendar[$key] === null) {
                 continue;
@@ -164,9 +161,9 @@ foreach ([1, 2, 3] as $position) {
  <section id="jlms-course-outline"><h2><?= Text::_('COM_JLMS_CURRICULUM') ?></h2>
  <?php $moduleIndex = 0; foreach ($this->item['modules'] as $module) : ?>
   <details id="jlms-module-<?=
-    (int) $module->id ?>" class="jlms-module"<?=
-    $moduleIndex++ === 0 ? ' open' : '' ?>><summary class="jlms-module__summary"><h3 class="jlms-module__title"><?=
-    $this->escape($module->title) ?></h3></summary>
+      (int) $module->id ?>" class="jlms-module"<?=
+      $moduleIndex++ === 0 ? ' open' : '' ?>><summary class="jlms-module__summary"><h3 class="jlms-module__title"><?=
+      $this->escape($module->title) ?></h3></summary>
    <ol class="jlms-module__lessons"><?php foreach ($this->item['lessons'][(int) $module->id] ?? [] as $lesson) : ?>
     <li id="jlms-lesson-<?= (int) $lesson->id ?>" class="jlms-lesson"><span class="jlms-lesson__title"><?= $this->escape($lesson->title) ?></span> <span class="jlms-lesson__requirement"><?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></span><?php if (!empty($this->item['public_previews']) && (string) $lesson->kind === 'text' && (int) $lesson->preview === 1) :
         ?> <a class="jlms-lesson__public-preview" href="<?= Route::_('index.php?option=com_jlms&view=lessonpreview&course_id=' . (int) $course->id . '&lesson_id=' . (int) $lesson->id) ?>"><?= Text::_('COM_JLMS_OPEN_PUBLIC_PREVIEW') ?></a><?php
@@ -183,9 +180,9 @@ foreach ([1, 2, 3] as $position) {
             ?><p class="jlms-material__meta"><?= nl2br($this->escape($material->description)) ?></p><?php
         endif; ?>
   <span class="jlms-material__meta"><?=
-    $this->escape($material->original_name) ?> · <?=
-    $this->escape($material->mime_type) ?> · <?=
-    number_format((int) $material->byte_size / 1048576, 2) ?> MiB</span>
+      $this->escape($material->original_name) ?> · <?=
+      $this->escape($material->mime_type) ?> · <?=
+      number_format((int) $material->byte_size / 1048576, 2) ?> MiB</span>
   <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id=' . (int) $course->id . '&id=' . (int) $material->id) ?>"><?= Text::_('COM_JLMS_MATERIAL_PREVIEW_DOWNLOAD') ?></a>
  </li>
                                 <?php endforeach; ?></ul>
