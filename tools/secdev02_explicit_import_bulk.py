@@ -25,7 +25,7 @@ $offset = 0; $items = [];
 foreach (token_get_all($source) as $token) {
     $id = is_array($token) ? $token[0] : 0;
     $text = is_array($token) ? $token[1] : $token;
-    if ($id === T_NAME_FULLY_QUALIFIED && preg_match('/^\\\\(Joomla|Jlms)\\\\/', $text)) {
+    if ($id === T_NAME_FULLY_QUALIFIED && (str_starts_with($text, '\\\\Joomla\\\\') || str_starts_with($text, '\\\\Jlms\\\\'))) {
         $items[] = [$offset, strlen($text), $text];
     }
     $offset += strlen($text);
@@ -70,7 +70,6 @@ def proposal(code: str, tokens: list) -> str | None:
     for position, length, original in tokens:
         if not original.startswith(("\\Joomla\\", "\\Jlms\\")):
             continue
-        start = len(code[:position].encode("utf-8").decode("utf-8", errors="ignore")) if False else position
         # PHP tokenizer offsets are bytes, and all source edits use UTF-8 bytes.
         content_bytes = code.encode("utf-8")
         begin = content_bytes.rfind(b"\n", 0, position) + 1
