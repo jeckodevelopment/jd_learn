@@ -70,8 +70,7 @@ final class ConfigurationDiagnostics
         string $siteRoot,
         string $publicRoot,
         string $documentRoot = ''
-    ): array
-    {
+    ): array {
         $configured = trim($configured);
         $state = 'managed';
         if ($configured !== '') {
@@ -366,8 +365,7 @@ final class ConfigurationDiagnostics
         array $menuEntries,
         bool $coursesComplete,
         bool $menusComplete
-    ): array
-    {
+    ): array {
         $courseOverrides = 0;
         $courseInvalid = 0;
         foreach ($courseParams as $raw) {
