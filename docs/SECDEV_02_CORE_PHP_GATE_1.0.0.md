@@ -364,3 +364,7 @@ PHPCS 4.0.4 PSR12 full repository comparison: **1018 → 993**, net **25 finding
 ### Second batch within PR #1016: PHP echo boundaries
 
 The pinned PHPCS 4.0.4 full tracked-PHP audit measured **993 → 914** (-79) across **23 PHP files** with zero per-file/per-rule regressions. Newlines are inserted only inside `<?= ... ?>` code regions, leaving rendered markup and PHP significant tokens identical; PHP lint, source contracts and complete CI remain mandatory. **No functional coverage percentage promotion.** SECDEV-02 remains partial while findings remain and CORE/API reviews are pending.
+
+### Third batch within PR #1016: PHP control tags
+
+PHP-only whitespace layout was applied within both ordinary `<?php ... ?>` and echo blocks of mixed templates. Pinned PHPCS 4.0.4 full scan: **914 → 913**, **-1** net findings on **1 PHP files**, no introduced file/rule findings; PHP lint successful. Original significant PHP tokens are preserved. Full CI and manual acceptance remain separate. **No functional coverage promotion, SECDEV-02 still partial** while other findings/CORE/API gaps remain.

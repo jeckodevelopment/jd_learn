@@ -18,7 +18,8 @@ use Jlms\Component\Jlms\Administrator\Application\PathwayArtwork;
   <article id="jlms-pathway-<?= (int) $item->id ?>" class="jlms-card jlms-course-card jlms-pathway-card">
         <?php if ($cover['image'] !== '') : ?>
    <div class="jlms-pathway-card__cover">
-    <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover['image'])))) ?>" alt="<?=
+    <img src="<?= $this->escape(Uri::root() . implode('/', array_map('rawurlencode', explode('/', $cover['image']))))
+    ?>" alt="<?=
        $this->escape($cover['alt']) ?>" loading="lazy" decoding="async">
    </div>
         <?php endif; ?>
