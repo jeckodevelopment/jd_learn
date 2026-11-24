@@ -15,41 +15,15 @@ namespace Joomla\CMS\Router {
         }
     }
 }
-namespace Joomla\CMS\Uri {
-    final class Uri
-    {
-        public static function root(): string
-        {
-            return 'https://example.test/';
-        }
-    }
-}
+
 namespace {
+    use Jlms\Tests\Fixtures\Cat04PublicMetadata\PublicDocument;
+
+    require __DIR__ . '/fixtures/cat04-public-uri.php';
+    require __DIR__ . '/fixtures/cat04-public-document.php';
     require __DIR__ . '/../component/site/src/Helper/PublicMetadataHelper.php';
 
-    final class PublicDocument
-    {
-        public string $title = '';
-        public string $description = '';
-        public array $head = [];
-        public array $meta = [];
-        public function setTitle(string $value): void
-        {
-            $this->title = $value;
-        }
-        public function setDescription(string $value): void
-        {
-            $this->description = $value;
-        }
-        public function addHeadLink(string $url, string $type): void
-        {
-            $this->head[$type] = $url;
-        }
-        public function setMetaData(string $key, string $value, string $type = 'name'): void
-        {
-            $this->meta[$type . ':' . $key] = $value;
-        }
-    }
+
     use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
 
     $doc = new PublicDocument();
