@@ -91,8 +91,10 @@ $factory = $component->getMVCFactory();
 $course = (int) $db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='quiz-runtime-fixture'")->loadResult();
 $source = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadObject();
 $oldVersion = (int) $source->current_version_id;
-$oldRows = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . $oldVersion . ' ORDER BY id')->loadAssocList();
-$oldEnrollment = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList();
+$oldRows = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE ' .
+    'course_version_id=' . $oldVersion . ' ORDER BY id')->loadAssocList();
+$oldEnrollment = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE ' .
+    'course_id=' . $course . ' ORDER BY id')->loadAssocList();
 $draft = $authoring->createDraft($actor, $course, (int) $source->revision);
 editorialExpect($draft !== $oldVersion, 'Published course gets an independent working copy');
 $outline = $authoring->outline($actor, $course, $draft);
@@ -107,7 +109,8 @@ foreach ($quizzes as $quiz) {
     editorialExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_quiz_questions WHERE quiz_id=' .
          (int) $quiz->id)->loadResult() > 0, 'Question revision links are copied');
 }
-$revision = static fn(): int => (int) $db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult();
+$revision = static fn(): int => (int) $db->setQuery('SELECT revision FROM #__jlms_course_versions ' .
+    'WHERE id=' . $draft)->loadResult();
 $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $draft,'expected_version_revision' => $revision(),
     'module_id' => (int)$outline['modules'][0]->id,'title' => 'New lesson in working copy','kind' => 'text'
         ,'required' => '0','body' => '<p>New content</p>']);
@@ -208,7 +211,8 @@ $fieldValue = static fn(): string => (string)$db->
      $db->quote((string)$course))->loadResult();
 $item = $model->getItem($course);
 editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision,'title' => 'Course history target',
-    'com_fields' => ['history-reference' => 'HISTORY_FIELD_ORIGINAL']]), 'Course field revision can be saved into native editorial history');
+    'com_fields' => ['history-reference' => 'HISTORY_FIELD_ORIGINAL']]), 'Course field revision can be saved into ' .
+        'native editorial history');
 $targetHistory = null;
 foreach ($db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course." . $course . "' ORDER BY version_id DESC")->loadObjectList() as $candidate) {
     $snapshot = json_decode($candidate->version_data, true, 64, JSON_THROW_ON_ERROR);
@@ -220,16 +224,20 @@ foreach ($db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.course.
 editorialExpect($targetHistory !== null, 'Native course history captures the field value with its editorial revision');
 $item = $model->getItem($course);
 editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision,'title' => 'Course history current',
-    'com_fields' => ['history-reference' => 'HISTORY_FIELD_CURRENT']]), 'A later native field value can be saved before restoring history');
-$assignedVersion = (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult();
-$assignedLearners = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList();
+    'com_fields' => ['history-reference' => 'HISTORY_FIELD_CURRENT']]), 'A later native field value can be saved ' .
+        'before restoring history');
+$assignedVersion = (int)$db->setQuery('SELECT current_version_id FROM ' .
+    '#__jlms_courses WHERE id=' . $course)->loadResult();
+$assignedLearners = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE ' .
+    'course_id=' . $course . ' ORDER BY id')->loadAssocList();
 editorialExpect(
     $model->loadHistory((int)$targetHistory->version_id),
     'Native history restores course custom fields through the guarded save'
 );
 editorialExpect($fieldValue() === 'HISTORY_FIELD_ORIGINAL', 'Content History restores the custom field value');
 editorialExpect(
-    (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $assignedVersion
+    (int)$db->setQuery('SELECT current_version_id FROM ' .
+        '#__jlms_courses WHERE id=' . $course)->loadResult() === $assignedVersion
     && $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')
         ->loadAssocList() === $assignedLearners,
     'Content History field restore preserves the active teaching version and learner assignments'
@@ -321,7 +329,8 @@ $app->getSession()->set('user', $linked);
 $item = $teacher->getItem($teacherId);
 editorialExpect($teacher->save(['id' => $teacherId,'revision' => (int)$item->revision,'bio' =>
      'Teacher self-edited presentation','state' => 0,'user_id' => (int)$actor->id,
-    'com_fields' => ['teaching-contact' => 'own@example.invalid']]), 'Linked teacher edits their presentation and permitted custom fields');
+    'com_fields' => ['teaching-contact' => 'own@example.invalid']]), 'Linked teacher edits their presentation and ' .
+        'permitted custom fields');
 $item = $teacher->getItem($teacherId);
 editorialExpect(
     (int)$item->state === 1 && (int)$item->user_id === (int)$linked->id,

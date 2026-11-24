@@ -35,6 +35,11 @@ require $root . '/administrator/includes/framework.php';
 \define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
 \define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
+
+use Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate as JdCourseMessageTemplate;
+use Jlms\Plugin\Privacy\Jdlearn\Extension\Jdlearn as JdJdlearn;
+use Joomla\CMS\Language\LanguageFactoryInterface as NativeLanguageFactoryInterface;
+use Joomla\Component\Privacy\Administrator\Export\Domain as NativeDomain;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -58,7 +63,7 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(NativeLanguageFactoryInterface::class)->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 
@@ -225,7 +230,8 @@ foreach ($mailTemplateIds as $templateId) {
         throw new \RuntimeException('JD Learn mail template is not registered in Joomla: ' . $templateId);
     }
     if (trim((string) $mailTemplate->subject) === '' || trim((string) $mailTemplate->body) === '' || trim((string) $mailTemplate->htmlbody) === '') {
-        throw new \RuntimeException('JD Learn mail template must include subject, plain-text and HTML content: ' . $templateId);
+        throw new \RuntimeException('JD Learn mail template must include subject, ' .
+            'plain-text and HTML content: ' . $templateId);
     }
     $tags = (array) $mailTemplate->params->get('tags', []);
     $requiredTags = match ($templateId) {
@@ -235,13 +241,14 @@ foreach ($mailTemplateIds as $templateId) {
     };
     foreach ($requiredTags as $requiredTag) {
         if (!in_array($requiredTag, $tags, true)) {
-            throw new \RuntimeException('JD Learn mail template does not document its variable ' . $requiredTag . ': ' . $templateId);
+            throw new \RuntimeException('JD Learn mail template does not document its ' .
+                'variable ' . $requiredTag . ': ' . $templateId);
         }
     }
 }
 // Course-message composition must load the actual Joomla template and validate a
 // per-send snapshot without changing the global template.
-$templateSource = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::load('*');
+$templateSource = JdCourseMessageTemplate::load('*');
 if (
     !str_contains($templateSource['subject'], '{MESSAGE_SUBJECT}')
     || !str_contains($templateSource['body'], '{MESSAGE_BODY_TEXT}')
@@ -255,7 +262,7 @@ $sampleVars = [
     'COURSE_TITLE' => 'Corso', 'COURSE_TITLE_HTML' => 'Corso',
     'SITE_NAME' => 'Sito', 'SITE_NAME_HTML' => 'Sito',
 ];
-$composerSource = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
+$composerSource = JdCourseMessageTemplate::forComposition('*');
 if (
     str_contains(implode(' ', $composerSource), '{MESSAGE_SUBJECT}')
     || str_contains(implode(' ', $composerSource), '{MESSAGE_BODY_TEXT}')
@@ -263,12 +270,12 @@ if (
 ) {
     throw new \RuntimeException('Legacy free-message fields were not resolved for the single composer.');
 }
-$checked = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($composerSource, $sampleVars);
+$checked = JdCourseMessageTemplate::validate($composerSource, $sampleVars);
 if ($checked['subject'] !== $composerSource['subject']) {
     throw new \RuntimeException('Per-message template snapshot was unexpectedly changed.');
 }
 try {
-    \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+    JdCourseMessageTemplate::validate(
         ['subject' => '{UNSUPPORTED_TAG}', 'body' => 'Text', 'htmlbody' => '<p>Text</p>'],
         $sampleVars
     );
@@ -284,7 +291,7 @@ $renderedSubject = $composerRenderer->render('{COURSE_TITLE}: {MESSAGE_SUBJECT}'
 if ($renderedSubject !== 'Corso: Avviso') {
     throw new \RuntimeException('Course email subject preview differs from Joomla template replacement.');
 }
-$untrusted = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+$untrusted = JdCourseMessageTemplate::validate(
     ['subject' => '{COURSE_TITLE}', 'body' => '{COURSE_TITLE}', 'htmlbody' => '<p>{USER_FULLNAME_HTML}</p><script>alert(1)</script>'],
     $sampleVars
 );
@@ -296,12 +303,12 @@ if (!str_contains($untrusted['htmlbody'], '<p>')) {
 }
 // Issue: a single HTML composer must accept documented recipient/course tokens
 // without requiring a second free-message field or self-referential slots.
-$singleComposer = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::forComposition('*');
+$singleComposer = JdCourseMessageTemplate::forComposition('*');
 $singleComposer['subject'] = 'Aggiornamento {COURSE_TITLE}';
 $singleComposer['htmlbody'] = ('<p>Ciao {USER_FULLNAME_HTML}, novità sul corso '
     . '{COURSE_TITLE_HTML}.</p><p>{SITE_NAME_HTML}</p>');
-$singleComposer['body'] = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($singleComposer['htmlbody']);
-$checkedSingle = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($singleComposer, $sampleVars);
+$singleComposer['body'] = JdCourseMessageTemplate::plainTextFromHtml($singleComposer['htmlbody']);
+$checkedSingle = JdCourseMessageTemplate::validate($singleComposer, $sampleVars);
 if (
     $checkedSingle['subject'] !== 'Aggiornamento {COURSE_TITLE}'
     || !str_contains($checkedSingle['body'], '{USER_FULLNAME}')
@@ -317,7 +324,7 @@ $legacyMessage = (object) [
     'body' => "{NAME} — {MESSAGE_BODY_TEXT} — {SITENAME}",
     'htmlbody' => '<p>Ciao {NAME_HTML}, {COURSE_HTML} — {MESSAGE_BODY_HTML}</p><p>{SITENAME_HTML}</p>',
 ];
-$messageTemplate = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::class;
+$messageTemplate = JdCourseMessageTemplate::class;
 try {
     $db->updateObject('#__mail_templates', $legacyMessage, ['template_id', 'language']);
     $legacyComposition = $messageTemplate::forComposition('it-IT');
@@ -358,14 +365,14 @@ try {
     $defaultMessage = (object) (['template_id' => 'com_jlms.course.message', 'language' => ''] + $templateSource);
     $db->updateObject('#__mail_templates', $defaultMessage, ['template_id', 'language']);
 }
-$dangerousPlain = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml(
+$dangerousPlain = JdCourseMessageTemplate::plainTextFromHtml(
     '<p>Messaggio &amp; comunicazione</p><script>alert("bad")</script>'
 );
 if (str_contains($dangerousPlain, 'alert') || !str_contains($dangerousPlain, 'Messaggio & comunicazione')) {
     throw new \RuntimeException('HTML-derived plain text must be safe and readable.');
 }
 try {
-    \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+    JdCourseMessageTemplate::validate(
         ['subject' => '{MESSAGE_SUBJECT}', 'body' => 'Testo', 'htmlbody' => '<p>Testo</p>'],
         $sampleVars
     );
@@ -506,7 +513,7 @@ foreach ($privacyExportData as $contribution) {
     }
 
     foreach ($contribution as $domain) {
-        if ($domain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain && str_starts_with($domain->name, 'jdlearn_')) {
+        if ($domain instanceof NativeDomain && str_starts_with($domain->name, 'jdlearn_')) {
             $privacyDomainNames[] = $domain->name;
         }
     }
@@ -519,7 +526,7 @@ sort($expectedPrivacyDomainNames);
 if ($privacyDomainNames !== $expectedPrivacyDomainNames) {
     throw new \RuntimeException('JD Learn privacy export domains missing: ' . implode(', ', $privacyDomainNames));
 }
-$privacyPlugin = new \Jlms\Plugin\Privacy\Jdlearn\Extension\Jdlearn((array) PluginHelper::getPlugin('privacy', 'jdlearn'));
+$privacyPlugin = new JdJdlearn((array) PluginHelper::getPlugin('privacy', 'jdlearn'));
 $privacyPlugin->setApplication($app);
 $privacyPlugin->setDatabase($db);
 $privacyUserId = (int) $db->setQuery("SELECT id FROM #__users WHERE username='ciprivacyclean'")->loadResult();
@@ -602,7 +609,7 @@ foreach (['pending', 'confirmed', 'revoked'] as $consentFixtureState) {
     foreach ($consentExportEvent->getArgument('result', []) as $contribution) {
         foreach ((array) $contribution as $domain) {
             if (
-                $domain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
+                $domain instanceof NativeDomain
                 && $domain->name === 'jdlearn_course_announcement_consent'
             ) {
                 $foundConsentDomain = count($domain->getItems()) === 1;
@@ -680,7 +687,7 @@ $privacyMailDomains = [];
 foreach ($privacySubjectDomains as $privacyContribution) {
     foreach ((array) $privacyContribution as $privacyDomain) {
         if (
-            $privacyDomain instanceof \Joomla\Component\Privacy\Administrator\Export\Domain
+            $privacyDomain instanceof NativeDomain
             && $privacyDomain->name === 'jdlearn_mail_deliveries'
         ) {
             $privacyMailDomains[] = $privacyDomain;
@@ -742,7 +749,8 @@ $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId
 $db->setQuery(('INSERT INTO #__jlms_mail_consents '
     . '(user_id,state,origin,policy_version,requested_at,confirmed_at) VALUES (')
     . (int) $userId . ",'confirmed','dashboard','ci-test',UTC_TIMESTAMP(),UTC_TIMESTAMP())")->execute();
-$confirmedAt = (string) $db->setQuery('SELECT confirmed_at FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->loadResult();
+$confirmedAt = (string) $db->setQuery('SELECT confirmed_at FROM ' .
+    '#__jlms_mail_consents WHERE user_id=' . (int) $userId)->loadResult();
 $linkOne = $mailConsent->createUnsubscribeUrl((int) $userId);
 $linkTwo = $mailConsent->createUnsubscribeUrl((int) $userId);
 parse_str((string) parse_url((string) $linkOne, PHP_URL_QUERY), $linkQueryOne);
@@ -752,7 +760,8 @@ $tokenTwo = (string) ($linkQueryTwo['token'] ?? '');
 if (!$linkOne || !$linkTwo || $tokenOne === '' || $tokenTwo === '' || array_key_exists('user_id', $linkQueryOne) || array_key_exists('email', $linkQueryOne)) {
     throw new \RuntimeException('Unsubscribe link did not contain an opaque token or exposed the user id.');
 }
-$db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 SECOND)')
+$db->setQuery($db->getQuery(true)->update('#__jlms_mail_unsubscribe_tokens')->set('expires_at = DATE_SUB(UTC_TIMESTAMP(), ' .
+    'INTERVAL 1 SECOND)')
     ->where('token_hash = ' . $db->quote(hash('sha256', $tokenOne))))->execute();
 if ($mailConsent->revokeByToken($tokenOne) || $mailConsent->state((int) $userId) !== 'confirmed') {
     throw new \RuntimeException('Expired unsubscribe token revoked consent.');

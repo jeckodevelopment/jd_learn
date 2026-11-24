@@ -220,7 +220,8 @@ final class CategoryReassignmentService
                 }
             }
         } catch (\Throwable $error) {
-            Log::add('Category reassignment Finder refresh failed; course count=' . count($ids), Log::WARNING, 'com_jlms');
+            Log::add('Category reassignment Finder refresh failed; course ' .
+                'count=' . count($ids), Log::WARNING, 'com_jlms');
         }
     }
 }

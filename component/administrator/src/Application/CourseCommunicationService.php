@@ -221,7 +221,8 @@ final class CourseCommunicationService
         }
         $token = bin2hex(random_bytes(32));
         $claim = $this->db->createQuery()->update('#__jlms_jobs')->set("status='running'")
-            ->set('lease_token=' . $this->db->quote($token))->set('lease_until=DATE_ADD(UTC_TIMESTAMP(6), INTERVAL 5 MINUTE)')
+            ->set('lease_token=' . $this->db->quote($token))->set('lease_until=DATE_ADD(UTC_TIMESTAMP(6), INTERVAL 5 ' .
+                'MINUTE)')
             ->set('attempts=attempts+1')->where('id=' . (int) $job->id)
             ->where("status IN ('queued','running')")->where('(lease_until IS NULL OR lease_until < UTC_TIMESTAMP(6))');
         $this->db->setQuery($claim)->execute();

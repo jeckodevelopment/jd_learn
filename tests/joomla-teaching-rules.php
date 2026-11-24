@@ -98,7 +98,9 @@ function ruleLearning(?int $course = null): array
         return [$db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')
             ->loadAssocList(),$db->setQuery(('SELECT a.* FROM #__jlms_attempts a JOIN #__jlms_enrollments e ON '
                 . 'e.id=a.enrollment_id WHERE e.course_id=') . $course . ' ORDER BY a.id')->
-                    loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN #__jlms_enrollments e ON e.id=p.enrollment_id WHERE e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
+                    loadAssocList(),$db->setQuery('SELECT p.* FROM #__jlms_lesson_progress p JOIN ' .
+                        '#__jlms_enrollments e ON e.id=p.enrollment_id WHERE ' .
+                        'e.course_id=' . $course . ' ORDER BY p.enrollment_id,p.lesson_id')->loadAssocList()];
     }return [$db->setQuery('SELECT * FROM #__jlms_enrollments ORDER BY id')->loadAssocList(),$db
         ->setQuery('SELECT * FROM #__jlms_attempts ORDER BY id')->loadAssocList(),$db
             ->setQuery('SELECT * FROM #__jlms_lesson_progress ORDER BY enrollment_id,lesson_id')->loadAssocList()];
@@ -623,7 +625,8 @@ ruleExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_lesson_progress WHER
     . (int)$consultationVideo)->loadResult() === $progressBeforeConsultationPlayback
     && (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_progress_sessions WHERE lesson_id='
         . (int)$consultationVideo)->loadResult() ===
-             $sessionsBeforeConsultationPlayback, 'Consultation video playback creates no progress rows or telemetry sessions');
+             $sessionsBeforeConsultationPlayback, 'Consultation video playback creates no progress rows or ' .
+                 'telemetry sessions');
 $version = $authoring->createDraft($actor, $course, (int)ruleRow('courses', $course)->revision);
 file_put_contents($fixture, json_encode(['course' => $course,'version' => $version,'original'
     => $original], JSON_THROW_ON_ERROR));

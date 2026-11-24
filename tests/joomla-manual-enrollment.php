@@ -25,6 +25,11 @@ require $root . '/administrator/includes/framework.php';
 \define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
 \define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
+
+use Jlms\Component\Jlms\Administrator\Application\CourseOperationsService as JdCourseOperationsService;
+use Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService as JdManualEnrollmentService;
+use Joomla\CMS\Language\LanguageFactoryInterface as NativeLanguageFactoryInterface;
+use Joomla\CMS\User\User as NativeUser;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -42,7 +47,7 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(NativeLanguageFactoryInterface::class)->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -93,7 +98,7 @@ if (($argv[2] ?? '') === 'worker') {
     $command = $race['commands'][(int)($argv[4] ?? 0)];
     try {
         $id = ($argv[3] ?? '') === 'auto' ? $learning->start(new
-            \Joomla\CMS\User\User($command[1]), 'en-GB', $command[0], bin2hex(random_bytes(16)))
+            NativeUser($command[1]), 'en-GB', $command[0], bin2hex(random_bytes(16)))
             : $service->apply($actor, ...$command);
         echo 'ok:' . $id . "\n";
     } catch (\RuntimeException $e) {
@@ -111,11 +116,12 @@ if (($argv[2] ?? '') === 'retained') {
         'manual assignment provenance retained'
     );
     manualExpect(
-        $learning->resumeTarget(new \Joomla\CMS\User\User($f['learner']), 'en-GB', (int)$e->id)['lesson_id'] === $f['lesson'],
+        $learning->resumeTarget(new NativeUser($f['learner']), 'en-GB', (int)$e->id)['lesson_id'] === $f['lesson'],
         'manual learner remains able to resume'
     );
     manualExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE enrollment_id=' . (int)$e->id)->loadResult() === 1,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_manual_enrollments WHERE ' .
+            'enrollment_id=' . (int)$e->id)->loadResult() === 1,
         'single manual receipt retained'
     );
     manualExpect((int)$db->setQuery(("SELECT COUNT(*) FROM #__action_logs WHERE "
@@ -146,7 +152,7 @@ $pub = $component->getPublicationService();
 $pub->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$pub->transitions($actor, $course)[0]->id);
 $users = [];
 foreach (['one','failure','race','capacity1','capacity2','automatic','snapshot','http','denied'] as $name) {
-    $u = new \Joomla\CMS\User\User();
+    $u = new NativeUser();
     $data = ['name' => 'CI Manual ' . $name,'username' => 'cimanual' . $name,'email' => 'cimanual' .
          $name . '@example.invalid','password' => 'Ci-only-Manual-Password-2026','password2' =>
          'Ci-only-Manual-Password-2026','groups' => $name === 'denied' ? [2] : [2,$group],'block' => 0,
@@ -154,9 +160,9 @@ foreach (['one','failure','race','capacity1','capacity2','automatic','snapshot',
     if (!$u->bind($data) || !$u->save()) {
         throw new \RuntimeException($u->getError());
     }
-    $users[$name] = new \Joomla\CMS\User\User((int)$u->id);
+    $users[$name] = new NativeUser((int)$u->id);
 }
-$manager = new \Joomla\CMS\User\User((int)$rf['manager']);
+$manager = new NativeUser((int)$rf['manager']);
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('com_jlms.course.' . $course);
 $rules = json_decode($asset->rules, true);
@@ -178,10 +184,12 @@ manualDenied(
     409,
     'stale course operation preview is rejected'
 );
-$operationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult();
+$operationCount = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
+    'course_id=' . $course)->loadResult();
 $operations->apply($manager, $course, 'admissions_close', $closed['impact']['revision'], 'Fixture closure', $closedKey, $closed['impact']['hash']);
 manualExpect(
-    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
+        'course_id=' . $course)->loadResult() === $operationCount,
     'identical course operation retry is idempotent'
 );
 // Archived courses must not be pre-armed: restore is editorial only and leaves both gates closed.
@@ -197,14 +205,15 @@ try {
         );
     }
     manualExpect(
-        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE course_id=' . $course)->loadResult() === $operationCount,
+        (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_course_operations WHERE ' .
+            'course_id=' . $course)->loadResult() === $operationCount,
         'archived operations leave audit untouched'
     );
 } finally {
     $db->setQuery('UPDATE #__jlms_courses SET state=1, delivery_enabled=1 WHERE id=' . (int)$course)->execute();
 }
 $opened = $operations->editor($manager, $course, 'admissions_open');
-$brokenOperations = new \Jlms\Component\Jlms\Administrator\Application\CourseOperationsService($db, $component->getEnrollmentRosterService(), static function (): void {
+$brokenOperations = new JdCourseOperationsService($db, $component->getEnrollmentRosterService(), static function (): void {
     throw new \RuntimeException('COM_JLMS_COURSE_OPERATIONS_AUDIT_FAILED', 503);
 });
 manualDenied(
@@ -259,7 +268,7 @@ manualExpect(
 );
 
 manualDenied(
-    fn()=>$service->editor(new \Joomla\CMS\User\User(), $course, (int)$users['one']->id, 'en-GB'),
+    fn()=>$service->editor(new NativeUser(), $course, (int)$users['one']->id, 'en-GB'),
     401,
     'anonymous manual admission denied'
 );
@@ -356,7 +365,7 @@ try {
 } finally {
     $update('users', (int)$users['failure']->id, ['block' => 0]);
 }
-$broken = new \Jlms\Component\Jlms\Administrator\Application\ManualEnrollmentService($db, $learning, $component->getCatalogService(), $component->getEnrollmentRosterService(), static function (): void {
+$broken = new JdManualEnrollmentService($db, $learning, $component->getCatalogService(), $component->getEnrollmentRosterService(), static function (): void {
     throw new \RuntimeException('COM_JLMS_MANUAL_AUDIT_FAILED', 503);
 });
 $beforeFailure = $counts();

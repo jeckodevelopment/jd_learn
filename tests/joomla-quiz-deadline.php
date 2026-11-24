@@ -49,6 +49,10 @@ require $root . '/administrator/includes/framework.php';
 \define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
 \define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
+
+use Jlms\Component\Jlms\Administrator\Application\QuizAttemptService as JdQuizAttemptService;
+use Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService as JdQuizDeadlineService;
+use Joomla\CMS\User\User as NativeUser;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -125,16 +129,16 @@ function deadlineKey(): string
         20
     );
 }
-function deadlineUser(string $name, int $group): \Joomla\CMS\User\User
+function deadlineUser(string $name, int $group): NativeUser
 {
-    $u = new \Joomla\CMS\User\User();
+    $u = new NativeUser();
     $d = ['name' => 'CI ' . $name,'username' => $name,'email' => $name . '@example.invalid','password' =>
          'Ci-only-Learner-Password-2026','password2' => 'Ci-only-Learner-Password-2026','groups' => [2,
         $group],'block' => 0,'activation' => ''];
     if (!$u->bind($d) || !$u->save()) {
         throw new \RuntimeException((string)$u->getError());
     }
-    return new \Joomla\CMS\User\User((int)$u->id);
+    return new NativeUser((int)$u->id);
 }
 function deadlineCommand(array $i, string $reason = 'PRIVATE_DEADLINE_REASON'): array
 {
@@ -145,17 +149,17 @@ function deadlineCommand(array $i, string $reason = 'PRIVATE_DEADLINE_REASON'): 
 $actor = $app->getIdentity();
 $learning = $component->getLearningService();
 $now = time();
-$audit = static function (\Joomla\CMS\User\User $actor, array $message) use ($db): void {
+$audit = static function (NativeUser $actor, array $message) use ($db): void {
     (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($db))->record(
         $actor,
         $message,
         'quizextend'
     );
 };
-$deadline = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), $audit, static function () use (&$now): int {
+$deadline = new JdQuizDeadlineService($db, $component->getQuizTimeService(), $audit, static function () use (&$now): int {
     return $now;
 });
-$runtime = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
+$runtime = new JdQuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
     return $now;
 }, $component->getQuizTimeService());
 $f = json_decode(file_get_contents(dirname($root) . '/quiz-attempts-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
@@ -284,7 +288,7 @@ deadlineExpect(
     $deadline->extend($actor, ...$command) === $id,
     'old successful replay after a later extension remains a no-op'
 );
-$broken = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), static function (): void {
+$broken = new JdQuizDeadlineService($db, $component->getQuizTimeService(), static function (): void {
     throw new \RuntimeException('COM_JLMS_QUIZ_EXTEND_AUDIT_FAILED', 503);
 }, static function () use (&$now): int {
     return $now;
@@ -321,7 +325,7 @@ deadlineReject(
 $managerGroup = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI assessment time manager'")->loadResult();
 $managerId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='ciquiztimemanager'")->loadResult();
 \Joomla\CMS\User\UserHelper::addUserToGroup($managerId, $managerGroup);
-$manager = new \Joomla\CMS\User\User($managerId);
+$manager = new NativeUser($managerId);
 $now = time();
 $managed = $runtime->start($u, 'en-GB', $enrollment, $f['practice_id'], deadlineKey());
 $mc = deadlineCommand($deadline->editor(
@@ -502,7 +506,7 @@ $runRace = static function (
 $runRace('ciquizextendrace', false);
 $runRace('ciquizexpirerace', true);
 // Native HTTP uses a separate enrollment, preserving previous fixtures.
-$http = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());
+$http = new NativeUser((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());
 $httpEnrollment = $f['http_enrollment'];
 $now = time();
 $httpA = $runtime->start($http, 'en-GB', $httpEnrollment, $f['practice_id'], deadlineKey());
