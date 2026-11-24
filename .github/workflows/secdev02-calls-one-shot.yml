@@ -26,6 +26,7 @@ jobs:
       - name: Apply source-wide guarded parameter reflow
         run: |
           python3 tools/secdev02_calls_reflow_bulk.py --self-test
+          echo 'Source-contract-preserving bulk pass'
           python3 tools/secdev02_calls_reflow_bulk.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs
           git diff --check
       - name: Validate PHP, PSR12 baseline and source structure
