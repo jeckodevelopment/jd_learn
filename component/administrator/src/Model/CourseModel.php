@@ -232,7 +232,9 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
         $id = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['course_id'] ?? null);
         $versionId = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['version_id'] ?? null);
         $revision = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['revision'] ?? null);
-        $versionRevision = \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['expected_version_revision'] ?? null);
+        $versionRevision =
+        \Jlms\Component\Jlms\Administrator\Application\CurriculumService::id($input['expected_version_revision']
+        ?? null);
         $source = $this->getItem($id);
         if (
             !$source || !\Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit($actor, $source)
@@ -494,7 +496,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 } else {
                     $params['catalog_position'] = (int) $position;
                 }
-                $data['params_json'] = json_encode($params, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                $data['params_json'] = json_encode($params, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE |
+                    JSON_UNESCAPED_SLASHES);
                 unset($data['catalog_position']);
             }
             if ($copySource !== null) {
@@ -572,7 +575,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 $programme = clone $copySource->version;
                 $programme->course_id = $newId;
                 $programme->title_snapshot = $target->title;
-                $programme->presentation_json = \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::snapshot($target);
+                $programme->presentation_json =
+                    \Jlms\Component\Jlms\Administrator\Application\CoursePresentation::snapshot($target);
                 (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionCopy($db))
                     ->copy($user, $programme, 1, true, (int) $copySource->version->id);
             }

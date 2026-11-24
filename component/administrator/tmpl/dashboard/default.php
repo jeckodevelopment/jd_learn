@@ -36,22 +36,39 @@ $schedulerHealthKeys = [
             } ?>
             <section class="jlms-admin-dashboard__group"
     aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>">
-                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
+                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos(
+                    $groupKey,
+                    '_'
+                ) + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
                 <ul>
                     <?php foreach ($shortcuts as $shortcut) : ?>
                         <li>
-                            <a id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key']))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
-                                <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
+                            <a
+                            id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace(
+                                'COM_JLMS_',
+                                '',
+                                $shortcut['key']
+                            ))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
+                                <span
+                            class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>"
+                            aria-hidden="true"></span>
                                 <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
                             </a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <?php if ($groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION' && $this->mailScheduler && ($this->mailScheduler['state'] !== 'operational' && $this->mailScheduler['state'] !== 'waiting' || $this->mailScheduler['duplicates'])) : ?>
+                <?php if (
+                $groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION' && $this->mailScheduler && ($this
+                    ->mailScheduler['state'] !== 'operational' && $this->mailScheduler['state'] !== 'waiting'
+                    || $this->mailScheduler['duplicates'])
+) : ?>
                     <p class="small alert alert-warning mt-2 mb-0" role="status">
                         <?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_WARNING')) ?>
                         <?php if ($this->canManageScheduler) :
-                            ?><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a><?php
+                            ?><a
+                            href="<?=
+                             \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?=
+                             $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a><?php
                         endif; ?>
                     </p>
                 <?php endif; ?>
@@ -74,19 +91,27 @@ $schedulerHealthKeys = [
                 <?php foreach ($this->schedulerHealth as $task) : ?>
                     <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
                         <th scope="row"><?= $this->escape(Text::_($task['label'])) ?></th>
-                        <td><?= $this->escape(Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')) ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') :
-                            ?> · <?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_DUPLICATES')) ?><?php
+                        <td><?= $this->escape(Text::_($schedulerHealthKeys[$task['state']]
+                            ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')) ?><?php if (
+                                $task['duplicates']
+                                && $task['state'] !== 'duplicates'
+                            ) :
+                                ?> · <?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_DUPLICATES')) ?><?php
                             endif; ?></td>
                         <td><?= $this->escape((string) ($task['last_execution'] ?: Text::_('JNEVER'))) ?></td>
                         <td><?= $this->escape((string) ($task['next_execution'] ?: '—')) ?></td>
-                        <td><?= $this->escape(Text::_(SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates']))) ?></td>
+                        <td><?= $this->escape(Text::_(SchedulerHealth::guidanceKey(
+                            (string) $task['state'],
+                            (bool) $task['duplicates']
+                        ))) ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
         <?php if ($this->canManageScheduler) : ?>
-        <p><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a></p>
+        <p><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this
+            ->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a></p>
         <?php endif; ?>
     </details>
     <?php endif; ?>
@@ -98,7 +123,12 @@ $schedulerHealthKeys = [
         <?php else : ?>
             <ul>
                 <?php foreach ($this->providers as $provider) : ?>
-                    <li data-jlms-provider="<?= $this->escape($provider['key']) ?>"><span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $this->escape(Text::_(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey((string) $provider['stateKey']))) ?></p></li>
+                    <li
+                    data-jlms-provider="<?= $this->escape($provider['key']) ?>"><span><?= $this
+                        ->escape(Text::_($provider['labelKey'])) ?></span> <span class="badge bg-<?= $this
+                        ->escape($provider['stateClass']) ?>"><?= $this
+                        ->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $this
+                        ->escape(Text::_(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey((string) $provider['stateKey']))) ?></p></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>

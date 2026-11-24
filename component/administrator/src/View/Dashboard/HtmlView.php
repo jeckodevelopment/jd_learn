@@ -232,7 +232,8 @@ final class HtmlView extends BaseHtmlView
                     => (string) $row->language],
                 $db->setQuery($mailTemplateQuery)->loadObjectList()
             );
-            $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::mailTemplates(
+            $this->configurationDiagnostics[] =
+            \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::mailTemplates(
                 $requiredTemplates,
                 $installedTemplates
             );
