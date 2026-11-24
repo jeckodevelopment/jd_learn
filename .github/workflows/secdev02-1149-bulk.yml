@@ -1,0 +1,53 @@
+name: SECDEV-02 bounded bulk remediation (temporary)
+on:
+  push:
+    branches:
+      - style/secdev02-1149-mass-remediation
+    paths:
+      - '.github/workflows/secdev02-1149-bulk.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  remediate:
+    if: github.repository == 'jeckodevelopment/jd_learn'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PHP CodeSniffer
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Execute broad token-safe remediation passes
+        run: |
+          python3 tools/secdev02_granular_expression_batch.py --self-test
+          python3 tools/secdev02_coordinated_bulk.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --pass 1 --self-test
+          python3 tools/secdev02_granular_expression_batch.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --top-files 250 --max-examined 6 --max-fixes 4 | tee /tmp/secdev02-bulk-pass1.log
+          python3 tools/secdev02_granular_expression_batch.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --top-files 430 --max-examined 4 --max-fixes 3 | tee /tmp/secdev02-bulk-pass2.log
+          git diff --check
+      - name: Validate changed PHP sources and no introduced PHPCS findings
+        run: |
+          git diff --name-only --diff-filter=ACM -- '*.php' | while IFS= read -r f; do php -l "$f" || exit 1; done
+          python3 tests/secdev02-psr12-phpcs.py --self-test
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          python3 tests/secdev02-psr4-hygiene.py --base-ref origin/main
+          python3 tools/build.py
+          python3 tools/check.py
+      - name: Record measured result and commit changes
+        run: |
+          echo 'Bulk remediation totals:'
+          grep -h 'granular bulk accepted_files=' /tmp/secdev02-bulk-pass*.log
+          git status --short
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.php'
+          if git diff --cached --quiet; then
+            echo 'No acceptable code changes produced'
+            exit 1
+          fi
+          git commit -m 'style(SECDEV-02): mass-remediate remaining PSR-12 PHP expressions'
+          git push origin HEAD:style/secdev02-1149-mass-remediation
