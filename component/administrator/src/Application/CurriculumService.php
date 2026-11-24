@@ -11,6 +11,8 @@ use Joomla\Database\ParameterType;
 use Jlms\Component\Jlms\Administrator\Domain\LessonTranscript;
 use Jlms\Component\Jlms\Administrator\Domain\DecimalId;
 use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
+use Jlms\Component\Jlms\Administrator\Domain\VideoDuration;
+use Jlms\Component\Jlms\Administrator\Domain\TeachingRules;
 use Jlms\Contracts\Video\SourceInput;
 use Jlms\Contracts\Video\VideoProviderRegistryInterface;
 
@@ -699,7 +701,7 @@ final class CurriculumService
                         $this->durationFingerprint($actor, $input),
                         (string)($durationProof['fingerprint'] ?? '')
                     )
-                    || !\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::valid($durationProof['duration_ms'] ?? null)
+                    || !VideoDuration::valid($durationProof['duration_ms'] ?? null)
                     || !in_array($durationProof['origin'] ?? '', ['author_sdk','provider_api'], true)
                 ) {
                     throw new \DomainException('COM_JLMS_VIDEO_METADATA_STALE');
@@ -733,7 +735,7 @@ final class CurriculumService
         $thresholdSubmitted = array_key_exists('video_threshold_percent', $input);
         $threshold = null;
         if ($kind === 'video' && $thresholdSubmitted && $input['video_threshold_percent'] !== '') {
-            $threshold = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::basisPoints($input['video_threshold_percent']);
+            $threshold = TeachingRules::basisPoints($input['video_threshold_percent']);
         } elseif ($kind !== 'video' && $thresholdSubmitted && $input['video_threshold_percent'] !== '') {
             throw new \DomainException('COM_JLMS_INVALID_INPUT');
         }
