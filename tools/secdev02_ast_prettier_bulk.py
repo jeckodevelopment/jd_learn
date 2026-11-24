@@ -101,7 +101,7 @@ def main() -> int:
         before = phpcs_counts(args.phpcs, path)
         least = sum(before.values())
         best = original
-        for width in (120, 108):
+        for width in (100, 96, 88, 80):
             command = [
                 str(prettier), "--plugin=@prettier/plugin-php", "--parser=php",
                 f"--print-width={width}", str(path.resolve())
