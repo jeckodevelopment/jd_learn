@@ -361,7 +361,8 @@ final class VideoProgressService
                     json_decode($progress->coverage_json, true, 32, JSON_THROW_ON_ERROR),
                     $telemetry['intervals'],
                     min(\Jlms\Component\Jlms\Administrator\Domain\VideoDuration::MAX, (int)$lesson
-                        ->duration_ms + \Jlms\Component\Jlms\Administrator\Domain\VideoDuration::tolerance((int)$lesson->duration_ms))
+                        ->duration_ms +
+                        \Jlms\Component\Jlms\Administrator\Domain\VideoDuration::tolerance((int)$lesson->duration_ms))
                 );
             } catch (\InvalidArgumentException $error) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_EVENTS_INVALID', 422);

@@ -179,7 +179,8 @@ final class HtmlView extends BaseHtmlView
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $storageRoot = (string) \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
                 ->get('material_storage_root', '');
-            $this->configurationDiagnostics[] = \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::storage(
+            $this->configurationDiagnostics[] =
+            \Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::storage(
                 $storageRoot,
                 JPATH_ROOT,
                 defined('JPATH_PUBLIC') ? JPATH_PUBLIC : JPATH_ROOT,
