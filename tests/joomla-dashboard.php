@@ -8,7 +8,12 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required.');
 }
-$fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+$fixtureDb = new \PDO(
+    getenv('JLMS_TEST_DSN'),
+    getenv('JLMS_TEST_USER'),
+    getenv('JLMS_TEST_PASSWORD'),
+    [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+);
 $languagePlugin = $fixtureDb->query(("SELECT enabled FROM joomla_extensions WHERE type='plugin' AND "
     . "folder='system' AND element='languagefilter'"))->fetchColumn();
 $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND "
@@ -99,7 +104,10 @@ if (($argv[2] ?? '') === 'retained') {
     $card = array_values(array_filter($cards, static fn($c)=>$c['id'] === $saved['completed']))[0];
     dashExpect($card['learning_state'] === 'completed' && $card['access'] === 'expired'
         && $card['percent'] === 100, 'completion and expired access retained independently');
-    dashExpect($learning->resumeTarget($user, 'en-GB', $saved['active'])['lesson_id'] === $saved['lesson'], 'resume history retained');
+    dashExpect(
+        $learning->resumeTarget($user, 'en-GB', $saved['active'])['lesson_id'] === $saved['lesson'],
+        'resume history retained'
+    );
     $issued = $component->getCertificateService()->listForStudent($user);
     dashExpect(
         count($issued) === 1 && $issued[0]['enrollment_id'] === $saved['completed'],
@@ -185,16 +193,25 @@ dashExpect($byId[$suspended]['access'] === 'suspended' && $byId[$cancelled]['acc
 dashExpect(count($read($owner, 'completed')) === 1 && count($read($owner, 'not_started')) === 24
     && $read($owner, 'in_progress') === [], 'progress filter does not conflate access status');
 $target = $learning->resumeTarget($owner, 'en-GB', $active);
-dashExpect($target['lesson_id'] === $f['lessons'][0], 'first required incomplete activity chosen when no last activity');
+dashExpect(
+    $target['lesson_id'] === $f['lessons'][0],
+    'first required incomplete activity chosen when no last activity'
+);
 dashExpect($snapshot() === $before, 'dashboard and resume reads do not write educational history');
 $learning->complete($owner, 'en-GB', $active, $f['lessons'][0], bin2hex(random_bytes(16)));
 $learning->complete($owner, 'en-GB', $active, $f['lessons'][1], bin2hex(random_bytes(16)));
 $update('jlms_enrollments', $active, ['last_lesson_id' => 0]);
 $beforeFallback = $snapshot();
-dashExpect($learning->resumeTarget($owner, 'en-GB', $active)['lesson_id'] === $f['lessons'][2], 'resume skips completed required lessons and selects the next incomplete required lesson');
+dashExpect(
+    $learning->resumeTarget($owner, 'en-GB', $active)['lesson_id'] === $f['lessons'][2],
+    'resume skips completed required lessons and selects the next incomplete required lesson'
+);
 dashExpect($snapshot() === $beforeFallback, 'required-incomplete fallback remains read-only');
 $update('jlms_enrollments', $active, ['last_lesson_id' => $f['lessons'][1]]);
-dashExpect($learning->resumeTarget($owner, 'en-GB', $active)['lesson_id'] === $f['lessons'][1], 'resume keeps last valid activity when one exists');
+dashExpect(
+    $learning->resumeTarget($owner, 'en-GB', $active)['lesson_id'] === $f['lessons'][1],
+    'resume keeps last valid activity when one exists'
+);
 dashExpect(count($read($owner, 'in_progress')) === 1, 'learning progress filter reflects persisted activity');
 $foreignLesson = (int)$db->setQuery('SELECT id FROM #__jlms_lessons WHERE course_version_id <> ' . (int)$base
     ->course_version_id . ' ORDER BY id LIMIT 1')->loadResult();
@@ -204,16 +221,30 @@ dashExpect($learning->resumeTarget($owner, 'en-GB', $active)['lesson_id'] === $f
     . 'disclosing its body'));
 $update('jlms_enrollments', $active, ['last_lesson_id' => $f['lessons'][1]]);
 dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $suspended), 403, 'suspension cannot be bypassed by resume');
-dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $completed), 403, 'expired completed classroom cannot be reopened by resume');
+dashDenied(
+    fn()=>$learning->resumeTarget($owner, 'en-GB', $completed),
+    403,
+    'expired completed classroom cannot be reopened by resume'
+);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$owner->id, $f['group_id']);
 try {
     $c = array_column($read($owner), null, 'id');
-    dashExpect($c[$active]['access'] === 'access' && $c[$completed]['completed'], 'fresh group revocation keeps owner history but removes access');
-    dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $active), 403, 'old actor object cannot bypass current revocation');
+    dashExpect(
+        $c[$active]['access'] === 'access' && $c[$completed]['completed'],
+        'fresh group revocation keeps owner history but removes access'
+    );
+    dashDenied(
+        fn()=>$learning->resumeTarget($owner, 'en-GB', $active),
+        403,
+        'old actor object cannot bypass current revocation'
+    );
 } finally {
     \Joomla\CMS\User\UserHelper::addUserToGroup((int)$owner->id, $f['group_id']);
 }
-dashExpect(array_column($read($owner), null, 'id')[$active]['access'] === 'available', 'restored current membership restores resume availability');
+dashExpect(
+    array_column($read($owner), null, 'id')[$active]['access'] === 'available',
+    'restored current membership restores resume availability'
+);
 $update('users', (int)$owner->id, ['block' => 1]);
 try {
     dashDenied(fn()=>$read($owner), 403, 'blocked account cannot read personal history');
@@ -239,7 +270,11 @@ try {
                 && $c[$completed]['completed'] && $c[$completed]['percent'] === 100,
             'inactive course keeps owner title, completions and historical counters'
         );
-        dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $active), 404, 'inactive course blocks direct resume');
+        dashDenied(
+            fn()=>$learning->resumeTarget($owner, 'en-GB', $active),
+            404,
+            'inactive course blocks direct resume'
+        );
         $update('jlms_course_versions', $versionId, ['rules_json'
             => json_encode($consultationRules, JSON_THROW_ON_ERROR)]);
         $consultationCards = array_column($read($owner), null, 'id');
@@ -255,7 +290,10 @@ try {
     $update('jlms_course_versions', $versionId, ['rules_json' => $historicalRules]);
     $update('jlms_courses', $f['course_id'], ['state' => 1]);
 }
-dashExpect(array_column($read($owner), null, 'id')[$active]['access'] === 'available', 'republished course restores classroom availability');
+dashExpect(
+    array_column($read($owner), null, 'id')[$active]['access'] === 'available',
+    'republished course restores classroom availability'
+);
 // LCM-01: an issued certificate is historical evidence, never gated by
 // the current publication state or by lesson access. A distinct owner still
 // cannot list or download it. Use the default installed immutable PDF template.
@@ -284,7 +322,11 @@ $certDbSnapshot = $db->setQuery(('SELECT id,serial,issued_at,identity_snapshot_j
     . '#__jlms_certificate_documents WHERE id=') . (int)$document->id)->loadAssoc();
 dashExpect($certificates->listForStudent($other) === [], 'foreign learner has no access to another issued certificate');
 dashDenied(fn()=>$certificates->download($other, $completed), 404, 'foreign certificate download denied');
-dashDenied(fn()=>$certificates->download(new \Joomla\CMS\User\User(), $completed), 401, 'anonymous certificate download denied');
+dashDenied(
+    fn()=>$certificates->download(new \Joomla\CMS\User\User(), $completed),
+    401,
+    'anonymous certificate download denied'
+);
 // SEC-P1: administrative certificate delivery must require the dedicated permission,
 // not merely ownership of the enrollment or an authenticated Joomla identity.
 dashDenied(fn()=>$certificates->adminDownload($owner, (int)$certificate
@@ -364,25 +406,44 @@ try {
  );
  $serialized = json_encode($read($owner), JSON_THROW_ON_ERROR);
  dashExpect(!str_contains($serialized, 'LEARNING_PRIVATE_BODY') && !str_contains($serialized, 'rules_json')
-     && !str_contains($serialized, 'subject_key') && !str_contains($serialized, 'user_id'), 'projection contains no private teaching, identity keys or internal rules');
+     && !str_contains(
+         $serialized,
+         'subject_key'
+     ) && !str_contains(
+         $serialized,
+         'user_id'
+     ), 'projection contains no private teaching, identity keys or internal rules');
  $app->loadIdentity($owner);
  $model = $factory->createModel('Dashboard', 'Site', ['ignore_request' => true]);
  $model->setState('filter.progress', 'all');
  $model->setState('list.limit', 20);
  $model->setState('list.start', 20);
- dashExpect(count($model->getItems()) === 5 && (int)$model->getTotal() === 25, 'native pagination bounded to own history');
+ dashExpect(
+     count($model->getItems()) === 5 && (int)$model->getTotal() === 25,
+     'native pagination bounded to own history'
+ );
  dashExpect((bool)$model->getProgressForm()->getField('progress'), 'native progress filter form available');
  $categoryFixture = json_decode(file_get_contents(dirname($root)
      . '/categories-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
  $italian = $learning->start($owner, 'it-IT', $categoryFixture['italianCourse'], bin2hex(random_bytes(16)));
  $c = array_column($read($owner), null, 'id');
- dashExpect(count($c) === 26 && $c[$italian]['access'] === 'available', 'history spans installed course languages independently of UI');
- dashExpect($learning->resumeTarget($owner, 'en-GB', $italian)['language'] === 'it-IT', 'resume preserves original course language without mapping enrollment');
+ dashExpect(
+     count($c) === 26 && $c[$italian]['access'] === 'available',
+     'history spans installed course languages independently of UI'
+ );
+ dashExpect(
+     $learning->resumeTarget($owner, 'en-GB', $italian)['language'] === 'it-IT',
+     'resume preserves original course language without mapping enrollment'
+ );
  $db->setQuery("UPDATE #__languages SET published=0 WHERE lang_code='it-IT'")->execute();
  try {
      $c = array_column($read($owner), null, 'id');
      dashExpect($c[$italian]['access'] === 'language', 'unpublished course language removes current availability');
-     dashDenied(fn()=>$learning->resumeTarget($owner, 'en-GB', $italian), 403, 'resume rechecks current content language');
+     dashDenied(
+         fn()=>$learning->resumeTarget($owner, 'en-GB', $italian),
+         403,
+         'resume rechecks current content language'
+     );
  } finally {
      $db->setQuery("UPDATE #__languages SET published=1 WHERE lang_code='it-IT'")->execute();
  }

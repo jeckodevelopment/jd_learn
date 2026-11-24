@@ -6,7 +6,12 @@ declare(strict_types=1);
 if (getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new RuntimeException('Disposable Joomla site required.');
 }
-$db = new PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+$db = new PDO(
+    getenv('JLMS_TEST_DSN'),
+    getenv('JLMS_TEST_USER'),
+    getenv('JLMS_TEST_PASSWORD'),
+    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+);
 $operation = $argv[1] ?? '';
 if ($operation === 'material-add') {
     $version = $db->query(("SELECT v.id AS version_id, c.created_by FROM joomla_jlms_courses c "
@@ -86,4 +91,7 @@ $q = $db->query("SELECT c.id,c.state,c.current_version_id,c.revision,v.status,v.
     (SELECT COUNT(*) FROM joomla_workflow_associations a WHERE a.item_id=c.id AND a.extension='com_jlms.course') AS associations
     FROM joomla_jlms_courses c LEFT JOIN joomla_jlms_course_versions v ON v.id=c.current_version_id
     WHERE c.alias='http-first-publication'");
-echo json_encode(['plugin' => (int) $plugin, 'course' => $q->fetch(PDO::FETCH_ASSOC) ?: null], JSON_THROW_ON_ERROR) . "\n";
+echo json_encode(
+    ['plugin' => (int) $plugin, 'course' => $q->fetch(PDO::FETCH_ASSOC) ?: null],
+    JSON_THROW_ON_ERROR
+) . "\n";

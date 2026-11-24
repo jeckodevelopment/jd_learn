@@ -76,7 +76,10 @@ final class QuestionDefinition
                 $id = bin2hex(random_bytes(12));
             }
             if (
-                !preg_match('/\A[A-Za-z0-9_-]{1,64}\z/D', $id) || isset($ids[$id]) || $label === '' || strlen($label) > 4096
+                !preg_match(
+                    '/\A[A-Za-z0-9_-]{1,64}\z/D',
+                    $id
+                ) || isset($ids[$id]) || $label === '' || strlen($label) > 4096
                 || preg_match('/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/', $label) || isset($labels[$label])
             ) {
                 throw new \RuntimeException('COM_JLMS_QUESTION_INVALID_OPTION_LABELS', 422);

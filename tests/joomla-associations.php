@@ -10,7 +10,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 }
 // Only the parent configures the fixture; workers must not mutate shared plugin settings.
 if (($argv[2] ?? '') !== 'worker') {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $plugin = $fixtureDb->query(("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' "
         . "AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC);
     $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1, "
@@ -56,7 +61,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -97,7 +105,10 @@ function assocSave(array $data): bool
 function assocRows(): string
 {
     global $db;
-    return json_encode($db->setQuery("SELECT * FROM #__associations WHERE context='com_jlms.item' ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR);
+    return json_encode(
+        $db->setQuery("SELECT * FROM #__associations WHERE context='com_jlms.item' ORDER BY id")->loadObjectList(),
+        JSON_THROW_ON_ERROR
+    );
 }
 if (($argv[2] ?? '') === 'worker') {
     $command = json_decode($argv[3], true, 16, JSON_THROW_ON_ERROR);
@@ -108,7 +119,10 @@ if (($argv[2] ?? '') === 'worker') {
     if (trim((string) fgets(STDIN)) !== 'go') {
         throw new \RuntimeException('Association worker barrier missing');
     }
-    echo json_encode(['saved' => assocSave(assocData($command['source']) + ['associations' => ['it-IT' => $command['target']]])], JSON_THROW_ON_ERROR);
+    echo json_encode(
+        ['saved' => assocSave(assocData($command['source']) + ['associations' => ['it-IT' => $command['target']]])],
+        JSON_THROW_ON_ERROR
+    );
     exit;
 }
 $actor = $app->getIdentity();
@@ -274,7 +288,10 @@ $workers = [];
 foreach ([$raceEn1,$raceEn2] as $source) {
     $pipes = [];
     $process = proc_open(
-        [PHP_BINARY,__FILE__,$root,'worker',json_encode(['source' => $source,'target' => $raceIt], JSON_THROW_ON_ERROR)],
+        [PHP_BINARY,__FILE__,$root,'worker',json_encode(
+            ['source' => $source,'target' => $raceIt],
+            JSON_THROW_ON_ERROR
+        )],
         [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']],
         $pipes
     );
@@ -333,7 +350,14 @@ foreach ([$en,$it,$all] as $course) {
     $authoring->saveLesson($actor, $scope() + ['id' => 0,'module_id' => $module,'title' => 'Translated lesson','kind' => 'text','required' => '1','body' => '<p>PRIVATE_TRANSLATION_BODY</p>']);
     $publication = $component->getPublicationService();
     $choice = $publication->transitions($actor, $course);
-    $publication->transition($actor, $course, $version, (int)assocData($course)['revision'], $scope()['expected_version_revision'], (int)$choice[0]->id);
+    $publication->transition(
+        $actor,
+        $course,
+        $version,
+        (int)assocData($course)['revision'],
+        $scope()['expected_version_revision'],
+        (int)$choice[0]->id
+    );
     $versions[$course] = $version;
 }
 $app->loadIdentity(new \Joomla\CMS\User\User());

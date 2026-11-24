@@ -28,7 +28,11 @@ abstract class AbstractFoundationProvider implements VideoProviderInterface
             $this->normaliseSource(new SourceInput($source->reference, $source->options));
             return new ValidationResult();
         } catch (\InvalidArgumentException $error) {
-            return new ValidationResult([new ValidationIssue('SOURCE_INVALID', 'COM_JLMS_SOURCE_INVALID', 'source_reference')]);
+            return new ValidationResult([new ValidationIssue(
+                'SOURCE_INVALID',
+                'COM_JLMS_SOURCE_INVALID',
+                'source_reference'
+            )]);
         }
     }
 

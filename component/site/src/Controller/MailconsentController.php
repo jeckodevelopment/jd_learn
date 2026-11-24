@@ -55,7 +55,10 @@ final class MailconsentController extends BaseController
         $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         $token = $this->input->getString('token', '');
         $ok = $this->app->bootComponent('com_jlms')->getCourseAnnouncementConsent()->confirm($token);
-        $this->app->enqueueMessage(Text::_($ok ? 'COM_JLMS_MAIL_CONSENT_CONFIRMED' : 'COM_JLMS_MAIL_CONSENT_LINK_INVALID'), $ok ? 'message' : 'warning');
+        $this->app->enqueueMessage(
+            Text::_($ok ? 'COM_JLMS_MAIL_CONSENT_CONFIRMED' : 'COM_JLMS_MAIL_CONSENT_LINK_INVALID'),
+            $ok ? 'message' : 'warning'
+        );
         $this->setRedirect(Route::_('index.php?option=com_jlms&view=preferences', false));
     }
 

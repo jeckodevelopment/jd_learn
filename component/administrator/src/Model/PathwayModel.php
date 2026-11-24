@@ -135,7 +135,10 @@ final class PathwayModel extends AdminModel
             foreach (['id', 'revision', 'catid', 'access', 'state'] as $key) {
                 if (
                     isset($data[$key]) && ((!is_int($data[$key]) && !is_string($data[$key]))
-                    || !preg_match($key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D', (string) $data[$key]))
+                    || !preg_match(
+                        $key === 'state' ? '/^(?:-2|[0-9]{1,10})$/D' : '/^[0-9]{1,10}$/D',
+                        (string) $data[$key]
+                    ))
                 ) {
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
@@ -298,7 +301,11 @@ final class PathwayModel extends AdminModel
                 'COM_JLMS_REVISION_CONFLICT',
                 'COM_JLMS_PATHWAY_INVALID'
             ];
-            $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            $this->setError(Text::_(in_array(
+                $error->getMessage(),
+                $known,
+                true
+            ) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
             if (getenv('JLMS_TEST_DISPOSABLE') === '1') {
                 $this->setError($this->getError() . ' [' . $stage . ': ' . $error->getMessage() . ']');
             }

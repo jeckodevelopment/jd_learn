@@ -24,7 +24,10 @@ $p = $i['impact'];
  <button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?></button></form>
  <section id="jlms-quiz-extend-impact"><h3><?= Text::_('COM_JLMS_QUIZ_REVIEW_PREVIEW') ?></h3>
  <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_DEADLINE') ?>: <?= $p['previous_deadline'] === null ? '—' : $this
-     ->escape(gmdate('Y-m-d H:i:s', $p['previous_deadline'])) ?> → <?= $p['new_deadline'] === null ? '—' : $this->escape(gmdate('Y-m-d H:i:s', $p['new_deadline'])) ?> UTC</p>
+     ->escape(gmdate(
+         'Y-m-d H:i:s',
+         $p['previous_deadline']
+     )) ?> → <?= $p['new_deadline'] === null ? '—' : $this->escape(gmdate('Y-m-d H:i:s', $p['new_deadline'])) ?> UTC</p>
  <p><?= Text::_('COM_JLMS_QUIZ_EXTEND_MINUTES') ?>: <?= (int)$i['minutes'] ?> · <?= Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?>: <?= (int)$p['effective_seconds'] ?> s</p>
  <?php if ($p['blocked'] !== null) :
         ?><p id="jlms-quiz-extend-blocked" class="alert alert-warning"><?= Text::_($p['blocked']) ?></p>

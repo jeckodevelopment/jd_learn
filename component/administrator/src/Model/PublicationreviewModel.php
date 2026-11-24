@@ -21,7 +21,12 @@ final class PublicationreviewModel extends BaseDatabaseModel
             throw new \RuntimeException(Text::_('COM_JLMS_PUBLICATION_REVIEW_REQUIRED'), 409);
         }
         try {
-            $impact = $app->bootComponent('com_jlms')->getPublicationService()->updateImpact($app->getIdentity(), $course, $version, (int)$plan['transition']);
+            $impact = $app->bootComponent('com_jlms')->getPublicationService()->updateImpact(
+                $app->getIdentity(),
+                $course,
+                $version,
+                (int)$plan['transition']
+            );
             if (!$impact || !hash_equals($plan['fingerprint'], $impact['fingerprint'])) {
                 throw new \DomainException('COM_JLMS_PUBLICATION_REVIEW_STALE');
             }

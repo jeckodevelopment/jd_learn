@@ -42,7 +42,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -101,7 +104,14 @@ $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), 
 $course = (int)$f['course'];
 $otherCourse = (int)$db->setQuery('SELECT course_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])->loadResult();
 $version = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . (int)$f['active'])->loadResult();
-$read = static fn($who, array $filters = [])=>$db->setQuery($service->query($who, $course, $filters), 0, 50)->loadObjectList();
+$read = static fn(
+    $who,
+    array $filters = []
+)=>$db->setQuery(
+    $service->query($who, $course, $filters),
+    0,
+    50
+)->loadObjectList();
 // SEC-P1: the original session identity must lose roster read access as soon
 // as an administrator blocks the Joomla account in another session.
 $originalBlock = (int) $db->setQuery('SELECT block FROM #__users WHERE id=' . $userId)->loadResult();
@@ -109,7 +119,11 @@ $enrollmentCountBeforeBlock = (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_
 try {
     $db->setQuery('UPDATE #__users SET block=1 WHERE id=' . $userId)->execute();
     rosterDenied(fn() => $service->query($actor, $course), 403, 'stale actor cannot query roster after account block');
-    rosterDenied(fn() => $service->filterOptions($actor, $course), 403, 'stale actor cannot list roster filters after account block');
+    rosterDenied(
+        fn() => $service->filterOptions($actor, $course),
+        403,
+        'stale actor cannot list roster filters after account block'
+    );
 } finally {
     $db->setQuery('UPDATE #__users SET block=' . $originalBlock . ' WHERE id=' . $userId)->execute();
 }
@@ -119,8 +133,15 @@ $path = dirname($root) . '/roster-fixture.json';
 if (($argv[2] ?? '') === 'retained') {
     $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     rosterExpect(count($read($actor)) === $saved['total'], 'roster history retained');
-    rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'completed'])) === 1, 'completion retained separately');
-    rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User($saved['manager']), $otherCourse), 403, 'course scope retained');
+    rosterExpect(
+        count($read($actor, ['user' => $f['owner'],'progress' => 'completed'])) === 1,
+        'completion retained separately'
+    );
+    rosterDenied(
+        fn()=>$service->query(new \Joomla\CMS\User\User($saved['manager']), $otherCourse),
+        403,
+        'course scope retained'
+    );
     echo json_encode(['roster_retention_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
     exit;
 }
@@ -129,7 +150,10 @@ $before = $db->setQuery(('SELECT id,revision,completed_total,completed_at,last_a
 $rows = $read($actor);
 $allIds = array_map(static fn($e)=>(int)$e->id, $rows);
 rosterExpect(count($rows) >= 26, 'course roster includes more than one student');
-rosterExpect(in_array($f['active'], $allIds, true) && in_array($f['other_enrollment'], $allIds, true), 'authorized operator sees all course owners');
+rosterExpect(
+    in_array($f['active'], $allIds, true) && in_array($f['other_enrollment'], $allIds, true),
+    'authorized operator sees all course owners'
+);
 rosterExpect(!in_array($f['italian'], $allIds, true), 'another course is excluded');
 rosterExpect(count($read($actor, ['user' => $f['owner']])) === 25, 'exact native user ID filter');
 $ownerUsername = (string)$db->setQuery('SELECT username FROM #__users WHERE id=' . (int)$f['owner'])->loadResult();
@@ -138,25 +162,57 @@ rosterExpect(count($usernameMatches) === 25, 'search finds learner by username')
 $ownerName = (string)$db->setQuery('SELECT name FROM #__users WHERE id=' . (int)$f['owner'])->loadResult();
 $searchFixtureName = 'Unique Roster Search Name';
 $ownerId = (int)$f['owner'];
-$rename = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name', $searchFixtureName)->bind(':id', $ownerId, \Joomla\Database\ParameterType::INTEGER);
+$rename = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(
+    ':name',
+    $searchFixtureName
+)->bind(
+    ':id',
+    $ownerId,
+    \Joomla\Database\ParameterType::INTEGER
+);
 $db->setQuery($rename)->execute();
 try {
-    rosterExpect(count($read($actor, ['user' => $f['owner'],'search' => 'Roster Search Name'])) === 25, 'search finds learner by display name');
+    rosterExpect(
+        count($read($actor, ['user' => $f['owner'],'search' => 'Roster Search Name'])) === 25,
+        'search finds learner by display name'
+    );
 } finally {
-    $restore = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name', $ownerName)->bind(':id', $ownerId, \Joomla\Database\ParameterType::INTEGER);
+    $restore = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(
+        ':name',
+        $ownerName
+    )->bind(
+        ':id',
+        $ownerId,
+        \Joomla\Database\ParameterType::INTEGER
+    );
     $db->setQuery($restore)->execute();
 }
 rosterExpect(count($read($actor, ['search' => '%'])) === 0, 'search treats LIKE wildcards literally');
-rosterDenied(fn()=>$service->query($actor, $course, ['search' => str_repeat('x', 101)]), 400, 'overlong learner search rejected');
-rosterDenied(fn()=>$service->query($actor, $course, ['search' => ['cidash']]), 400, 'non-string learner search rejected');
+rosterDenied(
+    fn()=>$service->query($actor, $course, ['search' => str_repeat('x', 101)]),
+    400,
+    'overlong learner search rejected'
+);
+rosterDenied(
+    fn()=>$service->query($actor, $course, ['search' => ['cidash']]),
+    400,
+    'non-string learner search rejected'
+);
 rosterExpect(count($read($actor, ['user' => $f['owner'],'status' => 'suspended'])) === 1, 'status filter');
-rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'completed'])) === 1, 'completion filter independent of expiration');
+rosterExpect(
+    count($read($actor, ['user' => $f['owner'],'progress' => 'completed'])) === 1,
+    'completion filter independent of expiration'
+);
 rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'in_progress'])) === 1, 'activity filter');
 rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'not_started'])) === 23, 'not started filter');
 rosterExpect(count($read($actor, ['user' => $f['empty']])) === 0, 'empty filter has no writes');
 rosterExpect(count($read($actor, ['version' => $version])) === count($rows), 'version filter');
 $foreignVersion = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' . (int)$f['italian'])->loadResult();
-rosterDenied(fn()=>$service->query($actor, $course, ['version' => $foreignVersion]), 404, 'version cannot cross course');
+rosterDenied(
+    fn()=>$service->query($actor, $course, ['version' => $foreignVersion]),
+    404,
+    'version cannot cross course'
+);
 foreach ([['status' => "active' OR 1=1 --"],['progress' => ['completed']],['user' => '1 OR 1=1'],['version' => -1],['user' => 1.5]] as $filters) {
     rosterDenied(fn()=>$service->query($actor, $course, $filters), 400, 'invalid filters fail closed');
 }
@@ -166,7 +222,11 @@ foreach (['rules_json','subject_key','email','password','LEARNING_PRIVATE_BODY',
 }
 rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User(), $course), 401, 'anonymous roster denied');
 rosterDenied(fn()=>$service->query(new \Joomla\CMS\User\User($f['owner']), $course), 403, 'learner roster denied');
-$g = $app->bootComponent('com_users')->getMVCFactory()->createModel('Group', 'Administrator', ['ignore_request' => true]);
+$g = $app->bootComponent('com_users')->getMVCFactory()->createModel(
+    'Group',
+    'Administrator',
+    ['ignore_request' => true]
+);
 if (!$g->save(['id' => 0,'parent_id' => 2,'title' => 'CI scoped enrollment reader'])) {
     throw new \RuntimeException($g->getError());
 }
@@ -406,9 +466,16 @@ $outboxBefore = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_mail_queue")->l
 $jobsBefore = (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_jobs WHERE kind='course_communication'")->loadResult();
 $recipientScope = $communication->editor($user, $course);
 $recipientIds = array_map(static fn($row): int=>(int)$row->enrollment_id, $recipientScope['recipients']);
-rosterExpect(in_array((int)$f['active'], $recipientIds, true), 'authorized course communication lists active enrollment');
+rosterExpect(
+    in_array((int)$f['active'], $recipientIds, true),
+    'authorized course communication lists active enrollment'
+);
 rosterExpect(!in_array((int)$f['italian'], $recipientIds, true), 'communication list excludes foreign enrollment ID');
-rosterDenied(fn()=>$communication->editor($user, $otherCourse), 403, 'communication editor denies unauthorized course ID');
+rosterDenied(
+    fn()=>$communication->editor($user, $otherCourse),
+    403,
+    'communication editor denies unauthorized course ID'
+);
 rosterDenied(
     fn()=>$communication->preview($user, $otherCourse, 'SEC-P1 preview', 'Safe message', [(int)$f['italian']]),
     403,
@@ -428,7 +495,11 @@ rosterDenied(fn()=>$communication->queue(
     str_repeat('0', 64),
     'd7e332c4-7f32-4a32-bd66-1f5ac8409d13'
 ), 409, 'invalid cross-course message cannot queue');
-rosterDenied(fn()=>$communication->editor(new \Joomla\CMS\User\User(), $course), 401, 'anonymous cannot inspect course message recipients');
+rosterDenied(
+    fn()=>$communication->editor(new \Joomla\CMS\User\User(), $course),
+    401,
+    'anonymous cannot inspect course message recipients'
+);
 rosterDenied(
     fn()=>$communication->editor(new \Joomla\CMS\User\User((int)$f['owner']), $course),
     403,
@@ -528,7 +599,10 @@ $m->setState('filter.roster', ['user' => $f['owner']]);
 $m->setState('list.start', 20);
 $m->setState('list.limit', 20);
 rosterExpect($m->getTotal() === 25 && count($m->getItems()) === 5, 'native list total and pagination');
-rosterExpect($m->getRosterForm()->getField('version') !== false && $m->getRosterForm()->getField('search') !== false, 'native filter form includes learner search');
+rosterExpect(
+    $m->getRosterForm()->getField('version') !== false && $m->getRosterForm()->getField('search') !== false,
+    'native filter form includes learner search'
+);
 $app->loadIdentity(new \Joomla\CMS\User\User($f['owner']));
 rosterDenied(fn()=>$m->getItems(), 403, 'cached native list rechecks authorization');
 rosterDenied(fn()=>$m->getTotal(), 403, 'cached total rechecks authorization');
@@ -537,7 +611,14 @@ $app->loadIdentity($actor);
 $originalName = $db->setQuery('SELECT name FROM #__users WHERE id=' . (int)$f['owner'])->loadResult();
 $name = '<img src=x onerror=ROSTER_XSS>';
 $id = (int)$f['owner'];
-$q = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(':name', $name)->bind(':id', $id, \Joomla\Database\ParameterType::INTEGER);
+$q = $db->createQuery()->update('#__users')->set('name = :name')->where('id = :id')->bind(
+    ':name',
+    $name
+)->bind(
+    ':id',
+    $id,
+    \Joomla\Database\ParameterType::INTEGER
+);
 $db->setQuery($q)->execute();
 rosterExpect($before === $db->setQuery(('SELECT id,revision,completed_total,completed_at,last_activity_at '
     . 'FROM #__jlms_enrollments ORDER BY id'))->loadAssocList(), 'roster reads do not mutate learning history');

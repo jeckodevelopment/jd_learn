@@ -245,7 +245,10 @@ $list->setState('filter.published', '0');
 listExpect($get() === [$ids['Bravo'],$ids['Zebra']] && (int)$list
     ->getTotal() === 2, 'Filter changes invalidate cached items and totals');
 $list->setState('filter.published', '2');
-listExpect($get() === [] && (int)$list->getTotal() === 0, 'Archived filter accepts state 2 and excludes active/draft fixtures');
+listExpect(
+    $get() === [] && (int)$list->getTotal() === 0,
+    'Archived filter accepts state 2 and excludes active/draft fixtures'
+);
 $list->setState('filter.published', '-2');
 listExpect($get() === [], 'Trashed filter excludes ordinary active and draft fixtures');
 $list->setState('filter.published', '');
@@ -364,7 +367,10 @@ listExpect([
  $db->setQuery('SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id=' . (int)$ids['Alpha'])->loadResult(),
 ] === $learningBefore, 'Bulk transitions preserve enrollment/version history');
 listExpect(!$courseModel->changeStates([$ids['Alpha']], 0), 'Restoring a course not in the trash is rejected');
-listExpect(!$courseModel->changeStates([$ids['Alpha'],$ids['Alpha']], -2), 'Duplicate bulk IDs rejected without mutation');
+listExpect(
+    !$courseModel->changeStates([$ids['Alpha'],$ids['Alpha']], -2),
+    'Duplicate bulk IDs rejected without mutation'
+);
 // Test fixture cleanup: production lifecycle deliberately forbids implicit publication.
 $db->setQuery('UPDATE #__jlms_courses SET state=1, admissions_open=' . (int)$originalGates['admissions_open']
     . ', delivery_enabled=' . (int)$originalGates['delivery_enabled'] . ', revision=' . (int)$originalRevision
@@ -381,9 +387,18 @@ listExpect($emptyId > 0, 'Unused purge fixture has an ID');
 listExpect(!$emptyModel->purgeEmpty($emptyId), 'Purge rejects a course not yet in the trash');
 listExpect($emptyModel->changeStates([$emptyId], -2), 'Move unused course into trash');
 $impact = $emptyModel->purgeImpact($emptyId);
-listExpect($impact['eligible'] && array_sum($impact['references']) === 0, 'Unused trashed course has an eligible impact preview');
-listExpect((int)$impact['id'] === $emptyId && (int)$impact['revision'] > 0, 'Purge preview binds to current course revision');
-listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$impact['revision'] + 1), 'Purge rejects stale revision after preview');
+listExpect(
+    $impact['eligible'] && array_sum($impact['references']) === 0,
+    'Unused trashed course has an eligible impact preview'
+);
+listExpect(
+    (int)$impact['id'] === $emptyId && (int)$impact['revision'] > 0,
+    'Purge preview binds to current course revision'
+);
+listExpect(
+    !$emptyModel->purgeEmpty($emptyId, (int)$impact['revision'] + 1),
+    'Purge rejects stale revision after preview'
+);
  // LCM-02: native multilingual associations are references even without a
  // course-version FK. They must block both preview and transactional purge.
  $associationKey = 'jlms-lcm02-purge-' . (string)$emptyId;
@@ -391,8 +406,14 @@ listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$impact['revision'] + 1), 'Pu
  $db->insertObject('#__associations', $associationRow);
 try {
     $associatedImpact = $emptyModel->purgeImpact($emptyId);
-    listExpect(!$associatedImpact['eligible'] && (int)$associatedImpact['references']['#__associations'] === 1, 'Native course association prevents purge preview');
-    listExpect(!$emptyModel->purgeEmpty($emptyId, (int)$associatedImpact['revision']), 'Native course association prevents destructive purge');
+    listExpect(
+        !$associatedImpact['eligible'] && (int)$associatedImpact['references']['#__associations'] === 1,
+        'Native course association prevents purge preview'
+    );
+    listExpect(
+        !$emptyModel->purgeEmpty($emptyId, (int)$associatedImpact['revision']),
+        'Native course association prevents destructive purge'
+    );
     listExpect((int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id=' . (int)$emptyId)
         ->loadResult() === 1, 'Rejected associated-course purge retains course');
     listExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE id=" . (int)$emptyId

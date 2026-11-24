@@ -105,7 +105,11 @@ $beforeLearning = $identityRows();
 $sourceLessons = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . (int) $version->id
     . ' ORDER BY id')->loadAssocList();
 PluginHelper::importPlugin('system', 'fields');
-$fields = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
+$fields = $app->bootComponent('com_fields')->getMVCFactory()->createModel(
+    'Field',
+    'Administrator',
+    ['ignore_request' => true]
+);
 copyExpect($fields->save(['id' => 0,'context' => 'com_jlms.course','title' => 'Copy course note','name'
     => 'copy-course-note','type' => 'text','state' => 1,'access' => 1,'language' => '*','group_id'
         => 0,'default_value' => '','description' => '','params' => [],'fieldparams'
@@ -135,7 +139,10 @@ $targetLessons = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_versi
     . ' ORDER BY id')->loadAssocList();
 copyExpect(count($sourceLessons) === count($targetLessons), 'Whole lesson outline copied');
 foreach ($sourceLessons as $n => $lesson) {
-    copyExpect($lesson['id'] !== $targetLessons[$n]['id'] && $lesson['logical_key'] !== $targetLessons[$n]['logical_key'], 'New physical and logical lesson identity');
+    copyExpect(
+        $lesson['id'] !== $targetLessons[$n]['id'] && $lesson['logical_key'] !== $targetLessons[$n]['logical_key'],
+        'New physical and logical lesson identity'
+    );
     copyExpect($lesson['body'] === $targetLessons[$n]['body']
         && $lesson['media_asset_id'] === $targetLessons[$n]['media_asset_id'], 'Lesson content and media association copied');
 }
@@ -179,7 +186,11 @@ copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', $bad), 'Published c
 $editorId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='cieditor'")->loadResult();
 $locked = (object)['id' => $copy,'checked_out' => $editorId];
 $db->updateObject('#__jlms_courses', $locked, 'id');
-copyDenied(fn()=>$authoring->duplicateItem($actor, 'lesson', array_replace($lessonInput, ['expected_version_revision' => $rev()])), 'Other user checkout blocks copying');
+copyDenied(fn()=>$authoring->duplicateItem(
+    $actor,
+    'lesson',
+    array_replace($lessonInput, ['expected_version_revision' => $rev()])
+), 'Other user checkout blocks copying');
 $update = (object)['id' => $copy,'checked_out' => null];
 $db->updateObject('#__jlms_courses', $update, 'id', true);
 $sourceAsset = new \Joomla\CMS\Table\Asset($db);

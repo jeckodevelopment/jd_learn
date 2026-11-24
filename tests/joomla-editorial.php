@@ -42,7 +42,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -97,14 +100,20 @@ editorialExpect(count($outline['lessons']) === count($oldRows), 'Working copy co
 $quizzes = $db->setQuery('SELECT * FROM #__jlms_quizzes WHERE course_version_id=' . $draft)->loadObjectList();
 editorialExpect(count($quizzes) > 0, 'Working copy contains editable quizzes');
 foreach ($quizzes as $quiz) {
-    editorialExpect(!isset(json_decode($quiz->selection_json, true)['published_pool_hash']), 'Working quiz is unfrozen');
+    editorialExpect(
+        !isset(json_decode($quiz->selection_json, true)['published_pool_hash']),
+        'Working quiz is unfrozen'
+    );
     editorialExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_quiz_questions WHERE quiz_id=' . (int) $quiz->id)->loadResult() > 0, 'Question revision links are copied');
 }
 $revision = static fn(): int => (int) $db->setQuery('SELECT revision FROM #__jlms_course_versions WHERE id=' . $draft)->loadResult();
 $authoring->saveLesson($actor, ['course_id' => $course,'version_id' => $draft,'expected_version_revision' => $revision(),
     'module_id' => (int)$outline['modules'][0]->id,'title' => 'New lesson in working copy','kind' => 'text','required' => '0','body' => '<p>New content</p>']);
 $current = $db->setQuery('SELECT * FROM #__jlms_courses WHERE id=' . $course)->loadObject();
-editorialExpect($authoring->createDraft($actor, $course, (int) $current->revision) === $draft, 'Opening edit again reuses the working copy');
+editorialExpect(
+    $authoring->createDraft($actor, $course, (int) $current->revision) === $draft,
+    'Opening edit again reuses the working copy'
+);
 $transitions = $publication->transitions($actor, $course, $draft);
 editorialExpect(count($transitions) > 0, 'Working copy has a native publication transition');
 $review = null;
@@ -126,9 +135,23 @@ foreach ($transitions as $transition) {
 }
 editorialExpect($approval !== null, 'Reviewer has an explicit approval transition');
 $impact = $publication->updateImpact($actor, $course, $draft, (int)$approval->id);
-editorialExpect(is_array($impact) && isset($impact['fingerprint']), 'Versioned approval presents the publication impact');
-$publication->transition($actor, $course, $draft, (int)$current->revision, $revision(), (int)$approval->id, $impact['fingerprint']);
-editorialExpect((int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $draft, 'Publication activates the edited version');
+editorialExpect(
+    is_array($impact) && isset($impact['fingerprint']),
+    'Versioned approval presents the publication impact'
+);
+$publication->transition(
+    $actor,
+    $course,
+    $draft,
+    (int)$current->revision,
+    $revision(),
+    (int)$approval->id,
+    $impact['fingerprint']
+);
+editorialExpect(
+    (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $draft,
+    'Publication activates the edited version'
+);
 editorialExpect($oldRows === $db->setQuery('SELECT * FROM #__jlms_lessons WHERE course_version_id=' . $oldVersion . ' ORDER BY id')->loadAssocList(), 'Published source lessons retain all original data');
 editorialExpect($oldEnrollment === $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList(), 'Existing enrollments and results stay unchanged');
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
@@ -142,8 +165,14 @@ $history = $db->setQuery("SELECT * FROM #__history WHERE item_id='com_jlms.cours
 editorialExpect(count($history) > 0, 'Native Joomla history stores course revisions');
 editorialExpect((int)$model->getItem($course)->state === 1, 'Normal save preserves publication state');
 $oldHistory = end($history);
-editorialExpect($model->loadHistory((int)$oldHistory->version_id), 'Native history restores editorial data through the guarded save');
-editorialExpect((int)$model->getItem($course)->current_version_id === $draft, 'Restoring editorial history does not roll back teaching assignments');
+editorialExpect(
+    $model->loadHistory((int)$oldHistory->version_id),
+    'Native history restores editorial data through the guarded save'
+);
+editorialExpect(
+    (int)$model->getItem($course)->current_version_id === $draft,
+    'Restoring editorial history does not roll back teaching assignments'
+);
 $item = $model->getItem($course);
 editorialExpect($model->save([
     'id' => $course,
@@ -154,7 +183,11 @@ editorialExpect($model->save([
 // Native course fields participate in Joomla Content History and restore through
 // the same guarded CourseModel save without changing the active teaching version.
 PluginHelper::importPlugin('system', 'fields');
-$historyFieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
+$historyFieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel(
+    'Field',
+    'Administrator',
+    ['ignore_request' => true]
+);
 if (
     !$historyFieldModel->save(['id' => 0,'context' => 'com_jlms.course','title' => 'History reference','name' => 'history-reference','type' => 'text',
     'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'default_value' => '','description' => '','params' => [],'fieldparams' => ['filter' => 'string']])
@@ -180,7 +213,10 @@ editorialExpect($model->save(['id' => $course,'revision' => (int)$item->revision
     'com_fields' => ['history-reference' => 'HISTORY_FIELD_CURRENT']]), 'A later native field value can be saved before restoring history');
 $assignedVersion = (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult();
 $assignedLearners = $db->setQuery('SELECT * FROM #__jlms_enrollments WHERE course_id=' . $course . ' ORDER BY id')->loadAssocList();
-editorialExpect($model->loadHistory((int)$targetHistory->version_id), 'Native history restores course custom fields through the guarded save');
+editorialExpect(
+    $model->loadHistory((int)$targetHistory->version_id),
+    'Native history restores course custom fields through the guarded save'
+);
 editorialExpect($fieldValue() === 'HISTORY_FIELD_ORIGINAL', 'Content History restores the custom field value');
 editorialExpect(
     (int)$db->setQuery('SELECT current_version_id FROM #__jlms_courses WHERE id=' . $course)->loadResult() === $assignedVersion
@@ -208,7 +244,11 @@ foreach (['html5-fixture','materials-fixture'] as $alias) {
 
 // Native teacher custom fields, with no category field in the profile editor.
 PluginHelper::importPlugin('system', 'fields');
-$fieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel('Field', 'Administrator', ['ignore_request' => true]);
+$fieldModel = $app->bootComponent('com_fields')->getMVCFactory()->createModel(
+    'Field',
+    'Administrator',
+    ['ignore_request' => true]
+);
 $field = ['id' => 0,'context' => 'com_jlms.teacher','title' => 'Public teaching contact','name' => 'teaching-contact','type' => 'text',
     'state' => 1,'access' => 1,'language' => '*','group_id' => 0,'required' => 0,'default_value' => '','description' => '','note' => '','ordering' => 0,
     'params' => ['display' => 2],'fieldparams' => ['filter' => 'string']];
@@ -220,9 +260,25 @@ $data = ['id' => 0,'revision' => 1,'title' => 'Editorial teacher profile','alias
 editorialExpect($teacher->save($data), 'Teacher creation needs no category choice');
 $teacherId = (int)$teacher->getState('teacher.id');
 editorialExpect(!$teacher->getForm([], false)->getField('catid'), 'Teacher form has no category selector');
-$q = $db->createQuery()->select('value')->from('#__fields_values')->where('field_id=:field AND item_id=:item')->bind(':field', $fieldId, \Joomla\Database\ParameterType::INTEGER)->bind(':item', $teacherId, \Joomla\Database\ParameterType::INTEGER);
-editorialExpect($db->setQuery($q)->loadResult() === 'contact@example.invalid', 'Native system fields plugin saves the teacher field value');
-$editorFixture = json_decode(file_get_contents(dirname($root) . '/editor-access-fixture.json'), true, 32, JSON_THROW_ON_ERROR);
+$q = $db->createQuery()->select('value')->from('#__fields_values')->where('field_id=:field AND item_id=:item')->bind(
+    ':field',
+    $fieldId,
+    \Joomla\Database\ParameterType::INTEGER
+)->bind(
+    ':item',
+    $teacherId,
+    \Joomla\Database\ParameterType::INTEGER
+);
+editorialExpect(
+    $db->setQuery($q)->loadResult() === 'contact@example.invalid',
+    'Native system fields plugin saves the teacher field value'
+);
+$editorFixture = json_decode(
+    file_get_contents(dirname($root) . '/editor-access-fixture.json'),
+    true,
+    32,
+    JSON_THROW_ON_ERROR
+);
 $linked = new \Joomla\CMS\User\User((int)$editorFixture['user']);
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->loadByName('com_jlms.teacher.' . $teacherId);
@@ -248,7 +304,10 @@ $item = $teacher->getItem($teacherId);
 editorialExpect($teacher->save(['id' => $teacherId,'revision' => (int)$item->revision,'bio' => 'Teacher self-edited presentation','state' => 0,'user_id' => (int)$actor->id,
     'com_fields' => ['teaching-contact' => 'own@example.invalid']]), 'Linked teacher edits their presentation and permitted custom fields');
 $item = $teacher->getItem($teacherId);
-editorialExpect((int)$item->state === 1 && (int)$item->user_id === (int)$linked->id, 'Self editing cannot change publication or account ownership');
+editorialExpect(
+    (int)$item->state === 1 && (int)$item->user_id === (int)$linked->id,
+    'Self editing cannot change publication or account ownership'
+);
 $app->loadIdentity($actor);
 $app->getSession()->set('user', $actor);
 $teacher->setCurrentUser($actor);

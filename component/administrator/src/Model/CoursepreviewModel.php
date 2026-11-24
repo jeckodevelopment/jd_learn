@@ -100,7 +100,10 @@ final class CoursepreviewModel extends BaseModel
             }
         } catch (\DomainException $error) {
             $denied = $error->getMessage() === 'JERROR_ALERTNOAUTHOR';
-            throw new \RuntimeException(Text::_($denied ? 'JERROR_ALERTNOAUTHOR' : 'COM_JLMS_RESOURCE_NOT_FOUND'), $denied ? 403 : 404);
+            throw new \RuntimeException(
+                Text::_($denied ? 'JERROR_ALERTNOAUTHOR' : 'COM_JLMS_RESOURCE_NOT_FOUND'),
+                $denied ? 403 : 404
+            );
         }
 
         $outline['selected'] = $lesson;

@@ -29,7 +29,10 @@ final class HtmlView extends BaseHtmlView
                     => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')
                         ->get('video_external_policy', 'blocked'),
                 'token' => \Joomla\CMS\Session\Session::getFormToken(),
-                'previewUrl' => \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=coursepreview.playback&format=json', false),
+                'previewUrl' => \Joomla\CMS\Router\Route::_(
+                    'index.php?option=com_jlms&task=coursepreview.playback&format=json',
+                    false
+                ),
                 'labels' => ['ready' => Text::_('COM_JLMS_COURSE_PREVIEW_VIDEO_READY'),
                     'error' => Text::_('COM_JLMS_VIDEO_UNAVAILABLE'),
                     'offline' => Text::_('COM_JLMS_VIDEO_OFFLINE'),

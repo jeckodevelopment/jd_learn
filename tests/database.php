@@ -8,7 +8,12 @@ $dsn = getenv('JLMS_TEST_DSN');
 if (!$dsn || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Explicit disposable database opt-in required.');
 }
-$db = new \PDO($dsn, getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+$db = new \PDO(
+    $dsn,
+    getenv('JLMS_TEST_USER'),
+    getenv('JLMS_TEST_PASSWORD'),
+    [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+);
 $prefix = 'ci_';
 $db->exec('CREATE TABLE `ci_categories` (`id` INT NOT NULL AUTO_INCREMENT, PRIMARY KEY (`id`)) ENGINE=InnoDB');
 $db->exec('INSERT INTO `ci_categories` (`id`) VALUES (1)');
@@ -48,7 +53,10 @@ $now = gmdate('Y-m-d H:i:s');
 function insertRow(\PDO $db, string $table, array $data): int
 {
     $columns = implode(',', array_map(static fn (string $name): string => '`' . $name . '`', array_keys($data)));
-    $q = $db->prepare('INSERT INTO `ci_jlms_' . $table . '` (' . $columns . ') VALUES (' . implode(',', array_fill(0, count($data), '?')) . ')');
+    $q = $db->prepare('INSERT INTO `ci_jlms_' . $table . '` (' . $columns . ') VALUES (' . implode(
+        ',',
+        array_fill(0, count($data), '?')
+    ) . ')');
     $q->execute(array_values($data));
     return (int) $db->lastInsertId();
 }

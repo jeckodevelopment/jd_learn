@@ -60,7 +60,10 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
         $attemptDomain = $this->createDomain('jdlearn_attempts', 'plg_privacy_jdlearn_domain_attempts');
         $answerDomain = $this->createDomain('jdlearn_answers', 'plg_privacy_jdlearn_domain_answers');
         $certificateDomain = $this->createDomain('jdlearn_certificates', 'plg_privacy_jdlearn_domain_certificates');
-        $consentDomain = $this->createDomain('jdlearn_course_announcement_consent', 'plg_privacy_jdlearn_domain_course_announcement_consent');
+        $consentDomain = $this->createDomain(
+            'jdlearn_course_announcement_consent',
+            'plg_privacy_jdlearn_domain_course_announcement_consent'
+        );
 
         $query = $db->createQuery()
             ->select([

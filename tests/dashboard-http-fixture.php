@@ -6,7 +6,12 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required');
 }
-$db = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+$db = new \PDO(
+    getenv('JLMS_TEST_DSN'),
+    getenv('JLMS_TEST_USER'),
+    getenv('JLMS_TEST_PASSWORD'),
+    [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+);
 $f = json_decode(file_get_contents(dirname($root) . '/dashboard-fixture.json'), true, 16, JSON_THROW_ON_ERROR);
 $state = dirname($root) . '/dashboard-http-plugin.json';
 $mode = $argv[2] ?? '';
@@ -39,7 +44,12 @@ if ($mode === 'enable') {
     $q = $db->prepare('UPDATE joomla_menu SET params=? WHERE id=?');
     $q->execute([json_encode($params, JSON_THROW_ON_ERROR),$menuId]);
 } elseif ($mode === 'navigation_off') {
-    $saved = json_decode(file_get_contents(dirname($root) . '/dashboard-navigation-original.json'), true, 8, JSON_THROW_ON_ERROR);
+    $saved = json_decode(
+        file_get_contents(dirname($root) . '/dashboard-navigation-original.json'),
+        true,
+        8,
+        JSON_THROW_ON_ERROR
+    );
     $q = $db->prepare('UPDATE joomla_menu SET params=? WHERE id=?');
     $q->execute([$saved['params'],$saved['id']]);
 } elseif ($mode === 'snapshot') {

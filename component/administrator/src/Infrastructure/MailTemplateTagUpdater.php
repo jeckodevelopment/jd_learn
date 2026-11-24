@@ -69,7 +69,11 @@ final class MailTemplateTagUpdater
                     $params = json_decode((string) $row->params, true, 64, JSON_THROW_ON_ERROR);
                 } catch (\JsonException $e) {
                     // Fail safely instead of destroying existing administrator preferences.
-                    throw new \RuntimeException('JD Learn mail template metadata is invalid; upgrade did not replace it.', 0, $e);
+                    throw new \RuntimeException(
+                        'JD Learn mail template metadata is invalid; upgrade did not replace it.',
+                        0,
+                        $e
+                    );
                 }
                 if (!is_array($params)) {
                     throw new \RuntimeException('JD Learn mail template preferences must be an object.');

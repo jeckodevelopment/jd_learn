@@ -83,7 +83,10 @@ if ($retained) {
 
     $rows = $db->setQuery('SELECT course_id FROM #__jlms_pathway_courses WHERE pathway_id=' . (int)$path
         . ' ORDER BY ordering')->loadColumn();
-    $check(array_map('intval', $rows) === [(int)$data['course'],(int)$data['hidden_course']], 'ordered course associations retained through package update');
+    $check(
+        array_map('intval', $rows) === [(int)$data['course'],(int)$data['hidden_course']],
+        'ordered course associations retained through package update'
+    );
     $student = new Joomla\CMS\User\User((int)$data['student']);
     $detail = $service->detail($student, 'en-GB', (int)$path);
     $check(
@@ -185,7 +188,10 @@ foreach (["1 OR 1=1 --", "1; DROP TABLE courses; --", "1 UNION SELECT 1"] as $sq
 $operator = $app->getIdentity();
 $student = $component->getLearningService()->start($operator, 'en-GB', $courseId, str_repeat('p', 40));
 $detail = $service->detail($operator, 'en-GB', $pathwayId);
-$check($detail['progress'] === 0 && $detail['required_courses'] === 1, 'enrolled course with defined rules permits a zero percent pathway aggregate');
+$check(
+    $detail['progress'] === 0 && $detail['required_courses'] === 1,
+    'enrolled course with defined rules permits a zero percent pathway aggregate'
+);
 $hiddenCourseId = (int)$db->setQuery("SELECT id FROM #__jlms_courses WHERE alias='test-course'")->loadResult();
 if (!$hiddenCourseId) {
     throw new RuntimeException('Draft course fixture missing.');
@@ -196,8 +202,14 @@ $check((bool)$pathModel->save(['id' => $pathwayId,'revision' => 1,'title' => 'CI
     'courses' => [['course_id' => $courseId,'ordering' => 10],['course_id' => $hiddenCourseId,'ordering'
         => 20]]]), 'second course association saves');
 $detail = $service->detail($operator, 'en-GB', $pathwayId);
-$check(count($detail['courses']) === 2 && $detail['courses'][0]['id'] === $courseId, 'visible course is first in its authored order');
-$check($detail['courses'][1]['id'] === null && $detail['courses'][1]['title'] === '', 'draft course becomes an unidentified placeholder');
+$check(
+    count($detail['courses']) === 2 && $detail['courses'][0]['id'] === $courseId,
+    'visible course is first in its authored order'
+);
+$check(
+    $detail['courses'][1]['id'] === null && $detail['courses'][1]['title'] === '',
+    'draft course becomes an unidentified placeholder'
+);
 
 // LCM-05: a published course with disabled delivery remains catalog-visible but
 // must not be presented as a usable classroom inside a learning pathway.
@@ -225,16 +237,37 @@ try {
         . (int)$courseId)->execute();
 }
 $deliveryRestored = $service->detail($operator, 'en-GB', $pathwayId);
-$check($deliveryRestored['courses'][0]['access'] === 'available', 'restored delivery returns pathway course to its previous availability');
-$check($deliveryRestored['courses'][0]['delivery_suspended'] === false, 're-enabled delivery clears suspension display state');
-$check(empty($service->detail(new Joomla\CMS\User\User(), 'en-GB', $pathwayId)['courses'][0]['delivery_suspended']), 'guest without content rights cannot inspect course delivery suspension');
+$check(
+    $deliveryRestored['courses'][0]['access'] === 'available',
+    'restored delivery returns pathway course to its previous availability'
+);
+$check(
+    $deliveryRestored['courses'][0]['delivery_suspended'] === false,
+    're-enabled delivery clears suspension display state'
+);
+$check(
+    empty($service->detail(new Joomla\CMS\User\User(), 'en-GB', $pathwayId)['courses'][0]['delivery_suspended']),
+    'guest without content rights cannot inspect course delivery suspension'
+);
 
-$check($detail['progress'] === null && $detail['required_courses'] === 2, 'unavailable course without evidence suppresses ungrounded aggregate');
+$check(
+    $detail['progress'] === null && $detail['required_courses'] === 2,
+    'unavailable course without evidence suppresses ungrounded aggregate'
+);
 $guest = new Joomla\CMS\User\User();
 $guestDetail = $service->detail($guest, 'en-GB', $pathwayId);
-$check(count($guestDetail['courses']) === 2 && $guestDetail['courses'][0]['access'] === 'restricted', 'catalog-visible but content-restricted course is labeled restricted');
-$check($guestDetail['courses'][1]['id'] === null && $guestDetail['courses'][1]['title'] === '', 'guest cannot identify the draft course');
-$check($guestDetail['progress'] === null && $guestDetail['has_unavailable_courses'] === true, 'guest has no personal percentage while unavailable course contributes zero internally');
+$check(
+    count($guestDetail['courses']) === 2 && $guestDetail['courses'][0]['access'] === 'restricted',
+    'catalog-visible but content-restricted course is labeled restricted'
+);
+$check(
+    $guestDetail['courses'][1]['id'] === null && $guestDetail['courses'][1]['title'] === '',
+    'guest cannot identify the draft course'
+);
+$check(
+    $guestDetail['progress'] === null && $guestDetail['has_unavailable_courses'] === true,
+    'guest has no personal percentage while unavailable course contributes zero internally'
+);
 $before = (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=' . (int)$operator->id
     . ' AND course_id=' . (int)$courseId)->loadResult();
 $again = $service->detail($guest, 'en-GB', $pathwayId);
@@ -355,7 +388,10 @@ file_put_contents(dirname($root) . '/pathway-acl-fixture.json', json_encode([
 $assertSiblingUnchanged('authoring');
 
 $emptyDetail = $service->detail($operator, 'en-GB', $emptyId);
-$check($emptyDetail['progress'] === null && $emptyDetail['required_courses'] === 0, 'empty pathway has no completion percentage');
+$check(
+    $emptyDetail['progress'] === null && $emptyDetail['required_courses'] === 0,
+    'empty pathway has no completion percentage'
+);
 // LCM-03: archive hides the public pathway without mutating its course links,
 // student enrollments or historical progress; restoring requires explicit publication.
 $pathwayCourses = [['course_id' => $courseId,'ordering' => 10],['course_id' => $hiddenCourseId,'ordering' => 20]];
@@ -723,7 +759,10 @@ $check(
     $readLinks() === array_map('intval', $beforeBulkCourses),
     'restored links retain original course order'
 );
-file_put_contents($lifecycleSnapshotFile, json_encode($readLifecycleSnapshot($pathwayId, $courseId), JSON_THROW_ON_ERROR));
+file_put_contents(
+    $lifecycleSnapshotFile,
+    json_encode($readLifecycleSnapshot($pathwayId, $courseId), JSON_THROW_ON_ERROR)
+);
 file_put_contents($fixture, json_encode(['pathway' => $pathwayId,'course' => $courseId,'hidden_course'
     => $hiddenCourseId,'student' => (int)$operator->id], JSON_THROW_ON_ERROR));
 echo json_encode(['pathway_checks' => 14,'status' => 'passed','pathway_id' => $pathwayId,'student_enrollment'

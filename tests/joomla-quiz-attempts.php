@@ -12,7 +12,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Retained checks must not alter state. Workers inherit the parent's committed setup;
 // rewriting extension settings concurrently can deadlock before the test barrier.
 if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR "
     . "(folder='task' AND element='jlms'))"));
     $fixtureDb->exec(("UPDATE joomla_extensions SET "
@@ -61,7 +66,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -96,7 +104,26 @@ function attemptReject(callable $call, int $code, string $message): void
 function attemptKey(): string
 {
     $s = bin2hex(random_bytes(16));
-    return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
+    return substr(
+        $s,
+        0,
+        8
+    ) . '-' . substr(
+        $s,
+        8,
+        4
+    ) . '-4' . substr(
+        $s,
+        13,
+        3
+    ) . '-a' . substr(
+        $s,
+        17,
+        3
+    ) . '-' . substr(
+        $s,
+        20
+    );
 }
 function attemptAnswers(array $dto, bool $correct = true): string
 {
@@ -166,7 +193,14 @@ $tfQuestion = $component->getQuestionBankService()->save($actor, ['id' => 0,'rev
 $tfRevision = (int)$db->setQuery('SELECT current_revision_id FROM #__jlms_questions WHERE id=' . $tfQuestion)->loadResult();
 $tfLesson = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'True false exercise','required' => '0','assessment' => 'practice','feedback_policy' => 'after_submit','max_attempts' => '1','retry_minutes' => '0','selection_mode' => 'fixed','questions' => [['revision_id' => $tfRevision,'points' => '7']]]));
 $subset = $quizzes->save($actor, $scope() + array_replace($base, ['title' => 'Subset quiz','required' => '0','max_attempts' => '0','retry_minutes' => '0','questions' => [...$base['questions'],['revision_id' => $tfRevision,'points' => '7']]]));
-$publication->transition($actor, $course, $version, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $course)[0]->id);
+$publication->transition(
+    $actor,
+    $course,
+    $version,
+    (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $course)->loadResult(),
+    $scope()['expected_version_revision'],
+    (int)$publication->transitions($actor, $course)[0]->id
+);
 attemptExpect(
     $db->setQuery('SELECT status FROM #__jlms_course_versions WHERE id=' . $version)->loadResult() === 'published',
     'valid quiz publishes through native workflow'
@@ -237,7 +271,10 @@ foreach (
 // Course calendar starts_at/ends_at is a separate normalized availability gate.
 $oldParams = (string)$db->setQuery('SELECT params_json FROM #__jlms_courses WHERE id=' . $course)->loadResult();
 $calendarParams = json_decode($oldParams, true, 32, JSON_THROW_ON_ERROR);
-$calendarParams['calendar'] = array_replace($calendarParams['calendar'] ?? ['_schema' => 1,'timezone' => 'UTC'], ['ends_at' => $nearClose]);
+$calendarParams['calendar'] = array_replace(
+    $calendarParams['calendar'] ?? ['_schema' => 1,'timezone' => 'UTC'],
+    ['ends_at' => $nearClose]
+);
 $setWindow('#__jlms_courses', $course, 'params_json', json_encode($calendarParams, JSON_THROW_ON_ERROR));
 $calendarPreview = $service->state($student, 'en-GB', $enrollment, $lesson);
 attemptExpect(
@@ -272,11 +309,29 @@ attemptExpect(
     'server snapshot and timer'
 );
 attemptExpect(
-    !str_contains(json_encode($a, JSON_THROW_ON_ERROR), '"correct"') && !str_contains(json_encode($a, JSON_THROW_ON_ERROR), 'PRIVATE_CORRECT_EXPLANATION'),
+    !str_contains(
+        json_encode($a, JSON_THROW_ON_ERROR),
+        '"correct"'
+    ) && !str_contains(
+        json_encode($a, JSON_THROW_ON_ERROR),
+        'PRIVATE_CORRECT_EXPLANATION'
+    ),
     'open DTO never leaks grading or explanations'
 );
 attemptExpect(
-    $service->start($student, 'en-GB', $enrollment, $lesson, $key)['attempt']['id'] === $aid && $service->start($student, 'en-GB', $enrollment, $lesson, attemptKey())['used_attempts'] === 1,
+    $service->start(
+        $student,
+        'en-GB',
+        $enrollment,
+        $lesson,
+        $key
+    )['attempt']['id'] === $aid && $service->start(
+        $student,
+        'en-GB',
+        $enrollment,
+        $lesson,
+        attemptKey()
+    )['used_attempts'] === 1,
     'key replay and new tab share one active attempt'
 );
 attemptReject(
@@ -292,7 +347,12 @@ $mut = attemptKey();
 $answers = attemptAnswers($a);
 $save = $service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 1, $mut, $answers, false);
 attemptExpect(
-    $save['attempt']['revision'] === 2 && $save['questions'] === [] && $service->state($student, 'en-GB', $enrollment, $lesson)['questions'][0]['selected'] !== [],
+    $save['attempt']['revision'] === 2 && $save['questions'] === [] && $service->state(
+        $student,
+        'en-GB',
+        $enrollment,
+        $lesson
+    )['questions'][0]['selected'] !== [],
     'answers saved with CAS revision'
 );
 attemptExpect(
@@ -310,13 +370,33 @@ attemptReject(
     'stale tab cannot overwrite answers'
 );
 attemptReject(
-    fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), '{"999999":["first"]}', false),
+    fn()=>$service->mutate(
+        $student,
+        'en-GB',
+        $enrollment,
+        $lesson,
+        $aid,
+        2,
+        attemptKey(),
+        '{"999999":["first"]}',
+        false
+    ),
     422,
     'foreign snapshot question rejected'
 );
 $qid = $a['questions'][0]['id'];
 attemptReject(
-    fn()=>$service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), json_encode([$qid => [['bad']]], JSON_THROW_ON_ERROR), false),
+    fn()=>$service->mutate(
+        $student,
+        'en-GB',
+        $enrollment,
+        $lesson,
+        $aid,
+        2,
+        attemptKey(),
+        json_encode([$qid => [['bad']]], JSON_THROW_ON_ERROR),
+        false
+    ),
     422,
     'nested option value rejected without warning'
 );
@@ -362,7 +442,17 @@ $partial = [];
 foreach ($a['questions'] as $q) {
     $partial[$q['id']] = ['first'];
 }
-$failed = $service->mutate($student, 'en-GB', $enrollment, $lesson, $aid, 2, attemptKey(), json_encode($partial, JSON_THROW_ON_ERROR), true);
+$failed = $service->mutate(
+    $student,
+    'en-GB',
+    $enrollment,
+    $lesson,
+    $aid,
+    2,
+    attemptKey(),
+    json_encode($partial, JSON_THROW_ON_ERROR),
+    true
+);
 attemptExpect(
     $failed['attempt']['score_points'] === 3 && !$failed['attempt']['passed'] && !$failed['feedback_available'] && !$failed['course_completed'],
     '60 percent fails exact 60.01 threshold; partial multiple selection earns zero and feedback stays closed'
@@ -402,7 +492,17 @@ attemptExpect(
     'no historical answer key while another attempt is active'
 );
 $now += 60;
-$expired = $service->mutate($student, 'en-GB', $enrollment, $lesson, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), true);
+$expired = $service->mutate(
+    $student,
+    'en-GB',
+    $enrollment,
+    $lesson,
+    $a['attempt']['id'],
+    1,
+    attemptKey(),
+    attemptAnswers($a),
+    true
+);
 attemptExpect(
     $expired['attempt']['state'] === 'expired' && $expired['attempt']['score_points'] === 0 && $expired['best']['score_points'] === 5,
     'late answers ignored and best score retained'
@@ -427,20 +527,45 @@ attemptExpect(
     'practice immediate feedback without requiring correct answers'
 );
 $a = $service->start($student, 'en-GB', $enrollment, $never, attemptKey());
-$p = $service->mutate($student, 'en-GB', $enrollment, $never, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), true);
+$p = $service->mutate(
+    $student,
+    'en-GB',
+    $enrollment,
+    $never,
+    $a['attempt']['id'],
+    1,
+    attemptKey(),
+    attemptAnswers($a),
+    true
+);
 attemptExpect(
     !$p['feedback_available'] && $p['attempt']['passed'],
     'never policy withholds feedback even after pass/exhaustion'
 );
 $a = $service->start($student, 'en-GB', $enrollment, $tfLesson, attemptKey());
-$p = $service->mutate($student, 'en-GB', $enrollment, $tfLesson, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), true);
+$p = $service->mutate(
+    $student,
+    'en-GB',
+    $enrollment,
+    $tfLesson,
+    $a['attempt']['id'],
+    1,
+    attemptKey(),
+    attemptAnswers($a),
+    true
+);
 attemptExpect(
     $p['attempt']['score_points'] === 7 && $p['attempt']['passed'],
     'true false is graded through immutable runtime snapshot'
 );
 $a = $service->start($student, 'en-GB', $enrollment, $subset, attemptKey());
 attemptExpect(
-    count($a['questions']) === 2 && $service->state($student, 'en-GB', $enrollment, $subset)['questions'] === $a['questions'],
+    count($a['questions']) === 2 && $service->state(
+        $student,
+        'en-GB',
+        $enrollment,
+        $subset
+    )['questions'] === $a['questions'],
     'proper subset extraction is stable on resume'
 );
 $p = $service->mutate($student, 'en-GB', $enrollment, $subset, $a['attempt']['id'], 1, attemptKey(), '{}', true);
@@ -453,7 +578,17 @@ $validation = $service->start($student, 'en-GB', $enrollment, $subset, attemptKe
 $validationId = $validation['attempt']['id'];
 $firstQ = $validation['questions'][0];
 attemptReject(
-    fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), json_encode([$firstQ['id'] => ['first','first']], JSON_THROW_ON_ERROR), false),
+    fn()=>$service->mutate(
+        $student,
+        'en-GB',
+        $enrollment,
+        $subset,
+        $validationId,
+        1,
+        attemptKey(),
+        json_encode([$firstQ['id'] => ['first','first']], JSON_THROW_ON_ERROR),
+        false
+    ),
     422,
     'duplicate option identifiers rejected'
 );
@@ -463,7 +598,17 @@ attemptReject(
     'non-map answer document rejected'
 );
 attemptReject(
-    fn()=>$service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, attemptKey(), str_repeat('x', 524289), false),
+    fn()=>$service->mutate(
+        $student,
+        'en-GB',
+        $enrollment,
+        $subset,
+        $validationId,
+        1,
+        attemptKey(),
+        str_repeat('x', 524289),
+        false
+    ),
     413,
     'answer payload bound enforced before decoding'
 );
@@ -476,7 +621,17 @@ $service->mutate($student, 'en-GB', $enrollment, $subset, $validationId, 1, atte
 // Separate user for timer grace and native scheduler execution; no test mutates a customer's site.
 $otherEnrollment = $learning->start($other, 'en-GB', $course, bin2hex(random_bytes(16)));
 $a = $service->start($other, 'en-GB', $otherEnrollment, $lesson, attemptKey());
-$r = $service->mutate($other, 'en-GB', $otherEnrollment, $lesson, $a['attempt']['id'], 1, attemptKey(), attemptAnswers($a), false);
+$r = $service->mutate(
+    $other,
+    'en-GB',
+    $otherEnrollment,
+    $lesson,
+    $a['attempt']['id'],
+    1,
+    attemptKey(),
+    attemptAnswers($a),
+    false
+);
 $u = (object)['id' => $otherEnrollment,'ends_at' => gmdate('Y-m-d H:i:s', time() - 1)];
 $db->updateObject('#__jlms_enrollments', $u, 'id');
 attemptExpect(
@@ -509,7 +664,10 @@ $option = $options->findOption('jlms.quiz.expire');
 attemptExpect($option !== null, 'native Scheduler discovers the base-package routine');
 $record = (object)['id' => 0,'type' => 'jlms.quiz.expire','params' => '{"limit":100}','taskOption' => $option];
 $task = new \Joomla\Component\Scheduler\Administrator\Task\Task($record);
-$event = new \Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent('onExecuteTask', ['subject' => $task,'params' => (object)['limit' => 100]]);
+$event = new \Joomla\Component\Scheduler\Administrator\Event\ExecuteTaskEvent(
+    'onExecuteTask',
+    ['subject' => $task,'params' => (object)['limit' => 100]]
+);
 $app->getDispatcher()->dispatch('onExecuteTask', $event);
 attemptExpect(
     ($event->getResultSnapshot()['status'] ?? null) === \Joomla\Component\Scheduler\Administrator\Task\Status::OK,
@@ -536,7 +694,11 @@ file_put_contents($fixturePath, json_encode($f, JSON_THROW_ON_ERROR));
 $workers = [];
 for ($i = 0; $i < 2; $i++) {
     $pipes = [];
-    $process = proc_open([PHP_BINARY,__FILE__,$root,'worker'], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+    $process = proc_open(
+        [PHP_BINARY,__FILE__,$root,'worker'],
+        [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']],
+        $pipes
+    );
     if (!is_resource($process)) {
         throw new \RuntimeException('Worker not started');
     }

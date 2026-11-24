@@ -12,7 +12,12 @@ if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
 // Retained checks must not alter state. Workers inherit the parent's committed setup;
 // rewriting extension settings concurrently can deadlock before the test barrier.
 if (!in_array(($argv[2] ?? ''), ['retained', 'worker'], true)) {
-    $fixtureDb = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+    $fixtureDb = new \PDO(
+        getenv('JLMS_TEST_DSN'),
+        getenv('JLMS_TEST_USER'),
+        getenv('JLMS_TEST_PASSWORD'),
+        [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+    );
     $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND (folder='jlmsvideo' OR "
     . "(folder='task' AND element='jlms'))"));
     $fixtureDb->exec(("UPDATE joomla_extensions SET "
@@ -61,7 +66,10 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage(
+    'en-GB',
+    false
+));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -96,7 +104,26 @@ function deadlineReject(callable $work, int $code, string $message): void
 function deadlineKey(): string
 {
     $s = bin2hex(random_bytes(16));
-    return substr($s, 0, 8) . '-' . substr($s, 8, 4) . '-4' . substr($s, 13, 3) . '-a' . substr($s, 17, 3) . '-' . substr($s, 20);
+    return substr(
+        $s,
+        0,
+        8
+    ) . '-' . substr(
+        $s,
+        8,
+        4
+    ) . '-4' . substr(
+        $s,
+        13,
+        3
+    ) . '-a' . substr(
+        $s,
+        17,
+        3
+    ) . '-' . substr(
+        $s,
+        20
+    );
 }
 function deadlineUser(string $name, int $group): \Joomla\CMS\User\User
 {
@@ -115,7 +142,11 @@ $actor = $app->getIdentity();
 $learning = $component->getLearningService();
 $now = time();
 $audit = static function (\Joomla\CMS\User\User $actor, array $message) use ($db): void {
-    (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($db))->record($actor, $message, 'quizextend');
+    (new \Jlms\Component\Jlms\Administrator\Infrastructure\AssessmentAudit($db))->record(
+        $actor,
+        $message,
+        'quizextend'
+    );
 };
 $deadline = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), $audit, static function () use (&$now): int {
     return $now;
@@ -157,7 +188,10 @@ if (($argv[2] ?? '') === 'retained') {
     $i = $deadline->editor($actor, $course, $lesson, $t['enrollment_id'], $t['attempt_id']);
     deadlineExpect(count($i['history']) === 2, 'append-only deadline history survives upgrade');
     $raw = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . (int)$t['attempt_id'])->loadObject();
-    deadlineExpect(hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'], 'frozen rules and effective deadline survive upgrade');
+    deadlineExpect(
+        hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)) === $t['snapshot_hash'],
+        'frozen rules and effective deadline survive upgrade'
+    );
     deadlineExpect((int)$db->setQuery("SELECT COUNT(*) FROM #__action_logs WHERE extension='com_jlms.quizextend' AND item_id=" . (int)$t['extension_id'])->loadResult() === 1, 'native extension audit survives upgrade');
     echo json_encode(['quiz_deadline_upgrade_checks' => $checks,'status' => 'passed']) . PHP_EOL;
     exit(0);
@@ -172,8 +206,15 @@ $original = $db->setQuery('SELECT rules_snapshot_json,deadline_at,revision FROM 
 $cancelBefore = $component->getQuizReviewService()->editor($actor, $course, $lesson, $enrollment, $attempt, false);
 $i = $deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 2);
 $command = deadlineCommand($i);
-deadlineExpect($i['impact']['new_deadline'] === $a['attempt']['deadline'] + 120 && $i['impact']['blocked'] === null, 'preview adds to current deadline');
-deadlineReject(fn()=>$deadline->editor($u, $course, $lesson, $enrollment, $attempt), 403, 'learner cannot read manager preview');
+deadlineExpect(
+    $i['impact']['new_deadline'] === $a['attempt']['deadline'] + 120 && $i['impact']['blocked'] === null,
+    'preview adds to current deadline'
+);
+deadlineReject(
+    fn()=>$deadline->editor($u, $course, $lesson, $enrollment, $attempt),
+    403,
+    'learner cannot read manager preview'
+);
 deadlineReject(fn()=>$deadline->extend($u, ...$command), 403, 'learner cannot extend own deadline');
 $bad = $command;
 $bad[10] = false;
@@ -191,7 +232,10 @@ $bad[7] = 'Changed reason';
 deadlineReject(fn()=>$deadline->extend($actor, ...$bad), 409, 'changed replay body rejected');
 $r = $runtime->state($u, 'en-GB', $enrollment, $lesson);
 deadlineExpect($r['time_seconds'] === 180 && $r['original_time_seconds'] === 60 && $r['extension_seconds'] === 120 && $r['attempt']['revision'] === 1, 'effective time changes without changing answer CAS revision');
-deadlineExpect(!str_contains(json_encode($r, JSON_THROW_ON_ERROR), 'PRIVATE_DEADLINE_REASON'), 'learner never receives internal extension reason');
+deadlineExpect(
+    !str_contains(json_encode($r, JSON_THROW_ON_ERROR), 'PRIVATE_DEADLINE_REASON'),
+    'learner never receives internal extension reason'
+);
 $raw = $db->setQuery('SELECT rules_snapshot_json FROM #__jlms_attempts WHERE id=' . $attempt)->loadResult();
 deadlineExpect($raw === $original->rules_snapshot_json, 'frozen rules remain byte-for-byte unchanged');
 $compact = $runtime->state($u, 'en-GB', $enrollment, $lesson, $attempt, true);
@@ -202,15 +246,35 @@ foreach ($a['questions'] as $q) {
     $answers[$q['id']] = $q['kind'] === 'multiple' ? ['first','second'] : ['first'];
 }
 $stale = deadlineCommand($deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 1));
-$runtime->mutate($u, 'en-GB', $enrollment, $lesson, $attempt, 1, deadlineKey(), json_encode($answers, JSON_THROW_ON_ERROR), false);
-deadlineReject(fn()=>$deadline->extend($actor, ...$stale), 409, 'concurrent answer save invalidates the administrative preview');
+$runtime->mutate(
+    $u,
+    'en-GB',
+    $enrollment,
+    $lesson,
+    $attempt,
+    1,
+    deadlineKey(),
+    json_encode($answers, JSON_THROW_ON_ERROR),
+    false
+);
+deadlineReject(
+    fn()=>$deadline->extend($actor, ...$stale),
+    409,
+    'concurrent answer save invalidates the administrative preview'
+);
 $now += 61;
 $run = $runtime->expireDue(100);
-deadlineExpect($runtime->state($u, 'en-GB', $enrollment, $lesson)['attempt']['state'] === 'open', 'passing the original deadline does not close an extended attempt');
+deadlineExpect(
+    $runtime->state($u, 'en-GB', $enrollment, $lesson)['attempt']['state'] === 'open',
+    'passing the original deadline does not close an extended attempt'
+);
 $i = $deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 1);
 $secondCommand = deadlineCommand($i);
 $deadline->extend($actor, ...$secondCommand);
-deadlineExpect($deadline->extend($actor, ...$command) === $id, 'old successful replay after a later extension remains a no-op');
+deadlineExpect(
+    $deadline->extend($actor, ...$command) === $id,
+    'old successful replay after a later extension remains a no-op'
+);
 $broken = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService($db, $component->getQuizTimeService(), static function (): void {
     throw new \RuntimeException('COM_JLMS_QUIZ_EXTEND_AUDIT_FAILED', 503);
 }, static function () use (&$now): int {
@@ -218,14 +282,20 @@ $broken = new \Jlms\Component\Jlms\Administrator\Application\QuizDeadlineService
 });
 $fail = deadlineCommand($deadline->editor($actor, $course, $lesson, $enrollment, $attempt, 1));
 deadlineReject(fn()=>$broken->extend($actor, ...$fail), 503, 'audit failure rolls extension back');
-deadlineExpect(count($deadline->editor($actor, $course, $lesson, $enrollment, $attempt)['history']) === 2, 'failed extension leaves no history row');
+deadlineExpect(
+    count($deadline->editor($actor, $course, $lesson, $enrollment, $attempt)['history']) === 2,
+    'failed extension leaves no history row'
+);
 $bad = $fail;
 $bad[9] = str_repeat('0', 64);
 deadlineReject(fn()=>$deadline->extend($actor, ...$bad), 409, 'forged impact rejected');
 $now = (int)$a['attempt']['started_at'] + 240;
 $expiry = $runtime->expireDue(100);
 $r = $runtime->state($u, 'en-GB', $enrollment, $lesson);
-deadlineExpect($r['attempt']['state'] === 'expired' && $r['attempt']['score_points'] === 5 && $r['course_completed'], 'effective deadline grades previously saved answers once');
+deadlineExpect(
+    $r['attempt']['state'] === 'expired' && $r['attempt']['score_points'] === 5 && $r['course_completed'],
+    'effective deadline grades previously saved answers once'
+);
 deadlineReject(fn()=>$deadline->extend($actor, ...$fail), 409, 'elapsed/closed attempt cannot be extended or reopened');
 deadlineExpect($deadline->extend($actor, ...$secondCommand) > 0, 'successful replay remains idempotent after closure');
 // An elapsed but not yet materialized deadline is just as authoritative as a closed attempt.
@@ -233,7 +303,11 @@ $now += 61;
 $late = $runtime->start($u, 'en-GB', $enrollment, $lesson, deadlineKey());
 $lateCommand = deadlineCommand($deadline->editor($actor, $course, $lesson, $enrollment, $late['attempt']['id'], 1));
 $now += 60;
-deadlineReject(fn()=>$deadline->extend($actor, ...$lateCommand), 409, 'deadline boundary blocks extension even before worker closure');
+deadlineReject(
+    fn()=>$deadline->extend($actor, ...$lateCommand),
+    409,
+    'deadline boundary blocks extension even before worker closure'
+);
 // Verify native course denial and revocation on an already successful replay.
 $managerGroup = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI assessment time manager'")->loadResult();
 $managerId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='ciquiztimemanager'")->loadResult();
@@ -241,7 +315,14 @@ $managerId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='ciquizt
 $manager = new \Joomla\CMS\User\User($managerId);
 $now = time();
 $managed = $runtime->start($u, 'en-GB', $enrollment, $f['practice_id'], deadlineKey());
-$mc = deadlineCommand($deadline->editor($manager, $course, $f['practice_id'], $enrollment, $managed['attempt']['id'], 1));
+$mc = deadlineCommand($deadline->editor(
+    $manager,
+    $course,
+    $f['practice_id'],
+    $enrollment,
+    $managed['attempt']['id'],
+    1
+));
 $asset = new \Joomla\CMS\Table\Asset($db);
 $asset->load((int)$db->setQuery('SELECT asset_id FROM #__jlms_courses WHERE id=' . $course)->loadResult());
 $oldRules = $asset->rules;
@@ -252,17 +333,46 @@ $asset->rules = $oldRules;
 $asset->store();
 $deadline->extend($manager, ...$mc);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup($managerId, $managerGroup);
-deadlineReject(fn()=>$deadline->extend($manager, ...$mc), 403, 'successful extension replay reloads revoked manager permissions');
+deadlineReject(
+    fn()=>$deadline->extend($manager, ...$mc),
+    403,
+    'successful extension replay reloads revoked manager permissions'
+);
 \Joomla\CMS\User\UserHelper::removeUserFromGroup((int)$u->id, $group);
-deadlineReject(fn()=>$runtime->state($u, 'en-GB', $enrollment, $f['practice_id']), 403, 'extension never bypasses Joomla access revocation');
+deadlineReject(
+    fn()=>$runtime->state($u, 'en-GB', $enrollment, $f['practice_id']),
+    403,
+    'extension never bypasses Joomla access revocation'
+);
 \Joomla\CMS\User\UserHelper::addUserToGroup((int)$u->id, $group);
 // A submitted attempt is never reopened by a preview prepared while it was open.
 $submittedUser = deadlineUser('ciquizsubmittedextend', $group);
 $submittedEnrollment = $learning->start($submittedUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 $submitted = $runtime->start($submittedUser, 'en-GB', $submittedEnrollment, $lesson, deadlineKey());
-$submittedCommand = deadlineCommand($deadline->editor($actor, $course, $lesson, $submittedEnrollment, $submitted['attempt']['id'], 1));
-$runtime->mutate($submittedUser, 'en-GB', $submittedEnrollment, $lesson, $submitted['attempt']['id'], 1, deadlineKey(), '{}', true);
-deadlineReject(fn()=>$deadline->extend($actor, ...$submittedCommand), 409, 'submission winning the lock prevents a later extension');
+$submittedCommand = deadlineCommand($deadline->editor(
+    $actor,
+    $course,
+    $lesson,
+    $submittedEnrollment,
+    $submitted['attempt']['id'],
+    1
+));
+$runtime->mutate(
+    $submittedUser,
+    'en-GB',
+    $submittedEnrollment,
+    $lesson,
+    $submitted['attempt']['id'],
+    1,
+    deadlineKey(),
+    '{}',
+    true
+);
+deadlineReject(
+    fn()=>$deadline->extend($actor, ...$submittedCommand),
+    409,
+    'submission winning the lock prevents a later extension'
+);
 // Build a native, legitimately untimed published quiz rather than editing frozen database evidence.
 $author = $component->getCurriculumService();
 $quizzes = $component->getQuizAuthoringService();
@@ -279,14 +389,42 @@ $scope = static fn(): array=>['course_id' => $uc,'version_id' => $uv,'expected_v
 $um = $author->saveModule($actor, $scope() + ['id' => 0,'title' => 'Untimed module']);
 $ul = $quizzes->save($actor, $scope() + ['lesson_id' => 0,'revision' => 1,'module_id' => $um,'title' => 'Untimed quiz','required' => '1','assessment' => 'graded','threshold' => '70','max_attempts' => '1','time_minutes' => '0','retry_minutes' => '0','selection_mode' => 'fixed','shuffle_questions' => '0','shuffle_options' => '0','feedback_policy' => 'never','questions' => [['revision_id' => $bank['first_revision'],'points' => '1']]]);
 $publication = $component->getPublicationService();
-$publication->transition($actor, $uc, $uv, (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $uc)->loadResult(), $scope()['expected_version_revision'], (int)$publication->transitions($actor, $uc)[0]->id);
+$publication->transition(
+    $actor,
+    $uc,
+    $uv,
+    (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHERE id=' . $uc)->loadResult(),
+    $scope()['expected_version_revision'],
+    (int)$publication->transitions($actor, $uc)[0]->id
+);
 $ue = $learning->start($u, 'en-GB', $uc, bin2hex(random_bytes(16)));
 $ua = $runtime->start($u, 'en-GB', $ue, $ul, deadlineKey());
 $ui = $deadline->editor($actor, $uc, $ul, $ue, $ua['attempt']['id'], 1);
-deadlineExpect($ui['impact']['blocked'] === 'COM_JLMS_QUIZ_EXTEND_UNTIMED', 'untimed attempts have no artificial extension deadline');
-deadlineReject(fn()=>$deadline->extend($actor, ...deadlineCommand($ui)), 409, 'untimed extension is rejected server-side');
+deadlineExpect(
+    $ui['impact']['blocked'] === 'COM_JLMS_QUIZ_EXTEND_UNTIMED',
+    'untimed attempts have no artificial extension deadline'
+);
+deadlineReject(
+    fn()=>$deadline->extend($actor, ...deadlineCommand($ui)),
+    409,
+    'untimed extension is rejected server-side'
+);
 // Two fresh users isolate concurrency tests from the sequential fixture's simulated clock.
-$runRace = static function (string $name, bool $expiry) use ($db, $root, $group, $learning, $runtime, $deadline, $actor, $course, $lesson, &$now): void {
+$runRace = static function (
+    string $name,
+    bool $expiry
+) use (
+    $db,
+    $root,
+    $group,
+    $learning,
+    $runtime,
+    $deadline,
+    $actor,
+    $course,
+    $lesson,
+    &$now
+): void {
     $now = time();
     $user = deadlineUser($name, $group);
     $e = $learning->start($user, 'en-GB', $course, bin2hex(random_bytes(16)));
@@ -297,7 +435,11 @@ $runRace = static function (string $name, bool $expiry) use ($db, $root, $group,
     $workers = [];
     foreach ($expiry ? ['extend','expire'] : ['extend','extend2'] as $mode) {
         $pipes = [];
-        $process = proc_open([PHP_BINARY,__FILE__,$root,'worker',$mode], [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']], $pipes);
+        $process = proc_open(
+            [PHP_BINARY,__FILE__,$root,'worker',$mode],
+            [0 => ['pipe','r'],1 => ['pipe','w'],2 => ['pipe','w']],
+            $pipes
+        );
         if (!is_resource($process)) {
             throw new \RuntimeException('Worker failed');
         }
@@ -336,7 +478,10 @@ $runRace = static function (string $name, bool $expiry) use ($db, $root, $group,
     }sort($results);
     deadlineExpect($results === ($expiry ? ['conflict','expired'] : ['conflict','ok']), $expiry ? 'expiry and extension cannot reopen an elapsed attempt' : 'two concurrent extensions from one preview add time once');
     $status = $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->loadResult();
-    deadlineExpect($status === ($expiry ? 'expired' : 'open'), 'concurrent deadline operations leave consistent status');
+    deadlineExpect(
+        $status === ($expiry ? 'expired' : 'open'),
+        'concurrent deadline operations leave consistent status'
+    );
 };
 $runRace('ciquizextendrace', false);
 $runRace('ciquizexpirerace', true);
@@ -346,6 +491,9 @@ $httpEnrollment = $f['http_enrollment'];
 $now = time();
 $httpA = $runtime->start($http, 'en-GB', $httpEnrollment, $f['practice_id'], deadlineKey());
 $raw = $db->setQuery('SELECT rules_snapshot_json,deadline_at FROM #__jlms_attempts WHERE id=' . $attempt)->loadObject();
-file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $lesson,'enrollment_id' => $enrollment,'attempt_id' => $attempt,'extension_id' => $id,'snapshot_hash' => hash('sha256', json_encode($raw, JSON_THROW_ON_ERROR)),
+file_put_contents($path, json_encode(['course_id' => $course,'lesson_id' => $lesson,'enrollment_id' => $enrollment,'attempt_id' => $attempt,'extension_id' => $id,'snapshot_hash' => hash(
+    'sha256',
+    json_encode($raw, JSON_THROW_ON_ERROR)
+),
  'http_enrollment' => $httpEnrollment,'http_lesson' => $f['practice_id'],'http_attempt' => $httpA['attempt']['id']], JSON_THROW_ON_ERROR));
 echo json_encode(['quiz_deadline_checks' => $checks,'status' => 'passed']) . PHP_EOL;

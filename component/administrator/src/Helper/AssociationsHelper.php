@@ -24,7 +24,15 @@ final class AssociationsHelper extends AssociationExtensionHelper
     public function getAssociations($typeName, $id)
     {
         if ($typeName === 'course.category') {
-            return Associations::getAssociations('com_jlms.course', '#__categories', 'com_categories.item', (int) $id, 'id', null, null);
+            return Associations::getAssociations(
+                'com_jlms.course',
+                '#__categories',
+                'com_categories.item',
+                (int) $id,
+                'id',
+                null,
+                null
+            );
         }
         // Courses use sectioned categories, not the component name as category extension.
         return $typeName === 'course'

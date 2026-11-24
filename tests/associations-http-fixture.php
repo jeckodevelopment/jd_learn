@@ -6,7 +6,12 @@ $root = realpath($argv[1] ?? '');
 if (!$root || getenv('JLMS_TEST_DISPOSABLE') !== '1') {
     throw new \RuntimeException('Disposable Joomla site required');
 }
-$pdo = new \PDO(getenv('JLMS_TEST_DSN'), getenv('JLMS_TEST_USER'), getenv('JLMS_TEST_PASSWORD'), [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
+$pdo = new \PDO(
+    getenv('JLMS_TEST_DSN'),
+    getenv('JLMS_TEST_USER'),
+    getenv('JLMS_TEST_PASSWORD'),
+    [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]
+);
 $state = dirname($root) . '/association-http-plugin.json';
 if (in_array(($argv[2] ?? ''), ['disable','verify'], true)) {
     if ($argv[2] === 'verify') {

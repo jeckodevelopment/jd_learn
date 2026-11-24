@@ -65,18 +65,27 @@ final class HtmlView extends BaseHtmlView
         if (empty($this->item['lesson']->prerequisite_blocked) && empty($this->item['lesson']->schedule_blocked) && $this->item['lesson']->kind === 'video') {
             $labels = [];
             foreach (['consent', 'ready', 'error', 'offline', 'denied', 'conflict', 'completed', 'duration', 'renewed', 'policy', 'loading', 'startup_request', 'startup_module', 'startup_provider', 'saving', 'saved', 'youtube_csp', 'youtube_sdk', 'youtube_referrer', 'youtube_embed'] as $key) {
-                $labels[$key] = \Joomla\CMS\Language\Text::_(implode('_', ['COM', 'JLMS', 'VIDEO', strtoupper($key === 'consent' ? 'consent_required' : $key)]));
+                $labels[$key] = \Joomla\CMS\Language\Text::_(implode(
+                    '_',
+                    ['COM', 'JLMS', 'VIDEO', strtoupper($key === 'consent' ? 'consent_required' : $key)]
+                ));
             }
             $labels['rate_unavailable'] = \Joomla\CMS\Language\Text::_('COM_JLMS_VIDEO_SPEED_UNAVAILABLE');
             $labels['captions_off'] = \Joomla\CMS\Language\Text::_('COM_JLMS_VIDEO_CAPTIONS_OFF');
             $labels['captions_unavailable'] = \Joomla\CMS\Language\Text::_('COM_JLMS_VIDEO_CAPTIONS_UNAVAILABLE');
             $urls = [];
             foreach (['playback', 'save', 'renew', 'close'] as $task) {
-                $urls[$task] = \Joomla\CMS\Router\Route::_('index.php?option=com_jlms&task=video.' . $task . '&format=json', false);
+                $urls[$task] = \Joomla\CMS\Router\Route::_(
+                    'index.php?option=com_jlms&task=video.' . $task . '&format=json',
+                    false
+                );
             }
             $this->getDocument()->addScriptOptions('com_jlms.video', ['enrollment' => $this->item['enrollment_id'],
                 'lesson' => (int) $this->item['lesson']->id, 'provider' => $this->item['lesson']->provider_key,
-                'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get('video_external_policy', 'blocked'),
+                'policy' => \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->get(
+                    'video_external_policy',
+                    'blocked'
+                ),
                 'token' => \Joomla\CMS\Session\Session::getFormToken(), 'urls' => $urls, 'labels' => $labels]);
             $this->getDocument()->getWebAssetManager()->useScript('com_jlms.video');
         }
