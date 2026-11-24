@@ -38,7 +38,7 @@ def main() -> int:
     ).split(b"\0")
     contracts = required_source_fragments()
     accepted = rejected = removed = 0
-    formatter_root = args.prettier.resolve().parents[2]
+    formatter_root = args.prettier.parent.parent.parent.resolve()
     for entry in files:
         if not entry:
             continue
