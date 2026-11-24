@@ -440,3 +440,14 @@ The full unchanged pinned PSR12 4.0.4 audit against the main baseline measured *
 ### Final post-merge CI reconciliation — PR #1019
 
 After restoring the original protected course-completion notification call and dashboard shortcut markup, the final verification run [#45448336480](https://github.com/jeckodevelopment/jd_learn/actions/runs/45448336480) passed the lightweight source/SAST/PHPCS gates, Chromium, PHP 8.3/MySQL 8.4 and PHP 8.4/MariaDB 10.6. Its exhaustive pinned PHPCS 4.0.4 PSR-12 output is **historical 811 → final 331 (−480, 59.2%)**, **zero introduced per-file/per-rule findings**; 260 long lines and 71 other structural findings remain. The prior 811 → 322 report was an intermediate pre-reversion measurement and must **not** be interpreted as the final merged state. Functional coverage percentages remain unchanged; SECDEV-02 remains **Parziale** and manual Joomla acceptance remains separate.
+
+
+## PR #1021 — guarded logical-expression reflow (24 novembre 2026)
+
+La baseline definitiva validata dopo il merge #1019 è **331 finding PSR-12**, di cui **260 `Generic.Files.LineLength.TooLong`** e 71 strutturali. Il precedente dato intermedio di 322 non rappresenta lo stato finale integrato. Un nuovo lotto interviene su condizioni logiche lunghe nei servizi PHP di pubblicazione, corsi e curriculum, esclusivamente separando su righe diverse gli operatori logici all'esterno dei letterali. Il gate PHPCS 4.0.4 completo della CI #4099 certifica **331 → 320 finding (−11)**, senza nuovi rilievi per file/regola; il residuo comprende **249 righe lunghe** e 71 rilievi strutturali. Il primo tentativo è stato respinto per violazioni di spaziatura dei blocchi `if`; le trasformazioni non conformi sono state ripristinate e sostituite con blocchi conformi. Non si dichiara la chiusura SECDEV-02. La matrice dei requisiti conserva stato e percentuali funzionali.
+
+### Comportamenti da testare
+
+- Integrità degli operandi e dell'ordine delle condizioni logiche; nessuna modifica di ACL, business rules, pubblicazione o salvataggio.
+- PHP lint, PHPCS PSR12 sull'intero repository e zero nuovi rilievi per file/regola, source contracts, SAST e build del pacchetto.
+- Joomla 6.2 con Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6; collaudi manuali separati.
