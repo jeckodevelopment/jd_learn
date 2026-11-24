@@ -52,7 +52,9 @@ final class CoursemessageController extends BaseController
         $raw['template'] = [
             'subject' => $raw['template']['subject'],
             'htmlbody' => $raw['template']['htmlbody'],
-            'body' => \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml($raw['template']['htmlbody']),
+            'body' => \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::plainTextFromHtml(
+                $raw['template']['htmlbody']
+            ),
         ];
         $raw['subject'] = $raw['template']['subject'];
         $raw['body'] = $raw['template']['body'];
