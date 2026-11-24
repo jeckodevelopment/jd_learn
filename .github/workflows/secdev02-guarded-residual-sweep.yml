@@ -1,0 +1,47 @@
+name: SECDEV-02 guarded residual sweep (temporary)
+on:
+  push:
+    branches: [style/secdev02-final-258-bulk-remediation]
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-residual-sweep
+  cancel-in-progress: false
+jobs:
+  remedy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-final-258-bulk-remediation
+          fetch-depth: 0
+      - name: Install pinned real PSR12 checker
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Broad guarded final sweep
+        shell: bash
+        run: |
+          set -euo pipefail
+          P=.runtime/secdev02-phpcs/vendor/bin/phpcs
+          python3 tools/secdev02_template_tag_reflow.py --phpcs "$P"
+          python3 tools/secdev02_structural_template_bulk.py --phpcs "$P"
+          python3 tools/secdev02_html_attribute_reflow.py --phpcs "$P"
+          python3 tools/secdev02_adaptive_operator_batch.py --phpcs "$P"
+          python3 tools/secdev02_whitespace_bulk_refactor.py --phpcs "$P"
+          python3 tools/secdev02_granular_expression_batch.py --phpcs "$P" --top-files 175 --max-examined 10 --max-fixes 10
+          python3 tools/secdev02_incremental_line_reflow.py --phpcs "$P" --max-files 130
+          python3 tools/secdev02_comment_wrap.py --phpcs "$P" --apply
+          python3 tools/secdev02_query_chain_wrap.py --phpcs "$P" --apply
+          python3 tools/secdev02_source_contract_repair.py --base-ref HEAD --max-reversions 50
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          git diff --check
+      - name: Commit audited changes and remove one-use workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/secdev02-guarded-residual-sweep.yml
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'refactor(SECDEV-02): guarded repository-wide residual sweep'
+          git push origin HEAD:style/secdev02-final-258-bulk-remediation
