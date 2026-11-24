@@ -58,7 +58,8 @@ def candidate(data: bytes, regions: list[tuple[int,int]],
             point = start + match.start()
             line_start = data.rfind(b'\n', 0, point) + 1
             line_end = data.find(b'\n', point)
-            if line_end < 0: line_end = len(data)
+            if line_end < 0:
+                line_end = len(data)
             if line_end - line_start <= LIMIT:
                 continue
             if point - line_start < 25 or point >= line_end - 10:
@@ -73,10 +74,12 @@ def candidate(data: bytes, regions: list[tuple[int,int]],
         start = data.rfind(b'\n', 0, point) + 1
         line = data[start:point]
         indent = len(line) - len(line.lstrip(b' \t'))
-        if indent > 30: continue
+        if indent > 30:
+            continue
         pad = b' ' * min(indent + extra, 28)
         if mode == 'attrs':
-            if data[point:point+1] != b' ': continue
+            if data[point:point+1] != b' ':
+                continue
             edits.append((point, 1, b'\n' + pad))
         else:
             edits.append((point, 0, b'\n' + pad))
@@ -105,19 +108,25 @@ def main() -> int:
     tracked = subprocess.check_output(['git','ls-files','-z','--','*.php'],cwd=ROOT).split(b'\0')
     accepted = rejected = removed = 0
     for item in tracked:
-        if not item: continue
+        if not item:
+            continue
         name = item.decode('utf-8')
-        if '/tmpl/' not in name: continue
+        if '/tmpl/' not in name:
+            continue
         path = ROOT/name
-        if not path.is_file(): continue
+        if not path.is_file():
+            continue
         original = path.read_bytes()
-        if not any(len(row)>LIMIT for row in original.splitlines()): continue
+        if not any(len(row)>LIMIT for row in original.splitlines()):
+            continue
         parts = spans(path)
-        if not parts: continue
+        if not parts:
+            continue
         protected = required.get(name,set())
         before = phpcs_counts(args.phpcs,path)
         score = sum(before.values())
-        if not score: continue
+        if not score:
+            continue
         best=original
         for strategy in ('blocks','attrs','both'):
             for extra in (2,4,0,8):
@@ -135,7 +144,8 @@ def main() -> int:
                 if not lint(path):
                     continue
                 after=phpcs_counts(args.phpcs,path)
-                if any(after[k]>before[k] for k in after): continue
+                if any(after[k]>before[k] for k in after):
+                    continue
                 total=sum(after.values())
                 if total<score:
                     best,score=trial,total
