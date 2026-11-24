@@ -248,3 +248,17 @@ Il batch unico di consolidamento eseguito sul ramo `style/secdev02-psr12-consoli
 **Limite e prossimo lavoro:** il debito **non è azzerato**. Le violazioni residue includono prevalentemente righe oltre i 120 caratteri in sorgenti e test che non possono essere spezzate automaticamente senza compromettere contratti testuali o introdurre altre violazioni; restano anche regole PSR1/PSR2 da risolvere con refactoring strutturale. Non cambiare lo standard o mascherare questi rilievi; SECDEV-02 rimane parziale. I collaudi manuali Joomla saranno effettuati separatamente.
 
 **Comportamenti da testare:** nessuna modifica funzionale ai contenuti delle stringhe, valori, chiamate Joomla e permessi; PHP lint e PHPCS sul repository intero; gate contratti di sicurezza; matrice CI e integrità dei pacchetti installabili.
+
+
+## SECDEV-02 — riformattazione strutturale degli operatori PHP (consolidamento successivo)
+
+Baseline dopo PR #1008: **1.869 rilievi PSR-12** sull'intero repository. Due passaggi incrementali e conservativi sono stati eseguiti nello stesso ramo `style/secdev02-structural-line-closeout`:
+
+- [Workflow #45345950823](https://github.com/jeckodevelopment/jd_learn/actions/runs/45345950823): **54 rilievi rimossi in 23 file**.
+- [Workflow #45346417398](https://github.com/jeckodevelopment/jd_learn/actions/runs/45346417398): ulteriori **2 rilievi rimossi in 2 file**.
+
+**Risultato verificato: 1.869 → 1.813 rilievi, −56; violazioni nuove zero.** Il controllo PHP lexer, il lint, il gate PHPCS per regola e i test strutturali `tools/check.py` sono passati. Le modifiche si limitano all'impaginazione di espressioni, operatori e chiamate senza modificare token significativi o contratti di sicurezza del sorgente. I workflow monouso con permessi di scrittura sono stati eliminati dai commit risultanti.
+
+**Limite:** il debito rimanente richiede interventi strutturali semantici sui file con maggior debito, test integrativi e separazione di script con side effect dalle dichiarazioni. Non alterare lo standard PSR-12 né segnare completato SECDEV-02. La CI finale sulla PR e i collaudi manuali Joomla rimangono distinti.
+
+**Comportamenti da testare:** sintassi, token PHP invariati, flussi del componente, HTML/JSON/media, registrazione dei plugin e task, ACL e protezioni CSRF; matrice PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium verde prima del merge.
