@@ -81,7 +81,8 @@ def transform(source: bytes, spans: list[tuple[int, int]], indent_step: int) -> 
     result = bytes(output)
     # Lossless restoring is guaranteed by positions and an exact single-space
     # replacement; do not attempt to normalize other HTML whitespace.
-    assert len(edits) > 0
+    if not edits:
+        return source, 0
     return result, len(edits)
 
 
