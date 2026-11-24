@@ -43,6 +43,42 @@ def fingerprint(result: subprocess.CompletedProcess) -> str:
     )
 
 
+
+SOURCE_CHECKS = [
+    ["python3", "tools/check.py"],
+    ["php", "tests/aut04-migration-boundary.php"],
+    ["php", "tests/aut-les-field-copy-boundary.php"],
+    ["php", "tests/course-message-idempotency.php"],
+    ["php", "tests/scheduler-guidance.php"],
+    ["php", "tests/doc07-configuration-diagnostics.php"],
+    ["php", "tests/catalog-literal-search.php"],
+    ["php", "tests/cat04-public-metadata.php"],
+    ["php", "tests/cat04-breadcrumb.php"],
+    ["python3", "tests/frontend-contract-hooks.py"],
+    ["python3", "tests/frontend-release-gate.py"],
+    ["python3", "tests/frontend-catalog-options.py"],
+    ["python3", "tests/frontend-menu-inheritance.py"],
+    ["python3", "tests/frontend-course-details.py"],
+    ["python3", "tests/frontend-classroom-layout.py"],
+    ["python3", "tests/frontend-lesson-navigation.py"],
+    ["python3", "tests/frontend-progress-feedback.py"],
+    ["python3", "tests/frontend-my-courses.py"],
+    ["python3", "tests/frontend-mycertificates.py"],
+    ["python3", "tests/frontend-teachers-directory.py"],
+    ["python3", "tests/database-byref-safety.py"],
+]
+
+
+def run_suite() -> tuple[list[str], subprocess.CompletedProcess]:
+    for command in SOURCE_CHECKS:
+        result = execute(command)
+        if result.returncode:
+            return command, result
+    return ["suite", "all"], subprocess.CompletedProcess(
+        args=["suite", "all"], returncode=0, stdout="", stderr=""
+    )
+
+
 def run() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--self-test", action="store_true")
@@ -68,10 +104,10 @@ def run() -> int:
         )
         original[name] = before.stdout
     reverted: list[str] = []
-    status = execute(["python3", "tools/check.py"])
+    command, status = run_suite()
     rounds = 0
     while status.returncode != 0 and rounds < args.max_reversions:
-        previous = fingerprint(status)
+        previous = " ".join(command) + " | " + fingerprint(status)
         remain = [name for name in files if name not in reverted]
         if not remain:
             break
@@ -87,16 +123,19 @@ def run() -> int:
             path = ROOT / name
             candidate = path.read_bytes()
             path.write_bytes(original[name])
-            package = execute(["python3", "tools/build.py"])
-            trial = execute(["python3", "tools/check.py"]) if package.returncode == 0 else package
-            changed_failure = fingerprint(trial) != previous
+            trial = execute(command)
+            changed_failure = fingerprint(trial) != fingerprint(status)
             if changed_failure:
                 reverted.append(name)
-                status = trial
+                build = execute(["python3", "tools/build.py"])
+                if build.returncode:
+                    print(build.stderr[-1200:], file=sys.stderr)
+                    return 1
+                command, status = run_suite()
                 rounds += 1
                 print(
                     f"SECDEV-02 contract rollback: {name}; remaining failure "
-                    f"{fingerprint(status)[:180]}", flush=True
+                    f"{' '.join(command)}: {fingerprint(status)[:180]}", flush=True
                 )
                 success = True
                 break
