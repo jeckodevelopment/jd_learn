@@ -417,7 +417,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             }
             $this->validateAssociations($data, $user, $id, $record);
             $teachers = null;
-            $previousTeacherIds = $id ? \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id) : [];
+            $previousTeacherIds = $id ?
+                 \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $id) : [];
             if (array_key_exists('teacher_ids', $data)) {
                 $teachers = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::assignment(
                     $db,
@@ -544,7 +545,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                     $db,
                     $user,
                     (string) $target->language,
-                    \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int) $copySource->course->id)
+                    \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int)
+                        $copySource->course->id)
                 );
                 foreach ($selected as $ordering => $teacher) {
                     $relation = (object) ['course_id' => $newId, 'teacher_id' => $teacher, 'ordering' => $ordering];
@@ -610,7 +612,8 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 } catch (\Throwable) {
                 }
             }
-            $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() : 'COM_JLMS_SAVE_FAILED'));
+            $this->setError(Text::_(in_array($error->getMessage(), $known, true) ? $error->getMessage() :
+                 'COM_JLMS_SAVE_FAILED'));
             return false;
         } finally {
             $this->associationWrite = false;
