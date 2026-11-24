@@ -451,3 +451,16 @@ La baseline definitiva validata dopo il merge #1019 è **331 finding PSR-12**, d
 - Integrità degli operandi e dell'ordine delle condizioni logiche; nessuna modifica di ACL, business rules, pubblicazione o salvataggio.
 - PHP lint, PHPCS PSR12 sull'intero repository e zero nuovi rilievi per file/regola, source contracts, SAST e build del pacchetto.
 - Joomla 6.2 con Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6; collaudi manuali separati.
+
+
+## PR #1022 — mass reflow of PHP inline expressions in Joomla templates (24 novembre 2026)
+
+Baseline di partenza verificata dopo il merge #1021: **320 rilievi PHPCS PSR-12 4.0.4**. Le viste frontend di corsi, categorie, scheda corso, aula e quiz, e la vista amministrativa della banca domande, contengono espressioni `<?= ... ?>` concatenate a righe HTML eccessivamente lunghe. Il batch inserisce interruzioni di riga esclusivamente **all'interno** dei tag PHP di output; non inserisce newline nel flusso HTML generato né modifica i token PHP significativi. Sono state candidate 66 righe sorgente. Il numero di finding rimossi non coincide necessariamente con il numero di righe modificate: è certificabile soltanto dal gate PHPCS completo. Le trasformazioni che non rispettano contratti sorgente, PHP lint, rendering Joomla o zero nuovi finding per file/regola devono essere ripristinate prima del merge.
+
+SECDEV-02 rimane **Parziale** finché restano finding, verifiche API Joomla/CORE o altre evidenze implementative non completate. Percentuali funzionali invariate; nessun collaudo manuale dichiarato eseguito.
+
+### Comportamenti da testare
+
+- Identità delle espressioni PHP e degli attributi HTML prodotti per link, filtri catalogo, immagini, quiz e pulsanti operativi; corretto escaping e output del renderer.
+- Test del DOM su Joomla 6.2, Chromium, PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6, source contracts e build del pacchetto installabile.
+- PHP lint sui file modificati, PHPCS PSR12 globale 4.0.4, zero regressioni per file/regola, SAST e vincoli di tracciabilità della matrice.
