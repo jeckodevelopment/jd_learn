@@ -309,3 +309,19 @@ Il ramo unico `style/secdev02-1305-bulk-cleanup` ha eseguito due lotti coordinat
 I **1.149 rilievi residui** non sono considerati chiusi: le sole trasformazioni di whitespace/token stanno esaurendo le opportunità; è necessario intervenire manualmente sulla struttura di espressioni e template con righe molto lunghe, nonché sulle violazioni PSR1/PSR2 (effetti collaterali e convenzioni di nomi), senza aggirare le API Joomla. Nessuna promozione SECDEV-02/criterion_01 o degli altri CORE/API in assenza di evidenza di conformità completa.
 
 **Comportamenti da testare:** equivalenza delle chiamate Joomla, mantenimento degli attributi HTML, navigazione curriculum, ACL, sessioni, CSRF, corsi, quiz, attestati, materiali, video; PHP lint, PHPCS integrale, generazione pacchetto e CI Joomla 6.2.0 con compat6 disabilitato. I collaudi manuali rimangono separati.
+
+
+## Riduzione coordinata dei rilievi residui e classificazione delle esclusioni (PR #1013)
+
+Baseline del ramo dopo PR #1012: **1.149** violazioni reali del gate PHPCS PSR-12. Tutte le modifiche sono state sviluppate su un solo ramo `style/secdev02-consolidated-1149-remediation`, senza alterare la configurazione PHPCS, i controlli di sicurezza o il perimetro dei file verificati.
+
+- [Workflow #45367338475](https://github.com/jeckodevelopment/jd_learn/actions/runs/45367338475): esame dei formatter di asserzioni, commenti, query fluenti ed espressioni PHP; **zero** ulteriori correzioni ammissibili, nessuna modifica al codice.
+- [Workflow #45368425210](https://github.com/jeckodevelopment/jd_learn/actions/runs/45368425210): refactoring di riferimenti pienamente qualificati a classi Joomla/JD Learn con `use` espliciti e alias univoci; **15 violazioni eliminate in 7 file**, con PHP lint, PHPCS e contratti sorgente verdi.
+- [Workflow #45369032851](https://github.com/jeckodevelopment/jd_learn/actions/runs/45369032851): scomposizione controllata di stringhe PHP e query SQL senza cambiare i byte dei valori; **38 violazioni eliminate in 9 file**, con verifica integrale PHPCS: **1.134 → 1.096**, **zero violazioni introdotte**. È stato escluso un fixture quiz che generava nuove violazioni di spaziatura e non poteva superare il gate.
+- [Workflow #45369404672](https://github.com/jeckodevelopment/jd_learn/actions/runs/45369404672): passata ufficiale `phpcbf` su PHP puro, protetta da confronto dell'AST normalizzato, commenti invariati, PHP lint e contratti sorgente; **zero** ulteriori correzioni compatibili con i criteri.
+
+**Risultato certificato dai gate preparatori: 1.149 → 1.096 (−53, circa −4,6%), zero nuove violazioni per regola.** I workflow monouso con permessi di scrittura sono stati rimossi automaticamente dopo le passate riuscite. La CI completa della PR certifica il merge separatamente.
+
+**Classificazione del residuo:** il debito non può essere dichiarato chiuso attraverso ulteriori lanci degli stessi formatter. Rimangono soprattutto righe lunghe che richiedono refactoring delle espressioni, dei servizi e dei template HTML/PHP, oltre a casi PSR1/PSR2 (script con dichiarazioni ed effetti collaterali, convenzioni sui nomi, classi multiple). Richiedono modifiche strutturali esplicite e test specifici: nessuna soppressione o esclusione dai controlli è autorizzata. Lo stato di SECDEV-02 resta **Parziale**.
+
+**Comportamenti da testare:** risoluzione delle classi dopo gli import, equivalenza del contenuto delle stringhe SQL/testo, regressioni delle query, permessi, CSRF, notifiche, iscrizioni, quiz e video; matrice PHP 8.3/MySQL, PHP 8.4/MariaDB e Chromium. I collaudi manuali Joomla sono separati.
