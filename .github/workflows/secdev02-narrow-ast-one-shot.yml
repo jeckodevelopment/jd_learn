@@ -1,0 +1,50 @@
+name: SECDEV-02 narrow AST bulk remediation
+on:
+  push:
+    branches:
+      - style/secdev02-psr12-targeted-bulk-1011
+    paths:
+      - .github/workflows/secdev02-narrow-ast-one-shot.yml
+permissions:
+  contents: write
+jobs:
+  narrow-ast:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-psr12-targeted-bulk-1011
+          persist-credentials: true
+      - name: Install pinned PHPCS, AST parser and formatter
+        run: |
+          mkdir -p .runtime/secdev02-phpcs .runtime/secdev02-ast .runtime/secdev02-prettier
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+          composer require --working-dir=.runtime/secdev02-ast --no-interaction --no-progress --no-plugins --no-scripts 'nikic/php-parser:^5.4'
+          npm install --prefix .runtime/secdev02-prettier --no-save --ignore-scripts --no-audit --no-fund --package-lock=false prettier@3.6.0 @prettier/plugin-php@0.26.0
+      - name: Try four layout widths across all eligible pure PHP
+        run: |
+          python3 tools/secdev02_ast_prettier_bulk.py --self-test
+          python3 tools/secdev02_ast_prettier_bulk.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --parser-dir .runtime/secdev02-ast --prettier .runtime/secdev02-prettier/node_modules/.bin/prettier
+          git diff --check
+      - name: Reconcile all source-contract tests and lint
+        run: |
+          python3 tools/build.py
+          python3 tools/secdev02_source_contract_repair.py --base-ref HEAD
+          git diff --check
+          git diff --name-only -z -- '*.php' | xargs -0 -r -n1 php -l
+          python3 tests/secdev02-psr12-phpcs.py --base-ref HEAD
+          python3 tools/build.py
+          python3 tools/check.py
+      - name: Commit validated PHP edits and remove one-shot workflow
+        run: |
+          rm .github/workflows/secdev02-narrow-ast-one-shot.yml
+          git add -A -- component libraries plugins packages tests tools .github/workflows/secdev02-narrow-ast-one-shot.yml
+          if git diff --cached --quiet; then
+            echo 'No changes accepted'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'style(SECDEV-02): narrow-width AST safe PHP refactor'
+          git push origin HEAD:style/secdev02-psr12-targeted-bulk-1011
