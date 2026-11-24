@@ -170,7 +170,7 @@ assert "catalog_show_cover" in diagnostics_code
 assert "catalog_show_summary" in diagnostics_code
 assert "$rawParams = $menu['params'] ?? '';" in diagnostics_code
 assert "Known invalid values must remain actionable" in diagnostics_code
-assert "bool $coursesComplete, bool $menusComplete" in diagnostics_code
+assert re.search(r"bool\s+\$coursesComplete\s*,\s*bool\s+\$menusComplete\b", diagnostics_code)
 assert "$menuInvalid, $menusComplete" in diagnostics_code
 
 for locale in ("it-IT", "en-GB"):
