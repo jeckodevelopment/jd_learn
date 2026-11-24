@@ -50,8 +50,13 @@ final class ManualEnrollmentService
         return $this->db->setQuery($q)->loadObject() ?: throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
     }
 
-    private function context(User $identity, int $courseId, int $userId, string $language, bool $preassignment = false): array
-    {
+    private function context(
+        User $identity,
+        int $courseId,
+        int $userId,
+        string $language,
+        bool $preassignment = false
+    ): array {
         $actor = $this->learning->freshActor($identity);
         $this->roster->course($actor, $courseId);
         if ($userId < 1 || !preg_match('/\A[a-z]{2,3}-[A-Z]{2}\z/D', $language)) {
@@ -195,8 +200,17 @@ final class ManualEnrollmentService
             'username' => $learner->username, 'impact' => $p, 'receipt' => $receipt];
     }
 
-    public function apply(User $identity, int $course, int $user, string $language, string $reason, string $key, string $impact, bool $confirmed, bool $preassignment = false): int
-    {
+    public function apply(
+        User $identity,
+        int $course,
+        int $user,
+        string $language,
+        string $reason,
+        string $key,
+        string $impact,
+        bool $confirmed,
+        bool $preassignment = false
+    ): int {
         $reason = trim($reason);
         if (!$confirmed || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key) || !preg_match('/\A[a-f0-9]{64}\z/D', $impact)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);

@@ -12,8 +12,11 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 /** Administrative invalidation preserves raw evidence and atomically replaces only effective projections. */
 final class QuizReviewService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly QuizTimeService $time, private readonly \Closure $audit)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly QuizTimeService $time,
+        private readonly \Closure $audit
+    ) {
     }
     private function attempt(int $id, int $enrollment, int $quiz, bool $lock = false): object
     {
@@ -146,8 +149,16 @@ final class QuizReviewService
         $impact['hash'] = hash('sha256', QuestionDefinition::canonical($impact));
         return [$impact,$p,$l];
     }
-    public function editor(User $actor, int $course, int $lesson, int $enrollment = 0, int $attempt = 0, bool $refund = false, int $before = 0, int $after = 0): array
-    {
+    public function editor(
+        User $actor,
+        int $course,
+        int $lesson,
+        int $enrollment = 0,
+        int $attempt = 0,
+        bool $refund = false,
+        int $before = 0,
+        int $after = 0
+    ): array {
         $base = $this->time->editor($actor, $course, $lesson, $enrollment, $after);
         $base['attempts'] = [];
         $base['selected'] = null;
@@ -178,8 +189,20 @@ final class QuizReviewService
             }
         }return $base;
     }
-    public function cancel(User $identity, int $course, int $lesson, int $enrollment, int $attempt, int $enrollmentRevision, int $attemptRevision, bool $refund, string $reason, string $key, string $impactHash, bool $confirmed): int
-    {
+    public function cancel(
+        User $identity,
+        int $course,
+        int $lesson,
+        int $enrollment,
+        int $attempt,
+        int $enrollmentRevision,
+        int $attemptRevision,
+        bool $refund,
+        string $reason,
+        string $key,
+        string $impactHash,
+        bool $confirmed
+    ): int {
         $reason = trim($reason);
         if (!$confirmed || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key) || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);

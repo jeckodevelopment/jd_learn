@@ -250,8 +250,13 @@ final class MaterialService
     }
 
     /** Serve only an attachment linked to this course version and the selected lesson/course. */
-    public function previewDownload(User $identity, int $courseId, int $versionId, int $lessonId, int $attachmentId): array
-    {
+    public function previewDownload(
+        User $identity,
+        int $courseId,
+        int $versionId,
+        int $lessonId,
+        int $attachmentId
+    ): array {
         $this->author($identity, $courseId, $versionId);
         $lesson = $this->row('lessons', $lessonId);
         $link = $this->row('attachments', $attachmentId);
@@ -371,8 +376,14 @@ final class MaterialService
     }
 
     /** Link an existing private asset to another scope in the same editable course version. */
-    public function reuse(User $identity, int $courseId, int $versionId, int $expected, int $sourceId, int $lessonId): int
-    {
+    public function reuse(
+        User $identity,
+        int $courseId,
+        int $versionId,
+        int $expected,
+        int $sourceId,
+        int $lessonId
+    ): int {
         return $this->transaction(function () use ($identity, $courseId, $versionId, $expected, $sourceId, $lessonId): int {
             [$actor, , $version] = $this->author($identity, $courseId, $versionId, true);
             $this->draft($version, $expected);
@@ -418,8 +429,15 @@ final class MaterialService
         });
     }
 
-    public function mutate(User $identity, int $courseId, int $versionId, int $id, int $expected, string $operation, array $input): void
-    {
+    public function mutate(
+        User $identity,
+        int $courseId,
+        int $versionId,
+        int $id,
+        int $expected,
+        string $operation,
+        array $input
+    ): void {
         $scan = [];
         $scannedId = 0;
         if ($operation === 'scan') {
@@ -497,8 +515,14 @@ final class MaterialService
         });
     }
 
-    public function learnerLists(User $actor, string $language, int $enrollmentId, int $lessonId, int $coursePage = 0, int $lessonPage = 0): array
-    {
+    public function learnerLists(
+        User $actor,
+        string $language,
+        int $enrollmentId,
+        int $lessonId,
+        int $coursePage = 0,
+        int $lessonPage = 0
+    ): array {
         $context = $this->learning->resourceContext($actor, $language, $enrollmentId, $lessonId);
         return ['course' => $this->listing($context['version_id'], null, $coursePage, false),
             'lesson' => $this->listing($context['version_id'], $lessonId, $lessonPage, false)];

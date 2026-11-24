@@ -395,3 +395,12 @@ Measured using pinned PHPCS 4.0.4 PSR12 on every tracked PHP file: **867 → 858
 
 - Joomla backend/frontend including curriculum, course publication, classroom, email, certificates, ACL and media.
 - PHP lint, source contract tests, SAST, PHPCS PSR-12 full scan, package build, Chromium, PHP 8.3/MySQL 8.4 and PHP 8.4/MariaDB 10.6.
+
+### SECDEV-02/PR #1018 full multiline method signature batch
+
+The full pinned PHPCS 4.0.4 PSR12 scan measured **858 → 811 (-47)** on **23 PHP files**, without any per-file/per-rule regressions. Named function declarations use PSR12-conformant one-parameter-per-line layout and a separate opening-brace line; significant lexer tokens, PHP lint and original source contracts are retained. No PHPCS rules or limits were relaxed. Functional requirement coverage remains unchanged. **SECDEV-02 is still partial** while findings, CORE/API reviews and manual acceptance remain outstanding.
+
+### Comportamenti da testare
+
+- Joomla backend/front-end functionality, class methods and services, signatures of public APIs, ACL, CSRF, enrollment, quiz, videos, certificates and email.
+- Full PHPCS PSR12, code contracts, security scanner, Joomla integration matrix and packaged release.

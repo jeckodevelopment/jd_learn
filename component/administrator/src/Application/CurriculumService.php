@@ -53,8 +53,13 @@ final class CurriculumService
         }
     }
 
-    private function draft(User $actor, int $courseId, int $versionId, int $revision, string $action = 'core.edit'): object
-    {
+    private function draft(
+        User $actor,
+        int $courseId,
+        int $versionId,
+        int $revision,
+        string $action = 'core.edit'
+    ): object {
         $course = $this->row('courses', $courseId, true);
         $this->authorise($actor, $course, $action);
         $reviewExtension = 'com_jlms.course';

@@ -142,8 +142,13 @@ final class LearningService
         return $course;
     }
 
-    private function authorisedEnrollment(User $actor, string $language, int $id, bool $lock = false, bool $allowExpiredWindow = false): array
-    {
+    private function authorisedEnrollment(
+        User $actor,
+        string $language,
+        int $id,
+        bool $lock = false,
+        bool $allowExpiredWindow = false
+    ): array {
         $enrollment = $this->row('enrollments', $id, $lock);
         if ((int) $enrollment->user_id !== (int) $actor->id) {
             throw new \RuntimeException('COM_JLMS_RESOURCE_NOT_FOUND', 404);
@@ -514,8 +519,14 @@ final class LearningService
         }
     }
 
-    public function quizContext(User $identity, string $language, int $enrollmentId, int $lessonId, bool $lock = false, bool $allowExpiredWindow = false): array
-    {
+    public function quizContext(
+        User $identity,
+        string $language,
+        int $enrollmentId,
+        int $lessonId,
+        bool $lock = false,
+        bool $allowExpiredWindow = false
+    ): array {
         $actor = $this->freshActor($identity);
         [, $version, , $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock, $allowExpiredWindow);
         $lesson = $this->lesson((int) $version->id, $lessonId);
@@ -528,8 +539,13 @@ final class LearningService
     }
 
     /** Internal video service context; controllers never serialise these database records. */
-    public function videoContext(User $identity, string $language, int $enrollmentId, int $lessonId, bool $lock = false): array
-    {
+    public function videoContext(
+        User $identity,
+        string $language,
+        int $enrollmentId,
+        int $lessonId,
+        bool $lock = false
+    ): array {
         $actor = $this->freshActor($identity);
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId, $lock);
         $lesson = $this->lesson((int) $version->id, $lessonId);
@@ -842,8 +858,13 @@ final class LearningService
         });
     }
 
-    private function queueCourseCompletion(User $actor, int $enrollmentId, int $courseId, string $language, string $completedAt): void
-    {
+    private function queueCourseCompletion(
+        User $actor,
+        int $enrollmentId,
+        int $courseId,
+        string $language,
+        string $completedAt
+    ): void {
         $q = $this->db->createQuery()
             ->select('title')
             ->from('#__jlms_courses')
@@ -912,8 +933,13 @@ final class LearningService
     }
 
     /** Persist an audio seek point only; this never grants lesson or course completion. */
-    public function saveAudioResume(User $identity, string $language, int $enrollmentId, int $lessonId, int $positionMs): int
-    {
+    public function saveAudioResume(
+        User $identity,
+        string $language,
+        int $enrollmentId,
+        int $lessonId,
+        int $positionMs
+    ): int {
         if ($positionMs < 0 || $positionMs > 28800000) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }

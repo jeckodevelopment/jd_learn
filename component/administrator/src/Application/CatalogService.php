@@ -15,8 +15,14 @@ final class CatalogService
     {
     }
 
-    public function query(User $actor, string $language, int $categoryId = 0, int $tagId = 0, int $teacherId = 0, int $pathwayId = 0)
-    {
+    public function query(
+        User $actor,
+        string $language,
+        int $categoryId = 0,
+        int $tagId = 0,
+        int $teacherId = 0,
+        int $pathwayId = 0
+    ) {
         $query = $this->courseQuery($actor, $language, $categoryId, false);
         $filterActor = (int) $actor->id ? new User((int) $actor->id) : $actor;
         $filterActor->clearAccessRights();

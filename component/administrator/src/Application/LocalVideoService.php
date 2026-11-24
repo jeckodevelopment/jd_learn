@@ -214,8 +214,13 @@ final class LocalVideoService
     }
 
     /** Read-only media preview; every request rechecks the current course editor ACL. */
-    public function previewDelivery(User $identity, int $courseId, int $versionId, int $lessonId, int $sourceRevision): array
-    {
+    public function previewDelivery(
+        User $identity,
+        int $courseId,
+        int $versionId,
+        int $lessonId,
+        int $sourceRevision
+    ): array {
         $actor = CourseEditorAccess::fresh($identity);
         $course = $this->row('courses', $courseId);
         if (!CourseEditorAccess::canEdit($actor, $course) || !$actor->authorise('jlms.materials.manage', 'com_jlms.course.' . $courseId)) {

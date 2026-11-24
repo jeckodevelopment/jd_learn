@@ -248,8 +248,14 @@ final class QuestionBankService
     }
 
     /** Native administration list: filters and pagination apply after the per-question ACL check. */
-    public function adminListing(User $identity, array $filters, int $start, int $limit, string $ordering, string $direction): array
-    {
+    public function adminListing(
+        User $identity,
+        array $filters,
+        int $start,
+        int $limit,
+        string $ordering,
+        string $direction
+    ): array {
         $actor = $this->learning->freshActor($identity);
         if (!$actor->authorise('core.manage', 'com_jlms')) {
             throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);

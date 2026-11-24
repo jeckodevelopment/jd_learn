@@ -530,8 +530,15 @@ final class PublicationService
         return $fields;
     }
 
-    public function transition(User $actor, int $courseId, int $versionId, int $courseRevision, int $versionRevision, int $transitionId, ?string $expectedImpact = null): void
-    {
+    public function transition(
+        User $actor,
+        int $courseId,
+        int $versionId,
+        int $courseRevision,
+        int $versionRevision,
+        int $transitionId,
+        ?string $expectedImpact = null
+    ): void {
         $actor = $this->fresh($actor);
         $remoteChecks = [];
         $course = $this->row('courses', $courseId);

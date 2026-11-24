@@ -12,8 +12,12 @@ use Jlms\Component\Jlms\Administrator\Domain\QuestionDefinition;
 /** Append-only deadline amendments; answer revisions and frozen teaching snapshots do not change. */
 final class QuizDeadlineService
 {
-    public function __construct(private readonly DatabaseInterface $db, private readonly QuizTimeService $time, private readonly \Closure $audit, private readonly \Closure $clock)
-    {
+    public function __construct(
+        private readonly DatabaseInterface $db,
+        private readonly QuizTimeService $time,
+        private readonly \Closure $audit,
+        private readonly \Closure $clock
+    ) {
     }
     private static function timestamp(string $date): int
     {
@@ -80,8 +84,14 @@ final class QuizDeadlineService
         $p['hash'] = hash('sha256', QuestionDefinition::canonical($p));
         return $p;
     }
-    public function editor(User $actor, int $course, int $lesson, int $enrollment, int $attempt, int $minutes = 5): array
-    {
+    public function editor(
+        User $actor,
+        int $course,
+        int $lesson,
+        int $enrollment,
+        int $attempt,
+        int $minutes = 5
+    ): array {
         [, $quiz,$e] = $this->time->managementContext($actor, $course, $lesson, $enrollment);
         $a = $this->attempt($attempt, $enrollment, (int)$quiz->id);
         $q = $this->db->createQuery()
@@ -100,8 +110,20 @@ final class QuizDeadlineService
             'history' => $this->db->setQuery($q, 0, 20)->loadObjectList()
         ];
     }
-    public function extend(User $identity, int $course, int $lesson, int $enrollment, int $attempt, int $enrollmentRevision, int $attemptRevision, int $minutes, string $reason, string $key, string $impactHash, bool $confirmed): int
-    {
+    public function extend(
+        User $identity,
+        int $course,
+        int $lesson,
+        int $enrollment,
+        int $attempt,
+        int $enrollmentRevision,
+        int $attemptRevision,
+        int $minutes,
+        string $reason,
+        string $key,
+        string $impactHash,
+        bool $confirmed
+    ): int {
         $reason = trim($reason);
         if (!$confirmed || !preg_match('/\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/D', $key) || !preg_match('/\A[a-f0-9]{64}\z/D', $impactHash) || $minutes < 1 || $minutes > 1440) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);

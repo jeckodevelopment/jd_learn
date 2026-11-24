@@ -39,8 +39,14 @@ final class EnrollmentApprovalService
     }
 
     /** A decision is atomic with its enrollment, minimal audit and outbox event. */
-    public function decide(User $identity, int $courseId, int $requestId, int $revision, string $decision, string $reason): int
-    {
+    public function decide(
+        User $identity,
+        int $courseId,
+        int $requestId,
+        int $revision,
+        string $decision,
+        string $reason
+    ): int {
         if ($courseId < 1 || $requestId < 1 || $revision < 1 || !in_array($decision, ['approved', 'rejected'], true)) {
             throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
         }
