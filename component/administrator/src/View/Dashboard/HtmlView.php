@@ -8,6 +8,8 @@ use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Factory;
 use Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus;
+use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
+use Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics;
 use Joomla\Database\DatabaseInterface;
 
 final class HtmlView extends BaseHtmlView
@@ -25,7 +27,7 @@ final class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
+        $actor = CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
         ToolbarHelper::title('JD Learn', 'graduation-cap');
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.admin-dashboard');
         // Each section is rendered only when the current actor can access a shortcut.
@@ -100,7 +102,11 @@ final class HtmlView extends BaseHtmlView
                 );
             }
             if ($actor->authorise('jlms.audit.view', 'com_jlms')) {
-                $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
+                $addShortcut(
+                    'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION',
+                    'COM_JLMS_MAIL_QUEUE', 'icon-envelope',
+                    'index.php?option=com_jlms&view=mailqueue'
+                );
             }
         }
         if ($actor->authorise('core.manage', 'com_mails') && $actor->authorise('core.edit', 'com_mails')) {
@@ -137,11 +143,16 @@ final class HtmlView extends BaseHtmlView
                 'COM_JLMS_DASHBOARD_GROUP_CONFIGURATION',
                 'COM_JLMS_VIDEO_PLUGINS',
                 'icon-plug',
-                'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'
+                'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo'
+                    . '&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'
             );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder', 'index.php?option=com_jlms&view=categoryreassignment');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_CONFIGURATION',
+                'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder',
+                'index.php?option=com_jlms&view=categoryreassignment'
+            );
         }
         if ($actor->authorise('core.options', 'com_jlms') || $actor->authorise('core.admin', 'com_jlms')) {
             ToolbarHelper::preferences('com_jlms');
@@ -205,7 +216,7 @@ final class HtmlView extends BaseHtmlView
             }
             array_push(
                 $this->configurationDiagnostics,
-                ...\Jlms\Component\Jlms\Administrator\Application\ConfigurationDiagnostics::operationalSettings($settings)
+                ...ConfigurationDiagnostics::operationalSettings($settings)
             );
             array_push(
                 $this->configurationDiagnostics,
