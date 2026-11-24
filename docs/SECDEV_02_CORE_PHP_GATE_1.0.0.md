@@ -519,3 +519,18 @@ Baseline certificata dalla CI #45502399210: **125 finding PSR-12**, di cui 102 `
 - Collaudo manuale Joomla: invio/anteprima comunicazioni, pubblicazione del curriculum, gestione dei conflitti di revisione e comportamento del filtro HTML.
 
 Lotto PR #1025: collegamento a matrice requisiti e metadati GitHub obbligatori (milestone 1.0.0, priorità P1, collaudo in attesa) verificati; esiti PHPCS e collaudi non ancora anticipati. Questo aggiornamento richiede nuova CI sull'HEAD, distinta dal rerun di un evento antecedente ai metadati.
+
+
+## PR conclusiva unica — baseline post #1025 (lavoro aperto)
+
+Il merge #1025 ha misurato un debito PHPCS PSR12 di **122** finding, rispetto ai 125 della baseline precedente; il saldo rimane da ricertificare sul ramo conclusivo. I 122 non rappresentano 122 criteri funzionali. La bonifica viene accorpata in un solo ramo, senza altri merge intermedi. Le prime modifiche sono la disposizione multi-linea delle allowlist del controller pubblico e della condizione di ammissione nel catalogo: preservano l'ordine degli elementi, gli operatori e i valori del codice PHP. La CI integrale deve misurare il saldo netto e respingere violazioni nuove.
+
+### Condizioni indispensabili per dichiarare conclusa SECDEV-02
+
+1. PHPCS PSR12 4.0.4 sull'intero PHP tracciato: zero finding, senza esclusioni/soppressioni; eventuali convenzioni native Joomla non rinominabili richiedono risoluzione tecnicamente motivata, non una modifica cieca.
+2. Riconciliazione di CORE-01–23, con evidenza verificabile di API, servizi pertinenti, patch Joomla target, test automatici, motivazioni di non applicabilità e risultati realmente ottenuti.
+3. Nessuna dipendenza dal plugin compat6, nessuna copia/modifica del core, verifica dei contratti nativi e di ACL/CSRF nei flussi interessati.
+4. CI verde su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium, SAST, pacchetto ZIP e source contracts. Collaudi manuali Joomla dichiarati separatamente e mai presunti.
+5. Aggiornamento del registro canonico e delle percentuali esclusivamente in base a evidenze concluse, con 'Comportamenti da testare' e collegamento al pacchetto installabile dopo merge.
+
+Non marcare SECDEV-02 completato finché queste condizioni non sono dimostrate. In particolare, i template misti HTML/PHP richiedono la preservazione dell'output, degli attributi e delle stringhe controllate dai test; il solo superamento di lint o PHPCS è insufficiente.
