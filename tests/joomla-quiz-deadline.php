@@ -322,7 +322,8 @@ deadlineReject(
     'deadline boundary blocks extension even before worker closure'
 );
 // Verify native course denial and revocation on an already successful replay.
-$managerGroup = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI assessment time manager'")->loadResult();
+$managerGroup = (int)$db->setQuery("SELECT id FROM #__usergroups WHERE title='CI assessment time manager'")
+    ->loadResult();
 $managerId = (int)$db->setQuery("SELECT id FROM #__users WHERE username='ciquiztimemanager'")->loadResult();
 \Joomla\CMS\User\UserHelper::addUserToGroup($managerId, $managerGroup);
 $manager = new NativeUser($managerId);

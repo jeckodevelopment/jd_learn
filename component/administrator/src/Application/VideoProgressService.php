@@ -194,7 +194,8 @@ final class VideoProgressService
             }
             $progress = $this->progress($enrollmentId, $lesson);
             if (!$progress) {
-                $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $lesson->course_version_id,
+                $progress = (object) ['enrollment_id' => $enrollmentId, 'course_version_id' => (int) $lesson
+                    ->course_version_id,
                     'lesson_id' => $lessonId, 'source_revision' => (int) $lesson->source_revision, 'coverage_json' => '[]',
                     'covered_ms' => 0, 'resume_ms' => 0, 'state' => 'started', 'last_activity_at' => $date, 'revision' => 1];
                 $this->db->insertObject('#__jlms_lesson_progress', $progress);

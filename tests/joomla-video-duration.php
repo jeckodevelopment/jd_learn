@@ -75,7 +75,8 @@ $registry = new VideoProviderRegistry();
 foreach ([new JdProvider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
     $registry->register($provider->getDescriptor(), static fn()=>$provider);
 }
-$authoring = new JdCurriculumService($db, static fn(string $body): string=>NativeComponentHelper::filterText($body), static fn()=>$registry);
+$authoring = new JdCurriculumService($db, static fn(string $body): string
+    =>NativeComponentHelper::filterText($body), static fn()=>$registry);
 $component->setCurriculumService($authoring);
 $actor = $app->getIdentity();
 $publication = $component->getPublicationService();

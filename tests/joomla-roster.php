@@ -575,7 +575,8 @@ try {
     if ($replayJob > 0) {
         $db->setQuery(("DELETE FROM #__action_logs WHERE "
             . "extension='com_jlms.coursecommunication' AND item_id=") . $replayJob)->execute();
-        $db->setQuery('DELETE FROM #__jlms_jobs WHERE id=' . $replayJob . " AND kind='course_communication'")->execute();
+        $db->setQuery('DELETE FROM #__jlms_jobs WHERE id=' . $replayJob . " AND kind='course_communication'")
+            ->execute();
     }
 }
 rosterExpect(

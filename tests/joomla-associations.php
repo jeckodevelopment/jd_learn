@@ -435,7 +435,8 @@ assocExpect(
 );
 assocExpect(
     json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR) === $livePointers
-    && (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")->loadResult() === $versionCount,
+    && (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")
+        ->loadResult() === $versionCount,
     'published translation graph edits preserve the live teaching pointers and versions'
 );
 assocExpect(

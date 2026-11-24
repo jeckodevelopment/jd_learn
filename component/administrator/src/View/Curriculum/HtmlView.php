@@ -331,7 +331,8 @@ final class HtmlView extends BaseHtmlView
                     }
                     $saved = array_filter($saved, static fn($value): bool => is_string($value) || is_int($value)
                         || (is_array($value) && array_is_list($value) && count($value) <= 5000
-                            && array_reduce($value, static fn(bool $valid, mixed $item): bool => $valid && (is_string($item) || is_int($item)), true)));
+                            && array_reduce($value, static fn(bool $valid, mixed $item): bool =>
+                             $valid && (is_string($item) || is_int($item)), true)));
                     $safe = array_intersect_key($saved, array_flip(['title','body','provider_key'
                         ,'source_reference','privacy_hash','duration_mode','duration_seconds'
                         ,'duration_confirmed','video_threshold_percent','audio_transcript','video_transcript'

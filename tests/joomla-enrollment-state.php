@@ -404,7 +404,8 @@ foreach ([false,true] as $different) {
     }
     stateExpect($count() === $startCount + 1, 'parallel requests write one state transition');
     stateExpect(
-        $different ? (count(array_filter($results, static fn($v)=>$v === 'conflict')) === 1) : ($results[0] === $results[1] && str_starts_with($results[0], 'ok:')),
+        $different ? (count(array_filter($results, static fn($v)=>$v === 'conflict')) === 1) :
+             ($results[0] === $results[1] && str_starts_with($results[0], 'ok:')),
         'parallel CAS and retry outcomes'
     );
     $service->apply($actor, ...stateCommand($service->editor($actor, $course, $enrollment, 'active')));
@@ -606,7 +607,8 @@ try {
         'approved admission active exactly once'
     );
     stateExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" . $requestId . " AND status='approved' AND revision=2")->loadResult() === 1,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollment_requests WHERE id=" . $requestId .
+             " AND status='approved' AND revision=2")->loadResult() === 1,
         'approved state persisted'
     );
     stateDenied(
@@ -634,7 +636,8 @@ try {
         'rejected request has no enrollment ID'
     );
     stateExpect(
-        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=" . (int)$rejectedUser->id . " AND course_id=" . $course)->loadResult() === 0,
+        (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_enrollments WHERE user_id=" .
+             (int)$rejectedUser->id . " AND course_id=" . $course)->loadResult() === 0,
         'rejection never grants classroom access'
     );
     stateExpect(

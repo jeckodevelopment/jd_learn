@@ -473,7 +473,8 @@ $update('jlms_courses', $course, ['enrollment_mode' => 'auto']);
 $auto = manualCommand($service->editor($actor, $course, (int)$users['automatic']->id, 'en-GB'));
 $result = $runRace([$auto,$auto], ['manual','auto']);
 manualExpect(
-    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course . ' AND user_id=' . (int)$users['automatic']->id)->loadResult() === 1,
+    (int)$db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE course_id=' . $course .
+         ' AND user_id=' . (int)$users['automatic']->id)->loadResult() === 1,
     'automatic start racing manual admission yields one enrollment'
 );
 // Deterministic reproduction: the automatic worker must wait for this edition.

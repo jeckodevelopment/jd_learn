@@ -221,7 +221,8 @@ final class EnrollmentMigrationService
                 ,'source_version_no' => (int)$sourceVersion->version_no,
             'source_status' => $source->status,'source_revision' => (int)$source->revision,'user_id' => (int)$source->user_id,
             'target_edition_id' => (int)($targetEdition->id ?? 0),
-            'learner_name' => (string)($source->learner_name ?? ''),'mapping' => $normal,'transfers' => $eligible,'unmapped' => $missing,
+            'learner_name' => (string)($source->learner_name ?? ''),'mapping' => $normal,'transfers' =>
+                 $eligible,'unmapped' => $missing,
             'open_attempts' => $openAttempts,'existing_target_id' => $existingTarget,
             'blocked' => (int)$courseRecord->state !== 1 ? 'COM_JLMS_LEARNING_DENIED' : ($openAttempts ?
                  'COM_JLMS_MIGRATION_OPEN_ATTEMPT' : ($existingTarget ?
@@ -425,7 +426,8 @@ final class EnrollmentMigrationService
                 ->bind(':id', $enrollment, ParameterType::INTEGER);
             $this->db->setQuery($q)->execute();
             ($this->audit)($actor, ['id' => (int)$job->id,'actor_id' => (int)$actor->id,'course_id' => $course,
-                'source_enrollment_id' => $enrollment,'target_enrollment_id' => $targetId,'target_version_id' => $plan['target_version_id'],
+                'source_enrollment_id' => $enrollment,'target_enrollment_id' => $targetId,
+                    'target_version_id' => $plan['target_version_id'],
                 'transfer_count' => count($plan['transfers']),'reason_reference' => (int)$job->id,
                 'reason_code' => 'course_version_enrollment_migrated','correlation_id' => bin2hex(random_bytes(16))]);
             $this->db->transactionCommit();
