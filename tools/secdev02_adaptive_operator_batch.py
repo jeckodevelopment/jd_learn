@@ -28,7 +28,8 @@ foreach (token_get_all($source) as $token) {
         $id === T_COALESCE || $id === T_DOUBLE_ARROW ||
         $id === T_IS_IDENTICAL || $id === T_IS_NOT_IDENTICAL ||
         $id === T_IS_EQUAL || $id === T_IS_NOT_EQUAL ||
-        $id === T_SPACESHIP || $id === T_CONCAT_EQUAL || $value === '.') {
+        $id === T_SPACESHIP || $id === T_CONCAT_EQUAL || $value === '.' || $value === '?' ||
+        $value === ':' || $value === ',') {
         $points[] = [$offset, $offset + strlen($value), $value];
     }
     $offset += strlen($value);
@@ -64,8 +65,8 @@ def propose(source: bytes, points: list, width: int, offset: int, after: bool) -
         possibilities = sorted({
             end_pos if after else start_pos
             for start_pos, end_pos, op in points
-            if begin + 24 < (end_pos if after else start_pos) < end - 14
-            and op in ("->", "?->", "&&", "||", "??", "=>", ".", "===", "!==", "==", "!=", "<=>", ".=")
+            if begin + 18 < (end_pos if after else start_pos) < end - 10
+            and op in ("->", "?->", "&&", "||", "??", "=>", ".", "===", "!==", "==", "!=", "<=>", ".=", "?", ":", ",")
         })
         if not possibilities:
             continue
@@ -127,7 +128,7 @@ def main() -> int:
         best, minimum = original, sum(baseline.values())
         for width, extra, after in (
             (112, 4, False), (106, 4, False), (110, 8, False),
-            (108, 4, True), (100, 4, True),
+            (108, 4, True), (100, 4, True), (112, 8, True),
         ):
             candidate = propose(original, points, width, extra, after)
             if candidate == original or any(
