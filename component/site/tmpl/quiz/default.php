@@ -12,27 +12,71 @@ $open = $attempt && $attempt['state'] === 'open';
 <section id="jlms-quiz" class="jlms-quiz" data-enrollment-id="<?= (int)$i['enrollment_id'] ?>">
  <header id="jlms-quiz-header"><h1><?= $this->escape($i['title']) ?></h1></header>
  <section id="jlms-quiz-rules">
-  <p><?= Text::_('COM_JLMS_QUIZ_RULES') ?>: <?= (int)$i['question_count'] ?> · <?= Text::_('COM_JLMS_QUIZ_THRESHOLD') ?> <?= $this->escape((string)($i['threshold'] / 100)) ?>% · <?= Text::_('COM_JLMS_QUIZ_RUNTIME_TIME') ?> <span id="jlms-quiz-duration"><?= (int)$i['time_seconds'] ?></span> s</p>
-  <p><?= Text::_('COM_JLMS_QUIZ_ATTEMPTS') ?>: <?= (int)$i['used_attempts'] ?> / <?= $i['remaining_attempts'] === null ? Text::_('COM_JLMS_QUIZ_UNLIMITED') : (int)($i['used_attempts'] + $i['remaining_attempts']) ?></p>
+  <p><?=
+      Text::_('COM_JLMS_QUIZ_RULES')
+  ?>: <?=
+      (int)$i['question_count']
+  ?> · <?=
+      Text::_('COM_JLMS_QUIZ_THRESHOLD')
+  ?> <?=
+      $this->escape((string)($i['threshold'] / 100))
+  ?>% · <?=
+      Text::_('COM_JLMS_QUIZ_RUNTIME_TIME')
+  ?> <span id="jlms-quiz-duration"><?=
+      (int)$i['time_seconds']
+  ?></span> s</p>
+  <p><?=
+      Text::_('COM_JLMS_QUIZ_ATTEMPTS')
+  ?>: <?=
+      (int)$i['used_attempts']
+  ?> / <?=
+      $i['remaining_attempts'] === null ? Text::_('COM_JLMS_QUIZ_UNLIMITED') : (int)($i['used_attempts'] + $i['remaining_attempts'])
+  ?></p>
   <p><?= Text::_('COM_JLMS_QUIZ_SAVE_NOTICE') ?></p>
  </section>
- <p id="jlms-quiz-availability"><?= Text::_('COM_JLMS_QUIZ_NEXT') ?>: <?= $this->escape(gmdate('Y-m-d H:i:s', $i['next_attempt_at'])) ?> UTC · <?= Text::_('COM_JLMS_QUIZ_FEEDBACK') ?>: <?= Text::_(match ($i['feedback_policy']) {
+ <p id="jlms-quiz-availability"><?=
+     Text::_('COM_JLMS_QUIZ_NEXT')
+ ?>: <?=
+     $this->escape(gmdate('Y-m-d H:i:s', $i['next_attempt_at']))
+ ?> UTC · <?=
+     Text::_('COM_JLMS_QUIZ_FEEDBACK')
+ ?>: <?= Text::_(match ($i['feedback_policy']) {
         'never'=>'COM_JLMS_QUIZ_FEEDBACK_NEVER','after_submit'=>'COM_JLMS_QUIZ_FEEDBACK_PRACTICE',
             default=>'COM_JLMS_QUIZ_FEEDBACK_DEFAULT'
                                 }) ?></p>
- <p id="jlms-quiz-time-allowance"><?= Text::_('COM_JLMS_QUIZ_TIME_EXTRA') ?>: <?= (int)$i['extra_time_seconds'] ?> s · <?= Text::_('COM_JLMS_QUIZ_TIME_NEXT') ?>: <?= (int)$i['next_time_seconds'] ?> s</p>
+ <p id="jlms-quiz-time-allowance"><?=
+     Text::_('COM_JLMS_QUIZ_TIME_EXTRA')
+ ?>: <?=
+     (int)$i['extra_time_seconds']
+ ?> s · <?=
+     Text::_('COM_JLMS_QUIZ_TIME_NEXT')
+ ?>: <?=
+     (int)$i['next_time_seconds']
+ ?> s</p>
  <p id="jlms-quiz-extension"
     role="status"
     aria-live="polite"><?= Text::_('COM_JLMS_QUIZ_EXTEND_NOTICE') ?>: <?= (int)$i['extension_seconds'] ?></p>
  <?php if (!$open && $i['start_window_close_at'] !== null) :
-        ?><p id="jlms-quiz-window-end"><?= Text::_('COM_JLMS_QUIZ_WINDOW_END') ?>: <?= $this->escape(gmdate('Y-m-d H:i:s', (int)$i['start_window_close_at'])) ?> UTC</p><?php
+        ?><p id="jlms-quiz-window-end"><?=
+            Text::_('COM_JLMS_QUIZ_WINDOW_END')
+        ?>: <?=
+            $this->escape(gmdate('Y-m-d H:i:s', (int)$i['start_window_close_at']))
+        ?> UTC</p><?php
  endif; ?>
  <p id="jlms-quiz-warning" role="alert" aria-live="assertive"></p>
  <p id="jlms-quiz-status" role="status" aria-live="polite"></p>
  <p id="jlms-quiz-timer" role="timer" aria-live="off"></p>
  <noscript><p><?= Text::_('COM_JLMS_QUIZ_JS_REQUIRED') ?></p></noscript>
  <?php if ($attempt && !$open) : ?>
- <section id="jlms-quiz-result"><h2><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></h2><p><?= Text::_($attempt['state'] === 'invalidated' ? 'COM_JLMS_QUIZ_CANCELLED' : ($attempt['passed'] ? 'COM_JLMS_QUIZ_PASSED' : 'COM_JLMS_QUIZ_FAILED')) ?>: <?= $attempt['score_points'] === null ? '—' : (int)$attempt['score_points'] ?>/<?= (int)$attempt['max_points'] ?></p>
+ <section id="jlms-quiz-result"><h2><?=
+     Text::_('COM_JLMS_QUIZ_RESULT')
+ ?></h2><p><?=
+     Text::_($attempt['state'] === 'invalidated' ? 'COM_JLMS_QUIZ_CANCELLED' : ($attempt['passed'] ? 'COM_JLMS_QUIZ_PASSED' : 'COM_JLMS_QUIZ_FAILED'))
+ ?>: <?=
+     $attempt['score_points'] === null ? '—' : (int)$attempt['score_points']
+ ?>/<?=
+     (int)$attempt['max_points']
+ ?></p>
         <?php if ($attempt['state'] === 'invalidated') :
             ?><p id="jlms-quiz-invalidated"><?= Text::_('COM_JLMS_QUIZ_CANCELLED_NOTICE') ?></p><?php
         endif; ?>
@@ -85,23 +129,45 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
     type="button"><?= Text::_('COM_JLMS_QUIZ_START') ?></button>
  <?php elseif (!empty($i['start_window_insufficient'])) : ?>
  <p id="jlms-quiz-window-insufficient"
- role="status"><?= Text::sprintf('COM_JLMS_QUIZ_WINDOW_INSUFFICIENT', (int)$i['next_time_seconds'], (int)$i['remaining_window_seconds']) ?></p>
+ role="status"><?=
+     Text::sprintf('COM_JLMS_QUIZ_WINDOW_INSUFFICIENT', (int)$i['next_time_seconds'], (int)$i['remaining_window_seconds'])
+ ?></p>
  <?php else :
         ?><p><?= Text::_('COM_JLMS_QUIZ_UNAVAILABLE') ?></p><?php
  endif; ?>
  <?php if ($i['active_attempt_id'] && (!$attempt || $i['active_attempt_id'] !== $attempt['id'])) :
-        ?><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' . (int)$i['active_attempt_id']) ?>"><?= Text::_('COM_JLMS_QUIZ_RESUME') ?></a><?php
+        ?><a href="<?=
+            Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' . (int)$i['active_attempt_id'])
+        ?>"><?=
+            Text::_('COM_JLMS_QUIZ_RESUME')
+        ?></a><?php
  endif; ?>
  </div></form>
  <section id="jlms-quiz-history"><h2><?= Text::_('COM_JLMS_QUIZ_HISTORY') ?></h2>
  <?php if ($i['best']) :
-        ?><p><?= Text::_('COM_JLMS_QUIZ_BEST') ?>: <?= (int)$i['best']['score_points'] ?>/<?= (int)$i['best']['max_points'] ?></p><?php
+        ?><p><?=
+            Text::_('COM_JLMS_QUIZ_BEST')
+        ?>: <?=
+            (int)$i['best']['score_points']
+        ?>/<?=
+            (int)$i['best']['max_points']
+        ?></p><?php
  endif; ?>
  <ol><?php foreach ($i['history'] as $entry) :
-        ?><li><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' . (int)$entry['id']) ?>"><?= Text::_('COM_JLMS_QUIZ_ATTEMPT') ?> <?= (int)$entry['attempt_no'] ?></a><?php if ($entry['status'] === 'invalidated') :
+        ?><li><a href="<?=
+            Route::_('index.php?option=com_jlms&view=quiz&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' . (int)$entry['id'])
+        ?>"><?=
+            Text::_('COM_JLMS_QUIZ_ATTEMPT')
+        ?> <?=
+            (int)$entry['attempt_no']
+        ?></a><?php if ($entry['status'] === 'invalidated') :
     ?> · <?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?><?php
         endif; ?></li><?php
      endforeach; ?></ol></section>
  <a id="jlms-quiz-back"
- href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id']) ?>"><?= Text::_('COM_JLMS_QUIZ_CLASSROOM') ?></a>
+ href="<?=
+     Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'])
+ ?>"><?=
+     Text::_('COM_JLMS_QUIZ_CLASSROOM')
+ ?></a>
 </section>
