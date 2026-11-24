@@ -38,31 +38,66 @@ final class HtmlView extends BaseHtmlView
             ];
         };
         if ($actor->authorise('core.manage', 'com_jlms')) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_DIDACTICS', 'COM_JLMS_COURSES', 'icon-book', 'index.php?option=com_jlms&view=courses');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_DIDACTICS',
+                'COM_JLMS_COURSES',
+                'icon-book',
+                'index.php?option=com_jlms&view=courses'
+            );
             if ($actor->authorise('jlms.pathways.manage', 'com_jlms')) {
-                $addShortcut('COM_JLMS_DASHBOARD_GROUP_DIDACTICS', 'COM_JLMS_PATHWAYS', 'icon-map-signs', 'index.php?option=com_jlms&view=pathways');
+                $addShortcut(
+                    'COM_JLMS_DASHBOARD_GROUP_DIDACTICS',
+                    'COM_JLMS_PATHWAYS',
+                    'icon-map-signs',
+                    'index.php?option=com_jlms&view=pathways'
+                );
             }
         }
         if (
             $actor->authorise('core.manage', 'com_categories')
             && $actor->authorise('core.manage', 'com_jlms.course')
         ) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_DIDACTICS', 'COM_JLMS_COURSE_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.course');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_DIDACTICS',
+                'COM_JLMS_COURSE_CATEGORIES',
+                'icon-folder',
+                'index.php?option=com_categories&view=categories&extension=com_jlms.course'
+            );
         }
         if (
             $actor->authorise('jlms.pathways.manage', 'com_jlms')
             && $actor->authorise('core.manage', 'com_categories')
             && $actor->authorise('core.manage', 'com_jlms.pathway')
         ) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_DIDACTICS', 'COM_JLMS_PATHWAY_CATEGORIES', 'icon-folder', 'index.php?option=com_categories&view=categories&extension=com_jlms.pathway');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_DIDACTICS',
+                'COM_JLMS_PATHWAY_CATEGORIES',
+                'icon-folder',
+                'index.php?option=com_categories&view=categories&extension=com_jlms.pathway'
+            );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_TEACHERS', 'icon-users', 'index.php?option=com_jlms&view=teachers');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_PEOPLE',
+                'COM_JLMS_TEACHERS',
+                'icon-users',
+                'index.php?option=com_jlms&view=teachers'
+            );
             if ($actor->authorise('jlms.quiz.manage', 'com_jlms')) {
-                $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_QUESTION_BANK', 'icon-question-circle', 'index.php?option=com_jlms&view=questionbank');
+                $addShortcut(
+                    'COM_JLMS_DASHBOARD_GROUP_PEOPLE',
+                    'COM_JLMS_QUESTION_BANK',
+                    'icon-question-circle',
+                    'index.php?option=com_jlms&view=questionbank'
+                );
             }
             if ($actor->authorise('jlms.certificates.manage', 'com_jlms')) {
-                $addShortcut('COM_JLMS_DASHBOARD_GROUP_PEOPLE', 'COM_JLMS_CERTIFICATES', 'fas fa-certificate', 'index.php?option=com_jlms&view=certificates');
+                $addShortcut(
+                    'COM_JLMS_DASHBOARD_GROUP_PEOPLE',
+                    'COM_JLMS_CERTIFICATES',
+                    'fas fa-certificate',
+                    'index.php?option=com_jlms&view=certificates'
+                );
             }
             if ($actor->authorise('jlms.audit.view', 'com_jlms')) {
                 $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_MAIL_QUEUE', 'icon-envelope', 'index.php?option=com_jlms&view=mailqueue');
@@ -79,16 +114,31 @@ final class HtmlView extends BaseHtmlView
             );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_COMMUNICATION', 'COM_JLMS_DASHBOARD_MAIL_VARIABLES', 'icon-info-circle', 'index.php?option=com_jlms&view=mailvariables');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION',
+                'COM_JLMS_DASHBOARD_MAIL_VARIABLES',
+                'icon-info-circle',
+                'index.php?option=com_jlms&view=mailvariables'
+            );
         }
         if (
             $actor->authorise('core.manage', 'com_fields')
             && $actor->authorise('core.manage', 'com_jlms')
         ) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_CUSTOM_FIELDS', 'icon-list', 'index.php?option=com_fields&view=fields&context=com_jlms.course');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_CONFIGURATION',
+                'COM_JLMS_CUSTOM_FIELDS',
+                'icon-list',
+                'index.php?option=com_fields&view=fields&context=com_jlms.course'
+            );
         }
         if ($actor->authorise('core.manage', 'com_plugins')) {
-            $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_VIDEO_PLUGINS', 'icon-plug', 'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0');
+            $addShortcut(
+                'COM_JLMS_DASHBOARD_GROUP_CONFIGURATION',
+                'COM_JLMS_VIDEO_PLUGINS',
+                'icon-plug',
+                'index.php?option=com_plugins&view=plugins&filter[folder]=jlmsvideo&filter[search]=&filter[enabled]=&filter[access]=&filter[element]=&limitstart=0'
+            );
         }
         if ($actor->authorise('core.manage', 'com_jlms')) {
             $addShortcut('COM_JLMS_DASHBOARD_GROUP_CONFIGURATION', 'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder', 'index.php?option=com_jlms&view=categoryreassignment');
