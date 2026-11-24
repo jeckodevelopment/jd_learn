@@ -22,6 +22,7 @@ jobs:
           composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
       - name: Split long embedded SQL/text literals without changing their byte values
         run: |
+          echo 'Exclude control-structure-sensitive quiz fixture'
           python3 tools/secdev02_literal_reflow_bulk.py --self-test
           python3 tools/secdev02_literal_reflow_bulk.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs
           git diff --check
