@@ -1,0 +1,37 @@
+name: SECDEV-02 corrected PSR1 declarations sweep (temporary)
+on:
+  push:
+    branches: [style/secdev02-final-258-bulk-remediation]
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-final-psr1-corrected
+  cancel-in-progress: false
+jobs:
+  remediation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-final-258-bulk-remediation
+          fetch-depth: 0
+      - name: Install pinned PHPCS
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Separate declarations without confusing closure use with imports
+        run: |
+          set -euo pipefail
+          python3 tools/secdev02_final_psr1_split.py --self-test --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --phpcbf .runtime/secdev02-phpcs/vendor/bin/phpcbf
+          python3 tools/secdev02_final_psr1_split.py --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs --phpcbf .runtime/secdev02-phpcs/vendor/bin/phpcbf
+          git add -A
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          git diff --cached --check
+      - name: Persist accepted batch and delete all temporary workflows
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/secdev02-psr1-diagnosis.yml .github/workflows/secdev02-psr1-fixed.yml tools/secdev02_final_psr1_split.py
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'refactor(SECDEV-02): correctly separate PHP fixture definitions and closure imports'
+          git push origin HEAD:style/secdev02-final-258-bulk-remediation
