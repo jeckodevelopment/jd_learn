@@ -87,7 +87,8 @@ def run() -> int:
             path = ROOT / name
             candidate = path.read_bytes()
             path.write_bytes(original[name])
-            trial = execute(["python3", "tools/check.py"])
+            package = execute(["python3", "tools/build.py"])
+            trial = execute(["python3", "tools/check.py"]) if package.returncode == 0 else package
             changed_failure = fingerprint(trial) != previous
             if changed_failure:
                 reverted.append(name)
