@@ -107,7 +107,8 @@ foreach ($item['outline'] as $entry) {
   <?php if (!empty($selected->schedule_blocked)) : ?>
   <div id="jlms-lesson-schedule-notice" class="alert alert-info" role="status">
         <?php if ($selected->schedule_state === 'upcoming') :
-            ?><p><?= Text::sprintf('COM_JLMS_LESSON_UPCOMING', $this->escape($selected->schedule_available_at)) ?></p><?php
+            ?><p><?=
+    Text::sprintf('COM_JLMS_LESSON_UPCOMING', $this->escape($selected->schedule_available_at)) ?></p><?php
         elseif ($selected->schedule_state === 'awaiting_start') :
             ?><p><?= Text::sprintf('COM_JLMS_LESSON_AWAITING_START', (int) $selected->schedule_after_days) ?></p><?php
         else :
