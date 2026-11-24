@@ -49,6 +49,9 @@ require $root . '/administrator/includes/framework.php';
 \define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
 \define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
+
+use Jlms\Component\Jlms\Administrator\Application\QuizAttemptService as JdQuizAttemptService;
+use Joomla\CMS\User\User as NativeUser;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -138,10 +141,10 @@ $authoring = $component->getCurriculumService();
 $publication = $component->getPublicationService();
 $quizzes = $component->getQuizAuthoringService();
 $actor = $app->getIdentity();
-$student = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult());
-$other = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerother'")->loadResult());
+$student = new NativeUser((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearner'")->loadResult());
+$other = new NativeUser((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerother'")->loadResult());
 $now = time();
-$service = new \Jlms\Component\Jlms\Administrator\Application\QuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
+$service = new JdQuizAttemptService($db, $learning, $component->getQuizSnapshotService(), static function () use (&$now): int {
     return $now;
 }, $component->getQuizTimeService());
 $fixturePath = dirname($root) . '/quiz-attempts-fixture.json';
@@ -150,7 +153,7 @@ if (($argv[2] ?? '') === 'worker') {
     fflush(STDOUT);
     fgets(STDIN);
     $f = json_decode(file_get_contents($fixturePath), true, 16, JSON_THROW_ON_ERROR);
-    $workerUser = new \Joomla\CMS\User\User($f['concurrent_user']);
+    $workerUser = new NativeUser($f['concurrent_user']);
     $r = $service->start($workerUser, 'en-GB', $f['concurrent_enrollment'], $f['lesson_id'], attemptKey());
     echo $r['attempt']['id'] . PHP_EOL;
     exit(0);
@@ -247,7 +250,7 @@ attemptReject(
     'foreign enrollment rejected'
 );
 attemptReject(
-    fn()=>$service->start(new \Joomla\CMS\User\User(), 'en-GB', $enrollment, $lesson, attemptKey()),
+    fn()=>$service->start(new NativeUser(), 'en-GB', $enrollment, $lesson, attemptKey()),
     401,
     'guest rejected'
 );
@@ -701,17 +704,17 @@ attemptExpect(
     $db->setQuery('SELECT status FROM #__jlms_attempts WHERE id=' . (int)$a['attempt']['id'])->loadResult() === 'expired',
     'scheduled routine closes due attempt without browser'
 );
-$httpUser = new \Joomla\CMS\User\User((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());
+$httpUser = new NativeUser((int)$db->setQuery("SELECT id FROM #__users WHERE username='cilearnerhttp'")->loadResult());
 $httpEnrollment = $learning->start($httpUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 // Concurrency uses one enrollment and two independent database connections/processes.
-$concurrentUser = new \Joomla\CMS\User\User();
+$concurrentUser = new NativeUser();
 $userData = ['name' => 'CI Concurrent quiz','username' => 'ciquizconcurrent','email' =>
      'ciquizconcurrent@example.invalid','password' => 'Ci-only-Learner-Password-2026','password2' =>
      'Ci-only-Learner-Password-2026','groups' => [2,$group],'block' => 0,'activation' => ''];
 if (!$concurrentUser->bind($userData) || !$concurrentUser->save()) {
     throw new \RuntimeException($concurrentUser->getError());
 }
-$concurrentUser = new \Joomla\CMS\User\User((int)$concurrentUser->id);
+$concurrentUser = new NativeUser((int)$concurrentUser->id);
 $concurrentEnrollment = $learning->start($concurrentUser, 'en-GB', $course, bin2hex(random_bytes(16)));
 $f = ['course_id' => $course,'lesson_id' => $lesson,'practice_id' => $practice,'never_id' => $never
     ,'enrollment_id' => $enrollment,'http_enrollment' => $httpEnrollment,'passed_attempt' => $passedAttempt

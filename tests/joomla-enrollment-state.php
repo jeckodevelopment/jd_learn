@@ -25,6 +25,9 @@ require $root . '/administrator/includes/framework.php';
 \define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
 \define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
+
+use Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService as JdEnrollmentStateService;
+use Joomla\CMS\Language\LanguageFactoryInterface as NativeLanguageFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -42,7 +45,7 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(NativeLanguageFactoryInterface::class)->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -289,7 +292,7 @@ $changed[4] = 'Changed reason';
 stateDenied(fn()=>$service->apply($manager, ...$changed), 409, 'UUID reuse with changed payload rejected');
 $next = $service->editor($actor, $course, $enrollment, 'active');
 $reactivate = stateCommand($next);
-$broken = new \Jlms\Component\Jlms\Administrator\Application\EnrollmentStateService($db, $learning, $component->getEnrollmentRosterService(), static function (): void {
+$broken = new JdEnrollmentStateService($db, $learning, $component->getEnrollmentRosterService(), static function (): void {
     throw new \RuntimeException('COM_JLMS_ENROLLMENT_STATE_AUDIT_FAILED', 503);
 });
 stateDenied(fn()=>$broken->apply($actor, ...$reactivate), 503, 'audit outage is a failed operation');

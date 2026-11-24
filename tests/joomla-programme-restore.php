@@ -25,6 +25,11 @@ require $root . '/administrator/includes/framework.php';
 \define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
 \define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
+
+use Jlms\Component\Jlms\Administrator\Application\CurriculumService as JdCurriculumService;
+use Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider as JdProvider;
+use Joomla\CMS\Component\ComponentHelper as NativeComponentHelper;
+use Joomla\CMS\Language\LanguageFactoryInterface as NativeLanguageFactoryInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -42,7 +47,7 @@ $container->alias('session.web', 'session.web.administrator')
     ->alias(SessionInterface::class, 'session.web.administrator');
 $app = $container->get(AdministratorApplication::class);
 Factory::$application = $app;
-$app->loadLanguage($container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false));
+$app->loadLanguage($container->get(NativeLanguageFactoryInterface::class)->createLanguage('en-GB', false));
 $app->createExtensionNamespaceMap();
 $db = $container->get(DatabaseInterface::class);
 $userId = (int) $db->setQuery("SELECT id FROM #__users WHERE username = 'cioperator'")->loadResult();
@@ -68,13 +73,13 @@ require __DIR__ . '/cloudflare-fixture.php';
 $vimeoEnabled = true;
 $registryFactory = static function () use ($config, $secrets, $transport, &$vimeoEnabled): VideoProviderRegistry {
     $registry = new VideoProviderRegistry();
-    foreach ([new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider($vimeoEnabled),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
+    foreach ([new JdProvider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider($vimeoEnabled),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
         $registry->register($provider->getDescriptor(), static fn()=>$provider);
     }
     return $registry;
 };
-\Joomla\CMS\Component\ComponentHelper::getParams('com_jlms')->set('video_external_policy', 'embed');
-$authoring = new \Jlms\Component\Jlms\Administrator\Application\CurriculumService($db, static fn(string $body): string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), $registryFactory);
+NativeComponentHelper::getParams('com_jlms')->set('video_external_policy', 'embed');
+$authoring = new JdCurriculumService($db, static fn(string $body): string=>NativeComponentHelper::filterText($body), $registryFactory);
 $component->setCurriculumService($authoring);
 $publication = $component->getPublicationService();
 $actor = $app->getIdentity();

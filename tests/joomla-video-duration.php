@@ -25,6 +25,11 @@ require $root . '/administrator/includes/framework.php';
 \define('JPATH_COMPONENT_ADMINISTRATOR', JPATH_COMPONENT);
 \define('JPATH_COMPONENT_SITE', JPATH_SITE . '/components/com_jlms');
 
+
+use Jlms\Component\Jlms\Administrator\Application\CurriculumService as JdCurriculumService;
+use Jlms\Component\Jlms\Administrator\Application\VideoProgressService as JdVideoProgressService;
+use Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider as JdProvider;
+use Joomla\CMS\Component\ComponentHelper as NativeComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Session\Session;
@@ -67,10 +72,10 @@ $factory = $component->getMVCFactory();
 require __DIR__ . '/cloudflare-fixture.php';
 [$config,$secrets,$transport,$remote] = cloudflareFixture();
 $registry = new VideoProviderRegistry();
-foreach ([new \Jlms\Plugin\Jlmsvideo\Youtube\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
+foreach ([new JdProvider(true),new \Jlms\Plugin\Jlmsvideo\Vimeo\Provider\Provider(true),new \Jlms\Plugin\Jlmsvideo\Cloudflarestream\Provider\Provider($config, $secrets, $transport)] as $provider) {
     $registry->register($provider->getDescriptor(), static fn()=>$provider);
 }
-$authoring = new \Jlms\Component\Jlms\Administrator\Application\CurriculumService($db, static fn(string $body): string=>\Joomla\CMS\Component\ComponentHelper::filterText($body), static fn()=>$registry);
+$authoring = new JdCurriculumService($db, static fn(string $body): string=>NativeComponentHelper::filterText($body), static fn()=>$registry);
 $component->setCurriculumService($authoring);
 $actor = $app->getIdentity();
 $publication = $component->getPublicationService();
@@ -128,7 +133,7 @@ if (in_array($mode, ['state','checkpoint','retained'], true)) {
     }echo json_encode($state, JSON_THROW_ON_ERROR);
     return;
 }
-$settings = \Joomla\CMS\Component\ComponentHelper::getParams('com_jlms');
+$settings = NativeComponentHelper::getParams('com_jlms');
 $settings->set('video_external_policy', 'embed');
 // HTTP requests boot a fresh application: explicitly configure the disposable site,
 // rather than relying only on this CLI process's in-memory Registry.
@@ -220,7 +225,7 @@ $frozen = durationRow('lessons', $lesson);
 durationDenied(fn()=>$authoring->authoringMetadata($actor, $input()), 'COM_JLMS_VERSION_IMMUTABLE');
 $enrollment = $learning->start($actor, 'en-GB', $course, bin2hex(random_bytes(20)));
 $now = (int)floor(microtime(true) * 1000);
-$video = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
+$video = new JdVideoProgressService($db, $learning, $authoring, static function () use (&$now): int {
     return $now;
 });
 $grant = $video->playback($actor, 'en-GB', $enrollment, $lesson, true);
