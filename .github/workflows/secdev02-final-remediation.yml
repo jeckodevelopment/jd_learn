@@ -1,0 +1,44 @@
+name: SECDEV-02 mass PSR-12 remediation (temporary)
+on:
+  push:
+    branches: [style/secdev02-final-258-bulk-remediation]
+permissions:
+  contents: write
+concurrency:
+  group: secdev02-final-mass
+  cancel-in-progress: false
+jobs:
+  remedy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: style/secdev02-final-258-bulk-remediation
+          fetch-depth: 0
+      - name: Install pinned PHPCS and formatters
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Execute guarded large-batch refactoring
+        shell: bash
+        run: |
+          set -euo pipefail
+          P=.runtime/secdev02-phpcs/vendor/bin/phpcs
+          B=.runtime/secdev02-phpcs/vendor/bin/phpcbf
+          python3 tools/secdev02_calls_reflow_bulk.py --phpcs "$P"
+          python3 tools/secdev02_mass_operator_semantic.py --phpcs "$P" --phpcbf "$B" --max-files 80 --max-tries 6
+          python3 tools/secdev02_mass_mixed_echo.py --phpcs "$P" --phpcbf "$B"
+          python3 tools/secdev02_mass_html_attributes.py --phpcs "$P" --max-files 55
+          python3 tools/secdev02_mass_array_semantic.py --phpcs "$P" --phpcbf "$B" --max-files 65 --passes 2
+          python3 tools/secdev02_psr1_helper_extraction.py --phpcs "$P" --phpcbf "$B"
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          git diff --check
+      - name: Commit audited batch and delete temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/secdev02-final-remediation.yml
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'refactor(SECDEV-02): guarded mass PSR12 remediation batch'
+          git push origin HEAD:style/secdev02-final-258-bulk-remediation
