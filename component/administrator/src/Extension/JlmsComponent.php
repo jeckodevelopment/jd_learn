@@ -6,6 +6,12 @@ namespace Jlms\Component\Jlms\Administrator\Extension;
 
 use Joomla\CMS\Extension\MVCComponent;
 use Jlms\Component\Jlms\Administrator\Application\CurriculumService;
+use Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService;
+use Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService;
+use Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService;
+use Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService;
+use Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent;
+use Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService;
 use Joomla\CMS\Categories\CategoryServiceInterface;
 use Joomla\CMS\Categories\CategoryServiceTrait;
 
@@ -41,7 +47,7 @@ final class JlmsComponent extends MVCComponent implements
     ): void {
         $this->categoryReassignmentService = $service;
     }
-    public function getCategoryReassignmentService(): \Jlms\Component\Jlms\Administrator\Application\CategoryReassignmentService
+    public function getCategoryReassignmentService(): CategoryReassignmentService
     {
         return $this->categoryReassignmentService;
     }
@@ -72,7 +78,7 @@ final class JlmsComponent extends MVCComponent implements
     ): void {
         $this->enrollmentApprovalService = $service;
     }
-    public function getEnrollmentApprovalService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentApprovalService
+    public function getEnrollmentApprovalService(): EnrollmentApprovalService
     {
         return $this->enrollmentApprovalService;
     }
@@ -94,7 +100,7 @@ final class JlmsComponent extends MVCComponent implements
     ): void {
         $this->courseCommunicationService = $service;
     }
-    public function getCourseCommunicationService(): \Jlms\Component\Jlms\Administrator\Application\CourseCommunicationService
+    public function getCourseCommunicationService(): CourseCommunicationService
     {
         return $this->courseCommunicationService;
     }
@@ -116,7 +122,7 @@ final class JlmsComponent extends MVCComponent implements
     ): void {
         $this->enrollmentMigrationService = $service;
     }
-    public function getEnrollmentMigrationService(): \Jlms\Component\Jlms\Administrator\Application\EnrollmentMigrationService
+    public function getEnrollmentMigrationService(): EnrollmentMigrationService
     {
         return $this->enrollmentMigrationService;
     }
@@ -268,7 +274,7 @@ final class JlmsComponent extends MVCComponent implements
     ): void {
         $this->courseAnnouncementConsent = $service;
     }
-    public function getCourseAnnouncementConsent(): \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementConsent
+    public function getCourseAnnouncementConsent(): CourseAnnouncementConsent
     {
         return $this->courseAnnouncementConsent;
     }
@@ -279,7 +285,7 @@ final class JlmsComponent extends MVCComponent implements
     ): void {
         $this->courseAnnouncementService = $service;
     }
-    public function getCourseAnnouncementService(): \Jlms\Component\Jlms\Administrator\Application\CourseAnnouncementService
+    public function getCourseAnnouncementService(): CourseAnnouncementService
     {
         return $this->courseAnnouncementService;
     }

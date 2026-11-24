@@ -60,7 +60,8 @@ $open = $attempt && $attempt['state'] === 'open';
     class="btn btn-link jlms-quiz-clear"><?= Text::_('COM_JLMS_QUIZ_CLEAR') ?></button><?php
         endif; ?>
         <?php if ($i['feedback_available']) :
-            ?><div class="jlms-quiz-question__feedback"><p><?= Text::_('COM_JLMS_QUIZ_CORRECT') ?>: <?php $correctLabels = [];
+            ?><div class="jlms-quiz-question__feedback">
+<p><?= Text::_('COM_JLMS_QUIZ_CORRECT') ?>: <?php $correctLabels = [];
 foreach ($q['options'] as $o) {
     if (in_array($o['id'], $q['correct'], true)) {
         $correctLabels[] = $o['label'];

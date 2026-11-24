@@ -597,9 +597,9 @@ assert '$menu->setActive((int) $item->id)' in admin_controller
 assert "$app->getPathway()" not in admin_controller
 
 # The dashboard-only email queue stays accessible but has no sidebar entry.
-assert "'COM_JLMS_MAIL_QUEUE', 'icon-envelope'" in dashboard_view
-assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder'," in dashboard_view
-assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder-tree'," not in dashboard_view
+assert re.search(r"'COM_JLMS_MAIL_QUEUE',\s*'icon-envelope'", dashboard_view)
+assert re.search(r"'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES',\s*'icon-folder',", dashboard_view)
+assert not re.search(r"'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES',\s*'icon-folder-tree',", dashboard_view)
 assert "'mailqueue' => ['mailqueue']" not in admin_controller
 assert "(int) ($item->parent_id ?? 0) !== 1" in admin_controller
 assert "(int) ($item->parent_id ?? 0) === 1" in admin_controller
@@ -996,9 +996,9 @@ assert '$menu->setActive((int) $item->id)' in admin_controller
 assert "$app->getPathway()" not in admin_controller
 
 # The dashboard-only email queue stays accessible but has no sidebar entry.
-assert "'COM_JLMS_MAIL_QUEUE', 'icon-envelope'" in dashboard_view
-assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder'," in dashboard_view
-assert "'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES', 'icon-folder-tree'," not in dashboard_view
+assert re.search(r"'COM_JLMS_MAIL_QUEUE',\s*'icon-envelope'", dashboard_view)
+assert re.search(r"'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES',\s*'icon-folder',", dashboard_view)
+assert not re.search(r"'COM_JLMS_DASHBOARD_CATEGORY_DEPENDENCIES',\s*'icon-folder-tree',", dashboard_view)
 assert "'mailqueue' => ['mailqueue']" not in admin_controller
 assert "(int) ($item->parent_id ?? 0) !== 1" in admin_controller
 assert "(int) ($item->parent_id ?? 0) === 1" in admin_controller

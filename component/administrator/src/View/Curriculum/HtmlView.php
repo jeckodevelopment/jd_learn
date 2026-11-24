@@ -11,6 +11,8 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Router\Route;
 use Jlms\Component\Jlms\Administrator\Application\CourseSchedule;
 use Jlms\Component\Jlms\Administrator\Domain\LessonAvailability;
+use Joomla\Component\Fields\Administrator\Helper\FieldsHelper;
+use Jlms\Component\Jlms\Administrator\Domain\TeachingRules;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -267,7 +269,7 @@ final class HtmlView extends BaseHtmlView
                     $this->selectedItem = $lesson;
                     $this->selectedModule = (int) $lesson->module_id;
                     $customFields = [];
-                    foreach (\Joomla\Component\Fields\Administrator\Helper\FieldsHelper::getFields('com_jlms.lesson', $lesson, true) as $customField) {
+                    foreach (FieldsHelper::getFields('com_jlms.lesson', $lesson, true) as $customField) {
                         $customFields[$customField->name] = $customField->value;
                     }
                     $source = $lesson->source_json ? json_decode(
@@ -279,7 +281,7 @@ final class HtmlView extends BaseHtmlView
                     $lessonParams = json_decode((string)$lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
                     $lessonThreshold = is_array($lessonParams)
                     && is_int($lessonParams['video_threshold_basis_points'] ?? null)
-                        ? \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($lessonParams['video_threshold_basis_points']) : '';
+                        ? TeachingRules::percent($lessonParams['video_threshold_basis_points']) : '';
                     $audioTranscript = is_array($lessonParams) && is_string($lessonParams['audio_transcript'] ?? null)
                         ? $lessonParams['audio_transcript'] : '';
                     $videoTranscript = is_array($lessonParams) && is_string($lessonParams['video_transcript'] ?? null)

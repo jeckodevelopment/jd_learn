@@ -22,7 +22,8 @@ if (($argv[2] ?? '') !== 'worker') {
     $plugin = $fixtureDb->query(("SELECT enabled, params FROM joomla_extensions WHERE type='plugin' "
         . "AND folder='system' AND element='languagefilter'"))->fetch(\PDO::FETCH_ASSOC);
     $fixtureDb->exec(("UPDATE joomla_extensions SET enabled=1, "
-        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1)"
+        . " WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
     register_shutdown_function(static function () use ($fixtureDb, $plugin): void {
         $statement = $fixtureDb->prepare(("UPDATE joomla_extensions SET enabled=?, params=? WHERE "
             . "type='plugin' AND folder='system' AND element='languagefilter'"));
@@ -262,7 +263,9 @@ assocExpect(
     'native zero selection clears whole old group'
 );
 assocExpect(
-    !$db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($otherEn,$otherIt)")->loadResult(),
+    !$db->setQuery(
+        "SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($otherEn,$otherIt)"
+    )->loadResult(),
     'no dangling old group after clear'
 );
 // Two independent native model requests compete for the same unassociated target.
@@ -317,7 +320,10 @@ assocExpect(
     count(array_filter($outcomes)) === 1,
     'concurrent groups cannot both claim one target: ' . json_encode($workerDetails, JSON_THROW_ON_ERROR)
 );
-$raceMembers = $db->setQuery("SELECT b.id FROM #__associations a JOIN #__associations b ON b.`key`=a.`key` AND b.context=a.context WHERE a.id=$raceIt AND a.context='com_jlms.item'")->loadColumn();
+$raceMembers = $db->setQuery(
+    "SELECT b.id FROM #__associations a JOIN #__associations b ON b.`key`=a.`key`"
+        . " AND b.context=a.context WHERE a.id=$raceIt AND a.context='com_jlms.item'"
+)->loadColumn();
 assocExpect(
     count($raceMembers) === 2 && count(array_intersect([$raceEn1,$raceEn2], array_map('intval', $raceMembers))) === 1,
     'race leaves exactly one coherent native translation pair'
@@ -410,11 +416,17 @@ assocExpect(
     'authorized editor can detach a published translation group'
 );
 assocExpect(
-    !(int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult(),
+    !(int) $db->setQuery(
+        "SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)"
+    )->loadResult(),
     'detaching a published group removes only its native association rows'
 );
 assocExpect(
-    json_encode($db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")->loadObjectList(), JSON_THROW_ON_ERROR) === $livePointers
+    json_encode(
+        $db->setQuery("SELECT id,current_version_id FROM #__jlms_courses WHERE id IN ($en,$it) ORDER BY id")
+            ->loadObjectList(),
+        JSON_THROW_ON_ERROR
+    ) === $livePointers
     && (int) $db->setQuery("SELECT COUNT(*) FROM #__jlms_course_versions WHERE course_id IN ($en,$it)")
         ->loadResult() === $versionCount,
     'published translation graph edits preserve the live teaching pointers and versions'
@@ -428,7 +440,9 @@ assocExpect(
     'native association API resolves the restored published translation'
 );
 assocExpect(
-    (int) $db->setQuery("SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)")->loadResult() === 2,
+    (int) $db->setQuery(
+        "SELECT COUNT(*) FROM #__associations WHERE context='com_jlms.item' AND id IN ($en,$it)"
+    )->loadResult() === 2,
     'native association graph remains valid after published relink'
 );
 file_put_contents($fixturePath, json_encode(['en' => $en,'it' => $it,'other_en' => $otherEn

@@ -478,3 +478,31 @@ Baseline PHPCS PSR-12 4.0.4 sul merge #1022: **258 finding**. Più passate coord
 - Ordine e scope delle costanti `JPATH_*`, `_JEXEC`, import necessari alle funzioni di prova, dichiarazioni di closure, compatibilità senza plugin compat6.
 - PHPCS PSR-12 4.0.4 sull'intero codice, PHP lint su tutti i file, source contracts, SAST e CSV integrity.
 - Collaudi manuali dell'utente separati: corsi, iscrizioni, quiz, curriculum, allegati, attestati, video e email.
+
+
+## PR #1024 — Batch consolidato sui 192 finding (24 novembre 2026)
+
+Il workflow preparatorio monouso #45492312216 ha eseguito sullo stesso ramo e nella stessa PR nove trasformatori conservativi già presenti. Gli esiti sono misurati con PHP_CodeSniffer **4.0.4**, senza escludere regole: **192 → 166 (−26)**; rimangono **137** righe lunghe e **29** rilievi strutturali. I cambiamenti sono limitati a cinque file PHP, lint e `git diff --check` verdi nel workflow di preparazione; il workflow temporaneo è stato rimosso. La **CI applicativa del commit finale rimane da certificare**. Le metriche 166/26 sono quelle del batch preparatorio e non un attestato finale di accettazione.
+
+Dei 29 finding strutturali, 15 riguardano membri con underscore potenzialmente vincolati ai contratti delle API Joomla: non possono essere rinominati automaticamente per ottenere uno zero artificiale. Gli altri sono sei file con effetti collaterali associati a simboli, cinque classi multiple, uno senza namespace, uno con nome classe fuori convenzione e uno di ordine dell'header. Nessuna regola PHPCS è stata disabilitata o attenuata. **SECDEV-02 resta Parziale**, CORE/API e collaudi manuali rimangono distinti; percentuali funzionali invariate.
+
+### Comportamenti da testare
+
+- PHPCS integrale e confronto con baseline 192; lint PHP e source contracts dei cinque PHP modificati.
+- Renderizzazione catalogo, dashboard e servizi amministrativi su Joomla 6.2; CI PHP/DB, Chromium, SAST e pacchetto installabile.
+- Riconciliazione separata dei 166 finding residui, dei contratti convenzionali Joomla e dei criteri CORE/API.
+
+
+### Seconda passata sullo stesso ramo #1024
+
+Workflow monouso #45493592120 completato: ulteriori trasformatori conservativi hanno ridotto il conteggio PHPCS da **166 a 161** (−5), composto da **132** linee lunghe e **29** rilievi strutturali. Lo strumento monouso è stato rimosso prima della CI. Un precedente riflusso del collegamento «Azzera filtri» del catalogo ha infranto un contratto sorgente esatto nel test `tests/frontend-catalog-options.py`; tale frammento è stato ripristinato nel commit successivo senza modificare logica o URL. La CI finale deve attestare il saldo effettivo dopo il ripristino.
+
+
+### Riconciliazione CI del ramo #1024 dopo correzione contratti (24 novembre)
+
+La CI leggera [#45495755340](https://github.com/jeckodevelopment/jd_learn/actions/runs/45495755340) conferma **192 → 159 finding PSR-12 (−33)**, **zero finding introdotti**. L'analisi di non regressione, i controlli sorgente e le verifiche leggere sono verdi. Il ramo era ancora in bozza durante questo run, quindi la matrice applicativa PHP/database e Chromium non è stata eseguita; questo risultato **non** equivale a CI completa o chiusura SECDEV-02. Le 15 firme/proprietà convenzionali Joomla non vanno rinominate per eliminare artificialmente il debito. Collaudi manuali separati e percentuali funzionali invariate.
+
+
+### Baseline definitiva dopo i ripristini di sicurezza della PR #1024
+
+La CI completa [#45497952357](https://github.com/jeckodevelopment/jd_learn/actions/runs/45497952357) risulta **interamente verde**: controlli statici, Chromium, Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Il saldo PHPCS 4.0.4 dopo tutti i ripristini dei contratti e del template dashboard è **192 → 168 (−24)**, con **zero nuovi rilievi**: 145 righe lunghe e 23 strutturali. I numeri 161, 159 e 158 erano misure intermedie prima dei ripristini necessari per l'integrazione; **non** rappresentano il saldo definitivo approvato dalla suite. I 168 rilievi rimangono aperti e la PR non deve essere considerata conclusiva; SECDEV-02 resta Parziale. L'accettazione manuale Joomla resta distinta.

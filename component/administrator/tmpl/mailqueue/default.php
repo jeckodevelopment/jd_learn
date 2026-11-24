@@ -138,7 +138,11 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
           <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
             id="jlms-mail-queue-sent-confirm-<?=
                (int) $row
-                   ->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-sent-confirm-<?=
+                   ->id ?>"
+name="jform[confirm]"
+value="1" required>
+<label class="form-check-label"
+for="jlms-mail-queue-sent-confirm-<?=
                (int) $row->id ?>"><?=
                Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_SENT_CONFIRM') ?></label></div>
           <button class="btn btn-success" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_MARK_SENT') ?></button>
@@ -155,7 +159,11 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
           <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
             id="jlms-mail-queue-retry-confirm-<?=
                (int) $row
-                   ->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-retry-confirm-<?=
+                   ->id ?>"
+name="jform[confirm]"
+value="1" required>
+<label class="form-check-label"
+for="jlms-mail-queue-retry-confirm-<?=
                (int) $row->id ?>"><?=
                Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
           <button class="btn btn-warning" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY') ?></button>
@@ -184,7 +192,11 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
           <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
             id="jlms-mail-queue-template-confirm-<?=
                (int) $row
-                   ->id ?>" name="jform[confirm]" value="1" required><label class="form-check-label" for="jlms-mail-queue-template-confirm-<?=
+                   ->id ?>"
+name="jform[confirm]"
+value="1" required>
+<label class="form-check-label"
+for="jlms-mail-queue-template-confirm-<?=
                (int) $row->id ?>"><?=
                Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_RETRY_CONFIRM') ?></label></div>
           <button class="btn btn-warning" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_RETRY') ?></button>

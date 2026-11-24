@@ -70,7 +70,7 @@ diagnostics_code = (ROOT / "component/administrator/src/Application/Configuratio
 assert "function operationalSettings(array $params): array" in diagnostics_code
 assert "function mailTemplates(array $required, array $installed): array" in diagnostics_code
 assert "string $documentRoot = ''" in diagnostics_code
-assert "static function (string $label, bool $enabled" in diagnostics_code
+assert re.search(r"static\s+function\s*\(\s*string\s+\$label\s*,\s*bool\s+\$enabled\b", diagnostics_code)
 assert "$params['material_clamd_socket']" in diagnostics_code
 assert re.search(r"array_push\s*\(\s*\$this->configurationDiagnostics\b", view) is not None
 assert "is_string($_SERVER['DOCUMENT_ROOT'] ?? null)" in view
@@ -170,7 +170,7 @@ assert "catalog_show_cover" in diagnostics_code
 assert "catalog_show_summary" in diagnostics_code
 assert "$rawParams = $menu['params'] ?? '';" in diagnostics_code
 assert "Known invalid values must remain actionable" in diagnostics_code
-assert "bool $coursesComplete, bool $menusComplete" in diagnostics_code
+assert re.search(r"bool\s+\$coursesComplete\s*,\s*bool\s+\$menusComplete\b", diagnostics_code)
 assert "$menuInvalid, $menusComplete" in diagnostics_code
 
 for locale in ("it-IT", "en-GB"):
