@@ -23,7 +23,9 @@ $i = $this->item;
   <p><?= $this->escape($v['learner_name']) ?> (<?= $this->escape($v['username']) ?>)</p>
   <p><?= Text::_('COM_JLMS_ROSTER_VERSION') ?> #<?= (int) $p['version_id'] ?> · <?= Text::_('COM_JLMS_ROSTER_EDITION') ?> #<?= (int) $p['edition_id'] ?> · <?= $this->escape($p['language']) ?></p>
         <?php if (!$p['has_current_access']) :
-            ?><p id="jlms-manual-access-warning" class="alert alert-warning" role="status"><?= Text::_('COM_JLMS_PREASSIGN_WARNING') ?></p><?php
+            ?><p id="jlms-manual-access-warning"
+    class="alert alert-warning"
+    role="status"><?= Text::_('COM_JLMS_PREASSIGN_WARNING') ?></p><?php
         endif; ?>
   <p><?= Text::_('COM_JLMS_MANUAL_CAPACITY') ?>: <?= (int) $p['used'] ?> / <?= $p['capacity'] === null ? Text::_('COM_JLMS_MANUAL_UNLIMITED') : (int) $p['capacity'] ?></p>
         <?php if ($p['blocked'] !== null) :
@@ -33,7 +35,10 @@ $i = $this->item;
                     ->escape($p['existing_status']) ?></p><?php
             endif; ?>
         <?php else :
-            ?><form id="jlms-manual-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
+            ?><form id="jlms-manual-form"
+    method="post"
+    class="form-validate"
+    action="<?= Route::_('index.php?option=com_jlms') ?>">
             <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="manualenrollment.apply"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_MANUAL_APPLY') ?></button>
   </form>
         <?php endif; ?>

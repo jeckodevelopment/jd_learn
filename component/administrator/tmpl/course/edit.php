@@ -78,7 +78,8 @@ $id = (int) $this->item->id;
   <h2 id="jlms-course-teaching-rules-heading" class="h4"><?= Text::_('COM_JLMS_TEACHING_RULES') ?></h2>
   <p><?= Text::_('COM_JLMS_TEACHING_RULES_SCOPE') ?></p><p><?= Text::_('COM_JLMS_TEACHING_RULES_SUPPORTED') ?></p>
   <?php if ($id && !$this->readOnly) :
-        ?><joomla-toolbar-button task="course.programmeRules" form-validation><button type="button" class="btn btn-secondary"><?= Text::_('COM_JLMS_TEACHING_RULES_OPEN') ?></button></joomla-toolbar-button><?php
+        ?><joomla-toolbar-button task="course.programmeRules" form-validation><button type="button"
+    class="btn btn-secondary"><?= Text::_('COM_JLMS_TEACHING_RULES_OPEN') ?></button></joomla-toolbar-button><?php
   endif; ?>
  </section>
  <?= HTMLHelper::_('uitab.endTab') ?>

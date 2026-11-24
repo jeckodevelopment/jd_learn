@@ -7,7 +7,11 @@ HTMLHelper::_('behavior.formvalidator');
 ?>
 <div id="j-main-container" class="j-main-container">
  <p class="alert alert-info"><?= Text::_('COM_JLMS_QUIZ_AUTHORING_NOTICE') ?></p>
- <div id="jlms-question-form"><form id="adminForm" name="adminForm" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>" class="form-validate">
+ <div id="jlms-question-form"><form id="adminForm"
+    name="adminForm"
+    method="post"
+    action="<?= Route::_('index.php?option=com_jlms') ?>"
+    class="form-validate">
   <?= $this->form->renderFieldset('details') ?>
   <input type="hidden" name="task" value="questionbank.save">
   <?= HTMLHelper::_('form.token') ?>

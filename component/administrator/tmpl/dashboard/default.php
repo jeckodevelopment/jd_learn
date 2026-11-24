@@ -34,7 +34,8 @@ $schedulerHealthKeys = [
             <?php if (!$shortcuts) {
                 continue;
             } ?>
-            <section class="jlms-admin-dashboard__group" aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>">
+            <section class="jlms-admin-dashboard__group"
+    aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>">
                 <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
                 <ul>
                     <?php foreach ($shortcuts as $shortcut) : ?>
@@ -117,7 +118,8 @@ $schedulerHealthKeys = [
                 </tr></thead>
                 <tbody>
                 <?php foreach ($this->configurationDiagnostics as $check) : ?>
-                    <tr data-jlms-configuration-kind="<?= $this->escape($check['kind']) ?>" data-jlms-configuration-severity="<?= $this->escape($check['severity']) ?>">
+                    <tr data-jlms-configuration-kind="<?= $this->escape($check['kind']) ?>"
+    data-jlms-configuration-severity="<?= $this->escape($check['severity']) ?>">
                         <th scope="row"><?= $this->escape(Text::_($check['labelKey'])) ?></th>
                         <td><?= $this->escape(Text::_($check['stateKey'])) ?></td>
                         <td><?= $this->escape(Text::_($check['guidanceKey'])) ?></td>

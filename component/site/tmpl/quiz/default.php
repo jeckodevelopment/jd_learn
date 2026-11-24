@@ -21,7 +21,9 @@ $open = $attempt && $attempt['state'] === 'open';
             default=>'COM_JLMS_QUIZ_FEEDBACK_DEFAULT'
                                 }) ?></p>
  <p id="jlms-quiz-time-allowance"><?= Text::_('COM_JLMS_QUIZ_TIME_EXTRA') ?>: <?= (int)$i['extra_time_seconds'] ?> s · <?= Text::_('COM_JLMS_QUIZ_TIME_NEXT') ?>: <?= (int)$i['next_time_seconds'] ?> s</p>
- <p id="jlms-quiz-extension" role="status" aria-live="polite"><?= Text::_('COM_JLMS_QUIZ_EXTEND_NOTICE') ?>: <?= (int)$i['extension_seconds'] ?></p>
+ <p id="jlms-quiz-extension"
+    role="status"
+    aria-live="polite"><?= Text::_('COM_JLMS_QUIZ_EXTEND_NOTICE') ?>: <?= (int)$i['extension_seconds'] ?></p>
  <?php if (!$open && $i['start_window_close_at'] !== null) :
         ?><p id="jlms-quiz-window-end"><?= Text::_('COM_JLMS_QUIZ_WINDOW_END') ?>: <?= $this->escape(gmdate('Y-m-d H:i:s', (int)$i['start_window_close_at'])) ?> UTC</p><?php
  endif; ?>
@@ -41,7 +43,9 @@ $open = $attempt && $attempt['state'] === 'open';
  <form id="jlms-quiz-form">
  <div id="jlms-quiz-questions">
  <?php foreach ($i['questions'] as $index => $q) : ?>
- <fieldset id="jlms-quiz-question-<?= (int)$q['id'] ?>" class="jlms-quiz-question" data-question-id="<?= (int)$q['id'] ?>"<?= $open ? '' : ' disabled' ?>>
+ <fieldset id="jlms-quiz-question-<?= (int)$q['id'] ?>"
+    class="jlms-quiz-question"
+    data-question-id="<?= (int)$q['id'] ?>"<?= $open ? '' : ' disabled' ?>>
   <legend><?= Text::_('COM_JLMS_QUIZ_QUESTION') ?> <?= (int)($index + 1) ?> (<?= (int)$q['max_points'] ?>)</legend>
   <div class="jlms-quiz-question__prompt"><?= $q['prompt'] /* Sanitised core HTML at attempt creation. */ ?></div>
         <?php foreach ($q['options'] as $o) :
@@ -49,7 +53,8 @@ $open = $attempt && $attempt['state'] === 'open';
   <div class="jlms-quiz-question__option"><input id="<?= $this->escape($control) ?>" type="<?= $q['kind'] === 'multiple' ? 'checkbox' : 'radio' ?>" name="answer_<?= (int)$q['id'] ?>[]" value="<?= $this->escape($o['id']) ?>"<?= in_array($o['id'], $q['selected'], true) ? ' checked' : '' ?>><label for="<?= $this->escape($control) ?>"><?= $this->escape($o['label']) ?></label></div>
         <?php endforeach; ?>
         <?php if ($open) :
-            ?><button type="button" class="btn btn-link jlms-quiz-clear"><?= Text::_('COM_JLMS_QUIZ_CLEAR') ?></button><?php
+            ?><button type="button"
+    class="btn btn-link jlms-quiz-clear"><?= Text::_('COM_JLMS_QUIZ_CLEAR') ?></button><?php
         endif; ?>
         <?php if ($i['feedback_available']) :
             ?><div class="jlms-quiz-question__feedback"><p><?= Text::_('COM_JLMS_QUIZ_CORRECT') ?>: <?php $correctLabels = [];
@@ -65,9 +70,15 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
  </div>
  <div id="jlms-quiz-actions">
  <?php if ($open) :
-        ?><button id="jlms-quiz-save" class="btn btn-secondary" type="button"><?= Text::_('COM_JLMS_QUIZ_SAVE') ?></button><button id="jlms-quiz-submit" class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_QUIZ_SUBMIT') ?></button>
+        ?><button id="jlms-quiz-save"
+    class="btn btn-secondary"
+    type="button"><?= Text::_('COM_JLMS_QUIZ_SAVE') ?></button><button id="jlms-quiz-submit"
+    class="btn btn-primary"
+    type="submit"><?= Text::_('COM_JLMS_QUIZ_SUBMIT') ?></button>
  <?php elseif ($i['can_start']) :
-        ?><button id="jlms-quiz-start" class="btn btn-primary" type="button"><?= Text::_('COM_JLMS_QUIZ_START') ?></button>
+        ?><button id="jlms-quiz-start"
+    class="btn btn-primary"
+    type="button"><?= Text::_('COM_JLMS_QUIZ_START') ?></button>
  <?php elseif (!empty($i['start_window_insufficient'])) : ?>
  <p id="jlms-quiz-window-insufficient" role="status"><?= Text::sprintf('COM_JLMS_QUIZ_WINDOW_INSUFFICIENT', (int)$i['next_time_seconds'], (int)$i['remaining_window_seconds']) ?></p>
  <?php else :

@@ -13,7 +13,13 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScrip
  <form action="<?= Route::_('index.php') ?>" method="get" id="adminForm" name="adminForm">
   <input type="hidden" name="option" value="com_jlms"><input type="hidden" name="view" value="questionbank">
   <div class="js-stools-container-bar row g-2 align-items-end mb-3">
-   <div class="col-md-4"><label class="form-label" for="filter_search"><?= Text::_('COM_JLMS_QUESTION_SEARCH') ?></label><input class="form-control" type="search" id="filter_search" name="filter[search]" value="<?= $this->escape((string)$this->state->get('filter.search', '')) ?>" maxlength="200"></div>
+   <div class="col-md-4"><label class="form-label"
+    for="filter_search"><?= Text::_('COM_JLMS_QUESTION_SEARCH') ?></label><input class="form-control"
+    type="search"
+    id="filter_search"
+    name="filter[search]"
+    value="<?= $this->escape((string)$this->state->get('filter.search', '')) ?>"
+    maxlength="200"></div>
    <div class="col-md-2"><label class="form-label" for="filter_catid"><?= Text::_('JCATEGORY') ?></label><select class="form-select" id="filter_catid" name="filter[catid]"><option value=""><?= Text::_('JOPTION_SELECT_CATEGORY') ?></option><?php foreach ($this->questionCategories as $category) :
         ?><option value="<?= (int)$category->id ?>" <?= (string)$this->state
             ->get('filter.catid', '') === (string)$category->id ? 'selected' : '' ?>><?= $this->escape($category
@@ -56,14 +62,28 @@ $this->getDocument()->getWebAssetManager()->useScript('table.columns')->useScrip
     <td class="d-none d-lg-table-cell"><?= (int)$row->revision_id ?> <span class="small text-body-secondary">(#<?= $id ?>)</span></td>
     <td class="text-end text-nowrap">
             <?php if ($row->can_duplicate) :
-                ?><form method="post" action="<?= Route::_('index.php?option=com_jlms') ?>" class="d-inline"><input type="hidden" name="task" value="questionbank.duplicate"><input type="hidden" name="id" value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-secondary" type="submit"><?= Text::_('COM_JLMS_QUESTION_DUPLICATE') ?></button></form><?php
+                ?><form method="post"
+    action="<?= Route::_('index.php?option=com_jlms') ?>"
+    class="d-inline"><input type="hidden"
+    name="task"
+    value="questionbank.duplicate"><input type="hidden"
+    name="id"
+    value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-secondary"
+    type="submit"><?= Text::_('COM_JLMS_QUESTION_DUPLICATE') ?></button></form><?php
             endif; ?>
             <?php if ($inUse) :
                 ?><span class="badge bg-warning text-dark" title="<?= $this
                     ->escape(Text::_('COM_JLMS_QUESTION_IN_USE')) ?>"><?= Text::_('COM_JLMS_QUESTION_IN_USE_BRIEF') ?></span><?php
             endif; ?>
             <?php if ($row->can_change_state) :
-                ?><form method="post" action="<?= Route::_('index.php?option=com_jlms') ?>" class="d-inline"><input type="hidden" name="task" value="<?= (int)$row->state === -2 ? 'questionbank.restore' : 'questionbank.trash' ?>"><input type="hidden" name="id" value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-secondary" type="submit"><?= Text::_((int)$row->state === -2 ? 'JTOOLBAR_RESTORE' : 'JTOOLBAR_TRASH') ?></button></form><?php
+                ?><form method="post"
+    action="<?= Route::_('index.php?option=com_jlms') ?>"
+    class="d-inline"><input type="hidden"
+    name="task"
+    value="<?= (int)$row->state === -2 ? 'questionbank.restore' : 'questionbank.trash' ?>"><input type="hidden"
+    name="id"
+    value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-secondary"
+    type="submit"><?= Text::_((int)$row->state === -2 ? 'JTOOLBAR_RESTORE' : 'JTOOLBAR_TRASH') ?></button></form><?php
             endif; ?>
             <?php if ($row->can_delete && (int)$row->state === -2) :
                 ?><form method="post" action="<?= Route::_('index.php?option=com_jlms') ?>" class="d-inline"><input type="hidden" name="task" value="questionbank.delete"><input type="hidden" name="id" value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-danger" type="submit" <?= $inUse ? 'disabled title="' . $this->escape(Text::_('COM_JLMS_QUESTION_IN_USE')) . '"' : '' ?> <?= $inUse ? '' : 'data-confirm="' . $this->escape(Text::_('COM_JLMS_QUESTION_DELETE_CONFIRM')) . '" onclick="return window.confirm(this.dataset.confirm)"' ?>><?= Text::_('JTOOLBAR_DELETE') ?></button></form><?php

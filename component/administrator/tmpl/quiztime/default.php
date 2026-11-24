@@ -29,7 +29,10 @@ $base = 'index.php?option=com_jlms&view=quiztime&id=' . (int)$i['course_id'] . '
         <?php if ($i['active']) :
             ?><p id="jlms-quiz-time-active" class="alert alert-warning"><?= Text::_('COM_JLMS_QUIZ_TIME_ACTIVE') ?> #<?= (int)$i['active']->id ?> · <?= (int)$i['active']->time_seconds ?> s · <?= $this->escape($i['active']->deadline_at ?? Text::_('COM_JLMS_QUIZ_UNLIMITED')) ?> UTC</p><?php
         endif; ?>
- <form id="jlms-quiz-time-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
+ <form id="jlms-quiz-time-form"
+    method="post"
+    class="form-validate"
+    action="<?= Route::_('index.php?option=com_jlms') ?>">
         <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="quiztime.save"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('JSAVE') ?></button></form>
  <table id="jlms-quiz-time-history" class="table"><caption><?= Text::_('COM_JLMS_QUIZ_TIME_HISTORY') ?></caption><thead><tr><th><?= Text::_('COM_JLMS_QUIZ_TIME_REVISION') ?></th><th><?= Text::_('COM_JLMS_QUIZ_TIME_MINUTES') ?></th><th><?= Text::_('COM_JLMS_QUIZ_TIME_REASON_LABEL') ?></th><th><?= Text::_('JAUTHOR') ?></th><th><?= Text::_('JDATE') ?></th></tr></thead><tbody>
         <?php foreach ($i['history'] as $h) :

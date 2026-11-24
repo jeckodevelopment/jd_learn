@@ -58,7 +58,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    </select>
   </div>
   <div class="col-md-5">
-   <label class="form-label" for="jlms-mail-queue-template"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_TEMPLATE') ?></label>
+   <label class="form-label"
+    for="jlms-mail-queue-template"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_TEMPLATE') ?></label>
    <select class="form-select" name="filter[template]" id="jlms-mail-queue-template">
     <option value=""><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_ALL') ?></option>
     <?php foreach (\Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds() as $template) : ?>
@@ -66,7 +67,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
     <?php endforeach; ?>
    </select>
   </div>
-  <div class="col-auto"><button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_APPLY') ?></button></div>
+  <div class="col-auto"><button class="btn btn-primary"
+    type="submit"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_APPLY') ?></button></div>
  </form>
 
  <p><?= Text::sprintf('COM_JLMS_MAIL_QUEUE_TOTAL', (int) $data['total']) ?></p>
@@ -119,7 +121,9 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
         <summary><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE') ?></summary>
         <div class="card card-body mt-2">
          <p><?= Text::_('COM_JLMS_MAIL_QUEUE_RECONCILE_WARNING') ?></p>
-         <form method="post" action="<?= Route::_('index.php?option=com_jlms&task=mailqueue.reconcile') ?>" class="mb-3">
+         <form method="post"
+    action="<?= Route::_('index.php?option=com_jlms&task=mailqueue.reconcile') ?>"
+    class="mb-3">
           <input type="hidden" name="jform[id]" value="<?= (int) $row->id ?>">
           <input type="hidden" name="jform[action]" value="sent">
           <label class="form-label" for="jlms-mail-queue-sent-note-<?= (int) $row
@@ -201,7 +205,13 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
    <input type="hidden" name="view" value="mailqueue">
    <div class="col-auto">
     <label for="jlms-consent-user-id" class="form-label"><?= Text::_('COM_JLMS_PRIVACY_CONSENTS_USER') ?></label>
-    <input class="form-control" id="jlms-consent-user-id" type="number" min="0" step="1" name="consent_user_id" value="<?= (int) $this->consentData['user_id'] ?>">
+    <input class="form-control"
+    id="jlms-consent-user-id"
+    type="number"
+    min="0"
+    step="1"
+    name="consent_user_id"
+    value="<?= (int) $this->consentData['user_id'] ?>">
    </div>
    <div class="col-auto align-self-end">
     <button type="submit" class="btn btn-secondary"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_APPLY') ?></button>

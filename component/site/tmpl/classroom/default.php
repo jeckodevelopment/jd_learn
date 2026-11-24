@@ -43,7 +43,9 @@ foreach ($item['outline'] as $entry) {
  <?php if ($item['progress_applicable']) : ?>
  <section id="jlms-learning-progress" aria-label="<?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>">
   <label for="jlms-progress-meter"><?= Text::_('COM_JLMS_LEARNING_PROGRESS') ?>: <?= (int) $item['percent'] ?>%</label>
-  <progress id="jlms-progress-meter" max="100" value="<?= (int) $item['percent'] ?>"><?= (int) $item['percent'] ?>%</progress>
+  <progress id="jlms-progress-meter"
+    max="100"
+    value="<?= (int) $item['percent'] ?>"><?= (int) $item['percent'] ?>%</progress>
         <?php if ($item['completed_at']) :
             ?><p id="jlms-course-completed" role="status"><?= Text::_('COM_JLMS_LEARNING_COMPLETED') ?></p><?php
         endif; ?>
@@ -81,7 +83,8 @@ foreach ($item['outline'] as $entry) {
         ?></ol></details><?php
  endif; ?>
  </nav>
- <article id="jlms-lesson-content" class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
+ <article id="jlms-lesson-content"
+    class="jlms-lesson-content"><h2 id="jlms-lesson-title"><?= $this->escape($selected->title) ?></h2>
   <p id="jlms-lesson-progress-status" role="status" aria-live="polite"></p>
   <?php if (!empty($selected->schedule_blocked)) : ?>
   <div id="jlms-lesson-schedule-notice" class="alert alert-info" role="status">
@@ -136,12 +139,15 @@ foreach ($item['outline'] as $entry) {
    </div>
    <div id="jlms-video-language-control" hidden>
     <label for="jlms-video-language"><?= Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE') ?></label>
-    <select id="jlms-video-language" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE')) ?>"></select>
+    <select id="jlms-video-language"
+    aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_CAPTIONS_LANGUAGE')) ?>"></select>
    </div>
   </section>
       <?php elseif ($selected->kind === 'audio' && !empty($selected->audio_attachment)) : ?>
   <section id="jlms-audio-region" aria-labelledby="jlms-lesson-title">
-   <audio id="jlms-audio-player" controls preload="metadata" data-resume-ms="<?= (int) ($selected->resume_ms ?? 0) ?>" aria-label="<?= $this->escape($selected->title) ?>">
+   <audio id="jlms-audio-player" controls preload="metadata"
+    data-resume-ms="<?= (int) ($selected->resume_ms ?? 0) ?>"
+    aria-label="<?= $this->escape($selected->title) ?>">
     <source src="<?= Route::_('index.php?option=com_jlms&task=attachment.audio&format=raw&id=' . (int) $selected->audio_attachment['id'] . '&lesson_id=' . (int) $selected->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>" type="<?= $this->escape($selected->audio_attachment['mime']) ?>">
    </audio>
    <p id="jlms-audio-progress-status" role="status" aria-live="polite"></p>
@@ -181,7 +187,10 @@ foreach ($item['outline'] as $entry) {
    <p class="jlms-material__meta"><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
                 <?php if (in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) : ?>
                     <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>
-    <a class="jlms-material__preview" target="_blank" rel="noopener" href="<?= Route::_($inlineUrl) ?>"><?= Text::_('COM_JLMS_VIEW_INLINE') ?></a>
+    <a class="jlms-material__preview"
+    target="_blank"
+    rel="noopener"
+    href="<?= Route::_($inlineUrl) ?>"><?= Text::_('COM_JLMS_VIEW_INLINE') ?></a>
                 <?php endif; ?>
    <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.download&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']) ?>"><?= Text::_('COM_JLMS_DOWNLOAD') ?></a>
   </article>
@@ -200,7 +209,9 @@ foreach ($item['outline'] as $entry) {
  </nav></section>
       <?php endforeach; ?></div>
   <?php endif; ?>
-  <nav id="jlms-lesson-navigation" class="jlms-lesson-navigation" aria-label="<?= $this->escape(Text::_('COM_JLMS_LESSON_NAVIGATION')) ?>">
+  <nav id="jlms-lesson-navigation"
+    class="jlms-lesson-navigation"
+    aria-label="<?= $this->escape(Text::_('COM_JLMS_LESSON_NAVIGATION')) ?>">
    <?php foreach (['previous' => $previousLesson, 'next' => $nextLesson] as $direction => $adjacent) : ?>
     <div class="jlms-lesson-navigation__item jlms-lesson-navigation__item--<?= $direction ?>">
         <?php if ($adjacent !== null) :

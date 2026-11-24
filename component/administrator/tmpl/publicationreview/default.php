@@ -57,11 +57,18 @@ $changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed'
         ?><p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_NO_ENROLLMENTS') ?></p><?php
  endif; ?>
  <p><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_VALIDATION') ?></p>
- <form method="post" id="jlms-publication-confirm-form" action="<?= Route::link('administrator', 'index.php?option=com_jlms') ?>">
+ <form method="post"
+    id="jlms-publication-confirm-form"
+    action="<?= Route::link('administrator', 'index.php?option=com_jlms') ?>">
   <?php foreach (['course_id' => $course->id,'version_id' => $version->id,'revision' => $course->revision,'expected_version_revision' => $version->revision,'transition_id' => $item['transition_id'],'review_ticket' => $item['ticket']] as $name => $value) : ?>
   <input type="hidden" name="jform[<?= $name ?>]" value="<?= $this->escape((string)$value) ?>">
   <?php endforeach; ?>
-  <div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="jlms-publication-confirm" name="jform[publication_confirmation]" value="1" required><label class="form-check-label" for="jlms-publication-confirm"><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_CONFIRM') ?></label></div>
+  <div class="form-check mb-3"><input class="form-check-input"
+    type="checkbox"
+    id="jlms-publication-confirm"
+    name="jform[publication_confirmation]"
+    value="1" required><label class="form-check-label"
+    for="jlms-publication-confirm"><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_CONFIRM') ?></label></div>
   <input type="hidden" name="task" value="curriculum.transition"><?= HTMLHelper::_('form.token') ?>
   <button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_PUBLISH_UPDATE') ?></button>
   <a class="btn btn-secondary" href="<?= $back ?>"><?= Text::_('JCANCEL') ?></a>

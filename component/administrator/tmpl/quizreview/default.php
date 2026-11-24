@@ -48,7 +48,10 @@ $base = 'index.php?option=com_jlms&view=quizreview&id=' . (int)$i['course_id'] .
                 <?php if ($p['blocked']) :
                     ?><p class="alert alert-warning" id="jlms-quiz-review-blocked"><?= Text::_('COM_JLMS_QUIZ_REVIEW_BLOCKED') ?> · <?= (int)$p['certificate_count'] ?>/<?= (int)$p['correction_count'] ?></p>
                 <?php else :
-                    ?><form id="jlms-quiz-review-form" method="post" class="form-validate" action="<?= Route::_('index.php?option=com_jlms') ?>">
+                    ?><form id="jlms-quiz-review-form"
+    method="post"
+    class="form-validate"
+    action="<?= Route::_('index.php?option=com_jlms') ?>">
                     <?= $this->form->renderFieldset('details') ?><input type="hidden" name="task" value="quizreview.cancel"><?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-danger"><?= Text::_('COM_JLMS_QUIZ_REVIEW_CANCEL') ?></button></form><?php
                 endif; ?>
  </section>
