@@ -4,7 +4,7 @@ import runpy
 verify_dom = runpy.run_path(str(Path(__file__).resolve().parent / 'frontend-dom-runtime.py'))['verify']
 from urllib.request import build_opener,HTTPCookieProcessor
 from urllib.error import HTTPError
-from urllib.parse import urljoin,urlencode,urlparse
+from urllib.parse import urljoin,urlencode
 from http.cookiejar import CookieJar
 from html.parser import HTMLParser
 import json,os,re,subprocess,sys,time
@@ -103,7 +103,7 @@ try:
       'CORE-21 teacher action unexpectedly accepted: '+name+' '+task+' '+str(code))
      if code==303:
       location=headers.get('Location','')
-      matrix_check(bool(location) and urlparse(urljoin(base,location)).hostname in ['localhost','127.0.0.1'],
+      matrix_check(bool(location) and urljoin(base+'/',location).startswith(base+'/'),
        'CORE-21 teacher redirect leaves Joomla origin: '+task+' '+location)
     else:
      matrix_check(400<=code<500,
