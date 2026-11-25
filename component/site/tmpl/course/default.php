@@ -40,6 +40,16 @@ $canRequestApproval = $this->hasContentAccess && $this->canStartWindow
     && $course->enrollment_mode === 'approval';
 $isWindowClosed = $this->hasContentAccess && !$this->canStartWindow;
 $pendingLabel = Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING');
+$accessText = Text::_($accessLabel);
+$previewActionLabel = Text::_('COM_JLMS_OPEN_PUBLIC_PREVIEW');
+$materialActionLabel = Text::_('COM_JLMS_MATERIAL_PREVIEW_DOWNLOAD');
+$materialPaging = $this->item['public_materials'] ?? [];
+$hasPreviousMaterialPage = !empty($materialPaging['page']);
+$hasNextMaterialPage = isset(
+    $materialPaging['page'],
+    $materialPaging['limit'],
+    $materialPaging['total']
+) && ($materialPaging['page'] + 1) * $materialPaging['limit'] < $materialPaging['total'];
 $coverImageSrc = '';
 if (!empty($presentation['image'])) {
     $coverImageSrc = $this->escape(Uri::root() . implode(
@@ -69,6 +79,7 @@ $certificateLabel = !empty($completionDetails) && $completionDetails['certificat
 $completionThreshold = empty($completionDetails)
     ? 0
     : TeachingRules::percent((int) $completionDetails['video_threshold_basis_points']);
+$completionVideoLabel = Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', $completionThreshold);
 foreach ([1, 2, 3] as $position) {
     $fieldOutput[$position] =
         \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::render('com_jlms.course', 'fields.render', [
@@ -133,7 +144,7 @@ foreach ([1, 2, 3] as $position) {
  </dl></section>
  <?php endif; ?>
 
- <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($accessLabel) ?></p><?php if ($this->isGuest) : ?>
+ <aside id="jlms-course-access" class="jlms-course-access"><p><?= $accessText ?></p><?php if ($this->isGuest) : ?>
   <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' .
     base64_encode('index.php?option=com_jlms&view=course&id=' .
     (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
@@ -154,7 +165,7 @@ foreach ([1, 2, 3] as $position) {
    <label class="jlms-course-consent"><input type="checkbox"
     name="jform[course_announcement_consent]"
     value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
-                                                                  <?php // New enrollment uses a distinct action label. ?>
+                                                                  <?php // Distinct enrollment action. ?>
                                                                   <?= HTMLHelper::_('form.token') ?>
    <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
   </form>
@@ -216,7 +227,7 @@ foreach ([1, 2, 3] as $position) {
         <?php else : ?>
    <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_COURSE_COMPLETION_ALL_REQUIRED') ?></p>
    <p id="jlms-course-completion-sequence"><?= Text::_($sequenceLabel) ?></p>
-   <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', $completionThreshold) ?></p>
+   <p id="jlms-course-completion-video"><?= $completionVideoLabel ?></p>
    <p id="jlms-course-completion-certificate"><?= Text::_($certificateLabel) ?></p>
             <?php if ($completion['certificate_planned']) :
                 ?>
