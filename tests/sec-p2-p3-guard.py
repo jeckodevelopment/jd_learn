@@ -27,6 +27,11 @@ for table in (
     assert table in remove, table
 for column in ("created_by", "modified_by", "reconciliation_by"):
     assert "quoteName('" + column + "')" in remove, column
+assert "foreach (['created_by', 'modified_by'] as $actorColumn)" in remove
+assert "->where($db->quoteName($actorColumn) . ' = ' . $userId)" in remove
+request_scope = remove.split("->update($db->quoteName('#__jlms_enrollment_requests'))", 1)[1]
+assert "->where($db->quoteName('user_id') . ' = ' . $userId)" in request_scope
+assert "->where($db->quoteName('decided_by') . ' = ' . $userId)" in request_scope
 for related in ("#__jlms_subjects", "#__jlms_assessment_revisions"):
     assert related in remove, related
 assert "->set($db->quoteName('user_id') . ' = NULL')" in remove
@@ -42,8 +47,9 @@ for expected in ("template_id", "state", "created_at", "sent_at", "recipient_use
 for forbidden in ("recipient_email", "recipient_name", "template_data", "last_error", "token_hash", "reconciliation_note"):
     assert forbidden not in mail, forbidden
 redaction = remove.split("->update($db->quoteName('#__jlms_mail_queue'))", 1)[1].split("->execute();", 1)[0]
-for field in ("recipient_user_id", "recipient_email", "recipient_name", "recipient_consent_at", "template_data", "reconciliation_note", "reconciliation_by", "last_error"):
+for field in ("recipient_user_id", "recipient_email", "recipient_name", "recipient_consent_at", "template_data", "reconciliation_note", "last_error"):
     assert "quoteName('" + field + "')" in redaction, field
+assert "quoteName('reconciliation_by')" not in redaction
 assert "NOT IN ('pending','retry','sending')" in redaction
 for locale in ("it-IT", "en-GB"):
     language = (root / f"plugins/privacy/jdlearn/language/{locale}/plg_privacy_jdlearn.ini").read_text()
