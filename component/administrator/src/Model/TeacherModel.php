@@ -29,7 +29,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             ['control' => 'jform', 'load_data' => $loadData]
         );
         if ($form && !$this->getCurrentUser()->authorise('jlms.teachers.manage', 'com_jlms')) {
-            foreach (['user_id', 'state', 'access', 'language'] as $field) {
+            foreach (['user_id', 'catid', 'state', 'access', 'language', 'tags'] as $field) {
                 $form->setFieldAttribute($field, 'disabled', 'true');
                 $form->setFieldAttribute($field, 'required', 'false');
                 $form->setFieldAttribute($field, 'filter', 'unset');
@@ -45,6 +45,9 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
     {
         $item = parent::getItem($pk);
         if ($item && !empty($item->id)) {
+            // Populate the native Joomla tag selector for saved teachers.
+            $item->tags = new \Joomla\CMS\Helper\TagsHelper();
+            $item->tags->getTagIds((int) $item->id, $this->typeAlias);
             foreach (json_decode($item->params_json, true, 16, JSON_THROW_ON_ERROR) as $key => $value) {
                 if (in_array($key, ['image_alt', 'image_decorative', 'website'], true)) {
                     $item->$key = $value;
@@ -82,6 +85,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 'state',
                 'user_id',
                 'com_fields',
+                'tags',
                 'version_note'
             ];
             $data = array_intersect_key($input, array_flip($allowed));
@@ -134,7 +138,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 $scope = 'com_jlms';
             }
             if (!$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
-                foreach (['user_id', 'catid', 'state', 'access', 'language'] as $protected) {
+                foreach (['user_id', 'catid', 'state', 'access', 'language', 'tags'] as $protected) {
                     unset($data[$protected]);
                 }
             }
