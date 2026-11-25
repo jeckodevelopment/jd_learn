@@ -269,7 +269,7 @@ foreach ([1, 2, 3] as $position) {
     ?><section id="jlms-course-materials"><h2><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h2>
  <ul class="jlms-material-list"><?php foreach ($this->item['public_materials']['items'] as $material) :
         $materialPreviewUrl = Route::_(
-        'index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id='
+            'index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id='
             . (int) $course->id . '&id=' . (int) $material->id
         );
         ?><li id="jlms-material-<?= (int) $material->id ?>" class="jlms-material">
