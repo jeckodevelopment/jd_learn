@@ -546,14 +546,15 @@ try {
 // CORE-04: reject malformed lifecycle selections before any write. In
 // particular, a duplicate ID or a 101-record batch must not be silently
 // deduplicated/truncated into an apparently successful partial operation.
-foreach ([
+$invalidTeacherBatches = [
     [[], 0, 'empty selection'],
     [[$public, $public], 0, 'duplicate ID'],
     [[(string) $public], 0, 'string ID'],
     [[0], 0, 'zero ID'],
     [range(1000000, 1000100), 0, 'oversized batch'],
     [[$public], 2, 'unsupported transition'],
-] as [$invalidIds, $invalidTarget, $reason]) {
+];
+foreach ($invalidTeacherBatches as [$invalidIds, $invalidTarget, $reason]) {
     teacherExpect(
         !$teacherModel->changeStates($invalidIds, $invalidTarget),
         'CORE-04: teacher bulk rejects ' . $reason
