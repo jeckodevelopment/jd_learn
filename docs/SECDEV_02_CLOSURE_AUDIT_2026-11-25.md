@@ -114,3 +114,29 @@ Sono state analizzate **tutte le 23 decisioni di riuso Joomla**, confrontando ma
 - **Già documentato come implementato nel registro del codice:** CORE-17 (2/2); i collaudi amministrativi esterni rimangono distinti dai criteri software.
 
 **Risultato della riconciliazione:** 23/23 servizi mappati a evidenza e prossimo collaudo, due interventi correttivi concreti e gate negativi permanenti; la conta originale dei criteri non verificabili resta da validare dopo la CI. Nessun requisito è chiuso per convenienza amministrativa.
+
+
+## Verifica dinamica dei residui CORE-06 e CORE-21 (25 novembre 2026, lotto applicativo)
+
+Questa tranche non si limita a enumerare i criteri: aggiunge test riproducibili direttamente al candidato Joomla 6.2.1.
+
+- **CORE-06 — lookup dei messaggi PHP.** Il test `tests/secdev02-core06-runtime-keys.py` attraversa tutti i file PHP del componente, sia backend sia frontend. Ricava i riferimenti statici `Text::_`, `Text::sprintf`, `Text::plural` e `Text::script` con chiavi `COM_JLMS_*` e verifica che ciascuna chiave esista **in entrambe le lingue** del client corrispondente. Sono presenti fixture negative per una chiave mancante da una sola traduzione. Il gate precedente verifica la parità dei cataloghi; questo verifica la **parità con il codice chiamante**. Vengono riferiti separatamente gli usi calcolati di `Text::_`, la cui verifica richiede sorgenti o scenari dinamici diversi.
+- **CORE-21 — HTTP Joomla reale.** Il test `tests/dashboard-http.py` estende la fixture a nove tentativi rifiutati (otto controller di task riservati, più inizio lezione), validando su risposta HTTP il codice di errore e l'header `Cache-Control: no-store`. I test esistenti verificano già separazione proprietario/iscrizione, revoca della sessione e visualizzazioni private con due modalità SEF. La nuova prova deve essere acquisita nella CI completa, evitando di dedurre correttezza del reverse proxy esterno dai soli header di PHP.
+- **Accettazione:** il nuovo gate può dimostrare il comportamento delle route e delle chiavi letterali **nel perimetro CI**, ma non attesta da solo tutti i modelli email/configurazioni SMTP, le chiavi computate, gli override lingua installati o le cache CDN/hosting. Pertanto i due criteri restano `unverifiable` finché tutte queste dimensioni pertinenti non siano collaudate e registrate.
+- **SECDEV-02:** nessuna percentuale aggiornata sulla sola presenza di script. L'obiettivo è abbassare gli elementi realmente non coperti tramite test eseguiti e rilevare differenze con risultati riproducibili.
+
+### Comportamenti da testare
+
+- Inserire temporaneamente un `Text::_('COM_JLMS_MISSING')` in una vista: gate CORE-06 rosso, anche con cataloghi IT/EN perfettamente allineati fra loro.
+- Rimuovere una chiave da uno dei cataloghi: gate rosso solo per la coppia/lingua realmente scoperta.
+- Eseguire senza token o con metodo errato task di video, quiz, iscrizioni, materiali, attestati, preferenze e docente: risposta di errore con `Cache-Control: private, no-store`.
+- Eseguire le due matrici PHP/database e la suite Chromium senza alterare flussi di apprendimento o modificare il core Joomla.
+
+
+### Riscontri effettivi dei nuovi gate — PR #1031
+
+Il nuovo controllo `tests/secdev02-core06-runtime-keys.py` ha riscontrato **6 chiavi letterali mancanti**, in entrambe le lingue (**12 traduzioni**): `COM_JLMS_PATHWAY_COURSES` (frontend) e le cinque etichette admin `COM_JLMS_VIDEO_SPEED`, `COM_JLMS_VIDEO_SPEED_UNAVAILABLE`, `COM_JLMS_VIDEO_CAPTIONS_LANGUAGE`, `COM_JLMS_VIDEO_CAPTIONS_OFF`, `COM_JLMS_VIDEO_CAPTIONS_UNAVAILABLE`. Tutti i cataloghi ora contengono le traduzioni corrispondenti; lo scanner nella CI rileva attualmente **661 chiavi letterali uniche su 296 file PHP**, zero chiavi letterali mancanti dopo la bonifica. **191 siti con chiavi calcolate** restano censiti, non convalidati dal gate statico.
+
+L'estensione del collaudo HTTP ha poi individuato un difetto effettivo in `QuizController`: la risposta JSON immediata su metodo rifiutato (HTTP 405) non esponeva l'header `Cache-Control: no-store`, nonostante `setHeader` fosse chiamato. La risposta veniva emessa direttamente senza lo step `sendHeaders` del normale flusso Joomla. L'intervento di sicurezza su `QuizController`, `VideoController` e `LessonController::begin` mantiene i risultati e gli errori JSON invariati, ma **invia gli header Joomla prima di stampare il corpo e chiudere**. I test negativi in `tests/secdev02-core21-private-dispatch.py` impediscono di reintrodurre la chiusura senza flush. La prova HTTP è eseguita nelle matrici CI. Finché non risulta verde sull'HEAD definitivo, il fix è un candidato, non un'accettazione.
+
+Questi risultati costituiscono correzioni misurabili e permanenti, ma **non chiudono** l'intero CORE-06/CORE-21 né SECDEV-02: modelli email e chiavi calcolate, retrocompatibilità di override, reverse proxy/cache CDN, sessioni reali e rimanenti criteri CORE richiedono ancora prove proprie.

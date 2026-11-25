@@ -37,6 +37,28 @@ def inspect_source(name: str, contents: str) -> list[str]:
     return faults
 
 
+
+def inspect_raw_json(name: str, contents: str, handler: str = "private function respond(") -> list[str]:
+    """A raw JSON task must flush Joomla's pending headers before echo/close."""
+    start = contents.find(handler)
+    if start < 0:
+        return [f"{name}: missing raw JSON response handler"]
+    end = contents.find("$this->app->close();", start)
+    if end < 0:
+        return [f"{name}: raw JSON handler does not close the Joomla request"]
+    body = contents[start:end]
+    ordered = [
+        body.rfind("$response = new JsonResponse("),
+        body.find("$this->app->sendHeaders();"),
+        body.find("echo $response;"),
+    ]
+    if min(ordered) < 0 or ordered != sorted(ordered):
+        return [f"{name}: raw JSON must flush no-store headers before body output"]
+    if body.count("$response = new JsonResponse(") != 2:
+        return [f"{name}: success/error branches must both defer JSON body output"]
+    return []
+
+
 def check(root: Path) -> list[str]:
     faults: list[str] = []
     for name in TASKS:
@@ -47,6 +69,12 @@ def check(root: Path) -> list[str]:
             faults.append(f"Missing protected controller: {relative}")
             continue
         faults.extend(inspect_source(name, source))
+    for name in ("Quiz", "Video", "Lesson"):
+        source = (root / "component/site/src/Controller" / f"{name}Controller.php").read_text(
+            encoding="utf-8"
+        )
+        handler = "public function begin(" if name == "Lesson" else "private function respond("
+        faults.extend(inspect_raw_json(name, source, handler))
     display = root / "component/site/src/Controller/DisplayController.php"
     try:
         source = display.read_text(encoding="utf-8")
@@ -87,6 +115,18 @@ def self_test() -> None:
     )
     assert any("must precede" in fault for fault in inspect_source("fixture", late))
     assert inspect_source("fixture", "public function execute($task) { return false; }")
+    raw = (
+        "private function respond() { "
+        "$response = new JsonResponse(1); "
+        "$response = new JsonResponse(2); "
+        "$this->app->sendHeaders(); echo $response; $this->app->close(); }"
+    )
+    assert not inspect_raw_json("fixture", raw)
+    assert inspect_raw_json("fixture", raw.replace("$this->app->sendHeaders();", ""))
+    assert inspect_raw_json("fixture", raw.replace(
+        "$this->app->sendHeaders(); echo $response;",
+        "echo $response; $this->app->sendHeaders();",
+    ))
 
 
 if __name__ == "__main__":

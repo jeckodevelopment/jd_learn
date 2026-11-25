@@ -58,7 +58,7 @@ final class QuizController extends BaseController
                 default=>$service->mutate(...[...$args,$integer('attempt_id'),$integer('revision'),$input
                     ->getString('mutation_id', ''),$answers,$operation === 'submit']),
             };
-            echo new JsonResponse($data, null, false, true);
+            $response = new JsonResponse($data, null, false, true);
         } catch (\Throwable $error) {
             $code = (int)$error->getCode();
             $key = $error->getMessage();
@@ -72,8 +72,12 @@ final class QuizController extends BaseController
             }
             $this->app->setHeader('status', (string)$code, true);
             http_response_code($code);
-            echo new JsonResponse(['code' => $key,'request_id' => $request], Text::_($key), true, true);
+            $response = new JsonResponse(['code' => $key,'request_id' => $request], Text::_($key), true, true);
         }
+        // Raw JSON task handlers bypass Joomla's normal document render path.
+        // Flush the queued private/no-store and JSON headers before body output.
+        $this->app->sendHeaders();
+        echo $response;
         $this->app->close();
     }
     public function start(): void

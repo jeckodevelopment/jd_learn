@@ -44,7 +44,7 @@ final class LessonController extends EnrollmentController
                 $lessonId,
                 $key
             );
-            echo new JsonResponse(['state' => $state], null, false, true);
+            $response = new JsonResponse(['state' => $state], null, false, true);
         } catch (\Throwable $error) {
             $code = (int) $error->getCode();
             $key = $error->getMessage();
@@ -62,8 +62,11 @@ final class LessonController extends EnrollmentController
             }
             $this->app->setHeader('status', (string) $code, true);
             http_response_code($code);
-            echo new JsonResponse(['code' => $key], Text::_($key), true, true);
+            $response = new JsonResponse(['code' => $key], Text::_($key), true, true);
         }
+        // This JSON task bypasses the normal Joomla document response.
+        $this->app->sendHeaders();
+        echo $response;
         $this->app->close();
     }
 }
