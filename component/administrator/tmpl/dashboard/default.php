@@ -53,8 +53,10 @@ $schedulerHealthKeys = [
     $shortcutId = $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key'])));
     ?>
                         <li>
-                            <a id="jlms-admin-shortcut-<?= $shortcutId ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
-                                <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
+                            <a id="jlms-admin-shortcut-<?= $shortcutId ?>" class="jlms-admin-dashboard__shortcut"
+                                href="<?= $shortcut['url'] ?>">
+                                <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>"
+                                    aria-hidden="true"></span>
                                 <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
                             </a>
                         </li>
@@ -118,6 +120,8 @@ $schedulerHealthKeys = [
         <?php else : ?>
             <ul>
                 <?php foreach ($this->providers as $provider) :
+    $providerStateLabel = $this->escape(Text::_($provider['stateKey']));
+    $providerStateClass = $this->escape($provider['stateClass']);
     $providerGuidance = $this->escape(Text::_(
         \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey(
             (string) $provider['stateKey']
@@ -126,7 +130,8 @@ $schedulerHealthKeys = [
     ?>
                     <li data-jlms-provider="<?= $this->escape($provider['key']) ?>">
 <span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span
- class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $providerGuidance ?></p></li>
+ class="badge bg-<?= $providerStateClass ?>"><?= $providerStateLabel ?></span>
+ <p class="small mb-1"><?= $providerGuidance ?></p></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
