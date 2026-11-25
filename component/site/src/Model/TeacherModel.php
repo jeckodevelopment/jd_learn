@@ -33,15 +33,26 @@ final class TeacherModel extends ListModel
         // displayed language when the teacher profile is language-neutral.
         $activeLanguage = (string) $app->getLanguage()->getTag();
         $itemLanguage = (string) $profile->language !== '*' ? (string) $profile->language : $activeLanguage;
-        $profile->fields = array_values(array_filter(
+        $profile->fields = self::filterPublicFields(
             FieldsHelper::getFields('com_jlms.teacher', $profile, true),
+            $itemLanguage
+        );
+        return $profile;
+    }
+
+    /** @param array<int, object> $fields
+     * @return list<object>
+     */
+    public static function filterPublicFields(array $fields, string $itemLanguage): array
+    {
+        return array_values(array_filter(
+            $fields,
             static fn (object $field): bool => in_array(
                 (string) ($field->language ?? '*'),
                 ['*', $itemLanguage],
                 true
             )
         ));
-        return $profile;
     }
 
     protected function getListQuery()
