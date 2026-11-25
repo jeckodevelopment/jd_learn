@@ -12,6 +12,7 @@ final class CoursepreviewController extends BaseController
 {
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (strtolower($task) !== 'playback') {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
@@ -48,6 +49,7 @@ final class CoursepreviewController extends BaseController
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         http_response_code($code);
+        $this->app->sendHeaders();
         echo new JsonResponse($data, $message, $code !== 200, true);
         $this->app->close();
     }
