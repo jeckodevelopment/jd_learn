@@ -775,6 +775,25 @@ if (
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
 
 $component = $app->bootComponent('com_jlms');
+
+/* SECDEV-02: the PSR-12 refactor must preserve the native Joomla Table ACL hooks. */
+foreach (['Course', 'Question', 'Teacher', 'Pathway'] as $tableName) {
+    $tableClass = 'Jlms\\Component\\Jlms\\Administrator\\Table\\' . $tableName . 'Table';
+    $nativeTable = new $tableClass($db);
+    foreach (['_getAssetName', '_getAssetTitle', '_getAssetParentId'] as $hook) {
+        $method = new \ReflectionMethod($nativeTable, $hook);
+        if (!$method->isProtected()) {
+            throw new \RuntimeException('Native Joomla Table ACL hook lost protected visibility.');
+        }
+    }
+    if ($tableName !== 'Pathway') {
+        $nullable = new \ReflectionProperty($nativeTable, '_supportNullValue');
+        if ($nullable->getValue($nativeTable) !== true) {
+            throw new \RuntimeException('Native Joomla Table nullable-column contract changed.');
+        }
+    }
+}
+
 $mailConsent = $component->getCourseAnnouncementConsent();
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();
 $db->setQuery(('INSERT INTO #__jlms_mail_consents '
