@@ -718,6 +718,24 @@ $tagAssociations = static function () use ($db, $taggedId): array {
     return array_map('intval', $db->setQuery($q)->loadColumn());
 };
 teacherExpect($tagAssociations() === [$tagId], 'CORE-09: Joomla persists tag association by teacher item ID');
+// Forged tag assignments from an authenticated learner may not change the
+// tag set, teacher revision or editorial authorization boundary.
+$taggedBefore = (int) $db->setQuery('SELECT revision FROM #__jlms_teachers WHERE id=' . $taggedId)
+    ->loadResult();
+$teacherModel->setCurrentUser($learner);
+teacherExpect(
+    !$teacherModel->save(array_replace($taggedTeacher, [
+        'id' => $taggedId, 'revision' => $taggedBefore, 'tags' => [],
+    ])),
+    'CORE-04/09: learner cannot forge a native Joomla teacher tag edit'
+);
+$teacherModel->setCurrentUser($actor);
+teacherExpect(
+    $tagAssociations() === [$tagId]
+    && (int) $db->setQuery('SELECT revision FROM #__jlms_teachers WHERE id=' . $taggedId)->loadResult()
+        === $taggedBefore,
+    'CORE-04/09: denied tag edit leaves associations and revision unchanged'
+);
 $taggedRecord = $teacherModel->getItem($taggedId);
 teacherExpect(
     $taggedRecord->tags instanceof \Joomla\CMS\Helper\TagsHelper
