@@ -30,7 +30,7 @@ $categoryOptionLabel = Text::_('JOPTION_SELECT_CATEGORY');
         ?><option value="<?= (int)$category->id ?>" <?= (string)$this->state
             ->get('filter.catid', '') === (string)$category->id ? 'selected' : '' ?>><?= $this->escape($category
                 ->title) ?></option><?php
-                                                                      endforeach; ?></select></div>
+                    endforeach; ?></select></div>
    <div class="col-md-2">
    <label class="form-label" for="filter_published"><?= Text::_('JSTATUS') ?></label>
    <select class="form-select" id="filter_published" name="filter[published]">
@@ -130,7 +130,7 @@ $categoryOptionLabel = Text::_('JOPTION_SELECT_CATEGORY');
                  Route::_('index.php?option=com_jlms') ?>" class="d-inline">
     <input type="hidden" name="task" value="questionbank.delete">
     <input type="hidden" name="id" value="<?= $id ?>">
-    <?= HTMLHelper::_('form.token') ?>
+                <?= HTMLHelper::_('form.token') ?>
     <button class="btn btn-sm btn-danger" type="submit" <?= $deleteDisabled ?> <?= $deleteConfirm ?>><?= $deleteLabel ?></button>
     </form><?php
             endif; ?>
