@@ -85,3 +85,19 @@ assert "['GET', 'HEAD']" in media and "Cache-Control" in media
 assert "getLocalVideoService()->delivery(" in media and "getLocalVideoService()->previewDelivery(" in media
 assert "CurriculumService::id(" in media and "MaterialDownload::send(" in media
 print("SEC-P1 plugin/task/media review gate: 10 plugin classes, 3 Scheduler tasks, bounded workers, controlled streaming entrypoint")
+
+# CORE-14: category-triggered Finder refresh must remain bounded and complete.
+# The semantic Joomla integration is exercised separately in the CI matrices.
+finder = (PLUGINS / "finder/jlms/src/Extension/Jlms.php").read_text(encoding="utf-8")
+refresh = finder.split("private function reindexAllCourses(): void", 1)[1].split(
+    "protected function index(", 1
+)[0]
+assert "do {" in refresh and "while (count($ids) === 500)" in refresh
+assert "->setQuery($query, 0, 500)->loadColumn()" in refresh
+assert "$after = (int) $id;" in refresh and "$this->refreshCourse($after);" in refresh
+assert "->where($db->quoteName('a.id') . ' > :after')" in refresh
+assert "->order($db->quoteName('a.id') . ' ASC')" in refresh
+associations = (ROOT / "component/administrator/src/Helper/AssociationsHelper.php").read_text(encoding="utf-8")
+edit = associations.split("public function allowEdit(", 1)[1].split("public function getType(", 1)[0]
+assert "$actor->authorise('core.manage', 'com_jlms')" in edit
+assert "$actor->block" in edit

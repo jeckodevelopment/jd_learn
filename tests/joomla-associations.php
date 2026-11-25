@@ -103,6 +103,14 @@ if (($argv[2] ?? '') === 'worker') {
 }
 $actor = $app->getIdentity();
 $helper = $component->getAssociationsExtension();
+// CORE-07: the native association manager must not disclose edit privileges
+// to an anonymous account, even when a content language is public.
+$app->loadIdentity(new \Joomla\CMS\User\User());
+assocExpect(
+    !$helper->allowEdit('course', 1) && !$helper->allowEdit('course.category', 1),
+    'anonymous account cannot edit native multilingual associations'
+);
+$app->loadIdentity($actor);
 assocExpect(
     $component instanceof \Joomla\CMS\Association\AssociationServiceInterface && $helper->hasAssociationsSupport(),
     'native association service registered'
