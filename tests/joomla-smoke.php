@@ -766,16 +766,25 @@ foreach ($privacyActorTemplateIds as $index => $templateId) {
         ->select(['created_by', 'modified_by'])
         ->from('#__jlms_certificate_templates')
         ->where('id = ' . $templateId))->loadObject();
-    if (!$actors || ($index === 0 && ((int) $actors->created_by !== $otherPrivacyUserId
-        || $actors->modified_by !== null)) || ($index === 1 && ($actors->created_by !== null
-        || (int) $actors->modified_by !== $otherPrivacyUserId))) {
+    if (
+        !$actors
+        || (
+            $index === 0
+            && ((int) $actors->created_by !== $otherPrivacyUserId || $actors->modified_by !== null)
+        )
+        || (
+            $index === 1
+            && ($actors->created_by !== null || (int) $actors->modified_by !== $otherPrivacyUserId)
+        )
+    ) {
         throw new \RuntimeException('Privacy erasure removed an unrelated editorial actor.');
     }
     $db->setQuery($db->createQuery()->delete('#__jlms_certificate_templates')
         ->where('id = ' . $templateId))->execute();
 }
 $sanitizedMail = $db->setQuery(("SELECT recipient_user_id,recipient_email,recipient_name,template_" .
-    "data,last_error,reconciliation_by FROM #__jlms_mail_queue WHERE event_key=") . $db->quote($privacyMailId))->loadObject();
+    "data,last_error,reconciliation_by FROM #__jlms_mail_queue WHERE event_key=") . $db->quote($privacyMailId))
+    ->loadObject();
 if (
     !$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== ''
     || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}' || $sanitizedMail
