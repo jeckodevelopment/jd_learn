@@ -14,7 +14,6 @@ use Joomla\Component\Privacy\Administrator\Plugin\PrivacyPlugin;
 use Joomla\Component\Privacy\Administrator\Removal\Status;
 use Joomla\Event\SubscriberInterface;
 
-
 final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 {
     public static function getSubscribedEvents(): array
