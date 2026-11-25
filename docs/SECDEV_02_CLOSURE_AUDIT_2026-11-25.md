@@ -332,3 +332,47 @@ pubblicazione del contenuto e URL volutamente malformati: nessuna
 risorsa di altri utenti deve essere consultabile. Restano aperti altri
 scenari dell'originale `CORE-13/all_routes`; questa correzione non ne
 dichiara automaticamente l'intera accettazione.
+
+## Intervento massivo CORE-01–23: implementazione, prove CI e collaudi distinti (25/11/2026)
+
+L'intervento non tratta i **23 servizi CORE** come 23 applicazioni mancanti. Il registro
+canonico rimane `docs/FUNCTIONAL_CRITERIA_1.0.0.json`, con 47 criteri CORE
+(24 `implemented`, 23 `unverifiable` prima di questo lotto). **Nessun
+`unverifiable` è promosso senza dimostrazione integrale.** Il nuovo controllo
+`tests/secdev02-core-ci-wiring.py` verifica che ciascuno dei 23 servizi abbia
+almeno un test collegato al workflow o al suo runner obbligatorio; rileva
+e blocca test dichiarati nella matrice ma rimossi accidentalmente dalla CI.
+Non dichiara l'esito dei test, l'approvazione dell'installazione o la riuscita
+di servizi esterni. Le due matrici runtime e Chromium restano requisiti di merge.
+
+**Implementazioni introdotte in un unico lotto:**
+
+- **CORE-01/04/15/20 — categorie e ACL editoriali.** I modelli e le tabelle
+  native di docenti e percorsi rifiutano una categoria figlia se un suo
+  antenato Joomla è cestinato. La verifica avviene anche **prima** della
+  prenotazione di asset ACL in fase di creazione percorso, e nuovamente
+  nella Table nativa. Le fixture `joomla-teachers.php` e `joomla-pathways.php`
+  verificano categorie annidate, rifiuto del salvataggio e assenza di record
+  parziali.
+- **CORE-09/06/20/04 — tag e form docente.** Il profilo docente implementa
+  `TaggableTableInterface` e `TaggableTableTrait` con il tipo
+  `com_jlms.teacher` già registrato in Joomla Content Types. Il form espone
+  categoria e tag nativi, le traduzioni IT/EN forniscono la label, il modello
+  ricarica le associazioni native. Un attore senza capacità di gestione
+  docenti non può alterare categoria, stato, lingua o tag mediante POST
+  forgiato. Nessuna tabella tag proprietaria viene introdotta.
+- **CORE-18/19 — Scheduled Tasks e Mail Templates.** I promemoria
+  scadenza escludono **prima del LIMIT** le righe con chiave evento già
+  accodata in `#__jlms_mail_queue` e le preferenze disabilitate. La query
+  usa lo stesso SHA-256 dell'accodamento e la stessa data di fine effettiva.
+  Questo evita la saturazione del primo batch con messaggi già processati
+  mentre altre iscrizioni attendono. Un gate con fixture negative ne
+  previene la regressione; SMTP e hosting restano da verificare.
+
+**Separazione delle prove:** implementazione e CI coprono codice, permessi
+statici, traduzioni, test Joomla e compatibilità PHP/database. Il collaudo
+manuale riguarda ruoli effettivi, override, menu, performance batch, SMTP
+e integrazioni esterne, registrati come **NON ESEGUITI** in
+`docs/QA_TESTBOOK.md`. CORE-17 aveva già i criteri di sviluppo implementati;
+gli altri servizi restano parzialmente verificati sino alla prova completa.
+**SECDEV-02 resta Parziale**: non si converte una CI verde in un collaudo.
