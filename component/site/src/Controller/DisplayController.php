@@ -17,6 +17,7 @@ final class DisplayController extends BaseController
             'courses', 'course', 'lessonpreview', 'teachers', 'teacher', 'teacheredit',
             'categories', 'category', 'dashboard', 'mycourses', 'mycertificates',
             'preferences', 'classroom', 'quiz', 'pathways', 'pathway',
+            'mailconsentrevoke',
         ];
         if (!in_array($view, $allowedViews, true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
@@ -27,6 +28,7 @@ final class DisplayController extends BaseController
         $privateViews = [
             'dashboard', 'mycourses', 'mycertificates', 'preferences',
             'lessonpreview', 'teacheredit', 'classroom', 'quiz',
+            'mailconsentrevoke',
         ];
         if (in_array($this->input->getCmd('view'), $privateViews, true)) {
             $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
