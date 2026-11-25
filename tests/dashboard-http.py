@@ -52,36 +52,71 @@ try:
  request(guest,overview,expected=401)
  request(guest,resume+str(f['active'])+'&lang=en',expected=401)
  student=client();login(student,'cidashboard')
- # CORE-21: exercise every private task controller over real Joomla HTTP,
- # including the framework's rejected-task and invalid-method paths.
- # No POST carries a token or an actionable payload.
- from urllib.request import Request
- private_task_probes = [
-  ('enrollment.start','GET'),
-  ('teacher.unknown','GET'),
-  ('quiz.start','GET'),
-  ('video.playback','GET'),
-  ('media.stream','POST'),
-  ('attachment.download','POST'),
-  ('certificate.download','POST'),
-  ('mailconsent.request','GET'),
-  ('lesson.begin','GET'),
- ]
- for task,method in private_task_probes:
-  path='/index.php?option=com_jlms&task='+task+'&format=raw&lang=en'
+ # CORE-21: two independent authenticated sessions + guest, exhaustive
+ # task allowlist and private-view inventory derived from a fail-closed manifest.
+ from urllib.request import Request, HTTPRedirectHandler
+ matrix=runpy.run_path(str(Path(__file__).resolve().parent/'secdev02-core21-task-matrix.py'))
+ expect(not matrix['validate'](Path(__file__).resolve().parents[1]),
+  'CORE-21 manifest differs from actual protected Joomla controllers')
+ class NoRedirect(HTTPRedirectHandler):
+  def redirect_request(self,req,fp,code,msg,headers,newurl):return None
+ def direct(http,path,method='GET'):
+  # Preserve the original authenticated cookie jar but inspect a 303 itself,
+  # not the ultimately reached public page, which may use different headers.
+  handler=next(h for h in http.handlers if isinstance(h,HTTPCookieProcessor))
+  raw=build_opener(HTTPCookieProcessor(handler.cookiejar),NoRedirect())
   probe=Request(urljoin(base,path),data=b'' if method=='POST' else None,method=method)
   try:
-   with student.open(probe,timeout=20)as response:
-    code=response.status
-    headers=response.headers
-    response.read()
+   with raw.open(probe,timeout=20) as result:
+    code=result.status
+    headers=result.headers
+    body=result.read().decode('utf-8',errors='replace')
   except HTTPError as error:
    code=error.code
    headers=error.headers
-   error.read()
-  expect(400<=code<500,'CORE-21 rejected private task '+task+' returned '+str(code))
-  expect('no-store'in headers.get('Cache-Control',''),
-   'CORE-21 '+task+' rejected response missing private no-store, status '+str(code))
+   body=error.read().decode('utf-8',errors='replace')
+  return code,headers,body
+ empty=client()
+ login(empty,'cidashboardempty')
+ private_cases=0
+ for name,http in [('owner',student),('empty',empty),('guest',guest)]:
+  for controller,actions in matrix['TASKS'].items():
+   for action,method in actions.items():
+    task=controller+'.'+action
+    url='/index.php?option=com_jlms&task='+task+'&format=raw&lang=en'
+    if task=='mailconsent.confirm':url+='&token=invalid-core21-fixture'
+    code,headers,body=direct(http,url,method)
+    # Invalid methods/no CSRF must never execute an update: redirects are
+    # acceptable only on the deliberately invalid consent-link GET.
+    if task=='mailconsent.confirm':
+     expect(code in [302,303,400,403,404],
+      'CORE-21 invalid consent link not rejected/redirected: '+name+' '+str(code))
+    else:
+     expect(400<=code<500,
+      'CORE-21 unsafe task response '+name+' '+task+' HTTP '+str(code))
+    expect('no-store' in headers.get('Cache-Control','').lower(),
+     'CORE-21 no-store missing '+name+' '+task+' HTTP '+str(code))
+    expect('LEARNING_PRIVATE_BODY_2' not in body and 'PRIVATE_CATEGORY_LESSON' not in body,
+     'CORE-21 task exposed private lesson body '+name+' '+task)
+    private_cases+=1
+  for view in matrix['PRIVATE_VIEWS']:
+   url='/index.php?option=com_jlms&view='+view+'&lang=en'
+   code,headers,body=direct(http,url)
+   expect(200<=code<500,
+    'CORE-21 private view '+view+' returned server error HTTP '+str(code))
+   expect('no-store' in headers.get('Cache-Control','').lower(),
+    'CORE-21 private view '+view+' missing no-store for '+name)
+   expect('noindex' in headers.get('X-Robots-Tag','').lower(),
+    'CORE-21 private view '+view+' missing noindex for '+name)
+   if name!='owner':
+    expect('LEARNING_PRIVATE_BODY_2' not in body,
+     'CORE-21 private view leaked owner content into '+name)
+   private_cases+=1
+ expect(private_cases == 3*(sum(len(a) for a in matrix['TASKS'].values())+
+  len(matrix['PRIVATE_VIEWS'])),'CORE-21 complete HTTP case count diverged')
+ print(json.dumps({'core21_private_http_cases':private_cases,
+  'task_routes':sum(len(a) for a in matrix['TASKS'].values()),
+  'private_views':len(matrix['PRIVATE_VIEWS']),'sessions':3}))
  # FE-06: menu opt-in defaults off; toggling the active Joomla menu must be effective.
  menu_overview=overview+'&Itemid='+str(f['menus']['en-GB'])
  _,hidden_nav,_=request(student,menu_overview)
@@ -147,7 +182,7 @@ try:
   _,restored,_=request(student,dashboard)
   expect('jlms-my-course-resume-'+str(f['active'])in Page(restored).ids,'same-session restored access reflected')
   fixture('block');request(student,dashboard,expected=403);fixture('unblock')
- empty=client();login(empty,'cidashboardempty');_,html,_=request(empty,dashboard)
+ _,html,_=request(empty,dashboard)
  expect('jlms-dashboard-empty'in Page(html).ids and not enrollments(html),'empty state without new enrollment')
  admin=client();url,html,_=request(admin,'/administrator/index.php');form=next(x for x in Page(html).forms if'username'in x['fields']and'passwd'in x['fields'])
  request(admin,urljoin(url,form['action']),form['fields']|{'username':'cioperator','passwd':'Ci-only-Long-Password-2026'})
