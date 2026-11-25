@@ -14,6 +14,7 @@ final class VideoController extends BaseController
 {
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (!in_array(strtolower($task), ['playback', 'save', 'renew', 'close'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
