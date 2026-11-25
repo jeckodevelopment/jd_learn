@@ -342,8 +342,37 @@ catExpect(
     'CORE-14: published public course with visible native category is Finder-eligible; fixture='
     . json_encode($finderFixture, JSON_THROW_ON_ERROR)
 );
+// CORE-14: prove the real Joomla Finder index is mutated, not only that the
+// adapter's candidate SELECT returns the expected rows. Use the installed
+// plugin, its native Indexer and the disposable site's #__finder_links table.
+$finderLive = $app->bootPlugin('jlms', 'finder');
+$finderRefresh = new \\ReflectionMethod($finderLive, 'refreshCourse');
+$finderUrl = (new \\ReflectionMethod($finderLive, 'getUrl'))
+    ->invoke($finderLive, $course, 'com_jlms', 'course');
+$finderLink = static function () use ($db, $finderUrl): array {
+    $q = $db->createQuery()->select('link_id, state, access, language')
+        ->from($db->quoteName('#__finder_links'))
+        ->where($db->quoteName('url') . ' = ' . $db->quote($finderUrl));
+    return $db->setQuery($q)->loadAssoc() ?: [];
+};
+$finderRefresh->invoke($finderLive, $course);
+catExpect(
+    $finderLink() !== [],
+    'CORE-14: real Joomla Finder index contains the published unrestricted course'
+);
 $update($en, ["access" => 2]);
+$finderRefresh->invoke($finderLive, $course);
+catExpect(
+    $finderLink() === [],
+    'CORE-14: parent ACL revocation removes the persisted Finder link'
+);
 catExpect(!$finderEligible(), 'CORE-14: parent category ACL change hides inherited child Finder result');
+$update($en, ["access" => 1]);
+$finderRefresh->invoke($finderLive, $course);
+catExpect(
+    $finderLink() !== [],
+    'CORE-14: restoring ancestor ACL rebuilds the persisted Finder link'
+);
 $update($en, ["access" => 1]);
 catExpect($finderEligible(), 'CORE-14: restoring ancestor ACL restores Finder eligibility');
 $update($en, ["language" => "it-IT"]);
