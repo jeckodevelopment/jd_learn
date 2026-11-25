@@ -42,6 +42,7 @@ TASKS = {
 PRIVATE_VIEWS = (
     "dashboard", "mycourses", "mycertificates", "preferences",
     "lessonpreview", "teacheredit", "classroom", "quiz",
+    "mailconsentrevoke",
 )
 ALLOWLIST_WORD = re.compile(r"'([a-z][a-z0-9]*)'")
 
