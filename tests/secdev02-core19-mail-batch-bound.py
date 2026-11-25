@@ -61,7 +61,7 @@ def self_test(source: str, form: str) -> None:
     assert inspect(source.replace("->enqueueDue($limit)", "->enqueueDue()", 1), form)
     assert inspect(source.replace("->process($limit)", "->process(5000)"), form)
     assert inspect(source.replace("->dispatch($limit)", "->dispatch()", 1), form)
-    assert inspect(source.replace("min(100,", "min(5000,", 1), form)
+    assert inspect(source.replace("min(100, (int) ($params->limit ?? 25))", "min(5000, (int) ($params->limit ?? 25))"), form)
     assert inspect(source, form.replace('max="100"', 'max="5000"'))
 
 
