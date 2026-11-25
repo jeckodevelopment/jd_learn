@@ -15,8 +15,8 @@ menu = read("component/site/tmpl/mycertificates/default.xml")
 assert "'mycertificates'" in controller
 assert "$privateViews = [" in controller
 private_routes = controller.split("$privateViews = [", 1)[1].split("];", 1)[0]
-for view in ("dashboard", "mycourses", "mycertificates", "preferences", "lessonpreview", "teacheredit", "classroom", "quiz"):
-    assert "'" + view + "'" in private_routes
+for route_name in ("dashboard", "mycourses", "mycertificates", "preferences", "lessonpreview", "teacheredit", "classroom", "quiz"):
+    assert "'" + route_name + "'" in private_routes
 assert "in_array($this->input->getCmd('view'), $privateViews, true)" in controller
 assert "RouterViewConfiguration('mycertificates')" in router
 assert "getCertificateService()->listForStudent($app->getIdentity())" in model
