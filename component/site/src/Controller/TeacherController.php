@@ -10,6 +10,7 @@ final class TeacherController extends \Joomla\CMS\MVC\Controller\FormController
     protected $view_list = 'teacher';
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (!in_array(strtolower($task), ['edit', 'save', 'apply', 'cancel'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
