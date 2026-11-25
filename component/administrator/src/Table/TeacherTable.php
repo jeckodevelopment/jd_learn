@@ -54,9 +54,11 @@ final class TeacherTable extends Table implements TaggableTableInterface
         $catid = (int) $this->catid;
         $access = (int) $this->access;
         $language = (string) $this->language;
-        $q = $db->createQuery()->select('id')->from('#__categories')
-            ->where("extension='com_jlms.teacher' AND published<>-2")->where('id=:id')
-                ->bind(':id', $catid, ParameterType::INTEGER);
+        $q = $db->createQuery()->select('cat.id')->from('#__categories AS cat')
+            ->where("cat.extension='com_jlms.teacher' AND cat.published<>-2")->where('cat.id=:id')
+            ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor'
+                . ' WHERE ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.published = -2)')
+            ->bind(':id', $catid, ParameterType::INTEGER);
         if (!$db->setQuery($q)->loadResult()) {
             $this->setError('COM_JLMS_TEACHER_INVALID');
             return false;
