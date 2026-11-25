@@ -339,6 +339,11 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
 
     public function save($data)
     {
+        // Native course tag relations are persisted by Joomla's taggable
+        // behaviour; ensure it is registered before AdminModel makes its Table.
+        if (isset($data['tags'])) {
+            \Joomla\CMS\Plugin\PluginHelper::importPlugin('behaviour', 'taggable');
+        }
         $db = $this->getDatabase();
         $this->associationWrite = false;
         $allowed = ['id', 'title', 'alias', 'catid', 'language', 'catalog_access', 'content_access'

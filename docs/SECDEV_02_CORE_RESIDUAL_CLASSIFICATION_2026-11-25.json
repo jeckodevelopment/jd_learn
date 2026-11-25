@@ -94,7 +94,8 @@
       "automated_evidence": [
         "tests/frontend-css-contract.py",
         "tests/frontend-dom-runtime.py",
-        "tests/secdev02-core05-overrides-inventory.py"
+        "tests/secdev02-core05-overrides-inventory.py",
+        "tests/secdev02-core05-layout-inventory.py"
       ]
     },
     {
@@ -123,7 +124,8 @@
       "manual_action": "Collaudare menu IT/EN, URL diretti e fallback multilingua.",
       "automated_evidence": [
         "tests/joomla-associations.php",
-        "tests/associations-http.py"
+        "tests/associations-http.py",
+        "tests/joomla-categories.php"
       ]
     },
     {
@@ -146,8 +148,8 @@
       "label": "Registrazione ed esposizione dei tag in tutte le entità previste",
       "canonical_status": "unverifiable",
       "acceptance_class": "developer_work_pending",
-      "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Esercitare persistenza nativa tag corso/docente e chiarire dalla specifica le eventuali altre entità previste, prima di aggiungere contesti.",
+      "implementation_finding": "teacher_tags_fixed_pr1042",
+      "development_action": "PR #1042 corregge il mapping Content Types/UCM e l'import del plugin Joomla Taggable per persistenza reale dei tag docente/corso; la CI esercita salvataggio, ricaricamento, cancellazione e diniego ACL. Restano da dimostrare tutti i contesti previsti dal criterio.",
       "manual_action": "Provare aggiunta, cambio e rimozione tag nelle entità approvate con ACL.",
       "automated_evidence": [
         "tests/secdev02-core-native-contracts.py",
@@ -221,7 +223,8 @@
       "development_action": "Prove di reindicizzazione Finder con cambio categoria/lingua/stato/ACL e lettura indice reale.",
       "manual_action": "Ricostruire e consultare Smart Search con articoli protetti e cambio permessi.",
       "automated_evidence": [
-        "tests/joomla-courses-ui.php"
+        "tests/joomla-courses-ui.php",
+        "tests/joomla-categories.php"
       ]
     },
     {
@@ -292,7 +295,8 @@
       "manual_action": "Provare tutte le azioni dell'amministrazione in più ruoli e browser.",
       "automated_evidence": [
         "tests/joomla-courses-ui.php",
-        "tests/joomla-teachers.php"
+        "tests/joomla-teachers.php",
+        "tests/secdev02-core05-layout-inventory.py"
       ]
     },
     {

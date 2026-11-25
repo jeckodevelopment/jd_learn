@@ -399,3 +399,18 @@ La nuova matrice operativa `docs/SECDEV_02_CORE_RESIDUAL_CLASSIFICATION_2026-11-
 **CORE-05 — copertura implementativa verificabile:** `docs/SECDEV_02_CORE05_VIEW_OVERRIDE_INVENTORY_2026-11-25.json` registra **17 viste site** e **29 viste administrator** con layout Joomla `default.php` o `edit.php` e controller MVC View corrispondente. `tests/secdev02-core05-overrides-inventory.py` impedisce che nuove viste vengano distribuite senza un inventario aggiornato oppure che spariscano layout/HtmlView. Non equivale a collaudo grafico degli override dei singoli template o viewport.
 
 **Stato:** attività di sviluppo/CI e regressioni aggiunte; i criteri granulari `unverifiable` non vengono promossi automaticamente e il residuo `SECDEV-02` rimane `Parziale`. Il collaudo manuale resta distinto in `docs/QA_TESTBOOK.md`.
+
+## SECDEV-02 — lotto trasversale prove native CORE (25/11/2026)
+
+Questa fase indirizza il gruppo dei **17 criteri ancora di competenza sviluppo/CI** senza convertirli automaticamente in `implemented` o attribuire all'utente la verifica tecnica. Non equivale alla chiusura dell'intero gruppo.
+
+- **CORE-04/09 — difetto concreto scoperto dalla CI:** i tag del docente non erano persistiti: il content type docente non forniva un mapping UCM completo e il model non garantiva l'import del plugin nativo Taggable. `EditorialInstaller` ora allinea anche in upgrade il mapping di docente (non solo corso), mentre i salvataggi editoriale docente/corso inizializzano il comportamento nativo Joomla. La CI prova UCM, creazione dell'entità tag, persistenza in `#__contentitem_tag_map`, rilettura, rimozione e rifiuto POST forgiato senza modifica di revision o associazioni.
+- **CORE-01/07/14:** prova del SQL di eleggibilità effettivamente prodotto dall'adapter Finder JD Learn in una installazione Joomla. Simula cambio ACL, lingua, pubblicazione di un antenato e stato/accesso del corso. La prova verifica che nessuna riga privata compaia nella selezione dei candidati; **non prova ancora la rielaborazione completa dell'indice Finder o l'esito del plugin di reindex**.
+- **CORE-05/20:** inventario di **52 layout PHP distribuibili** (22 frontend, 30 backend, nessun modulo autonomo): gate sulla corrispondenza del pacchetto, assenza di nuovi layout ignorati, `_JEXEC` guard, fonte CSS/override e fixture negative. Questa verifica non attesta automaticamente che ogni override di template terzo sia reso correttamente.
+- **CORE-06:** esteso l'audit delle chiavi lingua IT/EN anche al pool di costanti letterali `COM_JLMS_*` usate da errori e mappe di messaggi dinamici, precedentemente fuori dagli argomenti diretti `Text::_`. Il gate ha evidenziato cinque messaggi mancanti in entrambe le lingue: `COM_JLMS_CERTIFICATE_RENDER_FAILED`, `COM_JLMS_CERTIFICATE_UNAVAILABLE`, `COM_JLMS_ENROLLMENT_REQUEST_ALREADY_DECIDED`, `COM_JLMS_MAIL_CONSENT_DELIVERY_FAILED`, `COM_JLMS_MAIL_CONSENT_INVALID`. Aggiunte tutte le dieci traduzioni IT/EN, mantenendo obbligatoria la rilevazione in CI.
+
+Le evidenze sono rieseguite nel gate obbligatorio e nelle matrici Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Accettazione manuale separata e **NON ESEGUITA**: override su template reali, Finder/reindex/lingue su hosting, editor/tag con ruoli, UI nei viewport e verifica lingua delle email.
+
+Il CSV resta `Parziale` e la matrice `docs/FUNCTIONAL_CRITERIA_1.0.0.json` conserva le valutazioni originali fino all'accertamento dei criteri completi. Gli altri punti di sviluppo/CI sono ancora aperti nel registro di riconciliazione.
+
+**Riconciliazione PR #1044:** il lotto nativo CORE recupera la #1042 senza sostituire la #1043; test CI e collaudi manuali restano distinti. Lo stato globale SECDEV-02 rimane Parziale.

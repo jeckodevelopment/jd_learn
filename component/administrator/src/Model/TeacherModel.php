@@ -58,6 +58,9 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
     }
     public function save($input)
     {
+        // Joomla's tag persistence runs via the native behaviour subscriber.
+        // Load it before AdminModel creates the Table, also in non-web tasks.
+        \Joomla\CMS\Plugin\PluginHelper::importPlugin('behaviour', 'taggable');
         $db = $this->getDatabase();
         $db->transactionStart();
         try {

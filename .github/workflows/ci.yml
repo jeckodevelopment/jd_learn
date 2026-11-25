@@ -88,6 +88,8 @@ jobs:
           python3 tests/secdev02-core05-overrides-inventory.py
           python3 tests/secdev02-core19-mail-batch-bound.py --self-test
           python3 tests/secdev02-core19-mail-batch-bound.py
+          python3 tests/secdev02-core05-layout-inventory.py --self-test
+          python3 tests/secdev02-core05-layout-inventory.py
           python3 tests/secdev02-core-residual-split.py --self-test
           python3 tests/secdev02-core-residual-split.py
           python3 tests/secdev02-core19-expiry-reminders.py --self-test
