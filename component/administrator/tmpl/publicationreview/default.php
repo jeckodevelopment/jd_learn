@@ -36,8 +36,15 @@ $changeLabels = ['added' => 'COM_JLMS_PUBLICATION_REVIEW_ADDED', 'changed'
       Text::_($item['rules_changed'] ? 'JYES' : 'JNO') ?></strong></p>
  <?php if ($item['video_threshold_change']) :
         ?><p id="jlms-publication-threshold-change"><?=
-             Text::sprintf('COM_JLMS_TEACHING_THRESHOLD_CHANGE', $this
-            ->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['before'])), $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent($item['video_threshold_change']['after']))) ?></p><?php
+             Text::sprintf(
+                 'COM_JLMS_TEACHING_THRESHOLD_CHANGE',
+                 $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent(
+                     $item['video_threshold_change']['before']
+                 )),
+                 $this->escape(\Jlms\Component\Jlms\Administrator\Domain\TeachingRules::percent(
+                     $item['video_threshold_change']['after']
+                 ))
+             ) ?></p><?php
  endif; ?>
  <?php foreach ($labels as $kind => $label) :
         if (!$item['changes'][$kind]['details']) {
