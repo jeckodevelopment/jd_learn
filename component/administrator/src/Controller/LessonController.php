@@ -8,6 +8,7 @@ final class LessonController extends CurriculumController
 {
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (!in_array(strtolower($task), ['metadata', 'save', 'delete', 'reorder', 'duplicate', 'move'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
@@ -62,6 +63,7 @@ final class LessonController extends CurriculumController
         http_response_code($code);
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        $this->app->sendHeaders();
         echo new \Joomla\CMS\Response\JsonResponse($data, $message, $code !== 200, true);
         $this->app->close();
     }
