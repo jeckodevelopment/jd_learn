@@ -273,6 +273,12 @@ $asset->rules = json_encode($stateRules, JSON_THROW_ON_ERROR);
 $asset->store();
 $bulkModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $bulkModel->setCurrentUser($user);
+$bulkActor = EditorAccess::fresh($user);
+editorExpect(
+    $bulkActor->authorise('core.edit', 'com_jlms.course.' . $courses['allowed1'])
+    && $bulkActor->authorise('core.edit.state', 'com_jlms.course.' . $courses['allowed1']),
+    'CORE-04: first course in mixed batch is genuinely authorized before record denial'
+);
 $bulkIds = [$courses['allowed1'], $courses['denied']];
 $bulkBefore = $db->setQuery(
     'SELECT id,state,revision,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id IN ('
