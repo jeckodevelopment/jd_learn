@@ -1176,6 +1176,10 @@ runpy.run_path(str(ROOT/'tests/sec-p2-dependency-gate.py'), run_name='__main__')
 runpy.run_path(str(ROOT/'tests/sec-p2-source-gate.py'), run_name='__main__')
 # SEC-P2: every high/critical first-party finding needs reviewed mitigation evidence.
 runpy.run_path(str(ROOT/'tests/sec-p2-findings-gate.py'), run_name='__main__')
+# SECDEV-02: preserve closure evidence and reject unsupported completeness claims.
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-closure-readiness.py'), '--self-test'], check=True)
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-closure-readiness.py')], check=True)
+
 # SECDEV-07: security evidence and explicitly unclosed scanner/hosting gaps must remain traceable.
 runpy.run_path(str(ROOT/'tests/secdev07-assurance-gate.py'), run_name='__main__')
 
