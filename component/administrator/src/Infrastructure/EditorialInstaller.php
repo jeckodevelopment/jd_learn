@@ -37,31 +37,39 @@ final class EditorialInstaller
                     'ignoreChanges' => ['revision', 'modified_by', 'modified_at', 'checked_out',
                         'checked_out_time']], JSON_THROW_ON_ERROR);
             }
-            if ($type === 'course') {
-                $record->table = json_encode([
-                    'special' => ['type' => $table, 'prefix' => 'Jlms\\Component\\Jlms\\Administrator\\Table',
+            // TagsHelper::postStore() requires a complete UCM mapping. Register
+            // teachers as well as courses, including on upgrades of records
+            // originally installed with empty teacher field_mappings.
+            $record->table = json_encode([
+                'special' => ['type' => $table, 'prefix' => 'Jlms\\Component\\Jlms\\Administrator\\Table',
                     'key' => 'id'],
-                    'common' => ['dbtable' => '#__ucm_content', 'key' => 'ucm_id', 'type' => 'Corecontent',
-                        'prefix' => 'Joomla\\CMS\\Table\\', 'config' => 'array()'],
-                ], JSON_THROW_ON_ERROR);
-                $record->field_mappings = json_encode(['common' => [
-                    'core_content_item_id' => 'id', 'core_title' => 'title', 'core_state' => 'state',
-                    'core_alias' => 'alias', 'core_created_user_id' => 'created_by',
-                        'core_created_time' => 'created_at',
-                    'core_modified_user_id' => 'modified_by', 'core_modified_time' => 'modified_at',
-                        'core_body' => 'summary',
-                    'core_access' => 'content_access', 'core_language' => 'language', 'core_params' => 'params_json',
-                    'core_metadata' => 'metadata_json', 'core_catid' => 'catid', 'core_images' => 'image',
-                    'core_publish_up' => 'publish_up', 'core_publish_down' => 'publish_down',
-                    'core_version' => 'revision', 'asset_id' => 'asset_id',
-                ]], JSON_THROW_ON_ERROR);
-            } elseif (!$exists) {
-                $record->table = json_encode(['special' => ['type' => $table,
-                    'prefix' => 'Jlms\\Component\\Jlms\\Administrator\\Table', 'key' => 'id']], JSON_THROW_ON_ERROR);
-                $record->field_mappings = '{}';
-            } else {
-                continue;
+                'common' => ['dbtable' => '#__ucm_content', 'key' => 'ucm_id', 'type' => 'Corecontent',
+                    'prefix' => 'Joomla\\CMS\\Table\\', 'config' => 'array()'],
+            ], JSON_THROW_ON_ERROR);
+            $common = [
+                'core_content_item_id' => 'id',
+                'core_title' => 'title',
+                'core_state' => 'state',
+                'core_alias' => 'alias',
+                'core_created_user_id' => 'created_by',
+                'core_created_time' => 'created_at',
+                'core_modified_user_id' => 'modified_by',
+                'core_modified_time' => 'modified_at',
+                'core_body' => $type === 'course' ? 'summary' : 'bio',
+                'core_access' => $type === 'course' ? 'content_access' : 'access',
+                'core_language' => 'language',
+                'core_params' => 'params_json',
+                'core_catid' => 'catid',
+                'core_images' => 'image',
+                'core_version' => 'revision',
+                'asset_id' => 'asset_id',
+            ];
+            if ($type === 'course') {
+                $common['core_metadata'] = 'metadata_json';
+                $common['core_publish_up'] = 'publish_up';
+                $common['core_publish_down'] = 'publish_down';
             }
+            $record->field_mappings = json_encode(['common' => $common], JSON_THROW_ON_ERROR);
             if (!$record->check() || !$record->store()) {
                 throw new \RuntimeException('JD Learn content type setup failed');
             }
