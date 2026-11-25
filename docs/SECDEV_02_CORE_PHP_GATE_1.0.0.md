@@ -548,3 +548,28 @@ Comportamenti da testare: PHPCS 4.0.4 PSR12 senza nuovi rilievi, lint PHP, confr
 La CI completa [#45566471467](https://github.com/jeckodevelopment/jd_learn/actions/runs/45566471467) ha superato controlli preliminari, Chromium e tutte le matrici PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 dopo la correzione dei contratti del dashboard, delle variabili email e dei test di sicurezza dipendenti dalla formattazione. **PHPCS 4.0.4: 122 finding nella baseline di `main`, 102 sul ramo, 20 eliminati e 0 nuovi**, senza abbassare o escludere regole. La riformattazione automatica aggiuntiva ha rifiutato tutti i candidati e il workflow temporaneo e' stato eliminato; i tentativi HTML/PHP che introducevano regressioni sono stati ripristinati. La CI attesta il codice del lotto, **non il completamento SECDEV-02**.
 
 Dei residui, sono presenti le firme native `Table::_getAssetName`, `::_getAssetTitle`, `::_getAssetParentId` e la proprietà `$_supportNullValue`, che richiedono conservazione per compatibilità Joomla. Gli altri rilievi richiedono ulteriore bonifica dei template e dei file con side effect, non soppressioni indiscriminate. CORE-01–23 conserva verifiche end-to-end non risolte e l'inventario API non e' un collaudo universale. Lo stato del requisito resta **Parziale**, con percentuali e criteri implementativi non promossi e test manuali esplicitamente in attesa. L'integrazione di questo lotto va indicata come riduzione verificata del debito, mai come chiusura della sicurezza o della compatibilità core.
+
+ 
+## Piano di chiusura unificato SECDEV-02 — 25 novembre 2026
+
+**Baseline ufficiale:** CI #45567216732, PHP_CodeSniffer 4.0.4 PSR12: **102 rilievi**, senza nuove violazioni. Ripartizione: 79 righe lunghe; 12 firme con underscore; 3 proprietà con underscore; 6 file con side effects; 1 classe priva di namespace; 1 nome classe fuori da PascalCase.
+
+### Criteri di completamento non negoziabili
+
+1. Rimediare tutte le 79 righe lunghe con trasformazioni che preservino il rendering HTML, gli attributi, la sintassi PHP e il significato delle query. Ogni cambio deve passare PHPCS e i contratti già presenti, non soltanto il lint.
+2. Verificare i 23 rilievi strutturali: le firme `_getAssetName`, `_getAssetTitle`, `_getAssetParentId`, la proprietà `$_supportNullValue` e la classe installer Joomla `Com_JlmsInstallerScript` hanno nomi richiesti dal framework. Vanno ricondotti a un'integrazione nativa verificata; non rinominarli ciecamente, non azzerare il contatore mediante esclusioni globali o dichiarare uno zero falso. Registrare puntualmente ogni eventuale impossibilità tecnica e l'evidenza Joomla.
+3. Riconciliare **CORE-01–23** con `docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json` e `docs/FUNCTIONAL_CRITERIA_1.0.0.json`: prova delle API Joomla supportate, parità funzionale, rilevanza e motivazione di non applicabilità, assenza di dipendenza da compat6 e modifiche al core.
+4. Mantenere gate integrali: PHPCS, verifiche di non regressione, script di controllo, PHP lint, SAST, Selenium/Chromium, entrambe le matrici Joomla 6.2/PHP/database, build ZIP, integrità CSV e collaudi manuali separati.
+5. SECDEV-02 passa da **Parziale** a **Completato** esclusivamente quando la riconciliazione dei criteri è verificata: l'apertura di una PR, il merge di un lotto o una lista di eccezioni non bastano.
+
+### Intervento sul ramo unico
+
+La PR di consolidamento corregge per primi i controller pubblici, le viste amministrative e le stringhe SQL di prova più lunghe, mantenendo invariati i vincoli di routing, le query e la presentazione. Le viste miste PHP/HTML più complesse sono soggette ai test di output reale e ai contratti sorgente per evitare le regressioni già osservate nelle PR precedenti. La presente sezione non certifica l'accettazione dei lavori ancora in corso.
+
+### Comportamenti da testare
+
+- Accesso pubblico e blocco indicizzazione dei percorsi privati; gestione delle viste non ammesse.
+- Dashboard, anteprima corso, elenco mail, revisione pubblicazione e pulsanti nel curriculum.
+- Fixture di pubblicazione: identica query, identico risultato, nessun cambio di workflow.
+- Compatibilità native table/ACL e installazione Joomla senza dipendenze compat6.
+- Controlli automatici e collaudi manuali come sopra, con saldo PHPCS e stato CORE/API riportati separatamente.
