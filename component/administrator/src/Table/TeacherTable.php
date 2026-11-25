@@ -11,10 +11,11 @@ use Joomla\Database\ParameterType;
 
 final class TeacherTable extends Table
 {
-    protected $_supportNullValue = true;
     public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__jlms_teachers', 'id', $db);
+        // Retain Joomla Table's inherited nullable-column flag without redeclaring it.
+        $this->_supportNullValue = true;
         $this->setColumnAlias('published', 'state');
     }
 
