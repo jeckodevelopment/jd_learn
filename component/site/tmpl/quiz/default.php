@@ -144,8 +144,8 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
         ?><p><?= $bestScoreSummary ?></p><?php
  endif; ?>
  <ol><?php foreach ($i['history'] as $entry) :
-    $historyAttemptLabel = Text::_('COM_JLMS_QUIZ_ATTEMPT');
-    $entryIsInvalidated = $entry['status'] === 'invalidated';
+        $historyAttemptLabel = Text::_('COM_JLMS_QUIZ_ATTEMPT');
+        $entryIsInvalidated = $entry['status'] === 'invalidated';
         ?><li><a href="<?= Route::_('index.php?option=com_jlms&view=quiz&id=' .
     (int)$i['enrollment_id'] . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' .
     (int)$entry['id']) ?>"><?= $historyAttemptLabel ?> <?= (int)$entry['attempt_no'] ?></a><?php if ($entryIsInvalidated) :
