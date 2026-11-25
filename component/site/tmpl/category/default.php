@@ -57,7 +57,8 @@ value="<?= (int) $this->category->id ?>">
        Text::_('COM_JLMS_CATALOG_ORDER_PUBLISHED') ?></option></select>
             <?php endif; ?>
    <label for="jlms-category-catalog-tag"><?= Text::_('COM_JLMS_CATALOG_TAG') ?></label>
-   <select id="jlms-category-catalog-tag" name="filter[tag_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
+   <select id="jlms-category-catalog-tag" name="filter[tag_id]">
+   <option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
         ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php
                                                                                   endforeach; ?></select>
 <label for="jlms-category-catalog-difficulty"><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY') ?></label>
@@ -90,11 +91,13 @@ value="<?= (int) $this->category->id ?>">
        $this->layout === 'list' ? ' selected' : '' ?>><?=
        Text::_('COM_JLMS_CATALOG_LAYOUT_LIST') ?></option></select>
    <label for="jlms-category-catalog-teacher"><?= Text::_('COM_JLMS_CATALOG_TEACHER') ?></label>
-   <select id="jlms-category-catalog-teacher" name="filter[teacher_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
+   <select id="jlms-category-catalog-teacher" name="filter[teacher_id]">
+   <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
         ?><option value="<?= (int) $teacher->id ?>"<?= $this->teacherId === (int) $teacher->id ? ' selected' : '' ?>><?= $this->escape($teacher->title) ?></option><?php
                                                                                           endforeach; ?></select>
    <label for="jlms-category-catalog-pathway"><?= Text::_('COM_JLMS_CATALOG_PATHWAY') ?></label>
-   <select id="jlms-category-catalog-pathway" name="filter[pathway_id]"><option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
+   <select id="jlms-category-catalog-pathway" name="filter[pathway_id]">
+   <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
         ?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected' : '' ?>><?= $this->escape($pathway->title) ?></option><?php
                                                                                           endforeach; ?></select>
    <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
