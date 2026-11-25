@@ -8,6 +8,11 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\HTML\HTMLHelper;
 $item = $this->item;
 $selected = $item['lesson'];
+$materialRegions = [
+    'course' => 'jlms-classroom-course-materials',
+    'lesson' => 'jlms-lesson-resources',
+];
+$inlineMimeTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
 $orderedLessons = array_values($item['outline']);
 $previousLesson = null;
 $nextLesson = null;
@@ -68,7 +73,13 @@ foreach ($item['outline'] as $entry) {
    data-hide-label="<?= $this->escape(Text::_('COM_JLMS_HIDE_CURRICULUM')) ?>" hidden><?=
         Text::_('COM_JLMS_SHOW_CURRICULUM') ?></button>
  <nav id="jlms-classroom-outline" aria-label="<?= Text::_('COM_JLMS_CURRICULUM') ?>">
- <?php foreach ($item['outline'] as $entry) : ?>
+ <?php foreach ($item['outline'] as $entry) :
+    $entryProgressKey = $entry->state === 'completed'
+        ? 'COM_JLMS_LESSON_COMPLETED'
+        : ($entry->state === 'started'
+            ? 'COM_JLMS_LESSON_IN_PROGRESS'
+            : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'));
+    ?>
         <?php if ((int) $entry->module_id !== $currentModule) : ?>
             <?php if ($currentModule) :
                 ?></ol></details><?php
@@ -94,7 +105,7 @@ foreach ($item['outline'] as $entry) {
          elseif (!empty($entry->prerequisite_blocked)) :
                 ?><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?><?php
          else :
-                ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->state === 'started' ? 'COM_JLMS_LESSON_IN_PROGRESS' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'))) ?><?php
+                ?><?= Text::_($entryProgressKey) ?><?php
          endif; ?></span>
   </li>
  <?php endforeach; ?>
@@ -140,7 +151,9 @@ foreach ($item['outline'] as $entry) {
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
             <?php if ($selected->provider_key === 'youtube') : ?>
-                <?php $nextVideoLessonAvailable = $nextLesson !== null && $nextLesson->schedule_state === 'available' && empty($nextLesson->prerequisite_blocked); ?>
+                <?php $nextVideoLessonAvailable = $nextLesson !== null
+                    && $nextLesson->schedule_state === 'available'
+                    && empty($nextLesson->prerequisite_blocked); ?>
     <div id="jlms-youtube-finish" class="jlms-youtube-finish" role="status" aria-live="polite" hidden>
      <p class="jlms-youtube-finish__message"><?= Text::_('COM_JLMS_VIDEO_COMPLETED') ?></p>
                 <?php if ($nextVideoLessonAvailable) : ?>
@@ -218,7 +231,7 @@ foreach ($item['outline'] as $entry) {
           <?php endif; ?>
       <?php endif; ?>
  <div id="jlms-material-groups">
-      <?php foreach (['course' => 'jlms-classroom-course-materials', 'lesson' => 'jlms-lesson-resources'] as $scope => $region) :
+      <?php foreach ($materialRegions as $scope => $region) :
             $files = $this->materials[$scope]; ?>
  <section id="<?= $region ?>"
    class="jlms-material-list">
@@ -228,8 +241,9 @@ foreach ($item['outline'] as $entry) {
    <h4 class="jlms-material__title"><?= $this->escape($file->title) ?></h4>
      <p><?= $this->escape($file->description ?? '') ?></p>
    <p class="jlms-material__meta"><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
-                <?php if (in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) : ?>
-                    <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>
+                <?php if (in_array($file->mime_type, $inlineMimeTypes, true)) : ?>
+                    <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id='
+                        . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>
     <a class="jlms-material__preview"
     target="_blank"
     rel="noopener"
@@ -244,7 +258,9 @@ foreach ($item['outline'] as $entry) {
             <?php if (!$files['items']) :
                 ?><p><?= Text::_('COM_JLMS_NO_MATERIALS') ?></p><?php
             endif; ?>
-            <?php $materialsBase = 'index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->id . '&' . $scope . '_material_page='; ?>
+            <?php $materialsBase = 'index.php?option=com_jlms&view=classroom&id='
+                . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->id
+                . '&' . $scope . '_material_page='; ?>
  <nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
             <?php if ($files['page'] > 0) :
                 ?><a href="<?= Route::_($materialsBase . ($files['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php
@@ -263,6 +279,11 @@ foreach ($item['outline'] as $entry) {
         <?php if ($adjacent !== null) :
             $label = Text::_($direction === 'previous' ? 'COM_JLMS_PREVIOUS_LESSON' : 'COM_JLMS_NEXT_LESSON');
             $available = $adjacent->schedule_state === 'available' && empty($adjacent->prerequisite_blocked);
+            $adjacentReasonKey = !empty($adjacent->prerequisite_blocked)
+                ? 'COM_JLMS_PREREQUISITES_INCOMPLETE'
+                : ($adjacent->schedule_state === 'closed'
+                    ? 'COM_JLMS_LESSON_CLOSED'
+                    : 'COM_JLMS_LESSON_NOT_YET_AVAILABLE');
             ?>
             <?php if ($available) : ?>
        <a class="jlms-lesson-navigation__link"
@@ -277,7 +298,7 @@ foreach ($item['outline'] as $entry) {
         <span class="jlms-lesson-navigation__label"><?= $this->escape($label) ?></span>
         <span class="jlms-lesson-navigation__title"><?= $this->escape($adjacent->title) ?></span>
         <span class="jlms-lesson-navigation__reason"><?=
-             Text::_(!empty($adjacent->prerequisite_blocked) ? 'COM_JLMS_PREREQUISITES_INCOMPLETE' : ($adjacent->schedule_state === 'closed' ? 'COM_JLMS_LESSON_CLOSED' : 'COM_JLMS_LESSON_NOT_YET_AVAILABLE')) ?></span>
+             Text::_($adjacentReasonKey) ?></span>
        </span>
             <?php endif; ?>
         <?php endif; ?>
