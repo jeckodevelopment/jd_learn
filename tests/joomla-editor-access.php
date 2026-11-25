@@ -216,6 +216,52 @@ $second = $list->getItems();
 $actual = array_map(static fn($r)=>(int)$r->id, array_merge($first, $second));
 sort($actual);
 editorExpect($actual === $expected, 'All pages honour category grant, edit-own and explicit record deny');
+
+// CORE-04: source and destination category grants do not override a direct
+// record deny during bulk reassignment. This is a real Joomla ACL matrix.
+$sourceCategoryAsset = 'com_jlms.course.category.' . $categories['allowed'];
+$destinationCategoryAsset = 'com_jlms.course.category.' . $categories['other'];
+$asset->loadByName($sourceCategoryAsset);
+$sourceRulesBefore = $asset->rules;
+$sourceRules = json_decode($sourceRulesBefore, true);
+$sourceRules['core.delete'][(string) $group] = true;
+$asset->rules = json_encode($sourceRules, JSON_THROW_ON_ERROR);
+$asset->store();
+$asset->loadByName($destinationCategoryAsset);
+$destinationRulesBefore = $asset->rules;
+$destinationRules = json_decode($destinationRulesBefore, true);
+$destinationRules['core.edit'][(string) $group] = true;
+$asset->rules = json_encode($destinationRules, JSON_THROW_ON_ERROR);
+$asset->store();
+try {
+    $recordDenied = false;
+    try {
+        $component->getCategoryReassignmentService()->reassign(
+            $user,
+            $categories['allowed'],
+            ['courses' => $categories['other']]
+        );
+    } catch (\RuntimeException $error) {
+        $recordDenied = $error->getCode() === 403;
+    }
+    editorExpect($recordDenied, 'record-level deny blocks batch despite source/destination category grants');
+    $courseIds = implode(',', array_map('intval', [
+        $courses['allowed1'], $courses['allowed2'], $courses['denied']
+    ]));
+    editorExpect(
+        (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_courses WHERE id IN (' . $courseIds
+            . ') AND catid=' . (int) $categories['allowed'])->loadResult() === 3,
+        'record-level deny rolls back all categories, not just the denied course'
+    );
+} finally {
+    $asset->loadByName($destinationCategoryAsset);
+    $asset->rules = $destinationRulesBefore;
+    $asset->store();
+    $asset->loadByName($sourceCategoryAsset);
+    $asset->rules = $sourceRulesBefore;
+    $asset->store();
+}
+
 // The same model and user objects must not retain cached records after ACL revocation.
 $asset->loadByName('com_jlms.course.category.' . $categories['allowed']);
 $savedRules = $asset->rules;
