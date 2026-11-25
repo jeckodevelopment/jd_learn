@@ -251,7 +251,6 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 ->set($db->quoteName('template_data') . " = '{}'")
                 ->set($db->quoteName('reconciliation_note') . ' = NULL')
                 ->set($db->quoteName('last_error') . ' = NULL')
-                ->set($db->quoteName('reconciliation_by') . ' = NULL')
                 ->where($db->quoteName('recipient_user_id') . ' = ' . $userId)
                 ->where($db->quoteName('state') . " NOT IN ('pending','retry','sending')"))->execute();
             // Remove pending, expired and used unsubscribe tokens explicitly.
@@ -281,12 +280,15 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                         ->where($db->quoteName('a.enrollment_id') . ' IN (' . $enrollments . ')') . ')');
             $db->setQuery($answerQuery)->execute();
 
+            // A reviewer may be different from the requester. Each actor is
+            // anonymised only in their own column, without erasing another user's data.
             $db->setQuery($db->createQuery()->update($db->quoteName('#__jlms_enrollment_requests'))
                 ->set($db->quoteName('user_id') . ' = NULL')
-                ->set($db->quoteName('decided_by') . ' = NULL')
                 ->set($db->quoteName('reason') . ' = NULL')
-                ->where('(' . $db->quoteName('user_id') . ' = ' . $userId . ' OR ' . $db
-                    ->quoteName('decided_by') . ' = ' . $userId . ')'))->execute();
+                ->where($db->quoteName('user_id') . ' = ' . $userId))->execute();
+            $db->setQuery($db->createQuery()->update($db->quoteName('#__jlms_enrollment_requests'))
+                ->set($db->quoteName('decided_by') . ' = NULL')
+                ->where($db->quoteName('decided_by') . ' = ' . $userId))->execute();
             $db->setQuery($db->createQuery()->update($db->quoteName('#__jlms_manual_enrollments'))
                 ->set($db->quoteName('actor_user_id') . ' = NULL')
                 ->where($db->quoteName('actor_user_id') . ' = ' . $userId))->execute();
@@ -326,12 +328,13 @@ final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
                 '#__jlms_certificate_templates',
                 ] as $editorialTable
             ) {
-                $db->setQuery($db->createQuery()
-                    ->update($db->quoteName($editorialTable))
-                    ->set($db->quoteName('created_by') . ' = NULL')
-                    ->set($db->quoteName('modified_by') . ' = NULL')
-                    ->where('(' . $db->quoteName('created_by') . ' = ' . $userId
-                        . ' OR ' . $db->quoteName('modified_by') . ' = ' . $userId . ')'))->execute();
+                // Preserve the other account's attribution if author and editor differ.
+                foreach (['created_by', 'modified_by'] as $actorColumn) {
+                    $db->setQuery($db->createQuery()
+                        ->update($db->quoteName($editorialTable))
+                        ->set($db->quoteName($actorColumn) . ' = NULL')
+                        ->where($db->quoteName($actorColumn) . ' = ' . $userId))->execute();
+                }
             }
 
             foreach (['#__jlms_teachers', '#__jlms_subjects'] as $profileTable) {
