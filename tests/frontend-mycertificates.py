@@ -13,7 +13,11 @@ dashboard = read("component/site/tmpl/dashboard/default.php")
 partial = read("component/site/tmpl/dashboard/_certificates.php")
 menu = read("component/site/tmpl/mycertificates/default.xml")
 assert "'mycertificates'" in controller
-assert "['dashboard', 'mycourses', 'mycertificates', 'preferences', 'lessonpreview', 'teacheredit', 'classroom', 'quiz']" in controller
+assert "$privateViews = [" in controller
+private_routes = controller.split("$privateViews = [", 1)[1].split("];", 1)[0]
+for view in ("dashboard", "mycourses", "mycertificates", "preferences", "lessonpreview", "teacheredit", "classroom", "quiz"):
+    assert "'" + view + "'" in private_routes
+assert "in_array($this->input->getCmd('view'), $privateViews, true)" in controller
 assert "RouterViewConfiguration('mycertificates')" in router
 assert "getCertificateService()->listForStudent($app->getIdentity())" in model
 assert "get('Items')" in view and "noindex, nofollow" in view
