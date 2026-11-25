@@ -1,0 +1,45 @@
+name: SECDEV-02 guarded one-shot bulk remediation
+on:
+  push:
+    branches:
+      - style/secdev02-final-122-core-api-consolidation
+    paths:
+      - .github/workflows/secdev02-guarded-bulk-once.yml
+permissions:
+  contents: write
+jobs:
+  guarded-remediation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install pinned PHP_CodeSniffer
+        run: |
+          mkdir -p .runtime/secdev02-phpcs
+          composer require --working-dir=.runtime/secdev02-phpcs --no-interaction --no-progress --no-plugins --no-scripts 'squizlabs/php_codesniffer:4.0.4'
+      - name: Token-equivalent conservative bulk formatting
+        run: |
+          python3 tools/secdev02_lexer_bulk_wrap.py --self-test
+          python3 tools/secdev02_lexer_bulk_wrap.py --apply --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs
+          python3 tools/secdev02_assertion_wrap.py --self-test
+          python3 tools/secdev02_assertion_wrap.py --apply --phpcs .runtime/secdev02-phpcs/vendor/bin/phpcs
+          git diff --check
+          git diff --stat
+      - name: Check no regression and source contracts
+        run: |
+          python3 tests/secdev02-psr12-phpcs.py --base-ref origin/main
+          python3 tools/check.py
+      - name: Commit guarded candidates to existing PR branch
+        run: |
+          if [ -n "$(git status --porcelain -- component libraries plugins packages tests)" ]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add component libraries plugins packages tests
+            git commit -m 'style(SECDEV-02): token-equivalent PHPCS-validated bulk remediation'
+            git push origin HEAD:style/secdev02-final-122-core-api-consolidation
+          else
+            echo 'No further PHPCS-safe candidate accepted'
+          fi
