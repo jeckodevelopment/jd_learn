@@ -79,7 +79,8 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
             || $communication['processed'] >= $limit || $result['processed'] >= $limit
         );
         $this->logTask('Mail scheduler: batch_limit=' . $limit . '; at_limit=' . $atLimit
-            . '; skipped=' . $result['skipped'] . '; course expiry reminders: queued=' . $expiry['queued'] . '; failed=' . $expiry['failed']
+            . '; skipped=' . $result['skipped'] . '; course expiry reminders: queued=' . $expiry['queued']
+            . '; failed=' . $expiry['failed']
             . '; processed=' . $expiry['processed'] . '; lesson releases: queued=' . $lessons['queued']
                 . '; failed=' . $lessons['failed'] . '; processed=' . $lessons['processed']
                     . '; course version updates: queued=' . $updates['queued'] . '; failed='
