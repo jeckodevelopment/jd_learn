@@ -14,7 +14,6 @@ use Joomla\Component\Privacy\Administrator\Plugin\PrivacyPlugin;
 use Joomla\Component\Privacy\Administrator\Removal\Status;
 use Joomla\Event\SubscriberInterface;
 
-\defined('_JEXEC') or die;
 
 final class Jdlearn extends PrivacyPlugin implements SubscriberInterface
 {
