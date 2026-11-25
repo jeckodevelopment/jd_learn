@@ -15,13 +15,24 @@ final class CourseExpiryReminderService
     {
     }
 
+    /**
+     * Match the three-state course preference before applying the queue LIMIT.
+     * An explicit course opt-in must work even when the site default is off.
+     */
+    private static function eligiblePreferenceSql(bool $globallyEnabled): string
+    {
+        $preference = "JSON_UNQUOTE(JSON_EXTRACT(c.params_json, '$.mail_preferences.expiry'))";
+
+        return $globallyEnabled
+            ? '(' . $preference . " IS NULL OR " . $preference . " IN ('inherit', 'enabled'))"
+            : $preference . " = 'enabled'";
+    }
+
     /** @return array{queued:int,failed:int,processed:int} */
     public function enqueueDue(int $limit = 5000): array
     {
         $params = ComponentHelper::getParams('com_jlms');
-        if (!(bool) $params->get('mail_expiry_enabled', false)) {
-            return ['queued' => 0, 'failed' => 0, 'processed' => 0];
-        }
+        $globallyEnabled = (bool) $params->get('mail_expiry_enabled', false);
         $days = max(1, min(30, (int) $params->get('mail_expiry_days', 3)));
         $until = 'DATE_ADD(UTC_TIMESTAMP(6), INTERVAL ' . $days . ' DAY)';
         $query = $this->db->createQuery()->select('e.id AS enrollment_id, e.course_id, e.ends_at AS enrollment_ends_at,
@@ -36,9 +47,9 @@ final class CourseExpiryReminderService
             ->leftJoin("#__jlms_mail_queue AS existing ON existing.event_key = SHA2(CONCAT("
                 . "'course.expiring:', e.id, ':', COALESCE(e.ends_at, ed.ends_at)), 256)")
             ->where('existing.id IS NULL')
-            // Disabled course preferences must not consume the bounded batch.
-            ->where("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(c.params_json,"
-                . " '$.mail_preferences.expiry')), 'inherit') IN ('inherit','enabled')")
+            // Honor course opt-in even with a disabled global default; exclude
+            // ineligible rows before the bounded selection to prevent starvation.
+            ->where(self::eligiblePreferenceSql($globallyEnabled))
             ->where('u.block = 0')->where("e.status = 'active'")->where('e.completed_at IS NULL')
             ->where('(e.ends_at IS NOT NULL OR ed.ends_at IS NOT NULL)')
             ->where('COALESCE(e.ends_at, ed.ends_at) > UTC_TIMESTAMP(6)')
@@ -50,7 +61,7 @@ final class CourseExpiryReminderService
         $queued = 0;
         $failed = 0;
         foreach ($rows as $row) {
-            if (!MailPreferences::enabled('expiry', true, (string) $row->course_params)) {
+            if (!MailPreferences::enabled('expiry', $globallyEnabled, (string) $row->course_params)) {
                 continue;
             }
             $end = (string) ($row->enrollment_ends_at ?: $row->edition_ends_at);
