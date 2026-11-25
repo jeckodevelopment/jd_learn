@@ -147,8 +147,8 @@
       "label": "Registrazione ed esposizione dei tag in tutte le entità previste",
       "canonical_status": "unverifiable",
       "acceptance_class": "developer_work_pending",
-      "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Esercitare persistenza nativa tag corso/docente e chiarire dalla specifica le eventuali altre entità previste, prima di aggiungere contesti.",
+      "implementation_finding": "teacher_tags_fixed_pr1042",
+      "development_action": "PR #1042 corregge il mapping Content Types/UCM e l'import del plugin Joomla Taggable per persistenza reale dei tag docente/corso; la CI esercita salvataggio, ricaricamento, cancellazione e diniego ACL. Restano da dimostrare tutti i contesti previsti dal criterio.",
       "manual_action": "Provare aggiunta, cambio e rimozione tag nelle entità approvate con ACL.",
       "automated_evidence": [
         "tests/secdev02-core-native-contracts.py",
