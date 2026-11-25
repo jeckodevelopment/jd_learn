@@ -40,6 +40,25 @@ $canRequestApproval = $this->hasContentAccess && $this->canStartWindow
     && $course->enrollment_mode === 'approval';
 $isWindowClosed = $this->hasContentAccess && !$this->canStartWindow;
 $pendingLabel = Text::_('COM_JLMS_ENROLLMENT_MODE_PENDING');
+$coverImageSrc = '';
+if (!empty($presentation['image'])) {
+    $coverImageSrc = $this->escape(Uri::root() . implode(
+        '/',
+        array_map('rawurlencode', explode('/', $presentation['image']))
+    ));
+}
+$resumeUrl = '';
+$resumeLabel = '';
+if ($canResume) {
+    $resumeUrl = Route::_(
+        'index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $this->enrollmentState['id']
+    );
+    $resumeLabel = $this->enrollmentState['completed']
+        ? 'COM_JLMS_DASHBOARD_REVIEW'
+        : ($this->enrollmentState['learning_state'] === 'not_started'
+            ? 'COM_JLMS_COURSE_BEGIN'
+            : 'COM_JLMS_DASHBOARD_RESUME');
+}
 foreach ([1, 2, 3] as $position) {
     $fieldOutput[$position] =
         \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::render('com_jlms.course', 'fields.render', [
@@ -58,8 +77,8 @@ foreach ([1, 2, 3] as $position) {
             $fieldOutput[1] /* Prepared and rendered by native com_fields layouts. */ ?></div><?php
  endif; ?>
  <?php if (!empty($presentation['image'])) : ?>
- <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $this->escape(Uri::root() .
-    implode('/', array_map('rawurlencode', explode('/', $presentation['image'])))) ?>" alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
+ <div id="jlms-course-cover" class="jlms-course-cover"><img src="<?= $coverImageSrc ?>"
+    alt="<?= $this->escape($presentation['image_alt']) ?>" loading="lazy" decoding="async"></div>
  <?php endif; ?>
  <?php if (trim($fieldOutput[2]) !== '') :
         ?><div id="jlms-course-fields-before-content" class="jlms-course-fields"><?= $fieldOutput[2] ?></div><?php
@@ -93,7 +112,8 @@ foreach ([1, 2, 3] as $position) {
  <?php if (!empty($presentation['difficulty']) || !empty($presentation['estimated_minutes'])) : ?>
  <section id="jlms-course-facts"><h2><?= Text::_('COM_JLMS_COURSE_FACTS') ?></h2><dl>
         <?php if (!empty($presentation['difficulty'])) :
-            ?><dt><?= Text::_('COM_JLMS_COURSE_DIFFICULTY') ?></dt><dd id="jlms-course-difficulty"><?= Text::_($difficultyLabels[$presentation['difficulty']]) ?></dd><?php
+            ?><dt><?= Text::_('COM_JLMS_COURSE_DIFFICULTY') ?></dt>
+            <dd id="jlms-course-difficulty"><?= Text::_($difficultyLabels[$presentation['difficulty']]) ?></dd><?php
         endif; ?>
         <?php if (!empty($presentation['estimated_minutes'])) :
             ?><dt><?=
@@ -109,7 +129,7 @@ foreach ([1, 2, 3] as $position) {
     (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
                                                               <?php elseif ($this->enrollmentState !== null) : ?>
                                                                   <?php if ($canResume) : ?>
-   <a id="jlms-course-resume" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $this->enrollmentState['id']) ?>"><?= Text::_($this->enrollmentState['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : ($this->enrollmentState['learning_state'] === 'not_started' ? 'COM_JLMS_COURSE_BEGIN' : 'COM_JLMS_DASHBOARD_RESUME')) ?></a>
+   <a id="jlms-course-resume" class="btn btn-primary" href="<?= $resumeUrl ?>"><?= Text::_($resumeLabel) ?></a>
                                                                   <?php else :
                                                                         ?>
 <p id="jlms-course-existing-unavailable"><?= Text::_('COM_JLMS_COURSE_EXISTING_UNAVAILABLE') ?></p><?php
@@ -125,7 +145,8 @@ foreach ([1, 2, 3] as $position) {
     name="jform[course_announcement_consent]"
     value="1"> <?= Text::_('COM_JLMS_MAIL_CONSENT_ENROLLMENT_CHECKBOX') ?></label>
                                                                   <?php // New enrollment uses a distinct action label. ?>
-                                                                  <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
+                                                                  <?= HTMLHelper::_('form.token') ?>
+   <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
   </form>
                                                               <?php elseif ($canRequestApproval) : ?>
   <form id="jlms-enrollment-request-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
