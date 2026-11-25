@@ -155,20 +155,31 @@ foreach (['en-GB' => 'teacher-field-en', 'it-IT' => 'teacher-field-it'] as $tag 
 }
 $app->getInput()->set('id', $public);
 $teacherSiteModel = $factory->createModel('Teacher', 'Site', ['ignore_request' => true]);
-$originalLanguage = $app->getLanguage();
+$translatedProfile = $teacherSiteModel->getProfile();
+$fieldNames = array_map(static fn (object $field): string => (string) $field->name, $translatedProfile->fields);
+teacherExpect(
+    in_array('teacher-field-en', $fieldNames, true)
+    && !in_array('teacher-field-it', $fieldNames, true),
+    'Native Joomla teacher model hides Italian-only fields in English'
+);
+// The disposable Joomla installation has no Italian language files. Prove
+// both branches of the exact production filter without replacing the site's
+// Language instance with an unavailable locale (getTag() would be null).
+$fixtureFields = [
+    (object) ['name' => 'teacher-field-en', 'language' => 'en-GB'],
+    (object) ['name' => 'teacher-field-it', 'language' => 'it-IT'],
+    (object) ['name' => 'teacher-field-neutral', 'language' => '*'],
+];
 foreach (['en-GB' => 'teacher-field-en', 'it-IT' => 'teacher-field-it'] as $tag => $expected) {
-    $app->loadLanguage(
-        $container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage($tag, false)
-    );
-    $translatedProfile = $teacherSiteModel->getProfile();
-    $fieldNames = array_map(static fn (object $field): string => (string) $field->name, $translatedProfile->fields);
+    $filtered = \Jlms\Component\Jlms\Site\Model\TeacherModel::filterPublicFields($fixtureFields, $tag);
+    $names = array_map(static fn (object $field): string => (string) $field->name, $filtered);
     teacherExpect(
-        in_array($expected, $fieldNames, true)
-        && !in_array($tag === 'en-GB' ? 'teacher-field-it' : 'teacher-field-en', $fieldNames, true),
-        'Native teacher fields honor active language while teacher language is neutral'
+        in_array($expected, $names, true)
+        && in_array('teacher-field-neutral', $names, true)
+        && !in_array($tag === 'en-GB' ? 'teacher-field-it' : 'teacher-field-en', $names, true),
+        'Public teacher custom fields are constrained to the effective locale'
     );
 }
-$app->loadLanguage($originalLanguage);
 $app->getInput()->set('id', 0);
 // CORE-11: a trusted content plugin may modify a public teacher biography
 // but may not bypass the final allowlist.
