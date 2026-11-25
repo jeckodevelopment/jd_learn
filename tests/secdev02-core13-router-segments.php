@@ -58,10 +58,12 @@ namespace {
         }
     }
     // Build the three simple numeric child routes: names and IDs round-trip.
-    foreach ([
-        'getTeacherSegment', 'getTeachereditSegment',
-        'getClassroomSegment', 'getQuizSegment',
-    ] as $method) {
+    foreach (
+        [
+            'getTeacherSegment', 'getTeachereditSegment',
+            'getClassroomSegment', 'getQuizSegment',
+        ] as $method
+    ) {
         $segment = $router->{$method}(42, []);
         if ($segment !== [42 => '42']) {
             throw new \RuntimeException($method . ': native numeric segment changed');
