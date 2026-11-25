@@ -214,8 +214,8 @@ if (
 // Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db
     ->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
-require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
-(new \Com_JlmsInstallerScript())->postflight('update', null);
+$jdLearnInstaller = require JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
+$jdLearnInstaller->postflight('update', null);
 $defaultCertificateTemplate = $db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_templates')
     ->where('title = :title')->where('state = 1');
 $defaultCertificateTitle = 'JD Learn — Attestato standard';
@@ -775,6 +775,25 @@ if (
 $db->setQuery("DELETE FROM #__jlms_mail_queue WHERE event_key=" . $db->quote($otherPrivacyMailKey))->execute();
 
 $component = $app->bootComponent('com_jlms');
+
+/* SECDEV-02: the PSR-12 refactor must preserve the native Joomla Table ACL hooks. */
+foreach (['Course', 'Question', 'Teacher', 'Pathway'] as $tableName) {
+    $tableClass = 'Jlms\\Component\\Jlms\\Administrator\\Table\\' . $tableName . 'Table';
+    $nativeTable = new $tableClass($db);
+    foreach (['_getAssetName', '_getAssetTitle', '_getAssetParentId'] as $hook) {
+        $method = new \ReflectionMethod($nativeTable, $hook);
+        if (!$method->isProtected()) {
+            throw new \RuntimeException('Native Joomla Table ACL hook lost protected visibility.');
+        }
+    }
+    if ($tableName !== 'Pathway') {
+        $nullable = new \ReflectionProperty($nativeTable, '_supportNullValue');
+        if ($nullable->getValue($nativeTable) !== true) {
+            throw new \RuntimeException('Native Joomla Table nullable-column contract changed.');
+        }
+    }
+}
+
 $mailConsent = $component->getCourseAnnouncementConsent();
 $db->setQuery('DELETE FROM #__jlms_mail_consents WHERE user_id=' . (int) $userId)->execute();
 $db->setQuery(('INSERT INTO #__jlms_mail_consents '

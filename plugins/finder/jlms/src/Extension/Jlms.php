@@ -12,8 +12,6 @@ use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\QueryInterface;
 use Joomla\Event\SubscriberInterface;
 
-defined('_JEXEC') or die;
-
 final class Jlms extends Adapter implements SubscriberInterface
 {
     use DatabaseAwareTrait;

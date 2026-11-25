@@ -11,10 +11,17 @@ use Joomla\Database\ParameterType;
 
 final class TeacherTable extends Table
 {
-    protected $_supportNullValue = true;
+    use TeacherTableAssetMethods {
+        assetName as protected _getAssetName;
+        assetTitle as protected _getAssetTitle;
+        assetParentId as protected _getAssetParentId;
+    }
+
     public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__jlms_teachers', 'id', $db);
+        // Retain Joomla Table's inherited nullable-column flag without redeclaring it.
+        $this->_supportNullValue = true;
         $this->setColumnAlias('published', 'state');
     }
 
@@ -89,20 +96,5 @@ final class TeacherTable extends Table
         } finally {
             $this->_trackAssets = $tracking;
         }
-    }
-    protected function _getAssetName()
-    {
-        return 'com_jlms.teacher.' . (int) $this->id;
-    }
-    protected function _getAssetTitle()
-    {
-        return $this->title;
-    }
-    protected function _getAssetParentId(?Table $table = null, $id = null)
-    {
-        $catid = (int) $this->catid;
-        $q = $this->getDatabase()->createQuery()->select('asset_id')->from('#__categories')->where('id=:id')
-            ->bind(':id', $catid, ParameterType::INTEGER);
-        return (int) $this->getDatabase()->setQuery($q)->loadResult() ?: parent::_getAssetParentId($table, $id);
     }
 }

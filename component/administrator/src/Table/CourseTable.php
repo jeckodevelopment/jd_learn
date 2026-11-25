@@ -14,6 +14,12 @@ use Joomla\CMS\Tag\TaggableTableTrait;
 
 final class CourseTable extends Table implements TaggableTableInterface
 {
+    use CourseTableAssetMethods {
+        assetName as protected _getAssetName;
+        assetTitle as protected _getAssetTitle;
+        assetParentId as protected _getAssetParentId;
+    }
+
     use TaggableTableTrait;
 
     public $typeAlias = 'com_jlms.course';
@@ -23,7 +29,6 @@ final class CourseTable extends Table implements TaggableTableInterface
         return $this->typeAlias;
     }
 
-    protected $_supportNullValue = true;
     protected bool $stableAssetRequired = false;
     private int $preparedAsset = 0;
 
@@ -42,6 +47,8 @@ final class CourseTable extends Table implements TaggableTableInterface
     public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__jlms_courses', 'id', $db);
+        // Retain Joomla Table's inherited nullable-column flag without redeclaring it.
+        $this->_supportNullValue = true;
         $this->setColumnAlias('published', 'state');
     }
 
@@ -163,25 +170,5 @@ final class CourseTable extends Table implements TaggableTableInterface
         } finally {
             $this->_trackAssets = $tracking;
         }
-    }
-
-    protected function _getAssetName()
-    {
-        return 'com_jlms.course.' . (int) $this->id;
-    }
-
-    protected function _getAssetTitle()
-    {
-        return $this->title;
-    }
-
-    protected function _getAssetParentId(?Table $table = null, $id = null)
-    {
-        $db = $this->getDatabase();
-        $catid = (int) $this->catid;
-        $q = $db->createQuery()->select($db->quoteName('asset_id'))->from($db->quoteName('#__categories'))
-            ->where($db->quoteName('id') . ' = :id')->bind(':id', $catid, ParameterType::INTEGER);
-        $assetId = (int) $db->setQuery($q)->loadResult();
-        return $assetId ?: parent::_getAssetParentId($table, $id);
     }
 }

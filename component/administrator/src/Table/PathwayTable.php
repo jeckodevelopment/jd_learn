@@ -11,6 +11,12 @@ use Joomla\Database\ParameterType;
 
 final class PathwayTable extends Table
 {
+    use PathwayTableAssetMethods {
+        assetName as protected _getAssetName;
+        assetTitle as protected _getAssetTitle;
+        assetParentId as protected _getAssetParentId;
+    }
+
     private int $preparedAsset = 0;
 
     public function __construct(DatabaseInterface $db)
@@ -124,23 +130,5 @@ final class PathwayTable extends Table
         } finally {
             $this->_trackAssets = $tracking;
         }
-    }
-
-    protected function _getAssetName()
-    {
-        return 'com_jlms.pathway.' . (int) $this->id;
-    }
-
-    protected function _getAssetTitle()
-    {
-        return (string) $this->title;
-    }
-
-    protected function _getAssetParentId(?Table $table = null, $id = null)
-    {
-        $categoryId = (int) $this->catid;
-        $query = $this->getDatabase()->createQuery()->select('asset_id')->from('#__categories')
-            ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
-        return (int) $this->getDatabase()->setQuery($query)->loadResult() ?: parent::_getAssetParentId($table, $id);
     }
 }

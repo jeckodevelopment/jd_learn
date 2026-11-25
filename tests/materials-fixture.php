@@ -15,7 +15,8 @@ if (($argv[2] ?? '') !== 'retained') {
         \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION]);
     $fixtureDb->exec("UPDATE joomla_extensions SET enabled=1 WHERE type='plugin' AND folder='jlmsvideo'");
     $fixtureDb->exec(("UPDATE joomla_extensions SET "
-        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) WHERE type='plugin' AND folder='user' AND element='joomla'"));
+        . "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.mail_to_user',0) "
+        . "WHERE type='plugin' AND folder='user' AND element='joomla'"));
     unset($fixtureDb);
 }
 

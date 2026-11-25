@@ -34,7 +34,8 @@ if (!in_array($argv[2] ?? "", ["retained", "worker"], true)) {
     );
     $fixtureDb->exec(
         "UPDATE joomla_extensions SET " .
-            "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') WHERE type='component' AND element='com_jlms'",
+            "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.video_external_policy','embed') " .
+            "WHERE type='component' AND element='com_jlms'",
     );
     unset($fixtureDb);
 }
