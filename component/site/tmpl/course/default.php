@@ -12,6 +12,22 @@ use Jlms\Component\Jlms\Administrator\Domain\TeachingRules;
 $course = $this->item['course'];
 $presentation = $this->item['presentation'] ?? [];
 $fieldOutput = [];
+$presentationSections = [
+    'objectives' => 'COM_JLMS_COURSE_OBJECTIVES',
+    'audience' => 'COM_JLMS_COURSE_AUDIENCE',
+    'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT',
+];
+$difficultyLabels = [
+    'beginner' => 'COM_JLMS_COURSE_BEGINNER',
+    'intermediate' => 'COM_JLMS_COURSE_INTERMEDIATE',
+    'advanced' => 'COM_JLMS_COURSE_ADVANCED',
+];
+$calendarLabels = [
+    'publish_up' => 'COM_JLMS_CALENDAR_PUBLISH_UP',
+    'publish_down' => 'COM_JLMS_CALENDAR_PUBLISH_DOWN',
+    'starts_at' => 'COM_JLMS_CALENDAR_START',
+    'ends_at' => 'COM_JLMS_CALENDAR_END',
+];
 foreach ([1, 2, 3] as $position) {
     $fieldOutput[$position] =
         \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::render('com_jlms.course', 'fields.render', [
@@ -49,7 +65,7 @@ foreach ([1, 2, 3] as $position) {
      Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?=
      $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
  <?php endif; ?>
- <?php foreach (['objectives' => 'COM_JLMS_COURSE_OBJECTIVES', 'audience' => 'COM_JLMS_COURSE_AUDIENCE', 'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT'] as $field => $label) : ?>
+ <?php foreach ($presentationSections as $field => $label) : ?>
         <?php if (!empty($presentation[$field])) : ?>
  <section id="jlms-course-<?=
      str_replace('_', '-', $field) ?>" class="jlms-course-presentation-section"><h2><?=
@@ -65,7 +81,7 @@ foreach ([1, 2, 3] as $position) {
  <?php if (!empty($presentation['difficulty']) || !empty($presentation['estimated_minutes'])) : ?>
  <section id="jlms-course-facts"><h2><?= Text::_('COM_JLMS_COURSE_FACTS') ?></h2><dl>
         <?php if (!empty($presentation['difficulty'])) :
-            ?><dt><?= Text::_('COM_JLMS_COURSE_DIFFICULTY') ?></dt><dd id="jlms-course-difficulty"><?= Text::_(['beginner' => 'COM_JLMS_COURSE_BEGINNER', 'intermediate' => 'COM_JLMS_COURSE_INTERMEDIATE', 'advanced' => 'COM_JLMS_COURSE_ADVANCED'][$presentation['difficulty']]) ?></dd><?php
+            ?><dt><?= Text::_('COM_JLMS_COURSE_DIFFICULTY') ?></dt><dd id="jlms-course-difficulty"><?= Text::_($difficultyLabels[$presentation['difficulty']]) ?></dd><?php
         endif; ?>
         <?php if (!empty($presentation['estimated_minutes'])) :
             ?><dt><?=
@@ -139,7 +155,7 @@ foreach ([1, 2, 3] as $position) {
      Text::_('COM_JLMS_CALENDAR') ?></h2><p><?=
      Text::_('COM_JLMS_CALENDAR_ZONE') ?>: <?=
      $this->escape($calendar['timezone']) ?></p><dl>
-        <?php foreach (['publish_up' => 'COM_JLMS_CALENDAR_PUBLISH_UP','publish_down' => 'COM_JLMS_CALENDAR_PUBLISH_DOWN','starts_at' => 'COM_JLMS_CALENDAR_START','ends_at' => 'COM_JLMS_CALENDAR_END'] as $key => $label) :
+        <?php foreach ($calendarLabels as $key => $label) :
             if ($calendar[$key] === null) {
                 continue;
             } ?>
