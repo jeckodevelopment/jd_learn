@@ -93,7 +93,8 @@
       "manual_action": "Collaudare override su template e viewport desktop/mobile.",
       "automated_evidence": [
         "tests/frontend-css-contract.py",
-        "tests/frontend-dom-runtime.py"
+        "tests/frontend-dom-runtime.py",
+        "tests/secdev02-core05-layout-inventory.py"
       ]
     },
     {
@@ -289,7 +290,8 @@
       "manual_action": "Provare tutte le azioni dell'amministrazione in più ruoli e browser.",
       "automated_evidence": [
         "tests/joomla-courses-ui.php",
-        "tests/joomla-teachers.php"
+        "tests/joomla-teachers.php",
+        "tests/secdev02-core05-layout-inventory.py"
       ]
     },
     {
