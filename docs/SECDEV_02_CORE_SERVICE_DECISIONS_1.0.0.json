@@ -161,7 +161,8 @@
         ],
         "existing_automated_evidence": [
           "tests/secdev02-core06-locale-integrity.py",
-          "tests/secdev02-core-native-contracts.py"
+          "tests/secdev02-core-native-contracts.py",
+          "tests/secdev02-core06-runtime-keys.py"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
