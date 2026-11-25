@@ -3067,3 +3067,14 @@ Le **17 attività tecniche** classificate `developer_work_pending` non sono coll
 6. **CORE-23:** plugin provider/eventi terzi realmente installati, compatibilità payload minimo, casi di errore e isolamento.
 
 Per ogni caso registrare data, versione Joomla, ambiente, configurazione anonimizzata, passi, risultato atteso/effettivo e ID eventuale issue. Il superamento della CI sul repository **non marca queste prove come eseguite**.
+
+### SECDEV-02 / CORE-05, CORE-13, CORE-19, CORE-21 — collaudi dopo lotto tecnico
+
+**Stato: NON ESEGUITO.** Verifiche di sviluppo/CI del lotto distinte dalla presente accettazione.
+
+1. **Scheduler:** impostare `jlms.mail.dispatch` con limiti 1, 25 e 100, predisporre più batch di promemoria, uscite lezioni, cambi versione, richieste responsabili e comunicazioni; verificare che ciascuna fase rispetti il limite, non duplichi le notifiche e riprenda al run successivo. Provare limiti estremi e retry. Nessuna consegna SMTP reale è affermata dai test CI.
+2. **Revoca consenso:** aprire da guest un link bearer di revoca valido e verificare che la pagina sia raggiungibile; rifiutare token non valido e GET con azione; revocare solo dopo POST con token Joomla. Verificare intestazioni `Cache-Control: private, no-store`, `X-Robots-Tag: noindex, nofollow`, `Referrer-Policy: no-referrer` e assenza di token nei log e nei Referer di terze parti.
+3. **Override:** installare override delle 17 viste frontend e delle 29 amministrative in template Joomla di prova, dove pertinente, inclusi `edit.php` per corso/percorso/docente; controllare mobile/desktop, toolbar, menu, ACL, testi lunghi e script WAM. Eventuali differenze con i 46 punti d'ingresso nativi vanno documentate.
+4. **Sessioni:** ripetere la pagina bearer con guest e due account distinti, cache browser/proxy e query-string alterate; nessun dato del primo utente deve comparire al secondo.
+
+Registrare sempre ambiente, versioni, passi e risultati separatamente dalla CI. Non pubblicare token di consenso o altri dati personali in issue/PR/log.
