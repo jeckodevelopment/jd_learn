@@ -131,5 +131,4 @@ final class PathwayTable extends Table
             $this->_trackAssets = $tracking;
         }
     }
-
 }
