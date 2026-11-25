@@ -164,6 +164,19 @@ editorExpect(EditorAccess::canCreate(
     $user,
     $categories['other']
 ), 'Create scope remains category specific');
+$asset->loadByName('com_jlms.course.category.' . $categories['trash']);
+$trashRules = json_decode($asset->rules, true);
+$trashRules['core.create'][(string)$group] = true;
+$asset->rules = json_encode($trashRules, JSON_THROW_ON_ERROR);
+$asset->store();
+$user = EditorAccess::fresh($user);
+editorExpect(
+    !$user->authorise('core.create', 'com_jlms')
+    && $user->authorise('core.create', 'com_jlms.course.category.' . $categories['trash'])
+    && !EditorAccess::canCreate($db, $user, $categories['trash']),
+    'native category ACL alone cannot enable creating in a trashed category'
+);
+
 $model = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
 $base = ['id' => 0,'revision' => 1,'title' => '','alias' => '','catid' => 0,'language' => '*',
     'catalog_access' => 1,'content_access' => 2,'enrollment_mode' => 'auto','presentation_description' =>
