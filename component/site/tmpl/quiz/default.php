@@ -33,10 +33,7 @@ $open = $attempt && $attempt['state'] === 'open';
  <noscript><p><?= Text::_('COM_JLMS_QUIZ_JS_REQUIRED') ?></p></noscript>
  <?php if ($attempt && !$open) : ?>
  <section id="jlms-quiz-result"><h2><?= Text::_('COM_JLMS_QUIZ_RESULT') ?></h2>
-<p><?= Text::_($attempt['state'] === 'invalidated' ? 'COM_JLMS_QUIZ_CANCELLED' :
-        ($attempt['passed'] ? 'COM_JLMS_QUIZ_PASSED' :
-        'COM_JLMS_QUIZ_FAILED')) ?>: <?= $attempt['score_points'] === null ? '—' :
-        (int)$attempt['score_points'] ?>/<?= (int)$attempt['max_points'] ?></p>
+<p><?= Text::_($attempt['state'] === 'invalidated' ? 'COM_JLMS_QUIZ_CANCELLED' : ($attempt['passed'] ? 'COM_JLMS_QUIZ_PASSED' : 'COM_JLMS_QUIZ_FAILED')) ?>: <?= $attempt['score_points'] === null ? '—' : (int)$attempt['score_points'] ?>/<?= (int)$attempt['max_points'] ?></p>
         <?php if ($attempt['state'] === 'invalidated') :
             ?><p id="jlms-quiz-invalidated"><?= Text::_('COM_JLMS_QUIZ_CANCELLED_NOTICE') ?></p><?php
         endif; ?>
@@ -89,8 +86,7 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
     type="button"><?= Text::_('COM_JLMS_QUIZ_START') ?></button>
  <?php elseif (!empty($i['start_window_insufficient'])) : ?>
  <p id="jlms-quiz-window-insufficient"
- role="status"><?= Text::sprintf('COM_JLMS_QUIZ_WINDOW_INSUFFICIENT', (int)$i['next_time_seconds'],
-        (int)$i['remaining_window_seconds']) ?></p>
+ role="status"><?= Text::sprintf('COM_JLMS_QUIZ_WINDOW_INSUFFICIENT', (int)$i['next_time_seconds'], (int)$i['remaining_window_seconds']) ?></p>
  <?php else :
         ?><p><?= Text::_('COM_JLMS_QUIZ_UNAVAILABLE') ?></p><?php
  endif; ?>
