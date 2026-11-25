@@ -3051,3 +3051,19 @@ credenziali, token, identificativi personali o payload sensibili.
 
 Conservare solo riferimenti anonimizzati a utenti, sessioni, categorie e
 scadenze di prova; non inserire email reali, token o dati personali nei log.
+
+### SECDEV-02 / riconciliazione 23 criteri CORE — accettazione esterna
+
+**Stato: NON ESEGUITO.** La matrice di dettaglio è in `docs/SECDEV_02_CORE_RESIDUAL_RECONCILIATION_2026-11-25.md`.
+Le **17 attività tecniche** classificate `developer_work_pending` non sono collaudi da demandare all'utente: sono sviluppo, ampliamento di test CI e risoluzione degli eventuali difetti scoperti.
+
+**Sei prove ambientali da registrare separatamente:**
+
+1. **CORE-02:** autenticazione Joomla con MFA, recupero account, sospensione e provider configurato; ruoli/permessi effettivi senza account paralleli.
+2. **CORE-08:** esportazione, rimozione e retention per tutte le categorie di dati secondo policy del titolare; anonimizzare le prove.
+3. **CORE-12:** sorgenti video/provider supportati, file media pubblici e consegna protetta risorse private; nessuna esposizione a utenti non autorizzati.
+4. **CORE-18:** SMTP con template IT/EN, opt-in corso a globale OFF, opt-out corso a globale ON, retry e deduplicazione e-mail; nessun doppio invio.
+5. **CORE-22:** feed update server, aggiornamento del pacchetto e ripristino dati su un ambiente omologo all'hosting di destinazione.
+6. **CORE-23:** plugin provider/eventi terzi realmente installati, compatibilità payload minimo, casi di errore e isolamento.
+
+Per ogni caso registrare data, versione Joomla, ambiente, configurazione anonimizzata, passi, risultato atteso/effettivo e ID eventuale issue. Il superamento della CI sul repository **non marca queste prove come eseguite**.
