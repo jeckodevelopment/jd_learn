@@ -741,14 +741,54 @@ $db->setQuery("UPDATE #__jlms_mail_queue SET state='sent' WHERE event_key=" . $d
 $db->setQuery($db->createQuery()->update('#__jlms_mail_queue')
     ->set('last_error = ' . $db->quote('ci-privacy-diagnostic-placeholder'))
     ->where('event_key = ' . $db->quote($privacyMailId)))->execute();
+// CORE-08: deleting an account must preserve unrelated editors and authors.
+$privacyActorTemplateIds = [];
+foreach ([[$otherPrivacyUserId, $privacyUserId], [$privacyUserId, $otherPrivacyUserId]] as $actorPair) {
+    [$createdBy, $modifiedBy] = $actorPair;
+    $templateFixtureHash = hash('sha256', 'ci-privacy-actors-' . $privacyUserId . '-' . $createdBy);
+    $db->setQuery($db->createQuery()->insert('#__jlms_certificate_templates')
+        ->columns(['title', 'version_no', 'template_json', 'hash', 'state',
+            'created_by', 'created_at', 'modified_by', 'modified_at'])
+        ->values(implode(',', [
+            $db->quote('CI privacy attribution ' . $templateFixtureHash), '1', $db->quote('{}'),
+            $db->quote($templateFixtureHash), '0', $createdBy, 'UTC_TIMESTAMP(6)',
+            $modifiedBy, 'UTC_TIMESTAMP(6)'
+        ])))->execute();
+    $privacyActorTemplateIds[] = (int) $db->insertid();
+}
+$db->setQuery($db->createQuery()->update('#__jlms_mail_queue')
+    ->set('reconciliation_by = ' . $otherPrivacyUserId)
+    ->where('event_key = ' . $db->quote($privacyMailId)))->execute();
 $privacyRemoval = new RemoveDataEvent('onPrivacyRemoveData', ['subject' => $privacyRequest, 'user' => $privacyUser]);
 $privacyPlugin->onPrivacyRemoveData($privacyRemoval);
+foreach ($privacyActorTemplateIds as $index => $templateId) {
+    $actors = $db->setQuery($db->createQuery()
+        ->select(['created_by', 'modified_by'])
+        ->from('#__jlms_certificate_templates')
+        ->where('id = ' . $templateId))->loadObject();
+    if (
+        !$actors
+        || (
+            $index === 0
+            && ((int) $actors->created_by !== $otherPrivacyUserId || $actors->modified_by !== null)
+        )
+        || (
+            $index === 1
+            && ($actors->created_by !== null || (int) $actors->modified_by !== $otherPrivacyUserId)
+        )
+    ) {
+        throw new \RuntimeException('Privacy erasure removed an unrelated editorial actor.');
+    }
+    $db->setQuery($db->createQuery()->delete('#__jlms_certificate_templates')
+        ->where('id = ' . $templateId))->execute();
+}
 $sanitizedMail = $db->setQuery(("SELECT recipient_user_id,recipient_email,recipient_name,template_" .
-    "data,last_error FROM #__jlms_mail_queue WHERE event_key=") . $db->quote($privacyMailId))->loadObject();
+    "data,last_error,reconciliation_by FROM #__jlms_mail_queue WHERE event_key=") . $db->quote($privacyMailId))
+    ->loadObject();
 if (
     !$sanitizedMail || $sanitizedMail->recipient_user_id !== null || $sanitizedMail->recipient_email !== ''
     || $sanitizedMail->recipient_name !== '' || $sanitizedMail->template_data !== '{}' || $sanitizedMail
-    ->last_error !== null
+    ->last_error !== null || (int) $sanitizedMail->reconciliation_by !== $otherPrivacyUserId
 ) {
     throw new \RuntimeException('Privacy removal did not redact completed mail queue evidence.');
 }

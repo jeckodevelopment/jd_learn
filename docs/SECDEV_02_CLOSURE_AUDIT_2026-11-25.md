@@ -151,3 +151,28 @@ Il nuovo manifesto `tests/secdev02-core21-task-matrix.py` viene validato confron
 Il test HTTP Joomla `tests/dashboard-http.py` esegue automaticamente **tutte le route manifestate** con cookie separati per titolare iscrizione, secondo studente senza iscrizioni e visitatore anonimo. Usa solo metodi non consentiti, POST senza CSRF o link volutamente non valido, non muta consensi o progressi, e legge anche i redirect immediati **senza seguire il cambio pagina**: in questo modo controlla l'header `Cache-Control: no-store` della risposta originale, invece che quello di una pagina finale differente. Per le viste personali verifica anche `X-Robots-Tag: noindex` e l'assenza di contenuti didattici privati nelle risposte di account differenti. Il test esistente continua a verificare sessione, revoca, paginazione e avvio lezioni con due modalità SEF. È una **prova automatica significativa**, non una certificazione di reverse proxy/CDN o sessioni su hosting diverso.
 
 **Gate di promozione:** solo dopo la CI integrale verde e dopo la verifica che il manifesto corrisponda a ogni endpoint pubblicato valutare `CORE-21/private_cache` come implementato dal punto di vista del codice. Il collaudo della cache gestita dal provider e l'accettazione release restano a parte. Non anticipare percentuali prima degli esiti.
+
+
+## CORE-08 — correzione implementativa Privacy con utenti multipli (25/11/2026)
+
+**Difetto rilevato:** l'anonimizzazione di un account azzerava anche `created_by` e `modified_by`
+appartenenti a un altro account quando uno solo dei due campi corrispondeva al soggetto.
+La richiesta di iscrizione poteva perdere il richiedente e la motivazione quando l'account
+rimosso era soltanto il revisore; la coda mail perdeva l'attribuzione di un altro operatore
+di riconciliazione.
+
+**Correzione nel codice:** aggiornamenti indipendenti per autore, modificatore,
+richiedente e revisore; redazione del motivo solo per il richiedente; mantenimento
+dell'attribuzione a operatori terzi nella coda mail. Nessuna nuova tabella e nessuna
+modifica al core Joomla.
+
+**Prove implementative:** `tests/joomla-smoke.php` con due account distinti e
+attribuzioni editoriali incrociate, più gate di regressione `tests/sec-p2-p3-guard.py`.
+I test e le matrici CI devono essere eseguiti sull'HEAD della PR.
+
+**Collaudi manuali separati:** in un'installazione reale verificare la privacy su due
+account, le richieste di iscrizione, la conservazione dei dati e le attribuzioni;
+non considerarli eseguiti per effetto del merge.
+
+La correzione è un lotto concreto di sviluppo CORE-08; **non** equivale alla
+chiusura implementativa di tutti i 23 criteri o al collaudo SECDEV-02.
