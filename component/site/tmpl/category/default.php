@@ -129,7 +129,7 @@ value="<?= (int) $this->category->id ?>">
     <p class="jlms-course-card__summary"><?=
         $this->escape(\Joomla\String\StringHelper::substr((string) $item->summary, 0, 300)) ?></p>
    </article>
-                                                             <?php endforeach; ?></div>
+                <?php endforeach; ?></div>
         <?php if (!$this->items) :
             ?><p id="jlms-category-courses-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p>
             <?php if ($this->showFilters && $hasActiveCategoryFilters) : ?>
