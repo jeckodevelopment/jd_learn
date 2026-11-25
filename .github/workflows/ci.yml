@@ -84,6 +84,8 @@ jobs:
           python3 tests/secdev02-core-ledger.py
           python3 tests/secdev02-core-ci-wiring.py --self-test
           python3 tests/secdev02-core-ci-wiring.py
+          python3 tests/secdev02-core-residual-split.py --self-test
+          python3 tests/secdev02-core-residual-split.py
           python3 tests/secdev02-core19-expiry-reminders.py --self-test
           python3 tests/secdev02-core19-expiry-reminders.py
           python3 tests/secdev02-core-native-contracts.py --self-test
