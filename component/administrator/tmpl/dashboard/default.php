@@ -51,11 +51,12 @@ $schedulerHealthKeys = [
                 <ul>
                     <?php foreach ($shortcuts as $shortcut) :
     $shortcutId = $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key'])));
+    $shortcutIconClass = $this->escape($shortcut['icon']);
     ?>
                         <li>
                             <a id="jlms-admin-shortcut-<?= $shortcutId ?>" class="jlms-admin-dashboard__shortcut"
                                 href="<?= $shortcut['url'] ?>">
-                                <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>"
+                                <span class="jlms-admin-dashboard__shortcut-icon <?= $shortcutIconClass ?>"
                                     aria-hidden="true"></span>
                                 <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
                             </a>
