@@ -1,7 +1,7 @@
 <?php
 
 /**
- * SECDEV-02 full distributed-PHP Joomla API inventory on target Joomla 6.2.0.
+ * SECDEV-02 full distributed-PHP Joomla API inventory on target Joomla 6.2.1.
  *
  * This validates every statically named Joomla class and Class::method()
  * reference visible in PHP tokens. Dynamic instance calls need flow-sensitive
@@ -107,8 +107,8 @@ $app->createExtensionNamespaceMap();
 
 $version = (new \Joomla\CMS\Version())->getShortVersion();
 
-if ($version !== '6.2.0') {
-    throw new RuntimeException('Joomla patch target differs from pinned 6.2.0');
+if ($version !== '6.2.1') {
+    throw new RuntimeException('Joomla patch target differs from pinned 6.2.1');
 }
 
 $paths = [];
