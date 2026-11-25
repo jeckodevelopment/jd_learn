@@ -11,7 +11,8 @@ final class PublicationReadiness
      * @param list<object> $modules
      * @param list<object> $lessons
      * @param list<object> $attachments
-     * @param array<int,array{configured:bool,trackable:bool}> $providerChecks Local provider capability results keyed by lesson ID.
+     * @param array<int,array{configured:bool,trackable:bool}> $providerChecks
+     *     Local provider capability results keyed by lesson ID.
      * @return array{blockers:list<string>,warnings:list<string>}
      */
     public static function inspect(
