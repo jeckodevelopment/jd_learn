@@ -18,7 +18,15 @@ SOURCE = "docs/SECDEV_02_CORE_RESIDUAL_CLASSIFICATION_2026-11-25.json"
 CANONICAL = "docs/FUNCTIONAL_CRITERIA_1.0.0.json"
 LEDGER = "docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json"
 CLASSIFICATIONS = {"developer_work_pending", "site_external_only"}
-IMPLEMENTATION = {"no_additional_defect_confirmed", "expiry_override_fixed_this_pr"}
+IMPLEMENTATION = {
+    "no_additional_defect_confirmed",
+    "expiry_override_fixed_this_pr",
+    "teacher_tags_fixed_pr1042",
+}
+FIXED_SCOPE = {
+    "expiry_override_fixed_this_pr": {"CORE-18/smtp", "CORE-19/idempotent_tasks"},
+    "teacher_tags_fixed_pr1042": {"CORE-09/tags_context"},
+}
 
 
 def inspect(register: dict, ledger: dict, plan: dict) -> tuple[list[str], dict]:
@@ -86,8 +94,8 @@ def inspect(register: dict, ledger: dict, plan: dict) -> tuple[list[str], dict]:
         finding = entry.get("implementation_finding")
         if finding not in IMPLEMENTATION:
             failures.append(f"{key}: unsupported implementation conclusion")
-        if finding == "expiry_override_fixed_this_pr":
-            if key not in {"CORE-18/smtp", "CORE-19/idempotent_tasks"}:
+        if finding in FIXED_SCOPE:
+            if key not in FIXED_SCOPE[finding]:
                 failures.append(f"{key}: fix is assigned to unrelated criterion")
             summary["targeted_code_fix"] += 1
         for field in ("development_action", "manual_action"):
@@ -133,6 +141,9 @@ def self_test() -> None:
     assert any("canonical verification status" in x for x in inspect(register, ledger, plan)[0])
     register, ledger, plan = deepcopy(original)
     plan["criteria"][0]["implementation_finding"] = "expiry_override_fixed_this_pr"
+    assert any("unrelated" in x for x in inspect(register, ledger, plan)[0])
+    register, ledger, plan = deepcopy(original)
+    plan["criteria"][0]["implementation_finding"] = "teacher_tags_fixed_pr1042"
     assert any("unrelated" in x for x in inspect(register, ledger, plan)[0])
     register, ledger, plan = deepcopy(original)
     plan["criteria"][0]["automated_evidence"] = ["tests/not-reviewed.php"]
