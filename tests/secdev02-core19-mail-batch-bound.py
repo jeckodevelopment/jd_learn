@@ -78,10 +78,10 @@ def inspect_retry_and_tasks(source: str, queue: str) -> list[str]:
             problems.append(f"{routine}: missing task")
             continue
         body = source.split(marker, 1)[1].split("protected function ", 1)[0]
-        if not re.search(
-            r"\\$limit\\s*=\\s*max\\(1,\\s*min\\(100,\\s*\\(int\\)\\s*\\(\\$params->limit\\s*\\?\\?\\s*100\\)\\)\\);",
-            body,
-        ) or f"->{handler}($limit)" not in body:
+        compact = re.sub(r"\s+", "", body)
+        if "$limit=max(1,min(100,(int)($params->limit??100)));" not in compact or (
+            f"->{handler}($limit)" not in body
+        ):
             problems.append(f"{routine}: missing normalized 1..100 budget")
         if "batch_limit=" not in body or "has_more" not in body:
             problems.append(f"{routine}: bounded progress not logged")
