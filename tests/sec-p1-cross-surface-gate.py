@@ -86,9 +86,9 @@ assert "getLocalVideoService()->delivery(" in media and "getLocalVideoService()-
 assert "CurriculumService::id(" in media and "MaterialDownload::send(" in media
 print("SEC-P1 plugin/task/media review gate: 10 plugin classes, 3 Scheduler tasks, bounded workers, controlled streaming entrypoint")
 
-// CORE-14: category-triggered Finder refresh must remain bounded and complete.
-// The semantic Joomla integration is exercised separately in the CI matrices.
-$finder = (PLUGINS / "finder/jlms/src/Extension/Jlms.php").read_text(encoding="utf-8")
+# CORE-14: category-triggered Finder refresh must remain bounded and complete.
+# The semantic Joomla integration is exercised separately in the CI matrices.
+finder = (PLUGINS / "finder/jlms/src/Extension/Jlms.php").read_text(encoding="utf-8")
 refresh = finder.split("private function reindexAllCourses(): void", 1)[1].split(
     "protected function index(", 1
 )[0]
