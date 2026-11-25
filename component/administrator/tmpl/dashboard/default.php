@@ -125,7 +125,7 @@ $schedulerHealthKeys = [
                     $providerStateClass = $this->escape($provider['stateClass']);
                     $providerGuidance = $this->escape(Text::_(
                         \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey(
-                        (string) $provider['stateKey']
+                            (string) $provider['stateKey']
                         )
                     ));
                     ?>
