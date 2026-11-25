@@ -283,9 +283,13 @@ $data = ['id' => 0,'revision' => 1,'title' => 'Editorial teacher profile','alias
     ,'state' => 1,'access' => 1,'language' => '*',
     'bio' => 'Teacher presentation','image' => '','user_id' => '','com_fields' => ['teaching-contact' =>
          'contact@example.invalid']];
-editorialExpect($teacher->save($data), 'Teacher creation needs no category choice');
+editorialExpect($teacher->save($data), 'Teacher creation still defaults to native category when omitted');
 $teacherId = (int)$teacher->getState('teacher.id');
-editorialExpect(!$teacher->getForm([], false)->getField('catid'), 'Teacher form has no category selector');
+$teacherForm = $teacher->getForm([], false);
+editorialExpect(
+    $teacherForm->getField('catid') !== false && $teacherForm->getField('tags') !== false,
+    'CORE-01/09/20: native teacher form exposes optional category and tag fields'
+);
 $q = $db->createQuery()->select('value')->from('#__fields_values')->where('field_id=:field AND item_id=:item')->bind(
     ':field',
     $fieldId,
