@@ -84,6 +84,8 @@ jobs:
           python3 tests/secdev02-core-ledger.py
           python3 tests/secdev02-core-native-contracts.py --self-test
           python3 tests/secdev02-core-native-contracts.py
+          python3 tests/secdev02-json-header-contract.py --self-test
+          python3 tests/secdev02-json-header-contract.py
           python3 tests/secdev02-joomla-api-gate.py --self-test
           python3 tests/secdev02-joomla-api-gate.py
           php tests/secdev02-joomla-native-runtime.php --self-test
