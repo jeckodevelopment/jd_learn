@@ -13,6 +13,11 @@ use Joomla\Database\ParameterType;
 
 final class TeacherTable extends Table implements TaggableTableInterface
 {
+    use TeacherTableAssetMethods {
+        assetName as protected _getAssetName;
+        assetTitle as protected _getAssetTitle;
+        assetParentId as protected _getAssetParentId;
+    }
     use TaggableTableTrait;
 
     public $typeAlias = 'com_jlms.teacher';
@@ -20,12 +25,6 @@ final class TeacherTable extends Table implements TaggableTableInterface
     public function getTypeAlias(): string
     {
         return $this->typeAlias;
-    }
-
-    use TeacherTableAssetMethods {
-        assetName as protected _getAssetName;
-        assetTitle as protected _getAssetTitle;
-        assetParentId as protected _getAssetParentId;
     }
 
     public function __construct(DatabaseInterface $db)
