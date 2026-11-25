@@ -551,7 +551,7 @@ foreach ([
     [[$public, $public], 0, 'duplicate ID'],
     [[(string) $public], 0, 'string ID'],
     [[0], 0, 'zero ID'],
-    [array_fill(0, 101, $public), 0, 'oversized batch'],
+    [range(1000000, 1000100), 0, 'oversized batch'],
     [[$public], 2, 'unsupported transition'],
 ] as [$invalidIds, $invalidTarget, $reason]) {
     teacherExpect(
