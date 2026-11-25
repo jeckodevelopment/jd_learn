@@ -91,7 +91,7 @@
       "severity": "unknown",
       "surface": "hosted_joomla_platform",
       "status": "deployment_verification_pending",
-      "summary": "Core Joomla 6.2-dev adopted upstream Composer security fixes on 2026-11-13; the CI fixture 6.2.0 predates those fixes. Host and final Joomla patch level must be checked, and the core dependency advisories cannot be cleared by a JD Learn package scan.",
+      "summary": "Joomla 6.2.1 security/bugfix release published on 2026-11-24; CI now pins the official 6.2.1 package and SHA-256 while the actual installed hosting patch and related dependency advisories remain a separate deployment verification. JD Learn package scanning cannot certify core Joomla dependencies.",
       "upstream": "https://issues.joomla.org/tracker/joomla-cms/48846",
       "evidence": [
         "docs/SEC_P2_RELEASE_HARDENING_1.0.0.md",
@@ -101,7 +101,7 @@
         {
           "path": ".github/workflows/ci.yml",
           "contains": [
-            "Joomla_6-2-0-Stable-Full_Package.zip"
+            "Joomla_6-2-1-Stable-Full_Package.zip"
           ]
         }
       ],

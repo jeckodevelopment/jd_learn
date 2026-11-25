@@ -604,3 +604,21 @@ La fase statica del workflow [#45582619300](https://github.com/jeckodevelopment/
 **Fonti Joomla:** [API Joomla 6 Table](https://api.joomla.org/cms-6/classes/Joomla-CMS-Table-Table.html), [script installer anonimi e InstallerScriptInterface](https://manual.joomla.org/docs/next/building-extensions/install-update/installation/install-process/).
 
 **Criterio di accettazione:** solo la CI finale verde su entrambe le matrici, Chromium, pacchetto ZIP, contratti e verifiche di runtime dimostra che lo zero PHPCS non ha alterato il funzionamento. Il conteggio di 0 rilievi PSR-12 non certifica automaticamente tutti i 23 requisiti CORE, l'assenza di API dinamiche non esercitate o i collaudi manuali; **SECDEV-02 rimane Parziale** fino a tali evidenze.
+
+
+## Verifica conclusiva SECDEV-02 su Joomla 6.2.1 (25 novembre 2026)
+
+La PR #1028 ha eliminato **tutte le 27 violazioni PSR-12 residue**: PHPCS 4.0.4 ha misurato 27 → 0 senza finding introdotti; il runtime Joomla 6.2.0, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e l'upgrade ZIP sono stati verificati nella CI #45583375478. **La conformità statica PSR-12 del codice distribuito è raggiunta.**
+
+Durante la verifica di chiusura è emerso che Joomla ha pubblicato la patch **6.2.1** il 24 novembre 2026 con correzioni anche di sicurezza. La CI è quindi aggiornata alla **6.2.1** con SHA-256 pubblicato nella release ufficiale; l'inventario API e il gate runtime verificano precisamente la patch target, con `behaviour/compat6` disabilitato. Il risultato della nuova suite dev'essere misurato in CI sull'HEAD definitivo. Il livello patch dell'hosting deve essere controllato separatamente.
+
+**Esito di accettazione attuale: SECDEV-02 rimane Parziale.** I 23 servizi CORE sono tutti riconciliati come decisioni di riuso nativo/specializzazione, ma nel registro canonico persistono **23 criteri `unverifiable` su 47**. Per SECDEV-02 stesso, tutti e quattro i criteri conservano `unverifiable` in attesa di un'evidenza completa. L'ultimo inventario API distribuito sulla patch 6.2.0 ha coperto 351 PHP, 113 simboli, 60 chiamate statiche e 3 istanze dirette, ma ha censito **10.311 siti di chiamata su oggetti** e **98 riferimenti statici dinamici non verificati con analisi di flusso**. Non sono conteggi di bug, ma impediscono di attestare la compatibilità integrale di tutte le chiamate in base al solo scanner. Il testbook e i collaudi manuali di installazione/hosting restano separati.
+
+L'audit analitico e le prove da completare sono riuniti in [SECDEV_02_CLOSURE_AUDIT_2026-11-25.md](SECDEV_02_CLOSURE_AUDIT_2026-11-25.md), senza duplicare il registro canonico. Il comando `python3 tests/secdev02-closure-readiness.py --require-complete` è un controllo **rigoroso**, non è previsto che sia verde prima che tutte le prove siano presenti. Il normale check `tools/check.py` segnala i residui e blocca promozioni false o patch incoerenti.
+
+### Comportamenti da testare
+
+- Joomla 6.2.1: verifica SHA-256 del pacchetto e installazione/upgrade su entrambe le matrici PHP/database.
+- Nessuna dipendenza dal plugin Joomla di retrocompatibilità, mantenimento del routing, ACL, quiz, certificati, provider e Scheduler.
+- PHPCS 4.0.4: zero finding, zero nuove violazioni; contratto di chiusura che respinge promozioni non giustificate.
+- Riconciliazione dei 23 CORE non verificabili, revisione delle chiamate API dinamiche, registrazione effettiva dei casi di collaudo manuale senza inventare esiti.

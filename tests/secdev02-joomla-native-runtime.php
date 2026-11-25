@@ -77,8 +77,8 @@ require $root . '/administrator/includes/defines.php';
 require $root . '/administrator/includes/framework.php';
 
 $version = (new \Joomla\CMS\Version())->getShortVersion();
-if ($version !== '6.2.0') {
-    fwrite(STDERR, "SECDEV-02 Joomla patch mismatch: expected 6.2.0, installed {$version}\n");
+if ($version !== '6.2.1') {
+    fwrite(STDERR, "SECDEV-02 Joomla patch mismatch: expected 6.2.1, installed {$version}\n");
     exit(1);
 }
 
