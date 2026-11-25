@@ -84,7 +84,8 @@ try:
    for action,method in actions.items():
     task=controller+'.'+action
     url='/index.php?option=com_jlms&task='+task+'&format=raw&lang=en'
-    if task=='mailconsent.confirm':url+='&token=invalid-core21-fixture'
+    if task=='mailconsent.confirm':
+     url+='&token=invalid-core21-fixture'
     code,headers,body=direct(http,url,method)
     # Invalid methods/no CSRF must never execute an update: redirects are
     # acceptable only on the deliberately invalid consent-link GET.
