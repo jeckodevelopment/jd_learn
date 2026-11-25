@@ -214,8 +214,8 @@ if (
 // Reproduce the old component menu entry left behind by upgrades from releases that opened Courses.
 $db->setQuery($db->getQuery(true)->update($db->quoteName('#__menu'))->set($db->quoteName('link') . ' = ' . $db
     ->quote('index.php?option=com_jlms&view=courses'))->where($db->quoteName('id') . ' = ' . $menuParent))->execute();
-require_once JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
-(new \Com_JlmsInstallerScript())->postflight('update', null);
+$jdLearnInstaller = require JPATH_ADMINISTRATOR . '/components/com_jlms/script.php';
+$jdLearnInstaller->postflight('update', null);
 $defaultCertificateTemplate = $db->createQuery()->select('COUNT(*)')->from('#__jlms_certificate_templates')
     ->where('title = :title')->where('state = 1');
 $defaultCertificateTitle = 'JD Learn — Attestato standard';
