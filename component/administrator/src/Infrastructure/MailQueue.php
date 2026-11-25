@@ -222,7 +222,11 @@ final class MailQueue
         foreach ($ids as $id) {
             $claim = $this->db->createQuery()->update('#__jlms_mail_queue')
                 ->set("state = 'sending'")->set('claimed_at = UTC_TIMESTAMP(6)')->set('attempts = attempts + 1')
+                // The candidate query and the atomic claim must enforce the
+                // same eligibility. Another task may have rescheduled this
+                // message after we read the candidate IDs.
                 ->where('id = :id')->where("state IN ('pending','retry')")
+                ->where('available_at <= UTC_TIMESTAMP(6)')
                 ->bind(':id', $id, ParameterType::INTEGER);
             $this->db->setQuery($claim)->execute();
             if ($this->db->getAffectedRows() !== 1) {
@@ -380,6 +384,7 @@ final class MailQueue
                     // Transport exceptions can contain addresses, SMTP responses, or provider details.
                     // Keep the outbox diagnostic useful without persisting them.
                     ->set('last_error = :error')->set('claimed_at = NULL')->where('id = :id')
+                    ->where("state = 'sending'")
                     ->bind(':error', $safeError)
                     ->bind(':id', $id, ParameterType::INTEGER);
                 $this->db->setQuery($update)->execute();
