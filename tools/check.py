@@ -1176,6 +1176,13 @@ runpy.run_path(str(ROOT/'tests/sec-p2-dependency-gate.py'), run_name='__main__')
 runpy.run_path(str(ROOT/'tests/sec-p2-source-gate.py'), run_name='__main__')
 # SEC-P2: every high/critical first-party finding needs reviewed mitigation evidence.
 runpy.run_path(str(ROOT/'tests/sec-p2-findings-gate.py'), run_name='__main__')
+# CORE-06: all distributed Joomla catalog pairs must remain unambiguous and placeholder-compatible.
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core06-locale-integrity.py'), '--self-test'], check=True)
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core06-locale-integrity.py')], check=True)
+# CORE-21: no-store applies before task routing even for rejected private requests.
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core21-private-dispatch.py'), '--self-test'], check=True)
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core21-private-dispatch.py')], check=True)
+
 # SECDEV-02: preserve closure evidence and reject unsupported completeness claims.
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-closure-readiness.py'), '--self-test'], check=True)
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-closure-readiness.py')], check=True)
