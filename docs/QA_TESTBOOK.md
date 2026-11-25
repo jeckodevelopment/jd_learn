@@ -2989,3 +2989,29 @@ Con account amministratore e manager verificare le configurazioni globali e gli 
 ### SCR-01 — filtri URL, navigazione browser e reset pagine
 
 Accettazione manuale successiva, non bloccante: su catalogo e dettaglio categoria applicare ricerca e filtri (tag, livello, durata, disponibilità, docente, percorso, layout e ordinamento), passare alla pagina 2/3, verificare che URL e risultati restino filtrati; provare Indietro/Avanti del browser. Modificare un filtro sulla pagina 3: la richiesta GET deve omettere `limitstart` e mostrare la prima pagina. Provare anche paginazione separata delle sottocategorie. Con filtri disattivati via opzioni menu, URL forgiati non devono modificarne il risultato o essere propagati.
+
+
+### SECDEV-02 / CORE-20/21 — JSON audio e backend, collaudo manuale separato
+
+**Stato: NON ESEGUITO.** Questo controllo è successivo ai test automatici/merge
+e non determina il completamento delle implementazioni.
+
+1. Installare il pacchetto della CI su Joomla 6.2.1 e aprire gli strumenti di rete
+   del browser. Con uno studente iscritto salvare l'ultima posizione audio
+   tramite `audio.save` (POST + CSRF valido): confermare JSON, stato HTTP
+   corretto e `Cache-Control: private, no-store` sulla risposta originale.
+2. Ripetere da altro studente e da guest, con richiesta GET, POST senza CSRF,
+   record di iscrizione altrui e ID inesistenti: nessuna informazione privata,
+   stato 4xx appropriato e `no-store` anche sugli errori e sulle task sconosciute.
+3. Con ruoli backend distinti eseguire ordinamento programma
+   (`curriculum.saveOrder`), metadati lezione (`lesson.metadata`) e preview
+   (`coursepreview.playback`): header `Cache-Control` e `Content-Type`
+   presenti prima del body JSON sia su successo sia su rifiuto, senza consentire
+   accessi non autorizzati né modifiche inattese.
+4. Ripetere dietro reverse proxy/CDN verificando che non venga memorizzata
+   alcuna risposta riferita all'account precedente; confrontare comportamento
+   con browser diversi e in modalità privata.
+
+Registrare per ogni prova ambiente, versione, utenti/ruoli, URL anonimizzato,
+status e header osservati, risultato/esito e riferimenti a bug. Non riportare
+credenziali, token, identificativi personali o payload sensibili.
