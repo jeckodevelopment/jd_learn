@@ -135,12 +135,17 @@ final class Jlms extends Adapter implements SubscriberInterface
         $query = $query instanceof QueryInterface ? $query : $db->createQuery();
         $all = '*';
         $extension = 'com_jlms.course';
+        // A language-neutral course within an en-GB/it-IT category has that
+        // category's effective language in Smart Search, not a global '*' hit.
+        $effectiveLanguage = 'CASE WHEN a.language = ' . $db->quote($all)
+            . ' THEN cat.language ELSE a.language END';
         $query->select($db->quoteName([
-                'a.id', 'a.title', 'a.summary', 'a.state', 'a.language', 'a.catid', 'a.catalog_access',
+                'a.id', 'a.title', 'a.summary', 'a.state', 'a.catid', 'a.catalog_access',
                 'a.content_access',
                 'a.current_version_id', 'a.publish_up', 'a.publish_down', 'cat.title', 'cat.lft', 'cat.rgt',
-            ], ['id', 'title', 'summary', 'state', 'language', 'catid', 'catalog_access', 'content_access',
+            ], ['id', 'title', 'summary', 'state', 'catid', 'catalog_access', 'content_access',
             'current_version_id', 'publish_up', 'publish_down', 'category_title', 'category_lft', 'category_rgt']))
+            ->select($effectiveLanguage . ' AS ' . $db->quoteName('language'))
             ->from($db->quoteName($this->table, 'a'))
             ->innerJoin($db->quoteName('#__categories', 'cat') . ' ON cat.id = a.catid AND cat.extension = '
                 . $db->quote($extension))
@@ -150,7 +155,8 @@ final class Jlms extends Adapter implements SubscriberInterface
             // Catalog-only promotional cards with protected lesson access remain outside search indexes.
             ->where('a.state = 1')->where('a.catalog_access = 1')->where('a.content_access = 1')
                 ->where('cat.published = 1')->where('cat.access = 1')
-            ->where('(cat.language = ' . $db->quote($all) . ' OR cat.language = a.language)')
+            ->where('(cat.language = ' . $db->quote($all) . ' OR cat.language = a.language'
+                . ' OR a.language = ' . $db->quote($all) . ')')
             // Scheduled publication boundaries cannot be maintained by a static search index.
             ->where('(a.publish_up IS NULL OR a.publish_up = ' . $db->quote('0000-00-00 00:00:00') . ')')
             ->where('(a.publish_down IS NULL OR a.publish_down = ' . $db->quote('0000-00-00 00:00:00') . ')');
@@ -158,7 +164,8 @@ final class Jlms extends Adapter implements SubscriberInterface
             ->where('ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.id <> 1')
             ->where('(ancestor.extension <> ' . $db->quote($extension)
                 . ' OR ancestor.published <> 1 OR ancestor.access <> 1'
-                . ' OR (ancestor.language <> ' . $db->quote($all) . ' AND ancestor.language <> a.language))');
+                . ' OR (ancestor.language <> ' . $db->quote($all)
+                . ' AND ancestor.language <> ' . $effectiveLanguage . '))');
         $query->where('NOT EXISTS (' . $ancestor . ')');
         return $query;
     }
