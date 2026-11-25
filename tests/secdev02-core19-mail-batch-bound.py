@@ -131,9 +131,12 @@ def retry_self_test(source: str, queue: str) -> None:
         "->where('available_at <= UTC_TIMESTAMP(6)')", "", 1
     )
     assert inspect_retry_and_tasks(source, altered)
-    assert inspect_retry_and_tasks(source, queue.replace(
+    retry_start = queue.index("$safeError =")
+    retry_tail = queue[retry_start:]
+    altered_retry = queue[:retry_start] + retry_tail.replace(
         '->where("state = \'sending\'")', '', 1
-    )) or inspect_retry_and_tasks(source, queue)
+    )
+    assert inspect_retry_and_tasks(source, altered_retry)
 
 
 def main() -> int:
