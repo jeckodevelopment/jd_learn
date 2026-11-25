@@ -493,7 +493,8 @@
         ],
         "existing_automated_evidence": [
           "tests/joomla-roster.php",
-          "tests/joomla-smoke.php"
+          "tests/joomla-smoke.php",
+          "tests/secdev02-core19-expiry-reminders.py"
         ],
         "acceptance_mode": "site_and_external",
         "assessment": "partial_test_coverage",
@@ -519,7 +520,8 @@
           "idempotent_tasks"
         ],
         "existing_automated_evidence": [
-          "tests/joomla-quiz-attempts.php"
+          "tests/joomla-quiz-attempts.php",
+          "tests/secdev02-core19-expiry-reminders.py"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
