@@ -346,8 +346,8 @@ catExpect(
 // adapter's candidate SELECT returns the expected rows. Use the installed
 // plugin, its native Indexer and the disposable site's #__finder_links table.
 $finderLive = $app->bootPlugin('jlms', 'finder');
-$finderRefresh = new \\ReflectionMethod($finderLive, 'refreshCourse');
-$finderUrl = (new \\ReflectionMethod($finderLive, 'getUrl'))
+$finderRefresh = new \ReflectionMethod($finderLive, 'refreshCourse');
+$finderUrl = (new \ReflectionMethod($finderLive, 'getUrl'))
     ->invoke($finderLive, $course, 'com_jlms', 'course');
 $finderLink = static function () use ($db, $finderUrl): array {
     $q = $db->createQuery()->select('link_id, state, access, language')
@@ -373,7 +373,6 @@ catExpect(
     $finderLink() !== [],
     'CORE-14: restoring ancestor ACL rebuilds the persisted Finder link'
 );
-$update($en, ["access" => 1]);
 catExpect($finderEligible(), 'CORE-14: restoring ancestor ACL restores Finder eligibility');
 $update($en, ["language" => "it-IT"]);
 catExpect(!$finderEligible(), 'CORE-14: incompatible ancestor language hides English course in Finder');
