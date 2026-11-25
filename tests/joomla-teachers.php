@@ -138,6 +138,11 @@ teacherExpect(
 );
 // CORE-10: teacher field language must match the effective teacher language,
 // even when the profile itself is neutral and the viewer switches locales.
+// The Joomla CLI fixture has no web language by default. Native com_fields
+// needs an application language to resolve the field type/plugin labels.
+$app->loadLanguage(
+    $container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false)
+);
 $teacherFieldModel = $app->bootComponent('com_fields')->getMVCFactory()
     ->createModel('Field', 'Administrator', ['ignore_request' => true]);
 foreach (['en-GB' => 'teacher-field-en', 'it-IT' => 'teacher-field-it'] as $tag => $name) {
