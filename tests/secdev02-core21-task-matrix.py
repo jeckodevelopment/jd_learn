@@ -57,6 +57,14 @@ def names_in_execute(source: str) -> set[str]:
     return set(ALLOWLIST_WORD.findall(source[start:finish]))
 
 
+def allowed_views(source: str) -> set[str]:
+    start = source.find("$allowedViews = [")
+    finish = source.find("];", start)
+    if start < 0 or finish < 0:
+        return set()
+    return set(ALLOWLIST_WORD.findall(source[start:finish]))
+
+
 def private_views(source: str) -> set[str]:
     start = source.find("$privateViews = [")
     finish = source.find("];", start)
@@ -117,6 +125,22 @@ def validate(root: Path) -> list[str]:
     else:
         actual_views = private_views(source)
         expected_views = set(PRIVATE_VIEWS)
+        allowed = allowed_views(source)
+        if not expected_views.issubset(allowed):
+            failures.append(
+                f"CORE-13/21 private views forbidden by display allowlist: {sorted(expected_views - allowed)}"
+            )
+        # The native bearer unsubscribe confirmation view must be reachable
+        # without login and set the privacy headers before rendering its token.
+        consent = root / "component/site/src/View/Mailconsentrevoke/HtmlView.php"
+        if consent.is_file():
+            view_source = consent.read_text(encoding="utf-8")
+            for header in ("Referrer-Policy", "no-referrer", "Cache-Control", "private, no-store",
+                           "X-Robots-Tag", "noindex, nofollow"):
+                if header not in view_source:
+                    failures.append(f"CORE-13/21 consent route lost protected header: {header}")
+        else:
+            failures.append("CORE-13/21 missing bearer unsubscribe view")
         if actual_views != expected_views:
             failures.append(
                 f"CORE-21 private view drift: "
@@ -135,6 +159,10 @@ def self_test() -> None:
            return parent::execute($task);
         }"""
     ) == {"first", "second"}
+    assert allowed_views("$allowedViews = ['mailconsentrevoke', 'courses'];") == {
+        "mailconsentrevoke", "courses",
+    }
+    assert not allowed_views("$privateViews = ['dashboard'];")
     assert private_views("$privateViews = ['dashboard', 'quiz'];") == {
         "dashboard", "quiz",
     }
