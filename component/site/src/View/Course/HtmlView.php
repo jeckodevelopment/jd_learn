@@ -27,7 +27,8 @@ final class HtmlView extends BaseHtmlView
             $this->item['presentation']['description'] = PublicContentPreparation::html(
                 'com_jlms.course',
                 (int) $this->item['course']->id,
-                (string) $this->item['presentation']['description']
+                (string) $this->item['presentation']['description'],
+                $this->item['course']
             );
         }
         $this->canStartWindow = (bool) ($this->item['start_window_open'] ?? false);
