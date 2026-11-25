@@ -36,7 +36,8 @@ $schedulerHealthKeys = [
             } ?>
             <section class="jlms-admin-dashboard__group"
     aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>">
-                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
+                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey,
+        strrpos($groupKey, '_') + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
                 <ul>
                     <?php foreach ($shortcuts as $shortcut) : ?>
                         <li>
