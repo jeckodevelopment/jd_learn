@@ -75,7 +75,8 @@ foreach ([1, 2, 3] as $position) {
  </dl></section>
  <?php endif; ?>
 
- <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ? 'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
+ <aside id="jlms-course-access" class="jlms-course-access"><p><?= Text::_($this->hasContentAccess ?
+        'COM_JLMS_CONTENT_ACCESS_ALLOWED' : 'COM_JLMS_CONTENT_ACCESS_REQUIRED') ?></p><?php if ($this->isGuest) : ?>
   <a id="jlms-course-login" href="<?= Route::_('index.php?option=com_users&view=login&return=' .
     base64_encode('index.php?option=com_jlms&view=course&id=' .
     (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
@@ -143,7 +144,8 @@ foreach ([1, 2, 3] as $position) {
             if ($calendar[$key] === null) {
                 continue;
             } ?>
- <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(CourseSchedule::display($calendar[$key], $calendar['timezone'], true)) ?></dd><?php
+ <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(CourseSchedule::display($calendar[$key],
+        $calendar['timezone'], true)) ?></dd><?php
         endforeach; ?></dl>
  <p><?= Text::_('COM_JLMS_CALENDAR_POLICY') ?></p></section><?php
  endif; ?>
@@ -157,7 +159,8 @@ foreach ([1, 2, 3] as $position) {
    <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_COURSE_COMPLETION_ALL_REQUIRED') ?></p>
    <p id="jlms-course-completion-sequence"><?= Text::_($completion['sequence_mode'] === 'sequential' ? 'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL' : 'COM_JLMS_COURSE_COMPLETION_FREE') ?></p>
    <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', TeachingRules::percent((int)$completion['video_threshold_basis_points'])) ?></p>
-   <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned'] ? 'COM_JLMS_COURSE_CERTIFICATE_PLANNED' : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
+   <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned'] ?
+        'COM_JLMS_COURSE_CERTIFICATE_PLANNED' : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
             <?php if ($completion['certificate_planned']) :
                 ?>
 <p class="small" id="jlms-course-certificate-caveat"><?= Text::_('COM_JLMS_COURSE_CERTIFICATE_CONDITIONAL') ?></p><?php
