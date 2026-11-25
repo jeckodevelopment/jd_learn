@@ -573,3 +573,20 @@ La PR di consolidamento corregge per primi i controller pubblici, le viste ammin
 - Fixture di pubblicazione: identica query, identico risultato, nessun cambio di workflow.
 - Compatibilità native table/ACL e installazione Joomla senza dipendenze compat6.
 - Controlli automatici e collaudi manuali come sopra, con saldo PHPCS e stato CORE/API riportati separatamente.
+
+
+## PR finale sui 27 rilievi SECDEV-02 — 25 novembre 2026
+
+La CI conclusiva della PR #1027 (#45579625144) ha certificato **102 → 27** violazioni PHPCS PSR12 4.0.4, senza nuove segnalazioni. La presente PR riconcilia i 27 residui senza abbassare il gate e senza modificare per errore i contratti Joomla.
+
+### Correzioni senza modifiche ai comportamenti
+
+- Spostare la configurazione `$_supportNullValue` nel costruttore di tre Table derivate: la proprietà è *ereditata* da `Joomla\\CMS\\Table\\Table`, quindi non deve essere ridefinita (fonte: API ufficiale Joomla CMS 6).
+- Suddividere tre stringhe SQL nelle fixture e raccogliere una route dell'HTML del quiz in una variabile locale, preservando valore delle query, URL, escaping e output.
+- Per i metodi `_getAssetName`, `_getAssetTitle`, `_getAssetParentId` (contratti override del Table Joomla), protezioni `_JEXEC`, bootstrap e installer, verificare e documentare individualmente prima di trasformare le definizioni.
+
+### Gate e accettazione
+
+PHPCS PSR12 ufficiale su tutti i file, **zero violazioni nuove**, controllo delle API native Joomla, integrità CSV, lint di ogni PHP, source contracts, SAST, Joomla 6.2 senza compat6, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e pacchetto ZIP. I collaudi manuali rimangono separati; il mero merge non promuove SECDEV-02 a Completato.
+
+**Stato:** in corso. I saldi PHPCS finali e la classificazione dei casi nativi sono determinati soltanto dalla CI dell'HEAD definitivo.
