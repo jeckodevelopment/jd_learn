@@ -194,7 +194,8 @@
         ],
         "existing_automated_evidence": [
           "tests/joomla-associations.php",
-          "tests/associations-http.py"
+          "tests/associations-http.py",
+          "tests/joomla-categories.php"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -383,7 +384,8 @@
           "index_acl"
         ],
         "existing_automated_evidence": [
-          "tests/joomla-courses-ui.php"
+          "tests/joomla-courses-ui.php",
+          "tests/joomla-categories.php"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
