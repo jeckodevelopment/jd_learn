@@ -168,7 +168,8 @@ $app->getInput()->set('id', 0);
 // CORE-11: a trusted content plugin may modify a public teacher biography
 // but may not bypass the final allowlist.
 $teacherEvents = [];
-$app->getDispatcher()->addListener('onContentPrepare',
+$app->getDispatcher()->addListener(
+    'onContentPrepare',
     static function (\Joomla\CMS\Event\Content\ContentPrepareEvent $event) use (&$teacherEvents, $public): void {
         if ($event->getContext() !== 'com_jlms.teacher') {
             return;
@@ -176,9 +177,12 @@ $app->getDispatcher()->addListener('onContentPrepare',
         $item = $event->getItem();
         $teacherEvents[] = [(int) $item->id, $event->getContext()];
         $item->text .= '<em>PUBLIC_TEACHER_PREPARED</em><iframe src="https://example.invalid"></iframe>';
-    });
+    }
+);
 $preparedBio = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
-    'com_jlms.teacher', $public, $storedTeacherBio
+    'com_jlms.teacher',
+    $public,
+    $storedTeacherBio
 );
 teacherExpect(
     $teacherEvents === [[$public, 'com_jlms.teacher']]
