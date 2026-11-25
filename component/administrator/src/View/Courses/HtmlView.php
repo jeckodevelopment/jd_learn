@@ -20,7 +20,9 @@ final class HtmlView extends BaseHtmlView
 
     public function display($tpl = null)
     {
-        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(
+            Factory::getApplication()->getIdentity()
+        );
         if ($this->getLayout() === 'purgepreview') {
             $id = Factory::getApplication()->getInput()->getInt('id', 0);
             $model = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()
