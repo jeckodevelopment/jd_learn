@@ -14,6 +14,7 @@ final class AttachmentController extends BaseController
 {
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (
             !in_array(strtolower($task), ['download', 'audio', 'preview', 'inline', 'publicpreview'
             , 'publiclessonpreview'], true)

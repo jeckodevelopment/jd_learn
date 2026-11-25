@@ -14,6 +14,7 @@ final class MediaController extends BaseController
 {
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (strtolower($task) !== 'stream') {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }

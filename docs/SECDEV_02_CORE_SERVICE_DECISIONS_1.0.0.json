@@ -15,7 +15,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-categories.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "all_hierarchy"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-categories.php",
+          "tests/categories-http.py"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Gerarchia, lingua, permessi e riordino end-to-end"
+      }
     },
     {
       "id": "CORE-02",
@@ -29,7 +42,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-learning.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "auth_variants"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-learning.php",
+          "tests/joomla-smoke.php"
+        ],
+        "acceptance_mode": "site_and_external",
+        "assessment": "partial_test_coverage",
+        "limitation": "MFA e provider esterni reali"
+      }
     },
     {
       "id": "CORE-03",
@@ -43,7 +69,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-learning.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "cross_context"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-learning.php",
+          "tests/dashboard-http.py"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Rimozione accessi tra tutti i contesti"
+      }
     },
     {
       "id": "CORE-04",
@@ -57,7 +96,21 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-editor-access.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "record_acl",
+          "teacher_edit"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-editor-access.php",
+          "tests/joomla-courses-ui.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Matrice ruoli e protezioni su tutti i record"
+      }
     },
     {
       "id": "CORE-05",
@@ -72,7 +125,20 @@
       ],
       "automated_test_evidence": [
         "tests/secdev02-core-native-contracts.py"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "layout_coverage"
+        ],
+        "existing_automated_evidence": [
+          "tests/frontend-css-contract.py",
+          "tests/frontend-dom-runtime.py"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Override di ogni vista e modulo distribuito"
+      }
     },
     {
       "id": "CORE-06",
@@ -87,7 +153,20 @@
       ],
       "automated_test_evidence": [
         "tests/secdev02-core-native-contracts.py"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "strings"
+        ],
+        "existing_automated_evidence": [
+          "tests/secdev02-core06-locale-integrity.py",
+          "tests/secdev02-core-native-contracts.py"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Copertura totale stringhe e messaggi"
+      }
     },
     {
       "id": "CORE-07",
@@ -101,7 +180,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-associations.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "menu_matrix"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-associations.php",
+          "tests/associations-http.py"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Combinazioni menu, filtri e fallback"
+      }
     },
     {
       "id": "CORE-08",
@@ -115,7 +207,20 @@
       ],
       "automated_test_evidence": [
         "tests/install-package.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "scope"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-smoke.php",
+          "tests/sec-p3-data-inventory.py"
+        ],
+        "acceptance_mode": "site_and_external",
+        "assessment": "partial_test_coverage",
+        "limitation": "Classi dati, export, cancellazione e conservazione su hosting"
+      }
     },
     {
       "id": "CORE-09",
@@ -130,7 +235,20 @@
       ],
       "automated_test_evidence": [
         "tests/secdev02-core-native-contracts.py"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "tags_context"
+        ],
+        "existing_automated_evidence": [
+          "tests/secdev02-core-native-contracts.py",
+          "tests/joomla-courses-ui.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Tutti i contesti e filtri previsti"
+      }
     },
     {
       "id": "CORE-10",
@@ -144,7 +262,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-course-fields.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "teacher_scoping"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-course-fields.php",
+          "tests/joomla-courses-ui.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "ACL docente e lezione, lingua e accesso"
+      }
     },
     {
       "id": "CORE-11",
@@ -158,7 +289,19 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-curriculum.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "content_events"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-curriculum.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Eventi plugin e filtro HTML per ogni campo"
+      }
     },
     {
       "id": "CORE-12",
@@ -172,7 +315,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-course-presentation.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "media_providers"
+        ],
+        "existing_automated_evidence": [
+          "tests/materials-http.py",
+          "tests/html5-http.py"
+        ],
+        "acceptance_mode": "site_and_external",
+        "assessment": "partial_test_coverage",
+        "limitation": "Provider media e assenza di fuga allegati"
+      }
     },
     {
       "id": "CORE-13",
@@ -186,7 +342,20 @@
       ],
       "automated_test_evidence": [
         "tests/categories-http.py"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "all_routes"
+        ],
+        "existing_automated_evidence": [
+          "tests/categories-http.py",
+          "tests/associations-http.py"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "URL diretti, breadcrumb e menu multilingua"
+      }
     },
     {
       "id": "CORE-14",
@@ -200,7 +369,19 @@
       ],
       "automated_test_evidence": [
         "tests/install-package.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "index_acl"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-courses-ui.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Invalidazione indice per ACL, stato e lingua"
+      }
     },
     {
       "id": "CORE-15",
@@ -214,7 +395,19 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-publication.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "native_workflow"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-publication.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Transizioni e autorizzazioni per tutte le entità"
+      }
     },
     {
       "id": "CORE-16",
@@ -228,7 +421,19 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-programme-restore.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "all_entities"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-programme-restore.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Ripristini concorrenti e non mutazione assegnazioni"
+      }
     },
     {
       "id": "CORE-17",
@@ -248,7 +453,18 @@
       "automated_test_evidence": [
         "tests/joomla-enrollment-state.php",
         "tests/joomla-publication.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [],
+        "existing_automated_evidence": [
+          "tests/joomla-publication.php",
+          "tests/joomla-enrollment-state.php"
+        ],
+        "acceptance_mode": "code_complete_site_pending",
+        "assessment": "code_criteria_implemented",
+        "limitation": "Completezza eventi e politiche retention"
+      }
     },
     {
       "id": "CORE-18",
@@ -262,7 +478,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-smoke.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "smtp"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-roster.php",
+          "tests/joomla-smoke.php"
+        ],
+        "acceptance_mode": "site_and_external",
+        "assessment": "partial_test_coverage",
+        "limitation": "SMTP e template multilingua in ambiente"
+      }
     },
     {
       "id": "CORE-19",
@@ -276,7 +505,19 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-quiz-attempts.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "idempotent_tasks"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-quiz-attempts.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Ripetizioni, errori e notifiche duplicate"
+      }
     },
     {
       "id": "CORE-20",
@@ -290,7 +531,19 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-courses-ui.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "native_completeness"
+        ],
+        "existing_automated_evidence": [
+          "tests/joomla-courses-ui.php"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Batch, errori e recupero input nei percorsi residui"
+      }
     },
     {
       "id": "CORE-21",
@@ -304,7 +557,20 @@
       ],
       "automated_test_evidence": [
         "tests/dashboard-http.py"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "private_cache"
+        ],
+        "existing_automated_evidence": [
+          "tests/secdev02-core21-private-dispatch.py",
+          "tests/dashboard-http.py"
+        ],
+        "acceptance_mode": "ci_plus_site",
+        "assessment": "partial_test_coverage",
+        "limitation": "Cache cross-account su tutti gli endpoint"
+      }
     },
     {
       "id": "CORE-22",
@@ -318,7 +584,19 @@
       ],
       "automated_test_evidence": [
         "tests/install-package.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "release_updates"
+        ],
+        "existing_automated_evidence": [
+          "tests/install-package.php"
+        ],
+        "acceptance_mode": "site_and_external",
+        "assessment": "partial_test_coverage",
+        "limitation": "Aggiornamenti e rollback su ambienti target"
+      }
     },
     {
       "id": "CORE-23",
@@ -332,7 +610,20 @@
       ],
       "automated_test_evidence": [
         "tests/joomla-smoke.php"
-      ]
+      ],
+      "reconciliation": {
+        "reviewed_on": "2026-11-25",
+        "pending_criteria": [
+          "event_contracts"
+        ],
+        "existing_automated_evidence": [
+          "tests/provider-contract-example.php",
+          "tests/joomla-smoke.php"
+        ],
+        "acceptance_mode": "site_and_external",
+        "assessment": "partial_test_coverage",
+        "limitation": "Payload degli eventi e compatibilità plugin terzi"
+      }
     }
   ]
 }

@@ -80,6 +80,38 @@ def validate(root: Path) -> tuple[list[str], dict]:
                 errors.append(f"{key}: implementation evidence file not found: {item}")
         if not any(not p.startswith("tests/") for p in implementation):
             errors.append(f"{key}: missing source-level implementation evidence")
+        # The review plan must enumerate exactly the unverified canonical
+        # criteria, not a hand-written count or a second source of truth.
+        reconciliation = row.get("reconciliation")
+        pending = sorted(unit.get("id") for unit in units if unit.get("status") != "implemented")
+        if not isinstance(reconciliation, dict):
+            errors.append(f"{key}: reconciliation plan missing")
+        else:
+            selected = reconciliation.get("pending_criteria")
+            if not isinstance(selected, list) or sorted(selected) != pending:
+                errors.append(f"{key}: reconciliation differs from canonical pending criteria")
+            mode = reconciliation.get("acceptance_mode")
+            if mode not in {"ci_plus_site", "site_and_external", "code_complete_site_pending"}:
+                errors.append(f"{key}: unsupported acceptance mode")
+            expected_assessment = "partial_test_coverage" if pending else "code_criteria_implemented"
+            if reconciliation.get("assessment") != expected_assessment:
+                errors.append(f"{key}: contradictory implementation assessment")
+            if reconciliation.get("limitation") != row.get("remaining_verification"):
+                errors.append(f"{key}: reconciliation limitation differs from service decision")
+            candidates = reconciliation.get("existing_automated_evidence")
+            if not isinstance(candidates, list) or not candidates or len(set(candidates)) != len(candidates):
+                errors.append(f"{key}: reviewed candidate tests missing or duplicated")
+            else:
+                for candidate in candidates:
+                    if (
+                        not isinstance(candidate, str)
+                        or not candidate.startswith("tests/")
+                        or ".." in Path(candidate).parts
+                        or not (root / candidate).is_file()
+                    ):
+                        errors.append(f"{key}: reviewed candidate test unavailable: {candidate}")
+            if reconciliation.get("reviewed_on") != "2026-11-25":
+                errors.append(f"{key}: reconciliation review date missing")
         for unit in units:
             status = unit.get("status")
             if status not in STATES:
@@ -121,12 +153,31 @@ def self_test() -> None:
                           for i in range(1, 5)]
         }}
         (root / "docs/evidence.txt").write_text("proof", encoding="utf-8")
+        (root / "tests").mkdir()
+        (root / "tests/fixture.py").write_text("print('fixture')\n", encoding="utf-8")
         for row in rows:
             row["implementation_evidence"] = ["docs/evidence.txt"]
             row["automated_test_evidence"] = []
+            row["reconciliation"] = {
+                "reviewed_on": "2026-11-25",
+                "pending_criteria": [],
+                "existing_automated_evidence": ["tests/fixture.py"],
+                "acceptance_mode": "code_complete_site_pending",
+                "assessment": "code_criteria_implemented",
+                "limitation": row["remaining_verification"],
+            }
         (root / LEDGER).write_text(json.dumps({"schema_version": 2, "services": rows}), encoding="utf-8")
         (root / CRITERIA).write_text(json.dumps(register), encoding="utf-8")
         assert validate(root)[0] == [], validate(root)
+
+        rows[0]["reconciliation"]["pending_criteria"] = ["not-in-canonical-register"]
+        (root / LEDGER).write_text(json.dumps({"schema_version": 2, "services": rows}), encoding="utf-8")
+        assert any("reconciliation differs" in s for s in validate(root)[0])
+        rows[0]["reconciliation"]["pending_criteria"] = []
+        rows[0]["reconciliation"]["existing_automated_evidence"] = ["tests/missing.py"]
+        (root / LEDGER).write_text(json.dumps({"schema_version": 2, "services": rows}), encoding="utf-8")
+        assert any("candidate test unavailable" in s for s in validate(root)[0])
+        rows[0]["reconciliation"]["existing_automated_evidence"] = ["tests/fixture.py"]
         rows[0]["implementation_evidence"] = ["docs/unknown.txt"]
         (root / LEDGER).write_text(json.dumps({"schema_version": 2, "services": rows}), encoding="utf-8")
         assert any("evidence ledger differs" in item for item in validate(root)[0])

@@ -67,3 +67,50 @@ La nuova verifica sulla patch 6.2.1 deve essere acquisita da un run CI successiv
 - Blocco per compat6 attivo, simboli Joomla rimossi o downgrade della patch.
 - Integrità requisiti e inventario CORE; impossibilità di promuovere SECDEV-02 se i residui rimangono.
 - Collaudi manuali Joomla, da registrare in un'iterazione di accettazione separata.
+
+
+## Riconciliazione operativa dei 23 servizi CORE — 25 novembre 2026, lotto unico
+
+Sono state analizzate **tutte le 23 decisioni di riuso Joomla**, confrontando matrice originale, registro dei servizi, test effettivamente presenti nel repository e limiti di accettazione. Non sono state introdotte funzionalità artificiali per abbassare il contatore. Il campo `reconciliation` del registro `docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json` è ora consultabile e verificato automaticamente da `tests/secdev02-core-ledger.py` (allineamento esatto degli ID, esistenza dei test, divieto di promozioni non motivate e fixture negative).
+
+**Lettura della tabella:** i test elencati **esistono** e costituiscono punti di partenza per la verifica; non è attestato che coprano automaticamente il criterio in ogni ambiente o combinazione. Le righe con `ci_plus_site` richiedono anche test di accettazione Joomla; le righe `site_and_external` hanno dipendenze dalla configurazione, policy o provider. Il `code_complete_site_pending` per CORE-17 indica criteri di codice già implementati, non un collaudo completo del sito.
+
+| Servizio | Criteri ancora senza accettazione | Test di riferimento presenti | Verifica da completare |
+|---|---|---|---|
+| CORE-01 | all_hierarchy | `joomla-categories.php`, `categories-http.py` | CI parziale + matrice Joomla |
+| CORE-02 | auth_variants | `joomla-learning.php`, `joomla-smoke.php` | Dipendenza dal sito/provider |
+| CORE-03 | cross_context | `joomla-learning.php`, `dashboard-http.py` | CI parziale + matrice Joomla |
+| CORE-04 | record_acl, teacher_edit | `joomla-editor-access.php`, `joomla-courses-ui.php` | CI parziale + matrice Joomla |
+| CORE-05 | layout_coverage | `frontend-css-contract.py`, `frontend-dom-runtime.py` | CI parziale + matrice Joomla |
+| CORE-06 | strings | `secdev02-core06-locale-integrity.py`, `secdev02-core-native-contracts.py` | CI parziale + matrice Joomla |
+| CORE-07 | menu_matrix | `joomla-associations.php`, `associations-http.py` | CI parziale + matrice Joomla |
+| CORE-08 | scope | `joomla-smoke.php`, `sec-p3-data-inventory.py` | Dipendenza dal sito/provider |
+| CORE-09 | tags_context | `secdev02-core-native-contracts.py`, `joomla-courses-ui.php` | CI parziale + matrice Joomla |
+| CORE-10 | teacher_scoping | `joomla-course-fields.php`, `joomla-courses-ui.php` | CI parziale + matrice Joomla |
+| CORE-11 | content_events | `joomla-curriculum.php` | CI parziale + matrice Joomla |
+| CORE-12 | media_providers | `materials-http.py`, `html5-http.py` | Dipendenza dal sito/provider |
+| CORE-13 | all_routes | `categories-http.py`, `associations-http.py` | CI parziale + matrice Joomla |
+| CORE-14 | index_acl | `joomla-courses-ui.php` | CI parziale + matrice Joomla |
+| CORE-15 | native_workflow | `joomla-publication.php` | CI parziale + matrice Joomla |
+| CORE-16 | all_entities | `joomla-programme-restore.php` | CI parziale + matrice Joomla |
+| CORE-17 | Nessuno (codice) | `joomla-publication.php`, `joomla-enrollment-state.php` | Codice verificato; accettazione sito |
+| CORE-18 | smtp | `joomla-roster.php`, `joomla-smoke.php` | Dipendenza dal sito/provider |
+| CORE-19 | idempotent_tasks | `joomla-quiz-attempts.php` | CI parziale + matrice Joomla |
+| CORE-20 | native_completeness | `joomla-courses-ui.php` | CI parziale + matrice Joomla |
+| CORE-21 | private_cache | `secdev02-core21-private-dispatch.py`, `dashboard-http.py` | CI parziale + matrice Joomla |
+| CORE-22 | release_updates | `install-package.php` | Dipendenza dal sito/provider |
+| CORE-23 | event_contracts | `provider-contract-example.php`, `joomla-smoke.php` | Dipendenza dal sito/provider |
+
+### Bonifiche funzionali e nuovi gate di questa riconciliazione
+
+**CORE-06 — cataloghi IT/EN.** Riscontrata la dichiarazione duplicata `COM_JLMS_TEACHERS` nei file frontend italiani e inglesi (stesso valore ripetuto), rimossa senza cambiare la traduzione. Il test `tests/secdev02-core06-locale-integrity.py` valida tutte le **quattro coppie di cataloghi** `com_jlms.ini`/`com_jlms.sys.ini` frontend/backend in IT/EN: unicità delle chiavi, sintassi, parità fra lingue, valori non vuoti e segnaposto compatibili, con prove negative. Il criterio completo resta da verificare per i contenuti non letterali, le email personalizzate e il funzionamento dei language overrides nel sito reale.
+
+**CORE-21 — privacy delle route.** Otto controller frontend con task sensibili (`Enrollment`, `Teacher`, `Quiz`, `Video`, `Media`, `Attachment`, `Certificate`, `Mailconsent`) impostano ora `Cache-Control: private, no-store` **prima del dispatch e anche sugli errori**. La navigazione `DisplayController` resta non memorizzabile. Il test `tests/secdev02-core21-private-dispatch.py` copre tutti questi ingressi e blocca la rimozione/il ritardo della policy con fixture negative. Restano indispensabili prove HTTP multi-utente sui flussi e sull'hosting reale, che possono aggirare o riscrivere header PHP.
+
+### Classificazione precisa dei residui
+
+- **Richiedono ambiente o servizi esterni:** CORE-02 (MFA/IdP), CORE-08 (privacy e retention), CORE-12 (provider e risorse), CORE-18 (SMTP), CORE-22 (upgrade/rollback host), CORE-23 (plugin terzi). La CI non può simularne l'intero funzionamento reale.
+- **Richiedono ampliamento di regressioni funzionali Joomla:** CORE-01/03/04/05/06/07/09/10/11/13/14/15/16/19/20/21. Per ciascuno la tabella indica i test già eseguiti dal repository da riutilizzare; nessuna promozione per semplice presenza del file.
+- **Già documentato come implementato nel registro del codice:** CORE-17 (2/2); i collaudi amministrativi esterni rimangono distinti dai criteri software.
+
+**Risultato della riconciliazione:** 23/23 servizi mappati a evidenza e prossimo collaudo, due interventi correttivi concreti e gate negativi permanenti; la conta originale dei criteri non verificabili resta da validare dopo la CI. Nessun requisito è chiuso per convenienza amministrativa.
