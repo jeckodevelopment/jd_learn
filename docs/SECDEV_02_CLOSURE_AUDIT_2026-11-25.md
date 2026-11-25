@@ -200,7 +200,7 @@ utente Joomla aggiornato, inclusa la visualizzazione delle destinazioni.
 **Test automatici:** `tests/joomla-categories.php` prova il checkout
 appartenente a un altro utente, il rollback senza spostamenti e il rifiuto
 (o mancata offerta) di destinazioni con antenato cestinato; `tests/joomla-editor-access.php`
-verifica la creazione in categoria cestinata anche con permesso ACL nativo.
+verifica la creazione in categoria cestinata anche con permesso ACL nativo e il rollback totale del batch quando un record ha un diniego ACL esplicito pur avendo categorie sorgente/destinazione autorizzate.
 La CI delle due matrici PHP/database e Chromium è necessaria prima del merge.
 
 **Collaudi manuali non eseguiti:** con ruoli Joomla separati, testare i
