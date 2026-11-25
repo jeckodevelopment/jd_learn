@@ -43,6 +43,9 @@ final class CategoryReassignmentService
     /** @return array{category:object, references:array<string,int>, targets:array<string,list<object>>} */
     public function inspect(User $actor, int $categoryId): array
     {
+        // Never use a stale session object's permissions to advertise destinations.
+        $actor = new User((int) $actor->id);
+        $actor->clearAccessRights();
         $source = $this->category($categoryId, true);
         $this->assertManage($actor, $source, 'core.delete');
         $counts = [];
@@ -58,12 +61,16 @@ final class CategoryReassignmentService
             $counts[$key] = $this->count($reference['table'], $categoryId);
             $query = $this->db->createQuery()
                 ->select('id, title, created_user_id, checked_out, lft, rgt')
-                ->from('#__categories')
-                ->where('extension = :extension')
-                ->where('published <> -2')
-                ->where('id <> :source')
-                ->where('(lft < :sourceLft OR rgt > :sourceRgt)')
-                ->order('lft, title');
+                ->from('#__categories AS candidate')
+                ->where('candidate.extension = :extension')
+                ->where('candidate.published <> -2')
+                ->where('candidate.id <> :source')
+                ->where('(candidate.lft < :sourceLft OR candidate.rgt > :sourceRgt)')
+                // A live child of a trashed ancestor is not a usable destination.
+                ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE '
+                    . 'ancestor.lft <= candidate.lft AND ancestor.rgt >= candidate.rgt '
+                    . 'AND ancestor.id <> 1 AND ancestor.published = -2)')
+                ->order('candidate.lft, candidate.title');
             $sourceLft = (int) $source->lft;
             $sourceRgt = (int) $source->rgt;
             $query->bind(':extension', $reference['extension'])
@@ -103,33 +110,71 @@ final class CategoryReassignmentService
             if (!$destinationId || $destinationId === $categoryId) {
                 throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_TARGET_REQUIRED');
             }
-            $destination = $this->category((int) $destinationId);
+            // Preserve the original invalid-target contract for a descendant,
+            // even when its source/ancestor is already in the trash.
+            $destination = $this->category((int) $destinationId, true);
             $isSourceDescendant = (int) $destination->lft > (int) $source->lft
                 && (int) $destination->rgt < (int) $source->rgt;
+            if ($isSourceDescendant) {
+                throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_INVALID_TARGET');
+            }
+            // Only non-descendants can be considered destinations: now apply
+            // the complete trash/ancestor gate before permissions or writes.
+            $destination = $this->category((int) $destinationId);
             if (
-                $destination->extension !== $reference['extension'] || $destination->extension !== $source->extension
-                || $isSourceDescendant
+                $destination->extension !== $reference['extension']
+                || $destination->extension !== $source->extension
             ) {
                 throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_INVALID_TARGET');
             }
             $this->assertManage($actor, $destination, 'core.edit');
-            $resolved[$key] = ['table' => $reference['table'], 'target' => (int) $destinationId, 'expected' => $count];
+            $resolved[$key] = [
+                'table' => $reference['table'],
+                'extension' => $reference['extension'],
+                'target' => (int) $destinationId,
+                'expected' => $count,
+            ];
         }
 
         if ($resolved === []) {
             return $snapshot['references'];
         }
 
+        // Refresh ACL after inspection: account groups or blocking can change mid-session.
+        $actor = new User((int) $actor->id);
+        $actor->clearAccessRights();
         $courseIds = [];
-        if (isset($resolved['courses'])) {
-            $query = $this->db->createQuery()->select('id')->from('#__jlms_courses')->where('catid = :category');
-            $query->bind(':category', $categoryId, ParameterType::INTEGER);
-            $courseIds = array_map('intval', $this->db->setQuery($query)->loadColumn());
-        }
-
         $this->db->transactionStart();
         try {
-            foreach ($resolved as $item) {
+            foreach ($resolved as $key => $item) {
+                // Lock and validate *every* affected record, not only the source/destination
+                // category. Explicit record ACL denies and another editor's checkout win.
+                $rowsQuery = $this->db->createQuery()
+                    ->select('id, created_by, checked_out')
+                    ->from($this->db->quoteName($item['table']))
+                    ->where('catid = :source')
+                    ->order('id ASC')
+                    ->bind(':source', $categoryId, ParameterType::INTEGER);
+                $rowsQuery->setQuery((string) $rowsQuery . ' FOR UPDATE');
+                $rows = $this->db->setQuery($rowsQuery)->loadObjectList();
+                if (count($rows) !== $item['expected']) {
+                    throw new \RuntimeException('COM_JLMS_CATEGORY_REASSIGN_STALE');
+                }
+                foreach ($rows as $row) {
+                    $asset = $item['extension'] . '.' . (int) $row->id;
+                    $canEdit = $actor->authorise('core.edit', $asset)
+                        || ((int) $row->created_by === (int) $actor->id
+                            && $actor->authorise('core.edit.own', $asset));
+                    if (
+                        !$actor->id || $actor->block || !$canEdit
+                        || ((int) $row->checked_out > 0 && (int) $row->checked_out !== (int) $actor->id)
+                    ) {
+                        throw new \RuntimeException('JERROR_ALERTNOAUTHOR', 403);
+                    }
+                }
+                if ($key === 'courses') {
+                    $courseIds = array_map(static fn (object $row): int => (int) $row->id, $rows);
+                }
                 $query = $this->db->createQuery()
                     ->update($this->db->quoteName($item['table']))
                     ->set($this->db->quoteName('catid') . ' = :target')
@@ -171,9 +216,12 @@ final class CategoryReassignmentService
         }
         $query = $this->db->createQuery()
             ->select('id, title, extension, asset_id, created_user_id, checked_out, lft, rgt')
-            ->from('#__categories')->where('id = :id');
+            ->from('#__categories AS candidate')->where('candidate.id = :id');
         if (!$allowTrashed) {
-            $query->where('published <> -2');
+            $query->where('candidate.published <> -2')
+                ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE '
+                    . 'ancestor.lft <= candidate.lft AND ancestor.rgt >= candidate.rgt '
+                    . 'AND ancestor.id <> 1 AND ancestor.published = -2)');
         }
         $query->bind(':id', $id, ParameterType::INTEGER);
         $category = $this->db->setQuery($query)->loadObject();
