@@ -3025,3 +3025,29 @@ credenziali, token, identificativi personali o payload sensibili.
 - Verificare URL `ID`, `ID:alias` e vecchi `ID-alias` su record realmente accessibili; cambiare l'alias e verificare comportamento dei link preesistenti.
 - Ripetere con ID 0, troppo lunghi, alias vuoti, slash aggiuntivi, query/fragment nel segmento e caratteri di controllo codificati: nessuna visualizzazione di record errati o bypass ACL.
 - Ripetere come guest, studente e docente su record non pubblicati, in lingua diversa o di altro utente. Registrare URL anonimizzato, status HTTP, comportamento del router e risultati senza esporre identificativi sensibili.
+
+### SECDEV-02 — lotto CORE-01/04/06/09/15/18/19/20, accettazione manuale
+
+**Stato: NON ESEGUITO.** I test implementativi e CI sono separati da questi collaudi.
+
+- **Categorie annidate e ACL:** creare categorie docente e percorso figlie
+  di un antenato cestinato e verificare rifiuto di creazione/modifica
+  con ruoli diversi, nessun asset o record parziale. Riprovare dopo
+  il ripristino dell'antenato e con lingua/permessi della categoria variati.
+- **Form docente:** creare/modificare un profilo scegliendo categoria e tag
+  Joomla nativi, salvare e riaprire il form, verificare aggiornamento/rimozione
+  dei tag e assenza di associazioni a profili altrui. Verificare account con
+  sola modifica del proprio profilo: nessuna capacità di alterare
+  categoria, lingua, stato o tag tramite editor né POST forgiato.
+- **Scheduler su catalogo esteso:** predisporre oltre un batch di scadenze
+  con promemoria già accodati e altri mai accodati; eseguire più volte
+  il task. Ogni iscrizione eleggibile deve raggiungere la coda una sola
+  volta, senza starvation; nessun avviso per corsi con preferenza disattivata.
+  Verificare retry dopo errore, nessun reinvio doppio e corrispondenza lingua
+  dei modelli email. Annotare tempi/dimensioni e risultato SMTP reale.
+- **Integrazioni globali:** confermare l'assenza di regressioni su filtri
+  categoria e tag, menu multilingua, ACL per record, Content History,
+  Content Plugins, Smart Search, override e installazione/upgrade.
+
+Conservare solo riferimenti anonimizzati a utenti, sessioni, categorie e
+scadenze di prova; non inserire email reali, token o dati personali nei log.
