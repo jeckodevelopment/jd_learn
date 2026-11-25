@@ -25,10 +25,10 @@ for table in (
     "#__jlms_certificate_templates",
 ):
     assert table in remove, table
-for column in ("created_by", "modified_by", "reconciliation_by"):
-    assert "quoteName('" + column + "')" in remove, column
 assert "foreach (['created_by', 'modified_by'] as $actorColumn)" in remove
+assert "->set($db->quoteName($actorColumn) . ' = NULL')" in remove
 assert "->where($db->quoteName($actorColumn) . ' = ' . $userId)" in remove
+assert "quoteName('reconciliation_by')" in remove
 request_scope = remove.split("->update($db->quoteName('#__jlms_enrollment_requests'))", 1)[1]
 assert "->where($db->quoteName('user_id') . ' = ' . $userId)" in request_scope
 assert "->where($db->quoteName('decided_by') . ' = ' . $userId)" in request_scope
