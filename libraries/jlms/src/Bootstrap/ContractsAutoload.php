@@ -22,5 +22,4 @@ function autoload(string $class): void
     if (is_file($file)) {
         require_once $file;
     }
-
 }
