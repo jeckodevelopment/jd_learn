@@ -29,8 +29,30 @@ final class TeacherModel extends ListModel
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         $profile = $rows[$id];
-        $profile->fields = FieldsHelper::getFields('com_jlms.teacher', $profile, true);
+        // Joomla enforces field publication/group ACL; additionally scope the
+        // displayed language when the teacher profile is language-neutral.
+        $activeLanguage = (string) $app->getLanguage()->getTag();
+        $itemLanguage = (string) $profile->language !== '*' ? (string) $profile->language : $activeLanguage;
+        $profile->fields = self::filterPublicFields(
+            FieldsHelper::getFields('com_jlms.teacher', $profile, true),
+            $itemLanguage
+        );
         return $profile;
+    }
+
+    /** @param array<int, object> $fields
+     * @return list<object>
+     */
+    public static function filterPublicFields(array $fields, string $itemLanguage): array
+    {
+        return array_values(array_filter(
+            $fields,
+            static fn (object $field): bool => in_array(
+                (string) ($field->language ?? '*'),
+                ['*', $itemLanguage],
+                true
+            )
+        ));
     }
 
     protected function getListQuery()

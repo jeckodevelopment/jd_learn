@@ -208,6 +208,21 @@ listExpect(!$finderVisible(), 'Finder enforces category/course language consiste
 $finderLanguage->language = 'en-GB';
 $db->updateObject('#__jlms_courses', $finderLanguage, 'id');
 listExpect($finderVisible(), 'Matching category/course language restores Finder eligibility');
+// CORE-14: neutral course + translated category is public only in the
+// category language. Finder must expose that effective language, never '*'.
+$finderLanguage->language = '*';
+$db->updateObject('#__jlms_courses', $finderLanguage, 'id');
+listExpect($finderVisible(), 'Neutral course in translated category remains findable');
+$finderEffectiveQuery = $finderQueryMethod->invoke($finder)->where('a.id = ' . $finderSubject);
+$finderEffective = $db->setQuery($finderEffectiveQuery, 0, 1)->loadObject();
+listExpect(
+    $finderEffective !== null && $finderEffective->language === 'en-GB',
+    'Finder indexes neutral course with category language rather than global wildcard'
+);
+// Restore the editor fixture's explicit course language before later list
+// filtering tests. The wildcard course is deliberately temporary.
+$finderLanguage->language = 'en-GB';
+$db->updateObject('#__jlms_courses', $finderLanguage, 'id');
 $finderCategory->language = '*';
 $db->updateObject('#__categories', $finderCategory, 'id');
 

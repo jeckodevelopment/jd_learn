@@ -211,4 +211,64 @@ categorie annidate, Finder dopo il trasferimento e UI mobile backend; nessuno
 **Stato:** questi sono difetti implementativi specifici e non una promozione
 automatica dell'intero CORE-01/03/04 o di SECDEV-02. La certificazione
 implementativa completa resta da riconciliare con le altre aree core.
-\n\n## Intervento implementativo CORE-07 / CORE-14 — associazioni e Finder (25/11/2026, PR #1037)\n\nIl plugin Finder indicizzava nuovamente tutto il catalogo a ogni variazione di\ncategoria caricando l'elenco completo degli ID in memoria. Il nuovo ciclo\nusa **paginazione keyset di 500 ID**, ordinamento crescente e ultimo ID\nprocessato, mantenendo la stessa rivalidazione ACL, lingua, stato e criteri\ndi pubblicazione per ciascun corso. Gli indici restano gestiti da Smart Search\nJoomla, senza cache o schema proprietari.\n\nNell'helper nativo delle associazioni editoriali, `allowEdit` ora verifica\nesplicitamente anche `core.manage` sul componente, dopo aver ricaricato\nl'identità e prima delle verifiche record/categoria: permessi di sola modifica\nfrontend non autorizzano le funzioni amministrative multilingua.\n\n**Test di implementazione:** gate statico su paginazione keyset e controllo\ndei permessi, regressione Joomla per l'utente anonimo nelle associazioni,\nCI integrale Joomla 6.2.1 su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6.\nLe prove automatiche non sostituiscono un benchmark su catalogo reale.\n\n**Collaudo manuale separato, non eseguito:** verificare ricostruzione\nFinder dopo modifica massiva di categoria/lingua/ACL, associazioni native\ncon ruoli diversi e override del sito, tempi di reindicizzazione su catalogo\nesteso. Questo lotto non chiude automaticamente tutti i criteri CORE-07\ne CORE-14 né SECDEV-02 nel complesso.\n
+
+
+## Intervento implementativo CORE-07 / CORE-14 — associazioni e Finder (25/11/2026, PR #1037)
+
+Il plugin Finder indicizzava nuovamente tutto il catalogo a ogni variazione di
+categoria caricando l'elenco completo degli ID in memoria. Il nuovo ciclo
+usa **paginazione keyset di 500 ID**, ordinamento crescente e ultimo ID
+processato, mantenendo la stessa rivalidazione ACL, lingua, stato e criteri
+di pubblicazione per ciascun corso. Gli indici restano gestiti da Smart Search
+Joomla, senza cache o schema proprietari.
+
+Nell'helper nativo delle associazioni editoriali, `allowEdit` ora verifica
+esplicitamente anche `core.manage` sul componente, dopo aver ricaricato
+l'identità e prima delle verifiche record/categoria: permessi di sola modifica
+frontend non autorizzano le funzioni amministrative multilingua.
+
+**Test di implementazione:** gate statico su paginazione keyset e controllo
+dei permessi, regressione Joomla per l'utente anonimo nelle associazioni,
+CI integrale Joomla 6.2.1 su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6.
+Le prove automatiche non sostituiscono un benchmark su catalogo reale.
+
+**Collaudo manuale separato, non eseguito:** verificare ricostruzione
+Finder dopo modifica massiva di categoria/lingua/ACL, associazioni native
+con ruoli diversi e override del sito, tempi di reindicizzazione su catalogo
+esteso. Questo lotto non chiude automaticamente tutti i criteri CORE-07
+e CORE-14 né SECDEV-02 nel complesso.
+
+
+## SECDEV-02 — contenuti pubblici, campi docente e lingua Finder (25/11/2026)
+
+**Sviluppo — CORE-11.** Le descrizioni promozionali dei corsi e le biografie
+pubbliche dei docenti attivano ora `onContentPrepare` tramite il tipo
+`Joomla\\CMS\\Event\\Content\\ContentPrepareEvent`, con parametri nominati,
+contesto specifico e oggetto di contenuto pubblico già autorizzato. Il testo
+passa dall'allowlist HTML sia prima sia dopo il plugin: codice attivo, iframe,
+URL pericolosi e attributi non autorizzati non vengono mostrati. Restano
+**esclusi** dal dispatch corpi lezione, progressi e dati personali degli studenti.
+Il template docente rende la biografia filtrata come HTML (prima veniva
+stampata letteralmente con escape, pur essendo salvata con tag sicuri).
+
+**Sviluppo — CORE-10.** I campi personalizzati del docente, già selezionati con
+`FieldsHelper::getFields` e i filtri nativi Joomla, vengono ulteriormente
+limitati alla lingua effettiva del profilo (o alla lingua richiesta quando il
+profilo è multilingue), senza introdurre tabelle LMS parallele.
+
+**Sviluppo — CORE-14.** Un corso con lingua `*` collocato in una categoria
+`it-IT`/`en-GB` è indicizzato da Finder nella lingua della categoria, non
+come documento senza lingua, mantenendo i vincoli di visibilità e sicurezza
+sulla categoria e su tutti gli antenati. I corsi con lingua esplicita restano
+esclusi dalle categorie con lingua incompatibile.
+
+**Verifiche CI dedicate:** evento nativo con listener e sanitizzazione HTML,
+contesto lezione non esposto, campi docente IT/EN sul model Joomla, query
+reale Finder con lingua derivata e preservazione dei casi negativi.
+
+**Collaudi manuali — In attesa:** testare contenuti con plugin content
+configurati, override, lingue, campi gruppi e permessi docente, Finder con
+menu multilingua e componenti terzi nel sito reale. Queste prove non sono
+requisiti di completamento *dello sviluppo*, ma ne verificano successivamente
+il funzionamento in ambiente. Nessun criterio CORE complessivo viene promosso
+senza verifica tecnica di tutte le sottoparti implementative.

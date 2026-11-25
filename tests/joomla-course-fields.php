@@ -102,6 +102,52 @@ $record = $model->getItem($course);
 fieldsExpect(!$model->save(['id' => $course,'revision' => (int)$record->revision - 1,'com_fields'
     => ['course-editorial-reference' => 'Stale overwrite']]), 'Stale course revision rejected');
 fieldsExpect($value() === $before, 'Rejected stale edit cannot change field value');
+// CORE-11: Joomla content plugins must receive public editorial content
+// with a named ContentPrepareEvent, without bypassing the HTML allowlist.
+$preparedEvents = [];
+$app->getDispatcher()->addListener(
+    'onContentPrepare',
+    static function (\Joomla\CMS\Event\Content\ContentPrepareEvent $event) use (&$preparedEvents, $course): void {
+        if ($event->getContext() !== 'com_jlms.course') {
+            return;
+        }
+        $item = $event->getItem();
+        if (!str_contains((string) $item->text, 'CI_PUBLIC_COURSE_PLUGIN_MARKER')) {
+            return;
+        }
+        $preparedEvents[] = [
+            (int) $item->id,
+            $event->getContext(),
+            $event->getParams() instanceof \Joomla\Registry\Registry,
+            (int) ($item->catid ?? 0),
+            (string) ($item->language ?? ''),
+        ];
+        $item->text = str_replace(
+            'CI_PUBLIC_COURSE_PLUGIN_MARKER',
+            '<strong>PREPARED_COURSE_MARKER</strong><script>CI_PUBLIC_SCRIPT</script>',
+            $item->text
+        );
+    }
+);
+$preparedHtml = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
+    'com_jlms.course',
+    $course,
+    '<p>CI_PUBLIC_COURSE_PLUGIN_MARKER</p>',
+    (object) ['id' => $course, 'catid' => $catid, 'language' => '*', 'title' => 'Fixture']
+);
+fieldsExpect(
+    $preparedEvents === [[$course, 'com_jlms.course', true, $catid, '*']]
+    && str_contains($preparedHtml, '<strong>PREPARED_COURSE_MARKER</strong>')
+    && !str_contains($preparedHtml, '<script>'),
+    'Native ContentPrepareEvent transforms public course HTML without introducing unsafe markup'
+);
+$invalidContext = false;
+try {
+    \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html('com_jlms.lesson', $course, 'private');
+} catch (\InvalidArgumentException) {
+    $invalidContext = true;
+}
+fieldsExpect($invalidContext, 'Private lesson context cannot be forwarded to public content plugins');
 file_put_contents(dirname($root) . '/course-fields-fixture.json', json_encode(['course' => $course,'field'
     => $field], JSON_THROW_ON_ERROR));
 echo json_encode(['course_fields_native_checks' => $checks,'status' => 'passed']) . PHP_EOL;

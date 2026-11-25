@@ -16,7 +16,8 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
                 ->escape(\Joomla\CMS\Uri\Uri::root(true) . '/' . $this->profile->image) ?>" alt="<?= $this
                     ->escape($imageParams['image_alt'] ?? '') ?>" loading="lazy"><?php
         endif; ?>
- <div id="jlms-teacher-presentation"><?= nl2br($this->escape($this->profile->bio)) ?></div>
+ <div id="jlms-teacher-presentation"><?=
+     $this->profile->bio /* Filtered before and after native content preparation. */ ?></div>
  <dl id="jlms-teacher-fields">
         <?php foreach ($this->profile->fields as $field) : ?>
             <?php if ((string) $field->value === '') {

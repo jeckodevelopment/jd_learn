@@ -8,6 +8,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
 use Jlms\Component\Jlms\Site\Helper\PublicBreadcrumbHelper;
+use Jlms\Component\Jlms\Site\Helper\PublicContentPreparation;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -22,6 +23,14 @@ final class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $this->item = $this->get('Item');
+        if (!empty($this->item['presentation']['description'])) {
+            $this->item['presentation']['description'] = PublicContentPreparation::html(
+                'com_jlms.course',
+                (int) $this->item['course']->id,
+                (string) $this->item['presentation']['description'],
+                $this->item['course']
+            );
+        }
         $this->canStartWindow = (bool) ($this->item['start_window_open'] ?? false);
         $actor = Factory::getApplication()->getIdentity();
         $this->isGuest = !(int) $actor->id;
