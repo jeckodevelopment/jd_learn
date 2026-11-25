@@ -65,17 +65,90 @@ def self_test(source: str, form: str) -> None:
     assert inspect(source, form.replace('max="100"', 'max="5000"'))
 
 
+
+def inspect_retry_and_tasks(source: str, queue: str) -> list[str]:
+    """Verify concurrent claims, diagnostic bounds and three Scheduler routines."""
+    problems: list[str] = []
+    for routine, handler in (
+        ("expireQuizzes", "expireDue"),
+        ("cleanupMaterials", "purgeOrphaned"),
+    ):
+        marker = f"protected function {routine}("
+        if marker not in source:
+            problems.append(f"{routine}: missing task")
+            continue
+        body = source.split(marker, 1)[1].split("protected function ", 1)[0]
+        if not re.search(
+            r"\\$limit\\s*=\\s*max\\(1,\\s*min\\(100,\\s*\\(int\\)\\s*\\(\\$params->limit\\s*\\?\\?\\s*100\\)\\)\\);",
+            body,
+        ) or f"->{handler}($limit)" not in body:
+            problems.append(f"{routine}: missing normalized 1..100 budget")
+        if "batch_limit=" not in body or "has_more" not in body:
+            problems.append(f"{routine}: bounded progress not logged")
+
+    mail = source.split("protected function dispatchMail(", 1)
+    if len(mail) != 2:
+        problems.append("missing mail Scheduler method")
+    else:
+        if "Mail scheduler: batch_limit=" not in mail[1] or "at_limit=" not in mail[1]:
+            problems.append("mail Scheduler saturation diagnostic missing")
+        if "skipped=" not in mail[1] or "$result['skipped']" not in mail[1]:
+            problems.append("mail Scheduler skipped count diagnostic missing")
+        if mail[1].count("['processed'] >= $limit") < 6:
+            problems.append("mail Scheduler must report saturation for all six stages")
+
+    dispatcher = queue.split("public function dispatch(int $limit", 1)
+    if len(dispatcher) != 2:
+        problems.append("missing mail queue dispatch")
+        return problems
+    candidate = dispatcher[1]
+    claim = candidate.split("$claim =", 1)
+    if len(claim) != 2:
+        problems.append("missing mail queue atomic claim")
+    else:
+        claim_sql = claim[1].split("->execute();", 1)[0]
+        if "state IN ('pending','retry')" not in claim_sql or (
+            "available_at <= UTC_TIMESTAMP(6)" not in claim_sql
+        ):
+            problems.append("atomic claim must recheck retry availability")
+    failed = candidate.split("$safeError =", 1)
+    if len(failed) != 2 or '->where("state = \'sending\'")' not in (
+        failed[1].split("$failed++;", 1)[0]
+    ):
+        problems.append("retry transition must only update a sending row")
+    return problems
+
+
+def retry_self_test(source: str, queue: str) -> None:
+    assert not inspect_retry_and_tasks(source, queue), inspect_retry_and_tasks(source, queue)
+    assert inspect_retry_and_tasks(source.replace("Mail scheduler: batch_limit=", "Mail scheduler: limit="), queue)
+    assert inspect_retry_and_tasks(source.replace("->purgeOrphaned($limit)", "->purgeOrphaned(5000)"), queue)
+    assert inspect_retry_and_tasks(source.replace("->expireDue($limit)", "->expireDue(5000)"), queue)
+    assert inspect_retry_and_tasks(source.replace("at_limit=", "batch_full="), queue)
+    start = queue.index("$claim =")
+    tail = queue[start:]
+    altered = queue[:start] + tail.replace(
+        "->where('available_at <= UTC_TIMESTAMP(6)')", "", 1
+    )
+    assert inspect_retry_and_tasks(source, altered)
+    assert inspect_retry_and_tasks(source, queue.replace(
+        '->where("state = \'sending\'")', '', 1
+    )) or inspect_retry_and_tasks(source, queue)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
     source = (ROOT / TASK).read_text(encoding="utf-8")
     form = (ROOT / FORM).read_text(encoding="utf-8")
+    queue = (ROOT / "component/administrator/src/Infrastructure/MailQueue.php").read_text(encoding="utf-8")
     if args.self_test:
         self_test(source, form)
+        retry_self_test(source, queue)
         print("CORE-19 Scheduler batch-bound negative fixtures: OK")
         return 0
-    problems = inspect(source, form)
+    problems = inspect(source, form) + inspect_retry_and_tasks(source, queue)
     for item in problems:
         print("CORE-19: " + item, file=sys.stderr)
     print(f"CORE-19: 4 enqueue services, communication and dispatcher bounded; issues={len(problems)}")
