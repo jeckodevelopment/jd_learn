@@ -30,6 +30,7 @@ final class Jlms extends Adapter implements SubscriberInterface
             'onFinderAfterSave' => 'onFinderAfterSave',
             'onFinderAfterDelete' => 'onFinderAfterDelete',
             'onFinderChangeState' => 'onFinderChangeState',
+            'onFinderCategoryChangeState' => 'onFinderCategoryChangeState',
         ]);
     }
 
@@ -79,6 +80,26 @@ final class Jlms extends Adapter implements SubscriberInterface
         } elseif ($event->getContext() === 'com_plugins.plugin' && (int) $event->getValue() === 0) {
             $this->pluginDisable($event->getPks());
         }
+    }
+
+    /**
+     * Joomla emits a distinct Finder category-state event for bulk publish,
+     * unpublish and trash. Without this subscription, an already indexed
+     * course can remain visible after its category is unpublished.
+     */
+    public function onFinderCategoryChangeState(FinderEvent\AfterCategoryChangeStateEvent $event): void
+    {
+        if (!in_array($event->getExtension(), ['com_jlms.course', 'com_jlms'], true)) {
+            return;
+        }
+
+        if (!$event->getPks()) {
+            return;
+        }
+
+        // The candidate query resolves all ancestors, so refreshing the
+        // catalogue also invalidates descendants of a changed category.
+        $this->reindexAllCourses();
     }
 
     /** Keep stored Finder links aligned when a course becomes noindex or inaccessible. */
