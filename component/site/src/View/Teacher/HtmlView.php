@@ -16,7 +16,8 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         $this->profile->bio = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
             'com_jlms.teacher',
             (int) $this->profile->id,
-            (string) $this->profile->bio
+            (string) $this->profile->bio,
+            $this->profile
         );
         $app = \Joomla\CMS\Factory::getApplication();
         if ($app->getIdentity()->id) {
