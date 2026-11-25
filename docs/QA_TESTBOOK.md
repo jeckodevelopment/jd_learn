@@ -3078,3 +3078,14 @@ Per ogni caso registrare data, versione Joomla, ambiente, configurazione anonimi
 4. **Sessioni:** ripetere la pagina bearer con guest e due account distinti, cache browser/proxy e query-string alterate; nessun dato del primo utente deve comparire al secondo.
 
 Registrare sempre ambiente, versioni, passi e risultati separatamente dalla CI. Non pubblicare token di consenso o altri dati personali in issue/PR/log.
+
+### SECDEV-02 — prove CORE-04/05/06/07/09/14/20 successive al lotto nativo
+
+**Stato: NON ESEGUITO.** Non sostituire con l'esito dei test automatici.
+
+- Su Joomla 6.2.1 provare aggiunta, modifica e rimozione dei tag di docente e corso in un form reale, anche con due editor e ruolo che può modificare soltanto il proprio profilo; tag di terzi non modificabili.
+- Installare override Joomla per ciascuna tipologia di vista presente nell'inventario `docs/SECDEV_02_CORE05_LAYOUT_INVENTORY_1.0.0.json`, sui template desktop e mobile previsti; verificare CSS isolato, hook e accessibilità.
+- In Smart Search ricostruire il vero indice prima/dopo variazione di categoria, permessi, lingua e pubblicazione del corso; verificare la sparizione dei risultati non più accessibili e i tempi su catalogo grande.
+- Verificare IT/EN e override di lingua nei messaggi dinamici, nelle viste, nei controlli di errore e nei modelli di notifica.
+
+Registrare ambiente, ruoli, versione, selettori/URL anonimizzati, risultati attesi e riscontrati. I collaudi restano distinti dalle prove CI e dall'eventuale chiusura dei criteri implementativi.
