@@ -89,10 +89,10 @@ $schedulerHealthKeys = [
                 <tbody>
                 <?php foreach ($this->schedulerHealth as $task) :
                     $taskHealthLabel = $this->escape(
-                    Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')
+                        Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')
                     );
                     $taskGuidance = $this->escape(Text::_(
-                    SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates'])
+                        SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates'])
                     ));
                     ?>
                     <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
@@ -124,9 +124,9 @@ $schedulerHealthKeys = [
                     $providerStateLabel = $this->escape(Text::_($provider['stateKey']));
                     $providerStateClass = $this->escape($provider['stateClass']);
                     $providerGuidance = $this->escape(Text::_(
-                    \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey(
-                    (string) $provider['stateKey']
-                    )
+                        \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey(
+                        (string) $provider['stateKey']
+                        )
                     ));
                     ?>
                     <li data-jlms-provider="<?= $this->escape($provider['key']) ?>">
