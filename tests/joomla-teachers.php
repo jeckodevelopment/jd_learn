@@ -695,6 +695,15 @@ teacherExpect(
 );
 // CORE-09: verify actual Joomla tag association persistence, replacement,
 // rehydration and removal, not merely that the form exposes a tag field.
+$teacherTypeMapping = json_decode((string) $db->setQuery(
+    "SELECT field_mappings FROM #__content_types WHERE type_alias='com_jlms.teacher'"
+)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
+teacherExpect(
+    ($teacherTypeMapping['common']['core_content_item_id'] ?? '') === 'id'
+    && ($teacherTypeMapping['common']['core_body'] ?? '') === 'bio'
+    && ($teacherTypeMapping['common']['core_access'] ?? '') === 'access',
+    'CORE-09: installer registers native teacher UCM mappings required by Joomla tag persistence'
+);
 $tagModel = $app->bootComponent('com_tags')->getMVCFactory()
     ->createModel('Tag', 'Administrator', ['ignore_request' => true]);
 teacherExpect($tagModel->save([
