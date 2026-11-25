@@ -1186,6 +1186,10 @@ _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-cor
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core21-private-dispatch.py'), '--self-test'], check=True)
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core21-private-dispatch.py')], check=True)
 
+# CORE-21: every private frontend route must be in the live two-account HTTP probe matrix.
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core21-task-matrix.py'), '--self-test'], check=True)
+_progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-core21-task-matrix.py')], check=True)
+
 # SECDEV-02: preserve closure evidence and reject unsupported completeness claims.
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-closure-readiness.py'), '--self-test'], check=True)
 _progress_subprocess.run([_progress_sys.executable, str(ROOT/'tests/secdev02-closure-readiness.py')], check=True)
