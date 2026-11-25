@@ -549,7 +549,7 @@ La CI completa [#45566471467](https://github.com/jeckodevelopment/jd_learn/actio
 
 Dei residui, sono presenti le firme native `Table::_getAssetName`, `::_getAssetTitle`, `::_getAssetParentId` e la proprietà `$_supportNullValue`, che richiedono conservazione per compatibilità Joomla. Gli altri rilievi richiedono ulteriore bonifica dei template e dei file con side effect, non soppressioni indiscriminate. CORE-01–23 conserva verifiche end-to-end non risolte e l'inventario API non e' un collaudo universale. Lo stato del requisito resta **Parziale**, con percentuali e criteri implementativi non promossi e test manuali esplicitamente in attesa. L'integrazione di questo lotto va indicata come riduzione verificata del debito, mai come chiusura della sicurezza o della compatibilità core.
 
- 
+
 ## Piano di chiusura unificato SECDEV-02 — 25 novembre 2026
 
 **Baseline ufficiale:** CI #45567216732, PHP_CodeSniffer 4.0.4 PSR12: **102 rilievi**, senza nuove violazioni. Ripartizione: 79 righe lunghe; 12 firme con underscore; 3 proprietà con underscore; 6 file con side effects; 1 classe priva di namespace; 1 nome classe fuori da PascalCase.
