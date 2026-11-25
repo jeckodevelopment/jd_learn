@@ -215,6 +215,7 @@ class CurriculumController extends BaseController
 
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (
             static::class === self::class && !in_array(strtolower($task), ['createversion', 'restoreversion'
             , 'saveteachingrules', 'transition', 'duplicatecourse', 'saveorder'], true)
@@ -257,6 +258,7 @@ class CurriculumController extends BaseController
         http_response_code($code);
         $this->app->setHeader('Content-Type', 'application/json; charset=utf-8', true);
         $this->app->setHeader('Cache-Control', 'private, no-store', true);
+        $this->app->sendHeaders();
         echo new \Joomla\CMS\Response\JsonResponse($data, $message, $error, true);
         $this->app->close();
     }
