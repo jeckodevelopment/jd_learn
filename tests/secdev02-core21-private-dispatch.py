@@ -38,9 +38,9 @@ def inspect_source(name: str, contents: str) -> list[str]:
 
 
 
-def inspect_raw_json(name: str, contents: str) -> list[str]:
+def inspect_raw_json(name: str, contents: str, handler: str = "private function respond(") -> list[str]:
     """A raw JSON task must flush Joomla's pending headers before echo/close."""
-    start = contents.find("private function respond(")
+    start = contents.find(handler)
     if start < 0:
         return [f"{name}: missing raw JSON response handler"]
     end = contents.find("$this->app->close();", start)
@@ -69,11 +69,12 @@ def check(root: Path) -> list[str]:
             faults.append(f"Missing protected controller: {relative}")
             continue
         faults.extend(inspect_source(name, source))
-    for name in ("Quiz", "Video"):
+    for name in ("Quiz", "Video", "Lesson"):
         source = (root / "component/site/src/Controller" / f"{name}Controller.php").read_text(
             encoding="utf-8"
         )
-        faults.extend(inspect_raw_json(name, source))
+        handler = "public function begin(" if name == "Lesson" else "private function respond("
+        faults.extend(inspect_raw_json(name, source, handler))
     display = root / "component/site/src/Controller/DisplayController.php"
     try:
         source = display.read_text(encoding="utf-8")
