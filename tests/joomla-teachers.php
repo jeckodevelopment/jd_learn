@@ -136,6 +136,57 @@ teacherExpect(
     && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', $storedTeacherBio),
     'public teacher biography retains safe formatting but strips scripts, arbitrary embeds and active URLs'
 );
+// CORE-10: teacher field language must match the effective teacher language,
+// even when the profile itself is neutral and the viewer switches locales.
+$teacherFieldModel = $app->bootComponent('com_fields')->getMVCFactory()
+    ->createModel('Field', 'Administrator', ['ignore_request' => true]);
+foreach (['en-GB' => 'teacher-field-en', 'it-IT' => 'teacher-field-it'] as $tag => $name) {
+    teacherExpect($teacherFieldModel->save([
+        'id' => 0, 'context' => 'com_jlms.teacher', 'title' => $name, 'name' => $name,
+        'type' => 'text', 'state' => 1, 'access' => 1, 'language' => $tag,
+        'group_id' => 0, 'default_value' => 'Visible ' . $name, 'description' => '',
+        'params' => [], 'fieldparams' => ['filter' => 'string'],
+    ]), 'Native Joomla teacher custom-field language fixture saved');
+}
+$app->getInput()->set('id', $public);
+$teacherSiteModel = $factory->createModel('Teacher', 'Site', ['ignore_request' => true]);
+$originalLanguage = $app->getLanguage();
+foreach (['en-GB' => 'teacher-field-en', 'it-IT' => 'teacher-field-it'] as $tag => $expected) {
+    $app->loadLanguage(
+        $container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage($tag, false)
+    );
+    $translatedProfile = $teacherSiteModel->getProfile();
+    $fieldNames = array_map(static fn (object $field): string => (string) $field->name, $translatedProfile->fields);
+    teacherExpect(
+        in_array($expected, $fieldNames, true)
+        && !in_array($tag === 'en-GB' ? 'teacher-field-it' : 'teacher-field-en', $fieldNames, true),
+        'Native teacher fields honor active language while teacher language is neutral'
+    );
+}
+$app->loadLanguage($originalLanguage);
+$app->getInput()->set('id', 0);
+// CORE-11: a trusted content plugin may modify a public teacher biography
+// but may not bypass the final allowlist.
+$teacherEvents = [];
+$app->getDispatcher()->addListener('onContentPrepare',
+    static function (\Joomla\CMS\Event\Content\ContentPrepareEvent $event) use (&$teacherEvents, $public): void {
+        if ($event->getContext() !== 'com_jlms.teacher') {
+            return;
+        }
+        $item = $event->getItem();
+        $teacherEvents[] = [(int) $item->id, $event->getContext()];
+        $item->text .= '<em>PUBLIC_TEACHER_PREPARED</em><iframe src="https://example.invalid"></iframe>';
+    });
+$preparedBio = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
+    'com_jlms.teacher', $public, $storedTeacherBio
+);
+teacherExpect(
+    $teacherEvents === [[$public, 'com_jlms.teacher']]
+    && str_contains($preparedBio, '<strong>biography</strong>')
+    && str_contains($preparedBio, '<em>PUBLIC_TEACHER_PREPARED</em>')
+    && !str_contains($preparedBio, '<iframe'),
+    'Native teacher content preparation preserves safe rich text and strips injected embeds'
+);
 // SEC-P1: the session identity loaded before a block must never authorize
 // a teacher edit, including links and forms that call the shared helper.
 teacherExpect(TeacherProfiles::canEdit($actor, $teacher), 'teacher profile author may edit before account block');
