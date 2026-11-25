@@ -5,6 +5,14 @@ declare(strict_types=1);
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+$gridListClass = $this->layout === 'list' ? ' jlms-course-grid--list' : '';
+$hasActiveCategoryFilters = $this->search !== ''
+    || $this->tagId > 0
+    || $this->difficulty !== ''
+    || $this->duration !== ''
+    || $this->available === '1'
+    || $this->teacherId > 0
+    || $this->pathwayId > 0;
 ?>
 <section id="jlms-category" class="jlms-category" data-category-id="<?= (int) $this->category->id ?>">
  <header id="jlms-category-header">
@@ -59,7 +67,8 @@ value="<?= (int) $this->category->id ?>">
    <label for="jlms-category-catalog-tag"><?= Text::_('COM_JLMS_CATALOG_TAG') ?></label>
    <select id="jlms-category-catalog-tag" name="filter[tag_id]">
    <option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
-        ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php
+        $selectedTag = $this->tagId === (int) $tag->id ? ' selected' : '';
+        ?><option value="<?= (int) $tag->id ?>"<?= $selectedTag ?>><?= $this->escape($tag->title) ?></option><?php
                      endforeach; ?></select>
 <label for="jlms-category-catalog-difficulty"><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY') ?></label>
    <select id="jlms-category-catalog-difficulty" name="filter[difficulty]"><option value=""><?=
@@ -93,17 +102,19 @@ value="<?= (int) $this->category->id ?>">
    <label for="jlms-category-catalog-teacher"><?= Text::_('COM_JLMS_CATALOG_TEACHER') ?></label>
    <select id="jlms-category-catalog-teacher" name="filter[teacher_id]">
    <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
-        ?><option value="<?= (int) $teacher->id ?>"<?= $this->teacherId === (int) $teacher->id ? ' selected' : '' ?>><?= $this->escape($teacher->title) ?></option><?php
+        $selectedTeacher = $this->teacherId === (int) $teacher->id ? ' selected' : '';
+        ?><option value="<?= (int) $teacher->id ?>"<?= $selectedTeacher ?>><?= $this->escape($teacher->title) ?></option><?php
                      endforeach; ?></select>
    <label for="jlms-category-catalog-pathway"><?= Text::_('COM_JLMS_CATALOG_PATHWAY') ?></label>
    <select id="jlms-category-catalog-pathway" name="filter[pathway_id]">
    <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
-        ?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected' : '' ?>><?= $this->escape($pathway->title) ?></option><?php
+        $selectedPathway = $this->pathwayId === (int) $pathway->id ? ' selected' : '';
+        ?><option value="<?= (int) $pathway->id ?>"<?= $selectedPathway ?>><?= $this->escape($pathway->title) ?></option><?php
                      endforeach; ?></select>
    <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
   </form>
         <?php endif; ?>
-  <div id="jlms-category-course-grid" class="jlms-course-grid<?= $this->layout === 'list' ? ' jlms-course-grid--list' : '' ?>" data-layout="<?= $this->escape($this->layout) ?>"><?php foreach ($this->items as $item) : ?>
+  <div id="jlms-category-course-grid" class="jlms-course-grid<?= $gridListClass ?>" data-layout="<?= $this->escape($this->layout) ?>"><?php foreach ($this->items as $item) : ?>
    <article id="jlms-course-card-<?=
        (int) $item->id ?>" class="jlms-card jlms-course-card" data-course-id="<?=
        (int) $item->id ?>">
@@ -116,7 +127,7 @@ value="<?= (int) $this->category->id ?>">
                                                              <?php endforeach; ?></div>
         <?php if (!$this->items) :
             ?><p id="jlms-category-courses-empty"><?= Text::_('COM_JLMS_NO_PUBLISHED_COURSES') ?></p>
-            <?php if ($this->showFilters && ($this->search !== '' || $this->tagId > 0 || $this->difficulty !== '' || $this->duration !== '' || $this->available === '1' || $this->teacherId > 0 || $this->pathwayId > 0)) : ?>
+            <?php if ($this->showFilters && $hasActiveCategoryFilters) : ?>
     <p id="jlms-category-clear-filters"><a href="<?=
         Route::_('index.php?option=com_jlms&view=category&id=' . (int) $this->category->id) ?>"><?=
         Text::_('COM_JLMS_CATALOG_CLEAR_FILTERS') ?></a></p>
