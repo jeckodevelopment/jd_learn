@@ -414,3 +414,9 @@ Le evidenze sono rieseguite nel gate obbligatorio e nelle matrici Joomla PHP 8.3
 Il CSV resta `Parziale` e la matrice `docs/FUNCTIONAL_CRITERIA_1.0.0.json` conserva le valutazioni originali fino all'accertamento dei criteri completi. Gli altri punti di sviluppo/CI sono ancora aperti nel registro di riconciliazione.
 
 **Riconciliazione PR #1044:** il lotto nativo CORE recupera la #1042 senza sostituire la #1043; test CI e collaudi manuali restano distinti. Lo stato globale SECDEV-02 rimane Parziale.
+
+## Estensione matrice nativa Finder CORE-01/03/07/14 (25/11/2026)
+
+La fixture `tests/joomla-categories.php` esercita ora anche l'ACL, la lingua e la pubblicazione della **categoria figlia**, non soltanto degli antenati; separatamente varia l'accesso al catalogo del corso, la sua lingua e la finestra `publish_down`. Per ogni scenario verifica il blocco del candidato non pubblico e il suo ritorno dopo il ripristino. L'obiettivo è rilevare regressioni che la sola verifica dei parent non intercetterebbe.
+
+**Perimetro dell'evidenza:** selezione SQL dell'adapter Finder installato su Joomla nella CI MySQL/MariaDB. Non è ancora prova end-to-end dell'aggiornamento degli indici persistiti né del refresh dei risultati Smart Search a seguito degli eventi. Questa attività resta in carico allo sviluppo/CI insieme agli altri criteri `developer_work_pending`; il collaudo manuale sul sito è separato e NON ESEGUITO. Non si modifica lo stato `Parziale` né la conta 17+6 fino a evidenze sufficienti.

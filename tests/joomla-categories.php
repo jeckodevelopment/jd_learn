@@ -353,6 +353,36 @@ $update($en, ["published" => 0]);
 catExpect(!$finderEligible(), 'CORE-14: unpublishing ancestor removes public Finder eligibility');
 $update($en, ["published" => 1]);
 catExpect($finderEligible(), 'CORE-14: restoring ancestor publication restores Finder eligibility');
+// CORE-01/03/07/14: exercise the leaf category and course independently.
+// Each restrictive edit must immediately remove the candidate, and reverting
+// the edit must restore it without changing any other visibility dimension.
+$update($child, ["access" => 2]);
+catExpect(!$finderEligible(), 'CORE-14: restricted leaf category must not yield a public Finder result');
+$update($child, ["access" => 1]);
+catExpect($finderEligible(), 'CORE-14: restoring leaf category access restores Finder eligibility');
+$update($child, ["language" => "it-IT"]);
+catExpect(!$finderEligible(), 'CORE-07/14: leaf category language mismatch excludes English Finder result');
+$update($child, ["language" => "en-GB"]);
+catExpect($finderEligible(), 'CORE-07/14: restoring leaf language restores English Finder result');
+$update($child, ["published" => 0]);
+catExpect(!$finderEligible(), 'CORE-14: unpublished leaf category removes public Finder result');
+$update($child, ["published" => 1]);
+catExpect($finderEligible(), 'CORE-14: restoring leaf publication restores Finder eligibility');
+$db->setQuery('UPDATE #__jlms_courses SET catalog_access=2 WHERE id=' . $course)->execute();
+catExpect(!$finderEligible(), 'CORE-03/14: restricted course catalogue access blocks Finder');
+$db->setQuery('UPDATE #__jlms_courses SET catalog_access=1 WHERE id=' . $course)->execute();
+catExpect($finderEligible(), 'CORE-03/14: restoring course catalogue access restores Finder eligibility');
+$db->setQuery('UPDATE #__jlms_courses SET language=' . $db->quote('it-IT')
+    . ' WHERE id=' . $course)->execute();
+catExpect(!$finderEligible(), 'CORE-07/14: mismatched course language does not leak into category Finder');
+$db->setQuery('UPDATE #__jlms_courses SET language=' . $db->quote('en-GB')
+    . ' WHERE id=' . $course)->execute();
+catExpect($finderEligible(), 'CORE-07/14: restoring course language restores Finder eligibility');
+$db->setQuery('UPDATE #__jlms_courses SET publish_down=' . $db->quote('2035-01-01 00:00:00')
+    . ' WHERE id=' . $course)->execute();
+catExpect(!$finderEligible(), 'CORE-14: time-bounded publication remains outside the static index');
+$db->setQuery('UPDATE #__jlms_courses SET publish_down=NULL WHERE id=' . $course)->execute();
+catExpect($finderEligible(), 'CORE-14: removing publication schedule restores Finder eligibility');
 $db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id=' . $course)->execute();
 catExpect(!$finderEligible(), 'CORE-14: unpublished course must not be a public Finder hit');
 $db->setQuery('UPDATE #__jlms_courses SET state=1, content_access=2 WHERE id=' . $course)->execute();
