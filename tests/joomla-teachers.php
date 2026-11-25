@@ -516,6 +516,45 @@ teacherExpect(
     TeacherProfiles::available($db, $guest, 'en-GB', [$public, $private]) === [],
     'trashed teacher profiles are excluded from public visibility'
 );
+// CORE-04: one foreign checkout must reject a mixed batch atomically, even
+// when its first record was otherwise editable by the current administrator.
+$teacherIds = [$public, $private];
+$teacherSnapshot = static function () use ($db, $teacherIds): array {
+    return $db->setQuery('SELECT id,state,revision FROM #__jlms_teachers WHERE id IN ('
+        . implode(',', array_map('intval', $teacherIds)) . ') ORDER BY id')->loadAssocList();
+};
+$beforeTeacherBulk = $teacherSnapshot();
+$foreignCheckout = (object) [
+    'id' => $private, 'checked_out' => (int) $learner->id,
+];
+$db->updateObject('#__jlms_teachers', $foreignCheckout, 'id');
+try {
+    teacherExpect(
+        !$teacherModel->changeStates([$public, $private], 0),
+        'CORE-04: foreign checkout in mixed teacher batch rejects entire restoration'
+    );
+    teacherExpect(
+        $teacherSnapshot() === $beforeTeacherBulk,
+        'CORE-04: teacher checkout conflict rolls back states and revisions of prior records'
+    );
+} finally {
+    $releaseCheckout = (object) [
+        'id' => $private, 'checked_out' => 0,
+    ];
+    $db->updateObject('#__jlms_teachers', $releaseCheckout, 'id');
+}
+// Forging the same bulk operation with a viewer must not reuse a privileged
+// prior session or change either teacher, even with the model instance reused.
+$teacherModel->setCurrentUser($learner);
+teacherExpect(
+    !$teacherModel->changeStates([$public, $private], 0),
+    'CORE-03/04: unauthorised logged-in viewer cannot bulk restore teacher profiles'
+);
+$teacherModel->setCurrentUser($actor);
+teacherExpect(
+    $teacherSnapshot() === $beforeTeacherBulk,
+    'CORE-03/04: denied viewer batch leaves teacher state and revision unchanged'
+);
 teacherExpect(
     !$teacherModel->changeStates([$public, 999999999], 0),
     'mixed selection with absent teacher is rolled back atomically'
