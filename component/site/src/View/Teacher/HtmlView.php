@@ -13,6 +13,11 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
     public function display($tpl = null)
     {
         $this->profile = $this->get('Profile');
+        $this->profile->bio = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
+            'com_jlms.teacher',
+            (int) $this->profile->id,
+            (string) $this->profile->bio
+        );
         $app = \Joomla\CMS\Factory::getApplication();
         if ($app->getIdentity()->id) {
             $item = $app->bootComponent('com_jlms')->getMVCFactory()
