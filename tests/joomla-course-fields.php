@@ -115,8 +115,13 @@ $app->getDispatcher()->addListener(
         if (!str_contains((string) $item->text, 'CI_PUBLIC_COURSE_PLUGIN_MARKER')) {
             return;
         }
-        $preparedEvents[] = [(int) $item->id, $event->getContext(), $event->getParams() instanceof
-            \Joomla\Registry\Registry];
+        $preparedEvents[] = [
+            (int) $item->id,
+            $event->getContext(),
+            $event->getParams() instanceof \Joomla\Registry\Registry,
+            (int) ($item->catid ?? 0),
+            (string) ($item->language ?? ''),
+        ];
         $item->text = str_replace(
             'CI_PUBLIC_COURSE_PLUGIN_MARKER',
             '<strong>PREPARED_COURSE_MARKER</strong><script>CI_PUBLIC_SCRIPT</script>',
@@ -127,10 +132,11 @@ $app->getDispatcher()->addListener(
 $preparedHtml = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
     'com_jlms.course',
     $course,
-    '<p>CI_PUBLIC_COURSE_PLUGIN_MARKER</p>'
+    '<p>CI_PUBLIC_COURSE_PLUGIN_MARKER</p>',
+    (object) ['id' => $course, 'catid' => $catid, 'language' => '*', 'title' => 'Fixture']
 );
 fieldsExpect(
-    $preparedEvents === [[$course, 'com_jlms.course', true]]
+    $preparedEvents === [[$course, 'com_jlms.course', true, $catid, '*']]
     && str_contains($preparedHtml, '<strong>PREPARED_COURSE_MARKER</strong>')
     && !str_contains($preparedHtml, '<script>'),
     'Native ContentPrepareEvent transforms public course HTML without introducing unsafe markup'
