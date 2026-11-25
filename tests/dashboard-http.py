@@ -96,9 +96,15 @@ try:
     if task=='mailconsent.confirm':
      matrix_check(code in [302,303,400,403,404],
       'CORE-21 invalid consent link not rejected/redirected: '+name+' '+str(code))
-    elif task=='teacher.edit':
+    elif task.startswith('teacher.'):
+     # Native FormController redirects on absent editor ID or failed CSRF.
+     # Inspect the 303 itself, and never accept success for an invalid POST.
      matrix_check(code in [303,400,401,403,404,405],
-      'CORE-21 teacher edit without record not rejected/redirected: '+name+' '+str(code))
+      'CORE-21 teacher action unexpectedly accepted: '+name+' '+task+' '+str(code))
+     if code==303:
+      location=headers.get('Location','')
+      matrix_check(location.startswith('/') or location.startswith(base),
+       'CORE-21 teacher redirect leaves Joomla origin: '+task+' '+location)
     else:
      matrix_check(400<=code<500,
       'CORE-21 unsafe task response '+name+' '+task+' HTTP '+str(code))
