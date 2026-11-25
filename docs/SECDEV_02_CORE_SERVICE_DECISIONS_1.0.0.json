@@ -137,7 +137,8 @@
         ],
         "existing_automated_evidence": [
           "tests/frontend-css-contract.py",
-          "tests/frontend-dom-runtime.py"
+          "tests/frontend-dom-runtime.py",
+          "tests/secdev02-core05-overrides-inventory.py"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -356,7 +357,8 @@
         ],
         "existing_automated_evidence": [
           "tests/categories-http.py",
-          "tests/associations-http.py"
+          "tests/associations-http.py",
+          "tests/secdev02-core21-task-matrix.py"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -521,7 +523,8 @@
         ],
         "existing_automated_evidence": [
           "tests/joomla-quiz-attempts.php",
-          "tests/secdev02-core19-expiry-reminders.py"
+          "tests/secdev02-core19-expiry-reminders.py",
+          "tests/secdev02-core19-mail-batch-bound.py"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",

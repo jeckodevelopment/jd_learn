@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "scope": "CORE-05 native override inventory (source and CI; not site acceptance)",
+  "reviewed_on": "2026-11-25",
+  "clients": {
+    "site": [
+      {
+        "view": "categories",
+        "layout": "default.php"
+      },
+      {
+        "view": "category",
+        "layout": "default.php"
+      },
+      {
+        "view": "classroom",
+        "layout": "default.php"
+      },
+      {
+        "view": "course",
+        "layout": "default.php"
+      },
+      {
+        "view": "courses",
+        "layout": "default.php"
+      },
+      {
+        "view": "dashboard",
+        "layout": "default.php"
+      },
+      {
+        "view": "lessonpreview",
+        "layout": "default.php"
+      },
+      {
+        "view": "mailconsentrevoke",
+        "layout": "default.php"
+      },
+      {
+        "view": "mycertificates",
+        "layout": "default.php"
+      },
+      {
+        "view": "mycourses",
+        "layout": "default.php"
+      },
+      {
+        "view": "pathway",
+        "layout": "default.php"
+      },
+      {
+        "view": "pathways",
+        "layout": "default.php"
+      },
+      {
+        "view": "preferences",
+        "layout": "default.php"
+      },
+      {
+        "view": "quiz",
+        "layout": "default.php"
+      },
+      {
+        "view": "teacher",
+        "layout": "default.php"
+      },
+      {
+        "view": "teacheredit",
+        "layout": "default.php"
+      },
+      {
+        "view": "teachers",
+        "layout": "default.php"
+      }
+    ],
+    "administrator": [
+      {
+        "view": "categoryreassignment",
+        "layout": "default.php"
+      },
+      {
+        "view": "certificate",
+        "layout": "default.php"
+      },
+      {
+        "view": "certificates",
+        "layout": "default.php"
+      },
+      {
+        "view": "course",
+        "layout": "edit.php"
+      },
+      {
+        "view": "courseannouncement",
+        "layout": "default.php"
+      },
+      {
+        "view": "coursemessage",
+        "layout": "default.php"
+      },
+      {
+        "view": "courseoperations",
+        "layout": "default.php"
+      },
+      {
+        "view": "coursepreview",
+        "layout": "default.php"
+      },
+      {
+        "view": "courses",
+        "layout": "default.php"
+      },
+      {
+        "view": "curriculum",
+        "layout": "default.php"
+      },
+      {
+        "view": "dashboard",
+        "layout": "default.php"
+      },
+      {
+        "view": "enrollmentmigration",
+        "layout": "default.php"
+      },
+      {
+        "view": "enrollments",
+        "layout": "default.php"
+      },
+      {
+        "view": "enrollmentstate",
+        "layout": "default.php"
+      },
+      {
+        "view": "mailqueue",
+        "layout": "default.php"
+      },
+      {
+        "view": "mailvariables",
+        "layout": "default.php"
+      },
+      {
+        "view": "manualenrollment",
+        "layout": "default.php"
+      },
+      {
+        "view": "materials",
+        "layout": "default.php"
+      },
+      {
+        "view": "pathway",
+        "layout": "edit.php"
+      },
+      {
+        "view": "pathways",
+        "layout": "default.php"
+      },
+      {
+        "view": "publicationreview",
+        "layout": "default.php"
+      },
+      {
+        "view": "question",
+        "layout": "default.php"
+      },
+      {
+        "view": "questionbank",
+        "layout": "default.php"
+      },
+      {
+        "view": "quiz",
+        "layout": "default.php"
+      },
+      {
+        "view": "quizextend",
+        "layout": "default.php"
+      },
+      {
+        "view": "quizreview",
+        "layout": "default.php"
+      },
+      {
+        "view": "quiztime",
+        "layout": "default.php"
+      },
+      {
+        "view": "teacher",
+        "layout": "edit.php"
+      },
+      {
+        "view": "teachers",
+        "layout": "default.php"
+      }
+    ]
+  },
+  "manual_qa": "docs/QA_TESTBOOK.md"
+}

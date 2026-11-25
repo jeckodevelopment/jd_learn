@@ -89,11 +89,12 @@
       "canonical_status": "unverifiable",
       "acceptance_class": "developer_work_pending",
       "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Censire ogni vista e modulo distribuito, esercitare override e documentare i contratti DOM/CSS.",
+      "development_action": "Inventario CI ora verifica tutte le 46 viste MVC native; ancora da esercitare rendering degli override e moduli/template realmente installati.",
       "manual_action": "Collaudare override su template e viewport desktop/mobile.",
       "automated_evidence": [
         "tests/frontend-css-contract.py",
-        "tests/frontend-dom-runtime.py"
+        "tests/frontend-dom-runtime.py",
+        "tests/secdev02-core05-overrides-inventory.py"
       ]
     },
     {
@@ -202,11 +203,12 @@
       "canonical_status": "unverifiable",
       "acceptance_class": "developer_work_pending",
       "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Completare matrice di route dirette, breadcrumb, SEF, alias modificati, lingua e ACL per tutte le viste.",
+      "development_action": "Allineata allowlist DisplayController con vista bearer mailconsentrevoke e test manifest/HTTP per route private; restano combinazioni complete di SEF, breadcrumb e lingua.",
       "manual_action": "Verificare link diretti e breadcrumb con ruoli, menu e lingue.",
       "automated_evidence": [
         "tests/categories-http.py",
-        "tests/associations-http.py"
+        "tests/associations-http.py",
+        "tests/secdev02-core21-task-matrix.py"
       ]
     },
     {
@@ -271,11 +273,12 @@
       "canonical_status": "unverifiable",
       "acceptance_class": "developer_work_pending",
       "implementation_finding": "expiry_override_fixed_this_pr",
-      "development_action": "Correzione in questa PR: selezione SQL e MailPreferences concordano per default globale e override; ampliare il test di retry scheduler multi-batch.",
+      "development_action": "Normalizzato limite task in 1..100 e propagato a tutte le sei fasi; test negativo contro discovery senza limite; restano retry multibatch e diagnostica dinamica.",
       "manual_action": "Eseguire task su database realistico, disabilitazioni e ripetizioni senza duplicati.",
       "automated_evidence": [
         "tests/joomla-quiz-attempts.php",
-        "tests/secdev02-core19-expiry-reminders.py"
+        "tests/secdev02-core19-expiry-reminders.py",
+        "tests/secdev02-core19-mail-batch-bound.py"
       ]
     },
     {
@@ -299,7 +302,7 @@
       "canonical_status": "unverifiable",
       "acceptance_class": "developer_work_pending",
       "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Estendere manifesto HTTP a nuove route personali e verificare header/errori con sessioni isolate.",
+      "development_action": "Aggiunta pagina bearer mailconsentrevoke alla matrice HTTP con guest e due account e verifica no-store/noindex, referrer; continuare inventario endpoint personali ulteriori.",
       "manual_action": "Verificare cache e sessione fra account differenti anche dietro CDN/proxy.",
       "automated_evidence": [
         "tests/secdev02-core21-private-dispatch.py",

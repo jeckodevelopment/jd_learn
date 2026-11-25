@@ -54,14 +54,21 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
         $app = Factory::getApplication();
         $app->bootComponent('com_jlms');
         $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $expiry = (new \Jlms\Component\Jlms\Administrator\Application\CourseExpiryReminderService($db))->enqueueDue();
-        $lessons = (new \Jlms\Component\Jlms\Administrator\Application\LessonReleaseNotice($db))->enqueueDue();
-        $updates = (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionChangeNotice($db))->enqueueDue();
-        $managers = (new \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice($db))->enqueueDue();
-        $communication = $app->bootComponent('com_jlms')->getCourseCommunicationService()->process((int)($params
-            ->limit ?? 25));
-        $result = (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))->dispatch((int)($params
-            ->limit ?? 25));
+        // The task's configured limit must bound *all* discovery/enqueue
+        // routines as well as dispatch; otherwise a single run can enqueue
+        // thousands of notifications even with a small configured batch.
+        $limit = max(1, min(100, (int) ($params->limit ?? 25)));
+        $expiry = (new \Jlms\Component\Jlms\Administrator\Application\CourseExpiryReminderService($db))
+            ->enqueueDue($limit);
+        $lessons = (new \Jlms\Component\Jlms\Administrator\Application\LessonReleaseNotice($db))
+            ->enqueueDue($limit);
+        $updates = (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionChangeNotice($db))
+            ->enqueueDue($limit);
+        $managers = (new \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice($db))
+            ->enqueueDue($limit);
+        $communication = $app->bootComponent('com_jlms')->getCourseCommunicationService()->process($limit);
+        $result = (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))
+            ->dispatch($limit);
         $this->logTask('Course expiry reminders: queued=' . $expiry['queued'] . '; failed=' . $expiry['failed']
             . '; processed=' . $expiry['processed'] . '; lesson releases: queued=' . $lessons['queued']
                 . '; failed=' . $lessons['failed'] . '; processed=' . $lessons['processed']

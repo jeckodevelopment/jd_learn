@@ -90,7 +90,7 @@ def check(root: Path) -> list[str]:
         if CACHE not in source:
             faults.append("Frontend display no longer sets a no-store policy")
         for view in ("dashboard", "mycourses", "mycertificates", "preferences",
-                     "classroom", "quiz", "teacheredit"):
+                     "classroom", "quiz", "teacheredit", "mailconsentrevoke"):
             if f"'{view}'" not in source:
                 faults.append(f"Missing private view route: {view}")
     return faults
