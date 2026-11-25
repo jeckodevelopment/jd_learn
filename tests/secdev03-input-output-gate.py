@@ -66,7 +66,7 @@ def check() -> None:
     teacher_model = source("component/administrator/src/Model/TeacherModel.php")
     links = source("component/administrator/src/Application/EditorialLinkSafety.php")
     teacher_tests = source("tests/joomla-teachers.php")
-    assert "EditorialLinkSafety::containsSensitiveParameters($website)" in teacher_model
+    assert re.search(r"EditorialLinkSafety::containsSensitiveParameters\(\s*\$website\s*\)", teacher_model)
     assert "public static function containsSensitiveParameters(string $url)" in links
     for payload in ("accessToken=TEST_CREDENTIAL", "clientSecret=TEST_CREDENTIAL",
                     "api_key=TEST_CREDENTIAL"):
