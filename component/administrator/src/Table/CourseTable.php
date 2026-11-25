@@ -171,5 +171,4 @@ final class CourseTable extends Table implements TaggableTableInterface
             $this->_trackAssets = $tracking;
         }
     }
-
 }
