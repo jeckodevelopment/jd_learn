@@ -123,7 +123,8 @@
       "manual_action": "Collaudare menu IT/EN, URL diretti e fallback multilingua.",
       "automated_evidence": [
         "tests/joomla-associations.php",
-        "tests/associations-http.py"
+        "tests/associations-http.py",
+        "tests/joomla-categories.php"
       ]
     },
     {
@@ -220,7 +221,8 @@
       "development_action": "Prove di reindicizzazione Finder con cambio categoria/lingua/stato/ACL e lettura indice reale.",
       "manual_action": "Ricostruire e consultare Smart Search con articoli protetti e cambio permessi.",
       "automated_evidence": [
-        "tests/joomla-courses-ui.php"
+        "tests/joomla-courses-ui.php",
+        "tests/joomla-categories.php"
       ]
     },
     {
