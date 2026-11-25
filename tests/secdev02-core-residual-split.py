@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = "docs/SECDEV_02_CORE_RESIDUAL_CLASSIFICATION_2026-11-25.json"
 CANONICAL = "docs/FUNCTIONAL_CRITERIA_1.0.0.json"
 LEDGER = "docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json"
-CLASSIFICATIONS = {"ci_evidence_gap", "site_external_only"}
+CLASSIFICATIONS = {"developer_work_pending", "site_external_only"}
 IMPLEMENTATION = {"no_additional_defect_confirmed", "expiry_override_fixed_this_pr"}
 
 
@@ -96,7 +96,7 @@ def inspect(register: dict, ledger: dict, plan: dict) -> tuple[list[str], dict]:
     return failures, {
         "services_reviewed": len(expected_services),
         "pending_criteria": len(expected),
-        "automated_evidence_pending": summary["ci_evidence_gap"],
+        "developer_work_pending": summary["developer_work_pending"],
         "site_external_acceptance_pending": summary["site_external_only"],
         "criteria_touched_by_code_fix": summary["targeted_code_fix"],
         "manual_acceptance_executed": 0,
