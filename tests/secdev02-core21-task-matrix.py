@@ -75,12 +75,15 @@ def shipped_task_controllers(controller_dir: Path) -> set[str]:
 def validate(root: Path) -> list[str]:
     failures: list[str] = []
     controller_dir = root / "component/site/src/Controller"
+    # LessonController inherits the bounded execute() of EnrollmentController;
+    # its task names are audited separately by the shared task allowlist.
+    expected_controllers = set(TASKS) - {"lesson"}
     actual_controllers = shipped_task_controllers(controller_dir)
-    if actual_controllers != set(TASKS):
+    if actual_controllers != expected_controllers:
         failures.append(
             "CORE-21 untracked task controller: "
-            f"new={sorted(actual_controllers - set(TASKS))} "
-            f"removed={sorted(set(TASKS) - actual_controllers)}"
+            f"new={sorted(actual_controllers - expected_controllers)} "
+            f"removed={sorted(expected_controllers - actual_controllers)}"
         )
     for class_key, tasks in TASKS.items():
         # Lesson extends EnrollmentController and borrows its whitelist.
