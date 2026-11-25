@@ -118,8 +118,20 @@ $categoryOptionLabel = Text::_('JOPTION_SELECT_CATEGORY');
     type="submit"><?= Text::_((int)$row->state === -2 ? 'JTOOLBAR_RESTORE' : 'JTOOLBAR_TRASH') ?></button></form><?php
             endif; ?>
             <?php if ($row->can_delete && (int)$row->state === -2) :
+                $deleteDisabled = $inUse
+                    ? 'disabled title="' . $this->escape(Text::_('COM_JLMS_QUESTION_IN_USE')) . '"'
+                    : '';
+                $deleteConfirm = $inUse
+                    ? ''
+                    : 'data-confirm="' . $this->escape(Text::_('COM_JLMS_QUESTION_DELETE_CONFIRM'))
+                        . '" onclick="return window.confirm(this.dataset.confirm)"';
                 ?><form method="post" action="<?=
-                 Route::_('index.php?option=com_jlms') ?>" class="d-inline"><input type="hidden" name="task" value="questionbank.delete"><input type="hidden" name="id" value="<?= $id ?>"><?= HTMLHelper::_('form.token') ?><button class="btn btn-sm btn-danger" type="submit" <?= $inUse ? 'disabled title="' . $this->escape(Text::_('COM_JLMS_QUESTION_IN_USE')) . '"' : '' ?> <?= $inUse ? '' : 'data-confirm="' . $this->escape(Text::_('COM_JLMS_QUESTION_DELETE_CONFIRM')) . '" onclick="return window.confirm(this.dataset.confirm)"' ?>><?= Text::_('JTOOLBAR_DELETE') ?></button></form><?php
+                 Route::_('index.php?option=com_jlms') ?>" class="d-inline">
+    <input type="hidden" name="task" value="questionbank.delete">
+    <input type="hidden" name="id" value="<?= $id ?>">
+    <?= HTMLHelper::_('form.token') ?>
+    <button class="btn btn-sm btn-danger" type="submit" <?= $deleteDisabled ?> <?= $deleteConfirm ?>><?= Text::_('JTOOLBAR_DELETE') ?></button>
+    </form><?php
             endif; ?>
     </td>
    </tr>
