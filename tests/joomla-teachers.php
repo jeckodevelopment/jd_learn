@@ -693,6 +693,42 @@ teacherExpect(
     $db->setQuery('SELECT id, block FROM #__users WHERE id=' . (int) $actor->id)->loadAssoc() === $linkedBefore,
     'empty profile deletion never touches Joomla accounts'
 );
+// CORE-09: verify actual Joomla tag association persistence, replacement,
+// rehydration and removal, not merely that the form exposes a tag field.
+$tagModel = $app->bootComponent('com_tags')->getMVCFactory()
+    ->createModel('Tag', 'Administrator', ['ignore_request' => true]);
+teacherExpect($tagModel->save([
+    'id' => 0, 'parent_id' => 1, 'title' => 'CI teacher tag',
+    'alias' => 'ci-teacher-tag', 'published' => 1, 'access' => 1,
+    'language' => '*', 'description' => '',
+]), 'CORE-09: create published native Joomla tag');
+$tagId = (int) $tagModel->getState('tag.id');
+teacherExpect($tagId > 1, 'CORE-09: native tag has a persisted identity');
+$taggedTeacher = array_replace($teacherBase, [
+    'id' => 0, 'revision' => 1, 'title' => 'CI tagged teacher',
+    'alias' => 'ci-tagged-teacher', 'state' => 0, 'user_id' => '',
+    'tags' => [$tagId],
+]);
+teacherExpect($teacherModel->save($taggedTeacher), 'CORE-09: teacher with native tag saved');
+$taggedId = (int) $teacherModel->getState('teacher.id');
+$tagAssociations = static function () use ($db, $taggedId): array {
+    $q = $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
+        ->where('type_alias = ' . $db->quote('com_jlms.teacher'))
+        ->where('content_item_id = ' . $taggedId);
+    return array_map('intval', $db->setQuery($q)->loadColumn());
+};
+teacherExpect($tagAssociations() === [$tagId], 'CORE-09: Joomla persists tag association by teacher item ID');
+$taggedRecord = $teacherModel->getItem($taggedId);
+teacherExpect(
+    $taggedRecord->tags instanceof \Joomla\CMS\Helper\TagsHelper
+    && $taggedRecord->tags->getTagIds($taggedId, 'com_jlms.teacher') === (string) $tagId,
+    'CORE-09: editing teacher reloads the saved Joomla tag'
+);
+teacherExpect($teacherModel->save(array_replace($taggedTeacher, [
+    'id' => $taggedId, 'revision' => 1, 'tags' => [],
+])), 'CORE-09: native teacher tag can be removed');
+teacherExpect($tagAssociations() === [], 'CORE-09: removed tag association leaves no stale Joomla mapping');
+
 file_put_contents($fixture, json_encode(['course' => $course,'version' => $version,'ids'
     => [$public,$private],'public' => $public,'private' => $private,'teacher_category'
         => $teacherCategory,'snapshot' => $snapshot], JSON_THROW_ON_ERROR));
