@@ -132,7 +132,7 @@ $categoryOptionLabel = Text::_('JOPTION_SELECT_CATEGORY');
     <input type="hidden" name="id" value="<?= $id ?>">
                 <?= HTMLHelper::_('form.token') ?>
     <button class="btn btn-sm btn-danger" type="submit"
-    <?= $deleteDisabled ?> <?= $deleteConfirm ?>><?= $deleteLabel ?></button>
+                <?= $deleteDisabled ?> <?= $deleteConfirm ?>><?= $deleteLabel ?></button>
     </form><?php
             endif; ?>
     </td>
