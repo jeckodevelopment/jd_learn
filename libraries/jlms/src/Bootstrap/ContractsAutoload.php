@@ -18,7 +18,7 @@ function autoload(string $class): void
     if (!preg_match('/^[A-Za-z0-9_\\\\]+$/D', $relative)) {
         return;
     }
-    $file = __DIR__ . '/src/' . str_replace('\\', '/', $relative) . '.php';
+    $file = dirname(__DIR__) . '/' . str_replace('\\', '/', $relative) . '.php';
     if (is_file($file)) {
         require_once $file;
     }
