@@ -53,6 +53,21 @@ def validate(root: Path) -> list[str]:
             for key in REQUIRED_LANG_KEYS:
                 if keys.get(key) != 1:
                     errors.append(f"CORE-06: missing or duplicate {key} in {language_file.relative_to(root)}")
+    content_helper = (root / "component/site/src/Helper/PublicContentPreparation.php").read_text(encoding="utf-8")
+    course_view = (root / "component/site/src/View/Course/HtmlView.php").read_text(encoding="utf-8")
+    teacher_view = (root / "component/site/src/View/Teacher/HtmlView.php").read_text(encoding="utf-8")
+    teacher_model = (root / "component/site/src/Model/TeacherModel.php").read_text(encoding="utf-8")
+    finder = (root / "plugins/finder/jlms/src/Extension/Jlms.php").read_text(encoding="utf-8")
+    for token in ("ContentPrepareEvent", "onContentPrepare", "PluginHelper::importPlugin('content')",
+                  "CoursePresentation::html($item->text)", "com_jlms.course", "com_jlms.teacher"):
+        if token not in content_helper:
+            errors.append(f"CORE-11: missing guarded public content plugin contract {token}")
+    if "PublicContentPreparation::html(" not in course_view or "PublicContentPreparation::html(" not in teacher_view:
+        errors.append("CORE-11: public course/teacher views must prepare editorial content")
+    if "FieldsHelper::getFields('com_jlms.teacher'" not in teacher_model or "field->language" not in teacher_model:
+        errors.append("CORE-10: teacher field language scoping lost")
+    if "CASE WHEN a.language" not in finder or "cat.language" not in finder:
+        errors.append("CORE-14: effective course/category search language lost")
     table = (root / "component/administrator/src/Table/CourseTable.php").read_text(encoding="utf-8")
     installer = (root / "component/administrator/src/Infrastructure/EditorialInstaller.php").read_text(encoding="utf-8")
     for token in (
