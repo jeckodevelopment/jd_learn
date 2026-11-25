@@ -9,9 +9,14 @@ def read(path):
 controller = read("Controller/DisplayController.php")
 private = ("dashboard", "mycourses", "mycertificates", "preferences", "lessonpreview", "teacheredit", "classroom", "quiz")
 public = ("courses", "course", "categories", "category", "teachers", "teacher", "pathways", "pathway")
-private_line = next(line for line in controller.splitlines() if "setHeader('X-Robots-Tag'" in line or "if (in_array($this->input->getCmd('view')," in line)
-assert all("'" + name + "'" in controller.split("setHeader('X-Robots-Tag'",1)[0].split("if (in_array($this->input->getCmd('view'),")[-1] for name in private)
-assert all("'" + name + "'" not in controller.split("setHeader('X-Robots-Tag'",1)[0].split("if (in_array($this->input->getCmd('view'),")[-1] for name in public)
+before_robots_header = controller.split("setHeader('X-Robots-Tag'", 1)[0]
+if "$privateViews = [" in before_robots_header:
+    private_routes = before_robots_header.split("$privateViews = [", 1)[1].split("];", 1)[0]
+    assert "in_array($this->input->getCmd('view'), $privateViews, true)" in before_robots_header
+else:
+    private_routes = before_robots_header.split("if (in_array($this->input->getCmd('view'),", 1)[-1]
+assert all("'" + name + "'" in private_routes for name in private)
+assert all("'" + name + "'" not in private_routes for name in public)
 assert "setHeader('Cache-Control', 'private, no-store', true)" in controller
 for view in ("Dashboard", "Mycourses", "Mycertificates", "Preferences", "Lessonpreview", "Teacheredit", "Classroom", "Quiz"):
     code = read(f"View/{view}/HtmlView.php")
