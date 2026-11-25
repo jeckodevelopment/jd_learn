@@ -33,19 +33,21 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
     protected function expireQuizzes(ExecuteTaskEvent $event): int
     {
         $params = $event->getArgument('params');
+        $limit = max(1, min(100, (int) ($params->limit ?? 100)));
         $result = $this->getApplication()->bootComponent('com_jlms')->getQuizAttemptService()
-            ->expireDue((int)($params->limit ?? 100));
-        $this->logTask('Quiz expiry: closed=' . $result['closed'] . '; failed=' . $result['failed'] . '; more='
-            . (int)$result['has_more']);
+            ->expireDue($limit);
+        $this->logTask('Quiz expiry: batch_limit=' . $limit . '; closed=' . $result['closed']
+            . '; failed=' . $result['failed'] . '; more=' . (int) $result['has_more']);
         return $result['failed'] ? Status::KNOCKOUT : Status::OK;
     }
     protected function cleanupMaterials(ExecuteTaskEvent $event): int
     {
         $params = $event->getArgument('params');
+        $limit = max(1, min(100, (int) ($params->limit ?? 100)));
         $result = $this->getApplication()->bootComponent('com_jlms')->getMaterialService()
-            ->purgeOrphaned((int)($params->limit ?? 100));
-        $this->logTask('Material cleanup: deleted=' . $result['deleted'] . '; failed=' . $result['failed']
-            . '; more=' . (int)$result['has_more']);
+            ->purgeOrphaned($limit);
+        $this->logTask('Material cleanup: batch_limit=' . $limit . '; deleted=' . $result['deleted']
+            . '; failed=' . $result['failed'] . '; more=' . (int) $result['has_more']);
         return $result['failed'] ? Status::KNOCKOUT : Status::OK;
     }
     protected function dispatchMail(ExecuteTaskEvent $event): int
@@ -69,7 +71,15 @@ final class Jlms extends CMSPlugin implements SubscriberInterface
         $communication = $app->bootComponent('com_jlms')->getCourseCommunicationService()->process($limit);
         $result = (new \Jlms\Component\Jlms\Administrator\Infrastructure\MailQueue($db))
             ->dispatch($limit);
-        $this->logTask('Course expiry reminders: queued=' . $expiry['queued'] . '; failed=' . $expiry['failed']
+        // A stage reaching its cap may still have work: record saturation
+        // rather than claiming an exact pending count without another query.
+        $atLimit = (int) (
+            $expiry['processed'] >= $limit || $lessons['processed'] >= $limit
+            || $updates['processed'] >= $limit || $managers['processed'] >= $limit
+            || $communication['processed'] >= $limit || $result['processed'] >= $limit
+        );
+        $this->logTask('Mail scheduler: batch_limit=' . $limit . '; at_limit=' . $atLimit
+            . '; skipped=' . $result['skipped'] . '; course expiry reminders: queued=' . $expiry['queued'] . '; failed=' . $expiry['failed']
             . '; processed=' . $expiry['processed'] . '; lesson releases: queued=' . $lessons['queued']
                 . '; failed=' . $lessons['failed'] . '; processed=' . $lessons['processed']
                     . '; course version updates: queued=' . $updates['queued'] . '; failed='
