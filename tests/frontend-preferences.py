@@ -23,7 +23,13 @@ assert "mailconsent.request" in shared and "mailconsent.revoke" in shared
 assert "form.token" in shared and 'name="consent"' in shared
 assert "=== 'confirmed'" in shared and "=== 'pending'" in shared
 assert "RouterViewConfiguration('preferences')" in router
-assert "'preferences', 'lessonpreview'" in controller and "'preferences', 'classroom'" in controller
+if "$privateViews = [" in controller:
+    private_routes = controller.split("$privateViews = [", 1)[1].split("];", 1)[0]
+    assert "in_array($this->input->getCmd('view'), $privateViews, true)" in controller
+else:
+    private_routes = controller.split("if (in_array($this->input->getCmd('view'),", 1)[-1]
+for name in ("preferences", "lessonpreview", "classroom"):
+    assert "'" + name + "'" in private_routes
 assert "private, no-store" in controller and "noindex, nofollow" in controller
 assert consent.count("view=preferences") == 4
 assert "checkToken('post', false)" in consent and "getIdentity()" in consent

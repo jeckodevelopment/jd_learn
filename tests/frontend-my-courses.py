@@ -32,7 +32,12 @@ assert "getPagesLinks()" in LAYOUT
 assert 'name="view" value="mycourses"' in LAYOUT
 assert "view=mycourses" in LAYOUT and "view=mycourses" in DASHBOARD
 assert "RouterViewConfiguration('mycourses')" in ROUTER
-assert "'mycourses'" in CONTROLLER and "'dashboard', 'mycourses', 'mycertificates', 'preferences', 'lessonpreview'" in CONTROLLER
+assert "$privateViews = [" in CONTROLLER
+private_routes = CONTROLLER.split("$privateViews = [", 1)[1].split("];", 1)[0]
+assert all("'" + name + "'" in private_routes for name in (
+    "dashboard", "mycourses", "mycertificates", "preferences", "lessonpreview"
+))
+assert "in_array($this->input->getCmd('view'), $privateViews, true)" in CONTROLLER
 manifest = (ROOT / "component/jlms.xml").read_text()
 assert '<folder>tmpl</folder>' in manifest and '<folder>src</folder>' in manifest
 for lang in ("it-IT", "en-GB"):

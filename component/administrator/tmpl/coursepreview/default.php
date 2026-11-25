@@ -134,7 +134,9 @@ foreach ($this->preview['lessons'] as $entry) {
                             ?><audio id="jlms-preview-audio" controls preload="metadata"
     aria-label="<?= $this->escape($lesson->title) ?>">
                             <?php foreach ($audioFiles as $file) : ?>
-                                <?php $src = 'index.php?option=com_jlms&task=attachment.preview&format=raw&course_id=' . (int) $course->id . '&version_id=' . (int) $version->id . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
+                                <?php $src = 'index.php?option=com_jlms&task=attachment.preview&format=raw&course_id='
+                                    . (int) $course->id . '&version_id=' . (int) $version->id
+                                    . '&lesson_id=' . (int) $lesson->id . '&id=' . (int) $file->id; ?>
                                 <source src="<?= $this->escape(\Joomla\CMS\Router\Route::link('site', $src, false)) ?>"
     type="<?= $this->escape($file->mime_type) ?>">
                             <?php endforeach; ?>

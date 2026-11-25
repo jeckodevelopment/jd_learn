@@ -159,7 +159,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                 ?><p class="text-muted"><?= Text::_('COM_JLMS_PROGRAMME_EMPTY_MODULE') ?></p><?php
             endif; ?>
     <ol class="jlms-programme-lessons" data-sort-kind="lesson" data-module-id="<?= (int) $module->id ?>">
-            <?php foreach ($lessons as $position => $lesson) : ?>
+            <?php foreach ($lessons as $position => $lesson) :
+                $requiredLabel = Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'); ?>
      <li id="jlms-lesson-<?= (int) $lesson->id ?>" data-item-id="<?= (int) $lesson->id ?>">
                 <?php if ($this->editable) :
                     ?><button class="btn btn-sm btn-outline-secondary jlms-drag-handle" type="button"
@@ -180,7 +181,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
        <div class="small text-muted"><?= Text::_(match ($lesson->kind) {
             'text'=>'COM_JLMS_LESSON_TEXT','document'=>'COM_JLMS_LESSON_DOCUMENT','audio'
                 =>'COM_JLMS_LESSON_AUDIO','video'=>'COM_JLMS_LESSON_VIDEO',default=>'COM_JLMS_LESSON_QUIZ'
-                                     }) ?> · <?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></div>
+                                     }) ?> · <?= $requiredLabel ?></div>
       </div>
                 <?php if ($this->editable) :
                     $actions('lesson', $lesson, $position, count($lessons));
@@ -450,20 +451,21 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                      $this->escape($transitionDisplay($transition)) ?></option><?php
             endforeach; ?>
   </select>
-            <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
-                ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
-            elseif ($transitionAction($this->transitions[0]) === 'review') :
-                ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
-            elseif ($transitionAction($this->transitions[0]) === 'return') :
-                ?><?= Text::_('COM_JLMS_RETURN_TO_DRAFT') ?><?php
-            elseif (
-                $version->status === 'draft' && $course->current_version_id !== null
-                && $transitionAction($this->transitions[0]) === 'publish'
-            ) :
-                ?><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') ?><?php
-            else :
-                ?><?= $this->escape($transitionDisplay($this->transitions[0])) ?><?php
-            endif; ?></button>
+            <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit"
+    type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
+        ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
+                                          elseif ($transitionAction($this->transitions[0]) === 'review') :
+                                                ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
+                                          elseif ($transitionAction($this->transitions[0]) === 'return') :
+                                                ?><?= Text::_('COM_JLMS_RETURN_TO_DRAFT') ?><?php
+                                          elseif (
+                                              $version->status === 'draft' && $course->current_version_id !== null
+                                              && $transitionAction($this->transitions[0]) === 'publish'
+                                          ) :
+                                                ?><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') ?><?php
+                                          else :
+                                                ?><?= $this->escape($transitionDisplay($this->transitions[0])) ?><?php
+                                          endif; ?></button>
  </form>
      <?php endif; ?>
      <?php if ($version->status === 'published' && (int)$course->current_version_id === (int)$version->id) : ?>

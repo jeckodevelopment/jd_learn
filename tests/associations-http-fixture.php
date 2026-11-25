@@ -40,7 +40,9 @@ file_put_contents($state, json_encode($pdo->query(("SELECT enabled,params FROM j
     . "type='plugin' AND folder='system' AND element='languagefilter'"))
         ->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
 $pdo->exec(("UPDATE joomla_extensions SET "
-    . "enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1,'$.detect_browser',0,'$.remove_default_prefix',0) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
+    . "enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_assoc" .
+        "iations',1,'$.detect_browser',0,'$.remove_default_prefix',0) WHERE type=" .
+        "'plugin' AND folder='system' AND element='languagefilter'"));
 // Simulate the web request context required by AdministratorApplication in a CLI smoke test.
 $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['SERVER_NAME'] = 'localhost';

@@ -201,7 +201,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
             <?php if ($enrollment === null && !empty($this->cardPendingApprovals[(int) $item->id])) : ?>
      <p class="jlms-course-card__pending" role="status"><?= Text::_('COM_JLMS_COURSE_APPROVAL_PENDING') ?></p>
             <?php endif; ?>
-            <?php if ($enrollment === null && empty($this->cardPendingApprovals[(int) $item->id]) && (int) $item->admissions_open === 1 && (int) $item->delivery_enabled === 1 && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true)) : ?>
+            <?php $canEnroll = $enrollment === null
+                && empty($this->cardPendingApprovals[(int) $item->id])
+                && (int) $item->admissions_open === 1
+                && (int) $item->delivery_enabled === 1
+                && in_array((string) $item->enrollment_mode, ['auto', 'approval'], true); ?>
+            <?php if ($canEnroll) : ?>
      <p class="jlms-course-card__admission"><?= Text::_($item->enrollment_mode === 'approval'
          ? 'COM_JLMS_CATALOG_APPROVAL_REQUIRED' : 'COM_JLMS_CATALOG_AUTO_ENROLLMENT') ?></p>
             <?php endif; ?>

@@ -12,6 +12,8 @@ $safeOperationText = [
     'COURSE' => ['COM_JLMS_SAFE_OPERATIONS_COURSE_TITLE', 'COM_JLMS_SAFE_OPERATIONS_COURSE_STEPS'],
     'SCHEDULER' => ['COM_JLMS_SAFE_OPERATIONS_SCHEDULER_TITLE', 'COM_JLMS_SAFE_OPERATIONS_SCHEDULER_STEPS'],
 ];
+$schedulerUrl = \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks');
+$schedulerLabel = $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE'));
 $schedulerHealthKeys = [
     'missing' => 'COM_JLMS_SCHEDULER_HEALTH_MISSING',
     'invalid_rules' => 'COM_JLMS_SCHEDULER_HEALTH_INVALID_RULES',
@@ -30,28 +32,42 @@ $schedulerHealthKeys = [
     </header>
     <p class="alert alert-info"><?= Text::_('COM_JLMS_FOUNDATION_NOTICE') ?></p>
     <nav class="jlms-admin-dashboard__shortcuts" aria-label="<?= $this->escape(Text::_('COM_JLMS_DASHBOARD_TOOLS')) ?>">
-        <?php foreach ($this->shortcutGroups as $groupKey => $shortcuts) : ?>
+        <?php foreach ($this->shortcutGroups as $groupKey => $shortcuts) :
+            $groupSlug = $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1)));
+            $showMailWarning = $groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION'
+            && $this->mailScheduler
+            && (
+            ($this->mailScheduler['state'] !== 'operational'
+                && $this->mailScheduler['state'] !== 'waiting')
+            || $this->mailScheduler['duplicates']
+            );
+            ?>
             <?php if (!$shortcuts) {
                 continue;
             } ?>
             <section class="jlms-admin-dashboard__group"
-    aria-labelledby="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>">
-                <h2 id="jlms-admin-group-<?= $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1))) ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
+    aria-labelledby="jlms-admin-group-<?= $groupSlug ?>">
+                <h2 id="jlms-admin-group-<?= $groupSlug ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
                 <ul>
-                    <?php foreach ($shortcuts as $shortcut) : ?>
+                    <?php foreach ($shortcuts as $shortcut) :
+                        $shortcutId = $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key'])));
+                        $shortcutIconClass = $this->escape($shortcut['icon']);
+                        ?>
                         <li>
-                            <a id="jlms-admin-shortcut-<?= $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key']))) ?>" class="jlms-admin-dashboard__shortcut" href="<?= $shortcut['url'] ?>">
-                                <span class="jlms-admin-dashboard__shortcut-icon <?= $this->escape($shortcut['icon']) ?>" aria-hidden="true"></span>
+                            <a id="jlms-admin-shortcut-<?= $shortcutId ?>" class="jlms-admin-dashboard__shortcut"
+                                href="<?= $shortcut['url'] ?>">
+                                <span class="jlms-admin-dashboard__shortcut-icon <?= $shortcutIconClass ?>"
+                                    aria-hidden="true"></span>
                                 <span><?= $this->escape(Text::_($shortcut['key'])) ?></span>
                             </a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <?php if ($groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION' && $this->mailScheduler && ($this->mailScheduler['state'] !== 'operational' && $this->mailScheduler['state'] !== 'waiting' || $this->mailScheduler['duplicates'])) : ?>
+                <?php if ($showMailWarning) : ?>
                     <p class="small alert alert-warning mt-2 mb-0" role="status">
                         <?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_WARNING')) ?>
                         <?php if ($this->canManageScheduler) :
-                            ?><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a><?php
+                            ?><a href="<?= $schedulerUrl ?>"><?= $schedulerLabel ?></a><?php
                         endif; ?>
                     </p>
                 <?php endif; ?>
@@ -71,22 +87,29 @@ $schedulerHealthKeys = [
                     <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_NEXT') ?></th>
                     <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_GUIDANCE') ?></th></tr></thead>
                 <tbody>
-                <?php foreach ($this->schedulerHealth as $task) : ?>
+                <?php foreach ($this->schedulerHealth as $task) :
+                    $taskHealthLabel = $this->escape(
+                        Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')
+                    );
+                    $taskGuidance = $this->escape(Text::_(
+                        SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates'])
+                    ));
+                    ?>
                     <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
                         <th scope="row"><?= $this->escape(Text::_($task['label'])) ?></th>
-                        <td><?= $this->escape(Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')) ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') :
+                        <td><?= $taskHealthLabel ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') :
                             ?> · <?= $this->escape(Text::_('COM_JLMS_SCHEDULER_HEALTH_DUPLICATES')) ?><?php
                             endif; ?></td>
                         <td><?= $this->escape((string) ($task['last_execution'] ?: Text::_('JNEVER'))) ?></td>
                         <td><?= $this->escape((string) ($task['next_execution'] ?: '—')) ?></td>
-                        <td><?= $this->escape(Text::_(SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates']))) ?></td>
+                        <td><?= $taskGuidance ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
         <?php if ($this->canManageScheduler) : ?>
-        <p><a href="<?= \Joomla\CMS\Router\Route::_('index.php?option=com_scheduler&view=tasks') ?>"><?= $this->escape(Text::_('COM_JLMS_MAIL_SCHEDULER_CONFIGURE')) ?></a></p>
+        <p><a href="<?= $schedulerUrl ?>"><?= $schedulerLabel ?></a></p>
         <?php endif; ?>
     </details>
     <?php endif; ?>
@@ -97,10 +120,19 @@ $schedulerHealthKeys = [
             <p><?= Text::_('COM_JLMS_PROVIDERS_DISABLED') ?></p>
         <?php else : ?>
             <ul>
-                <?php foreach ($this->providers as $provider) : ?>
+                <?php foreach ($this->providers as $provider) :
+                    $providerStateLabel = $this->escape(Text::_($provider['stateKey']));
+                    $providerStateClass = $this->escape($provider['stateClass']);
+                    $providerGuidance = $this->escape(Text::_(
+                        \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey(
+                            (string) $provider['stateKey']
+                        )
+                    ));
+                    ?>
                     <li data-jlms-provider="<?= $this->escape($provider['key']) ?>">
 <span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span
- class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $this->escape(Text::_(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey((string) $provider['stateKey']))) ?></p></li>
+ class="badge bg-<?= $providerStateClass ?>"><?= $providerStateLabel ?></span>
+ <p class="small mb-1"><?= $providerGuidance ?></p></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
