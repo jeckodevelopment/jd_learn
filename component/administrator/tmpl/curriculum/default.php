@@ -453,8 +453,8 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
   </select>
             <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit"
     type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
-                ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
-            elseif ($transitionAction($this->transitions[0]) === 'review') :
+        ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
+                                          elseif ($transitionAction($this->transitions[0]) === 'review') :
                 ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
             elseif ($transitionAction($this->transitions[0]) === 'return') :
                 ?><?= Text::_('COM_JLMS_RETURN_TO_DRAFT') ?><?php
