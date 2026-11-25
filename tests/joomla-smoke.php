@@ -1084,6 +1084,36 @@ if (!$model->save($data + ['state' => 1,'asset_id' => 999999,'current_version_id
     throw new \RuntimeException('Native draft save failed: ' . $model->getError());
 }
 $id = (int) $model->getState('course.id');
+// CORE-18/19: execute the Scheduler's expiry preference SQL on the actual
+// Joomla MySQL/MariaDB connection and compare to MailPreferences semantics.
+// The global switch is a default, not an absolute veto on explicit opt-in.
+$expiryCondition = new \ReflectionMethod(
+    \Jlms\Component\Jlms\Administrator\Application\CourseExpiryReminderService::class,
+    'eligiblePreferenceSql'
+);
+$expiryCases = [
+    '{}',
+    '{"mail_preferences":{"expiry":"inherit"}}',
+    '{"mail_preferences":{"expiry":"enabled"}}',
+    '{"mail_preferences":{"expiry":"disabled"}}',
+    '{"mail_preferences":{"expiry":"invalid"}}',
+];
+foreach ([true, false] as $globallyEnabled) {
+    $sql = $expiryCondition->invoke(null, $globallyEnabled);
+    foreach ($expiryCases as $paramsJson) {
+        $query = 'SELECT CASE WHEN (' . $sql . ') THEN 1 ELSE 0 END AS eligible'
+            . ' FROM (SELECT ' . $db->quote($paramsJson) . ' AS params_json) AS c';
+        $allowed = (bool) $db->setQuery($query)->loadResult();
+        $expected = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
+            'expiry',
+            $globallyEnabled,
+            $paramsJson
+        );
+        if ($allowed !== $expected) {
+            throw new \RuntimeException('CORE-18/19 expiry SQL disagrees with course override semantics');
+        }
+    }
+}
 $managerNotice = new \Jlms\Component\Jlms\Administrator\Application\EnrollmentManagerNotice($db);
 $pendingScan = $managerNotice->enqueueDue(3);
 if (
