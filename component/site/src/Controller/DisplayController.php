@@ -12,7 +12,11 @@ final class DisplayController extends BaseController
 
     public function display($cachable = false, $urlparams = [])
     {
-        if (!in_array($this->input->getCmd('view', 'courses'), ['courses', 'course', 'lessonpreview', 'teachers', 'teacher', 'teacheredit', 'categories', 'category', 'dashboard', 'mycourses', 'mycertificates', 'preferences', 'classroom', 'quiz', 'pathways', 'pathway'], true)) {
+        if (!in_array($this->input->getCmd('view', 'courses'), [
+            'courses', 'course', 'lessonpreview', 'teachers', 'teacher', 'teacheredit',
+            'categories', 'category', 'dashboard', 'mycourses', 'mycertificates',
+            'preferences', 'classroom', 'quiz', 'pathways', 'pathway',
+        ], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
         // Private teaching and editing routes must never enter public search indexes.
