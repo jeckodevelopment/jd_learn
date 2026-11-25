@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PLUGINS = ROOT / "plugins"
 EXPECTED = {
     "actionlog/jdlearn": ("Jdlearn", ("onJlmsCourseTransition",)),
-    "finder/jlms": ("Jlms", ("onFinderAfterSave", "onFinderAfterDelete", "onFinderChangeState")),
+    "finder/jlms": ("Jlms", ("onFinderAfterSave", "onFinderAfterDelete", "onFinderChangeState", "onFinderCategoryChangeState")),
     "jlmsvideo/cloudflarestream": ("Cloudflarestream", ("RegisterVideoProvidersEvent::NAME",)),
     "jlmsvideo/html5": ("Html5", ("RegisterVideoProvidersEvent::NAME",)),
     "jlmsvideo/vimeo": ("Vimeo", ("RegisterVideoProvidersEvent::NAME",)),
@@ -38,7 +38,7 @@ for relative, (class_name, events) in EXPECTED.items():
     public = set(re.findall(r"public (?:static )?function ([A-Za-z0-9_]+)\(", text))
     expected = {
         "actionlog/jdlearn": {"getSubscribedEvents", "onJlmsCourseTransition"},
-        "finder/jlms": {"getSubscribedEvents", "onFinderAfterSave", "onFinderAfterDelete", "onFinderChangeState"},
+        "finder/jlms": {"getSubscribedEvents", "onFinderAfterSave", "onFinderAfterDelete", "onFinderChangeState", "onFinderCategoryChangeState"},
         "jlmsvideo/cloudflarestream": {"getSubscribedEvents", "registerProviders"},
         "jlmsvideo/html5": {"getSubscribedEvents", "registerProviders"},
         "jlmsvideo/vimeo": {"getSubscribedEvents", "registerProviders"},

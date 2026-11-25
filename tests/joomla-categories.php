@@ -360,6 +360,37 @@ catExpect(
     $finderLink() !== [],
     'CORE-14: real Joomla Finder index contains the published unrestricted course'
 );
+// A native Finder category-state event must update persisted links by going
+// through Joomla's dispatcher. Unlike the SQL-only and explicit refresh tests,
+// none of these transitions calls refreshCourse directly.
+catExpect(
+    isset($finderLive::getSubscribedEvents()['onFinderCategoryChangeState']),
+    'CORE-14: Finder adapter subscribes to the native category-state event'
+);
+$app->getDispatcher()->addSubscriber($finderLive);
+$finderCategoryEvent = static function (string $extension, int $category, int $value) use ($app): void {
+    $app->getDispatcher()->dispatch(
+        'onFinderCategoryChangeState',
+        new \Joomla\CMS\Event\Finder\AfterCategoryChangeStateEvent(
+            'onFinderCategoryChangeState',
+            ['context' => $extension, 'subject' => [$category], 'value' => $value]
+        )
+    );
+};
+$update($en, ['published' => 0]);
+$finderCategoryEvent('com_jlms.course', $en, 0);
+catExpect($finderLink() === [], 'CORE-14: native category event removes descendant Finder entry');
+$update($en, ['published' => 1]);
+$finderCategoryEvent('com_jlms.course', $en, 1);
+catExpect($finderLink() !== [], 'CORE-14: native category event reindexes descendant Finder entry');
+$update($en, ['published' => 0]);
+$finderCategoryEvent('com_content', $en, 0);
+catExpect($finderLink() !== [], 'CORE-14: unrelated category event cannot mutate JD Learn Finder links');
+$finderCategoryEvent('com_jlms.course', $en, 0);
+catExpect($finderLink() === [], 'CORE-14: relevant category event removes entry after unrelated event');
+$update($en, ['published' => 1]);
+$finderCategoryEvent('com_jlms.course', $en, 1);
+catExpect($finderLink() !== [], 'CORE-14: native category event restores course after ACL change');
 $update($en, ["access" => 2]);
 $finderRefresh->invoke($finderLive, $course);
 catExpect(
