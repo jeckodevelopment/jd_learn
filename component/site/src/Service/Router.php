@@ -67,7 +67,7 @@ final class Router extends RouterView
     }
     public function getTeachereditId($segment, $query): int
     {
-        return ctype_digit((string) $segment) ? (int) $segment : 0;
+        return $this->segmentId($segment);
     }
 
     public function getTeacherSegment($id, $query): array
@@ -76,7 +76,7 @@ final class Router extends RouterView
     }
     public function getTeacherId($segment, $query): int
     {
-        return ctype_digit((string) $segment) ? (int) $segment : 0;
+        return $this->segmentId($segment);
     }
 
     public function getCategorySegment($id, $query): array
@@ -103,7 +103,7 @@ final class Router extends RouterView
     }
     public function getQuizId($segment, $query): int
     {
-        return ctype_digit((string)$segment) ? (int)$segment : 0;
+        return $this->segmentId($segment);
     }
 
     public function getClassroomSegment($id, $query): array
@@ -113,7 +113,7 @@ final class Router extends RouterView
 
     public function getClassroomId($segment, $query): int
     {
-        return ctype_digit((string) $segment) ? (int) $segment : 0;
+        return $this->segmentId($segment);
     }
 
     public function getCourseSegment($id, $query): array
@@ -147,11 +147,25 @@ final class Router extends RouterView
         return $alias === '' ? (string) $id : $id . ':' . $alias;
     }
 
+    /**
+     * Decode Joomla ID, ID:alias and legacy ID-alias segments without
+     * overflow, empty aliases or injected path/query suffixes.
+     */
     private function segmentId($segment): int
     {
-        if (preg_match('/^(\d+)(?:(?::|-).*)?$/uD', (string) $segment, $matches) !== 1) {
+        if (!is_string($segment) && !is_int($segment)) {
             return 0;
         }
-        return (int) $matches[1];
+        // Leading-zero legacy IDs are normalized; zero and values larger
+        // than PHP_INT_MAX must never resolve to another resource.
+        if (preg_match('/\A([0-9]+)(?:(?::|-)([^\x00-\x1F\x7F\/\?#]+))?\z/uD', (string) $segment, $matches) !== 1) {
+            return 0;
+        }
+        $digits = ltrim($matches[1], '0');
+        if ($digits === '') {
+            return 0;
+        }
+        $id = filter_var($digits, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        return $id === false ? 0 : $id;
     }
 }

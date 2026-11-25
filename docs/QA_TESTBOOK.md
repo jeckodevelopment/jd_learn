@@ -3015,3 +3015,13 @@ e non determina il completamento delle implementazioni.
 Registrare per ogni prova ambiente, versione, utenti/ruoli, URL anonimizzato,
 status e header osservati, risultato/esito e riferimenti a bug. Non riportare
 credenziali, token, identificativi personali o payload sensibili.
+
+
+### SECDEV-02 / CORE-13 — decodifica route SEF e accessi diretti
+
+**Stato: NON ESEGUITO, collaudo manuale separato.**
+
+- Su Joomla 6.2.1 con SEF attivo, verificare link diretti e ritorno ai menu per corsi, categorie, docenti, aula, quiz e percorsi in IT/EN; confermare titolo, breadcrumb e associazione linguistica.
+- Verificare URL `ID`, `ID:alias` e vecchi `ID-alias` su record realmente accessibili; cambiare l'alias e verificare comportamento dei link preesistenti.
+- Ripetere con ID 0, troppo lunghi, alias vuoti, slash aggiuntivi, query/fragment nel segmento e caratteri di controllo codificati: nessuna visualizzazione di record errati o bypass ACL.
+- Ripetere come guest, studente e docente su record non pubblicati, in lingua diversa o di altro utente. Registrare URL anonimizzato, status HTTP, comportamento del router e risultati senza esporre identificativi sensibili.

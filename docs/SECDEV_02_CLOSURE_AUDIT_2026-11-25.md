@@ -306,3 +306,29 @@ amministrative con ruoli autorizzati/non autorizzati. Non dichiarare
 il collaudo manuale eseguito a seguito del merge. Il registro funzionale
 mantiene il suo stato finché la copertura tecnica completa non è dimostrata;
 questo lotto non chiude automaticamente CORE-20, CORE-21 o SECDEV-02.
+
+
+## CORE-13 — validazione uniforme dei segmenti nel router Joomla (25/11/2026)
+
+**Sviluppo implementativo:** i decoder di corsi, categorie, percorsi, docenti,
+modifica profilo docente, aula e quiz condividono ora un controllo positivo
+degli ID, che non converte numeri oltre `PHP_INT_MAX` in record diversi e
+rifiuta segmenti contenenti slash, query, fragment, caratteri di controllo
+o alias vuoti. Restano supportate le forme native `ID` e `ID:alias`,
+gli URL storici `ID-alias`, gli alias Unicode e gli ID con zeri iniziali.
+La risoluzione delle autorizzazioni rimane responsabilità dei model nativi
+Joomla: questa modifica non introduce bypass ACL, modifica schema o core.
+
+**Test automatici:** `tests/secdev02-core13-router-segments.php` esercita
+sette decoder, ID limite, overflow, alias Unicode e negativi, oltre al
+round-trip dei quattro segmenti numerici. Il test è nel job obbligatorio
+`Candidate plan and lightweight checks` e quindi precede le verifiche
+integrative Joomla 6.2.1 su entrambe le matrici PHP/database.
+
+**Collaudo manuale successivo, NON ESEGUITO:** link diretti e SEF ai corsi,
+categorie, docenti, aula, quiz e percorsi, con lingua IT/EN, breadcrumb,
+link da menu e associazioni. Provare inoltre un alias modificato dopo la
+pubblicazione del contenuto e URL volutamente malformati: nessuna
+risorsa di altri utenti deve essere consultabile. Restano aperti altri
+scenari dell'originale `CORE-13/all_routes`; questa correzione non ne
+dichiara automaticamente l'intera accettazione.
