@@ -262,6 +262,53 @@ try {
     $asset->store();
 }
 
+// CORE-03/04: bulk lifecycle actions must be all-or-nothing when a
+// selection contains a record explicitly denied by Joomla ACL. The first
+// course is editable; the later record has a direct core.edit deny.
+$asset->loadByName($sourceCategoryAsset);
+$stateRulesBefore = $asset->rules;
+$stateRules = json_decode($stateRulesBefore, true, 32, JSON_THROW_ON_ERROR);
+$stateRules['core.edit.state'][(string) $group] = true;
+$asset->rules = json_encode($stateRules, JSON_THROW_ON_ERROR);
+$asset->store();
+$bulkModel = $factory->createModel('Course', 'Administrator', ['ignore_request' => true]);
+$bulkModel->setCurrentUser($user);
+$bulkIds = [$courses['allowed1'], $courses['denied']];
+$bulkBefore = $db->setQuery(
+    'SELECT id,state,revision,admissions_open,delivery_enabled FROM #__jlms_courses WHERE id IN ('
+    . implode(',', array_map('intval', $bulkIds)) . ') ORDER BY id'
+)->loadAssocList();
+try {
+    editorExpect(
+        !$bulkModel->changeStates($bulkIds, -2),
+        'CORE-04: mixed record-level allow and explicit deny rejects whole course lifecycle batch'
+    );
+    editorExpect(
+        $db->setQuery('SELECT id,state,revision,admissions_open,delivery_enabled'
+            . ' FROM #__jlms_courses WHERE id IN (' . implode(',', $bulkIds) . ') ORDER BY id')
+            ->loadAssocList() === $bulkBefore,
+        'CORE-04: denied course does not leave an earlier allowed record changed or incremented'
+    );
+    // An already acquired editor view must not permit a new batch after the
+    // category's state-edit grant is withdrawn in that same Joomla session.
+    $asset->rules = $stateRulesBefore;
+    $asset->store();
+    editorExpect(
+        !$bulkModel->changeStates([$courses['allowed1']], -2),
+        'CORE-03/04: same-session state permission revocation denies previously editable course'
+    );
+    editorExpect(
+        $db->setQuery('SELECT id,state,revision,admissions_open,delivery_enabled'
+            . ' FROM #__jlms_courses WHERE id IN (' . implode(',', $bulkIds) . ') ORDER BY id')
+            ->loadAssocList() === $bulkBefore,
+        'CORE-03/04: revocation preserves the whole course lifecycle snapshot'
+    );
+} finally {
+    $asset->loadByName($sourceCategoryAsset);
+    $asset->rules = $stateRulesBefore;
+    $asset->store();
+}
+
 // The same model and user objects must not retain cached records after ACL revocation.
 $asset->loadByName('com_jlms.course.category.' . $categories['allowed']);
 $savedRules = $asset->rules;
