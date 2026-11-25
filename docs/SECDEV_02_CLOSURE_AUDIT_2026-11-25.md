@@ -131,3 +131,12 @@ Questa tranche non si limita a enumerare i criteri: aggiunge test riproducibili 
 - Rimuovere una chiave da uno dei cataloghi: gate rosso solo per la coppia/lingua realmente scoperta.
 - Eseguire senza token o con metodo errato task di video, quiz, iscrizioni, materiali, attestati, preferenze e docente: risposta di errore con `Cache-Control: private, no-store`.
 - Eseguire le due matrici PHP/database e la suite Chromium senza alterare flussi di apprendimento o modificare il core Joomla.
+
+
+### Riscontri effettivi dei nuovi gate — PR #1031
+
+Il nuovo controllo `tests/secdev02-core06-runtime-keys.py` ha riscontrato **6 chiavi letterali mancanti**, in entrambe le lingue (**12 traduzioni**): `COM_JLMS_PATHWAY_COURSES` (frontend) e le cinque etichette admin `COM_JLMS_VIDEO_SPEED`, `COM_JLMS_VIDEO_SPEED_UNAVAILABLE`, `COM_JLMS_VIDEO_CAPTIONS_LANGUAGE`, `COM_JLMS_VIDEO_CAPTIONS_OFF`, `COM_JLMS_VIDEO_CAPTIONS_UNAVAILABLE`. Tutti i cataloghi ora contengono le traduzioni corrispondenti; lo scanner nella CI rileva attualmente **661 chiavi letterali uniche su 296 file PHP**, zero chiavi letterali mancanti dopo la bonifica. **191 siti con chiavi calcolate** restano censiti, non convalidati dal gate statico.
+
+L'estensione del collaudo HTTP ha poi individuato un difetto effettivo in `QuizController`: la risposta JSON immediata su metodo rifiutato (HTTP 405) non esponeva l'header `Cache-Control: no-store`, nonostante `setHeader` fosse chiamato. La risposta veniva emessa direttamente senza lo step `sendHeaders` del normale flusso Joomla. L'intervento di sicurezza su `QuizController` e `VideoController` mantiene i risultati e gli errori JSON invariati, ma **invia gli header Joomla prima di stampare il corpo e chiudere**. I test negativi in `tests/secdev02-core21-private-dispatch.py` impediscono di reintrodurre la chiusura senza flush. La prova HTTP è eseguita nelle matrici CI. Finché non risulta verde sull'HEAD definitivo, il fix è un candidato, non un'accettazione.
+
+Questi risultati costituiscono correzioni misurabili e permanenti, ma **non chiudono** l'intero CORE-06/CORE-21 né SECDEV-02: modelli email e chiavi calcolate, retrocompatibilità di override, reverse proxy/cache CDN, sessioni reali e rimanenti criteri CORE richiedono ancora prove proprie.
