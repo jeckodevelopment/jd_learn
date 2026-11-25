@@ -23,7 +23,6 @@ final class CourseTable extends Table implements TaggableTableInterface
         return $this->typeAlias;
     }
 
-    protected $_supportNullValue = true;
     protected bool $stableAssetRequired = false;
     private int $preparedAsset = 0;
 
@@ -42,6 +41,8 @@ final class CourseTable extends Table implements TaggableTableInterface
     public function __construct(DatabaseInterface $db)
     {
         parent::__construct('#__jlms_courses', 'id', $db);
+        // Retain Joomla Table's inherited nullable-column flag without redeclaring it.
+        $this->_supportNullValue = true;
         $this->setColumnAlias('published', 'state');
     }
 
