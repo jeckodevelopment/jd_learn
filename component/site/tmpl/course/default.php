@@ -261,17 +261,17 @@ foreach ([1, 2, 3] as $position) {
     <span class="jlms-lesson__title"><?= $this->escape($lesson->title) ?></span>
     <span class="jlms-lesson__requirement"><?= $lessonRequirementLabel ?></span><?php if ($canPreviewLesson) :
         ?> <a class="jlms-lesson__public-preview" href="<?= $lessonPreviewUrl ?>"><?= $previewActionLabel ?></a><?php
-                        endif; ?></li>
+                                           endif; ?></li>
                                     <?php endforeach; ?></ol>
   </details>
  <?php endforeach; ?></section>
 <?php if (!empty($this->item['public_materials']['items'])) :
     ?><section id="jlms-course-materials"><h2><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h2>
  <ul class="jlms-material-list"><?php foreach ($this->item['public_materials']['items'] as $material) :
-    $materialPreviewUrl = Route::_(
+        $materialPreviewUrl = Route::_(
         'index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id='
             . (int) $course->id . '&id=' . (int) $material->id
-    );
+        );
         ?><li id="jlms-material-<?= (int) $material->id ?>" class="jlms-material">
   <span class="jlms-material__title"><?= $this->escape($material->title) ?></span>
         <?php if (trim((string) $material->description) !== '') :
