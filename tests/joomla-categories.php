@@ -322,7 +322,20 @@ $finderEligible = static function () use ($db, $finder, $finderSelect, $course):
     return (bool) $db->setQuery($query, 0, 1)->loadResult();
 };
 $db->setQuery('UPDATE #__jlms_courses SET content_access=1 WHERE id=' . $course)->execute();
-catExpect($finderEligible(), 'CORE-14: published public course with visible native category is Finder-eligible');
+$finderFixture = $db->setQuery(
+    'SELECT c.id, c.state, c.catalog_access, c.content_access, c.publish_up, c.publish_down,'
+    . ' c.language, c.current_version_id, v.status AS version_status,'
+    . ' cat.id AS category_id, cat.published AS category_published,'
+    . ' cat.access AS category_access, cat.language AS category_language'
+    . ' FROM #__jlms_courses c LEFT JOIN #__jlms_course_versions v'
+    . ' ON v.id=c.current_version_id'
+    . ' LEFT JOIN #__categories cat ON cat.id=c.catid WHERE c.id=' . $course
+)->loadAssoc();
+catExpect(
+    $finderEligible(),
+    'CORE-14: published public course with visible native category is Finder-eligible; fixture='
+    . json_encode($finderFixture, JSON_THROW_ON_ERROR)
+);
 $update($en, ["access" => 2]);
 catExpect(!$finderEligible(), 'CORE-14: parent category ACL change hides inherited child Finder result');
 $update($en, ["access" => 1]);
