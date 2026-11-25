@@ -59,6 +59,16 @@ if ($canResume) {
             ? 'COM_JLMS_COURSE_BEGIN'
             : 'COM_JLMS_DASHBOARD_RESUME');
 }
+$completionDetails = $this->item['completion'] ?? null;
+$sequenceLabel = $completionDetails !== null && $completionDetails['sequence_mode'] === 'sequential'
+    ? 'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL'
+    : 'COM_JLMS_COURSE_COMPLETION_FREE';
+$certificateLabel = $completionDetails !== null && $completionDetails['certificate_planned']
+    ? 'COM_JLMS_COURSE_CERTIFICATE_PLANNED'
+    : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED';
+$completionThreshold = $completionDetails === null
+    ? 0
+    : TeachingRules::percent((int) $completionDetails['video_threshold_basis_points']);
 foreach ([1, 2, 3] as $position) {
     $fieldOutput[$position] =
         \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::render('com_jlms.course', 'fields.render', [
@@ -174,7 +184,8 @@ foreach ([1, 2, 3] as $position) {
                 $this->escape($teacher['title']) ?></a></h3>
             <?php if ($teacher['image'] !== '') :
                 ?><img src="<?= $this->escape(Uri::root() .
-    implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>" alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php
+    implode('/', array_map('rawurlencode', explode('/', $teacher['image'])))) ?>"
+    alt="<?= $this->escape($teacher['image_alt']) ?>" loading="lazy" decoding="async"><?php
             endif; ?>
  <p><?= nl2br($this->escape($teacher['bio'])) ?></p><?php if ($teacher['website'] !== '') :
         ?><a href="<?= $this->escape($teacher['website']) ?>"
@@ -204,9 +215,9 @@ foreach ([1, 2, 3] as $position) {
    <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_CONSULTATION_COMPLETION_UNAVAILABLE') ?></p>
         <?php else : ?>
    <p id="jlms-course-completion-policy"><?= Text::_('COM_JLMS_COURSE_COMPLETION_ALL_REQUIRED') ?></p>
-   <p id="jlms-course-completion-sequence"><?= Text::_($completion['sequence_mode'] === 'sequential' ? 'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL' : 'COM_JLMS_COURSE_COMPLETION_FREE') ?></p>
-   <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', TeachingRules::percent((int)$completion['video_threshold_basis_points'])) ?></p>
-   <p id="jlms-course-completion-certificate"><?= Text::_($completion['certificate_planned'] ? 'COM_JLMS_COURSE_CERTIFICATE_PLANNED' : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED') ?></p>
+   <p id="jlms-course-completion-sequence"><?= Text::_($sequenceLabel) ?></p>
+   <p id="jlms-course-completion-video"><?= Text::sprintf('COM_JLMS_COURSE_COMPLETION_VIDEO_THRESHOLD', $completionThreshold) ?></p>
+   <p id="jlms-course-completion-certificate"><?= Text::_($certificateLabel) ?></p>
             <?php if ($completion['certificate_planned']) :
                 ?>
 <p class="small" id="jlms-course-certificate-caveat"><?= Text::_('COM_JLMS_COURSE_CERTIFICATE_CONDITIONAL') ?></p><?php
