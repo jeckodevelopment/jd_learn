@@ -42,7 +42,13 @@ def inspect(register: dict, ledger: dict, plan: dict) -> tuple[list[str], dict]:
         {row.get("id"): row for row in ledger.get("services", [])}
         if isinstance(ledger.get("services"), list) else {}
     )
-    if set(services) != expected_services:
+    reviewed_services = ledger.get("services", [])
+    if (
+        not isinstance(reviewed_services, list)
+        or len(reviewed_services) != len(expected_services)
+        or len(services) != len(expected_services)
+        or set(services) != expected_services
+    ):
         failures.append("CORE decisions missing or duplicated")
     keys = (
         [str(row.get("service")) + "/" + str(row.get("criterion")) for row in entries]
@@ -119,6 +125,9 @@ def self_test() -> None:
     register, ledger, plan = deepcopy(original)
     plan["criteria"].pop()
     assert any("exactly once" in x for x in inspect(register, ledger, plan)[0])
+    register, ledger, plan = deepcopy(original)
+    ledger["services"].append(deepcopy(ledger["services"][0]))
+    assert any("CORE decisions missing or duplicated" in x for x in inspect(register, ledger, plan)[0])
     register, ledger, plan = deepcopy(original)
     plan["criteria"][0]["canonical_status"] = "implemented"
     assert any("canonical verification status" in x for x in inspect(register, ledger, plan)[0])
