@@ -6,11 +6,13 @@ declare(strict_types=1);
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Version;
+use Joomla\CMS\Installer\InstallerScriptInterface;
 use Joomla\CMS\Table\Asset;
 use Joomla\Database\DatabaseInterface;
 use Jlms\Component\Jlms\Administrator\Infrastructure\SchemaInstaller;
 
-final class Com_JlmsInstallerScript
+// Joomla 6 can load the installer as a returned interface implementation.
+return new class () implements InstallerScriptInterface
 {
     public function preflight($type, $parent): bool
     {
@@ -107,4 +109,4 @@ final class Com_JlmsInstallerScript
         // Deliberately retain learning data and blobs. No destructive uninstall SQL.
         return true;
     }
-}
+};
