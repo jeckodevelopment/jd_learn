@@ -450,8 +450,7 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
                      $this->escape($transitionDisplay($transition)) ?></option><?php
             endforeach; ?>
   </select>
-            <?= HTMLHelper::_('form.token') ?>
-            <button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
+            <?= HTMLHelper::_('form.token') ?><button id="jlms-publication-submit" type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
                 ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
             elseif ($transitionAction($this->transitions[0]) === 'review') :
                 ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
