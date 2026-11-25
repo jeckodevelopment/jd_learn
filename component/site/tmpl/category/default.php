@@ -6,6 +6,8 @@ declare(strict_types=1);
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 $gridListClass = $this->layout === 'list' ? ' jlms-course-grid--list' : '';
+$anyTeacherLabel = Text::_('COM_JLMS_CATALOG_ANY_TEACHER');
+$anyPathwayLabel = Text::_('COM_JLMS_CATALOG_ANY_PATHWAY');
 $hasActiveCategoryFilters = $this->search !== ''
     || $this->tagId > 0
     || $this->difficulty !== ''
@@ -101,20 +103,23 @@ value="<?= (int) $this->category->id ?>">
        Text::_('COM_JLMS_CATALOG_LAYOUT_LIST') ?></option></select>
    <label for="jlms-category-catalog-teacher"><?= Text::_('COM_JLMS_CATALOG_TEACHER') ?></label>
    <select id="jlms-category-catalog-teacher" name="filter[teacher_id]">
-   <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
+   <option value="0"><?= $anyTeacherLabel ?></option><?php foreach ($this->teachers as $teacher) :
         $selectedTeacher = $this->teacherId === (int) $teacher->id ? ' selected' : '';
-        ?><option value="<?= (int) $teacher->id ?>"<?= $selectedTeacher ?>><?= $this->escape($teacher->title) ?></option><?php
+        $teacherTitle = $this->escape($teacher->title);
+        ?><option value="<?= (int) $teacher->id ?>"<?= $selectedTeacher ?>><?= $teacherTitle ?></option><?php
                      endforeach; ?></select>
    <label for="jlms-category-catalog-pathway"><?= Text::_('COM_JLMS_CATALOG_PATHWAY') ?></label>
    <select id="jlms-category-catalog-pathway" name="filter[pathway_id]">
-   <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
+   <option value="0"><?= $anyPathwayLabel ?></option><?php foreach ($this->pathways as $pathway) :
         $selectedPathway = $this->pathwayId === (int) $pathway->id ? ' selected' : '';
-        ?><option value="<?= (int) $pathway->id ?>"<?= $selectedPathway ?>><?= $this->escape($pathway->title) ?></option><?php
+        $pathwayTitle = $this->escape($pathway->title);
+        ?><option value="<?= (int) $pathway->id ?>"<?= $selectedPathway ?>><?= $pathwayTitle ?></option><?php
                      endforeach; ?></select>
    <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
   </form>
         <?php endif; ?>
-  <div id="jlms-category-course-grid" class="jlms-course-grid<?= $gridListClass ?>" data-layout="<?= $this->escape($this->layout) ?>"><?php foreach ($this->items as $item) : ?>
+  <div id="jlms-category-course-grid" class="jlms-course-grid<?= $gridListClass ?>"
+   data-layout="<?= $this->escape($this->layout) ?>"><?php foreach ($this->items as $item) : ?>
    <article id="jlms-course-card-<?=
        (int) $item->id ?>" class="jlms-card jlms-course-card" data-course-id="<?=
        (int) $item->id ?>">
