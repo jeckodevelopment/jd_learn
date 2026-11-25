@@ -38,12 +38,16 @@ def inspect(register: dict, ledger: dict, plan: dict) -> tuple[list[str], dict]:
     entries = plan.get("criteria")
     if not isinstance(entries, list):
         return failures + ["criteria must be an array"], {}
-    services = {row.get("id"): row for row in ledger.get("services", [])}
-                if isinstance(ledger.get("services"), list) else {}
+    services = (
+        {row.get("id"): row for row in ledger.get("services", [])}
+        if isinstance(ledger.get("services"), list) else {}
+    )
     if set(services) != expected_services:
         failures.append("CORE decisions missing or duplicated")
-    keys = [str(row.get("service")) + "/" + str(row.get("criterion")) for row in entries]
-            if all(isinstance(row, dict) for row in entries) else []
+    keys = (
+        [str(row.get("service")) + "/" + str(row.get("criterion")) for row in entries]
+        if all(isinstance(row, dict) for row in entries) else []
+    )
     if len(keys) != len(set(keys)) or set(keys) != set(expected):
         failures.append("reconciliation must cover each pending canonical criterion exactly once")
     if plan.get("pending_criteria_reviewed") != len(expected):
