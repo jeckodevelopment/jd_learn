@@ -60,7 +60,7 @@ value="<?= (int) $this->category->id ?>">
    <select id="jlms-category-catalog-tag" name="filter[tag_id]">
    <option value="0"><?= Text::_('COM_JLMS_CATALOG_ALL_TAGS') ?></option><?php foreach ($this->tags as $tag) :
         ?><option value="<?= (int) $tag->id ?>"<?= $this->tagId === (int) $tag->id ? ' selected' : '' ?>><?= $this->escape($tag->title) ?></option><?php
-                                                                                  endforeach; ?></select>
+                     endforeach; ?></select>
 <label for="jlms-category-catalog-difficulty"><?= Text::_('COM_JLMS_CATALOG_DIFFICULTY') ?></label>
    <select id="jlms-category-catalog-difficulty" name="filter[difficulty]"><option value=""><?=
        Text::_('COM_JLMS_CATALOG_ANY_DIFFICULTY') ?></option><option value="beginner"<?=
@@ -94,12 +94,12 @@ value="<?= (int) $this->category->id ?>">
    <select id="jlms-category-catalog-teacher" name="filter[teacher_id]">
    <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_TEACHER') ?></option><?php foreach ($this->teachers as $teacher) :
         ?><option value="<?= (int) $teacher->id ?>"<?= $this->teacherId === (int) $teacher->id ? ' selected' : '' ?>><?= $this->escape($teacher->title) ?></option><?php
-                                                                                          endforeach; ?></select>
+                     endforeach; ?></select>
    <label for="jlms-category-catalog-pathway"><?= Text::_('COM_JLMS_CATALOG_PATHWAY') ?></label>
    <select id="jlms-category-catalog-pathway" name="filter[pathway_id]">
    <option value="0"><?= Text::_('COM_JLMS_CATALOG_ANY_PATHWAY') ?></option><?php foreach ($this->pathways as $pathway) :
         ?><option value="<?= (int) $pathway->id ?>"<?= $this->pathwayId === (int) $pathway->id ? ' selected' : '' ?>><?= $this->escape($pathway->title) ?></option><?php
-                                                                                          endforeach; ?></select>
+                     endforeach; ?></select>
    <button type="submit"><?= Text::_('COM_JLMS_CATALOG_APPLY') ?></button>
   </form>
         <?php endif; ?>
