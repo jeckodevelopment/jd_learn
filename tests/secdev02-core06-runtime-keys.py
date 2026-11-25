@@ -9,7 +9,6 @@ Computed keys and Mail Templates configured on a real site remain separate.
 from __future__ import annotations
 
 import argparse
-from collections import Counter
 from pathlib import Path
 import re
 import sys
