@@ -219,6 +219,10 @@ listExpect(
     $finderEffective !== null && $finderEffective->language === 'en-GB',
     'Finder indexes neutral course with category language rather than global wildcard'
 );
+// Restore the editor fixture's explicit course language before later list
+// filtering tests. The wildcard course is deliberately temporary.
+$finderLanguage->language = 'en-GB';
+$db->updateObject('#__jlms_courses', $finderLanguage, 'id');
 $finderCategory->language = '*';
 $db->updateObject('#__categories', $finderCategory, 'id');
 
