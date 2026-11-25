@@ -474,6 +474,58 @@ try {
 } finally {
     $db->setQuery("UPDATE #__users SET block=0 WHERE id=" . (int) $actor->id)->execute();
 }
+// CORE-04: locking a single record must veto the entire bulk relocation.
+$otherEditorId = (int) $db->setQuery('SELECT id FROM #__users WHERE id <> ' . (int) $actor->id
+    . ' ORDER BY id LIMIT 1')->loadResult();
+catExpect($otherEditorId > 0, 'independent Joomla editor exists for category checkout regression');
+$db->setQuery('UPDATE #__jlms_courses SET checked_out=' . $otherEditorId . ' WHERE id=' . (int) $course)
+    ->execute();
+try {
+    $recordLocked = false;
+    try {
+        $reassignment->reassign($actor, $moveSource, ["courses" => $moveTarget]);
+    } catch (\RuntimeException $error) {
+        $recordLocked = $error->getCode() === 403;
+    }
+    catExpect($recordLocked, 'checked-out course vetoes whole category reassignment');
+    catExpect(
+        (int) $db->setQuery('SELECT catid FROM #__jlms_courses WHERE id=' . (int) $course)
+            ->loadResult() === $moveSource,
+        'denied record-level category move leaves source unchanged',
+    );
+} finally {
+    $db->setQuery('UPDATE #__jlms_courses SET checked_out=NULL WHERE id=' . (int) $course)->execute();
+}
+// CORE-01: published category nested inside an unrelated trashed parent is
+// not a valid destination. It must be absent from choices and rejected server-side.
+$orphanParent = $saveCategory([
+    "title" => "Trashed ancestor destination",
+    "alias" => "reassignment-trashed-ancestor",
+    "language" => "en-GB",
+]);
+$orphanChild = $saveCategory([
+    "title" => "Published child of trashed destination",
+    "alias" => "reassignment-trashed-child",
+    "parent_id" => $orphanParent,
+    "language" => "en-GB",
+]);
+$update($orphanParent, ["published" => -2]);
+$withTrashedAncestor = $reassignment->inspect($actor, $moveSource);
+catExpect(
+    !in_array(
+        $orphanChild,
+        array_map(static fn ($target): int => (int) $target->id, $withTrashedAncestor["targets"]["courses"]),
+        true,
+    ),
+    'relocation options omit a published child below a trashed ancestor',
+);
+$orphanRejected = false;
+try {
+    $reassignment->reassign($actor, $moveSource, ["courses" => $orphanChild]);
+} catch (\RuntimeException) {
+    $orphanRejected = true;
+}
+catExpect($orphanRejected, 'directly supplied child of trashed ancestor is rejected');
 $descendantRejected = false;
 try {
     $reassignment->reassign($actor, $moveSource, ["courses" => $moveChild]);
