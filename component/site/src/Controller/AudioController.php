@@ -15,6 +15,7 @@ final class AudioController extends BaseController
 {
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (strtolower($task) !== 'save') {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
@@ -45,7 +46,7 @@ final class AudioController extends BaseController
                 $lesson,
                 $position
             );
-            echo new JsonResponse(['resume_ms' => $saved], null, false, true);
+            $response = new JsonResponse(['resume_ms' => $saved], null, false, true);
         } catch (\Throwable $error) {
             $code = (int) $error->getCode();
             $key = $error->getMessage();
@@ -63,8 +64,12 @@ final class AudioController extends BaseController
             }
             $this->app->setHeader('status', (string) $code, true);
             http_response_code($code);
-            echo new JsonResponse(['code' => $key], Text::_($key), true, true);
+            $response = new JsonResponse(['code' => $key], Text::_($key), true, true);
         }
+        // Raw JSON bypasses normal Joomla rendering: send queued private/no-store
+        // and JSON headers before either the success or error response body.
+        $this->app->sendHeaders();
+        echo $response;
         $this->app->close();
     }
 }
