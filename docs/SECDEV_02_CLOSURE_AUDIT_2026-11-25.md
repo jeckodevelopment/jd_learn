@@ -176,3 +176,38 @@ non considerarli eseguiti per effetto del merge.
 
 La correzione è un lotto concreto di sviluppo CORE-08; **non** equivale alla
 chiusura implementativa di tutti i 23 criteri o al collaudo SECDEV-02.
+
+
+## SECDEV-02 — lotto implementativo ACL e categorie (25 novembre 2026)
+
+**CORE-01/03/04 — verifiche in codice, distinte dall'accettazione manuale.**
+`CategoryReassignmentService` controllava i permessi di eliminazione/modifica
+sulla categoria sorgente/destinazione, ma il batch aggiornava direttamente tutti
+i record con `catid` corrispondente: una negazione ACL sul singolo corso,
+percorso, docente o domanda e il checkout di un altro editor non fermavano
+l'operazione. Ora ogni record viene letto con lock `FOR UPDATE` nella
+transazione, autorizzato tramite `core.edit` o `core.edit.own` per il
+creatore e verificato per checkout, prima dell'aggiornamento. La selezione
+deve ancora corrispondere al conteggio iniziale; ogni diniego provoca rollback
+atomico. Gli ID corso da sincronizzare con Finder sono raccolti dalle righe
+bloccate, evitando l'inventario preventivo potenzialmente obsoleto.
+
+**CORE-01/04 — categoria non utilizzabile.** `CourseEditorAccess::canCreate`
+e la scelta/validazione delle destinazioni escludono anche categorie formalmente
+attive ma sotto un antenato nel cestino. I permessi sono sempre letti tramite
+utente Joomla aggiornato, inclusa la visualizzazione delle destinazioni.
+
+**Test automatici:** `tests/joomla-categories.php` prova il checkout
+appartenente a un altro utente, il rollback senza spostamenti e il rifiuto
+(o mancata offerta) di destinazioni con antenato cestinato; `tests/joomla-editor-access.php`
+verifica la creazione in categoria cestinata anche con permesso ACL nativo.
+La CI delle due matrici PHP/database e Chromium è necessaria prima del merge.
+
+**Collaudi manuali non eseguiti:** con ruoli Joomla separati, testare i
+permessi sul singolo record, le selezioni massive, il checkout concorrente,
+categorie annidate, Finder dopo il trasferimento e UI mobile backend; nessuno
+è considerato superato automaticamente dalla CI.
+
+**Stato:** questi sono difetti implementativi specifici e non una promozione
+automatica dell'intero CORE-01/03/04 o di SECDEV-02. La certificazione
+implementativa completa resta da riconciliare con le altre aree core.
