@@ -79,6 +79,28 @@ def validate(root: Path) -> list[str]:
     for token in ("new ContentType($db)", "com_jlms.", "core_content_item_id", "core_catid"):
         if token not in installer:
             errors.append(f"CORE-09: Joomla content-type mapping removed: {token}")
+    teacher_table = (root / "component/administrator/src/Table/TeacherTable.php").read_text(encoding="utf-8")
+    teacher_form = (root / "component/administrator/forms/teacher.xml").read_text(encoding="utf-8")
+    admin_teacher = (root / "component/administrator/src/Model/TeacherModel.php").read_text(encoding="utf-8")
+    for token in ("TaggableTableInterface", "use TaggableTableTrait;", "com_jlms.teacher"):
+        if token not in teacher_table:
+            errors.append(f"CORE-09: teacher Joomla tagging contract removed: {token}")
+    for token in ('name="catid" type="category"', 'extension="com_jlms.teacher"',
+                  'name="tags" type="tag"'):
+        if token not in teacher_form:
+            errors.append(f"CORE-01/09/20: teacher native form field missing: {token}")
+    for token in ("'catid', 'state', 'access', 'language', 'tags'", "'tags',",
+                  "getTagIds((int) $item->id, $this->typeAlias)"):
+        if token not in admin_teacher:
+            errors.append(f"CORE-04/09: teacher editor tag/ACL contract removed: {token}")
+    for path in (
+        "component/administrator/src/Table/TeacherTable.php",
+        "component/administrator/src/Table/PathwayTable.php",
+        "component/administrator/src/Model/PathwayModel.php",
+    ):
+        source = (root / path).read_text(encoding="utf-8")
+        if "ancestor.published = -2" not in source:
+            errors.append(f"CORE-01/04: nested trashed category guard missing: {path}")
     return errors
 
 
