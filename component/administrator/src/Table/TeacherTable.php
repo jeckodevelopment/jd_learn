@@ -5,12 +5,23 @@ declare(strict_types=1);
 namespace Jlms\Component\Jlms\Administrator\Table;
 
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Tag\TaggableTableInterface;
+use Joomla\CMS\Tag\TaggableTableTrait;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
-final class TeacherTable extends Table
+final class TeacherTable extends Table implements TaggableTableInterface
 {
+    use TaggableTableTrait;
+
+    public $typeAlias = 'com_jlms.teacher';
+
+    public function getTypeAlias(): string
+    {
+        return $this->typeAlias;
+    }
+
     use TeacherTableAssetMethods {
         assetName as protected _getAssetName;
         assetTitle as protected _getAssetTitle;
