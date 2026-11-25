@@ -74,12 +74,12 @@ foreach ($item['outline'] as $entry) {
         Text::_('COM_JLMS_SHOW_CURRICULUM') ?></button>
  <nav id="jlms-classroom-outline" aria-label="<?= Text::_('COM_JLMS_CURRICULUM') ?>">
  <?php foreach ($item['outline'] as $entry) :
-    $entryProgressKey = $entry->state === 'completed'
+        $entryProgressKey = $entry->state === 'completed'
         ? 'COM_JLMS_LESSON_COMPLETED'
         : ($entry->state === 'started'
             ? 'COM_JLMS_LESSON_IN_PROGRESS'
             : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'));
-    ?>
+        ?>
         <?php if ((int) $entry->module_id !== $currentModule) : ?>
             <?php if ($currentModule) :
                 ?></ol></details><?php
