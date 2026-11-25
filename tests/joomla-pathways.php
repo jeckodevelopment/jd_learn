@@ -125,6 +125,30 @@ $payload = ['id' => 0,'revision' => 1,'title' => 'CI learning pathway','alias' =
     'catid' => $categoryId,'access' => 1,'language' => '*','state' => 1,
     'courses' => [['course_id' => $courseId,'ordering' => 10]],
     'params_json' => '{"injected":true}','created_by' => 999999,'checked_out' => 999999];
+// CORE-01/04: a published child of a trashed ancestor must not allow
+// new pathway creation or allocation of native ACL assets.
+$check($categoryModel->save([
+    'id' => 0, 'parent_id' => 1, 'extension' => 'com_jlms.pathway',
+    'title' => 'CI pathway trashed parent', 'alias' => 'ci-pathway-trashed-parent',
+    'published' => 1, 'language' => '*', 'access' => 1, 'description' => '',
+]), 'CORE-01: pathway nested parent fixture created');
+$trashedPathwayParent = (int)$categoryModel->getState('category.id');
+$check($categoryModel->save([
+    'id' => 0, 'parent_id' => $trashedPathwayParent, 'extension' => 'com_jlms.pathway',
+    'title' => 'CI pathway nested child', 'alias' => 'ci-pathway-nested-child',
+    'published' => 1, 'language' => '*', 'access' => 1, 'description' => '',
+]), 'CORE-01: pathway nested child fixture created');
+$trashedPathwayChild = (int)$categoryModel->getState('category.id');
+$db->setQuery('UPDATE #__categories SET published=-2 WHERE id=' . $trashedPathwayParent)->execute();
+$check(!$pathModel->save(array_replace($payload, [
+    'catid' => $trashedPathwayChild,
+    'alias' => 'ci-invalid-ancestor-pathway',
+])), 'CORE-01/04: reject pathway with trashed ancestor before asset reservation');
+$check(
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_pathways WHERE alias='ci-invalid-ancestor-pathway'")
+        ->loadResult() === 0,
+    'CORE-01/04: rejected pathway leaves no partial record'
+);
 $check((bool)$pathModel->save($payload), 'native pathway model saves pathway and course order: ' . $pathModel
     ->getError());
 $pathwayId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='ci-learning-pathway'")->loadResult();
