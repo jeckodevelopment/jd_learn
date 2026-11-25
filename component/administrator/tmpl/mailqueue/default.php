@@ -65,7 +65,8 @@ $filterQuery = '&filter[state]=' . rawurlencode((string) $filters['state']) . '&
     for="jlms-mail-queue-template"><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_TEMPLATE') ?></label>
    <select class="form-select" name="filter[template]" id="jlms-mail-queue-template">
     <option value=""><?= Text::_('COM_JLMS_MAIL_QUEUE_FILTER_ALL') ?></option>
-    <?php foreach (\Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds() as $template) : ?>
+    <?php $templateIds = \Jlms\Component\Jlms\Administrator\Infrastructure\MailTemplateInstaller::templateIds(); ?>
+    <?php foreach ($templateIds as $template) : ?>
      <option value="<?= $this->escape($template) ?>" <?=
           $filters['template'] === $template ? 'selected' : '' ?>><?=
           $this->escape($template) ?></option>
