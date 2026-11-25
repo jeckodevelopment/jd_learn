@@ -412,3 +412,5 @@ Questa fase indirizza il gruppo dei **17 criteri ancora di competenza sviluppo/C
 Le evidenze sono rieseguite nel gate obbligatorio e nelle matrici Joomla PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Accettazione manuale separata e **NON ESEGUITA**: override su template reali, Finder/reindex/lingue su hosting, editor/tag con ruoli, UI nei viewport e verifica lingua delle email.
 
 Il CSV resta `Parziale` e la matrice `docs/FUNCTIONAL_CRITERIA_1.0.0.json` conserva le valutazioni originali fino all'accertamento dei criteri completi. Gli altri punti di sviluppo/CI sono ancora aperti nel registro di riconciliazione.
+
+**Riconciliazione PR #1044:** il lotto nativo CORE recupera la #1042 senza sostituire la #1043; test CI e collaudi manuali restano distinti. Lo stato globale SECDEV-02 rimane Parziale.
