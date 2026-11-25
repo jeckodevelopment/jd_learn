@@ -14,7 +14,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 TASKS = (
-    "Enrollment", "Teacher", "Quiz", "Video", "Media", "Attachment",
+    "Enrollment", "Teacher", "Quiz", "Video", "Audio", "Media", "Attachment",
     "Certificate", "Mailconsent",
 )
 CACHE = "$this->app->setHeader('Cache-Control', 'private, no-store', true);"
@@ -69,11 +69,15 @@ def check(root: Path) -> list[str]:
             faults.append(f"Missing protected controller: {relative}")
             continue
         faults.extend(inspect_source(name, source))
-    for name in ("Quiz", "Video", "Lesson"):
+    for name in ("Quiz", "Video", "Lesson", "Audio"):
         source = (root / "component/site/src/Controller" / f"{name}Controller.php").read_text(
             encoding="utf-8"
         )
-        handler = "public function begin(" if name == "Lesson" else "private function respond("
+        handler = (
+            "public function begin(" if name == "Lesson"
+            else "public function save(" if name == "Audio"
+            else "private function respond("
+        )
         faults.extend(inspect_raw_json(name, source, handler))
     display = root / "component/site/src/Controller/DisplayController.php"
     try:

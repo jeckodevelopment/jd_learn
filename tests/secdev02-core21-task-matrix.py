@@ -14,6 +14,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 TASKS = {
+    "audio": {"save": "GET"},
     "enrollment": {
         "start": "GET", "resume": "POST", "request": "GET",
     },
@@ -63,9 +64,27 @@ def private_views(source: str) -> set[str]:
     return set(ALLOWLIST_WORD.findall(source[start:finish]))
 
 
+def shipped_task_controllers(controller_dir: Path) -> set[str]:
+    return {
+        source.name.removesuffix("Controller.php").lower()
+        for source in controller_dir.glob("*Controller.php")
+        if source.name not in {"DisplayController.php", "LessonController.php"}
+    }
+
+
 def validate(root: Path) -> list[str]:
     failures: list[str] = []
     controller_dir = root / "component/site/src/Controller"
+    # LessonController inherits the bounded execute() of EnrollmentController;
+    # its task names are audited separately by the shared task allowlist.
+    expected_controllers = set(TASKS) - {"lesson"}
+    actual_controllers = shipped_task_controllers(controller_dir)
+    if actual_controllers != expected_controllers:
+        failures.append(
+            "CORE-21 untracked task controller: "
+            f"new={sorted(actual_controllers - expected_controllers)} "
+            f"removed={sorted(expected_controllers - actual_controllers)}"
+        )
     for class_key, tasks in TASKS.items():
         # Lesson extends EnrollmentController and borrows its whitelist.
         classname = "Enrollment" if class_key == "lesson" else (
@@ -120,6 +139,13 @@ def self_test() -> None:
     }
     assert not names_in_execute("public function something() {}")
     assert not private_views("$allowedViews = ['course'];")
+    from tempfile import TemporaryDirectory
+    with TemporaryDirectory() as folder:
+        controllers = Path(folder)
+        (controllers / "AudioController.php").write_text("<?php", encoding="utf-8")
+        assert shipped_task_controllers(controllers) == {"audio"}
+        (controllers / "UnexpectedController.php").write_text("<?php", encoding="utf-8")
+        assert shipped_task_controllers(controllers) - set(TASKS) == {"unexpected"}
 
 
 def main() -> int:
