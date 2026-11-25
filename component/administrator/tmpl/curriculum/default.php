@@ -455,17 +455,17 @@ $actions = function (string $kind, object $item, int $position, int $total) use 
     type="submit" class="btn btn-primary"><?php if (count($this->transitions) !== 1) :
         ?><?= Text::_('COM_JLMS_EXECUTE_TRANSITION') ?><?php
                                           elseif ($transitionAction($this->transitions[0]) === 'review') :
-                ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
-            elseif ($transitionAction($this->transitions[0]) === 'return') :
-                ?><?= Text::_('COM_JLMS_RETURN_TO_DRAFT') ?><?php
-            elseif (
-                $version->status === 'draft' && $course->current_version_id !== null
-                && $transitionAction($this->transitions[0]) === 'publish'
-            ) :
-                ?><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') ?><?php
-            else :
-                ?><?= $this->escape($transitionDisplay($this->transitions[0])) ?><?php
-            endif; ?></button>
+                                                ?><?= Text::_('COM_JLMS_SUBMIT_REVIEW') ?><?php
+                                          elseif ($transitionAction($this->transitions[0]) === 'return') :
+                                                ?><?= Text::_('COM_JLMS_RETURN_TO_DRAFT') ?><?php
+                                          elseif (
+                                              $version->status === 'draft' && $course->current_version_id !== null
+                                              && $transitionAction($this->transitions[0]) === 'publish'
+                                          ) :
+                                                ?><?= Text::_('COM_JLMS_PUBLICATION_REVIEW_ACTION') ?><?php
+                                          else :
+                                                ?><?= $this->escape($transitionDisplay($this->transitions[0])) ?><?php
+                                          endif; ?></button>
  </form>
      <?php endif; ?>
      <?php if ($version->status === 'published' && (int)$course->current_version_id === (int)$version->id) : ?>
