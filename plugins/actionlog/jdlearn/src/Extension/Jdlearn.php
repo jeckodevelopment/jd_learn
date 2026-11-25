@@ -12,7 +12,6 @@ use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 
-defined('_JEXEC') or die;
 
 /**
  * Native Joomla User Actions Log integration for committed course transitions.
