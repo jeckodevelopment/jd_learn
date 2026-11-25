@@ -118,6 +118,7 @@ $categoryOptionLabel = Text::_('JOPTION_SELECT_CATEGORY');
     type="submit"><?= Text::_((int)$row->state === -2 ? 'JTOOLBAR_RESTORE' : 'JTOOLBAR_TRASH') ?></button></form><?php
             endif; ?>
             <?php if ($row->can_delete && (int)$row->state === -2) :
+                $deleteLabel = Text::_('JTOOLBAR_DELETE');
                 $deleteDisabled = $inUse
                     ? 'disabled title="' . $this->escape(Text::_('COM_JLMS_QUESTION_IN_USE')) . '"'
                     : '';
@@ -130,7 +131,7 @@ $categoryOptionLabel = Text::_('JOPTION_SELECT_CATEGORY');
     <input type="hidden" name="task" value="questionbank.delete">
     <input type="hidden" name="id" value="<?= $id ?>">
     <?= HTMLHelper::_('form.token') ?>
-    <button class="btn btn-sm btn-danger" type="submit" <?= $deleteDisabled ?> <?= $deleteConfirm ?>><?= Text::_('JTOOLBAR_DELETE') ?></button>
+    <button class="btn btn-sm btn-danger" type="submit" <?= $deleteDisabled ?> <?= $deleteConfirm ?>><?= $deleteLabel ?></button>
     </form><?php
             endif; ?>
     </td>
