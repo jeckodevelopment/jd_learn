@@ -134,7 +134,12 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                     ->select('id')
                     ->from('#__categories')
                     ->where("extension='com_jlms.teacher' AND alias='jd-learn-teachers'");
-                $data['catid'] = (int) ($data['catid'] ?? $db->setQuery($query)->loadResult());
+                // The native category selector is optional on New Teacher.
+                // Unselected options send 0/empty; use the established
+                // default category without accepting invalid category IDs.
+                if (!isset($data['catid']) || $data['catid'] === '' || (string) $data['catid'] === '0') {
+                    $data['catid'] = (int) $db->setQuery($query)->loadResult();
+                }
                 $scope = 'com_jlms';
             }
             if (!$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
