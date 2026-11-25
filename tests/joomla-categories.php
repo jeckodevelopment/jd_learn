@@ -24,7 +24,8 @@ if (($argv[2] ?? "") !== "worker") {
         ->fetch(\PDO::FETCH_ASSOC);
     $fixtureDb->exec(
         "UPDATE joomla_extensions SET enabled=1, " .
-            "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1) WHERE type='plugin' AND folder='system' AND element='languagefilter'",
+            "params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.item_associations',1" .
+                ") WHERE type='plugin' AND folder='system' AND element='languagefilter'",
     );
     register_shutdown_function(static function () use ($fixtureDb, $plugin): void {
         $statement = $fixtureDb->prepare(
