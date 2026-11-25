@@ -60,13 +60,13 @@ if ($canResume) {
             : 'COM_JLMS_DASHBOARD_RESUME');
 }
 $completionDetails = $this->item['completion'] ?? null;
-$sequenceLabel = $completionDetails !== null && $completionDetails['sequence_mode'] === 'sequential'
+$sequenceLabel = !empty($completionDetails) && $completionDetails['sequence_mode'] === 'sequential'
     ? 'COM_JLMS_COURSE_COMPLETION_SEQUENTIAL'
     : 'COM_JLMS_COURSE_COMPLETION_FREE';
-$certificateLabel = $completionDetails !== null && $completionDetails['certificate_planned']
+$certificateLabel = !empty($completionDetails) && $completionDetails['certificate_planned']
     ? 'COM_JLMS_COURSE_CERTIFICATE_PLANNED'
     : 'COM_JLMS_COURSE_CERTIFICATE_NOT_PLANNED';
-$completionThreshold = $completionDetails === null
+$completionThreshold = empty($completionDetails)
     ? 0
     : TeachingRules::percent((int) $completionDetails['video_threshold_basis_points']);
 foreach ([1, 2, 3] as $position) {
