@@ -376,3 +376,16 @@ e integrazioni esterne, registrati come **NON ESEGUITI** in
 `docs/QA_TESTBOOK.md`. CORE-17 aveva già i criteri di sviluppo implementati;
 gli altri servizi restano parzialmente verificati sino alla prova completa.
 **SECDEV-02 resta Parziale**: non si converte una CI verde in un collaudo.
+
+## CORE-01–23 — classificazione finale del residuo sviluppi vs collaudi
+
+Questa ricognizione è distinta dalla PR massiva #1040. Il registro funzionale conserva **24 implemented e 23 unverifiable su 47 criteri** nei 23 servizi CORE. CORE-17 è già completo a livello di criteri tecnici; CORE-04 presenta due criteri residui. Il totale è quindi **23 criteri ancora da dimostrare, distribuiti su 22 servizi**.
+
+La nuova matrice operativa `docs/SECDEV_02_CORE_RESIDUAL_CLASSIFICATION_2026-11-25.json`, presentata in `docs/SECDEV_02_CORE_RESIDUAL_RECONCILIATION_2026-11-25.md` e verificata da `tests/secdev02-core-residual-split.py`, distingue **17 criteri ancora di competenza sviluppo/CI** da **6 criteri la cui accettazione dipende principalmente da sito Joomla, policy o terzi**. Nessun `unverifiable` viene trasformato in `implemented` senza prova, e nessuna accettazione manuale è dichiarata eseguita.
+
+**Difetto di codice individuato e corretto (CORE-18/19):** `CourseExpiryReminderService::enqueueDue` rispettava il toggle globale come blocco assoluto, impedendo i promemoria scadenza per i corsi esplicitamente abilitati. L'integrazione ora usa `MailPreferences::enabled('expiry', $globallyEnabled, ...)` e filtra la stessa decisione in SQL prima del LIMIT. Le nuove fixture Joomla confrontano la SQL con le preferenze di dominio su MySQL/MariaDB (5 varianti × 2 valori del toggle globale). Deduplicazione, coda e SMTP non vengono alterati.
+
+**Residui di sviluppo:** tutte le 17 righe `developer_work_pending` sono attività di verifica approfondita, integrazione e test da completare in software/CI, con interventi di codice ove i test rivelino difetti; non sono stati assegnati all'utente.
+**Collaudo utente:** le 6 dipendenze ambientali sono nel `docs/QA_TESTBOOK.md` come **NON ESEGUITE**; la prova manuale degli altri 17 casi resta distinta dalla verifica implementativa e verrà eseguita successivamente.
+
+**Stato SECDEV-02:** Parziale. La separazione del debito tecnico e dell'accettazione **non è una dichiarazione di completamento**.
