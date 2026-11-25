@@ -94,9 +94,7 @@ foreach ($item['outline'] as $entry) {
          elseif (!empty($entry->prerequisite_blocked)) :
                 ?><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?><?php
          else :
-                ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' :
-        ($entry->state === 'started' ? 'COM_JLMS_LESSON_IN_PROGRESS' : ($entry->required ?
-        'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'))) ?><?php
+                ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->state === 'started' ? 'COM_JLMS_LESSON_IN_PROGRESS' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'))) ?><?php
          endif; ?></span>
   </li>
  <?php endforeach; ?>
@@ -142,9 +140,7 @@ foreach ($item['outline'] as $entry) {
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
             <?php if ($selected->provider_key === 'youtube') : ?>
-                <?php $nextVideoLessonAvailable = $nextLesson !== null
-                    && $nextLesson->schedule_state === 'available'
-                    && empty($nextLesson->prerequisite_blocked); ?>
+                <?php $nextVideoLessonAvailable = $nextLesson !== null && $nextLesson->schedule_state === 'available' && empty($nextLesson->prerequisite_blocked); ?>
     <div id="jlms-youtube-finish" class="jlms-youtube-finish" role="status" aria-live="polite" hidden>
      <p class="jlms-youtube-finish__message"><?= Text::_('COM_JLMS_VIDEO_COMPLETED') ?></p>
                 <?php if ($nextVideoLessonAvailable) : ?>
@@ -222,10 +218,7 @@ foreach ($item['outline'] as $entry) {
           <?php endif; ?>
       <?php endif; ?>
  <div id="jlms-material-groups">
-      <?php foreach ([
-          'course' => 'jlms-classroom-course-materials',
-          'lesson' => 'jlms-lesson-resources',
-      ] as $scope => $region) :
+      <?php foreach (['course' => 'jlms-classroom-course-materials', 'lesson' => 'jlms-lesson-resources'] as $scope => $region) :
             $files = $this->materials[$scope]; ?>
  <section id="<?= $region ?>"
    class="jlms-material-list">
@@ -235,11 +228,8 @@ foreach ($item['outline'] as $entry) {
    <h4 class="jlms-material__title"><?= $this->escape($file->title) ?></h4>
      <p><?= $this->escape($file->description ?? '') ?></p>
    <p class="jlms-material__meta"><?= $this->escape($file->mime_type) ?> · <?= (int) $file->byte_size ?> B</p>
-                <?php if (in_array($file->mime_type, [
-                    'application/pdf', 'image/jpeg', 'image/png', 'image/webp',
-                ], true)) : ?>
-                    <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id='
-                        . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>
+                <?php if (in_array($file->mime_type, ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'], true)) : ?>
+                    <?php $inlineUrl = 'index.php?option=com_jlms&task=attachment.inline&format=raw&id=' . (int) $file->id . '&enrollment_id=' . (int) $item['enrollment_id']; ?>
     <a class="jlms-material__preview"
     target="_blank"
     rel="noopener"
@@ -254,9 +244,7 @@ foreach ($item['outline'] as $entry) {
             <?php if (!$files['items']) :
                 ?><p><?= Text::_('COM_JLMS_NO_MATERIALS') ?></p><?php
             endif; ?>
-            <?php $materialsBase = 'index.php?option=com_jlms&view=classroom&id='
-                . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->id
-                . '&' . $scope . '_material_page='; ?>
+            <?php $materialsBase = 'index.php?option=com_jlms&view=classroom&id=' . (int) $item['enrollment_id'] . '&lesson_id=' . (int) $selected->id . '&' . $scope . '_material_page='; ?>
  <nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
             <?php if ($files['page'] > 0) :
                 ?><a href="<?= Route::_($materialsBase . ($files['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php
