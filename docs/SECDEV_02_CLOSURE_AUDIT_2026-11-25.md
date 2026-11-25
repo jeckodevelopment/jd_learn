@@ -211,3 +211,38 @@ categorie annidate, Finder dopo il trasferimento e UI mobile backend; nessuno
 **Stato:** questi sono difetti implementativi specifici e non una promozione
 automatica dell'intero CORE-01/03/04 o di SECDEV-02. La certificazione
 implementativa completa resta da riconciliare con le altre aree core.
+
+
+## SECDEV-02 — contenuti pubblici, campi docente e lingua Finder (25/11/2026)
+
+**Sviluppo — CORE-11.** Le descrizioni promozionali dei corsi e le biografie
+pubbliche dei docenti attivano ora `onContentPrepare` tramite il tipo
+`Joomla\\CMS\\Event\\Content\\ContentPrepareEvent`, con parametri nominati,
+contesto specifico e oggetto di contenuto pubblico già autorizzato. Il testo
+passa dall'allowlist HTML sia prima sia dopo il plugin: codice attivo, iframe,
+URL pericolosi e attributi non autorizzati non vengono mostrati. Restano
+**esclusi** dal dispatch corpi lezione, progressi e dati personali degli studenti.
+Il template docente rende la biografia filtrata come HTML (prima veniva
+stampata letteralmente con escape, pur essendo salvata con tag sicuri).
+
+**Sviluppo — CORE-10.** I campi personalizzati del docente, già selezionati con
+`FieldsHelper::getFields` e i filtri nativi Joomla, vengono ulteriormente
+limitati alla lingua effettiva del profilo (o alla lingua richiesta quando il
+profilo è multilingue), senza introdurre tabelle LMS parallele.
+
+**Sviluppo — CORE-14.** Un corso con lingua `*` collocato in una categoria
+`it-IT`/`en-GB` è indicizzato da Finder nella lingua della categoria, non
+come documento senza lingua, mantenendo i vincoli di visibilità e sicurezza
+sulla categoria e su tutti gli antenati. I corsi con lingua esplicita restano
+esclusi dalle categorie con lingua incompatibile.
+
+**Verifiche CI dedicate:** evento nativo con listener e sanitizzazione HTML,
+contesto lezione non esposto, campi docente IT/EN sul model Joomla, query
+reale Finder con lingua derivata e preservazione dei casi negativi.
+
+**Collaudi manuali — In attesa:** testare contenuti con plugin content
+configurati, override, lingue, campi gruppi e permessi docente, Finder con
+menu multilingua e componenti terzi nel sito reale. Queste prove non sono
+requisiti di completamento *dello sviluppo*, ma ne verificano successivamente
+il funzionamento in ambiente. Nessun criterio CORE complessivo viene promosso
+senza verifica tecnica di tutte le sottoparti implementative.
