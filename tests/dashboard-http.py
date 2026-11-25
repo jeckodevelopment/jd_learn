@@ -79,6 +79,10 @@ try:
  empty=client()
  login(empty,'cidashboardempty')
  private_cases=0
+ matrix_failures=[]
+ def matrix_check(ok,message):
+  if not ok:
+   matrix_failures.append(message)
  for name,http in [('owner',student),('empty',empty),('guest',guest)]:
   for controller,actions in matrix['TASKS'].items():
    for action,method in actions.items():
@@ -87,37 +91,44 @@ try:
     if task=='mailconsent.confirm':
      url+='&token=invalid-core21-fixture'
     code,headers,body=direct(http,url,method)
-    # Invalid methods/no CSRF must never execute an update: redirects are
-    # acceptable only on the deliberately invalid consent-link GET.
+    # A native Joomla FormController edit GET without a record may redirect.
+    # Every mutation POST must be rejected without valid CSRF.
     if task=='mailconsent.confirm':
-     expect(code in [302,303,400,403,404],
+     matrix_check(code in [302,303,400,403,404],
       'CORE-21 invalid consent link not rejected/redirected: '+name+' '+str(code))
+    elif task=='teacher.edit':
+     matrix_check(code in [303,400,401,403,404,405],
+      'CORE-21 teacher edit without record not rejected/redirected: '+name+' '+str(code))
     else:
-     expect(400<=code<500,
+     matrix_check(400<=code<500,
       'CORE-21 unsafe task response '+name+' '+task+' HTTP '+str(code))
-    expect('no-store' in headers.get('Cache-Control','').lower(),
+    matrix_check('no-store' in headers.get('Cache-Control','').lower(),
      'CORE-21 no-store missing '+name+' '+task+' HTTP '+str(code))
-    expect('LEARNING_PRIVATE_BODY_2' not in body and 'PRIVATE_CATEGORY_LESSON' not in body,
+    matrix_check('LEARNING_PRIVATE_BODY_2' not in body and 'PRIVATE_CATEGORY_LESSON' not in body,
      'CORE-21 task exposed private lesson body '+name+' '+task)
     private_cases+=1
   for view in matrix['PRIVATE_VIEWS']:
    url='/index.php?option=com_jlms&view='+view+'&lang=en'
    code,headers,body=direct(http,url)
-   expect(200<=code<500,
+   matrix_check(200<=code<500,
     'CORE-21 private view '+view+' returned server error HTTP '+str(code))
-   expect('no-store' in headers.get('Cache-Control','').lower(),
+   matrix_check('no-store' in headers.get('Cache-Control','').lower(),
     'CORE-21 private view '+view+' missing no-store for '+name)
-   expect('noindex' in headers.get('X-Robots-Tag','').lower(),
+   matrix_check('noindex' in headers.get('X-Robots-Tag','').lower(),
     'CORE-21 private view '+view+' missing noindex for '+name)
    if name!='owner':
-    expect('LEARNING_PRIVATE_BODY_2' not in body,
+    matrix_check('LEARNING_PRIVATE_BODY_2' not in body,
      'CORE-21 private view leaked owner content into '+name)
    private_cases+=1
  expect(private_cases == 3*(sum(len(a) for a in matrix['TASKS'].values())+
   len(matrix['PRIVATE_VIEWS'])),'CORE-21 complete HTTP case count diverged')
  print(json.dumps({'core21_private_http_cases':private_cases,
   'task_routes':sum(len(a) for a in matrix['TASKS'].values()),
-  'private_views':len(matrix['PRIVATE_VIEWS']),'sessions':3}))
+  'private_views':len(matrix['PRIVATE_VIEWS']),'sessions':3,
+  'unmet_expectations':matrix_failures},ensure_ascii=False))
+ if matrix_failures:
+  raise RuntimeError('CORE-21 exhaustive HTTP failures: '+'; '.join(matrix_failures))
+ checks+=private_cases
  # FE-06: menu opt-in defaults off; toggling the active Joomla menu must be effective.
  menu_overview=overview+'&Itemid='+str(f['menus']['en-GB'])
  _,hidden_nav,_=request(student,menu_overview)
