@@ -49,7 +49,11 @@ foreach ([1, 2, 3] as $position) {
      Text::_('COM_JLMS_COURSE_DESCRIPTION') ?></h2><div><?=
      $presentation['description'] /* Strictly allowlisted by CoursePresentation::fromSnapshot. */ ?></div></section>
  <?php endif; ?>
- <?php foreach (['objectives' => 'COM_JLMS_COURSE_OBJECTIVES', 'audience' => 'COM_JLMS_COURSE_AUDIENCE', 'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT'] as $field => $label) : ?>
+ <?php foreach ([
+     'objectives' => 'COM_JLMS_COURSE_OBJECTIVES',
+     'audience' => 'COM_JLMS_COURSE_AUDIENCE',
+     'prerequisite_text' => 'COM_JLMS_COURSE_PREREQUISITE_TEXT',
+ ] as $field => $label) : ?>
         <?php if (!empty($presentation[$field])) : ?>
  <section id="jlms-course-<?=
      str_replace('_', '-', $field) ?>" class="jlms-course-presentation-section"><h2><?=
@@ -81,7 +85,10 @@ foreach ([1, 2, 3] as $position) {
     base64_encode('index.php?option=com_jlms&view=course&id=' .
     (int) $course->id)) ?>"><?= Text::_('COM_JLMS_LOGIN_TO_LEARN') ?></a>
                                                               <?php elseif ($this->enrollmentState !== null) : ?>
-                                                                  <?php if ($this->enrollmentState['access'] === 'available' && (int) $course->delivery_enabled === 1) : ?>
+                                                                  <?php if (
+     $this->enrollmentState['access'] === 'available'
+     && (int) $course->delivery_enabled === 1
+ ) : ?>
    <a id="jlms-course-resume" class="btn btn-primary" href="<?= Route::_('index.php?option=com_jlms&task=enrollment.resume&id=' . (int) $this->enrollmentState['id']) ?>"><?= Text::_($this->enrollmentState['completed'] ? 'COM_JLMS_DASHBOARD_REVIEW' : ($this->enrollmentState['learning_state'] === 'not_started' ? 'COM_JLMS_COURSE_BEGIN' : 'COM_JLMS_DASHBOARD_RESUME')) ?></a>
                                                                   <?php else :
                                                                         ?>
@@ -89,7 +96,10 @@ foreach ([1, 2, 3] as $position) {
                                                                   endif; ?>
                                                               <?php elseif ($this->pendingApproval) : ?>
   <p id="jlms-course-approval-pending"><?= Text::_('COM_JLMS_COURSE_APPROVAL_PENDING') ?></p>
-                                                              <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'auto') : ?>
+                                                              <?php elseif (
+     $this->hasContentAccess && $this->canStartWindow
+     && $course->enrollment_mode === 'auto'
+ ) : ?>
   <form id="jlms-start-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
    <input type="hidden" name="task" value="enrollment.start">
    <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
@@ -100,7 +110,10 @@ foreach ([1, 2, 3] as $position) {
                                                                   <?php // COM_JLMS_START_RESUME was the former shared label; new enrollment uses a distinct CTA. ?>
                                                                   <?= HTMLHelper::_('form.token') ?><button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_COURSE_ENROLL_START') ?></button>
   </form>
-                                                              <?php elseif ($this->hasContentAccess && $this->canStartWindow && $course->enrollment_mode === 'approval') : ?>
+                                                              <?php elseif (
+     $this->hasContentAccess && $this->canStartWindow
+     && $course->enrollment_mode === 'approval'
+ ) : ?>
   <form id="jlms-enrollment-request-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
    <input type="hidden" name="task" value="enrollment.request">
    <input type="hidden" name="jform[course_id]" value="<?= (int) $course->id ?>">
@@ -140,7 +153,12 @@ foreach ([1, 2, 3] as $position) {
      Text::_('COM_JLMS_CALENDAR') ?></h2><p><?=
      Text::_('COM_JLMS_CALENDAR_ZONE') ?>: <?=
      $this->escape($calendar['timezone']) ?></p><dl>
-        <?php foreach (['publish_up' => 'COM_JLMS_CALENDAR_PUBLISH_UP','publish_down' => 'COM_JLMS_CALENDAR_PUBLISH_DOWN','starts_at' => 'COM_JLMS_CALENDAR_START','ends_at' => 'COM_JLMS_CALENDAR_END'] as $key => $label) :
+        <?php foreach ([
+            'publish_up' => 'COM_JLMS_CALENDAR_PUBLISH_UP',
+            'publish_down' => 'COM_JLMS_CALENDAR_PUBLISH_DOWN',
+            'starts_at' => 'COM_JLMS_CALENDAR_START',
+            'ends_at' => 'COM_JLMS_CALENDAR_END',
+        ] as $key => $label) :
             if ($calendar[$key] === null) {
                 continue;
             } ?>
@@ -196,7 +214,11 @@ foreach ([1, 2, 3] as $position) {
   <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id=' . (int) $course->id . '&id=' . (int) $material->id) ?>"><?= Text::_('COM_JLMS_MATERIAL_PREVIEW_DOWNLOAD') ?></a>
  </li>
                                 <?php endforeach; ?></ul>
-    <?php if ($this->item['public_materials']['page'] > 0 || ($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) :
+    <?php if (
+        $this->item['public_materials']['page'] > 0
+        || ($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit']
+            < $this->item['public_materials']['total']
+    ) :
         ?><nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
         <?php if ($this->item['public_materials']['page'] > 0) :
             ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id .
