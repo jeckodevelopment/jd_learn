@@ -213,8 +213,13 @@ foreach ([1, 2, 3] as $position) {
         <?php foreach ($calendarLabels as $key => $label) :
             if ($calendar[$key] === null) {
                 continue;
-            } ?>
- <dt><?= Text::_($label) ?></dt><dd><?= $this->escape(CourseSchedule::display($calendar[$key], $calendar['timezone'], true)) ?></dd><?php
+            }
+            $calendarDisplay = $this->escape(CourseSchedule::display(
+                $calendar[$key],
+                $calendar['timezone'],
+                true
+            )); ?>
+ <dt><?= Text::_($label) ?></dt><dd><?= $calendarDisplay ?></dd><?php
         endforeach; ?></dl>
  <p><?= Text::_('COM_JLMS_CALENDAR_POLICY') ?></p></section><?php
  endif; ?>
@@ -242,9 +247,20 @@ foreach ([1, 2, 3] as $position) {
       (int) $module->id ?>" class="jlms-module"<?=
       $moduleIndex++ === 0 ? ' open' : '' ?>><summary class="jlms-module__summary"><h3 class="jlms-module__title"><?=
       $this->escape($module->title) ?></h3></summary>
-   <ol class="jlms-module__lessons"><?php foreach ($this->item['lessons'][(int) $module->id] ?? [] as $lesson) : ?>
-    <li id="jlms-lesson-<?= (int) $lesson->id ?>" class="jlms-lesson"><span class="jlms-lesson__title"><?= $this->escape($lesson->title) ?></span> <span class="jlms-lesson__requirement"><?= Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL') ?></span><?php if (!empty($this->item['public_previews']) && (string) $lesson->kind === 'text' && (int) $lesson->preview === 1) :
-        ?> <a class="jlms-lesson__public-preview" href="<?= Route::_('index.php?option=com_jlms&view=lessonpreview&course_id=' . (int) $course->id . '&lesson_id=' . (int) $lesson->id) ?>"><?= Text::_('COM_JLMS_OPEN_PUBLIC_PREVIEW') ?></a><?php
+   <ol class="jlms-module__lessons"><?php foreach ($this->item['lessons'][(int) $module->id] ?? [] as $lesson) :
+        $lessonRequirementLabel = Text::_($lesson->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL');
+        $canPreviewLesson = !empty($this->item['public_previews'])
+            && (string) $lesson->kind === 'text'
+            && (int) $lesson->preview === 1;
+        $lessonPreviewUrl = Route::_(
+            'index.php?option=com_jlms&view=lessonpreview&course_id=' . (int) $course->id
+                . '&lesson_id=' . (int) $lesson->id
+        );
+        ?>
+    <li id="jlms-lesson-<?= (int) $lesson->id ?>" class="jlms-lesson">
+    <span class="jlms-lesson__title"><?= $this->escape($lesson->title) ?></span>
+    <span class="jlms-lesson__requirement"><?= $lessonRequirementLabel ?></span><?php if ($canPreviewLesson) :
+        ?> <a class="jlms-lesson__public-preview" href="<?= $lessonPreviewUrl ?>"><?= $previewActionLabel ?></a><?php
                         endif; ?></li>
                                     <?php endforeach; ?></ol>
   </details>
@@ -252,6 +268,10 @@ foreach ([1, 2, 3] as $position) {
 <?php if (!empty($this->item['public_materials']['items'])) :
     ?><section id="jlms-course-materials"><h2><?= Text::_('COM_JLMS_COURSE_MATERIALS') ?></h2>
  <ul class="jlms-material-list"><?php foreach ($this->item['public_materials']['items'] as $material) :
+    $materialPreviewUrl = Route::_(
+        'index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id='
+            . (int) $course->id . '&id=' . (int) $material->id
+    );
         ?><li id="jlms-material-<?= (int) $material->id ?>" class="jlms-material">
   <span class="jlms-material__title"><?= $this->escape($material->title) ?></span>
         <?php if (trim((string) $material->description) !== '') :
@@ -261,16 +281,16 @@ foreach ([1, 2, 3] as $position) {
       $this->escape($material->original_name) ?> · <?=
       $this->escape($material->mime_type) ?> · <?=
       number_format((int) $material->byte_size / 1048576, 2) ?> MiB</span>
-  <a class="jlms-material__action" href="<?= Route::_('index.php?option=com_jlms&task=attachment.publicpreview&format=raw&course_id=' . (int) $course->id . '&id=' . (int) $material->id) ?>"><?= Text::_('COM_JLMS_MATERIAL_PREVIEW_DOWNLOAD') ?></a>
+  <a class="jlms-material__action" href="<?= $materialPreviewUrl ?>"><?= $materialActionLabel ?></a>
  </li>
                                 <?php endforeach; ?></ul>
-    <?php if ($this->item['public_materials']['page'] > 0 || ($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) :
+    <?php if ($hasPreviousMaterialPage || $hasNextMaterialPage) :
         ?><nav aria-label="<?= Text::_('COM_JLMS_PAGINATION') ?>">
-        <?php if ($this->item['public_materials']['page'] > 0) :
+        <?php if ($hasPreviousMaterialPage) :
             ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id .
     '&course_material_page=' . ($this->item['public_materials']['page'] - 1)) ?>"><?= Text::_('JPREV') ?></a><?php
         endif; ?>
-        <?php if (($this->item['public_materials']['page'] + 1) * $this->item['public_materials']['limit'] < $this->item['public_materials']['total']) :
+        <?php if ($hasNextMaterialPage) :
             ?><a href="<?= Route::_('index.php?option=com_jlms&view=course&id=' . (int) $course->id .
     '&course_material_page=' . ($this->item['public_materials']['page'] + 1)) ?>"><?= Text::_('JNEXT') ?></a><?php
         endif; ?>
