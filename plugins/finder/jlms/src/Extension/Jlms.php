@@ -100,11 +100,23 @@ final class Jlms extends Adapter implements SubscriberInterface
 
     private function reindexAllCourses(): void
     {
-        $q = $this->getDatabase()->createQuery()->select('a.id')->from($this->getDatabase()->quoteName($this
-            ->table, 'a'));
-        foreach ($this->getDatabase()->setQuery($q)->loadColumn() as $id) {
-            $this->refreshCourse((int) $id);
-        }
+        $db = $this->getDatabase();
+        $after = 0;
+        // Reindex native category changes without loading the whole catalogue in
+        // memory. Keyset pagination also avoids OFFSET shifts as rows are removed.
+        do {
+            $query = $db->createQuery()
+                ->select($db->quoteName('a.id'))
+                ->from($db->quoteName($this->table, 'a'))
+                ->where($db->quoteName('a.id') . ' > :after')
+                ->bind(':after', $after, \Joomla\Database\ParameterType::INTEGER)
+                ->order($db->quoteName('a.id') . ' ASC');
+            $ids = $db->setQuery($query, 0, 500)->loadColumn();
+            foreach ($ids as $id) {
+                $after = (int) $id;
+                $this->refreshCourse($after);
+            }
+        } while (count($ids) === 500);
     }
 
     protected function index(Result $item): void

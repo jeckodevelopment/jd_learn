@@ -213,6 +213,32 @@ automatica dell'intero CORE-01/03/04 o di SECDEV-02. La certificazione
 implementativa completa resta da riconciliare con le altre aree core.
 
 
+## Intervento implementativo CORE-07 / CORE-14 — associazioni e Finder (25/11/2026, PR #1037)
+
+Il plugin Finder indicizzava nuovamente tutto il catalogo a ogni variazione di
+categoria caricando l'elenco completo degli ID in memoria. Il nuovo ciclo
+usa **paginazione keyset di 500 ID**, ordinamento crescente e ultimo ID
+processato, mantenendo la stessa rivalidazione ACL, lingua, stato e criteri
+di pubblicazione per ciascun corso. Gli indici restano gestiti da Smart Search
+Joomla, senza cache o schema proprietari.
+
+Nell'helper nativo delle associazioni editoriali, `allowEdit` ora verifica
+esplicitamente anche `core.manage` sul componente, dopo aver ricaricato
+l'identità e prima delle verifiche record/categoria: permessi di sola modifica
+frontend non autorizzano le funzioni amministrative multilingua.
+
+**Test di implementazione:** gate statico su paginazione keyset e controllo
+dei permessi, regressione Joomla per l'utente anonimo nelle associazioni,
+CI integrale Joomla 6.2.1 su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6.
+Le prove automatiche non sostituiscono un benchmark su catalogo reale.
+
+**Collaudo manuale separato, non eseguito:** verificare ricostruzione
+Finder dopo modifica massiva di categoria/lingua/ACL, associazioni native
+con ruoli diversi e override del sito, tempi di reindicizzazione su catalogo
+esteso. Questo lotto non chiude automaticamente tutti i criteri CORE-07
+e CORE-14 né SECDEV-02 nel complesso.
+
+
 ## SECDEV-02 — contenuti pubblici, campi docente e lingua Finder (25/11/2026)
 
 **Sviluppo — CORE-11.** Le descrizioni promozionali dei corsi e le biografie
