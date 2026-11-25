@@ -33,15 +33,15 @@ $schedulerHealthKeys = [
     <p class="alert alert-info"><?= Text::_('COM_JLMS_FOUNDATION_NOTICE') ?></p>
     <nav class="jlms-admin-dashboard__shortcuts" aria-label="<?= $this->escape(Text::_('COM_JLMS_DASHBOARD_TOOLS')) ?>">
         <?php foreach ($this->shortcutGroups as $groupKey => $shortcuts) :
-    $groupSlug = $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1)));
-    $showMailWarning = $groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION'
-        && $this->mailScheduler
-        && (
+            $groupSlug = $this->escape(strtolower(substr($groupKey, strrpos($groupKey, '_') + 1)));
+            $showMailWarning = $groupKey === 'COM_JLMS_DASHBOARD_GROUP_COMMUNICATION'
+            && $this->mailScheduler
+            && (
             ($this->mailScheduler['state'] !== 'operational'
                 && $this->mailScheduler['state'] !== 'waiting')
             || $this->mailScheduler['duplicates']
-        );
-    ?>
+            );
+            ?>
             <?php if (!$shortcuts) {
                 continue;
             } ?>
@@ -50,9 +50,9 @@ $schedulerHealthKeys = [
                 <h2 id="jlms-admin-group-<?= $groupSlug ?>"><?= $this->escape(Text::_($groupKey)) ?></h2>
                 <ul>
                     <?php foreach ($shortcuts as $shortcut) :
-    $shortcutId = $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key'])));
-    $shortcutIconClass = $this->escape($shortcut['icon']);
-    ?>
+                        $shortcutId = $this->escape(strtolower(str_replace('COM_JLMS_', '', $shortcut['key'])));
+                        $shortcutIconClass = $this->escape($shortcut['icon']);
+                        ?>
                         <li>
                             <a id="jlms-admin-shortcut-<?= $shortcutId ?>" class="jlms-admin-dashboard__shortcut"
                                 href="<?= $shortcut['url'] ?>">
@@ -88,13 +88,13 @@ $schedulerHealthKeys = [
                     <th scope="col"><?= Text::_('COM_JLMS_SCHEDULER_HEALTH_GUIDANCE') ?></th></tr></thead>
                 <tbody>
                 <?php foreach ($this->schedulerHealth as $task) :
-    $taskHealthLabel = $this->escape(
-        Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')
-    );
-    $taskGuidance = $this->escape(Text::_(
-        SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates'])
-    ));
-    ?>
+                    $taskHealthLabel = $this->escape(
+                    Text::_($schedulerHealthKeys[$task['state']] ?? 'COM_JLMS_SCHEDULER_HEALTH_UNKNOWN')
+                    );
+                    $taskGuidance = $this->escape(Text::_(
+                    SchedulerHealth::guidanceKey((string) $task['state'], (bool) $task['duplicates'])
+                    ));
+                    ?>
                     <tr data-jlms-scheduler="<?= $this->escape($task['type']) ?>">
                         <th scope="row"><?= $this->escape(Text::_($task['label'])) ?></th>
                         <td><?= $taskHealthLabel ?><?php if ($task['duplicates'] && $task['state'] !== 'duplicates') :
@@ -121,14 +121,14 @@ $schedulerHealthKeys = [
         <?php else : ?>
             <ul>
                 <?php foreach ($this->providers as $provider) :
-    $providerStateLabel = $this->escape(Text::_($provider['stateKey']));
-    $providerStateClass = $this->escape($provider['stateClass']);
-    $providerGuidance = $this->escape(Text::_(
-        \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey(
-            (string) $provider['stateKey']
-        )
-    ));
-    ?>
+                    $providerStateLabel = $this->escape(Text::_($provider['stateKey']));
+                    $providerStateClass = $this->escape($provider['stateClass']);
+                    $providerGuidance = $this->escape(Text::_(
+                    \Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey(
+                    (string) $provider['stateKey']
+                    )
+                    ));
+                    ?>
                     <li data-jlms-provider="<?= $this->escape($provider['key']) ?>">
 <span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span
  class="badge bg-<?= $providerStateClass ?>"><?= $providerStateLabel ?></span>
