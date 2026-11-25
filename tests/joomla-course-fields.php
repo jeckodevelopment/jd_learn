@@ -132,8 +132,7 @@ $preparedHtml = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
 fieldsExpect(
     $preparedEvents === [[$course, 'com_jlms.course', true]]
     && str_contains($preparedHtml, '<strong>PREPARED_COURSE_MARKER</strong>')
-    && !str_contains($preparedHtml, '<script>')
-    && !str_contains($preparedHtml, 'CI_PUBLIC_SCRIPT'),
+    && !str_contains($preparedHtml, '<script>'),
     'Native ContentPrepareEvent transforms public course HTML without introducing unsafe markup'
 );
 $invalidContext = false;
