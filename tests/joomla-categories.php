@@ -307,6 +307,38 @@ $createCourse = static function (int $catid, string $tag, string $alias) use ($f
 $course = $createCourse($child, "en-GB", "taxonomy-visible-course");
 $italianCourse = $createCourse($it, "it-IT", "taxonomy-corso-italiano");
 $hiddenCourse = $createCourse($hidden, "en-GB", "HIDDEN_TAXONOMY_COURSE");
+/*
+ * CORE-14/01/07: test the real Finder adapter's SQL eligibility against
+ * ACL, state and language changes, including an otherwise valid child below
+ * an inaccessible parent. This checks candidates without mutating Joomla's
+ * shared Finder index or pretending a full reindex was run.
+ */
+$finderPlugin = new \ReflectionClass(\Jlms\Plugin\Finder\Jlms\Extension\Jlms::class);
+$finder = $finderPlugin->newInstanceWithoutConstructor();
+$finder->setDatabase($db);
+$finderSelect = new \ReflectionMethod($finder, 'getListQuery');
+$finderEligible = static function () use ($db, $finder, $finderSelect, $course): bool {
+    $query = $finderSelect->invoke($finder)->where('a.id = ' . (int) $course);
+    return (bool) $db->setQuery($query, 0, 1)->loadResult();
+};
+$db->setQuery('UPDATE #__jlms_courses SET content_access=1 WHERE id=' . $course)->execute();
+catExpect($finderEligible(), 'CORE-14: published public course with visible native category is Finder-eligible');
+$update($en, ["access" => 2]);
+catExpect(!$finderEligible(), 'CORE-14: parent category ACL change hides inherited child Finder result');
+$update($en, ["access" => 1]);
+catExpect($finderEligible(), 'CORE-14: restoring ancestor ACL restores Finder eligibility');
+$update($en, ["language" => "it-IT"]);
+catExpect(!$finderEligible(), 'CORE-14: incompatible ancestor language hides English course in Finder');
+$update($en, ["language" => "en-GB"]);
+$update($en, ["published" => 0]);
+catExpect(!$finderEligible(), 'CORE-14: unpublishing ancestor removes public Finder eligibility');
+$update($en, ["published" => 1]);
+catExpect($finderEligible(), 'CORE-14: restoring ancestor publication restores Finder eligibility');
+$db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id=' . $course)->execute();
+catExpect(!$finderEligible(), 'CORE-14: unpublished course must not be a public Finder hit');
+$db->setQuery('UPDATE #__jlms_courses SET state=1, content_access=2 WHERE id=' . $course)->execute();
+catExpect(!$finderEligible(), 'CORE-14: content-restricted course must not enter public Finder index');
+
 $deleteRejected = false;
 try {
     $db->setQuery("DELETE FROM #__categories WHERE id=" . (int) $child)->execute();
