@@ -272,3 +272,37 @@ menu multilingua e componenti terzi nel sito reale. Queste prove non sono
 requisiti di completamento *dello sviluppo*, ma ne verificano successivamente
 il funzionamento in ambiente. Nessun criterio CORE complessivo viene promosso
 senza verifica tecnica di tutte le sottoparti implementative.
+
+
+## SECDEV-02 — Bonifica trasversale JSON e route audio (25 novembre 2026)
+
+**Difetto implementativo effettivo — CORE-21:** la task privata `audio.save` era esclusa
+dall'inventario delle route HTTP; inoltre la risposta JSON di
+`AudioController` veniva emessa prima di inviare esplicitamente gli header
+Joomla. Ora il dispatch applica `Cache-Control: private, no-store` anche ai
+task rifiutati e il risultato (sia positivo sia negativo) viene restituito
+solo dopo `sendHeaders()`. Nessuna modifica a progresso o iscrizioni.
+
+**Difetto trasversale — CORE-20/21:** tre handler JSON amministrativi
+(`CurriculumController::saveOrder`, `LessonController::metadata`,
+`CoursepreviewController::playback`) emettevano anch'essi il corpo senza
+inviare gli header. Ora inviano gli header Joomla prima del corpo e
+applicano `no-store` prima di validare la task; ACL, codici HTTP e payload
+rimangono invariati.
+
+**Copertura regressiva:** il manifesto CORE-21 include `audio.save` e
+rileva ogni nuovo controller di task pubblicato ma non mappato (il controller
+`Lesson` è già coperto dall'ereditarietà di `Enrollment`). La matrice HTTP
+verifica con tre sessioni separate l'header di rifiuto di `audio.save`,
+senza modificare i progressi. Il test `secdev02-json-header-contract.py`
+individua in tutti i controller backend/frontend le emissioni JSON raw,
+impone `no-store` e `sendHeaders` prima dell'output e usa fixture negative.
+La CI esegue questi controlli oltre a Joomla 6.2.1, PSR-12, Chromium e ZIP.
+
+**Collaudo manuale separato:** riprodurre su installazione reale risposta
+audio positiva e negativa con due studenti e guest, verificare header e
+cache attraverso reverse proxy/CDN, e provare le tre operazioni JSON
+amministrative con ruoli autorizzati/non autorizzati. Non dichiarare
+il collaudo manuale eseguito a seguito del merge. Il registro funzionale
+mantiene il suo stato finché la copertura tecnica completa non è dimostrata;
+questo lotto non chiude automaticamente CORE-20, CORE-21 o SECDEV-02.
