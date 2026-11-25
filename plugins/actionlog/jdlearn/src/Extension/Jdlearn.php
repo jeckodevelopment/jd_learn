@@ -12,7 +12,6 @@ use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 
-
 /**
  * Native Joomla User Actions Log integration for committed course transitions.
  *
