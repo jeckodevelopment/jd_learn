@@ -94,7 +94,10 @@ assert "$identity->guest || $identity->block" in model
 assert "cardEnrollmentStates[(int) $item->id]" in template
 assert "enrollment['access'] === 'available'" in template
 assert "task=enrollment.resume&id=" in template
-assert "$enrollment === null && empty($this->cardPendingApprovals[(int) $item->id])" in template
+assert re.search(
+    r"\$enrollment\s*===\s*null\s*&&\s*empty\(\$this->cardPendingApprovals\[\(int\)\s*\$item->id\]\)",
+    template,
+)
 
 assert "TeacherProfiles::visible(" in model
 assert "catalog_presentation_json" in model.split("public function getCardTeachers", 1)[1]
