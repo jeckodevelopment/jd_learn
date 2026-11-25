@@ -590,3 +590,17 @@ La CI conclusiva della PR #1027 (#45579625144) ha certificato **102 → 27** vio
 PHPCS PSR12 ufficiale su tutti i file, **zero violazioni nuove**, controllo delle API native Joomla, integrità CSV, lint di ogni PHP, source contracts, SAST, Joomla 6.2 senza compat6, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium e pacchetto ZIP. I collaudi manuali rimangono separati; il mero merge non promuove SECDEV-02 a Completato.
 
 **Stato:** in corso. I saldi PHPCS finali e la classificazione dei casi nativi sono determinati soltanto dalla CI dell'HEAD definitivo.
+
+
+### Refactoring effettivo e controllo indipendente degli override — PR #1028
+
+La fase statica del workflow [#45582619300](https://github.com/jeckodevelopment/jd_learn/actions/runs/45582619300) ha misurato **PHPCS PSR12 ufficiale: 27 → 0, finding introdotti 0**, senza opzioni di esclusione, suppressioni né indebolimento del confronto con `main`. Tale run **non era interamente verde**: il test degli esempi provider ha rilevato che il nuovo loader cercava le classi nella directory sbagliata. Il path è stato corretto nel commit successivo e l'accettazione dipende dalla CI definitiva.
+
+- **Joomla Table / ACL (15):** nei tre costruttori che già configuravano `$_supportNullValue` l'impostazione avviene sulla proprietà *ereditata*, evitando la sua ridefinizione. Quattro trait di classe isolano le implementazioni asset name, title e parent ID; l'adattamento PHP dei trait espone con *gli stessi nomi e visibilità protected* gli override nativi `_getAssetName`, `_getAssetTitle`, `_getAssetParentId`. La suite aggiunge reflection runtime su tutte e quattro le Table e, dove pertinente, verifica il flag null. Nessun nuovo asset o cambio nelle regole di gerarchia ACL è intenzionale.
+- **Installer (2):** `component/script.php` restituisce una classe anonima che implementa `Joomla\\CMS\\Installer\\InstallerScriptInterface`, forma ufficialmente supportata in Joomla 6; conserva tutti i metodi preflight/install/update/uninstall/postflight, la verifica delle versioni e la creazione dello schema. Il test smoke istanzia l'oggetto restituito anziché dipendere dal nome legacy globale.
+- **PSR-1 e bootstrap (6):** la procedura di autoload delle librerie è separata dalla definizione della callback e dall'inizializzazione del marker. Le tre classi dei plugin sono *solo dichiarative*, mentre i rispettivi `services/provider.php` mantengono integralmente la protezione `_JEXEC` e l'inizializzazione DI. Le costanti della fixture Teaching Rules sono spostate in due helper, senza cambiare sequenza o valore.
+- **Espressioni lunghe (4):** tre query SQL di test sono suddivise con concatenazione a byte identici; il collegamento della cronologia quiz usa un URL e una label precalcolati, senza cambiare gli attributi HTML emessi.
+
+**Fonti Joomla:** [API Joomla 6 Table](https://api.joomla.org/cms-6/classes/Joomla-CMS-Table-Table.html), [script installer anonimi e InstallerScriptInterface](https://manual.joomla.org/docs/next/building-extensions/install-update/installation/install-process/).
+
+**Criterio di accettazione:** solo la CI finale verde su entrambe le matrici, Chromium, pacchetto ZIP, contratti e verifiche di runtime dimostra che lo zero PHPCS non ha alterato il funzionamento. Il conteggio di 0 rilievi PSR-12 non certifica automaticamente tutti i 23 requisiti CORE, l'assenza di API dinamiche non esercitate o i collaudi manuali; **SECDEV-02 rimane Parziale** fino a tali evidenze.
