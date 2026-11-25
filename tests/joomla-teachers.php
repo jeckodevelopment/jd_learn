@@ -524,9 +524,10 @@ $teacherSnapshot = static function () use ($db, $teacherIds): array {
         . implode(',', array_map('intval', $teacherIds)) . ') ORDER BY id')->loadAssocList();
 };
 $beforeTeacherBulk = $teacherSnapshot();
-$db->updateObject('#__jlms_teachers', (object) [
+$foreignCheckout = (object) [
     'id' => $private, 'checked_out' => (int) $learner->id,
-], 'id');
+];
+$db->updateObject('#__jlms_teachers', $foreignCheckout, 'id');
 try {
     teacherExpect(
         !$teacherModel->changeStates([$public, $private], 0),
@@ -537,9 +538,10 @@ try {
         'CORE-04: teacher checkout conflict rolls back states and revisions of prior records'
     );
 } finally {
-    $db->updateObject('#__jlms_teachers', (object) [
+    $releaseCheckout = (object) [
         'id' => $private, 'checked_out' => 0,
-    ], 'id');
+    ];
+    $db->updateObject('#__jlms_teachers', $releaseCheckout, 'id');
 }
 // Forging the same bulk operation with a viewer must not reuse a privileged
 // prior session or change either teacher, even with the model instance reused.
