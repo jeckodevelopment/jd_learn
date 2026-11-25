@@ -374,6 +374,26 @@ catExpect(
     'CORE-14: restoring ancestor ACL rebuilds the persisted Finder link'
 );
 catExpect($finderEligible(), 'CORE-14: restoring ancestor ACL restores Finder eligibility');
+// Verify reindex/removal on the leaf, a non-ACL ancestor change, and the
+// course itself. Each transition is exercised against the persisted index.
+$update($child, ["published" => 0]);
+$finderRefresh->invoke($finderLive, $course);
+catExpect($finderLink() === [], 'CORE-14: leaf unpublish removes persisted Finder link');
+$update($child, ["published" => 1]);
+$finderRefresh->invoke($finderLive, $course);
+catExpect($finderLink() !== [], 'CORE-14: leaf republish restores persisted Finder link');
+$update($en, ["language" => "it-IT"]);
+$finderRefresh->invoke($finderLive, $course);
+catExpect($finderLink() === [], 'CORE-07/14: ancestor language change removes Finder link');
+$update($en, ["language" => "en-GB"]);
+$finderRefresh->invoke($finderLive, $course);
+catExpect($finderLink() !== [], 'CORE-07/14: ancestor language restore reindexes Finder link');
+$db->setQuery('UPDATE #__jlms_courses SET content_access=2 WHERE id=' . $course)->execute();
+$finderRefresh->invoke($finderLive, $course);
+catExpect($finderLink() === [], 'CORE-03/14: course access revocation removes Finder link');
+$db->setQuery('UPDATE #__jlms_courses SET content_access=1 WHERE id=' . $course)->execute();
+$finderRefresh->invoke($finderLive, $course);
+catExpect($finderLink() !== [], 'CORE-03/14: course access restore reindexes Finder link');
 $update($en, ["language" => "it-IT"]);
 catExpect(!$finderEligible(), 'CORE-14: incompatible ancestor language hides English course in Finder');
 $update($en, ["language" => "en-GB"]);
