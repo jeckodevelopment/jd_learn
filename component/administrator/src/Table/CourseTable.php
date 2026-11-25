@@ -14,6 +14,12 @@ use Joomla\CMS\Tag\TaggableTableTrait;
 
 final class CourseTable extends Table implements TaggableTableInterface
 {
+    use CourseTableAssetMethods {
+        assetName as protected _getAssetName;
+        assetTitle as protected _getAssetTitle;
+        assetParentId as protected _getAssetParentId;
+    }
+
     use TaggableTableTrait;
 
     public $typeAlias = 'com_jlms.course';
@@ -166,23 +172,4 @@ final class CourseTable extends Table implements TaggableTableInterface
         }
     }
 
-    protected function _getAssetName()
-    {
-        return 'com_jlms.course.' . (int) $this->id;
-    }
-
-    protected function _getAssetTitle()
-    {
-        return $this->title;
-    }
-
-    protected function _getAssetParentId(?Table $table = null, $id = null)
-    {
-        $db = $this->getDatabase();
-        $catid = (int) $this->catid;
-        $q = $db->createQuery()->select($db->quoteName('asset_id'))->from($db->quoteName('#__categories'))
-            ->where($db->quoteName('id') . ' = :id')->bind(':id', $catid, ParameterType::INTEGER);
-        $assetId = (int) $db->setQuery($q)->loadResult();
-        return $assetId ?: parent::_getAssetParentId($table, $id);
-    }
 }
