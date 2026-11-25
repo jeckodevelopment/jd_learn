@@ -60,6 +60,11 @@ final class AssociationsHelper extends AssociationExtensionHelper
         $item = $this->getItem($typeName, $id);
         $actor = new \Joomla\CMS\User\User((int) Factory::getApplication()->getIdentity()->id);
         $actor->clearAccessRights();
+        // The association manager is an administrator surface. A frontend-only
+        // record/category permission never grants access to its edit controls.
+        if (!$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')) {
+            return false;
+        }
         if ($typeName === 'course.category') {
             $asset = 'com_jlms.course.category.' . (int) $id;
             return $item && !$actor->guest && !$actor->block && (!$item->checked_out || (int) $item
