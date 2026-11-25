@@ -146,13 +146,14 @@ echo $this->escape(implode(', ', $correctLabels)); ?></p><?= $q['explanation'] /
  <ol><?php foreach ($i['history'] as $entry) :
         $historyAttemptLabel = Text::_('COM_JLMS_QUIZ_ATTEMPT');
         $entryIsInvalidated = $entry['status'] === 'invalidated';
+        $historyEntryLabel = $historyAttemptLabel . ' ' . (int) $entry['attempt_no'];
         $historyEntryUrl = Route::_(
             'index.php?option=com_jlms&view=quiz&id=' . (int)$i['enrollment_id']
                 . '&lesson_id=' . (int)$i['lesson_id'] . '&attempt_id=' . (int)$entry['id']
         );
-        ?><li><a href="<?= $historyEntryUrl ?>"><?= $historyAttemptLabel ?> <?= (int)$entry['attempt_no'] ?></a><?php if ($entryIsInvalidated) :
+        ?><li><a href="<?= $historyEntryUrl ?>"><?= $historyEntryLabel ?></a><?php if ($entryIsInvalidated) :
     ?> · <?= Text::_('COM_JLMS_QUIZ_CANCELLED') ?><?php
-    endif; ?></li><?php
+        endif; ?></li><?php
      endforeach; ?></ol></section>
  <a id="jlms-quiz-back"
  href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' . (int)$i['enrollment_id'] .
