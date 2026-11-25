@@ -50,9 +50,12 @@ final class PathwayTable extends Table
 
         $db = $this->getDatabase();
         $categoryId = (int) $this->catid;
-        $category = $db->createQuery()->select('id')->from('#__categories')
-            ->where("extension='com_jlms.pathway' AND published <> -2")
-            ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
+        $category = $db->createQuery()->select('cat.id')->from('#__categories AS cat')
+            ->where("cat.extension='com_jlms.pathway' AND cat.published <> -2")
+            ->where('cat.id = :category')
+            ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor'
+                . ' WHERE ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.published = -2)')
+            ->bind(':category', $categoryId, ParameterType::INTEGER);
         if (!$db->setQuery($category)->loadResult()) {
             $this->setError('COM_JLMS_PATHWAY_INVALID');
             return false;

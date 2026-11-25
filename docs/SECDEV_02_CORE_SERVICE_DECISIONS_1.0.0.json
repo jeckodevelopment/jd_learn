@@ -23,7 +23,9 @@
         ],
         "existing_automated_evidence": [
           "tests/joomla-categories.php",
-          "tests/categories-http.py"
+          "tests/categories-http.py",
+          "tests/joomla-teachers.php",
+          "tests/joomla-pathways.php"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -105,7 +107,9 @@
         ],
         "existing_automated_evidence": [
           "tests/joomla-editor-access.php",
-          "tests/joomla-courses-ui.php"
+          "tests/joomla-courses-ui.php",
+          "tests/joomla-teachers.php",
+          "tests/joomla-pathways.php"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -244,7 +248,8 @@
         ],
         "existing_automated_evidence": [
           "tests/secdev02-core-native-contracts.py",
-          "tests/joomla-courses-ui.php"
+          "tests/joomla-courses-ui.php",
+          "tests/joomla-teachers.php"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -403,7 +408,8 @@
           "native_workflow"
         ],
         "existing_automated_evidence": [
-          "tests/joomla-publication.php"
+          "tests/joomla-publication.php",
+          "tests/joomla-pathways.php"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -487,7 +493,8 @@
         ],
         "existing_automated_evidence": [
           "tests/joomla-roster.php",
-          "tests/joomla-smoke.php"
+          "tests/joomla-smoke.php",
+          "tests/secdev02-core19-expiry-reminders.py"
         ],
         "acceptance_mode": "site_and_external",
         "assessment": "partial_test_coverage",
@@ -513,7 +520,8 @@
           "idempotent_tasks"
         ],
         "existing_automated_evidence": [
-          "tests/joomla-quiz-attempts.php"
+          "tests/joomla-quiz-attempts.php",
+          "tests/secdev02-core19-expiry-reminders.py"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
@@ -539,7 +547,8 @@
           "native_completeness"
         ],
         "existing_automated_evidence": [
-          "tests/joomla-courses-ui.php"
+          "tests/joomla-courses-ui.php",
+          "tests/joomla-teachers.php"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",

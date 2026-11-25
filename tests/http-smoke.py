@@ -549,7 +549,12 @@ try:
  if 'COM_JLMS_TEACHER_FIELDS' in h or 'option=com_fields&amp;view=fields&amp;context=com_jlms.teacher' in h:raise RuntimeError('Teacher custom fields access must be in the sidebar, not the list view')
  u,h=get('/administrator/index.php?option=com_jlms&task=teacher.add')
  teacher_form=next(f for f in Page(h).forms if 'jform[bio]' in f['fields'])
- if 'jform[catid]' in teacher_form['fields']:raise RuntimeError('Teacher creation must not require choosing a category')
+ # CORE-01/09/20: the native category selector is now present but optional.
+ category_select=re.search(r'<select\b[^>]*name=["\']jform\[catid\]["\'][^>]*>',h)
+ if not category_select or 'jform[catid]' not in teacher_form['fields']:
+  raise RuntimeError('Native teacher category selector must be present')
+ if re.search(r'\srequired(?:\s|=|>)',category_select.group(0),flags=re.I):
+  raise RuntimeError('Teacher creation must not require choosing a category')
  teacher_fields=dict(teacher_form['fields']);teacher_fields.update({'task':'teacher.apply','jform[title]':'HTTP teacher','jform[alias]':'http-teacher',
   'jform[state]':'1','jform[access]':'1','jform[language]':'*','jform[bio]':'HTTP teacher biography <script>plain text</script>',
   'jform[image]':'','jform[image_alt]':'','jform[image_decorative]':'0','jform[website]':'https://example.invalid/http-teacher','jform[user_id]':'0'})

@@ -84,9 +84,13 @@ final class PathwayModel extends AdminModel
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
                 $categoryId = (int) $categoryId;
-                $categoryQuery = $db->createQuery()->select('id, asset_id')->from('#__categories')
-                    ->where("extension='com_jlms.pathway' AND published <> -2")
-                    ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
+                $categoryQuery = $db->createQuery()->select('cat.id, cat.asset_id')
+                    ->from('#__categories AS cat')
+                    ->where("cat.extension='com_jlms.pathway' AND cat.published <> -2")
+                    ->where('cat.id = :category')
+                    ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor'
+                        . ' WHERE ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.published = -2)')
+                    ->bind(':category', $categoryId, ParameterType::INTEGER);
                 $category = $db->setQuery($categoryQuery)->loadObject()
                     ?: throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 if (!$actor->authorise('core.create', 'com_jlms.pathway.category.' . $categoryId)) {
@@ -166,9 +170,12 @@ final class PathwayModel extends AdminModel
             }
 
             $categoryId = (int) ($data['catid'] ?? $record->catid ?? 0);
-            $categoryQuery = $db->createQuery()->select('id')->from('#__categories')
-                ->where("extension='com_jlms.pathway' AND published <> -2")
-                ->where('id = :category')->bind(':category', $categoryId, ParameterType::INTEGER);
+            $categoryQuery = $db->createQuery()->select('cat.id')->from('#__categories AS cat')
+                ->where("cat.extension='com_jlms.pathway' AND cat.published <> -2")
+                ->where('cat.id = :category')
+                ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor'
+                    . ' WHERE ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.published = -2)')
+                ->bind(':category', $categoryId, ParameterType::INTEGER);
             if (!$categoryId || !$db->setQuery($categoryQuery)->loadResult()) {
                 throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
             }

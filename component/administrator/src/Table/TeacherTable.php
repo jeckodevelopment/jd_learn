@@ -5,16 +5,26 @@ declare(strict_types=1);
 namespace Jlms\Component\Jlms\Administrator\Table;
 
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Tag\TaggableTableInterface;
+use Joomla\CMS\Tag\TaggableTableTrait;
 use Joomla\CMS\Factory;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
-final class TeacherTable extends Table
+final class TeacherTable extends Table implements TaggableTableInterface
 {
     use TeacherTableAssetMethods {
         assetName as protected _getAssetName;
         assetTitle as protected _getAssetTitle;
         assetParentId as protected _getAssetParentId;
+    }
+    use TaggableTableTrait;
+
+    public $typeAlias = 'com_jlms.teacher';
+
+    public function getTypeAlias(): string
+    {
+        return $this->typeAlias;
     }
 
     public function __construct(DatabaseInterface $db)
@@ -43,9 +53,11 @@ final class TeacherTable extends Table
         $catid = (int) $this->catid;
         $access = (int) $this->access;
         $language = (string) $this->language;
-        $q = $db->createQuery()->select('id')->from('#__categories')
-            ->where("extension='com_jlms.teacher' AND published<>-2")->where('id=:id')
-                ->bind(':id', $catid, ParameterType::INTEGER);
+        $q = $db->createQuery()->select('cat.id')->from('#__categories AS cat')
+            ->where("cat.extension='com_jlms.teacher' AND cat.published<>-2")->where('cat.id=:id')
+            ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor'
+                . ' WHERE ancestor.lft <= cat.lft AND ancestor.rgt >= cat.rgt AND ancestor.published = -2)')
+            ->bind(':id', $catid, ParameterType::INTEGER);
         if (!$db->setQuery($q)->loadResult()) {
             $this->setError('COM_JLMS_TEACHER_INVALID');
             return false;
