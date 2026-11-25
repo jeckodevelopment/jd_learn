@@ -230,7 +230,7 @@ jobs:
           # official 6.2.1 GitHub release is a checksum-verified fallback.
           curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 --output /tmp/joomla.zip 'https://downloads.joomla.org/cms/joomla6/6-2-1/Joomla_6-2-1-Stable-Full_Package.zip?format=zip' \
             || curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 --output /tmp/joomla.zip 'https://github.com/joomla/joomla-cms/releases/download/6.2.1/Joomla_6.2.1-Stable-Full_Package.zip'
-          echo '7dc3d9adfef1816c11cf10fc5ec26abd33fa9779  /tmp/joomla.zip' | sha1sum --check --status
+          echo '1587c4ec74131ac4cbcf44bce20af22f364486c4169d5c569fb53cf8029c169c  /tmp/joomla.zip' | sha256sum --check --status
           unzip -q /tmp/joomla.zip -d .runtime/joomla
           php .runtime/joomla/installation/joomla.php install --site-name="JD Learn CI" --admin-user="CI Operator" --admin-username=cioperator --admin-password="Ci-only-Long-Password-2026" --admin-email=ci@example.invalid --db-type=mysqli --db-host=db --db-user=jlms_ci --db-pass=ci-disposable-password --db-name=jlms_test --db-prefix=joomla_ --db-encryption=0 --public-folder="" --no-interaction
           php tests/secdev02-compat6-disabled.php .runtime/joomla
