@@ -31,6 +31,14 @@ final class CourseExpiryReminderService
             ->from('#__jlms_enrollments AS e')->innerJoin('#__jlms_courses AS c ON c.id = e.course_id')
             ->innerJoin('#__jlms_editions AS ed ON ed.id = e.edition_id')
             ->innerJoin('#__users AS u ON u.id = e.user_id')
+            // Exclude previously queued reminders before applying the scheduler
+            // batch limit, otherwise old rows starve newer eligible enrollments.
+            ->leftJoin("#__jlms_mail_queue AS existing ON existing.event_key = SHA2(CONCAT("
+                . "'course.expiring:', e.id, ':', COALESCE(e.ends_at, ed.ends_at)), 256)")
+            ->where('existing.id IS NULL')
+            // Disabled course preferences must not consume the bounded batch.
+            ->where("COALESCE(JSON_UNQUOTE(JSON_EXTRACT(c.params_json,"
+                . " '$.mail_preferences.expiry')), 'inherit') IN ('inherit','enabled')")
             ->where('u.block = 0')->where("e.status = 'active'")->where('e.completed_at IS NULL')
             ->where('(e.ends_at IS NOT NULL OR ed.ends_at IS NOT NULL)')
             ->where('COALESCE(e.ends_at, ed.ends_at) > UTC_TIMESTAMP(6)')
