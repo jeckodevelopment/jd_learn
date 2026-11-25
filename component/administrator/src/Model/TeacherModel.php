@@ -191,7 +191,9 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 strlen($website) > 2048 || ($website !== '' && (!filter_var($website, FILTER_VALIDATE_URL)
                 || !in_array(strtolower((string) parse_url($website, PHP_URL_SCHEME)), ['http', 'https'], true)
                 || parse_url($website, PHP_URL_USER) !== null || parse_url($website, PHP_URL_PASS) !== null
-                || \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::containsSensitiveParameters($website)
+                || \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::containsSensitiveParameters(
+                    $website
+                )
                 || preg_match('/[\x00-\x20\x7f]/', $website)))
             ) {
                 throw new \InvalidArgumentException('COM_JLMS_TEACHER_INVALID');
