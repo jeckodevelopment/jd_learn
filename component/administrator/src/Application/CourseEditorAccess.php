@@ -31,10 +31,14 @@ final class CourseEditorAccess
         if ($category === null && $actor->authorise('core.create', 'com_jlms')) {
             return true;
         }
-        $q = $db->createQuery()->select('id')->from('#__categories')
-            ->where("extension='com_jlms.course' AND published<>-2");
+        $q = $db->createQuery()->select('category.id')->from('#__categories AS category')
+            ->where("category.extension='com_jlms.course' AND category.published<>-2")
+            // Do not offer a child below a trashed ancestor even when the child is published.
+            ->where('NOT EXISTS (SELECT 1 FROM #__categories AS ancestor WHERE '
+                . 'ancestor.lft <= category.lft AND ancestor.rgt >= category.rgt '
+                . 'AND ancestor.id <> 1 AND ancestor.published = -2)');
         if ($category !== null) {
-            $q->where('id=:category')->bind(':category', $category, ParameterType::INTEGER);
+            $q->where('category.id=:category')->bind(':category', $category, ParameterType::INTEGER);
         }
         foreach ($db->setQuery($q)->loadColumn() as $id) {
             if ($actor->authorise('core.create', 'com_jlms.course.category.' . (int)$id)) {
