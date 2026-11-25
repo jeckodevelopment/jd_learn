@@ -15,6 +15,7 @@ final class CertificateController extends BaseController
 {
     public function execute($task)
     {
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         if (!in_array(strtolower($task), ['download'], true)) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
