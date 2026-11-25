@@ -566,7 +566,8 @@
         ],
         "existing_automated_evidence": [
           "tests/secdev02-core21-private-dispatch.py",
-          "tests/dashboard-http.py"
+          "tests/dashboard-http.py",
+          "tests/secdev02-core21-task-matrix.py"
         ],
         "acceptance_mode": "ci_plus_site",
         "assessment": "partial_test_coverage",
