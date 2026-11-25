@@ -94,7 +94,9 @@ foreach ($item['outline'] as $entry) {
          elseif (!empty($entry->prerequisite_blocked)) :
                 ?><?= Text::_('COM_JLMS_PREREQUISITES_INCOMPLETE') ?><?php
          else :
-                ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' : ($entry->state === 'started' ? 'COM_JLMS_LESSON_IN_PROGRESS' : ($entry->required ? 'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'))) ?><?php
+                ?><?= Text::_($entry->state === 'completed' ? 'COM_JLMS_LESSON_COMPLETED' :
+        ($entry->state === 'started' ? 'COM_JLMS_LESSON_IN_PROGRESS' : ($entry->required ?
+        'COM_JLMS_REQUIRED' : 'COM_JLMS_OPTIONAL'))) ?><?php
          endif; ?></span>
   </li>
  <?php endforeach; ?>
