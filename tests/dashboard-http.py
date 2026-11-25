@@ -72,9 +72,13 @@ try:
   probe=Request(urljoin(base,path),data=b'' if method=='POST' else None,method=method)
   try:
    with student.open(probe,timeout=20)as response:
-    code=response.status;headers=response.headers;response.read()
+    code=response.status
+    headers=response.headers
+    response.read()
   except HTTPError as error:
-   code=error.code;headers=error.headers;error.read()
+   code=error.code
+   headers=error.headers
+   error.read()
   expect(400<=code<500,'CORE-21 rejected private task '+task+' returned '+str(code))
   expect('no-store'in headers.get('Cache-Control',''),
    'CORE-21 '+task+' rejected response missing private no-store, status '+str(code))
