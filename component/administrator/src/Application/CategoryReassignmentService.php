@@ -110,12 +110,20 @@ final class CategoryReassignmentService
             if (!$destinationId || $destinationId === $categoryId) {
                 throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_TARGET_REQUIRED');
             }
-            $destination = $this->category((int) $destinationId);
+            // Preserve the original invalid-target contract for a descendant,
+            // even when its source/ancestor is already in the trash.
+            $destination = $this->category((int) $destinationId, true);
             $isSourceDescendant = (int) $destination->lft > (int) $source->lft
                 && (int) $destination->rgt < (int) $source->rgt;
+            if ($isSourceDescendant) {
+                throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_INVALID_TARGET');
+            }
+            // Only non-descendants can be considered destinations: now apply
+            // the complete trash/ancestor gate before permissions or writes.
+            $destination = $this->category((int) $destinationId);
             if (
-                $destination->extension !== $reference['extension'] || $destination->extension !== $source->extension
-                || $isSourceDescendant
+                $destination->extension !== $reference['extension']
+                || $destination->extension !== $source->extension
             ) {
                 throw new \InvalidArgumentException('COM_JLMS_CATEGORY_REASSIGN_INVALID_TARGET');
             }
