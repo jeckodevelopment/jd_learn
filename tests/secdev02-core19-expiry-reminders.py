@@ -20,6 +20,11 @@ def inspect(source: str) -> list[str]:
         "identical deadline fallback": "COALESCE(e.ends_at, ed.ends_at)",
         "exclude duplicate before LIMIT": "->where('existing.id IS NULL')",
         "do not batch disabled course settings": "$.mail_preferences.expiry",
+        "global switch is not an unconditional veto": "$globallyEnabled = (bool) $params->get('mail_expiry_enabled', false);",
+        "explicit course opt-in when site default is off": "eligiblePreferenceSql($globallyEnabled)",
+        "SQL policy branches by global default": "$globallyEnabled",
+        "opt-in explicit policy": "$preference . \" = 'enabled'\"",
+        "PHP policy uses real global default": "MailPreferences::enabled('expiry', $globallyEnabled",
         "retry-safe event key in PHP": "hash('sha256', 'course.expiring:'",
         "bounded workload": "max(1, min(5000, $limit))",
         "database bounded select": "setQuery($query, 0, $limit)",
@@ -27,6 +32,10 @@ def inspect(source: str) -> list[str]:
     for name, token in required.items():
         if token not in source:
             faults.append(f"{name}: missing {token}")
+    if "if (!(bool) $params->get('mail_expiry_enabled', false))" in source:
+        faults.append("global-off short-circuit blocks explicitly enabled courses")
+    if "MailPreferences::enabled('expiry', true" in source:
+        faults.append("legacy hard-coded global-on policy breaks explicit override")
     if (
         "->where('existing.id IS NULL')" in source
         and "setQuery($query, 0, $limit)" in source
@@ -50,6 +59,10 @@ def self_test() -> None:
         "'course.expiring:', e.id, ':', COALESCE(e.ends_at, ed.ends_at))"
         "->where('existing.id IS NULL')"
         "$.mail_preferences.expiry"
+        "$globallyEnabled = (bool) $params->get('mail_expiry_enabled', false);"
+        "eligiblePreferenceSql($globallyEnabled)"
+        "$preference . \" = 'enabled'\""
+        "MailPreferences::enabled('expiry', $globallyEnabled"
         "max(1, min(5000, $limit))"
         "setQuery($query, 0, $limit)"
         "hash('sha256', 'course.expiring:'"
@@ -59,6 +72,8 @@ def self_test() -> None:
     assert inspect(base.replace("$.mail_preferences.expiry", ""))
     assert inspect(base.replace("SHA2(CONCAT(", "SHA1(CONCAT("))
     assert inspect(base.replace("max(1, min(5000, $limit))", "$limit"))
+    assert inspect(base + "if (!(bool) $params->get('mail_expiry_enabled', false))")
+    assert inspect(base + "MailPreferences::enabled('expiry', true")
 
 
 def main() -> int:
