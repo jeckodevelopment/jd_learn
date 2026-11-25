@@ -20,7 +20,9 @@ if ($mode === 'enable') {
                 . "type='plugin' AND folder='system' AND element='languagefilter'"))
                     ->fetch(\PDO::FETCH_ASSOC), JSON_THROW_ON_ERROR));
     $db->exec(("UPDATE joomla_extensions SET "
-                . "enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.detect_browser',0,'$.remove_default_prefix',0) WHERE type='plugin' AND folder='system' AND element='languagefilter'"));
+                . "enabled=1,params=JSON_SET(COALESCE(NULLIF(params,''),'{}'),'$.detect_bro" .
+                    "wser',0,'$.remove_default_prefix',0) WHERE type='plugin' AND folder='sys" .
+                    "tem' AND element='languagefilter'"));
 } elseif ($mode === 'disable') {
     $s = json_decode(file_get_contents($state), true, 16, JSON_THROW_ON_ERROR);
     $q = $db->prepare(("UPDATE joomla_extensions SET enabled=?,params=? WHERE type='plugin' AND folder='system' "
