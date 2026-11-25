@@ -322,6 +322,12 @@ $finderEligible = static function () use ($db, $finder, $finderSelect, $course):
     return (bool) $db->setQuery($query, 0, 1)->loadResult();
 };
 $db->setQuery('UPDATE #__jlms_courses SET content_access=1 WHERE id=' . $course)->execute();
+// The publication service records publish_up on the newly published fixture.
+// Finder intentionally omits time-bounded publications because the static index
+// cannot enforce their start/end boundaries. Verify that policy first, then
+// make the course unscheduled for the ancestor ACL/language lifecycle checks.
+catExpect(!$finderEligible(), 'CORE-14: scheduled publication is excluded from the static Finder index');
+$db->setQuery('UPDATE #__jlms_courses SET publish_up=NULL WHERE id=' . $course)->execute();
 $finderFixture = $db->setQuery(
     'SELECT c.id, c.state, c.catalog_access, c.content_access, c.publish_up, c.publish_down,'
     . ' c.language, c.current_version_id, v.status AS version_status,'
