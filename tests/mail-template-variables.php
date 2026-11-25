@@ -248,7 +248,13 @@ foreach (
 ) {
     $producer = file_get_contents(__DIR__ . '/../component/administrator/src/Application/' . $producerFile);
     foreach ($needles as $needle) {
-        if ($producer === false || !str_contains($producer, $needle)) {
+        if (
+            $producer === false
+            || !str_contains(
+                preg_replace('/\\s+/', '', $producer),
+                preg_replace('/\\s+/', '', $needle)
+            )
+        ) {
             throw new RuntimeException('Missing persisted timestamp producer contract: ' . $producerFile);
         }
     }

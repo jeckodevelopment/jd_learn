@@ -519,3 +519,32 @@ Baseline certificata dalla CI #45502399210: **125 finding PSR-12**, di cui 102 `
 - Collaudo manuale Joomla: invio/anteprima comunicazioni, pubblicazione del curriculum, gestione dei conflitti di revisione e comportamento del filtro HTML.
 
 Lotto PR #1025: collegamento a matrice requisiti e metadati GitHub obbligatori (milestone 1.0.0, priorità P1, collaudo in attesa) verificati; esiti PHPCS e collaudi non ancora anticipati. Questo aggiornamento richiede nuova CI sull'HEAD, distinta dal rerun di un evento antecedente ai metadati.
+
+
+## PR conclusiva unica — baseline post #1025 (lavoro aperto)
+
+Il merge #1025 ha misurato un debito PHPCS PSR12 di **122** finding, rispetto ai 125 della baseline precedente; il saldo rimane da ricertificare sul ramo conclusivo. I 122 non rappresentano 122 criteri funzionali. La bonifica viene accorpata in un solo ramo, senza altri merge intermedi. Un primo candidato di riformattazione delle allowlist e dei template misti HTML/PHP è stato **ripristinato integralmente** dopo il rifiuto della CI: 108 violazioni nuove di indentazione, quindi nessun indebolimento dei gate. La successiva correzione è limitata alla suddivisione di una costante SQL nella proiezione SELECT di CourseExpiryReminderService.php, preservando letteralmente il testo concatenato della query; l'esito va ricertificato dalla CI. La CI integrale deve misurare il saldo netto e respingere violazioni nuove.
+
+### Condizioni indispensabili per dichiarare conclusa SECDEV-02
+
+1. PHPCS PSR12 4.0.4 sull'intero PHP tracciato: zero finding, senza esclusioni/soppressioni; eventuali convenzioni native Joomla non rinominabili richiedono risoluzione tecnicamente motivata, non una modifica cieca.
+2. Riconciliazione di CORE-01–23, con evidenza verificabile di API, servizi pertinenti, patch Joomla target, test automatici, motivazioni di non applicabilità e risultati realmente ottenuti.
+3. Nessuna dipendenza dal plugin compat6, nessuna copia/modifica del core, verifica dei contratti nativi e di ACL/CSRF nei flussi interessati.
+4. CI verde su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6, Chromium, SAST, pacchetto ZIP e source contracts. Collaudi manuali Joomla dichiarati separatamente e mai presunti.
+5. Aggiornamento del registro canonico e delle percentuali esclusivamente in base a evidenze concluse, con 'Comportamenti da testare' e collegamento al pacchetto installabile dopo merge.
+
+Non marcare SECDEV-02 completato finché queste condizioni non sono dimostrate. In particolare, i template misti HTML/PHP richiedono la preservazione dell'output, degli attributi e delle stringhe controllate dai test; il solo superamento di lint o PHPCS è insufficiente.
+
+
+### PR #1026 — bonifica multipla di espressioni PHP nei template (24 novembre 2026)
+
+Dopo il primo intervento sulla costante SQL di `CourseExpiryReminderService.php`, il lotto è stato esteso a template di corso, aula, quiz, catalogo e amministrazione. I tentativi di separazione fra elementi HTML che generavano nuovi rilievi `Squiz.WhiteSpace.ScopeClosingBrace.Indent` sono stati ripristinati. Le nuove trasformazioni spezzano invece concatenazioni all'interno di espressioni PHP senza cambiare gli argomenti o il markup previsto. La CI #45507962214 ha rilevato preliminarmente **122 → 111**, con quattro regressioni di indentazione localizzate per file/riga; sono state corrette seguendo esattamente i messaggi di PHPCS. Il saldo finale **non è ancora certificato** e non è lecito dichiarare SECDEV-02 chiuso. La diagnostica PHPCS ora espone file e righe delle nuove violazioni senza alterare il gate di regressione.
+
+Comportamenti da testare: PHPCS 4.0.4 PSR12 senza nuovi rilievi, lint PHP, confronto dei contratti di rendering HTML, template del catalogo/corso/aula/quiz, controlli ACL e CSRF, integrazione Joomla 6.2 su entrambe le matrici PHP/database, Chromium, integrità CSV, ZIP installabile. I nomi di override Joomla e la verifica CORE/API restano autonomi; nessuna percentuale funzionale viene promossa in assenza di evidenza.
+
+
+### Esito verificato del lotto #1026 — 25 novembre 2026
+
+La CI completa [#45566471467](https://github.com/jeckodevelopment/jd_learn/actions/runs/45566471467) ha superato controlli preliminari, Chromium e tutte le matrici PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 dopo la correzione dei contratti del dashboard, delle variabili email e dei test di sicurezza dipendenti dalla formattazione. **PHPCS 4.0.4: 122 finding nella baseline di `main`, 102 sul ramo, 20 eliminati e 0 nuovi**, senza abbassare o escludere regole. La riformattazione automatica aggiuntiva ha rifiutato tutti i candidati e il workflow temporaneo e' stato eliminato; i tentativi HTML/PHP che introducevano regressioni sono stati ripristinati. La CI attesta il codice del lotto, **non il completamento SECDEV-02**.
+
+Dei residui, sono presenti le firme native `Table::_getAssetName`, `::_getAssetTitle`, `::_getAssetParentId` e la proprietà `$_supportNullValue`, che richiedono conservazione per compatibilità Joomla. Gli altri rilievi richiedono ulteriore bonifica dei template e dei file con side effect, non soppressioni indiscriminate. CORE-01–23 conserva verifiche end-to-end non risolte e l'inventario API non e' un collaudo universale. Lo stato del requisito resta **Parziale**, con percentuali e criteri implementativi non promossi e test manuali esplicitamente in attesa. L'integrazione di questo lotto va indicata come riduzione verificata del debito, mai come chiusura della sicurezza o della compatibilità core.

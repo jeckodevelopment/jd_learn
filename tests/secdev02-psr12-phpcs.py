@@ -197,6 +197,23 @@ def main() -> int:
         print(f"  introduced {rule}: {count}")
     for (filename, source), count in sorted(introduced.items())[:40]:
         print(f"New PSR-12 finding: {filename}: {source} x{count}", file=sys.stderr)
+    # Diagnostic only: retain the existing strict return status and rules, but
+    # identify affected physical lines to support safe PHP formatter repairs.
+    if introduced:
+        affected = sorted({filename for filename, _rule in introduced})
+        for filename in affected[:12]:
+            scan = subprocess.run(
+                [str(phpcs), "--standard=PSR12", "--report=json", "--no-cache", filename],
+                cwd=ROOT, text=True, capture_output=True, timeout=30, check=False,
+            )
+            try:
+                messages = next(iter(json.loads(scan.stdout)["files"].values()))["messages"]
+            except (KeyError, ValueError, TypeError):
+                continue
+            for hit in messages[:30]:
+                if (filename, hit["source"]) in introduced:
+                    print(f"PSR-12 diagnostic location: {filename}:{hit['line']} "
+                          f"{hit['source']}: {hit['message']}", file=sys.stderr)
     if now:
         print("SECDEV-02 PSR-12 debt remains; this gate does NOT certify full PSR-12 compliance.")
     if introduced and mechanical_line_length_exception(

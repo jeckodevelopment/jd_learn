@@ -27,7 +27,11 @@ final class CoursemessageModel extends BaseDatabaseModel
             if (is_array($preview)) {
                 // Preserve the same mutation across GET refreshes; migrate older
                 // sessions once, without creating a second test event on reload.
-                if (!\Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::valid($preview['mutation_id'] ?? null)) {
+                if (
+                    !\Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::valid(
+                        $preview['mutation_id'] ?? null
+                    )
+                ) {
                     $preview['mutation_id'] =
                         \Jlms\Component\Jlms\Administrator\Application\CourseMessageMutation::create();
                     $app->getSession()->set($key, $preview);

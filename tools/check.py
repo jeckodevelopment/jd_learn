@@ -156,7 +156,7 @@ assert "'template' => $plan['template']" in compose
 assert "hash_equals((string) $previous->payload_json, $expectedPayload)" in compose
 assert re.search(r"'payload_json'\s*=>\s*\$expectedPayload", compose)
 assert "'__course_message_snapshot'" in compose and "'__course_message_snapshot'" in dispatch
-assert "CourseMessageTemplate::validate($snapshot, $data)" in dispatch
+assert re.search(r"CourseMessageTemplate::validate\(\s*\$snapshot\s*,\s*\$data\s*\)", dispatch)
 assert "CourseMessageMailer::deliver(" in dispatch
 assert "Factory::getMailer()" in sender and "->replaceTags(" in sender
 assert "CourseMessageTemplate::validate(" in compose

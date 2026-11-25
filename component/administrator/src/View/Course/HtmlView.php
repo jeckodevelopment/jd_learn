@@ -24,7 +24,9 @@ final class HtmlView extends BaseHtmlView
     public function display($tpl = null)
     {
         $this->item = $this->get('Item');
-        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(Factory::getApplication()->getIdentity());
+        $actor = \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::fresh(
+            Factory::getApplication()->getIdentity()
+        );
         $id = (int)($this->item->id ?? 0);
         $allowed = $id > 0 ? \Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess::canEdit(
             $actor,

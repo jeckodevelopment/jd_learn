@@ -98,7 +98,9 @@ $schedulerHealthKeys = [
         <?php else : ?>
             <ul>
                 <?php foreach ($this->providers as $provider) : ?>
-                    <li data-jlms-provider="<?= $this->escape($provider['key']) ?>"><span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $this->escape(Text::_(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey((string) $provider['stateKey']))) ?></p></li>
+                    <li data-jlms-provider="<?= $this->escape($provider['key']) ?>">
+<span><?= $this->escape(Text::_($provider['labelKey'])) ?></span> <span
+ class="badge bg-<?= $this->escape($provider['stateClass']) ?>"><?= $this->escape(Text::_($provider['stateKey'])) ?></span><p class="small mb-1"><?= $this->escape(Text::_(\Jlms\Component\Jlms\Administrator\Application\DashboardProviderStatus::guidanceKey((string) $provider['stateKey']))) ?></p></li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>

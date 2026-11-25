@@ -318,7 +318,10 @@ final class MailQueue
                         throw new \RuntimeException('Invalid communication snapshot.');
                     }
                     try {
-                        $snapshot = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate($snapshot, $data);
+                        $snapshot = \Jlms\Component\Jlms\Administrator\Application\CourseMessageTemplate::validate(
+                            $snapshot,
+                            $data
+                        );
                     } catch (\Throwable $invalid) {
                         $invalidTemplate = true;
                         throw $invalid;
