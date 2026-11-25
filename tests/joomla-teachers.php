@@ -130,6 +130,46 @@ teacherExpect($teacherModel->save($teacherBase + ['params_json' => '{"injected":
     => 999999]), 'Teacher saved through native model');
 $public = (int)$teacherModel->getState('teacher.id');
 $teacher = $teacherModel->getItem($public);
+teacherExpect(
+    $teacherModel->getTable('Teacher') instanceof \Joomla\CMS\Tag\TaggableTableInterface,
+    'CORE-09: teacher uses Joomla native taggable table'
+);
+$nativeForm = $teacherModel->getForm([], false);
+teacherExpect(
+    $nativeForm !== false && $nativeForm->getField('catid') !== false
+    && $nativeForm->getField('tags') !== false,
+    'CORE-01/09/20: native teacher category and tag selectors available'
+);
+teacherExpect(
+    $teacher->tags instanceof \Joomla\CMS\Helper\TagsHelper,
+    'CORE-09: saved teacher populates native Joomla tag editor'
+);
+// A valid leaf beneath a trashed ancestor must never pass the teacher
+// model or native table guard, even when the editor has core.create.
+teacherExpect($categoryModel->save([
+    'id' => 0, 'parent_id' => 1, 'extension' => 'com_jlms.teacher',
+    'title' => 'CI teacher trashed parent', 'alias' => 'ci-teacher-trashed-parent',
+    'published' => 1, 'language' => '*', 'access' => 1,
+]), 'CORE-01: teacher nested parent fixture created');
+$trashedTeacherParent = (int)$categoryModel->getState('category.id');
+teacherExpect($categoryModel->save([
+    'id' => 0, 'parent_id' => $trashedTeacherParent, 'extension' => 'com_jlms.teacher',
+    'title' => 'CI teacher nested child', 'alias' => 'ci-teacher-nested-child',
+    'published' => 1, 'language' => '*', 'access' => 1,
+]), 'CORE-01: teacher nested child fixture created');
+$trashedTeacherChild = (int)$categoryModel->getState('category.id');
+$db->setQuery('UPDATE #__categories SET published=-2 WHERE id=' . $trashedTeacherParent)->execute();
+teacherExpect(
+    !$teacherModel->save(array_replace($teacherBase, [
+        'catid' => $trashedTeacherChild, 'alias' => 'ci-invalid-ancestor-teacher',
+    ])),
+    'CORE-01/04: creating a teacher under a trashed ancestor must fail'
+);
+teacherExpect(
+    (int)$db->setQuery("SELECT COUNT(*) FROM #__jlms_teachers WHERE alias='ci-invalid-ancestor-teacher'")
+        ->loadResult() === 0,
+    'CORE-01/04: denied teacher creation leaves no partial record'
+);
 $storedTeacherBio = (string)$db->setQuery('SELECT bio FROM #__jlms_teachers WHERE id=' . $public)->loadResult();
 teacherExpect(
     str_contains($storedTeacherBio, '<strong>biography</strong>')
