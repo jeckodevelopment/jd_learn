@@ -1,5 +1,13 @@
 # Lezioni video
 
+## SCR-08 — alternativa formativa interna e volontaria (lotto 26/11/2026)
+
+Nell'editor di una lezione video l'autore può selezionare **Attività formativa alternativa (facoltativa)**: una lezione **testo, documento oppure audio** già presente nella stessa bozza. La scelta predefinita è **Nessuna alternativa configurata**. Non si può indicare il video stesso, un altro video, un contenuto di un altro corso/versione né un URL esterno arbitrario. Il server valida la scelta nella transazione di salvataggio e nuovamente prima della pubblicazione; copie di moduli e versioni rimappano i riferimenti interni delle lezioni. Non serve una nuova tabella o una migrazione: il riferimento è conservato nei parametri della lezione video.
+
+L'aula dello studente visualizza il collegamento a **una lezione interna dello stesso programma assegnato** soltanto quando quella lezione è effettivamente disponibile, senza prerequisiti pendenti e senza finestre temporali che ne blocchino l'accesso. Il riferimento non è proiettato quando è non valido, programmato o indisponibile. Aprire il link chiama la normale route aula con nuova verifica dell'iscrizione e dell'accesso; non richiede un link o un'istanza del provider esterno. **Non viene assegnato alcun credito al video richiesto** per aver letto la lezione alternativa: la soglia per il video tracciato o la diversa regola manuale configurata dall'autore rimangono in vigore. Un corso in modalità sequenziale può impedire il link a un'alternativa che dipende dal video stesso: scegliere una lezione accessibile nella struttura didattica.
+
+L'alternativa è utile se il consenso non viene dato, il player restituisce errore o lo studente ha necessità di un contenuto diverso; non sblocca un provider disabilitato globalmente né autorizza una pubblicazione altrimenti vietata. **Nessun iframe, SDK o URL video esterno** è caricato dall'anteprima del collegamento alternativo. Le scelte di consenso rimangono regolate indipendentemente da `video_external_policy`.
+
 ## SCR-06 — regola editoriale esplicita di completamento manuale (26/11/2026)
 
 La lezione video mantiene come regola **predefinita** `video_coverage`: solo la copertura temporale verificata dal server può confermare una lezione video richiesta. Nell’editor del programma l’autore può scegliere, per quella lezione, **Conferma manuale dello studente**; il valore `manual` viene validato lato server, conservato nella bozza e congelato nella versione pubblicata. La scelta non si applica ai corsi senza regole didattiche né alle lezioni di testo/documento/audio, che mantengono le rispettive regole. La durata e l’eventuale configurazione/provider video devono comunque soddisfare i requisiti di pubblicazione.
