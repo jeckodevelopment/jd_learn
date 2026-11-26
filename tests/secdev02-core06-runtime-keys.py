@@ -137,7 +137,7 @@ def self_test() -> None:
         missing.write_text('COM_JLMS_DIFFERENT="No"\n', encoding="utf-8")
         errors, _ = inspect(root)
         assert len(errors) == 1 and "site/it-IT" in errors[0]
-        missing.write_text('COM_JLMS_HELLO="Hello"\\n', encoding="utf-8")
+        missing.write_text('COM_JLMS_HELLO="Hello"\n', encoding="utf-8")
         site_php = root / "component/site/tmpl/view.php"
         site_php.write_text("<?php Text::_('COM_JLMS_' . 'MISSING');", encoding="utf-8")
         errors, _ = inspect(root)
