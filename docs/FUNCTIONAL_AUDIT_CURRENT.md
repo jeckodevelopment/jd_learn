@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **507**.
-- Mancanti con lacuna accertata: **10**.
+- Implementati: **508**.
+- Mancanti con lacuna accertata: **9**.
 - Esaminati con esito non verificabile: **240**.
 - Da esaminare: **0**.
 
@@ -38,8 +38,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
   - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
-- `SEC-P5/criterion_01` — Test negativi end-to-end pertinenti alla release candidate. La revisione del criterio «Test negativi end-to-end pertinenti alla release candidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P5/criterion_02` — Penetration/risk review con ambito e risultati tracciabili. La revisione del criterio «Penetration/risk review con ambito e risultati tracciabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P5/criterion_03` — Vulnerabilità riesaminate e mitigazioni documentate. La revisione del criterio «Vulnerabilità riesaminate e mitigazioni documentate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -2019,6 +2017,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/PRIVACY_COOKIES.md#guida amministrativa inglese](../docs/PRIVACY_COOKIES.md)
   - [docs/PRIVACY_COOKIES_EN.md#Configure the CMP bridge](../docs/PRIVACY_COOKIES_EN.md)
   - [docs/PRIVACY_COOKIES_EN.md#Mandatory pre-release verification](../docs/PRIVACY_COOKIES_EN.md)
+- `SEC-P5/criterion_01` — Test negativi end-to-end pertinenti alla release candidate. Cinque aree E2E negative sono collegate alla matrice CI Joomla e protette da un gate fail-closed che controlla comandi e asserzioni. La CI #4693 sul commit candidato è verde per PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. Questo attesta solo le fixture controllate; non attesta penetration testing, hosting o accettazione manuale.
+  - [docs/SEC_P5_NEGATIVE_E2E_1.0.0.json#roster-authorization](../docs/SEC_P5_NEGATIVE_E2E_1.0.0.json)
+  - [tests/sec-p5-negative-e2e.py#inspect(manifest, workflow](../tests/sec-p5-negative-e2e.py)
+  - [.github/workflows/ci.yml#python3 tests/sec-p5-negative-e2e.py](../.github/workflows/ci.yml)
 - `LCM-01/criterion_01` — Archiviazione corsi: blocco nuove iscrizioni e fruizione anche da endpoint diretti. Chiusura dei gate core dimostrata da workflow Archive (ammissioni e delivery chiuse atomicamente) e da fixture Joomla: URL diretti aula, completamento, materiali, video e quiz respinti per stati 0, 2 e -2 anche con flag obsoleti; replay e nuova telemetria di sessioni video gia emesse, salvataggio e submit di quiz gia avviati, migrazione e riattivazione amministrativa respinti; dati storici invariati. Evidenza CI #45059160428 con quattro job verdi; accettazione manuale e integrazioni di terze parti restano distinte.
   - [component/administrator/src/Application/PublicationService.php#Preserve student history](../component/administrator/src/Application/PublicationService.php)
   - [component/administrator/src/Application/LearningService.php#private function authorisedEnrollment](../component/administrator/src/Application/LearningService.php)

@@ -11473,14 +11473,18 @@
       {
         "id": "criterion_01",
         "label": "Test negativi end-to-end pertinenti alla release candidate",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "docs/SEC_P5_NEGATIVE_E2E_1.0.0.json",
+          "tests/sec-p5-negative-e2e.py",
+          ".github/workflows/ci.yml"
         ],
         "review": {
-          "reason": "La revisione del criterio «Test negativi end-to-end pertinenti alla release candidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "Cinque aree E2E negative sono collegate alla matrice CI Joomla e protette da un gate fail-closed che controlla comandi e asserzioni. La CI #4693 sul commit candidato è verde per PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. Questo attesta solo le fixture controllate; non attesta penetration testing, hosting o accettazione manuale.",
           "references": [
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9"
+            "docs/SEC_P5_NEGATIVE_E2E_1.0.0.json#roster-authorization",
+            "tests/sec-p5-negative-e2e.py#inspect(manifest, workflow",
+            ".github/workflows/ci.yml#python3 tests/sec-p5-negative-e2e.py"
           ]
         }
       },
