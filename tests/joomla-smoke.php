@@ -1085,8 +1085,8 @@ if (!$model->save($data + ['state' => 1,'asset_id' => 999999,'current_version_id
 }
 $id = (int) $model->getState('course.id');
 // MAIL-05: complete global/course precedence for every supported mail event.
-// A malformed persisted preference map fails closed, never becomes an override.
-$events = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::EVENTS;
+$preferences = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::class;
+$events = $preferences::EVENTS;
 if (count($events) !== 16 || count(array_unique($events)) !== count($events)) {
     throw new \RuntimeException('MAIL-05 supported mail event inventory drifted.');
 }
@@ -1099,42 +1099,31 @@ foreach ($events as $event) {
                 'enabled' => true,
                 'disabled' => false,
             };
-            if (\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
-                $event,
-                $global,
-                $params
-            ) !== $expected) {
+            $actual = $preferences::enabled($event, $global, $params);
+            if ($actual !== $expected) {
                 throw new \RuntimeException('MAIL-05 per-event inheritance precedence failed: ' . $event);
             }
-            $merged = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::merge(
+            $merged = $preferences::merge(
                 ['mail_' . $event => $setting],
                 '{"other_setting":"preserved"}'
             );
             $data = json_decode((string) $merged, true, 16, JSON_THROW_ON_ERROR);
-            if (($data['other_setting'] ?? '') !== 'preserved'
-                || \Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
-                    $event,
-                    $global,
-                    $merged
-                ) !== $expected
-            ) {
+            $actualMerged = $preferences::enabled($event, $global, $merged);
+            if (($data['other_setting'] ?? '') !== 'preserved' || $actualMerged !== $expected) {
                 throw new \RuntimeException('MAIL-05 merge must preserve settings and precedence: ' . $event);
             }
         }
-        foreach (['{"mail_preferences":"corrupt"}', '{"mail_preferences":[]}', '{"mail_preferences":{"'
-            . $event . '":"invalid"}}'] as $params) {
-            if (str_contains($params, '"corrupt"') || str_contains($params, '"invalid"')) {
-                if (\Jlms\Component\Jlms\Administrator\Application\MailPreferences::enabled(
-                    $event,
-                    $global,
-                    $params
-                )) {
-                    throw new \RuntimeException('MAIL-05 invalid override was accepted: ' . $event);
-                }
+        $invalidCases = [
+            '{"mail_preferences":"corrupt"}',
+            '{"mail_preferences":{"' . $event . '":"invalid"}}'
+        ];
+        foreach ($invalidCases as $params) {
+            if ($preferences::enabled($event, $global, $params)) {
+                throw new \RuntimeException('MAIL-05 invalid override was accepted: ' . $event);
             }
         }
     }
-    $clear = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::merge(
+    $clear = $preferences::merge(
         ['mail_' . $event => 'inherit'],
         json_encode(['mail_preferences' => [$event => 'enabled'], 'other_setting' => 1], JSON_THROW_ON_ERROR)
     );
