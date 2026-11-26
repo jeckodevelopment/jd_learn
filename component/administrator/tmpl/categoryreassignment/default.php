@@ -9,6 +9,13 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
 $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
+$childWarning = '';
+if ($this->inspection && (int) $this->inspection['descendant_categories'] > 0) {
+    $childWarning = Text::sprintf(
+        'COM_JLMS_CATEGORY_REASSIGN_CHILD_WARNING',
+        (int) $this->inspection['descendant_categories']
+    );
+}
 ?>
 <div class="container-fluid">
  <p><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_INTRO') ?></p>
@@ -28,9 +35,10 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
  <?php if ($this->inspection) : ?>
   <h2><?= $this->escape($this->inspection['category']->title) ?></h2>
   <p><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_DELETE_NOTE') ?></p>
-  <?php if ($this->inspection['descendant_categories'] > 0) : ?>
-        <p id="jlms-category-reassign-subtree-warning" class="alert alert-warning" role="status"><?= Text::sprintf('COM_JLMS_CATEGORY_REASSIGN_CHILD_WARNING', (int) $this->inspection['descendant_categories']) ?></p>
-  <?php endif; ?>
+        <?php if ($childWarning !== '') : ?>
+         <p id="jlms-category-reassign-subtree-warning" class="alert alert-warning"
+            role="status"><?= $this->escape($childWarning) ?></p>
+        <?php endif; ?>
   <form action="<?= Route::_('index.php?option=com_jlms&task=categoryreassignment.reassign', false) ?>" method="post">
    <input type="hidden" name="category_id" value="<?= $categoryId ?>">
    <table class="table table-striped">
