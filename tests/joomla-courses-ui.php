@@ -298,6 +298,32 @@ $list->setState('filter.published', '');
 $list->setState('list.ordering', 'a.title; DROP TABLE #__jlms_courses');
 $list->setState('list.direction', 'DESC; DELETE');
 listExpect(count($get()) === 3, 'SQL ordering is allowlisted');
+// CORE-20: every native Search Tools filter must fail closed on malformed
+// input, agree with the pagination total and recover after a valid reset.
+$malformedAdminFilters = [
+    'published' => '99',
+    'category_id' => '0',
+    'author_id' => '-1',
+    'teacher_id' => '1 OR 1=1',
+    'access' => 'not-a-level',
+    'language' => 'en-GB/../../',
+    'checked_out' => 'all',
+];
+foreach ($malformedAdminFilters as $filterName => $invalidValue) {
+    $filteredList = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
+    $filteredList->setState('list.limit', 100);
+    $filteredList->setState('filter.search', 'List UI');
+    $filteredList->setState('filter.' . $filterName, $invalidValue);
+    listExpect(
+        $filteredList->getItems() === [] && (int) $filteredList->getTotal() === 0,
+        'CORE-20: malformed admin filter and total fail closed: ' . $filterName
+    );
+    $filteredList->setState('filter.' . $filterName, '');
+    listExpect(
+        (int) $filteredList->getTotal() === 3 && count($filteredList->getItems()) === 3,
+        'CORE-20: clearing malformed filter restores valid list and total: ' . $filterName
+    );
+}
 // Verify the archived state against an actual record without changing retained fixtures.
 $db->setQuery('UPDATE #__jlms_courses SET state=2 WHERE id=' . (int)$ids['Bravo'])->execute();
 try {
