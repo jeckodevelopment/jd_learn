@@ -798,6 +798,36 @@ teacherExpect(
     ])),
     'CORE-04/09: learner cannot forge a native Joomla teacher tag edit'
 );
+// CORE-04: a forged edit cannot smuggle administrative-only fields through
+// a profile update. Check durable state as well as the return value, so an
+// eventual post-save tag hook cannot silently mutate Joomla associations.
+$protectedTeacherBefore = $db->setQuery(
+    'SELECT revision,user_id,catid,state,access,language,params_json FROM #__jlms_teachers WHERE id='
+    . $taggedId
+)->loadAssoc();
+$forgedTeacherFields = [
+    ['user_id' => (int) $learner->id],
+    ['catid' => $teacherCategory],
+    ['state' => 1],
+    ['access' => 2],
+    ['language' => 'it-IT'],
+    ['tags' => []],
+];
+foreach ($forgedTeacherFields as $forgedFields) {
+    teacherExpect(
+        !$teacherModel->save(array_replace($taggedTeacher, [
+            'id' => $taggedId, 'revision' => $taggedBefore,
+        ], $forgedFields)),
+        'CORE-04: learner cannot forge teacher administrative fields'
+    );
+    teacherExpect(
+        $db->setQuery(
+            'SELECT revision,user_id,catid,state,access,language,params_json FROM #__jlms_teachers WHERE id='
+            . $taggedId
+        )->loadAssoc() === $protectedTeacherBefore && $tagAssociations() === [$tagId],
+        'CORE-04: rejected teacher field edit preserves profile and native tag associations'
+    );
+}
 $teacherModel->setCurrentUser($actor);
 teacherExpect(
     $tagAssociations() === [$tagId]

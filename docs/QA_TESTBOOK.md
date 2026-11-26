@@ -1,3 +1,9 @@
+## SECDEV-02 / CORE-04 — Tentativi di modifica forgiata del docente (26/11/2026)
+
+**Verifica automatica candidata:** `tests/joomla-teachers.php` prova separatamente la modifica illecita di account collegato, categoria, pubblicazione, livello d'accesso, lingua e tag con un utente autenticato privo dei privilegi editoriali. Per ciascun tentativo l'intero stato persistito del docente e la mappa nativa Joomla dei tag devono restare identici; il modello viene poi riportato all'utente editor autorizzato. Questo amplia la regressione sull'identità corrente senza attestare l'accettazione di CORE-04.
+
+**Collaudo manuale Joomla: In attesa.** Con due account reali (docente collegato al proprio profilo e operatore delegato), verificare che la modifica dei campi consentiti sia possibile e che richieste modificate per account collegato, categoria, pubblicazione, accesso, lingua e tag non producano modifiche involontarie. Provare anche checkout e storicizzazione, senza attribuire alla CI il collaudo del sito.
+
 ## SECDEV-02 / CORE-04 — Limiti delle operazioni massive docenti (26/11/2026)
 
 **Evidenza automatica candidata:** `tests/joomla-teachers.php` estende il test nativo Joomla con selezione vuota, ID duplicati, ID in formato stringa, ID zero, batch di 101 elementi e transizione non ammessa. Ogni rifiuto deve conservare stato e revisione di entrambi i docenti. La suite verifica già separatamente checkout concorrente, utente non autorizzato, record assente e rollback. Il test è da confermare nella CI del commit finale.
