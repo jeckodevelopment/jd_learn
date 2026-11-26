@@ -61,7 +61,11 @@ final class MailPreferences
         if (!is_array($data)) {
             return false;
         }
-        $value = $data['mail_preferences'][$event] ?? 'inherit';
+        $preferences = $data['mail_preferences'] ?? [];
+        if (!is_array($preferences)) {
+            return false;
+        }
+        $value = $preferences[$event] ?? 'inherit';
         return match ($value) {
             'enabled' => true,
             'disabled' => false,
