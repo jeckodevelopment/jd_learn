@@ -8,6 +8,6 @@ La prova si aggiunge ai controlli esistenti su editing docente, assegnazione pro
 
 ## Stato del requisito
 
-CORE-10 resta **Parziale** e il criterio esteso `teacher_scoping` resta **unverifiable`: il nuovo test copre il ripristino di un campo docente in Joomla CI, non tutte le combinazioni di ACL, lingua, gruppi, tipi di campo e contesti corso/lezione/docente. Non viene attribuito alcun collaudo manuale né incremento percentuale sulla sola aggiunta della regressione.
+CORE-10 resta **Parziale** e il criterio esteso `teacher_scoping` resta `unverifiable`: il nuovo test copre il ripristino di un campo docente in Joomla CI, non tutte le combinazioni di ACL, lingua, gruppi, tipi di campo e contesti corso/lezione/docente. Non viene attribuito alcun collaudo manuale né incremento percentuale sulla sola aggiunta della regressione.
 
 **Collaudo Joomla manuale: NON ESEGUITO.** Restano le combinazioni previste dal testbook, inclusi lingua, gruppi campo, permessi record e verifica del profilo pubblico.
