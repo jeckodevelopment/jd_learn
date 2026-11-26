@@ -6,6 +6,7 @@ This confirms traceability and identifies *unverified* controls, not runtime app
 from __future__ import annotations
 
 from collections import Counter
+from datetime import date
 import json
 from pathlib import Path
 import sys
