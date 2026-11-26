@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "baseline": "1.0.0",
+  "purpose": "Prevent removal or disconnection of negative end-to-end security regressions from the release-candidate CI matrix. Passing CI proves only these controlled fixtures on that commit; it is not a penetration test or hosted-installation acceptance.",
+  "suites": [
+    {
+      "id": "roster-authorization",
+      "command": "php tests/joomla-roster.php .runtime/joomla",
+      "test": "tests/joomla-roster.php",
+      "assertions": [
+        "anonymous roster denied",
+        "learner roster denied",
+        "delegated course manager denied global mail outbox"
+      ]
+    },
+    {
+      "id": "learning-identity-and-revocation",
+      "command": "python3 tests/learning-http.py .runtime/joomla",
+      "test": "tests/learning-http.py",
+      "assertions": [
+        "lesson.begin",
+        "group revocation",
+        "ownership"
+      ]
+    },
+    {
+      "id": "quiz-http-revocation",
+      "command": "python3 tests/quiz-attempts-http.py .runtime/joomla",
+      "test": "tests/quiz-attempts-http.py",
+      "assertions": [
+        "CSRF",
+        "revocation",
+        "ownership"
+      ]
+    },
+    {
+      "id": "video-csrf-and-ownership",
+      "command": "python3 tests/video-http.py .runtime/joomla",
+      "test": "tests/video-http.py",
+      "assertions": [
+        "Same-session POST without a Joomla token is rejected",
+        "expected=403",
+        "no media/provider secrets in rejected video response"
+      ]
+    },
+    {
+      "id": "private-materials-and-upload-controls",
+      "command": "python3 tests/materials-http.py .runtime/joomla",
+      "test": "tests/materials-http.py",
+      "assertions": [
+        "Managed private blob stays inaccessible to anonymous",
+        "CSRF must fail",
+        "material ACL passed",
+        "IDOR regression"
+      ]
+    }
+  ]
+}

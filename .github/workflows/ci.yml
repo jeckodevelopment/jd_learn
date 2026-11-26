@@ -112,6 +112,7 @@ jobs:
           python3 tests/secdev02-psr4-hygiene.py --base-ref origin/main
           python3 tests/sec-p2-dependency-gate.py
           python3 tests/sec-p2-source-gate.py
+          python3 tests/sec-p5-negative-e2e.py
           python3 tests/extension-manifest-metadata.py --zip "dist/pkg_jlms-$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')-dev.zip" --version "$(python3 -c 'import xml.etree.ElementTree as E; print(E.parse("packages/pkg_jlms.xml").findtext("version"))')" --date "$(git log -1 --format=%cs)"
           python3 tools/check.py
           python3 tests/asvs-reference.py
