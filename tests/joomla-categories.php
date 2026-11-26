@@ -224,6 +224,21 @@ $model = $factory->createModel("Categories", "Site", ["ignore_request" => true])
 $model->setState("filter.parent_id", $en);
 $model->setState("list.limit", 20);
 $model->setState("list.start", 0);
+// CORE-03: Joomla ListModel must never share an ACL-filtered query result
+// between identities using the same category state in one request lifecycle.
+$storeId = new \ReflectionMethod($model, "getStoreId");
+$guestCacheKey = $storeId->invoke($model, "category-list");
+$app->loadIdentity($actor);
+$editorCacheKey = $storeId->invoke($model, "category-list");
+catExpect(
+    $guestCacheKey !== $editorCacheKey,
+    "CORE-03: category ListModel cache keys isolate guest and editorial identities"
+);
+$app->loadIdentity($guest);
+catExpect(
+    $storeId->invoke($model, "category-list") === $guestCacheKey,
+    "CORE-03: category ListModel cache key remains stable for the same identity"
+);
 $ids = array_map(static fn($c) => (int) $c->id, $model->getItems());
 catExpect($ids === [$child] && (int) $model->getTotal() === 1, "hidden children do not affect list or count");
 catExpect(count($catalog->categoryPath($guest, "en-GB", $child)) === 2, "visible native ancestor path");
