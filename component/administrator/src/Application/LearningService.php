@@ -652,7 +652,7 @@ final class LearningService
         [$course, $version, $edition, $enrollment] = $this->authorisedEnrollment($actor, $language, $enrollmentId);
         $versionId = (int) $version->id;
         $q = $this->db->createQuery()->select(('m.id AS module_id, m.title AS module_title, l.id, l.title, '
-            . 'l.required, l.publish_up, l.publish_down, l.release_after_days, p.state'))
+            . 'l.kind, l.required, l.publish_up, l.publish_down, l.release_after_days, p.state'))
             ->from('#__jlms_modules AS m')->innerJoin(('#__jlms_lessons AS l ON l.module_id = m.id AND '
                 . 'l.course_version_id = m.course_version_id'))
             ->leftJoin('#__jlms_lesson_progress AS p ON p.lesson_id = l.id AND p.enrollment_id = :enrollment')
@@ -772,6 +772,23 @@ final class LearningService
                 'HTML'
             ))
             : '';
+        // Show only a configured internal alternative from the active version.
+        // A locked/scheduled target is not advertised, including its title.
+        $videoAlternative = null;
+        if (!$blocker && !$scheduleBlocked && $lesson->kind === 'video') {
+            $params = json_decode((string) ($lesson->params_json ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
+            $alternativeId = is_array($params) ? ($params['video_alternative_lesson_id'] ?? 0) : 0;
+            if (is_int($alternativeId) && $alternativeId > 0 && $alternativeId !== (int) $lesson->id) {
+                foreach ($outline as $entry) {
+                    if ((int) $entry->id === $alternativeId
+                        && in_array($entry->kind, ['text', 'document', 'audio'], true)
+                        && $entry->schedule_state === 'available' && !$entry->prerequisite_blocked) {
+                        $videoAlternative = ['id' => $alternativeId, 'title' => (string) $entry->title];
+                        break;
+                    }
+                }
+            }
+        }
         $publicTeachers = TeacherProfiles::current($this->db, $actor, $language, (int) $course->id);
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
             'teachers' => $publicTeachers,
@@ -792,7 +809,8 @@ final class LearningService
                 'body' => CoursePresentation::html(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)
                     ->clean((string) ($lesson->body ?? ''), 'HTML')),
                 'custom_fields' => $customFields],
-            'outline' => $outline, 'percent' => $percent, 'progress_applicable' => $progressApplicable,
+            'outline' => $outline, 'video_alternative' => $videoAlternative,
+            'percent' => $percent, 'progress_applicable' => $progressApplicable,
             'consultation_mode' => $rules['mode'] === 'consultation', 'completed_at' => $enrollment->completed_at];
     }
 
