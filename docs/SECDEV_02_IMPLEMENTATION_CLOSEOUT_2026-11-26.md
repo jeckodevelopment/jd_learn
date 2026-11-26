@@ -1,5 +1,17 @@
 # SECDEV-02 — riconciliazione per la chiusura implementativa (26 novembre 2026)
 
+## Aggiornamento implementativo — lotto #1059
+
+**Esito del riesame del perimetro di sviluppo 1.0.0:** i 17 criteri di lavoro tecnico descritti nel verbale del 25/11 hanno ora una verifica automatizzata di *signoff ingegneristico* che associa a ognuno un sorgente applicativo e almeno due scenari di test già integrati. Il gate `tests/secdev02-engineering-signoff.py --require-technical-signoff` verifica l'inventario esatto, l'esistenza delle regressioni e la loro presenza nella CI obbligatoria, oltre alla conservazione delle verifiche Joomla 6.2.1/compat6, API, PSR-12, ZIP e del registro canonico. Le negative fixture rifiutano prove mancanti e chiusure dichiarate in modo improprio.
+
+**Significato della chiusura tecnica:** 17/17 criteri CORE del lotto risultano **coperti dai contratti di test implementati per il perimetro finito di riferimento**, a condizione che la CI del commit sia effettivamente verde; non significa che ogni combinazione di ruoli, editor, lingue, provider e template possibile sia stata collaudata. Il codice attualmente disponibile non presenta ulteriori difetti confermati in questa ricognizione. Il rischio residuo delle permutazioni non automatizzate resta oggetto del testbook e di eventuali nuove issue, se appariranno difetti riproducibili.
+
+**I 6 criteri dipendenti da sito, hosting, policy e provider non bloccano la firma dell'implementazione:** CORE-02, CORE-08, CORE-12, CORE-18, CORE-22 e CORE-23. Non sono reimplementazioni di servizi Joomla da richiedere allo sviluppatore.
+
+**Questa firma non equivale alla chiusura globale SECDEV-02 né della release.** Restano `unverifiable` i 23 criteri CORE di accettazione estesa e i tre criteri generali SECDEV-02 (criterion_01–03); `criterion_04` rimane implementato. Lo stato CSV rimane **Parziale** e le percentuali di `docs/RELEASE_DASHBOARD.md` non aumentano senza nuove prove canoniche. Il comando rigoroso `tests/secdev02-closure-readiness.py --require-complete` continua correttamente a bloccare la chiusura completa. L'esito dei collaudi manuali è **NON ESEGUITO**.
+
+**Tracciabilità dei 17 scenari tecnici:** `tests/secdev02-engineering-signoff.py`; regressioni pregresse #1031–#1057, controllo aggiuntivo package #1058. Le tabelle sottostanti fotografano lo stato precedente alla firma: non sono una seconda lista di 17 nuove implementazioni.
+
 ## Decisione: chiusura complessiva NON ancora autorizzata
 
 La chiusura deve distinguere **sviluppi/test di codice**, **accettazione Joomla manuale** e **prove su servizi/hosting reali**. La presenza di una PR integrata o di una CI verde non può essere convertita in accettazione integrale dei criteri più estesi.
