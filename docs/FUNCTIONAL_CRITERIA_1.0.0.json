@@ -3465,15 +3465,18 @@
         "status": "unverifiable",
         "evidence": [
           "docs/LEARNING.md",
+          "tests/dashboard-http.py",
           "tests/joomla-learning.php",
           "tests/joomla-manual-enrollment.php"
         ],
         "review": {
-          "reason": "Le prove coprono accesso didattico e iscrizione in contesti specifici, ma non dimostrano la coerenza di ogni vista, transizione e ruolo senza livelli proprietari sull'intero perimetro.",
+          "reason": "Automated evidence covers key course-access and enrollment contexts, and now exercises same-session group revocation across personal history, resume, classroom, course detail and catalog HTTP routes. It still does not establish the full cross-product of every view, transition and role without proprietary levels.",
           "references": [
             "docs/LEARNING.md#L17-L23",
             "tests/joomla-learning.php#L206-L207",
-            "tests/joomla-manual-enrollment.php#L1-L20"
+            "tests/joomla-manual-enrollment.php#L1-L20",
+            "tests/dashboard-http.py",
+            "docs/CORE_03_CROSS_CONTEXT_REVOCATION_2026-11-26.md"
           ]
         }
       }
