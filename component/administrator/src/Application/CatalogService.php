@@ -420,6 +420,10 @@ final class CatalogService
         if (!$available) {
             throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
         }
+        // Published snapshots may predate the stricter authoring filter.
+        // Public previews must sanitize again immediately before template output.
+        $lesson->body = CoursePresentation::html(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)
+            ->clean((string) $lesson->body, 'HTML'));
         return $lesson;
     }
 }
