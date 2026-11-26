@@ -5,7 +5,7 @@ Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: 
 ## Sviluppo documentato (minimo confermato)
 
 **63.76%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
-Il registro contiene 501 criteri implementati con evidenza, 14 lacune accertate, 242 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
+Il registro contiene 502 criteri implementati con evidenza, 14 lacune accertate, 241 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
 
 La percentuale funzionale globale rigorosa resta **non determinabile** finché i criteri non verificabili non vengono risolti.
 
