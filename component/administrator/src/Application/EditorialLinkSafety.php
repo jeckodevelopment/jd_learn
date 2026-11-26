@@ -39,15 +39,23 @@ final class EditorialLinkSafety
     public static function secure(string $filteredHtml): string
     {
         return preg_replace_callback('/<a\b[^>]*>/i', static function (array $match): string {
-            // Never trust editor-provided link relationship attributes.
-            $tag = preg_replace('/\s+rel\s*=\s*(["\']).*?\1/is', '', $match[0]) ?? '<a>';
-            if (preg_match('/\bhref\s*=\s*(["\'])(.*?)\1/is', $tag, $href)) {
-                $url = html_entity_decode($href[2], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            // Treat both quoted and unquoted attributes as untrusted: a site
+            // editor or plugin may supply HTML that Joomla has not normalised.
+            $attributeValue = '(?:"[^"]*"|\'[^\']*\'|[^\s>]+)';
+            $tag = preg_replace('/\s+rel\s*=\s*' . $attributeValue . '/is', '', $match[0]) ?? '<a>';
+            if (preg_match('/\bhref\s*=\s*(?:(["\'])(.*?)\1|([^\s>]+))/is', $tag, $href)) {
+                $url = html_entity_decode(
+                    $href[1] !== '' ? $href[2] : $href[3],
+                    ENT_QUOTES | ENT_HTML5,
+                    'UTF-8'
+                );
                 $parts = parse_url($url);
-                $sensitive = $parts === false || isset($parts['user']) || isset($parts['pass']);
+                $scheme = strtolower((string) ($parts['scheme'] ?? ''));
+                $sensitive = $parts === false || isset($parts['user']) || isset($parts['pass'])
+                    || ($scheme !== '' && !in_array($scheme, ['http', 'https'], true));
                 $sensitive = $sensitive || self::containsSensitiveParameters($url);
                 if ($sensitive) {
-                    $tag = preg_replace('/\s+href\s*=\s*(["\']).*?\1/is', '', $tag) ?? '<a>';
+                    $tag = preg_replace('/\s+href\s*=\s*' . $attributeValue . '/is', '', $tag) ?? '<a>';
                 }
             }
             return preg_replace('/^<a(?=[\s>])/i', '<a rel="noreferrer noopener"', $tag) ?? '<a>';

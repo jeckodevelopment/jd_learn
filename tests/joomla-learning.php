@@ -371,6 +371,28 @@ learningExpect(
     !str_contains($view["lesson"]->body, "<script") && !str_contains($view["lesson"]->body, "onerror"),
     "delivery strips active markup",
 );
+// Regression for an older stored snapshot: classroom reads must not depend
+// on the sanitation policy used by the original privileged author.
+$originalBody = (string) $db->setQuery(
+    'SELECT body FROM #__jlms_lessons WHERE id=' . (int) $lessons[0]
+)->loadResult();
+fixtureUpdate('jlms_lessons', (object) [
+    'id' => $lessons[0],
+    'body' => '<p>LEGACY_SAFE_LESSON</p><iframe src="https://example.invalid/embed"></iframe>'
+        . '<script>LEGACY_LES_SCRIPT</script>'
+        . '<a href="https://example.invalid/?accessToken=TEST_CREDENTIAL">Private URL</a>'
+        . '<a href="https://example.invalid/public">Safe URL</a>',
+]);
+$legacyView = $learning->classroom($student, 'en-GB', $enrollment, $lessons[0]);
+learningExpect(
+    str_contains($legacyView['lesson']->body, 'LEGACY_SAFE_LESSON')
+    && str_contains($legacyView['lesson']->body, 'Safe URL')
+    && !preg_match('/<iframe|<script|TEST_CREDENTIAL/i', $legacyView['lesson']->body)
+    && substr_count($legacyView['lesson']->body, 'href=') <= 1,
+    'LES-02 legacy lesson HTML and credentials are sanitized again at protected delivery'
+);
+fixtureUpdate('jlms_lessons', (object) ['id' => $lessons[0], 'body' => $originalBody]);
+
 learningDenied(fn() => $learning->classroom($other, "en-GB", $enrollment), 404, "foreign enrollment hidden");
 learningDenied(
     fn() => $learning->classroom(new \Joomla\CMS\User\User(), "en-GB", $enrollment),

@@ -663,10 +663,14 @@ final class CurriculumService
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $transcript = in_array($kind, ['audio', 'video'], true)
-            ? LessonTranscript::sanitizeInput($input[$kind . '_transcript'] ?? '', $this->filterHtml)
+            ? CoursePresentation::html(LessonTranscript::sanitizeInput(
+                $input[$kind . '_transcript'] ?? '',
+                $this->filterHtml
+            ))
             : '';
         $fields = ['module_id' => $moduleId, 'title' => $title, 'kind' => $kind,
-            'body' => ($this->filterHtml)($input['body'] ?? ''), 'required' => (int) $required,
+            'body' => CoursePresentation::html(($this->filterHtml)($input['body'] ?? '')),
+            'required' => (int) $required,
             'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
             'params_json' => in_array($kind, ['audio', 'video'], true) ? LessonTranscript::encode(

@@ -3163,3 +3163,16 @@ Per l'accettazione preparare due editor con privilegi diversi, due studenti in s
 I sei ambiti **esterni** rimangono separati: CORE-02 (MFA/provider account), CORE-08 (policy di retention e Privacy), CORE-12 (provider media e proxy), CORE-18 (SMTP e mail template reali), CORE-22 (upgrade e restore su hosting target), CORE-23 (plugin/consumer terzi). Un fallimento di collaudo va aperto come issue riproducibile e corretto a livello di implementazione, senza travasare una verifica ambientale su una funzione Joomla duplicata.
 
 Non dichiarare concluso SECDEV-02 nel registro canonico fino ai collaudi richiesti e alla verifica completa delle evidenze.
+
+
+## LES-01–04 — collaudo post chiusura implementativa (26/11/2026)
+
+**Stato: NON ESEGUITO.** Il lotto di sicurezza LES-02 copre con CI la sanificazione di lezioni, trascrizioni, anteprime pubbliche storiche e href esterni; non sostituisce il collaudo effettivo dei plugin Joomla installati.
+
+1. Con un **Super User** e un **Editor**, incollare in un corso, una scheda percorso, una biografia docente, il corpo di una lezione e una trascrizione audio/video: un paragrafo con grassetto, un iframe, uno script, un'immagine di tracciamento con evento \`onerror\` e un link legittimo. Salvare e ricaricare. Atteso: paragrafo e link sicuri disponibili, script/iframe/eventi/immagini esterne attive assenti dalla resa pubblica e dall'aula.
+2. Tentare link con \`?accessToken=...\`, \`#clientSecret=...\`, \`https://utente:password@host\`, \`javascript:\`, e attributi \`href\`/\`rel\` senza virgolette; aprire presentazione corso, percorso, docente, aula e anteprima. Atteso: destinazioni pericolose rimosse, senza perdere il testo del link; \`rel=noreferrer noopener\` sui link pubblici consentiti.
+3. Preparare una **lezione pubblicata prima dell'aggiornamento** con body HTML precedentemente memorizzato; verificare che aula e anteprima pubblica autorizzata filtrino il contenuto anche in lettura. Non pubblicare mai veri token nel test.
+4. Usare i **quattro provider** video supportati e i materiali HTML5 protetti; verificare le sorgenti autorizzate senza regressioni di playback, range/download e permessi.
+5. Su **hosting e proxy reali**, tentare GET/HEAD/Range diretto ai blob managed, accesso attraverso alias e CDN, e misurare limiti di storage/streaming e carichi concorrenti: riguarda LES-03/public_storage e LES-04/capacity_policy, ancora non verificati a livello ambientale.
+
+Per ogni caso annotare configurazione Joomla/PHP, ruolo, URL della pagina (senza segreti), esito e bug riproducibile. La sola CI non aggiorna le accettazioni manuali.

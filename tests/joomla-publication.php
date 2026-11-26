@@ -309,6 +309,28 @@ pubExpect((int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_enrollments WHERE co
     ->loadResult() === $previewCounts
     && (int) $db->setQuery('SELECT COUNT(*) FROM #__jlms_attempts')
         ->loadResult() === $previewAttemptCounts, 'public preview creates no enrolment or quiz attempt');
+// A published historical version may contain active markup authored before
+// the stricter LES-02 editor contract. Public previews must sanitize on read.
+$originalPreviewBody = (string) $db->setQuery(
+    'SELECT body FROM #__jlms_lessons WHERE id=' . (int) $lesson
+)->loadResult();
+$writeFixture('#__jlms_lessons', (object) [
+    'id' => $lesson,
+    'body' => '<p>SAFE_PREVIEW_LEGACY</p><script>PRIVATE_LES_SCRIPT</script>'
+        . '<iframe src="https://example.invalid/embed"></iframe>'
+        . '<a href="https://example.invalid/?accessToken=TEST_CREDENTIAL">Unsafe link</a>'
+        . '<a href="https://example.invalid/help">Safe link</a>',
+], 'id');
+$legacyPublicPreview = $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson);
+pubExpect(
+    str_contains($legacyPublicPreview->body, 'SAFE_PREVIEW_LEGACY')
+    && str_contains($legacyPublicPreview->body, 'Safe link')
+    && !preg_match('/<script|<iframe|TEST_CREDENTIAL/i', $legacyPublicPreview->body)
+    && substr_count($legacyPublicPreview->body, 'href=') <= 1,
+    'LES-02 public lesson preview strips historical active embeds and credential links'
+);
+$writeFixture('#__jlms_lessons', (object) ['id' => $lesson, 'body' => $originalPreviewBody], 'id');
+
 $missingPreviewRejected = false;
 try {
     $catalog->publicLessonPreview($guest, 'en-GB', $course, $lesson + 99999);
