@@ -128,7 +128,7 @@ jobs:
             --version "$VERSION" --commit "$GITHUB_SHA" \
             --package "dist/pkg_jlms-$VERSION.zip" --feed dist/jdlearn.xml \
             --checksums dist/RELEASE_SHA256SUMS.txt \
-            --notes docs/RELEASE_NOTES_CANDIDATE_1.0.0.md \
+            --notes docs/RELEASE_NOTES_CANDIDATE_1.0.0.md --changelog CHANGELOG.md \
             --release-notes "$RELEASE_NOTES" \
             --output dist/RELEASE_CANDIDATE_EVIDENCE.json --verify
           python3 - <<'PY'
