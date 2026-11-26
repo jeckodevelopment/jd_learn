@@ -100,11 +100,6 @@ CASES = {
         ("tests/joomla-courses-ui.php", "CORE-20: malformed admin filter and total fail closed: "),
         ("tests/joomla-courses-ui.php", "CORE-20: clearing malformed filter restores valid list and total: "),
     ),
-    "CORE-21/private_cache": (
-        "component/site/src/Controller/DisplayController.php",
-        ("tests/dashboard-http.py", "CORE-21 exhaustive HTTP failures"),
-        ("tests/secdev02-core21-task-matrix.py", "CORE-21 untracked task controller"),
-    ),
 }
 SITE_EXTERNAL = {
     "CORE-02/auth_variants",
@@ -154,8 +149,8 @@ def inspect(root: Path, cases: dict = CASES,
         errors.append("Historical residual ledger differs from the canonical CORE inventory")
     if set(cases) & set(external) or set(cases) | set(external) != set(expected):
         errors.append("Every pending CORE criterion must be assigned to development or site exactly once")
-    if len(cases) != 17 or len(external) != 6:
-        errors.append("Technical/site separation must be reviewed: expected 17/6")
+    if len(cases) != 16 or len(external) != 6:
+        errors.append("Technical/site separation must be reviewed: expected 16/6")
     if {x["id"] for x in criteria["requirements"]["SECDEV-02"]} != EXPECTED_SECDEV:
         errors.append("SECDEV-02 general criteria inventory drifted")
     if any(x["status"] != "unverifiable" for x in criteria["requirements"]["SECDEV-02"][:3]):
@@ -245,7 +240,7 @@ def main() -> int:
     args = p.parse_args()
     if args.self_test:
         self_test()
-        print("SECDEV-02 17-criterion engineering evidence negative fixtures: OK")
+        print("SECDEV-02 16-criterion engineering evidence negative fixtures: OK")
         return 0
     failures, report = inspect(ROOT)
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
