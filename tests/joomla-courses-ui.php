@@ -346,6 +346,50 @@ $originalRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHE
     ->loadResult();
 $originalGates = $db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='
     . (int)$ids['Alpha'])->loadAssoc();
+// CORE-16: a second editor's native checkout blocks publication-state
+// changes without modifying editorial revisions or assigned teaching snapshots.
+$core16CourseBefore = $db->setQuery(
+    'SELECT state,revision,current_version_id FROM #__jlms_courses WHERE id=' . (int) $ids['Alpha']
+)->loadAssoc();
+$core16VersionBefore = $db->setQuery(
+    'SELECT status,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . (int) $originalVersion
+)->loadAssoc();
+$core16HistoryBefore = (int) $db->setQuery(
+    "SELECT COUNT(*) FROM #__history WHERE item_id='com_jlms.course." . (int) $ids['Alpha'] . "'"
+)->loadResult();
+$db->setQuery(
+    'UPDATE #__jlms_courses SET checked_out=' . (int) $editor
+    . ' WHERE id=' . (int) $ids['Alpha']
+)->execute();
+try {
+    listExpect(
+        !$courseModel->changeStates([$ids['Alpha']], -2),
+        'CORE-16: concurrent checkout prevents course lifecycle mutation'
+    );
+    listExpect(
+        $db->setQuery(
+            'SELECT state,revision,current_version_id FROM #__jlms_courses WHERE id=' . (int) $ids['Alpha']
+        )->loadAssoc() === $core16CourseBefore,
+        'CORE-16: denied checkout preserves course state, revision and assigned version'
+    );
+    listExpect(
+        $db->setQuery(
+            'SELECT status,structure_hash,published_at FROM #__jlms_course_versions WHERE id='
+            . (int) $originalVersion
+        )->loadAssoc() === $core16VersionBefore,
+        'CORE-16: denied lifecycle edit preserves immutable teaching snapshot'
+    );
+    listExpect(
+        (int) $db->setQuery(
+            "SELECT COUNT(*) FROM #__history WHERE item_id='com_jlms.course." . (int) $ids['Alpha'] . "'"
+        )->loadResult() === $core16HistoryBefore,
+        'CORE-16: denied checkout does not append phantom Joomla content history'
+    );
+} finally {
+    $db->setQuery(
+        'UPDATE #__jlms_courses SET checked_out=NULL WHERE id=' . (int) $ids['Alpha']
+    )->execute();
+}
 // Deliberately pre-arm the course to ensure trash closes both gates atomically.
 $db->setQuery('UPDATE #__jlms_courses SET admissions_open=1, delivery_enabled=1 WHERE id=' . (int)$ids['Alpha'])
     ->execute();
