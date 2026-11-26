@@ -154,7 +154,7 @@ foreach (['en-GB' => 'course-locale-en', 'it-IT' => 'course-locale-it'] as $loca
 }
 $publicCourse = $model->getItem($course);
 foreach (['en-GB' => 'course-locale-en', 'it-IT' => 'course-locale-it'] as $locale => $expected) {
-    $positions = \\Jlms\\Component\\Jlms\\Site\\Helper\\CourseFields::prepare($publicCourse, $locale);
+    $positions = \Jlms\Component\Jlms\Site\Helper\CourseFields::prepare($publicCourse, $locale);
     $names = [];
     foreach ($positions as $fields) {
         foreach ($fields as $fieldItem) {
@@ -172,7 +172,7 @@ foreach (['en-GB' => 'course-locale-en', 'it-IT' => 'course-locale-it'] as $loca
 $unsafeInputSeen = false;
 $app->getDispatcher()->addListener(
     'onContentPrepare',
-    static function (\\Joomla\\CMS\\Event\\Content\\ContentPrepareEvent $event) use (&$unsafeInputSeen): void {
+    static function (\Joomla\CMS\Event\Content\ContentPrepareEvent $event) use (&$unsafeInputSeen): void {
         if ($event->getContext() !== 'com_jlms.course') {
             return;
         }
@@ -185,7 +185,7 @@ $app->getDispatcher()->addListener(
         $item->text .= '<a href="javascript:alert(1)" onclick="alert(2)">unsafe</a>';
     }
 );
-$guardedHtml = \\Jlms\\Component\\Jlms\\Site\\Helper\\PublicContentPreparation::html(
+$guardedHtml = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
     'com_jlms.course',
     $course,
     '<p onclick="alert(1)">CI_SECOND_CONTENT_MARKER<script>alert(2)</script></p>'
@@ -193,18 +193,18 @@ $guardedHtml = \\Jlms\\Component\\Jlms\\Site\\Helper\\PublicContentPreparation::
 fieldsExpect(
     !$unsafeInputSeen
     && str_contains($guardedHtml, 'CI_SECOND_CONTENT_MARKER')
-    && !preg_match('~<script|onclick\\s*=|javascript:~i', $guardedHtml),
+    && !preg_match('~<script|onclick\s*=|javascript:~i', $guardedHtml),
     'CORE-11: pre-event input and post-event HTML enforce the public allowlist'
 );
 $invalidSource = false;
 try {
-    \\Jlms\\Component\\Jlms\\Site\\Helper\\PublicContentPreparation::html(
+    \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
         'com_jlms.course',
         $course,
         '<p>Safe</p>',
         (object) ['id' => $course + 1, 'catid' => $catid]
     );
-} catch (\\InvalidArgumentException) {
+} catch (\InvalidArgumentException) {
     $invalidSource = true;
 }
 fieldsExpect($invalidSource, 'CORE-11: content plugin preparation rejects mismatched source identity');
