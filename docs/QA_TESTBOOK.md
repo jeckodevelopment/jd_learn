@@ -1,3 +1,9 @@
+## SECDEV-02 / CORE-13 e CORE-15 — Router editoriali e transizioni massime (26/11/2026)
+
+**Evidenza automatica candidata:** `tests/joomla-pathways.php` esegue direttamente il decoder nativo del router per sette viste editoriali (corso, categoria, percorso, docente, modifica docente, aula, quiz), verificando ID semplici, ID con alias, alias storici, zeri iniziali e rifiuto di segmenti non validi, con query string o troppo grandi. La stessa fixture verifica sei batch non validi di transizioni sui percorsi (vuoto, duplicato, ID stringa/zero, oltre 100 record, stato non supportato), preservando stati, revisioni e ordine delle associazioni ai corsi. Si aggiunge ai test già presenti su permessi per-record e checkout concorrente. L'esito resta da attestare sulla CI finale.
+
+**Collaudo manuale Joomla: In attesa.** Eseguire URL diretti e breadcrumb di corso, docente e percorso con SEF attivo/disattivo, lingua IT/EN, alias modificati e menu associati. Verificare separatamente transizioni singole e massive su percorsi, lezioni e docenti con due editor e checkout/ACL distinti; un solo record negato non deve causare aggiornamenti parziali. Non confondere evidenza CI e accettazione del sito.
+
 ## SECDEV-02 / CORE-10 e CORE-11 — Campi multilingua e content plugin (26/11/2026)
 
 **Prova automatica candidata:** `tests/joomla-course-fields.php` crea due campi `com_jlms.course` nei cataloghi di lingua `en-GB` e `it-IT` attraverso il modello nativo Joomla, richiede la preparazione dei valori per entrambe le lingue e verifica che non compaiano campi della lingua opposta. Sul content plugin verifica la sanitizzazione prima della ricezione dell'evento e dopo la modifica, impedendo script, handler inline e URL attivi. Un oggetto sorgente con ID diverso da quello autorizzato deve essere respinto prima del dispatch. Restano le prove esistenti su campi docente e contenuti pubblici; la CI deve attestare il risultato sull'HEAD.
