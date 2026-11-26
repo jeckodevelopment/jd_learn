@@ -805,14 +805,15 @@ $protectedTeacherBefore = $db->setQuery(
     'SELECT revision,user_id,catid,state,access,language,params_json FROM #__jlms_teachers WHERE id='
     . $taggedId
 )->loadAssoc();
-foreach ([
+$forgedTeacherFields = [
     ['user_id' => (int) $learner->id],
     ['catid' => $teacherCategory],
     ['state' => 1],
     ['access' => 2],
     ['language' => 'it-IT'],
     ['tags' => []],
-] as $forgedFields) {
+];
+foreach ($forgedTeacherFields as $forgedFields) {
     teacherExpect(
         !$teacherModel->save(array_replace($taggedTeacher, [
             'id' => $taggedId, 'revision' => $taggedBefore,
