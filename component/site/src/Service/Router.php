@@ -149,7 +149,7 @@ final class Router extends RouterView
 
     /**
      * Decode Joomla ID, ID:alias and legacy ID-alias segments without
-     * overflow, empty aliases or injected path/query suffixes.
+     * overflow, empty aliases, repeated separators or injected path/query suffixes.
      */
     private function segmentId($segment): int
     {
@@ -158,7 +158,7 @@ final class Router extends RouterView
         }
         // Leading-zero legacy IDs are normalized; zero and values larger
         // than PHP_INT_MAX must never resolve to another resource.
-        if (preg_match('/\A([0-9]+)(?:(?::|-)([^\x00-\x1F\x7F\/\?#]+))?\z/uD', (string) $segment, $matches) !== 1) {
+        if (preg_match('/\A([0-9]+)(?:(?::|-)([^\x00-\x1F\x7F\/\?#:]+))?\z/uD', (string) $segment, $matches) !== 1) {
             return 0;
         }
         $digits = ltrim($matches[1], '0');
