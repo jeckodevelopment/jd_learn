@@ -780,9 +780,11 @@ final class LearningService
             $alternativeId = is_array($params) ? ($params['video_alternative_lesson_id'] ?? 0) : 0;
             if (is_int($alternativeId) && $alternativeId > 0 && $alternativeId !== (int) $lesson->id) {
                 foreach ($outline as $entry) {
-                    if ((int) $entry->id === $alternativeId
+                    if (
+                        (int) $entry->id === $alternativeId
                         && in_array($entry->kind, ['text', 'document', 'audio'], true)
-                        && $entry->schedule_state === 'available' && !$entry->prerequisite_blocked) {
+                        && $entry->schedule_state === 'available' && !$entry->prerequisite_blocked
+                    ) {
                         $videoAlternative = ['id' => $alternativeId, 'title' => (string) $entry->title];
                         break;
                     }
