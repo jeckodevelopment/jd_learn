@@ -1968,7 +1968,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/doc10-release-notes.py#Open Badges](../tests/doc10-release-notes.py)
 - `DOC-10/criterion_03` — Riferimenti al pacchetto installabile e versione coerenti. La build candidata verifica i manifest interni e l'uguaglianza versione package/componente; il record collega versione, nome ZIP, commit sorgente, feed e checksum dello ZIP Joomla interno. I test negativi respingono versioni/asset discordanti.
   - [tests/doc10-release-notes.py#ET.parse(root / "component/jlms.xml")](../tests/doc10-release-notes.py)
-  - [tests/release-workflow.py#manifest version differs](../tests/release-workflow.py)
+  - [tests/release-workflow.py#m.findtext('version')=='1.0.0'](../tests/release-workflow.py)
   - [tools/release_candidate_evidence.py#package_filename](../tools/release_candidate_evidence.py)
 - `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La validazione lega hash delle note, changelog, feed e ZIP; ricontrolla il record nel job di pubblicazione e interrompe in caso di differenza. La preparazione resta non pubblicante e il record non promuove l'accettazione manuale.
   - [tools/release_candidate_evidence.py#draft_release_notes_sha256](../tools/release_candidate_evidence.py)
