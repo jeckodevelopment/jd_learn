@@ -567,27 +567,32 @@
       "service": "Asset e cache",
       "decision": "native_plus_domain",
       "rationale": "WAM e sessione Joomla; le cache personali devono essere private/no-store",
-      "remaining_verification": "Cache cross-account su tutti gli endpoint",
+      "remaining_verification": "Collaudo su hosting reale, reverse proxy/CDN e configurazione cache del provider",
       "implementation_evidence": [
+        ".github/workflows/ci.yml",
         "component/media/joomla.asset.json",
-        "tests/dashboard-http.py"
+        "component/site/src/Controller/DisplayController.php",
+        "docs/CORE_21_FRONTEND_CACHE_REJECTION_2026-11-26.md",
+        "tests/dashboard-http.py",
+        "tests/secdev02-core21-private-dispatch.py",
+        "tests/secdev02-core21-task-matrix.py"
       ],
       "automated_test_evidence": [
-        "tests/dashboard-http.py"
+        "tests/dashboard-http.py",
+        "tests/secdev02-core21-private-dispatch.py",
+        "tests/secdev02-core21-task-matrix.py"
       ],
       "reconciliation": {
-        "reviewed_on": "2026-11-25",
-        "pending_criteria": [
-          "private_cache"
-        ],
+        "reviewed_on": "2026-11-26",
+        "pending_criteria": [],
         "existing_automated_evidence": [
           "tests/secdev02-core21-private-dispatch.py",
           "tests/dashboard-http.py",
           "tests/secdev02-core21-task-matrix.py"
         ],
-        "acceptance_mode": "ci_plus_site",
-        "assessment": "partial_test_coverage",
-        "limitation": "Cache cross-account su tutti gli endpoint"
+        "acceptance_mode": "code_complete_site_pending",
+        "assessment": "code_criteria_implemented",
+        "limitation": "Collaudo su hosting reale, reverse proxy/CDN e configurazione cache del provider"
       }
     },
     {
