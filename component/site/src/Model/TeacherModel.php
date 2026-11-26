@@ -19,6 +19,16 @@ final class TeacherModel extends ListModel
         $this->setState('list.limit', max(1, min(100, (int) $this->state->get('list.limit', 20))));
     }
 
+    /** Keep course-list caches separate for each teacher, identity and language. */
+    protected function getStoreId($id = '')
+    {
+        $app = Factory::getApplication();
+        $teacherId = $app->getInput()->getInt('id', 0);
+        return parent::getStoreId($id . ':teacher:' . $teacherId
+            . ':actor:' . (int) $app->getIdentity()->id
+            . ':locale:' . $app->getLanguage()->getTag());
+    }
+
     public function getProfile(): object
     {
         $app = Factory::getApplication();
