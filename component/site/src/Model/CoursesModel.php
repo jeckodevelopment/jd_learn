@@ -15,6 +15,8 @@ class CoursesModel extends ListModel
     /** @var array<int, object>|null */
     private ?array $visibleCatalogCategories = null;
 
+    private ?string $visibleCatalogCategoriesKey = null;
+
     protected function populateState($ordering = 'c.id', $direction = 'DESC')
     {
         parent::populateState($ordering, $direction);
@@ -141,10 +143,12 @@ class CoursesModel extends ListModel
         return $query->order($order === 'title' ? 'c.title ASC, c.id ASC' : 'c.id DESC');
     }
 
-    /** Prevent reuse of personalised catalogue results across Joomla identities. */
+    /** Never reuse language- or identity-sensitive catalogue lists in a different context. */
     protected function getStoreId($id = '')
     {
-        return parent::getStoreId($id . ':actor:' . (int) Factory::getApplication()->getIdentity()->id);
+        $app = Factory::getApplication();
+        return parent::getStoreId($id . ':actor:' . (int) $app->getIdentity()->id
+            . ':locale:' . $app->getLanguage()->getTag());
     }
 
     /** Visible frozen teacher names for the currently paginated catalogue courses only. */
@@ -255,14 +259,20 @@ class CoursesModel extends ListModel
     /** Categories containing at least one course visible to this user. */
     public function getCategories(): array
     {
-        if ($this->visibleCatalogCategories === null) {
-            $app = Factory::getApplication();
+        $app = Factory::getApplication();
+        $actorId = (int) $app->getIdentity()->id;
+        $language = $app->getLanguage()->getTag();
+        $categoryId = (int) $this->getState('filter.category_id');
+        $cacheKey = $actorId . ':' . $language . ':' . $categoryId;
+
+        if ($this->visibleCatalogCategories === null || $this->visibleCatalogCategoriesKey !== $cacheKey) {
             $this->visibleCatalogCategories = $app->bootComponent('com_jlms')
                 ->getCatalogService()->publicCourseCategories(
                     $app->getIdentity(),
-                    $app->getLanguage()->getTag(),
-                    (int) $this->getState('filter.category_id')
+                    $language,
+                    $categoryId
                 );
+            $this->visibleCatalogCategoriesKey = $cacheKey;
         }
         return $this->visibleCatalogCategories;
     }

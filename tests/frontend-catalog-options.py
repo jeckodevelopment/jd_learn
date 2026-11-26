@@ -137,6 +137,13 @@ assert "if (!isset($states[$id]))" in dash
 
 assert "getStoreId($id = '')" in model
 assert "getIdentity()->id" in model
+# CORE-07: both Joomla's ListModel cache and the memoized category-filter
+# choices must be keyed to the current identity and language.
+assert "':locale:' . $app->getLanguage()->getTag()" in model
+assert "private ?string $visibleCatalogCategoriesKey = null;" in model
+assert "$cacheKey = $actorId . ':' . $language . ':' . $categoryId;" in model
+assert "$this->visibleCatalogCategoriesKey !== $cacheKey" in model
+assert "$this->visibleCatalogCategoriesKey = $cacheKey;" in model
 dash = (root / "component/administrator/src/Application/DashboardService.php").read_text()
 assert "->clear('order')->order('e.id DESC')" in dash
 

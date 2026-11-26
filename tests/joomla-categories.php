@@ -220,6 +220,36 @@ catExpect(
     "root, section, language and ancestor access denied",
 );
 $app->loadIdentity($guest);
+// CORE-07: both the Joomla ListModel result cache and the catalog's
+// category-choice memoization must follow the active identity.
+$catalogModel = $factory->createModel("Courses", "Site", ["ignore_request" => true]);
+$catalogStoreId = new \ReflectionMethod($catalogModel, "getStoreId");
+$guestCatalogKey = $catalogStoreId->invoke($catalogModel, "course-list");
+$catalogModel->getCategories();
+$categoryCacheKey = new \ReflectionProperty($catalogModel, "visibleCatalogCategoriesKey");
+$guestCategoriesKey = $categoryCacheKey->getValue($catalogModel);
+$app->loadIdentity($actor);
+$editorCatalogKey = $catalogStoreId->invoke($catalogModel, "course-list");
+$catalogModel->getCategories();
+$editorCategoriesKey = $categoryCacheKey->getValue($catalogModel);
+catExpect(
+    $guestCatalogKey !== $editorCatalogKey,
+    "CORE-07: catalog ListModel cache is isolated by Joomla identity"
+);
+catExpect(
+    $guestCategoriesKey !== $editorCategoriesKey,
+    "CORE-07: catalog category choices invalidate on Joomla identity change"
+);
+$app->loadIdentity($guest);
+catExpect(
+    $catalogStoreId->invoke($catalogModel, "course-list") === $guestCatalogKey,
+    "CORE-07: catalog ListModel cache key is stable after returning to guest"
+);
+$catalogModel->getCategories();
+catExpect(
+    $categoryCacheKey->getValue($catalogModel) === $guestCategoriesKey,
+    "CORE-07: category-choice cache context is restored for guest"
+);
 $model = $factory->createModel("Categories", "Site", ["ignore_request" => true]);
 $model->setState("filter.parent_id", $en);
 $model->setState("list.limit", 20);
