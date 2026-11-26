@@ -256,7 +256,7 @@ final class MailQueue
                 if ((string) $row->template_id === 'com_jlms.course.published' && !$this->announcementEligible($row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
                         ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
-                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                        ->where('id = :id')->where("state = 'sending'")->bind(':id', $id, ParameterType::INTEGER);
                     $this->db->setQuery($skip)->execute();
                     $skipped++;
                     continue;
@@ -268,7 +268,7 @@ final class MailQueue
                     // The assignment or the verified account may have changed since queueing.
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
                         ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}'")
-                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                        ->where('id = :id')->where("state = 'sending'")->bind(':id', $id, ParameterType::INTEGER);
                     $this->db->setQuery($skip)->execute();
                     $skipped++;
                     continue;
@@ -276,7 +276,7 @@ final class MailQueue
                 if ((string) $row->template_id === 'com_jlms.course.expiring' && !$this->expiryEligible($row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
                         ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}' ")
-                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                        ->where('id = :id')->where("state = 'sending'")->bind(':id', $id, ParameterType::INTEGER);
                     $this->db->setQuery($skip)->execute();
                     $skipped++;
                     continue;
@@ -284,7 +284,7 @@ final class MailQueue
                 if ((string) $row->template_id === 'com_jlms.lesson.available' && !$this->lessonReleaseEligible($row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
                         ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}'")
-                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                        ->where('id = :id')->where("state = 'sending'")->bind(':id', $id, ParameterType::INTEGER);
                     $this->db->setQuery($skip)->execute();
                     ++$skipped;
                     continue;
@@ -292,7 +292,7 @@ final class MailQueue
                 if ((string) $row->template_id === 'com_jlms.course.updated' && !$this->courseUpdateEligible($row)) {
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')->set("state = 'skipped'")
                         ->set("recipient_email = ''")->set("recipient_name = ''")->set("template_data = '{}'")
-                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                        ->where('id = :id')->where("state = 'sending'")->bind(':id', $id, ParameterType::INTEGER);
                     $this->db->setQuery($skip)->execute();
                     ++$skipped;
                     continue;
@@ -304,7 +304,7 @@ final class MailQueue
                     $skip = $this->db->createQuery()->update('#__jlms_mail_queue')
                         ->set("state = 'skipped'")->set("recipient_email = ''")
                         ->set("recipient_name = ''")->set("template_data = '{}'")
-                        ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
+                        ->where('id = :id')->where("state = 'sending'")->bind(':id', $id, ParameterType::INTEGER);
                     $this->db->setQuery($skip)->execute();
                     ++$skipped;
                     continue;
