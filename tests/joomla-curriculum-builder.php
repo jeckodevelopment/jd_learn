@@ -251,8 +251,10 @@ builderExpect(
     && $copyVideoAlternativeId !== $l2,
     'SCR-08: copying a module remaps the internal alternative to the duplicated lesson'
 );
-builderExpect($learningBefore === $learning(),
-    'SCR-13: duplicating authoring alternatives does not mutate any learner progress');
+builderExpect(
+    $learningBefore === $learning(),
+    'SCR-13: duplicating authoring alternatives does not mutate any learner progress'
+);
 
 file_put_contents($file, json_encode(['course' => $course,'version' => $version,'m1' => $m1,'m2' => $m2,'l1'
     => $l1,'l2' => $l2,'source' => $source,'source_version' => (int)$published->id,'snapshot'
