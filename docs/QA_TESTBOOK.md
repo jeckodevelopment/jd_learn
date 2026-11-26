@@ -1,3 +1,9 @@
+## SECDEV-02 / CORE-06 — Chiavi lingua concatenate staticamente (26/11/2026)
+
+**Verifica automatica candidata:** `tests/secdev02-core06-runtime-keys.py` riconosce anche le chiavi Joomla `Text::_`/`sprintf`/`plural`/`script` costruite esclusivamente concatenando frammenti PHP letterali, e le verifica contro i cataloghi IT/EN del client corretto. Fixture negative provano una chiave composta assente e una concatenazione dipendente da variabile che non deve essere presentata come copertura statica. Gli usi realmente dinamici restano esplicitamente fuori dalla certificazione. L'esito va acquisito sul commit finale della CI.
+
+**Collaudo manuale Joomla: In attesa.** Verificare IT/EN con override di lingua, messaggi di errore e notifiche nei ruoli guest/docente/amministratore; controllare anche modelli email personalizzati e provider reali. Non promuovere il criterio per la sola copertura statica.
+
 ## SECDEV-02 / CORE-04 — Tentativi di modifica forgiata del docente (26/11/2026)
 
 **Verifica automatica candidata:** `tests/joomla-teachers.php` prova separatamente la modifica illecita di account collegato, categoria, pubblicazione, livello d'accesso, lingua e tag con un utente autenticato privo dei privilegi editoriali. Per ciascun tentativo l'intero stato persistito del docente e la mappa nativa Joomla dei tag devono restare identici; il modello viene poi riportato all'utente editor autorizzato. Questo amplia la regressione sull'identità corrente senza attestare l'accettazione di CORE-04.
