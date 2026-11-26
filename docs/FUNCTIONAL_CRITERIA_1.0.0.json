@@ -3472,7 +3472,6 @@
         "review": {
           "reason": "Automated evidence covers key course-access and enrollment contexts, and now exercises same-session group revocation across personal history, resume, classroom, course detail and catalog HTTP routes. It still does not establish the full cross-product of every view, transition and role without proprietary levels.",
           "references": [
-            "docs/CORE_03_CROSS_CONTEXT_REVOCATION_2026-11-26.md#CORE-03/cross_context",
             "docs/LEARNING.md#L17-L23",
             "tests/dashboard-http.py#mid-session revocation retains history and removes resume action",
             "tests/dashboard-http.py#role revocation preserves owner-scoped personal navigation and history",
