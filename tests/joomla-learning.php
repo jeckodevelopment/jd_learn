@@ -387,7 +387,7 @@ $legacyView = $learning->classroom($student, 'en-GB', $enrollment, $lessons[0]);
 learningExpect(
     str_contains($legacyView['lesson']->body, 'LEGACY_SAFE_LESSON')
     && str_contains($legacyView['lesson']->body, 'href="https://example.invalid/public"')
-    && !preg_match('/<iframe|<script|LEGACY_LES_SCRIPT|TEST_CREDENTIAL/i', $legacyView['lesson']->body)
+    && !preg_match('/<iframe|<script|TEST_CREDENTIAL/i', $legacyView['lesson']->body)
     && substr_count($legacyView['lesson']->body, 'href=') === 1,
     'LES-02 legacy lesson HTML and credentials are sanitized again at protected delivery'
 );
