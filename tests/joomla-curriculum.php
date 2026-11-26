@@ -141,16 +141,20 @@ $source = json_decode($row->source_json, true, 32, JSON_THROW_ON_ERROR);
 curriculumExpect($source['reference'] === 'dQw4w9WgXcQ' && $row->completion_rule === 'video_coverage'
     && (int)$row->required === 0, 'video normalised and optional flag retained');
 $videoParams = json_decode((string) $row->params_json, true, 16, JSON_THROW_ON_ERROR);
-curriculumExpect(($videoParams['video_alternative_lesson_id'] ?? 0) === $firstLesson,
-    'SCR-08: explicit lesson alternative persists in the native draft video parameters');
+curriculumExpect(
+    ($videoParams['video_alternative_lesson_id'] ?? 0) === $firstLesson,
+    'SCR-08: explicit lesson alternative persists in the native draft video parameters'
+);
 $priorAlternativeRevision = versionRevision();
 curriculumDenied(fn() => $service->saveLesson($actor, scopeInput() + [
     'id' => 0, 'module_id' => $module, 'title' => 'Forged other-kind alternative',
     'kind' => 'text', 'body' => '<p>wrong kind</p>', 'required' => '0',
     'video_alternative_lesson_id' => $firstLesson
 ]), 'SCR-08: non-video kind cannot accept a forged video alternative');
-curriculumExpect(versionRevision() === $priorAlternativeRevision,
-    'SCR-08: invalid alternative leaves the teaching version revision unchanged');
+curriculumExpect(
+    versionRevision() === $priorAlternativeRevision,
+    'SCR-08: invalid alternative leaves the teaching version revision unchanged'
+);
 curriculumDenied(fn() => $service->saveLesson($actor, scopeInput() + [
     'id' => $video, 'revision' => recordRevision('lessons', $video), 'module_id' => $module,
     'title' => 'Video draft', 'kind' => 'video', 'required' => '0', 'body' => '',
