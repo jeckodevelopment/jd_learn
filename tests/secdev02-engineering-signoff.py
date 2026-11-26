@@ -53,7 +53,7 @@ CASES = {
     "CORE-07/menu_matrix": (
         "component/site/src/Controller/DisplayController.php",
         ("tests/categories-http.py", "CORE-07: explicit menu Itemid selects the authorised English category"),
-        ("tests/joomla-categories.php", "CORE-07: native "),
+        ("tests/joomla-categories.php", "native category and category-index menus in both languages"),
     ),
     "CORE-09/tags_context": (
         "component/administrator/src/Table/TeacherTable.php",
