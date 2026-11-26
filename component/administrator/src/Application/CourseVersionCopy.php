@@ -163,6 +163,28 @@ final class CourseVersionCopy
             $this->copyLessonFields($actor, $old, $lessons[$old]);
             $first = $first ?: $lessons[$old];
         }
+        // Remap explicitly selected local alternatives when copying a subtree.
+        // A single-lesson copy can still link to an existing same-version lesson.
+        foreach ($lessonRows as $lesson) {
+            $oldId = (int) $lesson['id'];
+            if (!isset($lessons[$oldId]) || $lesson['kind'] !== 'video') {
+                continue;
+            }
+            $params = json_decode((string) $lesson['params_json'], true, 16, JSON_THROW_ON_ERROR);
+            $alternative = is_array($params) ? ($params['video_alternative_lesson_id'] ?? 0) : 0;
+            if (!is_int($alternative) || $alternative <= 0) {
+                continue;
+            }
+            $replacement = $lessons[$alternative] ?? ($target === $sourceVersion ? $alternative : 0);
+            if ($replacement) {
+                $params['video_alternative_lesson_id'] = $replacement;
+            } else {
+                unset($params['video_alternative_lesson_id']);
+            }
+            $record = (object) ['id' => $lessons[$oldId],
+                'params_json' => json_encode($params, JSON_THROW_ON_ERROR)];
+            $this->db->updateObject('#__jlms_lessons', $record, 'id');
+        }
         $attachments = array_filter(
             $this->rows('attachments', 'course_version_id', $sourceVersion, 1000),
             static fn(array $attachment): bool => $attachment['lesson_id'] === null ? $whole : isset($lessons[
