@@ -42,6 +42,29 @@ def source_keys(source: str) -> set[str]:
     return {match.group(2) for match in TEXT_CALL.finditer(source)}
 
 
+
+# Only literal PHP concatenations can be statically proven. Variables and
+# interpolation remain subject to runtime coverage.
+STATIC_JOINED_TEXT = re.compile(
+    r"""(?:\\?Joomla\\CMS\\Language\\)?Text\s*::\s*"""
+    r"""(?:_|sprintf|plural|script)\s*\(\s*"""
+    r"""((?:(?:'[^'\r\n]*'|"[^"\r\n]*")\s*\.\s*)+"""
+    r"""(?:'[^'\r\n]*'|"[^"\r\n]*"))\s*(?:,|\))""",
+)
+QUOTED_FRAGMENT = re.compile(r"""(['"])([^'"\r\n]*)\1""")
+
+
+def static_joined_keys(source: str) -> set[str]:
+    """Resolve quoted-only expressions, never computed variables."""
+    keys: set[str] = set()
+    for match in STATIC_JOINED_TEXT.finditer(source):
+        fragments = QUOTED_FRAGMENT.findall(match.group(1))
+        key = "".join(value for _, value in fragments)
+        if re.fullmatch(r"COM_JLMS_[A-Z0-9_]+", key):
+            keys.add(key)
+    return keys
+
+
 def translatable_literal_pool(source: str) -> set[str]:
     """Static literal error/status and computed Text key map candidates."""
     return {match.group(2) for match in KEY_LITERALS.finditer(source)}
@@ -58,7 +81,7 @@ def inspect(root: Path) -> tuple[list[str], dict]:
         discovered: dict[str, list[str]] = {}
         for filename in sources:
             source = filename.read_text(encoding="utf-8")
-            for key in source_keys(source) | translatable_literal_pool(source):
+            for key in source_keys(source) | translatable_literal_pool(source) | static_joined_keys(source):
                 discovered.setdefault(key, []).append(str(filename.relative_to(root)))
         locales = {loc: translated_keys(root, client, loc) for loc in LOCALES}
         for key, paths in sorted(discovered.items()):
@@ -88,6 +111,10 @@ def self_test() -> None:
     assert source_keys('Text::sprintf("COM_JLMS_WORLD", $value)') == {"COM_JLMS_WORLD"}
     assert source_keys(r"\Joomla\CMS\Language\Text::_('COM_JLMS_A')") == {"COM_JLMS_A"}
     assert not source_keys("Text::_(implode('_', ['COM', 'JLMS', 'HELLO']))")
+    assert static_joined_keys("Text::_('COM_JLMS_' . 'HELLO')") == {"COM_JLMS_HELLO"}
+    assert static_joined_keys('Text::sprintf("COM_JLMS_" . "WORLD", $n)') == {"COM_JLMS_WORLD"}
+    assert not static_joined_keys("Text::_('COM_JLMS_' . $suffix)")
+    assert not static_joined_keys("Text::_('OTHER_' . 'KEY')")
     assert translatable_literal_pool("$error = 'COM_JLMS_BAD_REQUEST';") == {"COM_JLMS_BAD_REQUEST"}
     assert translatable_literal_pool("['bad' => 'COM_JLMS_ERROR']") == {"COM_JLMS_ERROR"}
     assert not translatable_literal_pool("['bad' => 'OTHER_PREFIX_ERROR']")
@@ -110,6 +137,12 @@ def self_test() -> None:
         missing.write_text('COM_JLMS_DIFFERENT="No"\n', encoding="utf-8")
         errors, _ = inspect(root)
         assert len(errors) == 1 and "site/it-IT" in errors[0]
+        missing.write_text('COM_JLMS_HELLO="Hello"\n', encoding="utf-8")
+        site_php = root / "component/site/tmpl/view.php"
+        site_php.write_text("<?php Text::_('COM_JLMS_' . 'MISSING');", encoding="utf-8")
+        errors, _ = inspect(root)
+        assert any("COM_JLMS_MISSING" in error for error in errors)
+
 
 
 def main() -> int:
