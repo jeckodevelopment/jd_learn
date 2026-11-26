@@ -3475,8 +3475,10 @@
             "docs/LEARNING.md#L17-L23",
             "tests/joomla-learning.php#L206-L207",
             "tests/joomla-manual-enrollment.php#L1-L20",
-            "tests/dashboard-http.py",
-            "docs/CORE_03_CROSS_CONTEXT_REVOCATION_2026-11-26.md"
+            "tests/dashboard-http.py#mid-session revocation retains history and removes resume action",
+            "tests/dashboard-http.py#role revocation preserves owner-scoped personal navigation and history",
+            "tests/dashboard-http.py#revoked learner retains only public catalog metadata",
+            "docs/CORE_03_CROSS_CONTEXT_REVOCATION_2026-11-26.md#CORE-03/cross_context"
           ]
         }
       }
