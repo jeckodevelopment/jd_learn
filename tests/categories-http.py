@@ -55,6 +55,14 @@ try:
   config.write_text(changed)
   _,catalog_page=get('/index.php?option=com_jlms&view=courses&lang=en')
   expect(verify_dom(catalog_page, root='jlms-courses', scoped_class='jlms-course-card') > 0, 'UI-07: catalog CSS customization and unique IDs verified in real Joomla HTML')
+  # CORE-01: only an absent or explicitly zero parent selects the root.
+  # Malformed and overflowing IDs must never alias an accessible category.
+  for bad_parent in ('-1', 'not-a-number', '999999999999999999999999999999999'):
+   expect(denied('/index.php?option=com_jlms&view=categories&lang=en&parent_id='+bad_parent),
+          'CORE-01: malformed category parent must fail closed: '+bad_parent)
+  _,zero_root=get('/index.php?option=com_jlms&view=categories&lang=en&parent_id=0')
+  expect('id="jlms-categories"' in zero_root,
+         'CORE-01: explicit root parent_id=0 continues to work')
   _,root_page=get('/index.php?option=com_jlms&view=categories&lang=en')
   expect('id="jlms-categories"' in root_page and 'Taxonomy English' in root_page and 'PRIVATE_QUESTION_CATEGORY' not in root_page,'root list scoped and visible')
   expect(verify_dom(root_page, root='jlms-categories', scoped_class='jlms-category-card') > 0, 'UI-07: public category index preserves scoped cards and unique IDs')
