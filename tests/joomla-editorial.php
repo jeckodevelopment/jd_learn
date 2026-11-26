@@ -303,6 +303,41 @@ editorialExpect(
     $db->setQuery($q)->loadResult() === 'contact@example.invalid',
     'Native system fields plugin saves the teacher field value'
 );
+$teacherHistory = null;
+foreach (
+    $db->setQuery(
+        "SELECT * FROM #__history WHERE item_id='com_jlms.teacher." . (int)$teacherId
+        . "' ORDER BY version_id DESC"
+    )->loadObjectList() as $candidate
+) {
+    $snapshot = json_decode($candidate->version_data, true, 64, JSON_THROW_ON_ERROR);
+    if (($snapshot['com_fields']['teaching-contact'] ?? null) === 'contact@example.invalid') {
+        $teacherHistory = $candidate;
+        break;
+    }
+}
+editorialExpect(
+    $teacherHistory !== null,
+    'Native teacher history captures the profile custom field value'
+);
+$item = $teacher->getItem($teacherId);
+editorialExpect(
+    $teacher->save([
+        'id' => $teacherId,
+        'revision' => (int)$item->revision,
+        'com_fields' => ['teaching-contact' => 'contact-before-restore@example.invalid']
+    ]),
+    'Teacher field value changes before Content History restoration'
+);
+editorialExpect(
+    $teacher->loadHistory((int)$teacherHistory->version_id),
+    'Native Content History restores teacher custom fields through the guarded save'
+);
+editorialExpect(
+    (string)$db->setQuery($q)->loadResult() === 'contact@example.invalid',
+    'Content History restores the teacher custom field value'
+);
+
 $editorFixture = json_decode(
     file_get_contents(dirname($root) . '/editor-access-fixture.json'),
     true,
