@@ -3152,3 +3152,14 @@ Registrare ambiente, ruoli, versione, selettori/URL anonimizzati, risultati atte
 **Test automatici:** `python3 tests/secdev02-package-core-boundary.py --self-test` e controllo sul package costruito in CI. Bloccano costituenti e file estranei, manifest incoerenti, percorsi non sicuri, ZIP con membri duplicati e percorsi esterni ai namespace dell'estensione. Il risultato non equivale a un'installazione Joomla di produzione.
 
 **Collaudo manuale Joomla: NON ESEGUITO.** Su installazione di test Joomla 6.2.1, estrarre il ZIP effettivo dall'artefatto CI, installare o aggiornare JD Learn dalla versione precedentemente distribuita. Verificare Gestione estensioni (component, library, provider, Task/Privacy/System/Finder/User/Actionlog), integrità degli aggiornamenti, assenza di file estranei nel core Joomla e funzionamento delle funzioni già pubblicate. Ripetere su ambiente omologo a quello di destinazione; registrare versione PHP/DB, esito e rollback, senza esporre credenziali.
+
+
+### SECDEV-02 — accettazione successiva al signoff implementativo #1059
+
+**Stato del collaudo manuale: NON ESEGUITO.** Il gate `tests/secdev02-engineering-signoff.py` riconcilia 17 ambiti tecnici già coperti da test automatici obbligatori: non marca alcun test sul sito come superato.
+
+Per l'accettazione preparare due editor con privilegi diversi, due studenti in sessioni separate, categoria padre/figlio, corsi e lezioni pubblicati/archiviati, docente con tag/campi e menu IT/EN. Verificare revoche a sessione aperta, batch misti e rollback, gerarchie e riordino, workflow/storico, filtri invalidi e ripristino, plugin Content, language override, navigazione SEF, cronologia, route dirette e cache browser/proxy. Registrare per ogni prova il risultato osservato e le versioni PHP/Joomla/database.
+
+I sei ambiti **esterni** rimangono separati: CORE-02 (MFA/provider account), CORE-08 (policy di retention e Privacy), CORE-12 (provider media e proxy), CORE-18 (SMTP e mail template reali), CORE-22 (upgrade e restore su hosting target), CORE-23 (plugin/consumer terzi). Un fallimento di collaudo va aperto come issue riproducibile e corretto a livello di implementazione, senza travasare una verifica ambientale su una funzione Joomla duplicata.
+
+Non dichiarare concluso SECDEV-02 nel registro canonico fino ai collaudi richiesti e alla verifica completa delle evidenze.
