@@ -100,17 +100,30 @@ curriculumDenied(fn () => $service->saveModule($anonymous, scopeInput() + ['id' 
     => 'No access']), 'anonymous cannot mutate draft');
 $service->saveTeachingRules($actor, scopeInput() + ['mode' => 'learning','sequence_mode'
     => 'free','video_threshold' => '90','public_previews' => '1']);
+$unsafeLessonBody = '<p>First lesson <strong>Safe text</strong></p>'
+    . '<script>TEST_LES_SECRET</script><iframe src="https://example.invalid/embed"></iframe>'
+    . '<img src="https://example.invalid/tracker" onerror="alert(1)">'
+    . '<a href="https://example.invalid/open">Safe link</a>'
+    . '<a href="https://example.invalid/?apiKey=TEST_CREDENTIAL">Secret link</a>';
 $firstLesson = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
     => 'Text introduction',
-    'kind' => 'text','required' => '1','body' => '<p>First lesson</p>','preview' => 1,'public_preview'
+    'kind' => 'text','required' => '1','body' => $unsafeLessonBody,'preview' => 1,'public_preview'
         => '1','completion_rule' => 'forged','release_after_days' => '2']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $firstLesson)->loadObject();
 curriculumExpect($row->completion_rule === 'manual' && (int)$row
     ->preview === 1, 'explicit text preview is saved while derived completion rules ignore mass assignment');
 curriculumExpect((int)$row->release_after_days === 2, 'relative lesson release is validated and persisted');
 curriculumExpect(
-    $row->body === \Joomla\CMS\Component\ComponentHelper::filterText('<p>First lesson</p>'),
-    'body uses the native Joomla content filter'
+    str_contains($row->body, '<strong>Safe text</strong>')
+    && str_contains($row->body, 'href="https://example.invalid/open"')
+    && !preg_match('/<script|<iframe|<img|onerror=|javascript:/i', $row->body),
+    'LES-02 native Joomla lesson authoring retains safe HTML and strips arbitrary active content'
+);
+curriculumExpect(
+    !str_contains($row->body, 'TEST_CREDENTIAL')
+    && substr_count($row->body, 'href=') === 1
+    && str_contains($row->body, 'Secret link'),
+    'LES-02 privileged lesson author cannot persist credential-bearing outbound links'
 );
 $video = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
     => 'Video draft','kind' => 'video',
