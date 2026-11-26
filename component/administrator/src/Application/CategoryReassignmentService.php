@@ -40,7 +40,7 @@ final class CategoryReassignmentService
     {
     }
 
-    /** @return array{category:object, references:array<string,int>, targets:array<string,list<object>>} */
+    /** @return array{category:object, references:array<string,int>, descendant_references:array<string,int>, descendant_categories:int, targets:array<string,list<object>>} */
     public function inspect(User $actor, int $categoryId): array
     {
         // Never use a stale session object's permissions to advertise destinations.
@@ -49,16 +49,35 @@ final class CategoryReassignmentService
         $source = $this->category($categoryId, true);
         $this->assertManage($actor, $source, 'core.delete');
         $counts = [];
+        $descendantCounts = [];
         $targets = [];
+        // An operator inspecting a source before a native Joomla move/delete
+        // must see its entire nested subtree, not only direct catid references.
+        // Child records are NOT moved implicitly by the direct reassignment task.
+        $descendantQuery = $this->db->createQuery()
+            ->select('COUNT(*)')
+            ->from('#__categories AS nested')
+            ->where('nested.extension = :extension')
+            ->where('nested.lft > :leftBoundary')
+            ->where('nested.rgt < :rightBoundary');
+        $categoryExtension = (string) $source->extension;
+        $leftBoundary = (int) $source->lft;
+        $rightBoundary = (int) $source->rgt;
+        $descendantQuery->bind(':extension', $categoryExtension)
+            ->bind(':leftBoundary', $leftBoundary, ParameterType::INTEGER)
+            ->bind(':rightBoundary', $rightBoundary, ParameterType::INTEGER);
+        $descendantCategories = (int) $this->db->setQuery($descendantQuery)->loadResult();
 
         foreach (self::REFERENCES as $key => $reference) {
             if ($source->extension !== $reference['extension']) {
                 $counts[$key] = 0;
+                $descendantCounts[$key] = 0;
                 $targets[$key] = [];
                 continue;
             }
 
             $counts[$key] = $this->count($reference['table'], $categoryId);
+            $descendantCounts[$key] = $this->countDescendants($reference['table'], $source);
             $query = $this->db->createQuery()
                 ->select('id, title, created_user_id, checked_out, lft, rgt')
                 ->from('#__categories AS candidate')
@@ -90,7 +109,8 @@ final class CategoryReassignmentService
             ));
         }
 
-        return ['category' => $source, 'references' => $counts, 'targets' => $targets];
+        return ['category' => $source, 'references' => $counts, 'descendant_references' => $descendantCounts,
+            'descendant_categories' => $descendantCategories, 'targets' => $targets];
     }
 
     /** @param array<string, mixed> $destinations */
@@ -206,6 +226,25 @@ final class CategoryReassignmentService
         $query = $this->db->createQuery()->select('COUNT(*)')->from($this->db->quoteName($table))
             ->where($this->db->quoteName('catid') . ' = :category');
         $query->bind(':category', $categoryId, ParameterType::INTEGER);
+        return (int) $this->db->setQuery($query)->loadResult();
+    }
+
+    /** Count referenced records in nested categories only; exclude the source itself. */
+    private function countDescendants(string $table, object $source): int
+    {
+        $query = $this->db->createQuery()->select('COUNT(*)')
+            ->from($this->db->quoteName($table) . ' AS item')
+            ->innerJoin('#__categories AS nested ON nested.id = item.catid')
+            ->where('nested.extension = :extension')
+            ->where('nested.lft > :leftBoundary')
+            ->where('nested.rgt < :rightBoundary');
+        $extension = (string) $source->extension;
+        $leftBoundary = (int) $source->lft;
+        $rightBoundary = (int) $source->rgt;
+        $query->bind(':extension', $extension)
+            ->bind(':leftBoundary', $leftBoundary, ParameterType::INTEGER)
+            ->bind(':rightBoundary', $rightBoundary, ParameterType::INTEGER);
+
         return (int) $this->db->setQuery($query)->loadResult();
     }
 

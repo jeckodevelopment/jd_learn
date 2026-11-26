@@ -3176,3 +3176,16 @@ Non dichiarare concluso SECDEV-02 nel registro canonico fino ai collaudi richies
 5. Su **hosting e proxy reali**, tentare GET/HEAD/Range diretto ai blob managed, accesso attraverso alias e CDN, e misurare limiti di storage/streaming e carichi concorrenti: riguarda LES-03/public_storage e LES-04/capacity_policy, ancora non verificati a livello ambientale.
 
 Per ogni caso annotare configurazione Joomla/PHP, ruolo, URL della pagina (senza segreti), esito e bug riproducibile. La sola CI non aggiorna le accettazioni manuali.
+
+
+## SCR — collaudi manuali dopo il lotto 26 novembre 2026
+
+**Stato: NON ESEGUITI.** I test automatici del lotto verificano isolamento di risultati, conteggi del ramo e feedback di invio; il collaudo del sito rimane indipendente.
+
+1. **SCR-01 — catalogo e privacy.** Predisporre un corso visibile, un corso in una categoria nascosta, uno non pubblicato e uno di lingua diversa. Da ospite e studente, provare griglia/lista, ricerca per titolo noto del corso nascosto, filtri, categoria, ordinamento, navigazione avanti/indietro e paginazione. Nessun titolo, numero di risultati o metadato privato deve emergere.
+2. **SCR-02 — ricollocazione con figli.** Su una categoria A con un corso diretto e un secondo corso nella figlia A1, aprire JD Learn → Gestione dipendenze categorie. Attesi 1 riferimento diretto e 1 nelle sottocategorie, oltre all’avviso sul numero di figli. Ricollocare il corso diretto nella categoria B: quello di A1 deve rimanere invariato. Verificare ACL, checkout, annullamento, Finder e impossibilità di eliminare A finché restano dipendenze native/figli. Ripetere con categoria cestinata e altri tipi di riferimento.
+3. **SCR-06 — aula e salvataggio.** In un corso con lezioni testo, documento, audio e video, aprire l’aula da studente. Verificare indice, materiali, avanzamento, precedente/successiva, blocchi e prerequisiti. Su «Segna come completata» deve comparire «Salvataggio…» fino al redirect di risposta e un doppio clic non deve creare due invii. Rientrando dalla cronologia il pulsante torna utilizzabile senza mostrare un falso stato salvato. Ripetere con rete interrotta e sessione scaduta: non attribuire mai credito non confermato.
+4. **SCR-06/video e SCR-08.** Provare player remoto senza consenso o con provider disabilitato; nessun URL alternativo deve eludere il blocco. Per video richiesto, il pulsante manuale non sostituisce il raggiungimento della soglia. Una diversa attività alternativa può essere offerta soltanto se configurata editorialmente e autorizzata. Verificare quattro provider e policy Joomla reali.
+5. **SCR-13 — editor Joomla.** Collaudare AC-129–AC-134: Salva/Salva e chiudi, programma contestuale, riordino e duplicazione, conferme di modifica versione, campi/ACL/checkout, dati non confermati prima di navigare, due editor concorrenti, desktop/mobile e browser di destinazione. Registrare anomalie riproducibili, mantenendo separato il lavoro implementativo.
+
+Versione target: Joomla 6.2.1; registrare PHP, database, ruoli, lingue, template, dispositivo ed esito osservato. I test manuali non sono parte delle percentuali CI.

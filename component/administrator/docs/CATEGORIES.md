@@ -24,6 +24,10 @@ I link lingua per `category` e `categories` puntano alla categoria associata, co
 
 Gli aggiornamenti della tassonomia seguono il lifecycle e le autorizzazioni core Joomla, anche per categorie pubblicate. Non si applica alle categorie il blocco dei gruppi di traduzioni dei corsi pubblicati della 0.14. Spostamenti e cambi di accesso/stato/lingua cambiano subito la visibilità pubblica dei discendenti. La scrittura delle categorie usa i lock e la semantica nativa del core. Le colonne `catid` restano allineate al tipo signed `id` della tabella categorie Joomla. Le FK di `#__jlms_courses`, `#__jlms_pathways`, `#__jlms_teachers` e `#__jlms_questions` impediscono la cancellazione permanente di una categoria ancora referenziata; prima della cancellazione permanente, spostare i record in una categoria valida. Il cestinamento nativo resta reversibile: nasconde i record legati alla categoria e il ripristino della categoria ripristina la visibilità, senza eliminare corsi o storico didattico. Le associazioni tradotte restano gestite da Joomla.
 
+## Riepilogo delle dipendenze prima di spostare/eliminare (SCR-02)
+
+Nel backend JD Learn → Gestione dipendenze categorie, un utente autorizzato può ispezionare una categoria e vedere separatamente **i record direttamente collegati** e **i record nelle sottocategorie** (corsi, percorsi, docenti o domande), insieme al numero delle sottocategorie. Il comando di ricollocazione resta esplicito e atomico **solo per i record diretti**; non sposta implicitamente né i figli né i corsi in essi contenuti. Prima della cancellazione o dello spostamento di un ramo, gestire le sottocategorie da Joomla Categorie, preservando il lifecycle nativo e i riferimenti storici. Questa schermata non espone metadati didattici privati nel frontend pubblico.
+
 ## Override, prestazioni e verifica
 
 Override nativi `templates/NOME/html/com_jlms/categories/default.php` e `category/default.php`. Le regioni seguono FRONTEND_CSS.md; WAM `com_jlms.site`, variabili esistenti, nessuno stile globale del template. Mantenere escaping, router, filtri di accesso e paginazioni indipendenti negli override.

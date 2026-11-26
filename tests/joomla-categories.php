@@ -326,6 +326,25 @@ $createCourse = static function (int $catid, string $tag, string $alias) use ($f
 $course = $createCourse($child, "en-GB", "taxonomy-visible-course");
 $italianCourse = $createCourse($it, "it-IT", "taxonomy-corso-italiano");
 $hiddenCourse = $createCourse($hidden, "en-GB", "HIDDEN_TAXONOMY_COURSE");
+
+ // SCR-01: the same SQL visibility policy must remove restricted, unpublished
+ // and foreign-language courses from ALL guest catalogue result variants,
+ // including a forged search for the exact hidden promotional title.
+$guestCatalog = $catalog->query($guest, 'en-GB')->clear('select')->select('c.id');
+$catalogIds = array_map('intval', $db->setQuery($guestCatalog, 0, 50)->loadColumn());
+catExpect(
+    !in_array($hiddenCourse, $catalogIds, true)
+    && !in_array($italianCourse, $catalogIds, true),
+    'SCR-01: guest catalogue excludes hidden category and wrong-language promotional results'
+);
+$privateTitleSearch = '%HIDDEN_TAXONOMY_COURSE%';
+$guestSearch = $catalog->query($guest, 'en-GB')->clear('select')->select('c.id')
+    ->where('c.title LIKE :scrPrivateSearch')->bind(':scrPrivateSearch', $privateTitleSearch);
+catExpect(
+    $db->setQuery($guestSearch, 0, 50)->loadColumn() === [],
+    'SCR-01: a forged search for a hidden course title does not expose its promotional record'
+);
+
 /*
  * CORE-14/01/07: test the real Finder adapter's SQL eligibility against
  * ACL, state and language changes, including an otherwise valid child below
@@ -680,6 +699,11 @@ $versionBefore = (int) $db
     ->setQuery("SELECT current_version_id FROM #__jlms_courses WHERE id=" . (int) $course)
     ->loadResult();
 $reassignment = $component->getCategoryReassignmentService();
+// SCR-02: a source can have its own referenced courses and other courses
+// inside nested categories. They must appear as separate counts; only the
+// source's own direct records are eligible for explicit reassignment.
+$db->setQuery('UPDATE #__jlms_courses SET catid=' . (int) $moveChild
+    . ' WHERE id=' . (int) $hiddenCourse)->execute();
 $inspection = $reassignment->inspect($actor, $moveSource);
 catExpect(
     $inspection["references"]["courses"] === 1 && $inspection["targets"]["courses"] !== [],
@@ -689,6 +713,19 @@ catExpect(
     !in_array($moveChild, array_map(static fn($target) => (int) $target->id, $inspection["targets"]["courses"]), true),
     "descendant categories are excluded as relocation targets",
 );
+catExpect(
+    $inspection["descendant_categories"] === 1
+    && $inspection["descendant_references"]["courses"] === 1
+    && $inspection["references"]["courses"] === 1,
+    "SCR-02: inspection separates directly movable courses from nested dependency counts",
+);
+catExpect(
+    $inspection["descendant_references"]["pathways"] === 0
+    && $inspection["descendant_references"]["teachers"] === 0
+    && $inspection["descendant_references"]["questions"] === 0,
+    "SCR-02: unrelated entity sections do not leak into category dependency totals",
+);
+
 // SEC-P1: the operator session may remain in memory after the user is blocked.
 // Authorization must load current Joomla account state before either read or mutation.
 $db->setQuery("UPDATE #__users SET block=1 WHERE id=" . (int) $actor->id)->execute();
@@ -784,6 +821,14 @@ catExpect(
         $versionBefore,
     "category reassignment keeps the active teaching version",
 );
+catExpect(
+    (int) $db->setQuery('SELECT catid FROM #__jlms_courses WHERE id=' . (int) $hiddenCourse)
+        ->loadResult() === $moveChild,
+    "SCR-02: direct reassignment never silently relocates courses from nested categories",
+);
+$db->setQuery('UPDATE #__jlms_courses SET catid=' . (int) $hidden
+    . ' WHERE id=' . (int) $hiddenCourse)->execute();
+
 // Restore the shared course fixture for the following HTTP category-view suite.
 $db->setQuery("UPDATE #__jlms_courses SET catid=" . (int) $child . " WHERE id=" . (int) $course)->execute();
 file_put_contents(
