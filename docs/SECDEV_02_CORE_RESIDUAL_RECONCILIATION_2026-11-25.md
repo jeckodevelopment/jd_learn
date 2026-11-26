@@ -49,3 +49,8 @@ Un criterio può diventare `implemented` nella matrice **solo quando** la parte 
 ### Difetto corretto in questo lotto: preferenza promemoria email
 
 Prima, `CourseExpiryReminderService::enqueueDue()` terminava subito quando `mail_expiry_enabled` era false, malgrado un corso potesse avere `mail_preferences.expiry=enabled`. Ora seleziona solo gli opt-in espliciti in questo scenario, oppure gli override abilitati e quelli ereditati se il default globale è true. Le righe già accodate e quelle disabilitate vengono escluse **prima del LIMIT**. Le combinazioni valide e invalide vengono confrontate con la funzione di dominio durante i test nativi su MySQL 8.4 e MariaDB 10.6.
+
+
+## Aggiornamento 26 novembre 2026 — residui dopo la copertura CORE-21
+
+La PR #1078 riconcilia `CORE-21/private_cache` come implementato sul perimetro del codice e della CI: le route private censite sono sottoposte ai controlli fail-closed e la suite HTTP verifica tre identità. Il criterio esce quindi dai residui di sviluppo/CI. Restano **16 criteri tecnici** e **6 verifiche ambientali/esterne**; il servizio CORE-21 rimane Parziale per invalidazione multilivello dei metadati e per prove hosting proxy/CDN, che non sono state dichiarate svolte.
