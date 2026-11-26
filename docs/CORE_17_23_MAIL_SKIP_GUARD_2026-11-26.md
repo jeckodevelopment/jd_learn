@@ -19,3 +19,5 @@ La regressione `tests/secdev02-core19-mail-batch-bound.py` verifica il controllo
 ## Verifiche separate
 
 Nessuno dei criteri CORE-17–23 viene promosso a completato sulla sola modifica. `CORE-19` rimane **Parziale** fino alla prova di dispatch/retry concorrenti in un'installazione reale. Collaudo manuale **NON ESEGUITO**: simulare revoche account/consenso e cambi di stato della coda durante la consegna, verificando assenza di duplicati, perdita di notifica, disclosure e alterazioni dello stato. Le evidenze su SMTP, cache reverse proxy, hosting e plugin restano separate nel testbook.
+
+Nota operativa: il controllo di stato riguarda l'UPDATE della riga, non garantisce da solo l'assenza di un invio SMTP dopo una revoca concorrente; questa condizione richiede le prove end-to-end previste nel testbook.
