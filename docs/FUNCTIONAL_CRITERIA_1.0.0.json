@@ -11197,64 +11197,73 @@
       {
         "id": "criterion_01",
         "label": "Note rilascio e changelog corrispondono alla candidata",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/VERSIONING.md",
-          "CHANGELOG.md"
+          "CHANGELOG.md",
+          "tools/release_candidate_evidence.py",
+          "tests/release-workflow.py",
+          ".github/workflows/release.yml"
         ],
         "review": {
-          "reason": "La revisione del criterio «Note rilascio e changelog corrispondono alla candidata» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La candidata 1.0.0 ha una sezione versionata nel changelog. Il validatore confronta il testo delle note del workflow con la sezione della stessa versione e include l'hash del changelog nel record candidato, verificato nuovamente prima della pubblicazione. L'evidenza resta candidate_not_approved e non dichiara accettazione manuale.",
           "references": [
-            "docs/VERSIONING.md#L1-L25",
-            "CHANGELOG.md#L1-L25"
+            "CHANGELOG.md### 1.0.0 — candidata non pubblicata",
+            "tools/release_candidate_evidence.py#release_notes_in_changelog",
+            "tests/release-workflow.py#CHANGELOG-different.md",
+            ".github/workflows/release.yml#--changelog CHANGELOG.md"
           ]
         }
       },
       {
         "id": "criterion_02",
         "label": "Incompatibilità e limitazioni note esplicitate",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/VERSIONING.md",
-          "CHANGELOG.md"
+          "docs/RELEASE_NOTES_CANDIDATE_1.0.0.md",
+          "tests/doc10-release-notes.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Incompatibilità e limitazioni note esplicitate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La bozza candidata esplicita compatibilità ancora da convalidare, limiti dei canali di sviluppo, dipendenze da configurazione/provider e funzioni fuori perimetro; la suite DOC-10 verifica le sezioni e i limiti di scope documentati. La bozza non è pubblicazione né accettazione.",
           "references": [
-            "docs/VERSIONING.md#L1-L25",
-            "CHANGELOG.md#L1-L25"
+            "docs/RELEASE_NOTES_CANDIDATE_1.0.0.md### Incompatibilità e limitazioni note",
+            "tests/doc10-release-notes.py#Open Badges"
           ]
         }
       },
       {
         "id": "criterion_03",
         "label": "Riferimenti al pacchetto installabile e versione coerenti",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/VERSIONING.md",
-          "CHANGELOG.md"
+          "tests/doc10-release-notes.py",
+          "tests/release-workflow.py",
+          "tools/release_candidate_evidence.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Riferimenti al pacchetto installabile e versione coerenti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La build candidata verifica i manifest interni e l'uguaglianza versione package/componente; il record collega versione, nome ZIP, commit sorgente, feed e checksum dello ZIP Joomla interno. I test negativi respingono versioni/asset discordanti.",
           "references": [
-            "docs/VERSIONING.md#L1-L25",
-            "CHANGELOG.md#L1-L25"
+            "tests/doc10-release-notes.py#ET.parse(root / \"component/jlms.xml\")",
+            "tests/release-workflow.py#m.findtext('version')=='1.0.0'",
+            "tools/release_candidate_evidence.py#package_filename"
           ]
         }
       },
       {
         "id": "criterion_04",
         "label": "Documentazione della release verificata rispetto agli artefatti",
-        "status": "missing",
+        "status": "implemented",
         "evidence": [
-          "docs/VERSIONING.md",
-          "CHANGELOG.md"
+          "tools/release_candidate_evidence.py",
+          ".github/workflows/release.yml",
+          "tests/release-workflow.py"
         ],
         "review": {
-          "reason": "La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.",
+          "reason": "La validazione lega hash delle note, changelog, feed e ZIP; ricontrolla il record nel job di pubblicazione e interrompe in caso di differenza. La preparazione resta non pubblicante e il record non promuove l'accettazione manuale.",
           "references": [
-            "docs/VERSIONING.md#L1-L25",
-            "CHANGELOG.md#L1-L25"
+            "tools/release_candidate_evidence.py#draft_release_notes_sha256",
+            "tools/release_candidate_evidence.py#changelog_sha256",
+            ".github/workflows/release.yml#--output dist/RELEASE_CANDIDATE_EVIDENCE.json --verify",
+            "tests/release-workflow.py#record['changelog_sha256']"
           ]
         }
       }

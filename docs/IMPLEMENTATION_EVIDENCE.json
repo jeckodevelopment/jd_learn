@@ -1,9 +1,9 @@
 {
-  "audited_at": "2026-11-15",
+  "audited_at": "2026-11-26",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 63.99,
-    "development_evidence_floor_percent": 63.99,
+    "percent": 64.46,
+    "development_evidence_floor_percent": 64.46,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -18,12 +18,12 @@
     "source": "docs/RELEASE_DASHBOARD.md"
   },
   "version": "0.57.7-dev",
-  "code_baseline": "622a4ae67cae10d5dec35688d1d550fa064994a1",
+  "code_baseline": "37d3cd17f7afabb192ce429c36d9f1517eacb227",
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 43858672461,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43858672461",
+    "run_id": 45899449372,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/45899449372",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
