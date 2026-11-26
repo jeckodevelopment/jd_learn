@@ -100,6 +100,14 @@ final class EnrollmentManagerNotice
         )->from('#__jlms_enrollment_requests AS r')
             ->innerJoin('#__jlms_editions AS ed ON ed.id = r.edition_id')
             ->innerJoin('#__jlms_courses AS c ON c.id = ed.course_id')
+            // Exclude a request from discovery once its manager fan-out has
+            // been queued. Otherwise the same oldest rows fill every bounded
+            // batch forever even though MailQueue correctly deduplicates them.
+            ->leftJoin(("#__jlms_mail_queue AS notice ON notice.template_id = "
+                . $this->db->quote('com_jlms.enrollment.manager_request') . " AND notice.event_key = "
+                . "SHA2(CONCAT(" . $this->db->quote('enrollment.manager.request:') . ", r.id, "
+                . $this->db->quote(':') . ", notice.recipient_user_id), 256)"))
+            ->where('notice.id IS NULL')
             ->where("r.status = 'pending'")->where("ed.status = 'open'")
             ->where("c.enrollment_mode = 'approval'")->where('c.state = 1')
             ->where('c.admissions_open = 1')
