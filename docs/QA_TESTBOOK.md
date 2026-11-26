@@ -1,3 +1,9 @@
+## SECDEV-02 / CORE-10 e CORE-11 — Campi multilingua e content plugin (26/11/2026)
+
+**Prova automatica candidata:** `tests/joomla-course-fields.php` crea due campi `com_jlms.course` nei cataloghi di lingua `en-GB` e `it-IT` attraverso il modello nativo Joomla, richiede la preparazione dei valori per entrambe le lingue e verifica che non compaiano campi della lingua opposta. Sul content plugin verifica la sanitizzazione prima della ricezione dell'evento e dopo la modifica, impedendo script, handler inline e URL attivi. Un oggetto sorgente con ID diverso da quello autorizzato deve essere respinto prima del dispatch. Restano le prove esistenti su campi docente e contenuti pubblici; la CI deve attestare il risultato sull'HEAD.
+
+**Collaudo manuale Joomla: In attesa.** Creare campi per corsi, docenti e lezioni con lingue, gruppi di accesso e stati diversi. Controllare guest/studente/docente, override template IT/EN, plugin editor/content installati e la mancata esposizione di lezioni o dati privati agli eventi pubblici. Verificare che nessun HTML attivo venga persistito o visualizzato. Registrare separatamente i risultati di sito, senza equipararli alla CI.
+
 ## SECDEV-02 / CORE-06 — Chiavi lingua concatenate staticamente (26/11/2026)
 
 **Verifica automatica candidata:** `tests/secdev02-core06-runtime-keys.py` riconosce anche le chiavi Joomla `Text::_`/`sprintf`/`plural`/`script` costruite esclusivamente concatenando frammenti PHP letterali, e le verifica contro i cataloghi IT/EN del client corretto. Fixture negative provano una chiave composta assente e una concatenazione dipendente da variabile che non deve essere presentata come copertura statica. Gli usi realmente dinamici restano esplicitamente fuori dalla certificazione. L'esito va acquisito sul commit finale della CI.
