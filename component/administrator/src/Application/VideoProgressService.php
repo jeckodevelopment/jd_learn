@@ -117,7 +117,7 @@ final class VideoProgressService
         $video = new VideoSource($lesson->provider_key, $source['reference'], (int) $lesson->
             source_revision, $source['options'] ?? []);
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $context[1]->rules_json);
-        $trackingRequired = $rules['mode'] !== 'consultation';
+        $trackingRequired = $rules['mode'] !== 'consultation' && $lesson->completion_rule === 'video_coverage';
         $capabilities = $provider->getCapabilities($video);
         if ($trackingRequired && !($capabilities->position && $capabilities->duration && $capabilities->seek)) {
             throw new \RuntimeException('COM_JLMS_VIDEO_UNAVAILABLE', 503);
@@ -170,7 +170,7 @@ final class VideoProgressService
         $fingerprint = self::fingerprint($preflight[3]);
         $descriptor = $this->descriptor([...$preflight, $language]);
         $rules = \Jlms\Component\Jlms\Administrator\Domain\TeachingRules::decode((string) $preflight[1]->rules_json);
-        if ($rules['mode'] === 'consultation') {
+        if ($rules['mode'] === 'consultation' || $preflight[3]->completion_rule === 'manual') {
             $current = $this->context($identity, $language, $enrollmentId, $lessonId, false);
             if (!hash_equals($fingerprint, self::fingerprint($current[3]))) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
@@ -321,6 +321,11 @@ final class VideoProgressService
             $events
 ): array {
             [$actor, $version, $enrollment, $lesson] = $this->context($identity, $language, $enrollmentId, $lessonId);
+            // Legacy playback sessions cannot award coverage after an editorial
+            // switch to manual confirmation. A manual video uses a no-tracking grant.
+            if ($lesson->completion_rule !== 'video_coverage') {
+                throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
+            }
             $now = ($this->clock)();
             if ((int) $lesson->source_revision !== $sourceRevision) {
                 throw new \RuntimeException('COM_JLMS_VIDEO_CONFLICT', 409);
