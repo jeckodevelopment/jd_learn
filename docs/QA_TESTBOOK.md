@@ -1,3 +1,13 @@
+## SECDEV-02 — Verifica formale 23 servizi Joomla e collaudi residui (26/11/2026 · PR #1057)
+
+**Criterio tecnico con evidenza:** `SECDEV-02/criterion_04` è verificato dal registro delle 23 decisioni Joomla e dal nuovo gate `tests/secdev02-core-decision-signoff.py` con fixture negative. Non introduce nuove funzionalità nel componente e non sostituisce la revisione degli altri criteri.
+
+**Sviluppo/CI ancora da completare:** 17 criteri CORE (`CORE-01, CORE-03, CORE-04` × 2, `CORE-05, CORE-06, CORE-07, CORE-09, CORE-10, CORE-11, CORE-13, CORE-14, CORE-15, CORE-16, CORE-19, CORE-20, CORE-21`) richiedono la verifica completa delle combinazioni descritte nel verbale `docs/SECDEV_02_IMPLEMENTATION_CLOSEOUT_2026-11-26.md`. Le regressioni integrate costituiscono evidenze parziali, non accettazione del criterio.
+
+**Collaudo manuale Joomla: In attesa.** Per i 6 criteri esterni (`CORE-02, CORE-08, CORE-12, CORE-18, CORE-22, CORE-23`) eseguire test con MFA/IdP, policy di conservazione, provider media, SMTP, host updater/backup/restore e plugin consumer reali. Verificare inoltre sul sito ACL per-record, checkout concorrente, menu e lingua, Finder, tutte le viste private/sessioni/cache e User Actions Log. Registrare data, ambiente, versione Joomla, account/ruolo, precondizioni e risultato di ogni prova; non compilare "Eseguito" senza esito osservato.
+
+**Decisione di rilascio:** SECDEV-02 resta Parziale. Il gate `tests/secdev02-closure-readiness.py --require-complete` deve continuare a bloccare qualsiasi promozione complessiva priva di prove.
+
 ## SECDEV-02 / CORE-01, CORE-03, CORE-07 — Gerarchie, revoche ACL e menu IT/EN (26/11/2026)
 
 **Evidenza automatica candidata:** `tests/joomla-categories.php` crea una gerarchia pubblica di tre livelli con categorie native, controlla l'ordine degli antenati e verifica che restrizioni di accesso, stato o lingua sul genitore rendano inaccessibili anche i nipoti. Una ricollocazione nativa sotto una categoria limitata e il successivo ripristino devono rispettare immediatamente la gerarchia. Sul corso pubblicato viene esercitata la revoca/ripristino nella medesima applicazione attraverso quattro proiezioni: URL del corso, disponibilità alla didattica per iscritti, scelta categoria del catalogo e categoria discendente, senza cache di visibilità stantia. Il test verifica inoltre i record di menu Joomla per elenco categorie e dettaglio categoria in italiano e inglese, lingua, accesso, pubblicazione e destinazione esatta.
