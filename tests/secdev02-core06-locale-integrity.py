@@ -20,6 +20,8 @@ CATALOGS = ("com_jlms.ini", "com_jlms.sys.ini")
 KEY = re.compile(r"^([A-Z][A-Z0-9_]+)=(.*)$")
 FORMAT = re.compile(r"%(?:\d+\$)?[-+ #0]*(?:\d+|\*)?(?:\.(?:\d+|\*))?[bcdeEfFgGosuxX]")
 PLACEHOLDER = re.compile(r"\{[A-Za-z][A-Za-z0-9_]*\}")
+# Disallow unescaped quote delimiters and dangling escapes inside Joomla INI values.
+QUOTED_VALUE = re.compile(r'"(?:[^"\\]|\\.)*"')
 
 
 def parse(contents: str, name: str) -> tuple[dict[str, str], list[str]]:
@@ -35,8 +37,8 @@ def parse(contents: str, name: str) -> tuple[dict[str, str], list[str]]:
         key, raw = match.groups()
         if key in result:
             errors.append(f"{name}:{line_number}: duplicate key {key}")
-        elif not raw.startswith('"') or not raw.endswith('"') or len(raw) < 3:
-            errors.append(f"{name}:{line_number}: empty/unquoted value {key}")
+        elif not QUOTED_VALUE.fullmatch(raw) or len(raw) < 3:
+            errors.append(f"{name}:{line_number}: malformed quoted value {key}")
         elif not raw[1:-1].strip():
             errors.append(f"{name}:{line_number}: blank translation {key}")
         result[key] = raw[1:-1]
@@ -93,6 +95,9 @@ def self_test() -> None:
     assert signature("A {USER}") != signature("A {NAME}")
     assert parse(good + 'COM_JLMS_SECOND="Second"\n', "fixture")[1]
     assert parse('COM_JLMS_MISSING="  "\n', "fixture")[1]
+    assert parse('COM_JLMS_BROKEN="A "raw" quote"\n', "fixture")[1]
+    assert parse('COM_JLMS_BROKEN="Value" trailing"\n', "fixture")[1]
+    assert not parse('COM_JLMS_VALID="An escaped \"quote\" is valid"\n', "fixture")[1]
     with tempfile.TemporaryDirectory(prefix="jdlearn-locale-") as folder:
         root = Path(folder)
         for client in CLIENTS:
