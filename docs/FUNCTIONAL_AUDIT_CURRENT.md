@@ -2,8 +2,8 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **503**.
-- Mancanti con lacuna accertata: **14**.
+- Implementati: **507**.
+- Mancanti con lacuna accertata: **10**.
 - Esaminati con esito non verificabile: **240**.
 - Da esaminare: **0**.
 
@@ -38,18 +38,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `DOC-03/criterion_03` — Schermate illustrative accessibili e coerenti con la UI. La guida funzionale spiega stato e navigazione usando testo. Gli screenshot illustrativi e accessibili richiesti rientrano nel lavoro ancora previsto dal piano per i manuali.
   - [docs/LEARNER_DASHBOARD.md#Riprendi e Rivedi](../docs/LEARNER_DASHBOARD.md)
   - [docs/PRODUCT_DOCUMENTATION_1.0.0.md#DOC-P4](../docs/PRODUCT_DOCUMENTATION_1.0.0.md)
-- `DOC-10/criterion_01` — Note rilascio e changelog corrispondono alla candidata. La revisione del criterio «Note rilascio e changelog corrispondono alla candidata» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
-  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
-- `DOC-10/criterion_02` — Incompatibilità e limitazioni note esplicitate. La revisione del criterio «Incompatibilità e limitazioni note esplicitate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
-  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
-- `DOC-10/criterion_03` — Riferimenti al pacchetto installabile e versione coerenti. La revisione del criterio «Riferimenti al pacchetto installabile e versione coerenti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
-  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
-- `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La revisione del criterio «Documentazione della release verificata rispetto agli artefatti» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
-  - [docs/VERSIONING.md#L1-L25](../docs/VERSIONING.md#L1-L25)
-  - [CHANGELOG.md#L1-L25](../CHANGELOG.md#L1-L25)
 - `SEC-P5/criterion_01` — Test negativi end-to-end pertinenti alla release candidate. La revisione del criterio «Test negativi end-to-end pertinenti alla release candidate» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L9)
 - `SEC-P5/criterion_02` — Penetration/risk review con ambito e risultati tracciabili. La revisione del criterio «Penetration/risk review con ambito e risultati tracciabili» non ha trovato il deliverable o comportamento richiesto nei riferimenti del progetto; il gap è quindi accertato per il perimetro 1.0.0. La classificazione riguarda questo criterio e non implica un esito di accettazione Joomla.
@@ -1970,6 +1958,23 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tools/doc08_gate.py#missing or empty operational guide](../tools/doc08_gate.py)
   - [docs/DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md#Controlli automatici](../docs/DOC08_RELEASE_DOCUMENTATION_GATE_1.0.0.md)
   - [tests/doc08-gate.py#DOC-08](../tests/doc08-gate.py)
+- `DOC-10/criterion_01` — Note rilascio e changelog corrispondono alla candidata. La candidata 1.0.0 ha una sezione versionata nel changelog. Il validatore confronta il testo delle note del workflow con la sezione della stessa versione e include l'hash del changelog nel record candidato, verificato nuovamente prima della pubblicazione. L'evidenza resta candidate_not_approved e non dichiara accettazione manuale.
+  - [CHANGELOG.md### 1.0.0 — candidata non pubblicata](../CHANGELOG.md)
+  - [tools/release_candidate_evidence.py#release_notes_in_changelog](../tools/release_candidate_evidence.py)
+  - [tests/release-workflow.py#CHANGELOG-different.md](../tests/release-workflow.py)
+  - [.github/workflows/release.yml#--changelog CHANGELOG.md](../.github/workflows/release.yml)
+- `DOC-10/criterion_02` — Incompatibilità e limitazioni note esplicitate. La bozza candidata esplicita compatibilità ancora da convalidare, limiti dei canali di sviluppo, dipendenze da configurazione/provider e funzioni fuori perimetro; la suite DOC-10 verifica le sezioni e i limiti di scope documentati. La bozza non è pubblicazione né accettazione.
+  - [docs/RELEASE_NOTES_CANDIDATE_1.0.0.md### Incompatibilità e limitazioni note](../docs/RELEASE_NOTES_CANDIDATE_1.0.0.md)
+  - [tests/doc10-release-notes.py#Open Badges](../tests/doc10-release-notes.py)
+- `DOC-10/criterion_03` — Riferimenti al pacchetto installabile e versione coerenti. La build candidata verifica i manifest interni e l'uguaglianza versione package/componente; il record collega versione, nome ZIP, commit sorgente, feed e checksum dello ZIP Joomla interno. I test negativi respingono versioni/asset discordanti.
+  - [tests/doc10-release-notes.py#ET.parse(root / "component/jlms.xml")](../tests/doc10-release-notes.py)
+  - [tests/release-workflow.py#manifest version differs](../tests/release-workflow.py)
+  - [tools/release_candidate_evidence.py#package_filename](../tools/release_candidate_evidence.py)
+- `DOC-10/criterion_04` — Documentazione della release verificata rispetto agli artefatti. La validazione lega hash delle note, changelog, feed e ZIP; ricontrolla il record nel job di pubblicazione e interrompe in caso di differenza. La preparazione resta non pubblicante e il record non promuove l'accettazione manuale.
+  - [tools/release_candidate_evidence.py#draft_release_notes_sha256](../tools/release_candidate_evidence.py)
+  - [tools/release_candidate_evidence.py#changelog_sha256](../tools/release_candidate_evidence.py)
+  - [.github/workflows/release.yml#--output dist/RELEASE_CANDIDATE_EVIDENCE.json --verify](../.github/workflows/release.yml)
+  - [tests/release-workflow.py#record['changelog_sha256']](../tests/release-workflow.py)
 - `SEC-P1/criterion_01` — Audit sistematico di minacce/codice: ACL, IDOR, CSRF, XSS, SQLi, SSRF, upload, traversal, asset privati, token e code. SEC-P1: modello delle minacce e code review completati sui confini di trust di tutte le 14 macro-superfici; riesame strutturale dei 37 controller, 10 plugin, 3 task e scansione dei sorgenti PHP distribuiti. Verifiche Joomla di regressione e finding VIDEO-ROOT corretti; prove E2E/pentest e hardening deployment restano nei gate separati SEC-P5 e SEC-P2, non costituiscono criteri SEC-P1.
   - [docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5](../docs/SEC_P1_THREAT_MODEL_1.0.0.md#L1-L5)
   - [docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5](../docs/SEC_P1_THREAT_CONTROL_EVIDENCE_1.0.0.csv#L1-L5)
