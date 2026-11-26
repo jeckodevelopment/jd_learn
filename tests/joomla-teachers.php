@@ -75,6 +75,10 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
 
+// The CLI bootstrap does not set a website locale automatically.
+$app->loadLanguage(
+    $container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false)
+);
 // CORE-10: reuse of a Joomla ListModel must not carry a course list across
 // teacher profiles or a user switch, even when paging parameters match.
 $publicTeacherModel = $factory->createModel('Teacher', 'Site', ['ignore_request' => true]);
