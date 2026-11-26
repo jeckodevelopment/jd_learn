@@ -82,6 +82,8 @@ jobs:
           python3 tests/secdev02-core-php.py
           python3 tests/secdev02-core-ledger.py --self-test
           python3 tests/secdev02-core-ledger.py
+          python3 tests/secdev02-core-decision-signoff.py --self-test
+          python3 tests/secdev02-core-decision-signoff.py
           python3 tests/secdev02-core-ci-wiring.py --self-test
           python3 tests/secdev02-core-ci-wiring.py
           python3 tests/secdev02-core05-overrides-inventory.py --self-test
