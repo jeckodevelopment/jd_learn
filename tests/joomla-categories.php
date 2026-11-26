@@ -326,6 +326,24 @@ $createCourse = static function (int $catid, string $tag, string $alias) use ($f
 $course = $createCourse($child, "en-GB", "taxonomy-visible-course");
 $italianCourse = $createCourse($it, "it-IT", "taxonomy-corso-italiano");
 $hiddenCourse = $createCourse($hidden, "en-GB", "HIDDEN_TAXONOMY_COURSE");
+
+ // SCR-01: the same SQL visibility policy must remove restricted, unpublished
+ // and foreign-language courses from ALL guest catalogue result variants,
+ // including a forged search for the exact hidden promotional title.
+$guestCatalog = $catalog->query($guest, 'en-GB')->clear('select')->select('c.id');
+$catalogIds = array_map('intval', $db->setQuery($guestCatalog, 0, 50)->loadColumn());
+catExpect(
+    !in_array($hiddenCourse, $catalogIds, true)
+    && !in_array($italianCourse, $catalogIds, true),
+    'SCR-01: guest catalogue excludes hidden category and wrong-language promotional results'
+);
+$guestSearch = $catalog->query($guest, 'en-GB')->clear('select')->select('c.id')
+    ->where('c.title LIKE :scrPrivateSearch')->bind(':scrPrivateSearch', '%HIDDEN_TAXONOMY_COURSE%');
+catExpect(
+    $db->setQuery($guestSearch, 0, 50)->loadColumn() === [],
+    'SCR-01: a forged search for a hidden course title does not expose its promotional record'
+);
+
 /*
  * CORE-14/01/07: test the real Finder adapter's SQL eligibility against
  * ACL, state and language changes, including an otherwise valid child below
