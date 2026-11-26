@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-15",
+  "date": "2026-11-26",
   "baseline_commit": "2d70bb15d897f0d9f0ed3cbc29e72bf6bb61c28b",
-  "runtime_tested_head": "22014343e9151aa4feba5d135a1f7c5206d111d7",
-  "ci_run": 43768526287,
+  "runtime_tested_head": "37d3cd17f7afabb192ce429c36d9f1517eacb227",
+  "ci_run": 45899449372,
   "counts": {
     "Stato implementazione": {
       "Completata": 46,
