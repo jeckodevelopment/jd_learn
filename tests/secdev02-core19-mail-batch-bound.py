@@ -188,7 +188,7 @@ def manager_notice_self_test(source: str) -> None:
     assert inspect_manager_notice(source.replace("SHA2(CONCAT(", "SHA1(CONCAT(", 1))
     assert inspect_manager_notice(source.replace("notice.event_key =", "notice.created_at =", 1))
     assert inspect_manager_notice(source.replace("setQuery($query, 0, $limit)", "setQuery($query)", 1))
-    assert inspect_manager_notice(source.replace("com_jlms.enrollment.manager_request", "com_jlms.other", 1))
+    assert inspect_manager_notice(source.replace("com_jlms.enrollment.manager_request", "com_jlms.other"))
 
 
 def main() -> int:
