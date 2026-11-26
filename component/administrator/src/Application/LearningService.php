@@ -762,15 +762,15 @@ final class LearningService
                 ];
             }
         }
-        $audioTranscript = \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
+        $audioTranscript = CoursePresentation::html(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
             LessonTranscript::decode((string) $lesson->kind, (string) ($lesson->params_json ?? '{}')),
             'HTML'
-        );
+        ));
         $videoTranscript = $lesson->kind === 'video'
-            ? \Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
+            ? CoursePresentation::html(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)->clean(
                 LessonTranscript::decode('video', (string) ($lesson->params_json ?? '{}')),
                 'HTML'
-            )
+            ))
             : '';
         $publicTeachers = TeacherProfiles::current($this->db, $actor, $language, (int) $course->id);
         return ['enrollment_id' => $enrollmentId, 'course_id' => (int) $course->id, 'title' => $version->title_snapshot,
@@ -788,7 +788,7 @@ final class LearningService
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
                 'resume_ms' => (int) ($lesson->resume_ms ?? 0), 'audio_transcript' => $audioTranscript,
                 'video_transcript' => $videoTranscript,
-                'body' => EditorialLinkSafety::secure(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)
+                'body' => CoursePresentation::html(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)
                     ->clean((string) ($lesson->body ?? ''), 'HTML')),
                 'custom_fields' => $customFields],
             'outline' => $outline, 'percent' => $percent, 'progress_applicable' => $progressApplicable,
