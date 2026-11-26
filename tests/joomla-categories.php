@@ -337,8 +337,9 @@ catExpect(
     && !in_array($italianCourse, $catalogIds, true),
     'SCR-01: guest catalogue excludes hidden category and wrong-language promotional results'
 );
+$privateTitleSearch = '%HIDDEN_TAXONOMY_COURSE%';
 $guestSearch = $catalog->query($guest, 'en-GB')->clear('select')->select('c.id')
-    ->where('c.title LIKE :scrPrivateSearch')->bind(':scrPrivateSearch', '%HIDDEN_TAXONOMY_COURSE%');
+    ->where('c.title LIKE :scrPrivateSearch')->bind(':scrPrivateSearch', $privateTitleSearch);
 catExpect(
     $db->setQuery($guestSearch, 0, 50)->loadColumn() === [],
     'SCR-01: a forged search for a hidden course title does not expose its promotional record'
