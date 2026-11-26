@@ -40,6 +40,28 @@ expect(
     'LES-02 credentials are not emitted as HTML attributes'
 );
 
+// A content plugin may send attributes without quotes. The shared sanitiser
+// must not trust this variant or retain an old rel=opener override.
+$unquoted = \Jlms\Component\Jlms\Administrator\Application\EditorialLinkSafety::secure(
+    '<a href=https://example.invalid/public rel=opener>Public</a>'
+    . '<a href=https://example.invalid/private?apiKey=TEST_CREDENTIAL rel=opener>Secret</a>'
+    . '<a href=javascript:alert(1)>Script</a>'
+    . '<a href=https://user:pass@example.invalid/private>Userinfo</a>'
+);
+expect(
+    substr_count($unquoted, 'href=') === 1
+    && str_contains($unquoted, 'href=https://example.invalid/public')
+    && substr_count($unquoted, 'rel="noreferrer noopener"') === 4
+    && !str_contains($unquoted, 'rel=opener'),
+    'LES-02 unquoted link attributes cannot bypass credential and referrer policy'
+);
+expect(
+    !str_contains($unquoted, 'TEST_CREDENTIAL')
+    && !str_contains($unquoted, 'javascript:')
+    && !str_contains($unquoted, 'user:pass@'),
+    'LES-02 unsafe unquoted outgoing URLs are stripped without losing anchor text'
+);
+
 $storagePathCheck = new \ReflectionMethod(
     \Jlms\Component\Jlms\Administrator\Infrastructure\ProtectedMaterialStorage::class,
     'isAbsolutePath'
