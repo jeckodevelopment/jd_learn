@@ -543,6 +543,27 @@ try {
     ];
     $db->updateObject('#__jlms_teachers', $releaseCheckout, 'id');
 }
+// CORE-04: reject malformed lifecycle selections before any write. In
+// particular, a duplicate ID or a 101-record batch must not be silently
+// deduplicated/truncated into an apparently successful partial operation.
+$invalidTeacherBatches = [
+    [[], 0, 'empty selection'],
+    [[$public, $public], 0, 'duplicate ID'],
+    [[(string) $public], 0, 'string ID'],
+    [[0], 0, 'zero ID'],
+    [range(1000000, 1000100), 0, 'oversized batch'],
+    [[$public], 2, 'unsupported transition'],
+];
+foreach ($invalidTeacherBatches as [$invalidIds, $invalidTarget, $reason]) {
+    teacherExpect(
+        !$teacherModel->changeStates($invalidIds, $invalidTarget),
+        'CORE-04: teacher bulk rejects ' . $reason
+    );
+    teacherExpect(
+        $teacherSnapshot() === $beforeTeacherBulk,
+        'CORE-04: rejected ' . $reason . ' retains all teacher states and revisions'
+    );
+}
 // Forging the same bulk operation with a viewer must not reuse a privileged
 // prior session or change either teacher, even with the model instance reused.
 $teacherModel->setCurrentUser($learner);

@@ -1,3 +1,9 @@
+## SECDEV-02 / CORE-04 — Limiti delle operazioni massive docenti (26/11/2026)
+
+**Evidenza automatica candidata:** `tests/joomla-teachers.php` estende il test nativo Joomla con selezione vuota, ID duplicati, ID in formato stringa, ID zero, batch di 101 elementi e transizione non ammessa. Ogni rifiuto deve conservare stato e revisione di entrambi i docenti. La suite verifica già separatamente checkout concorrente, utente non autorizzato, record assente e rollback. Il test è da confermare nella CI del commit finale.
+
+**Collaudo manuale Joomla: In attesa.** Selezionare due docenti con stati differenti e ripetere le operazioni massive con ruoli delegati e checkout concorrente. Verificare che le richieste alterate o fuori limite non cambino alcun record, le relazioni con corsi o gli storici. Non considerare il controllo automatico un'accettazione manuale di CORE-04.
+
 ## LCM-03 — Cancellazione dei percorsi con riferimenti di estensioni terze dichiarati (PR #956)
 
 **Evidenza automatica:** [CI #45065520029](https://github.com/jeckodevelopment/jd_learn/actions/runs/45065520029), 4/4 superati su PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium; test `tests/joomla-pathways.php` con una tabella esterna collegata mediante FK `ON DELETE CASCADE`. La cancellazione di un percorso cestinato con un record esterno deve fallire, conservando percorso e record. Una volta rimossa la dipendenza, è consentita soltanto la purga del percorso vuoto e autorizzato.
