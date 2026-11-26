@@ -36,6 +36,14 @@ final class CategoriesModel extends ListModel
         $this->setState('filter.parent_id', $parentId);
     }
 
+    /** Scope list-model result caches to the current Joomla identity and locale. */
+    protected function getStoreId($id = '')
+    {
+        $app = Factory::getApplication();
+        return parent::getStoreId($id . ':actor:' . (int) $app->getIdentity()->id
+            . ':locale:' . $app->getLanguage()->getTag());
+    }
+
     public function getParent(): ?object
     {
         $id = (int) $this->getState('filter.parent_id', 0);
