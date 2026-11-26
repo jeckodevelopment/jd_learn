@@ -386,7 +386,7 @@ final class PublicationService
                             '/\A[a-z][a-z0-9_]{1,63}\z/D',
                             $lesson->provider_key
                         )
-                        || $lesson->completion_rule !== 'video_coverage'
+                        || !in_array($lesson->completion_rule, ['video_coverage', 'manual'], true)
                     ) {
                         throw new \DomainException('COM_JLMS_PUBLICATION_UNSUPPORTED');
                     }
@@ -426,7 +426,7 @@ final class PublicationService
                         throw new \DomainException('COM_JLMS_VIDEO_EDITOR_CONFIG_REQUIRED');
                     }
                     if (
-                        $rules['mode'] !== 'consultation'
+                        $rules['mode'] !== 'consultation' && $lesson->completion_rule === 'video_coverage'
                         && !(($capabilities = $provider->getCapabilities($normal))->position
                         && $capabilities->duration
                         && $capabilities->seek)
