@@ -8,6 +8,7 @@ La chiusura deve distinguere **sviluppi/test di codice**, **accettazione Joomla 
 - **SECDEV-02:** quattro criteri: **criterion_04 implementato con prova specifica**, mentre `criterion_01`, `criterion_02`, `criterion_03` rimangono `unverifiable`. La conformità PSR-12, i test sul pacchetto installato e la versione Joomla 6.2.1 sono verificati nel perimetro CI, non su ogni ambiente/estensione.
 - **Collaudi Joomla manuali:** **non eseguiti** nell'ambito di questa ricognizione. La chiusura implementativa del lavoro residuo rimane distinta dall'accettazione finale della release.
 - **Stato `docs/REQUIREMENTS_STATUS.csv`: Parziale**. Non aumentare la percentuale complessiva del progetto senza ricalcolare tutti i criteri ponderati.
+- **Soglia minima di evidenza dello sviluppo ricalcolata:** **63,76%**, rispetto al 63,64% precedente (+0,12 punti); area sicurezza **50,26%**. È una stima inferiore documentale e **non** la percentuale funzionale globale definitiva. Copertura accettazione manuale **4,67%**, invariata. Fonti: `tools/functional_progress.py`, `docs/REQUIREMENTS_RECONCILIATION.json` e `docs/RELEASE_DASHBOARD.md`.
 
 ## Criterio architetturale certificato: SECDEV-02/criterion_04
 
