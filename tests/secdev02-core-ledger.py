@@ -6,6 +6,7 @@ This confirms traceability and identifies *unverified* controls, not runtime app
 from __future__ import annotations
 
 from collections import Counter
+from datetime import date
 import json
 from pathlib import Path
 import sys
@@ -110,7 +111,11 @@ def validate(root: Path) -> tuple[list[str], dict]:
                         or not (root / candidate).is_file()
                     ):
                         errors.append(f"{key}: reviewed candidate test unavailable: {candidate}")
-            if reconciliation.get("reviewed_on") != "2026-11-25":
+            reviewed_on = reconciliation.get("reviewed_on")
+            try:
+                if not isinstance(reviewed_on, str) or date.fromisoformat(reviewed_on).isoformat() != reviewed_on:
+                    raise ValueError("invalid ISO date")
+            except ValueError:
                 errors.append(f"{key}: reconciliation review date missing")
         for unit in units:
             status = unit.get("status")

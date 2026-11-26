@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "reviewed_on": "2026-11-25",
+  "reviewed_on": "2026-11-26",
   "source_of_truth": "docs/FUNCTIONAL_CRITERIA_1.0.0.json",
-  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice.",
+  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN.",
   "services_reviewed": 23,
-  "pending_criteria_reviewed": 23,
+  "pending_criteria_reviewed": 22,
   "criteria": [
     {
       "service": "CORE-01",
@@ -297,21 +297,6 @@
         "tests/joomla-courses-ui.php",
         "tests/joomla-teachers.php",
         "tests/secdev02-core05-layout-inventory.py"
-      ]
-    },
-    {
-      "service": "CORE-21",
-      "criterion": "private_cache",
-      "label": "Test cache/sessione su tutti gli endpoint personali",
-      "canonical_status": "unverifiable",
-      "acceptance_class": "developer_work_pending",
-      "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Aggiunta pagina bearer mailconsentrevoke alla matrice HTTP con guest e due account e verifica no-store/noindex, referrer; continuare inventario endpoint personali ulteriori.",
-      "manual_action": "Verificare cache e sessione fra account differenti anche dietro CDN/proxy.",
-      "automated_evidence": [
-        "tests/secdev02-core21-private-dispatch.py",
-        "tests/dashboard-http.py",
-        "tests/secdev02-core21-task-matrix.py"
       ]
     },
     {
