@@ -111,6 +111,14 @@ def inspect_retry_and_tasks(source: str, queue: str) -> list[str]:
             "available_at <= UTC_TIMESTAMP(6)" not in claim_sql
         ):
             problems.append("atomic claim must recheck retry availability")
+    # Every eligibility/consent skip must be conditional on the sending claim.
+    # Otherwise an administrator's concurrent state change may be overwritten.
+    skips = re.findall(
+        r"""\$skip = \$this->db->createQuery\(\)->update\('#__jlms_mail_queue'\)([\s\S]*?)\$this->db->setQuery\(\$skip\)->execute\(\);""",
+        candidate,
+    )
+    if len(skips) != 7 or any('->where("state = \'sending\'")' not in skip for skip in skips):
+        problems.append("mail skip transitions must be conditional on current sending state")
     failed = candidate.split("$safeError =", 1)
     if len(failed) != 2 or '->where("state = \'sending\'")' not in (
         failed[1].split("$failed++;", 1)[0]
@@ -131,6 +139,12 @@ def retry_self_test(source: str, queue: str) -> None:
         "->where('available_at <= UTC_TIMESTAMP(6)')", "", 1
     )
     assert inspect_retry_and_tasks(source, altered)
+    skip_start = queue.index("$skip =")
+    first_skip = queue[skip_start:]
+    altered_skip = queue[:skip_start] + first_skip.replace(
+        '->where("state = \'sending\'")', '', 1
+    )
+    assert inspect_retry_and_tasks(source, altered_skip)
     retry_start = queue.index("$safeError =")
     retry_tail = queue[retry_start:]
     altered_retry = queue[:retry_start] + retry_tail.replace(
