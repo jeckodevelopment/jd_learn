@@ -53,7 +53,8 @@ def verify(args):
         changelog_source,
     )
     assert release_notes_in_changelog, "Versioned candidate changelog section is missing"
-    normalize = lambda value: " ".join(value.split())
+    def normalize(value):
+        return " ".join(value.split())
     assert normalize(args.release_notes) in normalize(release_notes_in_changelog.group(1)), (
         "Release notes do not match the versioned changelog candidate"
     )
