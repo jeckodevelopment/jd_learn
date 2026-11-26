@@ -223,6 +223,42 @@ $lesson = $authoring->saveLesson(
         "body" => "<p>Video description</p>",
     ],
 );
+// SCR-06: explicit manual rule is allowed only after a deliberate author choice.
+// A second OPTIONAL video keeps the legacy required coverage fixture unchanged.
+$manualVideo = $authoring->saveLesson(
+    $actor,
+    $scope() + [
+        "id" => 0,
+        "module_id" => $module,
+        "title" => "Manual video lesson",
+        "kind" => "video",
+        "required" => "0",
+        "video_completion_rule" => "manual",
+        "provider_key" => "youtube",
+        "source_reference" => "dQw4w9WgXcQ",
+        "duration_seconds" => "10",
+        "duration_confirmed" => "1",
+        "body" => "<p>Explicit manual lesson.</p>",
+    ],
+);
+videoExpect(
+    (string) $db->setQuery("SELECT completion_rule FROM #__jlms_lessons WHERE id=" .
+        $manualVideo)->loadResult() === "manual",
+    "SCR-06: explicit manual video rule is persisted in the draft"
+);
+$invalidVideoRule = false;
+try {
+    $authoring->saveLesson($actor, $scope() + [
+        "id" => 0, "module_id" => $module, "title" => "Invalid video rule",
+        "kind" => "video", "required" => "0", "video_completion_rule" => "unsafe_rule",
+        "provider_key" => "youtube", "source_reference" => "dQw4w9WgXcQ",
+        "duration_seconds" => "10", "duration_confirmed" => "1", "body" => "<p>Reject.</p>",
+    ]);
+} catch (\DomainException $error) {
+    $invalidVideoRule = $error->getMessage() === "COM_JLMS_INVALID_INPUT";
+}
+videoExpect($invalidVideoRule, "SCR-06: unknown manual/video completion rule cannot be submitted");
+
 $cr = (int) $db->setQuery("SELECT revision FROM #__jlms_courses WHERE id=" . $course)->loadResult();
 $settings = \Joomla\CMS\Component\ComponentHelper::getParams("com_jlms");
 $settings->set("video_external_policy", "blocked");
@@ -261,6 +297,38 @@ $service = new \Jlms\Component\Jlms\Administrator\Application\VideoProgressServi
     static function () use (&$now): int {
         return $now;
     },
+);
+$manualView = $learning->classroom($student, "en-GB", $enrollment, $manualVideo);
+videoExpect(
+    $manualView["lesson"]->completion_rule === "manual"
+    && $manualView["lesson"]->kind === "video",
+    "SCR-06: authorised classroom receives only the frozen editorial manual rule"
+);
+videoDenied(
+    fn() => $service->playback($student, "en-GB", $enrollment, $manualVideo, false),
+    403,
+    "SCR-06: manual video rule does not bypass provider consent"
+);
+$manualGrant = $service->playback($student, "en-GB", $enrollment, $manualVideo, true);
+videoExpect(
+    $manualGrant["tracking"] === false && $manualGrant["session_id"] === null,
+    "SCR-06: explicit manual video never receives a coverage-tracking session"
+);
+videoDenied(
+    fn() => $learning->complete($other, "en-GB", $enrollment, $manualVideo, bin2hex(random_bytes(16))),
+    404,
+    "SCR-06: foreign enrollment cannot manually complete a video"
+);
+$learning->complete($student, "en-GB", $enrollment, $manualVideo, bin2hex(random_bytes(16)));
+videoExpect(
+    (string) $db->setQuery("SELECT state FROM #__jlms_lesson_progress WHERE enrollment_id=" .
+        $enrollment . " AND lesson_id=" . $manualVideo)->loadResult() === "completed",
+    "SCR-06: authorised manual video confirmation updates only the lesson ledger"
+);
+videoExpect(
+    (int) $db->setQuery("SELECT completed_total FROM #__jlms_enrollments WHERE id=" .
+        $enrollment)->loadResult() === 0,
+    "SCR-06: optional manual lesson cannot earn credit for the required coverage video"
 );
 videoFixtureUpdate(
     "jlms_lessons",
