@@ -89,8 +89,10 @@ $app->loadIdentity(new \Joomla\CMS\User\User());
 $guestTeacherKey = $teacherCacheMethod->invoke($publicTeacherModel, 'teacher-course-list');
 teacherExpect($guestTeacherKey !== $teacherOneKey, 'CORE-10: public teacher lists isolate identity');
 $app->loadIdentity($operator);
-teacherExpect($teacherCacheMethod->invoke($publicTeacherModel, 'teacher-course-list') === $teacherOneKey,
-    'CORE-10: public teacher list identity scope is stable');
+teacherExpect(
+    $teacherCacheMethod->invoke($publicTeacherModel, 'teacher-course-list') === $teacherOneKey,
+    'CORE-10: public teacher list identity scope is stable'
+);
 $app->getInput()->set('id', 0);
 
 $teacherListTemplate = file_get_contents(dirname(__DIR__) . '/component/administrator/tmpl/teachers/default.php');
