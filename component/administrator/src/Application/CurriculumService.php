@@ -774,6 +774,7 @@ final class CurriculumService
             $id,
             $fields,
             $durationProof,
+            $transcript,
             $requiredLessons,
             $alternativeLessonId,
             $thresholdSubmitted,
