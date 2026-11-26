@@ -117,7 +117,8 @@ curriculumExpect(
     str_contains($row->body, '<strong>Safe text</strong>')
     && str_contains($row->body, 'href="https://example.invalid/open"')
     && !preg_match('/<script|<iframe|<img|onerror=|javascript:/i', $row->body),
-    'LES-02 native Joomla lesson authoring retains safe HTML and strips arbitrary active content'
+    'LES-02 native Joomla lesson authoring retains safe HTML and strips arbitrary active content: '
+    . json_encode($row->body, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)
 );
 curriculumExpect(
     !str_contains($row->body, 'TEST_CREDENTIAL')
