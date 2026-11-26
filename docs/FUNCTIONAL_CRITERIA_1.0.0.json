@@ -11484,7 +11484,7 @@
           "references": [
             "docs/SEC_P5_NEGATIVE_E2E_1.0.0.json#roster-authorization",
             "tests/sec-p5-negative-e2e.py#inspect(manifest, workflow",
-            ".github/workflows/ci.yml#SEC-P5 negative E2E wiring gate"
+            ".github/workflows/ci.yml#python3 tests/sec-p5-negative-e2e.py"
           ]
         }
       },
