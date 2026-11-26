@@ -28,17 +28,24 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
  <?php if ($this->inspection) : ?>
   <h2><?= $this->escape($this->inspection['category']->title) ?></h2>
   <p><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_DELETE_NOTE') ?></p>
+  <?php if ($this->inspection['descendant_categories'] > 0) : ?>
+   <p id="jlms-category-reassign-subtree-warning" class="alert alert-warning" role="status"><?=
+        Text::sprintf('COM_JLMS_CATEGORY_REASSIGN_CHILD_WARNING',
+            (int) $this->inspection['descendant_categories']) ?></p>
+  <?php endif; ?>
   <form action="<?= Route::_('index.php?option=com_jlms&task=categoryreassignment.reassign', false) ?>" method="post">
    <input type="hidden" name="category_id" value="<?= $categoryId ?>">
    <table class="table table-striped">
     <thead><tr><th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_REFERENCE') ?></th>
       <th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_COUNT') ?></th>
+      <th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_DESCENDANT_COUNT') ?></th>
       <th scope="col"><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_TARGET') ?></th>
       </tr></thead>
     <tbody>
         <?php foreach ($this->inspection['references'] as $key => $count) : ?>
      <tr><th scope="row"><?= Text::_($key === 'questions' ? 'COM_JLMS_QUESTION_BANK' : 'COM_JLMS_'
-         . strtoupper($key)) ?></th><td><?= (int) $count ?></td><td>
+         . strtoupper($key)) ?></th><td><?= (int) $count ?></td>
+     <td><?= (int) ($this->inspection['descendant_references'][$key] ?? 0) ?></td><td>
             <?php if ($count > 0) : ?>
        <select class="form-select" name="destination[<?= $this->escape($key) ?>]" required>
         <option value=""><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_CHOOSE_TARGET') ?></option>
