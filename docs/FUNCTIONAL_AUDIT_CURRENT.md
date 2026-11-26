@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **508**.
+- Implementati: **509**.
 - Mancanti con lacuna accertata: **9**.
-- Esaminati con esito non verificabile: **240**.
+- Esaminati con esito non verificabile: **239**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -344,10 +344,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/COURSE_EDITOR.md#L1-L30](../docs/COURSE_EDITOR.md#L1-L30)
   - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
   - [tests/joomla-courses-ui.php#L1-L30](../tests/joomla-courses-ui.php#L1-L30)
-- `CORE-21/private_cache` — Test cache/sessione su tutti gli endpoint personali. Video, download e pagine personali hanno politiche private e fixture HTTP rappresentative. Serve il censimento dei task personali e una prova coerente di cache e sessione per ognuno.
-  - [component/site/src/Controller/VideoController.php#private, no-store](../component/site/src/Controller/VideoController.php)
-  - [component/site/src/Controller/CertificateController.php#private, no-store](../component/site/src/Controller/CertificateController.php)
-  - [tests/dashboard-http.py#local nav does not duplicate IDs](../tests/dashboard-http.py)
 - `CORE-22/release_updates` — Update server e rollback di migrazione in hosting variabili. Il feed e la pipeline esistono. La compatibilità del rollback di dati e migrazioni in hosting diversi richiede esecuzioni documentate.
   - [packages/pkg_jlms.xml#<updateservers>](../packages/pkg_jlms.xml)
   - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)
@@ -1098,6 +1094,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/PublicationService.php#onJlmsCourseTransition](../component/administrator/src/Application/PublicationService.php)
   - [tests/joomla-publication.php#CORE-17: exactly one native Joomla actionlog event](../tests/joomla-publication.php)
   - [packages/pkg_jlms.xml#plg_actionlog_jdlearn](../packages/pkg_jlms.xml)
+- `CORE-21/private_cache` — Test cache/sessione su tutti gli endpoint personali. Il gate statico verifica no-store prima del dispatch e del rifiuto delle viste; il manifesto censisce tutti i task privati e le viste protette; dashboard-http esercita ogni route con sessione owner, secondo account e guest verificando no-store/noindex e isolamento del contenuto. La CI #4693 verde ha eseguito la suite Joomla disposable su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Il comportamento di reverse proxy/CDN e hosting reale resta collaudo separato.
+  - [component/site/src/Controller/DisplayController.php#Cache-Control](../component/site/src/Controller/DisplayController.php)
+  - [tests/secdev02-core21-private-dispatch.py#no-store](../tests/secdev02-core21-private-dispatch.py)
+  - [tests/secdev02-core21-task-matrix.py#PRIVATE_VIEWS](../tests/secdev02-core21-task-matrix.py)
+  - [tests/dashboard-http.py#CORE-21](../tests/dashboard-http.py)
+  - [docs/CORE_21_FRONTEND_CACHE_REJECTION_2026-11-26.md#Limiti e accettazione](../docs/CORE_21_FRONTEND_CACHE_REJECTION_2026-11-26.md)
+  - [.github/workflows/ci.yml#python3 tests/dashboard-http.py](../.github/workflows/ci.yml)
 - `UI-01/all_views` — Inventario completo di ID/classi su tutte le viste della 1.0.0. L'inventario contratti frontend comprende già la sezione Viste aggiuntive distribuite, con lessonpreview e mailconsentrevoke, radici DOM e hook da preservare. La segnalazione di omissione era obsoleta. Non si considera eseguita l'accettazione manuale degli override.
   - [docs/FRONTEND_CONTRACT_INVENTORY.md#Viste aggiuntive distribuite](../docs/FRONTEND_CONTRACT_INVENTORY.md)
   - [component/site/tmpl/lessonpreview/default.php#jlms](../component/site/tmpl/lessonpreview/default.php)
