@@ -48,6 +48,26 @@ $check = static function (bool $ok, string $message): void {
     }
 };
 
+// CORE-13: real Joomla router segment decoding is identical across the
+// registered editorial views, even for historical aliases and invalid IDs.
+$routerClass = new ReflectionClass(\Jlms\Component\Jlms\Site\Service\Router::class);
+$router = $routerClass->newInstanceWithoutConstructor();
+$routeMethods = [
+    'getCourseId', 'getCategoryId', 'getPathwayId', 'getTeacherId',
+    'getTeachereditId', 'getClassroomId', 'getQuizId',
+];
+$validRoutes = ['24', '00024', '24:published-course', '24-old-alias'];
+$invalidRoutes = ['', '0', '000', '-24', '24:', '24-', '24/other', '24?extra=1',
+    '24#fragment', '999999999999999999999999999999999'];
+foreach ($routeMethods as $routeMethod) {
+    foreach ($validRoutes as $routeSegment) {
+        $check($router->$routeMethod($routeSegment, []) === 24, 'CORE-13: valid editorial route');
+    }
+    foreach ($invalidRoutes as $routeSegment) {
+        $check($router->$routeMethod($routeSegment, []) === 0, 'CORE-13: malformed editorial route rejected');
+    }
+}
+
 $lifecycleSnapshotFile = dirname($root) . '/pathway-lifecycle-snapshot.json';
 $readLifecycleSnapshot = static function (int $pathId, int $courseId) use ($db): array {
     return [
@@ -584,6 +604,39 @@ $check(
     (int) $db->setQuery('SELECT state FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult() === -2,
     'failed bulk selection did not restore first pathway'
 );
+// CORE-15: malformed pathway transitions cannot change a previously
+// trashed record or its ordered relations, including oversized bulk inputs.
+$beforeInvalidBulk = $db->setQuery(
+    'SELECT id,state,revision FROM #__jlms_pathways WHERE id IN ('
+    . $pathwayId . ',' . $emptyId . ') ORDER BY id'
+)->loadAssocList();
+$beforeInvalidLinks = $db->setQuery(
+    'SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='
+    . $pathwayId . ' ORDER BY ordering'
+)->loadAssocList();
+$invalidLifecycleBatches = [
+    [[], 0],
+    [[$pathwayId, $pathwayId], 0],
+    [[(string) $pathwayId], 0],
+    [[0], 0],
+    [range(1000000, 1000100), 0],
+    [[$pathwayId], 3],
+];
+foreach ($invalidLifecycleBatches as [$selection, $targetState]) {
+    $check(!$pathModel->changeStates($selection, $targetState), 'CORE-15: invalid transition rejected');
+    $currentState = $db->setQuery(
+        'SELECT id,state,revision FROM #__jlms_pathways WHERE id IN ('
+        . $pathwayId . ',' . $emptyId . ') ORDER BY id'
+    )->loadAssocList();
+    $currentLinks = $db->setQuery(
+        'SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='
+        . $pathwayId . ' ORDER BY ordering'
+    )->loadAssocList();
+    $check(
+        $currentState === $beforeInvalidBulk && $currentLinks === $beforeInvalidLinks,
+        'CORE-15: rejected transition preserves states, revisions and course links'
+    );
+}
 $check(!$pathModel->changeStates([$pathwayId, $pathwayId], 0), 'duplicate identifiers denied');
 $check(!$pathModel->changeStates([$pathwayId], 1), 'bulk action cannot publish directly from trash');
 // LCM-03: native checkout of one record must roll back the complete bulk action.
