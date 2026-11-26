@@ -15,7 +15,25 @@ final class CategoriesModel extends ListModel
     {
         parent::populateState($ordering, $direction);
         $this->setState('list.limit', max(1, min(100, (int) $this->state->get('list.limit', 20))));
-        $this->setState('filter.parent_id', max(0, Factory::getApplication()->getInput()->getInt('parent_id', 0)));
+        // An absent parent selects the root; a malformed explicit parent must not
+        // silently fall back to the root directory or a different category.
+        $rawParent = Factory::getApplication()->getInput()->get('parent_id', null, 'RAW');
+        if ($rawParent === null) {
+            $parentId = 0;
+        } elseif (!is_string($rawParent) && !is_int($rawParent)) {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        } elseif (preg_match('/\\A[0-9]+\\z/D', (string) $rawParent) !== 1) {
+            throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+        } else {
+            $digits = ltrim((string) $rawParent, '0');
+            $parentId = $digits === '' ? 0 : filter_var($digits, FILTER_VALIDATE_INT, [
+                'options' => ['min_range' => 1],
+            ]);
+            if ($parentId === false) {
+                throw new \RuntimeException('JERROR_LAYOUT_PAGE_NOT_FOUND', 404);
+            }
+        }
+        $this->setState('filter.parent_id', $parentId);
     }
 
     public function getParent(): ?object
