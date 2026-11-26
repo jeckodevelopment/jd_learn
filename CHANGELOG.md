@@ -2,6 +2,8 @@
 
 Prima versione stabile di JD Learn
 
+- DOC-10 implementativo completato (PR #1074, merge `37d3cd17f7afabb192ce429c36d9f1517eacb227`): le note della candidata sono legate alla sezione versionata del changelog e il digest è verificato prima della pubblicazione. Stato candidato e accettazione manuale restano separati.
+
 - **LCM-05 — chiusura gate lifecycle implementativo (22/11/2026, PR #965 e #966):** 7/7 criteri documentati e testati nel perimetro software. Le query del plugin Finder rispettano stati, lingua, accesso e calendario; transizioni notificano dopo commit; metadati SEO HTTP e snapshot di percorso/associazioni dopo upgrade sono verificati. La CI #45076048707 è 4/4 verde, compreso il backup/ripristino disposable eseguito nella pipeline. Collaudo Smart Search e recovery dell'hosting reale non eseguiti.
 
 - **LCM-05 — gate Finder e conservazione lifecycle (22/11/2026):** ampliate le prove dell'adapter Finder installato su database Joomla per archiviazione, cestinazione, ripristino non pubblicato, pubblicazione esplicita, finestre di pubblicazione e filtro lingua. Aggiunto snapshot isolato dei dati stabili di percorso e associazioni da confrontare prima e dopo un aggiornamento reale del pacchetto in CI; versioni, iscrizioni e attestati sono coperti dalle rispettive fixture retained della stessa pipeline. Restano distinti il collaudo SEO su installazione reale e le verifiche operative di backup/ripristino dell'hosting.
