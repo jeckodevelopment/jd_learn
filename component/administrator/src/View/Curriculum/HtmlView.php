@@ -186,7 +186,7 @@ final class HtmlView extends BaseHtmlView
             $lessonData = $common + ['kind' => in_array($requestedKind, ['video', 'document', 'audio'], true) ?
                      $requestedKind : 'text', 'required' => 1, 'required_lesson_ids' => [], 'publish_up' => '',
                      'publish_down' => '', 'release_after_days' => '', 'audio_transcript' => '',
-                     'video_transcript' => ''];
+                     'video_transcript' => '', 'video_completion_rule' => 'video_coverage'];
             $this->selectedModule = $app->getInput()->getInt('module_id', 0);
             $this->editorMode = $app->getInput()->getBool('new_module') || !$this->outline['modules'] ? 'module' : '';
             if ($this->outline['modules'] && $app->getInput()->getBool('new_lesson')) {
@@ -290,7 +290,9 @@ final class HtmlView extends BaseHtmlView
                         'title' => $lesson->title, 'module_id' => $lesson->module_id, 'body' => $lesson->body,
                         'audio_transcript' => $audioTranscript, 'video_transcript' => $videoTranscript,
                         'public_preview' => (int) $lesson->preview,
-                        'kind' => $lesson->kind, 'required' => $lesson->required, 'provider_key' => $lesson
+                        'kind' => $lesson->kind, 'required' => $lesson->required,
+                        'video_completion_rule' => $lesson->kind === 'video' ? $lesson->completion_rule
+                            : 'video_coverage', 'provider_key' => $lesson
                         ->provider_key,
                         'source_reference' => $lesson->provider_key === 'html5' ? '' :
                              ($source['reference'] ?? ''), 'privacy_hash' => $source['options']['privacy_hash'] ?? '',
@@ -381,7 +383,8 @@ final class HtmlView extends BaseHtmlView
                              $valid && (is_string($item) || is_int($item)), true)));
                     $safe = array_intersect_key($saved, array_flip(['title','body','provider_key'
                         ,'source_reference','privacy_hash','duration_mode','duration_seconds'
-                        ,'duration_confirmed','video_threshold_percent','audio_transcript','video_transcript'
+                        ,'duration_confirmed','video_threshold_percent','video_completion_rule'
+                        ,'audio_transcript','video_transcript'
                         ,'required','kind','required_lesson_ids','publish_up','publish_down'
                         ,'release_after_days','public_preview']));
                     if ($this->editorMode === 'module') {
