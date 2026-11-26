@@ -1,3 +1,5 @@
+**CORE-10 — test Content History dei campi docente (lotto in corso, 26/11/2026):** `tests/joomla-editorial.php` verifica ora una revisione con campo nativo docente, modifica successiva e ripristino con `TeacherModel::loadHistory()`. Il criterio completo resta Parziale/unverifiable; non si promuove l'accettazione Joomla né la percentuale. Dettaglio: [CORE10_TEACHER_HISTORY_2026-11-26.md](CORE10_TEACHER_HISTORY_2026-11-26.md).
+
 # Piano operativo delle PR — JD Learn 1.0.0
 
 **Issue #379 — uniformità dei metadati, P1:** una sola versione/data di rilascio e nomi pubblici `JD Learn - ...` per tutte le 11 parti Joomla. Build deterministica `tools/build.py`, controllo degli ZIP annidati `tests/extension-manifest-metadata.py`, workflow release con data esplicita, test di installazione e upgrade CI. Registrare il collaudo della Gestione estensioni su Joomla prima dell'accettazione finale. Milestone 1.0.0; governance PR/label in `docs/RELEASE_METADATA.md`.
