@@ -3202,3 +3202,17 @@ Versione target: Joomla 6.2.1; registrare PHP, database, ruoli, lingue, template
 - **SCR06-V05 / compatibilità editor e versioni:** duplicare, spostare e modificare una bozza; la scelta deve restare associata alla lezione. Nelle versioni pubblicate/storiche il valore non deve cambiare automaticamente. Ripetere sul frontend mobile e con PHP/DB di destinazione.
 
 Raccogliere esito, versione pacchetto, PHP, database, provider, politica di consenso, configurazione, ruoli e screenshot/log degli eventuali KO. Gli interventi implementativi successivi dipendono da difetti riproducibili.
+
+
+## SCR-08 / SCR-01 / SCR-02 / SCR-06 / SCR-13 — collaudi successivi al lotto alternative (26/11/2026)
+
+**Stato: NON ESEGUITI.** Le verifiche CI su Joomla effimero non costituiscono collaudo umano sull'istanza di destinazione.
+
+- **SCR08-ALT-01 (configurazione):** nella bozza inserire un video e almeno una lezione testo, documento o audio. Verificare che il selettore dell'alternativa parta da *Nessuna*, elenchi solo lezioni locali della stessa versione e non proponga altri video, la stessa lezione o collegamenti esterni. Salvare, ricaricare il form, modificare una bozza e verificare la scelta.
+- **SCR08-ALT-02 (validazione):** tentare tramite POST contraffatto di usare come alternativa il video stesso, una lezione di un'altra versione, un ID mancante o un valore non numerico. La scrittura deve fallire senza incrementare la revisione e senza effetti collaterali. Verificare che la pubblicazione rifiuti riferimenti diventati obsoleti dopo eliminazione.
+- **SCR08-ALT-03 (disponibilità):** da studente iscritto verificare il collegamento a una lezione interna già disponibile. Ripetere dopo avere programmato la lezione nel futuro, bloccato un prerequisito, impostato una sequenza che non la rende accessibile e revocato l'iscrizione. Nessun titolo/link alternativo deve essere mostrato se il target non è disponibile.
+- **SCR08-ALT-04 (consenso e credito):** con provider esterno in modalità `site_consent`, negare il consenso, aprire la lezione alternativa, tornare al video e verificare che non sia stato caricato alcun SDK/iframe esterno senza permesso. La lezione alternativa non completa il video richiesto, né tramite telemetria né tramite mutazione manuale non abilitata. Provare anche un errore temporaneo del player.
+- **SCR13-ALT-05 (copie e versioni):** duplicare il modulo che contiene video e lezione alternativa: il riferimento deve puntare alla copia. Duplicare la versione e confermare la rimappatura dei riferimenti, senza cambiare la versione già assegnata a uno studente. Verificare Salva, Salva e chiudi, editor mobile e stato non salvato.
+- **SCR01/02/06 (regressioni):** cercare dal catalogo il titolo di una lezione o corso con ACL negata; verificarne l'assenza in ogni filtro e vista. Spostare una categoria con sottocategorie e verificare i riepiloghi diretti e annidati. Provare la disponibilità e l'indice dell'aula, il salvataggio manuale di testo/audio/video con regola manuale e la ripresa senza crediti non confermati.
+
+Annotare versione Joomla, PHP, database, lingua, ruolo, template, consenso, data, passaggi, risultato atteso/osservato e bug riproducibili. Questo verbale non modifica automaticamente lo stato canonico dei criteri `unverifiable`.
