@@ -40,14 +40,29 @@ with tempfile.TemporaryDirectory() as tmp:
     sums.write_text(f"{hashlib.sha256(archive.read_bytes()).hexdigest()}  {archive.name}\n")
     evidence=Path(tmp)/'evidence.json'
     note=root/'docs/RELEASE_NOTES_CANDIDATE_1.0.0.md'
+    changelog=Path(tmp)/'CHANGELOG.md'
+    changelog.write_text(
+        "## 1.0.0 — candidata non pubblicata\n\n"
+        "Prima versione stabile di JD Learn\n",
+        encoding='utf-8',
+    )
     args=[
         '--version','1.0.0','--commit','a'*40,'--package',archive,
-        '--feed',feed,'--checksums',sums,'--notes',note,
+        '--feed',feed,'--checksums',sums,'--notes',note,'--changelog',changelog,
         '--release-notes','Prima versione stabile di JD Learn','--output',evidence,
     ]
     call('tools/release_candidate_evidence.py',*args)
     call('tools/release_candidate_evidence.py',*args,'--verify')
     changed=list(args)
+    different_changelog=Path(tmp)/'CHANGELOG-different.md'
+    different_changelog.write_text(
+        "## 1.0.0 — candidata non pubblicata\n\n"
+        "Altre note non corrispondenti\n",
+        encoding='utf-8',
+    )
+    mismatch=list(args)
+    mismatch[mismatch.index('--changelog')+1]=different_changelog
+    call('tools/release_candidate_evidence.py',*mismatch,expected=1)
     changed[changed.index('--release-notes')+1]='Different notes on same ZIP'
     call('tools/release_candidate_evidence.py',*changed,'--verify',expected=1)
     sums.write_text('0'*64+f"  {archive.name}\n")
@@ -58,6 +73,7 @@ with tempfile.TemporaryDirectory() as tmp:
         record=json.load(stream)
     assert record['status']=='candidate_not_approved'
     assert record['manual_joomla_acceptance']=='not_asserted'
+    assert record['changelog_sha256']==hashlib.sha256(changelog.read_bytes()).hexdigest()
     record['package_sha256']='0'*64
     evidence.write_text(json.dumps(record))
     call('tools/release_candidate_evidence.py',*args,'--verify',expected=1)

@@ -1,3 +1,5 @@
+**DOC-10 — allineamento note e changelog della candidata (PR #1074 aperta, 26/11/2026):** il record di evidenza lega ora anche l'hash del changelog e richiede una sezione versionata per la candidata con le stesse note immesse nel workflow. Il test di release copre mismatch e integrità del changelog insieme a ZIP, feed e note. La candidata resta `candidate_not_approved`; nessuna pubblicazione o accettazione manuale viene dichiarata.
+
 **CORE-10 — test Content History dei campi docente (PR #1073 aperta, 26/11/2026):** `tests/joomla-editorial.php` verifica ora una revisione con campo nativo docente, modifica successiva e ripristino con `TeacherModel::loadHistory()`. Il criterio completo resta Parziale/unverifiable; non si promuove l'accettazione Joomla né la percentuale. Dettaglio: [CORE10_TEACHER_HISTORY_2026-11-26.md](CORE10_TEACHER_HISTORY_2026-11-26.md).
 
 # Piano operativo delle PR — JD Learn 1.0.0
