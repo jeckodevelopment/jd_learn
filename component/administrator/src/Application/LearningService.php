@@ -480,7 +480,7 @@ final class LearningService
         }
         $supported = ($lesson->kind === 'quiz' && $lesson->completion_rule === 'quiz_pass')
             || (in_array($lesson->kind, ['text', 'document', 'audio'], true) && $lesson->completion_rule === 'manual')
-            || ($lesson->kind === 'video' && $lesson->completion_rule === 'video_coverage'
+            || ($lesson->kind === 'video' && in_array($lesson->completion_rule, ['video_coverage', 'manual'], true)
                 && is_string($lesson->provider_key) && preg_match('/\A[a-z][a-z0-9_]{1,63}\z/D', $lesson
                     ->provider_key) === 1);
         if (!$supported || !LessonAvailability::validReleaseDays($lesson->release_after_days)) {
@@ -786,6 +786,7 @@ final class LearningService
                 'blocked_by_id' => $blocker ? (int) $blocker->required_id : 0,
                 'blocked_by_title' => $blocker ? (string) $blocker->required_title : '',
                 'provider_key' => $lesson->provider_key, 'duration_ms' => $lesson->duration_ms,
+                'completion_rule' => $lesson->completion_rule,
                 'resume_ms' => (int) ($lesson->resume_ms ?? 0), 'audio_transcript' => $audioTranscript,
                 'video_transcript' => $videoTranscript,
                 'body' => CoursePresentation::html(\Joomla\CMS\Filter\InputFilter::getInstance([], [], 1, 1)
@@ -872,7 +873,7 @@ final class LearningService
             $this->assertLessonAvailable($lesson, $enrollment);
             $this->assertPrerequisitesComplete($enrollmentId, $lessonId, $version);
             if (
-                !in_array($lesson->kind, ['text', 'document', 'audio'], true) || $lesson->completion_rule
+                !in_array($lesson->kind, ['text', 'document', 'audio', 'video'], true) || $lesson->completion_rule
                 !== 'manual'
             ) {
                 throw new \RuntimeException('COM_JLMS_LEARNING_DENIED', 403);

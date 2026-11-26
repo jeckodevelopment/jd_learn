@@ -30,4 +30,12 @@ assert '--jlms-classroom-sticky-offset' in css
 assert 'position: static' in css and 'position: sticky' in css
 for task in ('lesson.complete', 'attachment.download', 'video', 'quiz'):
     assert task in view, task
+# SCR-06: manual video completion exists only for an explicitly authored
+# manual video rule and still uses the CSRF-protected native completion action.
+assert "$selected->completion_rule === 'manual'" in view
+assert "$selected->provider_key === 'youtube' && $selected->completion_rule === 'video_coverage'" in view
+video_region = view.split('id="jlms-video-region"', 1)[1].split('id="jlms-video-speed-control"', 1)[0]
+assert 'id="jlms-complete-form"' in video_region
+assert 'name="task" value="lesson.complete"' in video_region
+assert "HTMLHelper::_('form.token')" in video_region
 print('FE-03 classroom responsive outline and compatibility: OK')

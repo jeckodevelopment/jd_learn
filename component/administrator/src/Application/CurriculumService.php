@@ -662,6 +662,15 @@ final class CurriculumService
         if (!in_array($required, ['0', '1'], true)) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
+        // Video coverage remains the default. Only an explicit editorial selection
+        // can switch a video lesson to manually confirmed completion.
+        $videoCompletionRule = $input['video_completion_rule'] ?? 'video_coverage';
+        if (
+            !is_string($videoCompletionRule) || !in_array($videoCompletionRule, ['video_coverage', 'manual'], true)
+            || ($kind !== 'video' && $videoCompletionRule === 'manual')
+        ) {
+            throw new \DomainException('COM_JLMS_INVALID_INPUT');
+        }
         $transcript = in_array($kind, ['audio', 'video'], true)
             ? CoursePresentation::html(LessonTranscript::sanitizeInput(
                 $input[$kind . '_transcript'] ?? '',
@@ -671,7 +680,7 @@ final class CurriculumService
         $fields = ['module_id' => $moduleId, 'title' => $title, 'kind' => $kind,
             'body' => CoursePresentation::html(($this->filterHtml)($input['body'] ?? '')),
             'required' => (int) $required,
-            'completion_rule' => $kind === 'video' ? 'video_coverage' : 'manual', 'provider_key' => null,
+            'completion_rule' => $kind === 'video' ? $videoCompletionRule : 'manual', 'provider_key' => null,
             'source_json' => null, 'media_asset_id' => null, 'duration_ms' => null,
             'params_json' => in_array($kind, ['audio', 'video'], true) ? LessonTranscript::encode(
                 $transcript,

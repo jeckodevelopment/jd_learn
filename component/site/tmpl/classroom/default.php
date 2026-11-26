@@ -150,7 +150,7 @@ foreach ($item['outline'] as $entry) {
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
-            <?php if ($selected->provider_key === 'youtube') : ?>
+            <?php if ($selected->provider_key === 'youtube' && $selected->completion_rule === 'video_coverage') : ?>
                 <?php $nextVideoLessonAvailable = $nextLesson !== null
                     && $nextLesson->schedule_state === 'available'
                     && empty($nextLesson->prerequisite_blocked); ?>
@@ -171,6 +171,16 @@ foreach ($item['outline'] as $entry) {
                   <div class="jlms-lesson-transcript__content"><?= $selected->video_transcript ?></div>
                   </details><?php
             endif; ?>
+            <?php if ($item['progress_applicable'] && $selected->completion_rule === 'manual') : ?>
+   <form id="jlms-complete-form" method="post" action="<?= Route::_('index.php?option=com_jlms') ?>">
+    <input type="hidden" name="task" value="lesson.complete">
+    <input type="hidden" name="jform[enrollment_id]" value="<?= (int) $item['enrollment_id'] ?>">
+    <input type="hidden" name="jform[lesson_id]" value="<?= (int) $selected->id ?>">
+    <input type="hidden" name="jform[idempotency_key]" value="<?= $this->escape($this->mutationKey) ?>">
+                <?= HTMLHelper::_('form.token') ?>
+    <button class="btn btn-primary" type="submit"><?= Text::_('COM_JLMS_MARK_COMPLETE') ?></button>
+   </form>
+            <?php endif; ?>
    <div id="jlms-video-speed-control" hidden>
     <label for="jlms-video-speed"><?= Text::_('COM_JLMS_VIDEO_SPEED') ?></label>
     <select id="jlms-video-speed" aria-label="<?= $this->escape(Text::_('COM_JLMS_VIDEO_SPEED')) ?>">

@@ -1,5 +1,14 @@
 # Lezioni video
 
+## SCR-06 — regola editoriale esplicita di completamento manuale (26/11/2026)
+
+La lezione video mantiene come regola **predefinita** `video_coverage`: solo la copertura temporale verificata dal server può confermare una lezione video richiesta. Nell’editor del programma l’autore può scegliere, per quella lezione, **Conferma manuale dello studente**; il valore `manual` viene validato lato server, conservato nella bozza e congelato nella versione pubblicata. La scelta non si applica ai corsi senza regole didattiche né alle lezioni di testo/documento/audio, che mantengono le rispettive regole. La durata e l’eventuale configurazione/provider video devono comunque soddisfare i requisiti di pubblicazione.
+
+**Con regola `manual`** il player richiede sempre autenticazione, accesso corrente e, per i provider esterni, consenso. Il server restituisce un descrittore video senza sessione di tracking; la telemetria di visione non può attribuire crediti. L’aula mostra `Segna come completata` con POST, token Joomla e chiave idempotente. Il servizio `LearningService::complete` controlla di nuovo titolarità, prerequisiti, finestra, versione e regola editoriale prima di attribuire il progresso. Il video resta navigabile e non si completa all’apertura. Una lezione configurata `video_coverage` rifiuta sempre il completamento manuale.
+
+Questa scelta è una regola editoriale *di completamento*, **non** un’autorizzazione a caricare provider esterni senza consenso e **non** la configurazione automatica di un’attività formativa alternativa per SCR-08: le alternative richiedono una distinta scelta dell’autore. In consultazione non si attribuiscono progressi in nessuna modalità. I test automatizzati coprono entrambe le modalità sul sito Joomla effimero; il collaudo con provider/consenso reali resta separato.
+
+
 **Guide operative per ruolo (PBASE-03):** [Amministratore, autore e sviluppatore](VIDEO_PROVIDER_ROLES_1.0.0.md), con esempio di plugin Joomla aderente al contratto di registrazione ma volutamente senza player.
 
 ## Configurazione e limiti attuali
