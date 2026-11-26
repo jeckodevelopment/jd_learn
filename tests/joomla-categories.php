@@ -186,6 +186,12 @@ $grandchild = $saveCategory([
     "alias" => "taxonomy-grandchild",
     "parent_id" => $hidden,
 ]);
+$visibleDeep = $saveCategory([
+    "title" => "Visible nested taxonomy grandchild",
+    "alias" => "taxonomy-visible-grandchild",
+    "parent_id" => $child,
+    "language" => "en-GB",
+]);
 $otherSection = $saveCategory([
     "title" => "PRIVATE_QUESTION_CATEGORY",
     "alias" => "taxonomy-question",
@@ -221,6 +227,11 @@ $model->setState("list.start", 0);
 $ids = array_map(static fn($c) => (int) $c->id, $model->getItems());
 catExpect($ids === [$child] && (int) $model->getTotal() === 1, "hidden children do not affect list or count");
 catExpect(count($catalog->categoryPath($guest, "en-GB", $child)) === 2, "visible native ancestor path");
+catExpect(
+    array_map(static fn (object $entry): int => (int) $entry->id, $catalog
+        ->categoryPath($guest, "en-GB", $visibleDeep)) === [$en, $child, $visibleDeep],
+    "CORE-01: full three-level native ancestor order and IDs preserved"
+);
 $update = static function (int $id, array $fields) use ($db): void {
     $record = (object) (["id" => $id] + $fields);
     $db->updateObject("#__categories", $record, "id", true);
@@ -228,6 +239,7 @@ $update = static function (int $id, array $fields) use ($db): void {
 foreach ([["access", 2], ["published", 0], ["language", "it-IT"]] as [$field, $value]) {
     $update($en, [$field => $value]);
     catExpect(catHidden($child), "ancestor " . $field . " hides direct child URL");
+    catExpect(catHidden($visibleDeep), "CORE-01: ancestor " . $field . " hides nested descendant");
     $update($en, [
         $field => match ($field) {
             "access", "published" => 1,
@@ -236,6 +248,7 @@ foreach ([["access", 2], ["published", 0], ["language", "it-IT"]] as [$field, $v
     ]);
 }
 catExpect(!catHidden($child), "restored access current without shared category cache");
+catExpect(!catHidden($visibleDeep), "CORE-01: restoring ancestors reopens nested direct category URL");
 $app->loadIdentity($actor);
 // A native move under a restricted ancestor must hide an otherwise public child.
 $move = new \Joomla\CMS\Table\Category($db);
@@ -245,12 +258,18 @@ if (!$move->store()) {
     throw new \RuntimeException("Native move failed");
 }
 catExpect(catHidden($child), "native category move changes current inherited visibility");
+catExpect(catHidden($visibleDeep), "CORE-01: native subtree move rechecks descendant ACL");
 $move->load($child);
 $move->setLocation($en, "last-child");
 if (!$move->store()) {
     throw new \RuntimeException("Native move restore failed");
 }
 catExpect(!catHidden($child), "native move restore reflected");
+catExpect(
+    array_map(static fn (object $entry): int => (int) $entry->id, $catalog
+        ->categoryPath($guest, "en-GB", $visibleDeep)) === [$en, $child, $visibleDeep],
+    "CORE-01: moving native subtree back restores original ancestor ordering"
+);
 $createCourse = static function (int $catid, string $tag, string $alias) use ($factory, $component, $actor, $db): int {
     $model = $factory->createModel("Course", "Administrator", ["ignore_request" => true]);
     if (
