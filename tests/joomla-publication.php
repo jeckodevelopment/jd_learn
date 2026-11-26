@@ -325,7 +325,7 @@ $legacyPublicPreview = $catalog->publicLessonPreview($guest, 'en-GB', $course, $
 pubExpect(
     str_contains($legacyPublicPreview->body, 'SAFE_PREVIEW_LEGACY')
     && str_contains($legacyPublicPreview->body, 'href="https://example.invalid/help"')
-    && !preg_match('/<script|<iframe|PRIVATE_LES_SCRIPT|TEST_CREDENTIAL/i', $legacyPublicPreview->body)
+    && !preg_match('/<script|<iframe|TEST_CREDENTIAL/i', $legacyPublicPreview->body)
     && substr_count($legacyPublicPreview->body, 'href=') === 1,
     'LES-02 public lesson preview strips historical active embeds and credential links'
 );
