@@ -640,6 +640,23 @@ foreach (["en-GB" => $en, "it-IT" => $it] as $tag => $categoryId) {
     }
 }
 catExpect(count($menus) === 4, "native category and category-index menus in both languages");
+// CORE-07: menu routing metadata must remain language-scoped, published,
+// accessible and pinned to the correct translated category in both clients.
+foreach (["en-GB" => $en, "it-IT" => $it] as $locale => $categoryId) {
+    foreach (["categories", "category"] as $viewName) {
+        $alias = "taxonomy-menu-" . $viewName . "-" . substr($locale, 0, 2);
+        $menu = $db->setQuery("SELECT link,language,access,published FROM #__menu WHERE id="
+            . (int) $menus[$alias])->loadAssoc();
+        catExpect(
+            $menu !== null && $menu["language"] === $locale
+            && (int) $menu["access"] === 1 && (int) $menu["published"] === 1
+            && $menu["link"] === "index.php?option=com_jlms&view=" . $viewName
+                . ($viewName === "category" ? "&id=" . $categoryId : ""),
+            "CORE-07: native " . $locale . " menu resolves the correct view and category"
+        );
+    }
+}
+
 // Explicit dependency review and atomic recategorisation preserve the teaching version.
 $moveSource = $saveCategory([
     "title" => "Reassignment source",
