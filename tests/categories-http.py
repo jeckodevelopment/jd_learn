@@ -62,6 +62,13 @@ try:
   if sef:expect('taxonomy-menu-category-en' in category_link,'native category menu selected by router')
   _,menu_page=get(category_link)
   expect('id="jlms-category"' in menu_page and 'Taxonomy English' in menu_page,'native category menu opens correct view')
+  # CORE-07: both the menu-selected and the legacy numeric category URL
+  # must resolve the same accessible content in either Joomla SEF mode.
+  en_menu=f['menus']['taxonomy-menu-category-en']
+  routed='/index.php?option=com_jlms&view=category&id='+str(f['en'])+'&lang=en&Itemid='+str(en_menu)
+  _,routed_page=get(routed)
+  expect('id="jlms-category"' in routed_page and 'Taxonomy English' in routed_page,
+         'CORE-07: explicit menu Itemid selects the authorised English category')
   url,page=get('/index.php?option=com_jlms&view=category&id='+str(f['en'])+'&lang=en')
   parsed=Page(page)
   canonical_links=[link.get('href','') for link in parsed.head_links if link.get('rel')=='canonical']
@@ -104,8 +111,14 @@ try:
   fixture('restore_target')
   fixture('hide_parent')
   expect(denied('/index.php?option=com_jlms&view=category&id='+str(f['child'])+'&lang=en'),'restricted ancestor denies direct category URL')
+  expect(denied(routed), 'CORE-03/07: revoked ancestor denies menu-selected category URL')
+  expect(denied('/index.php?option=com_jlms&view=course&id='+str(f['course'])+'&lang=en'),
+         'CORE-03/07: ancestor ACL revocation denies direct course URL despite public alias')
   expect(denied('/index.php?option=com_jlms&view=categories&parent_id='+str(f['child'])+'&lang=en'),'restricted ancestor denies child-index URL')
   fixture('restore_parent')
+  _,restored_menu=get(routed)
+  expect('id="jlms-category"' in restored_menu and 'Taxonomy English' in restored_menu,
+         'CORE-03/07: menu route reopens immediately on ancestor ACL restoration')
   expect(denied('/index.php?option=com_jlms&view=category&id='+str(f['otherSection'])+'&lang=en'),'question category cannot be read via course view')
  url,html=get('/administrator/index.php')
  login=next(x for x in Page(html).forms if 'username'in x['fields'])

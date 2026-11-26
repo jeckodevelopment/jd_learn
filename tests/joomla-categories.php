@@ -186,6 +186,12 @@ $grandchild = $saveCategory([
     "alias" => "taxonomy-grandchild",
     "parent_id" => $hidden,
 ]);
+$visibleDeep = $saveCategory([
+    "title" => "Visible nested taxonomy grandchild",
+    "alias" => "taxonomy-visible-grandchild",
+    "parent_id" => $child,
+    "language" => "en-GB",
+]);
 $otherSection = $saveCategory([
     "title" => "PRIVATE_QUESTION_CATEGORY",
     "alias" => "taxonomy-question",
@@ -221,6 +227,11 @@ $model->setState("list.start", 0);
 $ids = array_map(static fn($c) => (int) $c->id, $model->getItems());
 catExpect($ids === [$child] && (int) $model->getTotal() === 1, "hidden children do not affect list or count");
 catExpect(count($catalog->categoryPath($guest, "en-GB", $child)) === 2, "visible native ancestor path");
+catExpect(
+    array_map(static fn (object $entry): int => (int) $entry->id, $catalog
+        ->categoryPath($guest, "en-GB", $visibleDeep)) === [$en, $child, $visibleDeep],
+    "CORE-01: full three-level native ancestor order and IDs preserved"
+);
 $update = static function (int $id, array $fields) use ($db): void {
     $record = (object) (["id" => $id] + $fields);
     $db->updateObject("#__categories", $record, "id", true);
@@ -228,6 +239,7 @@ $update = static function (int $id, array $fields) use ($db): void {
 foreach ([["access", 2], ["published", 0], ["language", "it-IT"]] as [$field, $value]) {
     $update($en, [$field => $value]);
     catExpect(catHidden($child), "ancestor " . $field . " hides direct child URL");
+    catExpect(catHidden($visibleDeep), "CORE-01: ancestor " . $field . " hides nested descendant");
     $update($en, [
         $field => match ($field) {
             "access", "published" => 1,
@@ -236,6 +248,7 @@ foreach ([["access", 2], ["published", 0], ["language", "it-IT"]] as [$field, $v
     ]);
 }
 catExpect(!catHidden($child), "restored access current without shared category cache");
+catExpect(!catHidden($visibleDeep), "CORE-01: restoring ancestors reopens nested direct category URL");
 $app->loadIdentity($actor);
 // A native move under a restricted ancestor must hide an otherwise public child.
 $move = new \Joomla\CMS\Table\Category($db);
@@ -245,12 +258,18 @@ if (!$move->store()) {
     throw new \RuntimeException("Native move failed");
 }
 catExpect(catHidden($child), "native category move changes current inherited visibility");
+catExpect(catHidden($visibleDeep), "CORE-01: native subtree move rechecks descendant ACL");
 $move->load($child);
 $move->setLocation($en, "last-child");
 if (!$move->store()) {
     throw new \RuntimeException("Native move restore failed");
 }
 catExpect(!catHidden($child), "native move restore reflected");
+catExpect(
+    array_map(static fn (object $entry): int => (int) $entry->id, $catalog
+        ->categoryPath($guest, "en-GB", $visibleDeep)) === [$en, $child, $visibleDeep],
+    "CORE-01: moving native subtree back restores original ancestor ordering"
+);
 $createCourse = static function (int $catid, string $tag, string $alias) use ($factory, $component, $actor, $db): int {
     $model = $factory->createModel("Course", "Administrator", ["ignore_request" => true]);
     if (
@@ -328,6 +347,51 @@ $db->setQuery('UPDATE #__jlms_courses SET content_access=1 WHERE id=' . $course)
 // make the course unscheduled for the ancestor ACL/language lifecycle checks.
 catExpect(!$finderEligible(), 'CORE-14: scheduled publication is excluded from the static Finder index');
 $db->setQuery('UPDATE #__jlms_courses SET publish_up=NULL WHERE id=' . $course)->execute();
+// CORE-03: revoke ancestor visibility and verify all public projections in
+// the same Joomla application: direct course, enrolled delivery, category
+// browsing and catalog filter options. No stale privilege from prior reads.
+$directCategoryCourse = static function (bool $enrolled) use ($catalog, $guest, $course): bool {
+    try {
+        if ($enrolled) {
+            $catalog->enrolledCourse($guest, "en-GB", $course);
+        } else {
+            $catalog->course($guest, "en-GB", $course);
+        }
+        return true;
+    } catch (\RuntimeException $error) {
+        if ($error->getCode() !== 404) {
+            throw $error;
+        }
+        return false;
+    }
+};
+$categoryChoiceAvailable = static function () use ($catalog, $guest, $child): bool {
+    return isset($catalog->publicCourseCategories($guest, "en-GB")[$child]);
+};
+catExpect(
+    $directCategoryCourse(false) && $directCategoryCourse(true) && $categoryChoiceAvailable(),
+    "CORE-03: initial catalog, enrolled projection and category choices visible"
+);
+$ancestorRevocations = [
+    ["access", 2, 1],
+    ["published", 0, 1],
+    ["language", "it-IT", "en-GB"],
+];
+foreach ($ancestorRevocations as [$name, $deny, $allow]) {
+    $update($en, [$name => $deny]);
+    catExpect(
+        !$directCategoryCourse(false) && !$directCategoryCourse(true)
+        && !$categoryChoiceAvailable() && catHidden($visibleDeep),
+        "CORE-01/03: " . $name . " withdrawal propagates across all live public projections"
+    );
+    $update($en, [$name => $allow]);
+    catExpect(
+        $directCategoryCourse(false) && $directCategoryCourse(true)
+        && $categoryChoiceAvailable() && !catHidden($visibleDeep),
+        "CORE-03: restoring " . $name . " propagates without stale category caches"
+    );
+}
+
 $finderFixture = $db->setQuery(
     'SELECT c.id, c.state, c.catalog_access, c.content_access, c.publish_up, c.publish_down,'
     . ' c.language, c.current_version_id, v.status AS version_status,'
@@ -576,6 +640,23 @@ foreach (["en-GB" => $en, "it-IT" => $it] as $tag => $categoryId) {
     }
 }
 catExpect(count($menus) === 4, "native category and category-index menus in both languages");
+// CORE-07: menu routing metadata must remain language-scoped, published,
+// accessible and pinned to the correct translated category in both clients.
+foreach (["en-GB" => $en, "it-IT" => $it] as $locale => $categoryId) {
+    foreach (["categories", "category"] as $viewName) {
+        $alias = "taxonomy-menu-" . $viewName . "-" . substr($locale, 0, 2);
+        $menu = $db->setQuery("SELECT link,language,access,published FROM #__menu WHERE id="
+            . (int) $menus[$alias])->loadAssoc();
+        catExpect(
+            $menu !== null && $menu["language"] === $locale
+            && (int) $menu["access"] === 1 && (int) $menu["published"] === 1
+            && $menu["link"] === "index.php?option=com_jlms&view=" . $viewName
+                . ($viewName === "category" ? "&id=" . $categoryId : ""),
+            "CORE-07: native " . $locale . " menu resolves the correct view and category"
+        );
+    }
+}
+
 // Explicit dependency review and atomic recategorisation preserve the teaching version.
 $moveSource = $saveCategory([
     "title" => "Reassignment source",
