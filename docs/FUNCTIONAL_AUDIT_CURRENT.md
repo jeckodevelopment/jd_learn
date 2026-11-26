@@ -279,9 +279,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
 - `CORE-03/cross_context` — Coerenza senza livelli proprietari in tutte le viste e le iscrizioni. Automated evidence covers key course-access and enrollment contexts, and now exercises same-session group revocation across personal history, resume, classroom, course detail and catalog HTTP routes. It still does not establish the full cross-product of every view, transition and role without proprietary levels.
   - [docs/LEARNING.md#L17-L23](../docs/LEARNING.md#L17-L23)
-  - [tests/dashboard-http.py#mid-session revocation retains history and removes resume action](../tests/dashboard-http.py#mid-session revocation retains history and removes resume action)
-  - [tests/dashboard-http.py#role revocation preserves owner-scoped personal navigation and history](../tests/dashboard-http.py#role revocation preserves owner-scoped personal navigation and history)
-  - [tests/dashboard-http.py#revoked learner retains only public catalog metadata](../tests/dashboard-http.py#revoked learner retains only public catalog metadata)
+  - [tests/dashboard-http.py#mid-session revocation retains history and removes resume action](../tests/dashboard-http.py)
+  - [tests/dashboard-http.py#role revocation preserves owner-scoped personal navigation and history](../tests/dashboard-http.py)
+  - [tests/dashboard-http.py#revoked learner retains only public catalog metadata](../tests/dashboard-http.py)
   - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
   - [tests/joomla-manual-enrollment.php#L1-L20](../tests/joomla-manual-enrollment.php#L1-L20)
 - `CORE-04/record_acl` — ACL su singolo record/docente e selezioni multiple in tutti i contesti. Il test editoriale dimostra grant di categoria, deny per singolo corso e revoca in sessione per le operazioni coperte. Il criterio estende il controllo a docenti, selezioni multiple e tutti i contesti; la matrice completa non è stata eseguita.
