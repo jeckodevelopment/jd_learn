@@ -1084,6 +1084,54 @@ if (!$model->save($data + ['state' => 1,'asset_id' => 999999,'current_version_id
     throw new \RuntimeException('Native draft save failed: ' . $model->getError());
 }
 $id = (int) $model->getState('course.id');
+// MAIL-05: complete global/course precedence for every supported mail event.
+$preferences = \Jlms\Component\Jlms\Administrator\Application\MailPreferences::class;
+$events = $preferences::EVENTS;
+if (count($events) !== 16 || count(array_unique($events)) !== count($events)) {
+    throw new \RuntimeException('MAIL-05 supported mail event inventory drifted.');
+}
+foreach ($events as $event) {
+    foreach ([true, false] as $global) {
+        foreach (['inherit', 'enabled', 'disabled'] as $setting) {
+            $params = json_encode(['mail_preferences' => [$event => $setting]], JSON_THROW_ON_ERROR);
+            $expected = match ($setting) {
+                'inherit' => $global,
+                'enabled' => true,
+                'disabled' => false,
+            };
+            $actual = $preferences::enabled($event, $global, $params);
+            if ($actual !== $expected) {
+                throw new \RuntimeException('MAIL-05 per-event inheritance precedence failed: ' . $event);
+            }
+            $merged = $preferences::merge(
+                ['mail_' . $event => $setting],
+                '{"other_setting":"preserved"}'
+            );
+            $data = json_decode((string) $merged, true, 16, JSON_THROW_ON_ERROR);
+            $actualMerged = $preferences::enabled($event, $global, $merged);
+            if (($data['other_setting'] ?? '') !== 'preserved' || $actualMerged !== $expected) {
+                throw new \RuntimeException('MAIL-05 merge must preserve settings and precedence: ' . $event);
+            }
+        }
+        $invalidCases = [
+            '{"mail_preferences":"corrupt"}',
+            '{"mail_preferences":{"' . $event . '":"invalid"}}'
+        ];
+        foreach ($invalidCases as $params) {
+            if ($preferences::enabled($event, $global, $params)) {
+                throw new \RuntimeException('MAIL-05 invalid override was accepted: ' . $event);
+            }
+        }
+    }
+    $clear = $preferences::merge(
+        ['mail_' . $event => 'inherit'],
+        json_encode(['mail_preferences' => [$event => 'enabled'], 'other_setting' => 1], JSON_THROW_ON_ERROR)
+    );
+    $cleared = json_decode((string) $clear, true, 16, JSON_THROW_ON_ERROR);
+    if (isset($cleared['mail_preferences'][$event]) || ($cleared['other_setting'] ?? null) !== 1) {
+        throw new \RuntimeException('MAIL-05 inherit must remove local override: ' . $event);
+    }
+}
 // CORE-18/19: execute the Scheduler's expiry preference SQL on the actual
 // Joomla MySQL/MariaDB connection and compare to MailPreferences semantics.
 // The global switch is a default, not an absolute veto on explicit opt-in.

@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **502**.
+- Implementati: **503**.
 - Mancanti con lacuna accertata: **14**.
-- Esaminati con esito non verificabile: **241**.
+- Esaminati con esito non verificabile: **240**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -214,9 +214,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `MAIL-04/threshold` — Scheduler e soglie su tutti i casi temporali. Il repository contiene riferimenti pertinenti al criterio «Scheduler e soglie su tutti i casi temporali», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
   - [component/administrator/src/Application/CourseExpiryReminderService.php#L1-L25](../component/administrator/src/Application/CourseExpiryReminderService.php#L1-L25)
   - [plugins/task/jlms/src/Extension/Jlms.php#L1-L25](../plugins/task/jlms/src/Extension/Jlms.php#L1-L25)
-- `MAIL-05/inheritance` — Ereditarietà delle preferenze per tutti gli eventi. Il repository contiene riferimenti pertinenti al criterio «Ereditarietà delle preferenze per tutti gli eventi», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.
-  - [component/administrator/src/Application/MailPreferences.php#L1-L25](../component/administrator/src/Application/MailPreferences.php#L1-L25)
-  - [component/administrator/config.xml#L1-L25](../component/administrator/config.xml#L1-L25)
 - `MAIL-09/delivery_conflict` — Idempotenza completa e backoff su errori SMTP reali. Il dispatcher reclama le righe e applica retry con backoff. I casi di accettazione remota incerta e recupero senza consegna doppia richiedono un trasporto SMTP testato.
   - [component/administrator/src/Infrastructure/MailQueue.php#public function dispatch](../component/administrator/src/Infrastructure/MailQueue.php)
   - [component/administrator/src/Infrastructure/MailQueue.php#$delay = min(3600](../component/administrator/src/Infrastructure/MailQueue.php)
@@ -1077,6 +1074,13 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Application/QuizAttemptService.php#course.completed:](../component/administrator/src/Application/QuizAttemptService.php)
   - [tests/joomla-quiz-attempts.php#quiz completion enqueues exactly one course.completed message](../tests/joomla-quiz-attempts.php)
   - [component/administrator/src/Application/LearningService.php#course.completed:](../component/administrator/src/Application/LearningService.php)
+- `MAIL-05/inheritance` — Ereditarietà delle preferenze per tutti gli eventi. Tutti i 16 eventi del catalogo sono verificati nella fixture Joomla con valore globale ON/OFF, override inherit/enabled/disabled, merge conservativo e rimozione override. Il gate di preflight confronta la lista eventi con i 15 campi globali e per corso, riservando l'annuncio al flusso separato con doppio opt-in; la mappa corrotta fallisce in modo sicuro. Questa è prova implementativa della precedenza, non collaudo SMTP o accettazione Joomla manuale.
+  - [component/administrator/src/Application/MailPreferences.php#public static function enabled(](../component/administrator/src/Application/MailPreferences.php)
+  - [component/administrator/forms/course.xml#name="mail_manager_request"](../component/administrator/forms/course.xml)
+  - [component/administrator/config.xml#name="mail_manager_request_enabled"](../component/administrator/config.xml)
+  - [tests/joomla-smoke.php#// MAIL-05: complete global/course precedence](../tests/joomla-smoke.php)
+  - [tests/mail05-event-contract.py#def inspect(](../tests/mail05-event-contract.py)
+  - [tools/check.py#tests/mail05-event-contract.py](../tools/check.py)
 - `MAIL-06/selection` — Selezione destinatari attivi e sottoinsiemi autorizzati. La composizione valida ID univoci e restringe l’insieme alle iscrizioni attive sul corso, account sbloccati e indirizzi validi. Il worker rivalida ogni destinatario.
   - [component/administrator/src/Application/CourseCommunicationService.php#public function preview](../component/administrator/src/Application/CourseCommunicationService.php)
   - [component/administrator/src/Application/CourseCommunicationService.php#private function activeIds](../component/administrator/src/Application/CourseCommunicationService.php)
