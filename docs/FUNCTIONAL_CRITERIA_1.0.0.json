@@ -3997,18 +3997,24 @@
       {
         "id": "private_cache",
         "label": "Test cache/sessione su tutti gli endpoint personali",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/site/src/Controller/VideoController.php",
-          "component/site/src/Controller/CertificateController.php",
-          "tests/dashboard-http.py"
+          "component/site/src/Controller/DisplayController.php",
+          "tests/secdev02-core21-private-dispatch.py",
+          "tests/secdev02-core21-task-matrix.py",
+          "tests/dashboard-http.py",
+          "docs/CORE_21_FRONTEND_CACHE_REJECTION_2026-11-26.md",
+          ".github/workflows/ci.yml"
         ],
         "review": {
-          "reason": "Video, download e pagine personali hanno politiche private e fixture HTTP rappresentative. Serve il censimento dei task personali e una prova coerente di cache e sessione per ognuno.",
+          "reason": "Il gate statico verifica no-store prima del dispatch e del rifiuto delle viste; il manifesto censisce tutti i task privati e le viste protette; dashboard-http esercita ogni route con sessione owner, secondo account e guest verificando no-store/noindex e isolamento del contenuto. La CI #4693 verde ha eseguito la suite Joomla disposable su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6. Il comportamento di reverse proxy/CDN e hosting reale resta collaudo separato.",
           "references": [
-            "component/site/src/Controller/VideoController.php#private, no-store",
-            "component/site/src/Controller/CertificateController.php#private, no-store",
-            "tests/dashboard-http.py#local nav does not duplicate IDs"
+            "component/site/src/Controller/DisplayController.php#Cache-Control",
+            "tests/secdev02-core21-private-dispatch.py#no-store",
+            "tests/secdev02-core21-task-matrix.py#PRIVATE_VIEWS",
+            "tests/dashboard-http.py#CORE-21",
+            "docs/CORE_21_FRONTEND_CACHE_REJECTION_2026-11-26.md#Limiti e accettazione",
+            ".github/workflows/ci.yml#python3 tests/dashboard-http.py"
           ]
         }
       }
