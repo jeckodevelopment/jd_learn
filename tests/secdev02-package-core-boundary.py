@@ -14,7 +14,7 @@ from pathlib import Path
 import stat
 import sys
 import xml.etree.ElementTree as ET
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import BadZipFile, ZipFile, ZIP_DEFLATED
 
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = {
@@ -129,7 +129,7 @@ def scan(payload: bytes) -> tuple[list[str], dict]:
                             errors.append(
                                 f"{filename}: unapproved installation root {path}"
                             )
-    except (ValueError, KeyError, OSError, ET.ParseError) as exc:
+    except (BadZipFile, ValueError, KeyError, OSError, ET.ParseError) as exc:
         errors.append(f"package: unreadable ZIP or Joomla manifest: {exc}")
     return errors, report
 
