@@ -95,6 +95,8 @@ jobs:
           python3 tests/secdev02-core05-layout-inventory.py --self-test
           python3 tests/secdev02-core05-layout-inventory.py
           python3 tests/secdev02-core-residual-split.py --self-test
+          python3 tests/secdev02-engineering-signoff.py --self-test
+          python3 tests/secdev02-engineering-signoff.py --require-technical-signoff
           python3 tests/secdev02-core-residual-split.py
           python3 tests/secdev02-core19-expiry-reminders.py --self-test
           python3 tests/secdev02-core19-expiry-reminders.py
