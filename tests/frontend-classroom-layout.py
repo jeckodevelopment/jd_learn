@@ -38,4 +38,14 @@ video_region = view.split('id="jlms-video-region"', 1)[1].split('id="jlms-video-
 assert 'id="jlms-complete-form"' in video_region
 assert 'name="task" value="lesson.complete"' in video_region
 assert "HTMLHelper::_('form.token')" in video_region
+# SCR-08: explicit local alternative is a same-site course-scoped navigation,
+# not an external player link and not a completion endpoint.
+assert 'id="jlms-video-alternative"' in view
+assert "if (!empty($item['video_alternative']))" in view
+alt_section = view.split('id="jlms-video-alternative"', 1)[1].split('id="jlms-player-status"', 1)[0]
+assert "'&lesson_id=' . (int) $item['video_alternative']['id']" in alt_section
+assert "COM_JLMS_VIDEO_ALTERNATIVE_NO_CREDIT" in alt_section
+assert 'task=video.playback' not in alt_section
+assert 'video_alternative' in service
+assert "in_array($entry->kind, ['text', 'document', 'audio'], true)" in service
 print('FE-03 classroom responsive outline and compatibility: OK')
