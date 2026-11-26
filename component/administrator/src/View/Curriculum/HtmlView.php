@@ -260,8 +260,10 @@ final class HtmlView extends BaseHtmlView
             $none = $alternativeField->addChild('option', 'COM_JLMS_VIDEO_ALTERNATIVE_NONE');
             $none->addAttribute('value', '0');
             foreach ($this->outline['lessons'] as $candidate) {
-                if ((int) $candidate->id === $editLesson
-                    || !in_array($candidate->kind, ['text', 'document', 'audio'], true)) {
+                if (
+                    (int) $candidate->id === $editLesson
+                    || !in_array($candidate->kind, ['text', 'document', 'audio'], true)
+                ) {
                     continue;
                 }
                 $option = $alternativeField->addChild('option', htmlspecialchars($candidate->title, ENT_XML1));
