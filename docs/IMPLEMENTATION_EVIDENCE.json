@@ -2,8 +2,8 @@
   "audited_at": "2026-11-26",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 64.58,
-    "development_evidence_floor_percent": 64.58,
+    "percent": 64.81,
+    "development_evidence_floor_percent": 64.81,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -14089,6 +14089,38 @@
     },
     {
       "feature": "SEC-P5 criterion_01: negative E2E suite inventory and fail-closed CI wiring (PR #1076)",
+      "ci": {
+        "run_id": 45902877659,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/45902877659",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
+    {
+      "feature": "CORE-21/private_cache exhaustive route inventory and multi-session no-store regression (PRs #1032/#1064)",
       "ci": {
         "run_id": 45902877659,
         "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/45902877659",
