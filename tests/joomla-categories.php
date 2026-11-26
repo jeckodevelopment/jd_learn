@@ -347,6 +347,51 @@ $db->setQuery('UPDATE #__jlms_courses SET content_access=1 WHERE id=' . $course)
 // make the course unscheduled for the ancestor ACL/language lifecycle checks.
 catExpect(!$finderEligible(), 'CORE-14: scheduled publication is excluded from the static Finder index');
 $db->setQuery('UPDATE #__jlms_courses SET publish_up=NULL WHERE id=' . $course)->execute();
+// CORE-03: revoke ancestor visibility and verify all public projections in
+// the same Joomla application: direct course, enrolled delivery, category
+// browsing and catalog filter options. No stale privilege from prior reads.
+$directCategoryCourse = static function (bool $enrolled) use ($catalog, $guest, $course): bool {
+    try {
+        if ($enrolled) {
+            $catalog->enrolledCourse($guest, "en-GB", $course);
+        } else {
+            $catalog->course($guest, "en-GB", $course);
+        }
+        return true;
+    } catch (\RuntimeException $error) {
+        if ($error->getCode() !== 404) {
+            throw $error;
+        }
+        return false;
+    }
+};
+$categoryChoiceAvailable = static function () use ($catalog, $guest, $child): bool {
+    return isset($catalog->publicCourseCategories($guest, "en-GB")[$child]);
+};
+catExpect(
+    $directCategoryCourse(false) && $directCategoryCourse(true) && $categoryChoiceAvailable(),
+    "CORE-03: initial catalog, enrolled projection and category choices visible"
+);
+$ancestorRevocations = [
+    ["access", 2, 1],
+    ["published", 0, 1],
+    ["language", "it-IT", "en-GB"],
+];
+foreach ($ancestorRevocations as [$name, $deny, $allow]) {
+    $update($en, [$name => $deny]);
+    catExpect(
+        !$directCategoryCourse(false) && !$directCategoryCourse(true)
+        && !$categoryChoiceAvailable() && catHidden($visibleDeep),
+        "CORE-01/03: " . $name . " withdrawal propagates across all live public projections"
+    );
+    $update($en, [$name => $allow]);
+    catExpect(
+        $directCategoryCourse(false) && $directCategoryCourse(true)
+        && $categoryChoiceAvailable() && !catHidden($visibleDeep),
+        "CORE-03: restoring " . $name . " propagates without stale category caches"
+    );
+}
+
 $finderFixture = $db->setQuery(
     'SELECT c.id, c.state, c.catalog_access, c.content_access, c.publish_up, c.publish_down,'
     . ' c.language, c.current_version_id, v.status AS version_status,'
