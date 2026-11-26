@@ -3216,3 +3216,17 @@ Raccogliere esito, versione pacchetto, PHP, database, provider, politica di cons
 - **SCR01/02/06 (regressioni):** cercare dal catalogo il titolo di una lezione o corso con ACL negata; verificarne l'assenza in ogni filtro e vista. Spostare una categoria con sottocategorie e verificare i riepiloghi diretti e annidati. Provare la disponibilità e l'indice dell'aula, il salvataggio manuale di testo/audio/video con regola manuale e la ripresa senza crediti non confermati.
 
 Annotare versione Joomla, PHP, database, lingua, ruolo, template, consenso, data, passaggi, risultato atteso/osservato e bug riproducibili. Questo verbale non modifica automaticamente lo stato canonico dei criteri `unverifiable`.
+
+
+## CORE-03 — access revocation across learner contexts (PR #1079)
+
+**Stato:** da collaudare manualmente; non eseguito.
+
+1. Con un utente iscritto, revocare il gruppo Joomla che concede accesso didattico senza chiudere la sessione.
+2. Verificare che la cronologia personale resti disponibile, senza pulsante di ripresa.
+3. Aprire la classroom tramite link diretto e tramite ripresa: l'accesso deve essere negato.
+4. Aprire catalogo e scheda corso: restano disponibili i soli metadati pubblici e non compare il corpo privato delle lezioni.
+5. Ripristinare il gruppo nella stessa sessione: ripresa di nuovo disponibile, storico invariato.
+6. Ripetere con i ruoli Joomla previsti dalla matrice ACL e con SEF attivo/disattivo.
+
+La suite automatica usa fixture disposable e copre la revoca/ripristino in HTTP; questa registrazione non promuove il criterio completo CORE-03/cross_context a implemented.
