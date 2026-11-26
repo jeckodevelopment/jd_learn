@@ -4,7 +4,7 @@ Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: 
 
 ## Sviluppo documentato (minimo confermato)
 
-**63.64%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
+**63.76%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
 Il registro contiene 501 criteri implementati con evidenza, 14 lacune accertate, 242 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
 
 La percentuale funzionale globale rigorosa resta **non determinabile** finché i criteri non verificabili non vengono risolti.
@@ -20,7 +20,7 @@ La percentuale funzionale globale rigorosa resta **non determinabile** finché i
 | Materiali, quiz e attestati | 7.94% | 70.59% | 17.65% | 0.00% | 0 | 14 |
 | Email e notifiche | 6.07% | 67.31% | 15.38% | 0.00% | 0 | 11 |
 | Joomla, ACL e configurazione | 17.76% | 55.48% | 2.63% | 0.00% | 0 | 37 |
-| Privacy, sicurezza e compatibilità | 23.83% | 49.77% | 0.00% | 0.00% | 4 | 96 |
+| Privacy, sicurezza e compatibilità | 23.83% | 50.26% | 0.00% | 0.00% | 4 | 95 |
 | Packaging, documentazione e reporting | 7.01% | 45.00% | 0.00% | 0.00% | 10 | 24 |
 
 I pesi derivano dal numero di requisiti in scope, senza doppio conteggio. Il delta per macroarea richiede una baseline storica calcolata con la stessa metodologia; le vecchie stime non sono confrontabili.
