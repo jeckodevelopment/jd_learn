@@ -97,7 +97,7 @@ def self_test() -> None:
     assert parse('COM_JLMS_MISSING="  "\n', "fixture")[1]
     assert parse('COM_JLMS_BROKEN="A "raw" quote"\n', "fixture")[1]
     assert parse('COM_JLMS_BROKEN="Value" trailing"\n', "fixture")[1]
-    assert not parse('COM_JLMS_VALID="An escaped \"quote\" is valid"\n', "fixture")[1]
+    assert not parse(r'COM_JLMS_VALID="An escaped \"quote\" is valid"' + "\n", "fixture")[1]
     with tempfile.TemporaryDirectory(prefix="jdlearn-locale-") as folder:
         root = Path(folder)
         for client in CLIENTS:
