@@ -9785,10 +9785,10 @@
         "review": {
           "reason": "Verificati e motivati individualmente i riusi Joomla e i servizi di dominio per tutti i 23 servizi CORE-01–23. Il registro versionato descrive decisione, razionale, evidenza di codice, evidenza CI e limiti di collaudo per ciascun servizio; il gate dedicato verifica unicità, completezza e distinzione dei sei servizi con dipendenze ambientali. Questo criterio riguarda esclusivamente la decisione architetturale di riuso e non promuove gli altri tre criteri SECDEV-02 né i 23 criteri CORE non verificati.",
           "references": [
-            "docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json",
-            "tests/secdev02-core-ledger.py",
-            "tests/secdev02-core-decision-signoff.py",
-            "tests/secdev02-core-ci-wiring.py"
+            "docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json#L1-L20",
+            "tests/secdev02-core-ledger.py#L1-L20",
+            "tests/secdev02-core-decision-signoff.py#L1-L20",
+            "tests/secdev02-core-ci-wiring.py#L1-L20"
           ]
         }
       }
