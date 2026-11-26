@@ -1,6 +1,6 @@
 # JD Learn — note della candidata 1.0.0 (bozza controllata)
 
-**Stato:** bozza preparatoria, **non** note di una release 1.0.0 pubblicata o approvata. La build corrente va sempre letta da `packages/pkg_jlms.xml`: non sostituire automaticamente il numero della build di sviluppo con `1.0.0`. Ultimo aggiornamento redazionale: 22 novembre 2026.
+**Stato:** bozza preparatoria, **non** note di una release 1.0.0 pubblicata o approvata. La build corrente va sempre letta da `packages/pkg_jlms.xml`: non sostituire automaticamente il numero della build di sviluppo con `1.0.0`. Ultimo aggiornamento redazionale: 26 novembre 2026.
 
 ## Novità nel perimetro approvato
 
