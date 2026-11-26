@@ -148,6 +148,15 @@ foreach ($item['outline'] as $entry) {
       <?php endif; ?>
       <?php if ($selected->kind === 'video') : ?>
   <section id="jlms-video-region" aria-labelledby="jlms-lesson-title">
+            <?php if (!empty($item['video_alternative'])) : ?>
+   <aside id="jlms-video-alternative" class="alert alert-info">
+    <p><?= Text::_('COM_JLMS_VIDEO_ALTERNATIVE_AVAILABLE') ?></p>
+    <a class="btn btn-outline-primary" href="<?= Route::_('index.php?option=com_jlms&view=classroom&id=' .
+        (int) $item['enrollment_id'] . '&lesson_id=' . (int) $item['video_alternative']['id']) ?>"><?=
+        $this->escape($item['video_alternative']['title']) ?></a>
+    <p class="small"><?= Text::_('COM_JLMS_VIDEO_ALTERNATIVE_NO_CREDIT') ?></p>
+   </aside>
+            <?php endif; ?>
    <p id="jlms-player-status" role="status" aria-live="polite"></p>
    <div id="jlms-player" class="jlms-player" data-title="<?= $this->escape($selected->title) ?>"></div>
             <?php if ($selected->provider_key === 'youtube' && $selected->completion_rule === 'video_coverage') : ?>
