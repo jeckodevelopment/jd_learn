@@ -29,9 +29,9 @@ $categoryId = $this->inspection ? (int) $this->inspection['category']->id : 0;
   <h2><?= $this->escape($this->inspection['category']->title) ?></h2>
   <p><?= Text::_('COM_JLMS_CATEGORY_REASSIGN_DELETE_NOTE') ?></p>
   <?php if ($this->inspection['descendant_categories'] > 0) : ?>
-   <p id="jlms-category-reassign-subtree-warning" class="alert alert-warning" role="status"><?=
-        Text::sprintf('COM_JLMS_CATEGORY_REASSIGN_CHILD_WARNING',
-            (int) $this->inspection['descendant_categories']) ?></p>
+        <p id="jlms-category-reassign-subtree-warning" class="alert alert-warning" role="status"><?=
+            Text::sprintf('COM_JLMS_CATEGORY_REASSIGN_CHILD_WARNING', (int) $this
+            ->inspection['descendant_categories']) ?></p>
   <?php endif; ?>
   <form action="<?= Route::_('index.php?option=com_jlms&task=categoryreassignment.reassign', false) ?>" method="post">
    <input type="hidden" name="category_id" value="<?= $categoryId ?>">
