@@ -469,9 +469,11 @@ final class PublicationService
         $lessonIndex = array_column($lessons, null, 'id');
         foreach ($lessons as $candidate) {
             $alternative = $candidate['video_alternative_lesson_id'] ?? 0;
-            if ($alternative && (!isset($lessonIndex[$alternative])
+            if (
+                $alternative && (!isset($lessonIndex[$alternative])
                 || !in_array($lessonIndex[$alternative]['kind'], ['text', 'document', 'audio'], true)
-                || $alternative === $candidate['id'])) {
+                || $alternative === $candidate['id'])
+            ) {
                 throw new \DomainException('COM_JLMS_VIDEO_ALTERNATIVE_INVALID');
             }
         }
