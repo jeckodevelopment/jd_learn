@@ -3230,3 +3230,10 @@ Annotare versione Joomla, PHP, database, lingua, ruolo, template, consenso, data
 6. Ripetere con i ruoli Joomla previsti dalla matrice ACL e con SEF attivo/disattivo.
 
 La suite automatica usa fixture disposable e copre la revoca/ripristino in HTTP; questa registrazione non promuove il criterio completo CORE-03/cross_context a implemented.
+
+
+## MAIL-G — equità dei batch per avvisi ai responsabili
+
+**Automatico:** la query `EnrollmentManagerNotice::enqueueDue()` esclude gli eventi responsabile già accodati prima del limite Scheduler; `tests/secdev02-core19-mail-batch-bound.py` protegge il predicato e la sua posizione tramite fixture negative. La CI della PR deve eseguire il gate e le matrici Joomla.
+
+**Collaudo Joomla manuale: In attesa.** Creare più di un batch di richieste `pending` con responsabili autorizzati e verificare su esecuzioni Scheduler successive che le richieste successive avanzino senza duplicare gli avvisi. Provare anche preferenza OFF, cambio/blocco del responsabile e richiesta chiusa prima dell'invio. Registrare il risultato SMTP separatamente dalla CI.
