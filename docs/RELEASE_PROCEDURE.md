@@ -15,7 +15,7 @@ Le versioni del package seguono [la policy SemVer del progetto](VERSIONING.md). 
 
 ## DOC-10 — evidenza vincolata alla candidata
 
-Il workflow di preparazione `publish=false` produce anche `RELEASE_CANDIDATE_EVIDENCE.json`, con commit sorgente, versione, nome e SHA-256 dello **ZIP Joomla interno**, hash del feed, della bozza controllata e del testo effettivo delle note immesso nel workflow. Se il testo delle note differisce tra preparazione e pubblicazione, la validazione si interrompe. Il record è verificato nuovamente dal job di pubblicazione prima di creare la GitHub Release. La verifica fallisce se ZIP, feed, checksum o note non corrispondono più alla candidata.
+Il workflow di preparazione `publish=false` produce anche `RELEASE_CANDIDATE_EVIDENCE.json`, con commit sorgente, versione, nome e SHA-256 dello **ZIP Joomla interno**, hash del feed, della bozza controllata, del changelog e del testo effettivo delle note immesso nel workflow. Il changelog deve contenere una sezione `## X.Y.Z — candidata non pubblicata` e le note devono corrispondere al testo di quella sezione; un mismatch interrompe la validazione. Il record è verificato nuovamente dal job di pubblicazione prima di creare la GitHub Release. La verifica fallisce se ZIP, feed, checksum, note o changelog non corrispondono più alla candidata.
 
 L'evidenza non è un'approvazione: `status=candidate_not_approved` e `manual_joomla_acceptance=not_asserted`. Gli amministratori devono comunque registrare nel testbook collaudi, compatibilità e decisione di rilascio; il record non promuove automaticamente criteri DOC-10 né pubblica la 1.0.0.
 
