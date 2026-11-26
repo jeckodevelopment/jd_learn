@@ -43,6 +43,7 @@ if (config && Number.isInteger(Number(config.enrollment)) && Number.isInteger(Nu
         submitted = false;
         completing = false;
         if (submitButton) submitButton.disabled = false;
+        feedback('', 'idle'); // Restored page cannot know whether the POST completed.
       }, { once: true });
     });
   }
