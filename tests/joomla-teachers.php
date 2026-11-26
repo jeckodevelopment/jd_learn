@@ -75,6 +75,30 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
 
+// The CLI bootstrap does not set a website locale automatically.
+$app->loadLanguage(
+    $container->get(\Joomla\CMS\Language\LanguageFactoryInterface::class)->createLanguage('en-GB', false)
+);
+// CORE-10: reuse of a Joomla ListModel must not carry a course list across
+// teacher profiles or a user switch, even when paging parameters match.
+$publicTeacherModel = $factory->createModel('Teacher', 'Site', ['ignore_request' => true]);
+$teacherCacheMethod = new \ReflectionMethod($publicTeacherModel, 'getStoreId');
+$app->getInput()->set('id', 1);
+$teacherOneKey = $teacherCacheMethod->invoke($publicTeacherModel, 'teacher-course-list');
+$app->getInput()->set('id', 2);
+$teacherTwoKey = $teacherCacheMethod->invoke($publicTeacherModel, 'teacher-course-list');
+teacherExpect($teacherOneKey !== $teacherTwoKey, 'CORE-10: public teacher lists isolate teacher IDs');
+$app->getInput()->set('id', 1);
+$app->loadIdentity(new \Joomla\CMS\User\User());
+$guestTeacherKey = $teacherCacheMethod->invoke($publicTeacherModel, 'teacher-course-list');
+teacherExpect($guestTeacherKey !== $teacherOneKey, 'CORE-10: public teacher lists isolate identity');
+$app->loadIdentity($operator);
+teacherExpect(
+    $teacherCacheMethod->invoke($publicTeacherModel, 'teacher-course-list') === $teacherOneKey,
+    'CORE-10: public teacher list identity scope is stable'
+);
+$app->getInput()->set('id', 0);
+
 $teacherListTemplate = file_get_contents(dirname(__DIR__) . '/component/administrator/tmpl/teachers/default.php');
 teacherExpect($teacherListTemplate !== false && str_contains(
     $teacherListTemplate,
