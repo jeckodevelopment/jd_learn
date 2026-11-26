@@ -48,6 +48,26 @@ $check = static function (bool $ok, string $message): void {
     }
 };
 
+// CORE-13: real Joomla router segment decoding is identical across the
+// registered editorial views, even for historical aliases and invalid IDs.
+$routerClass = new ReflectionClass(\Jlms\Component\Jlms\Site\Service\Router::class);
+$router = $routerClass->newInstanceWithoutConstructor();
+$routeMethods = [
+    'getCourseId', 'getCategoryId', 'getPathwayId', 'getTeacherId',
+    'getTeachereditId', 'getClassroomId', 'getQuizId',
+];
+$validRoutes = ['24', '00024', '24:published-course', '24-old-alias'];
+$invalidRoutes = ['', '0', '000', '-24', '24:', '24-', '24/other', '24?extra=1',
+    '24#fragment', '999999999999999999999999999999999'];
+foreach ($routeMethods as $routeMethod) {
+    foreach ($validRoutes as $routeSegment) {
+        $check($router->$routeMethod($routeSegment, []) === 24, 'CORE-13: valid editorial route');
+    }
+    foreach ($invalidRoutes as $routeSegment) {
+        $check($router->$routeMethod($routeSegment, []) === 0, 'CORE-13: malformed editorial route rejected');
+    }
+}
+
 $lifecycleSnapshotFile = dirname($root) . '/pathway-lifecycle-snapshot.json';
 $readLifecycleSnapshot = static function (int $pathId, int $courseId) use ($db): array {
     return [
