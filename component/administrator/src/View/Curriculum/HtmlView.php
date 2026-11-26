@@ -253,6 +253,23 @@ final class HtmlView extends BaseHtmlView
                 $option = $prerequisiteField->addChild('option', htmlspecialchars($candidate->title, ENT_XML1));
                 $option->addAttribute('value', (string) $candidate->id);
             }
+            // An alternative is an explicitly selected on-site lesson, never a remote URL.
+            $alternativeField = new \SimpleXMLElement('<field name="video_alternative_lesson_id" '
+                . 'type="list" label="COM_JLMS_VIDEO_ALTERNATIVE_LABEL" '
+                . 'description="COM_JLMS_VIDEO_ALTERNATIVE_DESC" showon="kind:video" filter="integer" />');
+            $none = $alternativeField->addChild('option', 'COM_JLMS_VIDEO_ALTERNATIVE_NONE');
+            $none->addAttribute('value', '0');
+            foreach ($this->outline['lessons'] as $candidate) {
+                if (
+                    (int) $candidate->id === $editLesson
+                    || !in_array($candidate->kind, ['text', 'document', 'audio'], true)
+                ) {
+                    continue;
+                }
+                $option = $alternativeField->addChild('option', htmlspecialchars($candidate->title, ENT_XML1));
+                $option->addAttribute('value', (string) $candidate->id);
+            }
+            $this->lessonForm->setField($alternativeField);
             $this->lessonForm->setField($prerequisiteField);
             $this->lessonForm->setField($field);
             foreach ($this->outline['lessons'] as $lesson) {
@@ -291,6 +308,8 @@ final class HtmlView extends BaseHtmlView
                         'audio_transcript' => $audioTranscript, 'video_transcript' => $videoTranscript,
                         'public_preview' => (int) $lesson->preview,
                         'kind' => $lesson->kind, 'required' => $lesson->required,
+                        'video_alternative_lesson_id' => is_int($lessonParams['video_alternative_lesson_id'] ?? null)
+                            ? $lessonParams['video_alternative_lesson_id'] : 0,
                         'video_completion_rule' => $lesson->kind === 'video' ? $lesson->completion_rule
                             : 'video_coverage', 'provider_key' => $lesson
                         ->provider_key,
@@ -383,6 +402,7 @@ final class HtmlView extends BaseHtmlView
                              $valid && (is_string($item) || is_int($item)), true)));
                     $safe = array_intersect_key($saved, array_flip(['title','body','provider_key'
                         ,'source_reference','privacy_hash','duration_mode','duration_seconds'
+                        , 'video_alternative_lesson_id'
                         ,'duration_confirmed','video_threshold_percent','video_completion_rule'
                         ,'audio_transcript','video_transcript'
                         ,'required','kind','required_lesson_ids','publish_up','publish_down'

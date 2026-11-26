@@ -53,3 +53,7 @@ La preferenza velocità video 0.42.0-dev è locale al browser e viene applicata 
 ## Trascrizione delle lezioni audio
 
 La lezione audio può includere una trascrizione facoltativa, inserita manualmente dall’autore e separata dal corpo didattico; non viene generata né scaricata automaticamente. L’autore la inserisce nell’editor dedicato del programma; JD Learn applica il filtro HTML Joomla e la conserva nella versione della lezione. Nell’aula compare in un elemento espandibile accessibile, visibile soltanto dopo i controlli di autorizzazione della lezione. I cambiamenti alla trascrizione seguono il normale ciclo di bozza e pubblicazione della versione. Una trascrizione vuota non aggiunge elementi all’aula.
+
+## Alternativa locale alle lezioni video (SCR-08)
+
+Se l'autore ha configurato una lezione alternativa per un video, l'aula propone un link **interno** solo quando il contenuto è disponibile per lo studente nella versione didattica assegnata. Le lezioni alternative sono testo, documento o audio, non rimandi esterni ai video. Il link non viene mostrato per un target programmato, bloccato o assente. L'apertura della lezione usa lo stesso controllo server di iscrizione, categoria, accesso corrente e prerequisiti; non avvia il player esterno. L'attività alternativa non completa automaticamente il video obbligatorio e non modifica i progressi storici. La sua configurazione e i collaudi sono descritti in `docs/VIDEO.md` e `docs/QA_TESTBOOK.md`.

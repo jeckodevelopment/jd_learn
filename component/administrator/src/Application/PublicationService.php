@@ -373,6 +373,10 @@ final class PublicationService
                         'blocked'
                     );
                     $params = json_decode($lesson->params_json, true, 16, JSON_THROW_ON_ERROR);
+                    $videoAlternative = is_array($params) ? ($params['video_alternative_lesson_id'] ?? 0) : 0;
+                    if (!is_int($videoAlternative) || $videoAlternative < 0) {
+                        throw new \DomainException('COM_JLMS_VIDEO_ALTERNATIVE_INVALID');
+                    }
                     if (
                         !is_array($params) || (array_key_exists('video_threshold_basis_points', $params)
                         && (!is_int($params['video_threshold_basis_points'])
@@ -452,13 +456,27 @@ final class PublicationService
                     'provider_key' => $lesson->provider_key, 'source_revision' => (int) $lesson->source_revision,
                     'fields_sha256' => hash('sha256', $lesson->fields_snapshot_json),
                     'source_sha256' => hash('sha256', (string) $lesson->source_json), 'body_sha256' =>
-                         hash('sha256', (string) $lesson->body)];
+                         hash('sha256', (string) $lesson->body),
+                    ...(($lesson->kind === 'video' && $videoAlternative > 0)
+                        ? ['video_alternative_lesson_id' => $videoAlternative] : [])];
                 $lessonSnapshot = (object) ['id' => (int) $lesson->id, 'fields_snapshot_json' => $lesson
                     ->fields_snapshot_json];
                 $this->db->updateObject('#__jlms_lessons', $lessonSnapshot, 'id');
                 $lastId = (int) $lesson->id;
             }
         } while (count($batch) === 16);
+        // A frozen alternative must resolve to a non-video lesson in this version.
+        $lessonIndex = array_column($lessons, null, 'id');
+        foreach ($lessons as $candidate) {
+            $alternative = $candidate['video_alternative_lesson_id'] ?? 0;
+            if (
+                $alternative && (!isset($lessonIndex[$alternative])
+                || !in_array($lessonIndex[$alternative]['kind'], ['text', 'document', 'audio'], true)
+                || $alternative === $candidate['id'])
+            ) {
+                throw new \DomainException('COM_JLMS_VIDEO_ALTERNATIVE_INVALID');
+            }
+        }
         if (in_array(0, array_values($moduleIds), true) || (!$required && $rules['mode'] !== 'consultation')) {
             throw new \DomainException('COM_JLMS_PUBLICATION_EMPTY');
         }

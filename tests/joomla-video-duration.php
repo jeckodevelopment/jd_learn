@@ -130,7 +130,15 @@ durationExpect($model->save(['id' => $course,'revision' => $item->revision,'cata
     => 1,'content_access' => 1,'enrollment_mode' => 'auto']), 'Independent duration fixture has learner access');
 $version = (int)$authoring->outline($actor, $course)['version']->id;
 $module = (int)$authoring->outline($actor, $course, $version)['modules'][0]->id;
-$lesson = (int)$authoring->outline($actor, $course, $version)['lessons'][0]->id;
+$videoCandidates = array_values(array_filter(
+    $authoring->outline($actor, $course, $version)['lessons'],
+    static fn(object $entry): bool => $entry->kind === 'video' && (int) $entry->required === 1
+));
+durationExpect(
+    count($videoCandidates) === 1,
+    'SCR-08: video duration fixture selects required video independently of alternative order'
+);
+$lesson = (int) $videoCandidates[0]->id;
 $scope = static fn(): array=>['course_id' => $course,'version_id' => $version,'module_id'
     => $module,'expected_version_revision' => durationRow('course_versions', $version)->revision];
 $input = static fn(): array=>$scope() + ['id' => $lesson,'revision' => durationRow('lessons', $lesson)

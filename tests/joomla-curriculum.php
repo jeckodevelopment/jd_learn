@@ -133,11 +133,35 @@ curriculumExpect(
 );
 $video = $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
     => 'Video draft','kind' => 'video',
-    'required' => '0','body' => '','provider_key' => 'youtube','source_reference' => 'https://youtu.be/dQw4w9WgXcQ']);
+    'required' => '0','body' => '','provider_key' => 'youtube',
+    'video_alternative_lesson_id' => $firstLesson,
+    'source_reference' => 'https://youtu.be/dQw4w9WgXcQ']);
 $row = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . $video)->loadObject();
 $source = json_decode($row->source_json, true, 32, JSON_THROW_ON_ERROR);
 curriculumExpect($source['reference'] === 'dQw4w9WgXcQ' && $row->completion_rule === 'video_coverage'
     && (int)$row->required === 0, 'video normalised and optional flag retained');
+$videoParams = json_decode((string) $row->params_json, true, 16, JSON_THROW_ON_ERROR);
+curriculumExpect(
+    ($videoParams['video_alternative_lesson_id'] ?? 0) === $firstLesson,
+    'SCR-08: explicit lesson alternative persists in the native draft video parameters'
+);
+$priorAlternativeRevision = versionRevision();
+curriculumDenied(fn() => $service->saveLesson($actor, scopeInput() + [
+    'id' => 0, 'module_id' => $module, 'title' => 'Forged other-kind alternative',
+    'kind' => 'text', 'body' => '<p>wrong kind</p>', 'required' => '0',
+    'video_alternative_lesson_id' => $firstLesson
+]), 'SCR-08: non-video kind cannot accept a forged video alternative');
+curriculumExpect(
+    versionRevision() === $priorAlternativeRevision,
+    'SCR-08: invalid alternative leaves the teaching version revision unchanged'
+);
+curriculumDenied(fn() => $service->saveLesson($actor, scopeInput() + [
+    'id' => $video, 'revision' => recordRevision('lessons', $video), 'module_id' => $module,
+    'title' => 'Video draft', 'kind' => 'video', 'required' => '0', 'body' => '',
+    'provider_key' => 'youtube', 'source_reference' => 'https://youtu.be/dQw4w9WgXcQ',
+    'video_alternative_lesson_id' => $video
+]), 'SCR-08: a video cannot designate itself as an alternative');
+
 $videoPreviewRejected = false;
 try {
     $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $module,'title'
@@ -182,6 +206,18 @@ $foreignCourse = (int)$model->getState('course.id');
 $foreignVersion = $service->createDraft($actor, $foreignCourse, 1);
 $foreignModule = $service->saveModule($actor, ['course_id' => $foreignCourse,'version_id' => $foreignVersion,
     'expected_version_revision' => 1,'id' => 0,'title' => 'Foreign module']);
+$foreignAlternative = $service->saveLesson($actor, [
+    'course_id' => $foreignCourse, 'version_id' => $foreignVersion,
+    'expected_version_revision' => recordRevision('course_versions', $foreignVersion),
+    'id' => 0, 'module_id' => $foreignModule, 'title' => 'Foreign local lesson',
+    'kind' => 'text', 'body' => '<p>Must remain private to its version.</p>', 'required' => '0'
+]);
+curriculumDenied(fn() => $service->saveLesson($actor, scopeInput() + [
+    'id' => $video, 'revision' => recordRevision('lessons', $video), 'module_id' => $module,
+    'title' => 'Video draft', 'kind' => 'video', 'required' => '0', 'body' => '',
+    'provider_key' => 'youtube', 'source_reference' => 'https://youtu.be/dQw4w9WgXcQ',
+    'video_alternative_lesson_id' => $foreignAlternative
+]), 'SCR-08: cross-version alternative is rejected before any draft mutation');
 curriculumDenied(fn () => $service->saveLesson($actor, scopeInput() + ['id' => 0,'module_id' => $foreignModule,
     'title' => 'Wrong parent','kind' => 'text','required' => '1','body' => 'not allowed']), 'foreign module rejected');
 curriculumDenied(

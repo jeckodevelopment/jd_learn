@@ -208,6 +208,11 @@ $scope = static function () use ($db, $course, $version): array {
     ];
 };
 $module = $authoring->saveModule($actor, $scope() + ["id" => 0, "title" => "Video chapter"]);
+$localAlternative = $authoring->saveLesson($actor, $scope() + [
+    "id" => 0, "module_id" => $module, "title" => "Local alternative text",
+    "kind" => "text", "required" => "0",
+    "body" => "<p>Alternative text is served only by the authorised classroom.</p>",
+]);
 $lesson = $authoring->saveLesson(
     $actor,
     $scope() + [
@@ -215,6 +220,7 @@ $lesson = $authoring->saveLesson(
         "module_id" => $module,
         "title" => "Video lesson",
         "kind" => "video",
+        "video_alternative_lesson_id" => $localAlternative,
         "required" => "1",
         "provider_key" => "youtube",
         "source_reference" => "dQw4w9WgXcQ",
@@ -362,6 +368,27 @@ videoExpect(
     $view["lesson"]->kind === "video" && !isset($view["lesson"]->source_json),
     "classroom never exposes reference",
 );
+videoExpect(
+    ($view["video_alternative"]["id"] ?? 0) === $localAlternative
+    && ($view["video_alternative"]["title"] ?? "") === "Local alternative text",
+    "SCR-08: explicit internal alternative is visible only in an authorised course classroom"
+);
+videoFixtureUpdate("jlms_lessons", (object) [
+    "id" => $localAlternative,
+    "publish_up" => gmdate("Y-m-d H:i:s", time() + 3600),
+]);
+$scheduledAlternative = $learning->classroom($student, "en-GB", $enrollment, $lesson);
+videoExpect(
+    $scheduledAlternative["video_alternative"] === null,
+    "SCR-08: scheduled alternative title and link are not disclosed before availability"
+);
+videoFixtureUpdate("jlms_lessons", (object) ["id" => $localAlternative, "publish_up" => null], true);
+$noDisclosure = $learning->classroom($student, "en-GB", $enrollment, $lesson);
+videoExpect(
+    ($noDisclosure["video_alternative"]["id"] ?? 0) === $localAlternative,
+    "SCR-08: a now-available alternative becomes visible without relaxing video policy"
+);
+
 // LCM-01: withdrawal, archive and trash stop existing video access without
 // deleting progress. A promotional end date alone is not a teaching deadline.
 foreach ([0, 2, -2] as $blockedState) {

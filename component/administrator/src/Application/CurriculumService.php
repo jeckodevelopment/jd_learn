@@ -752,6 +752,10 @@ final class CurriculumService
         } elseif ($kind !== 'video' && $thresholdSubmitted && $input['video_threshold_percent'] !== '') {
             throw new \DomainException('COM_JLMS_INVALID_INPUT');
         }
+        $alternativeLessonId = self::id($input['video_alternative_lesson_id'] ?? 0, true);
+        if ($kind !== 'video' && $alternativeLessonId !== 0) {
+            throw new \DomainException('COM_JLMS_VIDEO_ALTERNATIVE_INVALID');
+        }
         $requiredLessons = $input['required_lesson_ids'] ?? [];
         if (!is_array($requiredLessons) || !array_is_list($requiredLessons) || count($requiredLessons) > 5000) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
@@ -770,7 +774,9 @@ final class CurriculumService
             $id,
             $fields,
             $durationProof,
+            $transcript,
             $requiredLessons,
+            $alternativeLessonId,
             $thresholdSubmitted,
             $threshold
 ): int {
@@ -780,6 +786,16 @@ final class CurriculumService
             $module = $this->row('modules', $moduleId, true);
             if ((int) $module->course_version_id !== $versionId) {
                 throw new \DomainException('COM_JLMS_RESOURCE_NOT_FOUND');
+            }
+            if ($alternativeLessonId !== 0) {
+                $alternative = $this->row('lessons', $alternativeLessonId, true);
+                if (
+                    (int) $alternative->course_version_id !== $versionId
+                    || !in_array($alternative->kind, ['text', 'document', 'audio'], true)
+                    || $alternativeLessonId === $id
+                ) {
+                    throw new \DomainException('COM_JLMS_VIDEO_ALTERNATIVE_INVALID');
+                }
             }
             if ($id) {
                 $lesson = $this->row('lessons', $id, true);
@@ -844,6 +860,7 @@ final class CurriculumService
                     $params['video_transcript'] = $transcript;
                     $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
                 }
+                $fields = self::withVideoAlternative($fields, $alternativeLessonId);
                 $this->update('lessons', $lesson, $fields, $actor);
             } else {
                 if ($fields['kind'] === 'video' && $threshold !== null) {
@@ -854,6 +871,7 @@ final class CurriculumService
                     $params['video_threshold_basis_points'] = $threshold;
                     $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
                 }
+                $fields = self::withVideoAlternative($fields, $alternativeLessonId);
                 $fields = array_replace($fields, LessonAvailability::normalize($input['publish_up'] ??
                      null, $input['publish_down'] ?? null, $timezone));
                 $fields['release_after_days'] =
@@ -883,6 +901,25 @@ final class CurriculumService
             $this->update('course_versions', $version, [], $actor);
             return $id;
         });
+    }
+
+    /** A local alternative is an editor choice, not a bypass of video completion or consent. */
+    private static function withVideoAlternative(array $fields, int $alternativeLessonId): array
+    {
+        if ($fields['kind'] !== 'video') {
+            return $fields;
+        }
+        $params = json_decode((string) $fields['params_json'], true, 16, JSON_THROW_ON_ERROR);
+        if (!is_array($params)) {
+            throw new \DomainException('COM_JLMS_VIDEO_ALTERNATIVE_INVALID');
+        }
+        if ($alternativeLessonId > 0) {
+            $params['video_alternative_lesson_id'] = $alternativeLessonId;
+        } else {
+            unset($params['video_alternative_lesson_id']);
+        }
+        $fields['params_json'] = json_encode($params, JSON_THROW_ON_ERROR);
+        return $fields;
     }
 
     /** Replace the prerequisite edges for one lesson and reject references outside this draft or cycles. */

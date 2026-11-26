@@ -220,6 +220,42 @@ builderDenied(fn()=>$service->saveOrder($actor, ['course_id' => $source,'version
 builderExpect($sourceBefore === builderSnapshot($source, (int)$published
     ->id), 'Published source untouched by every draft operation');
 builderExpect($learningBefore === $learning(), 'No enrollment, attempt or progress mutation');
+
+// SCR-08 / SCR-13: a copied module must point to its copied alternative,
+// not back to an old video or text lesson. This copies only draft authoring
+// entities; enrolments and student history remain untouched.
+$videoAlternative = $service->saveLesson($actor, $scope() + [
+    'id' => 0, 'module_id' => $m1, 'title' => 'Video with alternative',
+    'kind' => 'video', 'required' => '0',
+    'body' => '<p>Provider requires consent.</p>',
+    'provider_key' => 'youtube', 'source_reference' => 'dQw4w9WgXcQ',
+    'video_alternative_lesson_id' => $l2,
+]);
+$copiedModule = (new \Jlms\Component\Jlms\Administrator\Application\CourseVersionCopy($db))
+    ->item($actor, 'module', builderRow('modules', $m1), $version, 'Copy with alternative');
+$copyLessons = $db->setQuery('SELECT id, kind, title, params_json FROM #__jlms_lessons WHERE module_id=' .
+    (int) $copiedModule)->loadObjectList();
+$copyTextId = 0;
+$copyVideoAlternativeId = 0;
+foreach ($copyLessons as $copied) {
+    if ($copied->title === 'Builder lesson two') {
+        $copyTextId = (int) $copied->id;
+    }
+    if ($copied->title === 'Video with alternative') {
+        $params = json_decode((string) $copied->params_json, true, 16, JSON_THROW_ON_ERROR);
+        $copyVideoAlternativeId = (int) ($params['video_alternative_lesson_id'] ?? 0);
+    }
+}
+builderExpect(
+    $copyTextId > 0 && $copyVideoAlternativeId === $copyTextId
+    && $copyVideoAlternativeId !== $l2,
+    'SCR-08: copying a module remaps the internal alternative to the duplicated lesson'
+);
+builderExpect(
+    $learningBefore === $learning(),
+    'SCR-13: duplicating authoring alternatives does not mutate any learner progress'
+);
+
 file_put_contents($file, json_encode(['course' => $course,'version' => $version,'m1' => $m1,'m2' => $m2,'l1'
     => $l1,'l2' => $l2,'source' => $source,'source_version' => (int)$published->id,'snapshot'
         => builderSnapshot($course, $version)], JSON_THROW_ON_ERROR));
