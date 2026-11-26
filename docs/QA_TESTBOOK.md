@@ -3145,3 +3145,10 @@ Registrare sempre ambiente, versioni, passi e risultati separatamente dalla CI. 
 - Verificare IT/EN e override di lingua nei messaggi dinamici, nelle viste, nei controlli di errore e nei modelli di notifica.
 
 Registrare ambiente, ruoli, versione, selettori/URL anonimizzati, risultati attesi e riscontrati. I collaudi restano distinti dalle prove CI e dall'eventuale chiusura dei criteri implementativi.
+
+
+### SECDEV-02 / CORE-22 — confine ZIP installabile dopo PR #1058
+
+**Test automatici:** `python3 tests/secdev02-package-core-boundary.py --self-test` e controllo sul package costruito in CI. Bloccano costituenti e file estranei, manifest incoerenti, percorsi non sicuri, ZIP con membri duplicati e percorsi esterni ai namespace dell'estensione. Il risultato non equivale a un'installazione Joomla di produzione.
+
+**Collaudo manuale Joomla: NON ESEGUITO.** Su installazione di test Joomla 6.2.1, estrarre il ZIP effettivo dall'artefatto CI, installare o aggiornare JD Learn dalla versione precedentemente distribuita. Verificare Gestione estensioni (component, library, provider, Task/Privacy/System/Finder/User/Actionlog), integrità degli aggiornamenti, assenza di file estranei nel core Joomla e funzionamento delle funzioni già pubblicate. Ripetere su ambiente omologo a quello di destinazione; registrare versione PHP/DB, esito e rollback, senza esporre credenziali.

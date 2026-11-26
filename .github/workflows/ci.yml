@@ -78,6 +78,8 @@ jobs:
       - name: Lightweight structure, package and documentation checks
         run: |
           python3 tools/build.py
+          python3 tests/secdev02-package-core-boundary.py --self-test
+          python3 tests/secdev02-package-core-boundary.py
           python3 tests/secdev02-core-php.py --self-test
           python3 tests/secdev02-core-php.py
           python3 tests/secdev02-core-ledger.py --self-test

@@ -55,6 +55,12 @@ Le PR seguenti sono **già integrate** in `main`, ampliano concretamente le veri
 
 **CORE-17** è già 2/2 nella matrice tecnica. L'accettazione amministrativa sull'ambiente reale rimane distinta.
 
+## Lotto #1058 — prova dell'artefatto installabile, non soltanto dei sorgenti
+
+La CI ora costruisce il package di sviluppo prima di eseguire `tests/secdev02-package-core-boundary.py` sullo ZIP realmente prodotto. Il test confronta i dodici costituenti con le dichiarazioni del manifest Joomla, i tipi/ID/gruppi, la versione timbrata degli ZIP figli e i percorsi installabili consentiti. Blocca traversal, file esterni al namespace JD Learn, ZIP non sicuri, duplicati o link simbolici; le fixture negative esercitano le principali deviazioni.
+
+**Ambito:** rafforza le evidenze per SECDEV-02/criterion_03 (assenza di modifiche distribuite al core Joomla) e l'integrità CORE-22. Non certifica automaticamente l'assenza di *ogni* dipendenza da API rimosse, l'upgrade su hosting target o il collaudo Joomla: i 3 criteri SECDEV pendenti e i 23 CORE in revisione rimangono invariati. Nessuna percentuale viene promossa sulla sola aggiunta del gate.
+
 ## Condizioni operative per chiudere senza false dichiarazioni
 
 1. Completare le prove o correzioni implementative pertinenti ai **17** residui e registrarne test e risultato. Se una porzione è esclusivamente manuale, motivarne esplicitamente la riclassificazione, senza fingere test di sviluppo.
