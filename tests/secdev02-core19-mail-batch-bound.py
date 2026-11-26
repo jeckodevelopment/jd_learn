@@ -163,6 +163,7 @@ def inspect_manager_notice(source: str) -> list[str]:
     required = {
         "queue template discriminator": "com_jlms.enrollment.manager_request",
         "request/recipient event-key lookup": "SHA2(CONCAT(",
+        "event-key join": "notice.event_key =",
         "request event namespace": "enrollment.manager.request:",
         "exclude already queued fan-out": "->where('notice.id IS NULL')",
         "configured bounded selection": "setQuery($query, 0, $limit)",
@@ -185,6 +186,7 @@ def manager_notice_self_test(source: str) -> None:
     assert not inspect_manager_notice(source), inspect_manager_notice(source)
     assert inspect_manager_notice(source.replace("->where('notice.id IS NULL')", "", 1))
     assert inspect_manager_notice(source.replace("SHA2(CONCAT(", "SHA1(CONCAT(", 1))
+    assert inspect_manager_notice(source.replace("notice.event_key =", "notice.created_at =", 1))
     assert inspect_manager_notice(source.replace("setQuery($query, 0, $limit)", "setQuery($query)", 1))
     assert inspect_manager_notice(source.replace("com_jlms.enrollment.manager_request", "com_jlms.other", 1))
 
