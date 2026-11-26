@@ -2650,16 +2650,24 @@
       {
         "id": "inheritance",
         "label": "Ereditarietà delle preferenze per tutti gli eventi",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Application/MailPreferences.php",
-          "component/administrator/config.xml"
+          "component/administrator/forms/course.xml",
+          "component/administrator/config.xml",
+          "tests/joomla-smoke.php",
+          "tests/mail05-event-contract.py",
+          "tools/check.py"
         ],
         "review": {
-          "reason": "Il repository contiene riferimenti pertinenti al criterio «Ereditarietà delle preferenze per tutti gli eventi», ma questi non dimostrano l'intero requisito, tutte le varianti/casi limite o l'esecuzione nel contesto richiesto. In assenza di una registrazione completa delle prove, l'esito resta non verificabile; non viene attribuita accettazione Joomla.",
+          "reason": "Tutti i 16 eventi del catalogo sono verificati nella fixture Joomla con valore globale ON/OFF, override inherit/enabled/disabled, merge conservativo e rimozione override. Il gate di preflight confronta la lista eventi con i 15 campi globali e per corso, riservando l'annuncio al flusso separato con doppio opt-in; la mappa corrotta fallisce in modo sicuro. Questa è prova implementativa della precedenza, non collaudo SMTP o accettazione Joomla manuale.",
           "references": [
-            "component/administrator/src/Application/MailPreferences.php#L1-L25",
-            "component/administrator/config.xml#L1-L25"
+            "component/administrator/src/Application/MailPreferences.php#public static function enabled(",
+            "component/administrator/forms/course.xml#name=\"mail_manager_request\"",
+            "component/administrator/config.xml#name=\"mail_manager_request_enabled\"",
+            "tests/joomla-smoke.php#// MAIL-05: complete global/course precedence",
+            "tests/mail05-event-contract.py#def inspect(",
+            "tools/check.py#tests/mail05-event-contract.py"
           ]
         }
       }
