@@ -87,6 +87,7 @@ completion.completionHandlers.submit({ preventDefault() { prevented++; } });
 assert.equal(prevented, 1, 'Duplicate native completion submission must be blocked');
 completion.globalHandlers.pageshow();
 assert.equal(completion.completionButton.disabled, false, 'BFCache return restores manual completion');
+assert.equal(completion.status.dataset.state, 'idle', 'BFCache restoration never claims a completed save');
 completion.completionHandlers.submit({ preventDefault() { prevented++; } });
 assert.equal(prevented, 1, 'Native completion can be retried after returning');
 
