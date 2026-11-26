@@ -3189,3 +3189,16 @@ Per ogni caso annotare configurazione Joomla/PHP, ruolo, URL della pagina (senza
 5. **SCR-13 — editor Joomla.** Collaudare AC-129–AC-134: Salva/Salva e chiudi, programma contestuale, riordino e duplicazione, conferme di modifica versione, campi/ACL/checkout, dati non confermati prima di navigare, due editor concorrenti, desktop/mobile e browser di destinazione. Registrare anomalie riproducibili, mantenendo separato il lavoro implementativo.
 
 Versione target: Joomla 6.2.1; registrare PHP, database, ruoli, lingue, template, dispositivo ed esito osservato. I test manuali non sono parte delle percentuali CI.
+
+
+## SCR-06 — Completamento manuale video: conferma editoriale esplicita (26/11/2026)
+
+**Stato: NON ESEGUITO (collaudo manuale).** Non considerare i test CI come esecuzione dei casi su un sito reale.
+
+- **SCR06-V01 / default e soglia:** creare una lezione video obbligatoria senza cambiare la nuova voce *Regola di completamento del video*. Pubblicare con un provider funzionante. Aprire da studente: deve comparire il player, **non** il pulsante *Segna come completata*. Un invio forzato di `lesson.complete` deve essere respinto dal server; il video si completa soltanto al raggiungimento della soglia di copertura.
+- **SCR06-V02 / manuale esplicito:** nell'editor selezionare *Conferma manuale dello studente* su un video richiesto. Salvare, ricaricare l'editor, pubblicare e iscriversi. Nell'aula verificare che il player si apra e il pulsante sia disponibile; fino al POST di conferma non si attribuiscono crediti neanche dopo visione completa. Dopo conferma verificare stato/percentuale/ripresa e assenza di doppio credito su ripetizione del POST.
+- **SCR06-V03 / autorizzazioni e consenso:** da ospite, altro studente, iscrizione revocata, lezione chiusa o prerequisito bloccato provare `lesson.complete`, playback e refresh. Nessun credito né contenuto privato. Verificare che un video remoto manuale non carichi SDK/iframe senza policy e consenso validi.
+- **SCR06-V04 / tipi e consultazione:** le lezioni testo/documento/audio non devono accettare una regola video contraffatta. Una lezione video manuale in corso di sola consultazione non deve attribuire progresso; il player può restare utilizzabile con consenso.
+- **SCR06-V05 / compatibilità editor e versioni:** duplicare, spostare e modificare una bozza; la scelta deve restare associata alla lezione. Nelle versioni pubblicate/storiche il valore non deve cambiare automaticamente. Ripetere sul frontend mobile e con PHP/DB di destinazione.
+
+Raccogliere esito, versione pacchetto, PHP, database, provider, politica di consenso, configurazione, ruoli e screenshot/log degli eventuali KO. Gli interventi implementativi successivi dipendono da difetti riproducibili.
