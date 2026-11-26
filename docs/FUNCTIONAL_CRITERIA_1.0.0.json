@@ -9775,18 +9775,20 @@
       {
         "id": "criterion_04",
         "label": "Motivare ogni servizio core non pertinente senza duplicarlo automaticamente",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "component/administrator/services/provider.php",
-          "docs/MANUAL_ENROLLMENT.md",
-          "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md"
+          "docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json",
+          "tests/secdev02-core-ledger.py",
+          "tests/secdev02-core-decision-signoff.py",
+          "tests/secdev02-core-ci-wiring.py"
         ],
         "review": {
-          "reason": "Il repository contiene codice e prove per flussi specifici collegati a motivare ogni servizio core non pertinente senza duplicarlo automaticamente, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.",
+          "reason": "Verificati e motivati individualmente i riusi Joomla e i servizi di dominio per tutti i 23 servizi CORE-01–23. Il registro versionato descrive decisione, razionale, evidenza di codice, evidenza CI e limiti di collaudo per ciascun servizio; il gate dedicato verifica unicità, completezza e distinzione dei sei servizi con dipendenze ambientali. Questo criterio riguarda esclusivamente la decisione architetturale di riuso e non promuove gli altri tre criteri SECDEV-02 né i 23 criteri CORE non verificati.",
           "references": [
-            "component/administrator/services/provider.php#L1-L25",
-            "docs/MANUAL_ENROLLMENT.md#L1-L25",
-            "docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25"
+            "docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json#L1-L20",
+            "tests/secdev02-core-ledger.py#L1-L20",
+            "tests/secdev02-core-decision-signoff.py#L1-L20",
+            "tests/secdev02-core-ci-wiring.py#L1-L20"
           ]
         }
       }

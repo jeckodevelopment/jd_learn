@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **501**.
+- Implementati: **502**.
 - Mancanti con lacuna accertata: **14**.
-- Esaminati con esito non verificabile: **242**.
+- Esaminati con esito non verificabile: **241**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -787,10 +787,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
 - `SECDEV-02/criterion_03` — nessuna modifica del core o dipendenza intenzionale da API rimosse. Il repository contiene codice e prove per flussi specifici collegati a nessuna modifica del core o dipendenza intenzionale da api rimosse, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
-  - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
-  - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
-  - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
-- `SECDEV-02/criterion_04` — Motivare ogni servizio core non pertinente senza duplicarlo automaticamente. Il repository contiene codice e prove per flussi specifici collegati a motivare ogni servizio core non pertinente senza duplicarlo automaticamente, ma il criterio richiede copertura completa trasversale di endpoint, ruoli e casi limite. La revisione sistematica o l'accettazione ambientale richiesta non è stata registrata, quindi l'esito resta non verificabile senza attribuire implementazioni o lacune non dimostrate.
   - [component/administrator/services/provider.php#L1-L25](../component/administrator/services/provider.php#L1-L25)
   - [docs/MANUAL_ENROLLMENT.md#L1-L25](../docs/MANUAL_ENROLLMENT.md#L1-L25)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L1-L25)
@@ -1803,6 +1799,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/services/provider.php#ComponentDispatcherFactory](../component/administrator/services/provider.php)
   - [component/administrator/services/provider.php#setMVCFactory](../component/administrator/services/provider.php)
   - [component/jlms.xml#<extension](../component/jlms.xml)
+- `SECDEV-02/criterion_04` — Motivare ogni servizio core non pertinente senza duplicarlo automaticamente. Verificati e motivati individualmente i riusi Joomla e i servizi di dominio per tutti i 23 servizi CORE-01–23. Il registro versionato descrive decisione, razionale, evidenza di codice, evidenza CI e limiti di collaudo per ciascun servizio; il gate dedicato verifica unicità, completezza e distinzione dei sei servizi con dipendenze ambientali. Questo criterio riguarda esclusivamente la decisione architetturale di riuso e non promuove gli altri tre criteri SECDEV-02 né i 23 criteri CORE non verificati.
+  - [docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json#L1-L20](../docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json#L1-L20)
+  - [tests/secdev02-core-ledger.py#L1-L20](../tests/secdev02-core-ledger.py#L1-L20)
+  - [tests/secdev02-core-decision-signoff.py#L1-L20](../tests/secdev02-core-decision-signoff.py#L1-L20)
+  - [tests/secdev02-core-ci-wiring.py#L1-L20](../tests/secdev02-core-ci-wiring.py#L1-L20)
 - `SECDEV-03/criterion_01` — Input, query e output. Implementazione 1.0.0 delimitata al package: inventario dei controller, plugin e template distribuiti con gate runtime e test HTTP/DB; il threat model SEC-P1 copre le superfici software. Prove manuali su hosting, ruoli reali e override di terzi restano nei gate separati.
   - [tests/secdev03-implementation-coverage.py#L23-L23](../tests/secdev03-implementation-coverage.py#L23-L23)
   - [tests/sec-p1-controller-gates.py#L62-L62](../tests/sec-p1-controller-gates.py#L62-L62)
