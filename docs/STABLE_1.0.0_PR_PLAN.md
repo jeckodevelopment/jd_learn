@@ -1,4 +1,4 @@
-**CORE-10 — test Content History dei campi docente (lotto in corso, 26/11/2026):** `tests/joomla-editorial.php` verifica ora una revisione con campo nativo docente, modifica successiva e ripristino con `TeacherModel::loadHistory()`. Il criterio completo resta Parziale/unverifiable; non si promuove l'accettazione Joomla né la percentuale. Dettaglio: [CORE10_TEACHER_HISTORY_2026-11-26.md](CORE10_TEACHER_HISTORY_2026-11-26.md).
+**CORE-10 — test Content History dei campi docente (PR #1073 aperta, 26/11/2026):** `tests/joomla-editorial.php` verifica ora una revisione con campo nativo docente, modifica successiva e ripristino con `TeacherModel::loadHistory()`. Il criterio completo resta Parziale/unverifiable; non si promuove l'accettazione Joomla né la percentuale. Dettaglio: [CORE10_TEACHER_HISTORY_2026-11-26.md](CORE10_TEACHER_HISTORY_2026-11-26.md).
 
 # Piano operativo delle PR — JD Learn 1.0.0
 
