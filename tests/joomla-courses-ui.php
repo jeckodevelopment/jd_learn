@@ -298,6 +298,32 @@ $list->setState('filter.published', '');
 $list->setState('list.ordering', 'a.title; DROP TABLE #__jlms_courses');
 $list->setState('list.direction', 'DESC; DELETE');
 listExpect(count($get()) === 3, 'SQL ordering is allowlisted');
+// CORE-20: every native Search Tools filter must fail closed on malformed
+// input, agree with the pagination total and recover after a valid reset.
+$malformedAdminFilters = [
+    'published' => '99',
+    'category_id' => '0',
+    'author_id' => '-1',
+    'teacher_id' => '1 OR 1=1',
+    'access' => 'not-a-level',
+    'language' => 'en-GB/../../',
+    'checked_out' => 'all',
+];
+foreach ($malformedAdminFilters as $filterName => $invalidValue) {
+    $filteredList = $factory->createModel('Courses', 'Administrator', ['ignore_request' => true]);
+    $filteredList->setState('list.limit', 100);
+    $filteredList->setState('filter.search', 'List UI');
+    $filteredList->setState('filter.' . $filterName, $invalidValue);
+    listExpect(
+        $filteredList->getItems() === [] && (int) $filteredList->getTotal() === 0,
+        'CORE-20: malformed admin filter and total fail closed: ' . $filterName
+    );
+    $filteredList->setState('filter.' . $filterName, '');
+    listExpect(
+        (int) $filteredList->getTotal() === 3 && count($filteredList->getItems()) === 3,
+        'CORE-20: clearing malformed filter restores valid list and total: ' . $filterName
+    );
+}
 // Verify the archived state against an actual record without changing retained fixtures.
 $db->setQuery('UPDATE #__jlms_courses SET state=2 WHERE id=' . (int)$ids['Bravo'])->execute();
 try {
@@ -320,6 +346,50 @@ $originalRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_courses WHE
     ->loadResult();
 $originalGates = $db->setQuery('SELECT admissions_open, delivery_enabled FROM #__jlms_courses WHERE id='
     . (int)$ids['Alpha'])->loadAssoc();
+// CORE-16: a second editor's native checkout blocks publication-state
+// changes without modifying editorial revisions or assigned teaching snapshots.
+$core16CourseBefore = $db->setQuery(
+    'SELECT state,revision,current_version_id FROM #__jlms_courses WHERE id=' . (int) $ids['Alpha']
+)->loadAssoc();
+$core16VersionBefore = $db->setQuery(
+    'SELECT status,structure_hash,published_at FROM #__jlms_course_versions WHERE id=' . (int) $originalVersion
+)->loadAssoc();
+$core16HistoryBefore = (int) $db->setQuery(
+    "SELECT COUNT(*) FROM #__history WHERE item_id='com_jlms.course." . (int) $ids['Alpha'] . "'"
+)->loadResult();
+$db->setQuery(
+    'UPDATE #__jlms_courses SET checked_out=' . (int) $editor
+    . ' WHERE id=' . (int) $ids['Alpha']
+)->execute();
+try {
+    listExpect(
+        !$courseModel->changeStates([$ids['Alpha']], -2),
+        'CORE-16: concurrent checkout prevents course lifecycle mutation'
+    );
+    listExpect(
+        $db->setQuery(
+            'SELECT state,revision,current_version_id FROM #__jlms_courses WHERE id=' . (int) $ids['Alpha']
+        )->loadAssoc() === $core16CourseBefore,
+        'CORE-16: denied checkout preserves course state, revision and assigned version'
+    );
+    listExpect(
+        $db->setQuery(
+            'SELECT status,structure_hash,published_at FROM #__jlms_course_versions WHERE id='
+            . (int) $originalVersion
+        )->loadAssoc() === $core16VersionBefore,
+        'CORE-16: denied lifecycle edit preserves immutable teaching snapshot'
+    );
+    listExpect(
+        (int) $db->setQuery(
+            "SELECT COUNT(*) FROM #__history WHERE item_id='com_jlms.course." . (int) $ids['Alpha'] . "'"
+        )->loadResult() === $core16HistoryBefore,
+        'CORE-16: denied checkout does not append phantom Joomla content history'
+    );
+} finally {
+    $db->setQuery(
+        'UPDATE #__jlms_courses SET checked_out=NULL WHERE id=' . (int) $ids['Alpha']
+    )->execute();
+}
 // Deliberately pre-arm the course to ensure trash closes both gates atomically.
 $db->setQuery('UPDATE #__jlms_courses SET admissions_open=1, delivery_enabled=1 WHERE id=' . (int)$ids['Alpha'])
     ->execute();
