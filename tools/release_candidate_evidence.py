@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bind a JD Learn release candidate to its actual ZIP, feed and source notes.
+"""Bind a JD Learn release candidate to its actual ZIP, feed, release notes and changelog entry.
 
 This is an integrity record, never a release approval or manual acceptance.
 """
@@ -21,8 +21,10 @@ def verify(args):
     feed = Path(args.feed)
     sums = Path(args.checksums)
     notes = Path(args.notes)
+    changelog = Path(args.changelog)
     assert re.fullmatch(r"(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)", args.version)
     assert re.fullmatch(r"[a-f0-9]{40}", args.commit), "Full commit SHA required"
+    assert changelog.is_file(), "Candidate changelog is missing"
     assert package.is_file() and package.name == f"pkg_jlms-{args.version}.zip"
     assert feed.is_file() and sums.is_file() and notes.is_file()
     digest = sha256(package)
@@ -45,6 +47,16 @@ def verify(args):
     assert update.findtext("./downloads/downloadurl") == expected_url
     assert args.release_notes.strip(), "Release notes must not be empty"
     source = notes.read_text(encoding="utf-8")
+    changelog_source = changelog.read_text(encoding="utf-8")
+    release_notes_in_changelog = re.search(
+        rf"(?ms)^## {re.escape(args.version)} — candidata non pubblicata\s*$(.*?)(?=^## |\Z)",
+        changelog_source,
+    )
+    assert release_notes_in_changelog, "Versioned candidate changelog section is missing"
+    normalize = lambda value: " ".join(value.split())
+    assert normalize(args.release_notes) in normalize(release_notes_in_changelog.group(1)), (
+        "Release notes do not match the versioned changelog candidate"
+    )
     assert "## Incompatibilità e limitazioni note" in source
     assert "## Gate prima di pubblicare le note definitive" in source
     assert "non" in source.lower() and "pubblicata" in source.lower()
@@ -58,6 +70,7 @@ def verify(args):
         "package_sha256": digest,
         "feed_sha256": sha256(feed),
         "draft_release_notes_sha256": sha256(notes),
+        "changelog_sha256": sha256(changelog),
         "actual_release_notes_sha256": hashlib.sha256(args.release_notes.encode("utf-8")).hexdigest(),
         "release_asset_url": expected_url,
     }
@@ -65,7 +78,7 @@ def verify(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    for flag in ("version", "commit", "package", "feed", "checksums", "notes", "output"):
+    for flag in ("version", "commit", "package", "feed", "checksums", "notes", "changelog", "output"):
         parser.add_argument("--" + flag, required=True)
     parser.add_argument("--release-notes", required=True)
     parser.add_argument("--verify", action="store_true")
