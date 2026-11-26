@@ -788,9 +788,11 @@ final class CurriculumService
             }
             if ($alternativeLessonId !== 0) {
                 $alternative = $this->row('lessons', $alternativeLessonId, true);
-                if ((int) $alternative->course_version_id !== $versionId
+                if (
+                    (int) $alternative->course_version_id !== $versionId
                     || !in_array($alternative->kind, ['text', 'document', 'audio'], true)
-                    || $alternativeLessonId === $id) {
+                    || $alternativeLessonId === $id
+                ) {
                     throw new \DomainException('COM_JLMS_VIDEO_ALTERNATIVE_INVALID');
                 }
             }
