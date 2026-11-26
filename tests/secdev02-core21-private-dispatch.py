@@ -89,6 +89,11 @@ def check(root: Path) -> list[str]:
             faults.append("Frontend display no longer enforces noncacheable Joomla rendering")
         if CACHE not in source:
             faults.append("Frontend display no longer sets a no-store policy")
+        else:
+            view_lookup = source.find("$view = $this->input->getCmd(")
+            cache_setup = source.find(CACHE)
+            if view_lookup < 0 or cache_setup > view_lookup:
+                faults.append("Frontend no-store must precede view parsing and rejection")
         for view in ("dashboard", "mycourses", "mycertificates", "preferences",
                      "classroom", "quiz", "teacheredit", "mailconsentrevoke"):
             if f"'{view}'" not in source:

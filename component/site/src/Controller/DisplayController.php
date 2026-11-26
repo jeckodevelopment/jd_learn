@@ -12,6 +12,8 @@ final class DisplayController extends BaseController
 
     public function display($cachable = false, $urlparams = [])
     {
+        // Protect even rejected requests: invalid views throw before rendering.
+        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         $view = $this->input->getCmd('view', 'courses');
         $allowedViews = [
             'courses', 'course', 'lessonpreview', 'teachers', 'teacher', 'teacheredit',
@@ -33,7 +35,6 @@ final class DisplayController extends BaseController
         if (in_array($this->input->getCmd('view'), $privateViews, true)) {
             $this->app->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
         }
-        $this->app->setHeader('Cache-Control', 'private, no-store', true);
         return parent::display(false, $urlparams);
     }
 }
