@@ -32,6 +32,14 @@ PARTS = {
     "plg_actionlog_jdlearn.zip": ("plugin", "jdlearn", "actionlog"),
 }
 COMPONENT_ROOTS = {"administrator", "site", "media", "jlms.xml", "script.php"}
+COMPONENT_SUBROOTS = {
+    "administrator": {
+        "services", "src", "tmpl", "forms", "sql", "docs", "help",
+        "language", "access.xml", "config.xml",
+    },
+    "site": {"forms", "src", "tmpl", "language"},
+    "media": {"css", "js", "joomla.asset.json"},
+}
 LIBRARY_ROOTS = {"src", "jlms.xml", "bootstrap.php"}
 PLUGIN_ROOTS = {
     "src", "services", "language", "media", "docs", "forms",
@@ -129,6 +137,13 @@ def scan(payload: bytes) -> tuple[list[str], dict]:
                             errors.append(
                                 f"{filename}: unapproved installation root {path}"
                             )
+                        elif kind == "component" and root in COMPONENT_SUBROOTS:
+                            parts = path.split("/", 2)
+                            if (len(parts) < 2
+                                    or parts[1] not in COMPONENT_SUBROOTS[root]):
+                                errors.append(
+                                    f"{filename}: unapproved installation root {path}"
+                                )
     except (BadZipFile, ValueError, KeyError, OSError, ET.ParseError) as exc:
         errors.append(f"package: unreadable ZIP or Joomla manifest: {exc}")
     return errors, report
