@@ -107,7 +107,7 @@ final class VideoProgressService
     private static function fingerprint(object $lesson): string
     {
         return hash('sha256', json_encode([$lesson->id, $lesson->course_version_id, $lesson->source_revision,
-            $lesson->source_json, $lesson->access_expires_at], JSON_THROW_ON_ERROR));
+            $lesson->source_json, $lesson->access_expires_at, $lesson->completion_rule], JSON_THROW_ON_ERROR));
     }
 
     private function descriptor(array $context): \Jlms\Contracts\Video\PlaybackDescriptor
