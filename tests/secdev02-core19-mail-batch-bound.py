@@ -153,6 +153,44 @@ def retry_self_test(source: str, queue: str) -> None:
     assert inspect_retry_and_tasks(source, altered_retry)
 
 
+def inspect_manager_notice(source: str) -> list[str]:
+    """Prevent pending manager alerts from monopolizing every bounded task run."""
+    problems: list[str] = []
+    start = source.find("public function enqueueDue(")
+    if start < 0:
+        return ["EnrollmentManagerNotice.enqueueDue is missing"]
+    body = source[start:]
+    required = {
+        "queue template discriminator": "com_jlms.enrollment.manager_request",
+        "request/recipient event-key lookup": "SHA2(CONCAT(",
+        "event-key join": "notice.event_key =",
+        "request event namespace": "enrollment.manager.request:",
+        "exclude already queued fan-out": "->where('notice.id IS NULL')",
+        "configured bounded selection": "setQuery($query, 0, $limit)",
+    }
+    for label, token in required.items():
+        if token not in body:
+            problems.append(f"manager notices missing {label}")
+    if (
+        "->where('notice.id IS NULL')" in body
+        and "setQuery($query, 0, $limit)" in body
+        and body.index("->where('notice.id IS NULL')") >= body.index("setQuery($query, 0, $limit)")
+    ):
+        problems.append("manager-notice deduplication must happen before LIMIT")
+    if "->order('r.id')" not in body:
+        problems.append("manager notice batch must retain deterministic request ordering")
+    return problems
+
+
+def manager_notice_self_test(source: str) -> None:
+    assert not inspect_manager_notice(source), inspect_manager_notice(source)
+    assert inspect_manager_notice(source.replace("->where('notice.id IS NULL')", "", 1))
+    assert inspect_manager_notice(source.replace("SHA2(CONCAT(", "SHA1(CONCAT(", 1))
+    assert inspect_manager_notice(source.replace("notice.event_key =", "notice.created_at =", 1))
+    assert inspect_manager_notice(source.replace("setQuery($query, 0, $limit)", "setQuery($query)", 1))
+    assert inspect_manager_notice(source.replace("com_jlms.enrollment.manager_request", "com_jlms.other"))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--self-test", action="store_true")
@@ -160,12 +198,16 @@ def main() -> int:
     source = (ROOT / TASK).read_text(encoding="utf-8")
     form = (ROOT / FORM).read_text(encoding="utf-8")
     queue = (ROOT / "component/administrator/src/Infrastructure/MailQueue.php").read_text(encoding="utf-8")
+    manager_notice = (ROOT / "component/administrator/src/Application/EnrollmentManagerNotice.php").read_text(
+        encoding="utf-8"
+    )
     if args.self_test:
         self_test(source, form)
         retry_self_test(source, queue)
+        manager_notice_self_test(manager_notice)
         print("CORE-19 Scheduler batch-bound negative fixtures: OK")
         return 0
-    problems = inspect(source, form) + inspect_retry_and_tasks(source, queue)
+    problems = inspect(source, form) + inspect_retry_and_tasks(source, queue) + inspect_manager_notice(manager_notice)
     for item in problems:
         print("CORE-19: " + item, file=sys.stderr)
     print(f"CORE-19: 4 enqueue services, communication and dispatcher bounded; issues={len(problems)}")
