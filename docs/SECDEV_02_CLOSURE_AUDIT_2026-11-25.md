@@ -450,3 +450,8 @@ La suite Joomla reale include ora una matrice sui corsi (`tests/joomla-editor-ac
 Per i docenti (`tests/joomla-teachers.php`) il lotto introduce una selezione mista con checkout straniero su un record, controllando rollback atomico di stati/revisioni anche se l'altro record era elaborabile. Inoltre tenta la stessa operazione con l'identità di un utente privo di autorizzazioni, riutilizzando il modello per rilevare l'uso improprio di permessi precedentemente acquisiti.
 
 **Perimetro:** prove su installazioni Joomla disposable nelle matrici PHP/MySQL e PHP/MariaDB; i workflow di pubblicazione editoriale e la revoca dinamica di livelli in tutte le viste frontend richiedono ulteriori evidenze separate. Nessun collaudo manuale eseguito e nessuna promozione artificiale dei criteri SECDEV-02 ancora aperti.
+
+
+## Aggiornamento 26 novembre 2026 — CORE-21
+
+La riconciliazione successiva della PR #1078 promuove `CORE-21/private_cache` a `implemented`: manifesto fail-closed di task e viste private, header `no-store/noindex`, test HTTP con owner, secondo account e guest, eseguiti nella CI Joomla. Il registro operativo corrente scende da 23 a **22 criteri CORE non verificabili**; la classificazione tecnica passa da 17 a **16 criteri**, mentre i 6 criteri ambientali restano distinti. CORE-21 mantiene la riga servizio `Parziale` per l'invalidazione multilivello dei metadati non coperta e per il collaudo proxy/CDN/hosting: la promozione del criterio cache privata non chiude tali residui.
