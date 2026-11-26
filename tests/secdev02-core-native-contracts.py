@@ -79,6 +79,19 @@ def validate(root: Path) -> list[str]:
     for token in ("new ContentType($db)", "com_jlms.", "core_content_item_id", "core_catid"):
         if token not in installer:
             errors.append(f"CORE-09: Joomla content-type mapping removed: {token}")
+    pathway_table = (root / "component/administrator/src/Table/PathwayTable.php").read_text(encoding="utf-8")
+    pathway_model = (root / "component/administrator/src/Model/PathwayModel.php").read_text(encoding="utf-8")
+    pathway_form = (root / "component/administrator/forms/pathway.xml").read_text(encoding="utf-8")
+    for token in ("TaggableTableInterface", "use TaggableTableTrait;", "com_jlms.pathway"):
+        if token not in pathway_table:
+            errors.append(f"CORE-09: pathway Joomla taggable table contract removed: {token}")
+    for token in ("'pathway' => 'PathwayTable'", "default => 'description'"):
+        if token not in installer:
+            errors.append(f"CORE-09: pathway UCM mapping removed: {token}")
+    if 'name="tags" type="tag"' not in pathway_form or "getTagIds((int) $item->id, $this->typeAlias)" not in pathway_model:
+        errors.append("CORE-09: pathway native tag editor field or rehydration removed")
+    if "PluginHelper::importPlugin('behaviour', 'taggable')" not in pathway_model or "'tags'," not in pathway_model:
+        errors.append("CORE-09: pathway native tag persistence hook removed")
     teacher_table = (root / "component/administrator/src/Table/TeacherTable.php").read_text(encoding="utf-8")
     teacher_form = (root / "component/administrator/forms/teacher.xml").read_text(encoding="utf-8")
     admin_teacher = (root / "component/administrator/src/Model/TeacherModel.php").read_text(encoding="utf-8")

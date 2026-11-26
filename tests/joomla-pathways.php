@@ -136,6 +136,31 @@ if (!$courseId) {
     throw new RuntimeException('Published catalog course fixture missing.');
 }
 $pathModel = $component->getMVCFactory()->createModel('Pathway', 'Administrator', ['ignore_request' => true]);
+$pathTable = $pathModel->getTable('Pathway');
+$pathForm = $pathModel->getForm([], false);
+$check(
+    $pathTable instanceof \\Joomla\\CMS\\Tag\\TaggableTableInterface
+    && $pathTable->getTypeAlias() === 'com_jlms.pathway',
+    'CORE-09: pathway uses Joomla native taggable table'
+);
+$check($pathForm && $pathForm->getField('tags') !== false, 'CORE-09: pathway form exposes Joomla tag selector');
+$pathTypeMapping = json_decode((string) $db->setQuery(
+    "SELECT field_mappings FROM #__content_types WHERE type_alias='com_jlms.pathway'"
+)->loadResult(), true, 32, JSON_THROW_ON_ERROR);
+$check(
+    ($pathTypeMapping['common']['core_content_item_id'] ?? '') === 'id'
+    && ($pathTypeMapping['common']['core_body'] ?? '') === 'description'
+    && ($pathTypeMapping['common']['core_access'] ?? '') === 'access',
+    'CORE-09: installer registers pathway UCM mappings for native tag persistence'
+);
+$pathTagModel = $app->bootComponent('com_tags')->getMVCFactory()
+    ->createModel('Tag', 'Administrator', ['ignore_request' => true]);
+$check($pathTagModel->save([
+    'id' => 0, 'parent_id' => 1, 'title' => 'CI pathway tag', 'alias' => 'ci-pathway-tag',
+    'published' => 1, 'access' => 1, 'language' => '*', 'description' => '',
+]), 'CORE-09: create pathway native Joomla tag');
+$pathTagId = (int) $pathTagModel->getState('tag.id');
+$check($pathTagId > 1, 'CORE-09: pathway native tag has an identity');
 // SECDEV-03: hostile editorial HTML and protected table columns must not escape
 // the native pathway editor's HTML filtering and explicit write allowlist.
 $payload = ['id' => 0,'revision' => 1,'title' => 'CI learning pathway','alias' => 'ci-learning-pathway',
@@ -143,7 +168,7 @@ $payload = ['id' => 0,'revision' => 1,'title' => 'CI learning pathway','alias' =
         . 'src="https://example.invalid"></iframe><a '
         . 'href="javascript:alert(2)" onclick="alert(3)">read</a>'),
     'catid' => $categoryId,'access' => 1,'language' => '*','state' => 1,
-    'courses' => [['course_id' => $courseId,'ordering' => 10]],
+    'courses' => [['course_id' => $courseId,'ordering' => 10]], 'tags' => [$pathTagId],
     'params_json' => '{"injected":true}','created_by' => 999999,'checked_out' => 999999];
 // CORE-01/04: a published child of a trashed ancestor must not allow
 // new pathway creation or allocation of native ACL assets.
@@ -211,6 +236,18 @@ $stored = $db->setQuery('SELECT course_id,ordering FROM #__jlms_pathway_courses 
     . (int)$pathwayId)->loadObject();
 $check($pathwayId > 0 && (int)$stored->course_id === $courseId && (int)$stored
     ->ordering === 0, 'native authoring normalizes and persists ordering');
+$pathTagIds = static function () use ($db, $pathwayId): array {
+    $q = $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
+        ->where('type_alias = ' . $db->quote('com_jlms.pathway'))
+        ->where('content_item_id = ' . $pathwayId);
+    return array_map('intval', $db->setQuery($q)->loadColumn());
+};
+$check($pathTagIds() === [$pathTagId], 'CORE-09: Joomla persists pathway tag association');
+$loadedPathway = $pathModel->getItem($pathwayId);
+$check(
+    $loadedPathway->tags instanceof \\Joomla\\CMS\\Helper\\TagsHelper,
+    'CORE-09: pathway editor rehydrates native tag field'
+);
 // SECDEV-03: submitted association IDs are literal integer identifiers,
 // never SQL syntax; rejected updates may not modify the existing links.
 $beforeAssociationInjection = $db->setQuery(
@@ -837,6 +874,18 @@ $check(
     $readLinks() === array_map('intval', $beforeBulkCourses),
     'restored links retain original course order'
 );
+$currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$check(
+    $pathModel->save(['id' => $pathwayId, 'revision' => $currentRevision, 'tags' => []]),
+    'CORE-09: replacing pathway tags with an empty selection succeeds'
+);
+$check($pathTagIds() === [], 'CORE-09: removing pathway tags clears only its native tag associations');
+$currentRevision = (int)$db->setQuery('SELECT revision FROM #__jlms_pathways WHERE id=' . $pathwayId)->loadResult();
+$check(
+    $pathModel->save(['id' => $pathwayId, 'revision' => $currentRevision, 'tags' => [$pathTagId]]),
+    'CORE-09: pathway tags can be reassigned after removal'
+);
+$check($pathTagIds() === [$pathTagId], 'CORE-09: pathway tag reassignment persists');
 file_put_contents(
     $lifecycleSnapshotFile,
     json_encode($readLifecycleSnapshot($pathwayId, $courseId), JSON_THROW_ON_ERROR)

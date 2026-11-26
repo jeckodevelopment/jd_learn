@@ -35,6 +35,8 @@ final class PathwayModel extends AdminModel
     {
         $item = parent::getItem($pk);
         if ($item && !empty($item->id)) {
+            $item->tags = new \\Joomla\\CMS\\Helper\\TagsHelper();
+            $item->tags->getTagIds((int) $item->id, $this->typeAlias);
             $pathwayId = (int) $item->id;
             $query = $this->getDatabase()->createQuery()->select('course_id, ordering')->from('#__jlms_pathway_courses')
                 ->where('pathway_id = :pathway')
@@ -55,6 +57,7 @@ final class PathwayModel extends AdminModel
 
     public function save($input)
     {
+        \\Joomla\\CMS\\Plugin\\PluginHelper::importPlugin('behaviour', 'taggable');
         $db = $this->getDatabase();
         $preparedAsset = 0;
         $transactionStarted = false;
@@ -131,6 +134,7 @@ final class PathwayModel extends AdminModel
                 'language',
                 'state',
                 'courses',
+                'tags',
                 'cover_image',
                 'cover_alt',
                 'cover_decorative'
