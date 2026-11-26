@@ -21,6 +21,32 @@ if (config && Number.isInteger(Number(config.enrollment)) && Number.isInteger(Nu
       }, 5000);
     }
   };
+  // Manual completion is a native HTML POST followed by a server redirect.
+  // Show only "saving" until that navigation confirms the result; a receipt
+  // from the separate lesson.begin POST must not falsely report it as saved.
+  let completing = false;
+  const form = document.querySelector('#jlms-complete-form');
+  if (form) {
+    let submitted = false;
+    const submitButton = form.querySelector('button[type="submit"]');
+    form.addEventListener('submit', event => {
+      if (submitted) {
+        event.preventDefault();
+        return;
+      }
+      submitted = true;
+      completing = true;
+      feedback(config.labels?.pending || '', 'saving');
+      if (submitButton) submitButton.disabled = true;
+      // On BFCache restoration, re-enable the native form for a fresh submit.
+      globalThis.addEventListener?.('pageshow', () => {
+        submitted = false;
+        completing = false;
+        if (submitButton) submitButton.disabled = false;
+      }, { once: true });
+    });
+  }
+
   const body = new URLSearchParams({ enrollment_id: String(config.enrollment), lesson_id: String(config.lesson),
     idempotency_key: String(config.idempotencyKey), [config.token]: '1' });
 
@@ -58,12 +84,14 @@ if (config && Number.isInteger(Number(config.enrollment)) && Number.isInteger(Nu
   // bounded lesson-start receipt so video.js can avoid overlapping transactions.
   const beginReceipt = send(0).then(result => {
     const row = document.querySelector(`#jlms-classroom-lesson-${Number(config.lesson)} > span`);
-    if (row) row.textContent = result.data?.state === 'completed'
-      ? (config.labels?.completed || '') : (config.labels?.inProgress || '');
-    feedback(result.data?.state === 'completed'
-      ? (config.labels?.completed || '') : (config.labels?.started || ''), 'saved');
+    if (!completing) {
+      if (row) row.textContent = result.data?.state === 'completed'
+        ? (config.labels?.completed || '') : (config.labels?.inProgress || '');
+      feedback(result.data?.state === 'completed'
+        ? (config.labels?.completed || '') : (config.labels?.started || ''), 'saved');
+    }
   }).catch(() => {
-    feedback(config.labels?.error || '', 'error');
+    if (!completing) feedback(config.labels?.error || '', 'error');
   });
   globalThis.__jlmsLessonBegin = {
     enrollment: Number(config.enrollment), lesson: Number(config.lesson), settled: beginReceipt
