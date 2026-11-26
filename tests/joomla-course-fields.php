@@ -144,7 +144,8 @@ fieldsExpect(
 // CORE-10: native public field visibility must respect the requested locale
 // even if the course itself is language-neutral. Exercise real com_fields
 // persistence, rather than an isolated copy of the filter expression.
-foreach (['en-GB' => 'course-locale-en', 'it-IT' => 'course-locale-it'] as $locale => $name) {
+$courseLocaleFields = ['en-GB' => 'course-locale-en', 'it-IT' => 'course-locale-it'];
+foreach ($courseLocaleFields as $locale => $name) {
     fieldsExpect($fieldModel->save([
         'id' => 0, 'context' => 'com_jlms.course', 'title' => $name,
         'name' => $name, 'type' => 'text', 'state' => 1, 'access' => 1,
@@ -153,7 +154,7 @@ foreach (['en-GB' => 'course-locale-en', 'it-IT' => 'course-locale-it'] as $loca
     ]), 'CORE-10: native course field locale fixture saved');
 }
 $publicCourse = $model->getItem($course);
-foreach (['en-GB' => 'course-locale-en', 'it-IT' => 'course-locale-it'] as $locale => $expected) {
+foreach ($courseLocaleFields as $locale => $expected) {
     $positions = \Jlms\Component\Jlms\Site\Helper\CourseFields::prepare($publicCourse, $locale);
     $names = [];
     foreach ($positions as $fields) {
