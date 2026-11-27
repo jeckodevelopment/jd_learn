@@ -333,7 +333,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             $db->transactionStart();
             $started = true;
             foreach ($ids as $id) {
-                $query = $db->createQuery()->select('id, state, revision, checked_out')->from('#__jlms_teachers')
+                $query = $db->createQuery()->select('id, state, revision, checked_out, created_by, user_id')->from('#__jlms_teachers')
                     ->where('id = :id')->bind(':id', $id, ParameterType::INTEGER);
                 $query->setQuery((string) $query . ' FOR UPDATE');
                 $record = $db->setQuery($query)->loadObject()
