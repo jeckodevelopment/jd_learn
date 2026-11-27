@@ -10,6 +10,8 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\User\User;
+use Joomla\CMS\Versioning\VersionableModelInterface;
+use Joomla\CMS\Versioning\VersionableModelTrait;
 use Jlms\Component\Jlms\Administrator\Application\CourseArtwork;
 use Joomla\Database\ParameterType;
 
