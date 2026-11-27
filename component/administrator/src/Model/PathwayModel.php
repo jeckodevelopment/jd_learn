@@ -35,7 +35,7 @@ final class PathwayModel extends AdminModel
     {
         $item = parent::getItem($pk);
         if ($item && !empty($item->id)) {
-            $item->tags = new \\Joomla\\CMS\\Helper\\TagsHelper();
+            $item->tags = new \Joomla\CMS\Helper\TagsHelper();
             $item->tags->getTagIds((int) $item->id, $this->typeAlias);
             $pathwayId = (int) $item->id;
             $query = $this->getDatabase()->createQuery()->select('course_id, ordering')->from('#__jlms_pathway_courses')
