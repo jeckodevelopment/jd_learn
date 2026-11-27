@@ -27,7 +27,7 @@ final class CurriculumModel extends FormModel
         );
     }
 
-    public function getLessonForm()
+    public function getLessonForm(string $language = '*')
     {
         $form = $this->loadForm(
             'com_jlms.curriculum_lesson',
@@ -38,7 +38,7 @@ final class CurriculumModel extends FormModel
         \Joomla\Component\Fields\Administrator\Helper\FieldsHelper::prepareForm(
             'com_jlms.lesson',
             $form,
-            new \stdClass()
+            (object) ['language' => $language]
         );
         $field = new \SimpleXMLElement(('<field name="provider_key" type="list" '
             . 'label="COM_JLMS_VIDEO_PROVIDER" showon="kind:video" />'));
