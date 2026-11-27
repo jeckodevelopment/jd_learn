@@ -104,9 +104,7 @@
       ],
       "reconciliation": {
         "reviewed_on": "2026-11-27",
-        "pending_criteria": [
-          "teacher_edit"
-        ],
+        "pending_criteria": [],
         "existing_automated_evidence": [
           "tests/joomla-editor-access.php",
           "tests/joomla-courses-ui.php",
@@ -114,7 +112,7 @@
           "tests/joomla-pathways.php"
         ],
         "acceptance_mode": "ci_plus_site",
-        "assessment": "partial_test_coverage",
+        "assessment": "code_criteria_implemented",
         "limitation": "Matrice ruoli e protezioni su tutti i record"
       }
     },

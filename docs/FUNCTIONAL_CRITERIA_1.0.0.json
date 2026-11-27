@@ -3506,16 +3506,17 @@
       {
         "id": "teacher_edit",
         "label": "Modifiche di profilo docente e limitazioni campi/pubblicazione",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Model/TeacherModel.php",
-          "docs/TEACHERS.md"
+          "tests/joomla-editor-access.php"
         ],
         "review": {
-          "reason": "Il modello docente applica capacità di gestione e permessi record sulle modifiche note; non è attestata l'intera matrice di campi, pubblicazione e accessi multipli per tutti i ruoli e contesti richiesti.",
+          "reason": "La prova Joomla disposable su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 verifica il salvataggio editoriale di un docente delegato con core.edit.own senza core.edit, respinge il payload forgiato sui campi amministrativi e nega la modifica del profilo altrui preservando i dati. Entrambi gli ambienti CI standard superano (run #46078241684). Il criterio è implementato per la superficie verificata; l’accettazione manuale Joomla e gli altri ruoli restano separati.",
           "references": [
-            "component/administrator/src/Model/TeacherModel.php#L21-L78",
-            "docs/TEACHERS.md#L3-L5"
+            "component/administrator/src/Model/TeacherModel.php#TeacherProfiles::canEdit($actor, $record)",
+            "tests/joomla-editor-access.php#CORE-04: edit-own authorizes editing the delegated editor’s own teacher profile",
+            "tests/joomla-editor-access.php#CORE-04: edit-own cannot modify another owner’s teacher profile"
           ]
         }
       }

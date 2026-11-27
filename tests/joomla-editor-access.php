@@ -400,6 +400,74 @@ editorExpect(
         . $ownTeacher . ',' . $deniedTeacher . ') ORDER BY id')->loadAssocList() === $teacherBatchBefore,
     'CORE-04: denied mixed teacher batch rolls back the authorized earlier record'
 );
+// Exercise the single-record TeacherModel::save() path, not only the shared
+// authorization helper and the bulk lifecycle endpoint. A delegated editor may
+// change their own profile but cannot smuggle administrator-only fields.
+$teacherComponentRules = json_decode($teacherComponentRulesBefore, true, 32, JSON_THROW_ON_ERROR);
+$teacherComponentRules['jlms.teachers.manage'][(string) $group] = false;
+$asset->loadByName('com_jlms');
+$asset->rules = json_encode($teacherComponentRules, JSON_THROW_ON_ERROR);
+$asset->store();
+$ownTeacherBefore = $db->setQuery(
+    'SELECT id,title,alias,revision,catid,user_id,state,access,language FROM #__jlms_teachers WHERE id='
+    . $ownTeacher
+)->loadAssoc();
+editorExpect(
+    $teacherModel->save([
+        'id' => $ownTeacher,
+        'revision' => (int) $ownTeacherBefore['revision'],
+        'title' => 'Delegated self edit',
+        'alias' => 'delegated-self-edit',
+        'catid' => $teacherCategory,
+        'state' => 0,
+        'access' => 2,
+        'language' => 'it-IT',
+        'user_id' => (int) $operator->id,
+        'tags' => [],
+    ]),
+    'CORE-04: edit-own authorizes editing the delegated editor’s own teacher profile'
+);
+$ownTeacherAfter = $db->setQuery(
+    'SELECT id,title,alias,revision,catid,user_id,state,access,language FROM #__jlms_teachers WHERE id='
+    . $ownTeacher
+)->loadAssoc();
+editorExpect(
+    $ownTeacherAfter['title'] === 'Delegated self edit'
+    && $ownTeacherAfter['alias'] === 'delegated-self-edit'
+    && (int) $ownTeacherAfter['revision'] > (int) $ownTeacherBefore['revision']
+    && (int) $ownTeacherAfter['catid'] === (int) $ownTeacherBefore['catid']
+    && (int) $ownTeacherAfter['user_id'] === (int) $user->id
+    && (int) $ownTeacherAfter['state'] === (int) $ownTeacherBefore['state']
+    && (int) $ownTeacherAfter['access'] === (int) $ownTeacherBefore['access']
+    && $ownTeacherAfter['language'] === $ownTeacherBefore['language'],
+    'CORE-04: self edit preserves category, owner, publication, access and language fields'
+);
+$deniedTeacherBefore = $db->setQuery(
+    'SELECT id,title,alias,revision,catid,user_id,state,access,language FROM #__jlms_teachers WHERE id='
+    . $deniedTeacher
+)->loadAssoc();
+editorExpect(
+    !$teacherModel->save([
+        'id' => $deniedTeacher,
+        'revision' => (int) $deniedTeacherBefore['revision'],
+        'title' => 'Forged other profile edit',
+        'alias' => 'forged-other-profile-edit',
+        'catid' => $teacherCategory,
+    ]),
+    'CORE-04: edit-own cannot modify another owner’s teacher profile'
+);
+editorExpect(
+    $db->setQuery(
+        'SELECT id,title,alias,revision,catid,user_id,state,access,language FROM #__jlms_teachers WHERE id='
+        . $deniedTeacher
+    )->loadAssoc() === $deniedTeacherBefore,
+    'CORE-04: denied other-profile edit preserves all persisted teacher fields'
+);
+$asset->loadByName('com_jlms');
+$asset->rules = $teacherComponentRulesBefore;
+$asset->store();
+$teacherModel->setCurrentUser($operator);
+
 // Do not leak this delegated management grant into later integration fixtures.
 $asset->loadByName('com_jlms');
 $asset->rules = $teacherComponentRulesBefore;
