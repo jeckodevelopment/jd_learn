@@ -87,7 +87,7 @@ if (($argv[2] ?? '') === 'retained') {
     $saved = json_decode(file_get_contents($path), true, 16, JSON_THROW_ON_ERROR);
     $user = new \Joomla\CMS\User\User($saved['owner']);
     $cards = $read($user);
-    dashExpect(count($cards) === 26, 'owner history count retained');
+    dashExpect(count($cards) === 27, 'owner history count retained');
     $card = array_values(array_filter($cards, static fn($c)=>$c['id'] === $saved['completed']))[0];
     dashExpect($card['learning_state'] === 'completed' && $card['access'] === 'expired'
         && $card['percent'] === 100, 'completion and expired access retained independently');
