@@ -55,7 +55,11 @@ final class EditorialInstaller
                 'core_created_time' => 'created_at',
                 'core_modified_user_id' => 'modified_by',
                 'core_modified_time' => 'modified_at',
-                'core_body' => match ($type) { 'course' => 'summary', 'teacher' => 'bio', default => 'description' },
+                'core_body' => match ($type) {
+                    'course' => 'summary',
+                    'teacher' => 'bio',
+                    default => 'description',
+                },
                 'core_access' => $type === 'course' ? 'content_access' : 'access',
                 'core_language' => 'language',
                 'core_params' => 'params_json',
