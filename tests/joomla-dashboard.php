@@ -148,6 +148,7 @@ $now = gmdate('Y-m-d H:i:s');
 $completed = $seed('completed', ['completed_total' => 3,'completed_at' => $now,'ends_at' => '2000-01-01 00:00:00']);
 $suspended = $seed('suspended', ['status' => 'suspended']);
 $cancelled = $seed('cancelled', ['status' => 'cancelled']);
+$pending = $seed('pending', ['status' => 'pending']);
 $future = $seed('future', ['starts_at' => '2099-01-01 00:00:00']);
 for ($i = 0; $i < 20; $i++) {
     $seed('page-' . $i);
@@ -171,7 +172,7 @@ dashDenied(fn()=>$guestModel->getTotal(), 401, 'native totals require authentica
 $app->loadIdentity($operator);
 dashDenied(fn()=>$learning->resumeTarget($other, 'en-GB', $active), 404, 'other owner cannot resolve resume target');
 $rows = $db->setQuery($service->query($owner))->loadObjectList();
-dashExpect(count($rows) === 25, 'query selects only owner history');
+dashExpect(count($rows) === 26, 'query selects only owner history');
 dashDenied(fn()=>$service->cards($other, 'en-GB', $rows), 404, 'projection rejects another owner rows');
 $cards = $read($owner);
 $byId = array_column($cards, null, 'id');
@@ -180,8 +181,20 @@ dashExpect($byId[$active]['learning_state'] === 'not_started' && $byId[$active][
 dashExpect($byId[$completed]['learning_state'] === 'completed' && $byId[$completed]['access'] === 'expired'
     && $byId[$completed]['percent'] === 100, 'completed history remains visible after window expiry');
 dashExpect($byId[$suspended]['access'] === 'suspended' && $byId[$cancelled]['access'] === 'cancelled'
-    && $byId[$future]['access'] === 'not_open', 'distinct classroom block reasons');
-dashExpect(count($read($owner, 'completed')) === 1 && count($read($owner, 'not_started')) === 24
+    && $byId[$future]['access'] === 'not_open' && $byId[$pending]['access'] === 'pending',
+    'distinct classroom block reasons');
+dashExpect($byId[$active]['next_action'] === null, 'available course relies on its resume action');
+$nextActions = [
+    $completed => 'COM_JLMS_DASHBOARD_NEXT_EXPIRED',
+    $suspended => 'COM_JLMS_DASHBOARD_NEXT_SUSPENDED',
+    $cancelled => 'COM_JLMS_DASHBOARD_NEXT_CANCELLED',
+    $future => 'COM_JLMS_DASHBOARD_NEXT_NOT_OPEN',
+    $pending => 'COM_JLMS_DASHBOARD_NEXT_PENDING',
+];
+foreach ($nextActions as $id => $action) {
+    dashExpect($byId[$id]['next_action'] === $action, 'blocked enrollment provides its specific next action');
+}
+dashExpect(count($read($owner, 'completed')) === 1 && count($read($owner, 'not_started')) === 25
     && $read($owner, 'in_progress') === [], 'progress filter does not conflate access status');
 $target = $learning->resumeTarget($owner, 'en-GB', $active);
 dashExpect(
@@ -221,7 +234,8 @@ dashDenied(
 try {
     $c = array_column($read($owner), null, 'id');
     dashExpect(
-        $c[$active]['access'] === 'access' && $c[$completed]['completed'],
+        $c[$active]['access'] === 'access' && $c[$active]['next_action'] === 'COM_JLMS_DASHBOARD_NEXT_ACCESS'
+         && $c[$completed]['completed'],
         'fresh group revocation keeps owner history but removes access'
     );
     dashDenied(
@@ -257,7 +271,7 @@ try {
         $update('jlms_courses', $f['course_id'], ['state' => $inactiveState]);
         $c = array_column($read($owner), null, 'id');
         dashExpect(
-            count($c) === 25 && $c[$active]['access'] === 'unavailable' && $c[$active]['title'] !== ''
+            count($c) === 26 && $c[$active]['access'] === 'unavailable' && $c[$active]['title'] !== ''
                 && $c[$completed]['completed'] && $c[$completed]['percent'] === 100,
             'inactive course keeps owner title, completions and historical counters'
         );
@@ -431,7 +445,9 @@ try {
  $db->setQuery("UPDATE #__languages SET published=0 WHERE lang_code='it-IT'")->execute();
  try {
      $c = array_column($read($owner), null, 'id');
-     dashExpect($c[$italian]['access'] === 'language', 'unpublished course language removes current availability');
+     dashExpect($c[$italian]['access'] === 'language'
+          && $c[$italian]['next_action'] === 'COM_JLMS_DASHBOARD_NEXT_LANGUAGE',
+          'unpublished course language removes current availability');
      dashDenied(
          fn()=>$learning->resumeTarget($owner, 'en-GB', $italian),
          403,
