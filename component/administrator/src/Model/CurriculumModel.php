@@ -6,6 +6,7 @@ namespace Jlms\Component\Jlms\Administrator\Model;
 
 use Joomla\CMS\MVC\Model\FormModel;
 use Joomla\CMS\Factory;
+use Joomla\Database\DatabaseInterface;
 
 final class CurriculumModel extends FormModel
 {
@@ -40,6 +41,18 @@ final class CurriculumModel extends FormModel
             $form,
             (object) ['language' => $language]
         );
+        // FieldsHelper prepares definitions for the context but does not enforce their language.
+        // Remove localized definitions that cannot be used by this lesson form.
+        $db = Factory::getContainer()->get(DatabaseInterface::class);
+        $query = $db->getQuery(true)
+            ->select($db->quoteName(['name', 'language']))
+            ->from($db->quoteName('#__fields'))
+            ->where($db->quoteName('context') . ' = ' . $db->quote('com_jlms.lesson'));
+        foreach ($db->setQuery($query)->loadObjectList() as $definition) {
+            if (!in_array((string) $definition->language, ['*', $language], true)) {
+                $form->removeField((string) $definition->name, 'com_fields');
+            }
+        }
         $field = new \SimpleXMLElement(('<field name="provider_key" type="list" '
             . 'label="COM_JLMS_VIDEO_PROVIDER" showon="kind:video" />'));
         foreach (
