@@ -335,7 +335,8 @@ editorExpect($teacherCategoryModel->save([
 ]), 'CORE-04: delegated teacher category fixture saved');
 $teacherCategory = (int) $teacherCategoryModel->getState('category.id');
 $asset->loadByName('com_jlms');
-$teacherComponentRules = json_decode($asset->rules, true, 32, JSON_THROW_ON_ERROR);
+$teacherComponentRulesBefore = $asset->rules;
+$teacherComponentRules = json_decode($teacherComponentRulesBefore, true, 32, JSON_THROW_ON_ERROR);
 $teacherComponentRules['jlms.teachers.manage'][(string) $group] = true;
 $asset->rules = json_encode($teacherComponentRules, JSON_THROW_ON_ERROR);
 $asset->store();
@@ -399,6 +400,10 @@ editorExpect(
         . $ownTeacher . ',' . $deniedTeacher . ') ORDER BY id')->loadAssocList() === $teacherBatchBefore,
     'CORE-04: denied mixed teacher batch rolls back the authorized earlier record'
 );
+// Do not leak this delegated management grant into later integration fixtures.
+$asset->loadByName('com_jlms');
+$asset->rules = $teacherComponentRulesBefore;
+$asset->store();
 $teacherModel->setCurrentUser($operator);
 
 // The same model and user objects must not retain cached records after ACL revocation.
