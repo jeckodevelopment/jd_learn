@@ -3990,7 +3990,10 @@
           "references": [
             "docs/COURSE_EDITOR.md#L1-L30",
             "docs/AUTHORING.md#L1-L31",
-            "tests/joomla-courses-ui.php#L1-L30"
+            "tests/joomla-courses-ui.php#L1-L30",
+            "component/administrator/src/Model/PathwaysModel.php",
+            "component/administrator/tmpl/pathways/default.php",
+            "tests/joomla-pathways.php"
           ]
         }
       }
