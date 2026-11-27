@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **510**.
+- Implementati: **511**.
 - Mancanti con lacuna accertata: **9**.
-- Esaminati con esito non verificabile: **238**.
+- Esaminati con esito non verificabile: **237**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -53,10 +53,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/joomla-publication.php#one default edition created](../tests/joomla-publication.php)
   - [tests/joomla-publication.php#republish creates no duplicate edition](../tests/joomla-publication.php)
   - [tests/joomla-enrollment-state.php#reactivation does not extend expired window](../tests/joomla-enrollment-state.php)
-- `STU-01/blocked_reason` — Diagnostica completa di ogni blocco e azione proposta. DashboardService calcola cause distinte di indisponibilità e il test copre sospensione, annullamento e finestra non aperta. Non è dimostrata la completezza di ogni causa/blocco né l’azione proposta e disponibile per ciascun ruolo e contesto.
-  - [component/administrator/src/Application/DashboardService.php#$reason = 'available'](../component/administrator/src/Application/DashboardService.php)
-  - [tests/joomla-dashboard.php#distinct classroom block reasons](../tests/joomla-dashboard.php)
-  - [docs/LEARNER_DASHBOARD.md#access](../docs/LEARNER_DASHBOARD.md)
 - `STU-02/mobile` — Indice mobile e adattamento senza scroll eccessivo in tutte le risoluzioni. La guida descrive un indice comprimibile su smartphone e la disposizione responsive. Il criterio specifica tutte le risoluzioni e l’assenza di scroll eccessivo; servono verifiche visuali browser su viewport reali per accertare tali esiti.
   - [docs/LEARNING.md#Su smartphone l’indice del programma è comprimibile](../docs/LEARNING.md)
   - [docs/FRONTEND_CSS.md#mobile](../docs/FRONTEND_CSS.md)

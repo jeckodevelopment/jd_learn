@@ -1017,20 +1017,16 @@
       {
         "id": "blocked_reason",
         "label": "Diagnostica completa di ogni blocco e azione proposta",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "component/administrator/src/Application/DashboardService.php",
+          "component/site/tmpl/dashboard/_courses.php",
+          "component/site/language/it-IT/com_jlms.ini",
+          "component/site/language/en-GB/com_jlms.ini",
           "tests/joomla-dashboard.php",
-          "docs/LEARNER_DASHBOARD.md"
-        ],
-        "review": {
-          "reason": "DashboardService calcola cause distinte di indisponibilità e il test copre sospensione, annullamento e finestra non aperta. Non è dimostrata la completezza di ogni causa/blocco né l’azione proposta e disponibile per ciascun ruolo e contesto.",
-          "references": [
-            "component/administrator/src/Application/DashboardService.php#$reason = 'available'",
-            "tests/joomla-dashboard.php#distinct classroom block reasons",
-            "docs/LEARNER_DASHBOARD.md#access"
-          ]
-        }
+          "tests/dashboard-http.py",
+          "tests/dashboard-http-fixture.php"
+        ]
       }
     ],
     "STU-02": [

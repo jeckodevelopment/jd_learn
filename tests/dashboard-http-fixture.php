@@ -80,6 +80,12 @@ if ($mode === 'enable') {
         $q = $db->prepare('UPDATE joomla_users SET block=? WHERE id=?');
         $q->execute([$mode === 'block' ? 1 : 0,$f['owner']]);
     }
+} elseif (in_array($mode, ['course_off','course_on'], true)) {
+    $q = $db->prepare('UPDATE joomla_jlms_courses SET state=? WHERE id=?');
+    $q->execute([$mode === 'course_off' ? 0 : 1,$f['course']]);
+} elseif (in_array($mode, ['language_missing','language_restore'], true)) {
+    $q = $db->prepare('UPDATE joomla_jlms_courses SET language=? WHERE id=?');
+    $q->execute([$mode === 'language_missing' ? 'zz-ZZ' : 'en-GB',$f['course']]);
 } else {
     throw new \RuntimeException('Unknown fixture mode');
 }
