@@ -349,7 +349,7 @@
         "jlms-player-status",
         "jlms-progress-meter",
         "jlms-video-alternative",
-      "jlms-video-language",
+        "jlms-video-language",
         "jlms-video-language-control",
         "jlms-video-region",
         "jlms-video-speed",
@@ -537,6 +537,7 @@
         "jlms-my-course-grid",
         "jlms-my-course__access",
         "jlms-my-course__action",
+        "jlms-my-course__next-action",
         "jlms-my-course__progress",
         "jlms-my-course__title"
       ]
