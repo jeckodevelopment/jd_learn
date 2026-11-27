@@ -251,7 +251,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             }
             $teacherId = (int) $this->getState('teacher.id');
             if ($teacherId < 1) {
-                throw new \\RuntimeException('COM_JLMS_SAVE_FAILED');
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
             }
             $history = $data;
             $history['id'] = $teacherId;
