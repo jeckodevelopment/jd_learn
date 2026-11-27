@@ -182,7 +182,7 @@ $authoring->saveTeachingRules($actor, pubScope() + ['mode' => 'learning','sequen
 
 $reviewChoice = null;
 foreach ($publication->transitions($actor, $course, $version) as $candidate) {
-    $options = new \\Joomla\\Registry\\Registry($candidate->options);
+    $options = new \Joomla\Registry\Registry($candidate->options);
     if ((string)$options->get('jlms_action', '') === 'review') {
         $reviewChoice = $candidate;
         break;
@@ -210,7 +210,7 @@ try {
         'required' => '1',
         'body' => '<p>Must remain unchanged during review</p>',
     ]);
-} catch (\\DomainException $error) {
+} catch (\DomainException $error) {
     $lessonWriteDeniedInReview = $error->getMessage() === 'COM_JLMS_VERSION_IN_REVIEW';
 }
 $lessonAfterReview = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . (int)$lesson)->loadObject();
@@ -228,7 +228,7 @@ try {
         'revision' => (int)$moduleBeforeReview->revision,
         'title' => 'Edited module during review',
     ]);
-} catch (\\DomainException $error) {
+} catch (\DomainException $error) {
     $moduleWriteDeniedInReview = $error->getMessage() === 'COM_JLMS_VERSION_IN_REVIEW';
 }
 $moduleAfterReview = $db->setQuery('SELECT * FROM #__jlms_modules WHERE id=' . (int)$module)->loadObject();
@@ -240,7 +240,7 @@ pubExpect(
 );
 $returnChoice = null;
 foreach ($publication->transitions($actor, $course, $version) as $candidate) {
-    $options = new \\Joomla\\Registry\\Registry($candidate->options);
+    $options = new \Joomla\Registry\Registry($candidate->options);
     if ((string)$options->get('jlms_action', '') === 'return') {
         $returnChoice = $candidate;
         break;
