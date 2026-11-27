@@ -43,6 +43,9 @@ final class HtmlView extends BaseHtmlView
             $this->form->setFieldAttribute('state', 'disabled', 'true');
         }
         ToolbarHelper::title(Text::_('COM_JLMS_PATHWAY'), 'map-signs');
+        if ($id > 0) {
+            ToolbarHelper::versions('com_jlms.pathway', $id);
+        }
         ToolbarHelper::apply('pathway.apply');
         ToolbarHelper::save('pathway.save');
         ToolbarHelper::cancel('pathway.cancel');
