@@ -1,4 +1,4 @@
-## CORE-16 — storico del profilo docente e tag nativi (PR candidata)
+## CORE-16 — storico del profilo docente e tag nativi (PR #1091)
 
 **Collaudo manuale Joomla: In attesa.** In un sito di test con cronologia contenuti abilitata, aprire un docente associato a un corso pubblicato. Aggiungere un tag Joomla, salvare e creare una seconda revisione rimuovendo il tag e modificando la biografia. Dal pannello Versioni ripristinare la prima revisione: il titolo/biografia e il tag devono tornare ai valori salvati; la revisione corrente deve avanzare. Verificare che la versione didattica assegnata al corso mantenga contenuto, hash e data originali. Ripetere con cronologia disabilitata e confermare che il salvataggio resti possibile senza voci Versioni. Annotare versione Joomla, ruolo, lingua, corso/versione assegnata e risultato.
 
