@@ -7,6 +7,8 @@
 
 Prima versione stabile di JD Learn
 
+- **CORE-03/cross_context — revoca viewing level tra i contesti (PR candidata):** aggiunte regressioni di servizio e HTTP che revocano indipendentemente il viewing access level Joomla lasciando intatto il gruppo utente. I test coprono aula, completamento/replay iscrizione, cronologia, ripresa, scheda e catalogo, e il ripristino nella stessa sessione. Registro aggiornato a `implemented` per il perimetro software verificato; ruoli ulteriori, URL SEF e accettazione manuale restano pendenti. Sviluppo minimo 65,55% (513 implementati, 9 mancanti, 235 non verificabili); CI e artefatto ancora in attesa.
+
 - **CORE-09 (PR #1081, CI #4754 verde):** tag nativi Joomla completati per corsi, docenti e percorsi, inclusi mapping UCM, persistenza, rimozione e reidratazione. `CORE-09/tags_context` è implementato nel perimetro software. AC-19/AC-64 sul pacchetto installato, ricerca e ACL restano collaudo manuale in attesa.
 - **CORE-16 — storico dei percorsi (PR #1083, candidata):** aggiunti snapshot Joomla Content History con tag e ordine dei corsi; il ripristino passa dal modello transazionale e crea una nuova revisione. CI e collaudo Joomla restano pendenti; nessuna promozione dell'intero criterio.
 - **DOC-03/criterion_03 (PR #1082, candidata):** aggiunte quattro illustrazioni SVG schematiche e descritte in modo accessibile per catalogo, area personale, aula e profilo docente. I dati sono fittizi; il confronto con il pacchetto installato resta collaudo manuale.

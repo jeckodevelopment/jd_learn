@@ -4,8 +4,8 @@ Generato da `tools/functional_audit.py --sync`; verificato da `--check`. Fonte: 
 
 ## Sviluppo documentato (minimo confermato)
 
-**65.32%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
-Il registro contiene 512 criteri implementati con evidenza, 9 lacune accertate, 236 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
+**65.55%** — media a peso uguale della quota di criteri `implemented` documentati per ciascun requisito in scope (214 requisiti).
+Il registro contiene 513 criteri implementati con evidenza, 9 lacune accertate, 235 non verificabili e 0 non ancora esaminati. I criteri non verificabili/non esaminati non entrano nel numeratore: il valore è un minimo supportato dalle evidenze, non una stima del codice che potrebbe esistere senza riscontro.
 
 La percentuale funzionale globale rigorosa resta **non determinabile** finché i criteri non verificabili non vengono risolti.
 
@@ -19,7 +19,7 @@ La percentuale funzionale globale rigorosa resta **non determinabile** finché i
 | Provider e fruizione video | 8.41% | 71.20% | 0.00% | 0.00% | 0 | 20 |
 | Materiali, quiz e attestati | 7.94% | 70.59% | 17.65% | 0.00% | 0 | 14 |
 | Email e notifiche | 6.07% | 71.15% | 15.38% | 0.00% | 0 | 10 |
-| Joomla, ACL e configurazione | 17.76% | 58.99% | 2.63% | 0.00% | 0 | 34 |
+| Joomla, ACL e configurazione | 17.76% | 60.31% | 2.63% | 0.00% | 0 | 33 |
 | Privacy, sicurezza e compatibilità | 23.83% | 50.75% | 0.00% | 0.00% | 3 | 95 |
 | Packaging, documentazione e reporting | 7.01% | 51.67% | 0.00% | 0.00% | 6 | 24 |
 

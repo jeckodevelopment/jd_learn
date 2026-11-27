@@ -11,7 +11,13 @@ import json,os,re,subprocess,sys,time
 root=Path(sys.argv[1]).resolve()
 if os.environ.get('JLMS_TEST_DISPOSABLE')!='1':raise RuntimeError('Disposable Joomla site required')
 f=json.loads((root.parent/'dashboard-fixture.json').read_text());base='http://127.0.0.1:8093'
-config=root/'configuration.php';original=config.read_text();log=open(root.parent/'dashboard-http.log','w+');server=None;checks=0;navActivated=False
+config = root / 'configuration.php'
+original = config.read_text()
+log = open(root.parent / 'dashboard-http.log', 'w+')
+server = None
+checks = 0
+navActivated = False
+viewLevelRevoked = False
 class Page(HTMLParser):
  def __init__(self,text):super().__init__(convert_charrefs=True);self.forms=[];self.form=None;self.links=[];self.ids=[];self.feed(text)
  def handle_starttag(self,tag,attrs):
@@ -230,6 +236,25 @@ try:
   fixture('grant')
   _,restored,_=request(student,dashboard)
   expect('jlms-my-course-resume-'+str(f['active'])in Page(restored).ids,'same-session restored access reflected')
+  # CORE-03: independently withdraw the Joomla viewing level while retaining
+  # the user's group, then restore the same level in this authenticated session.
+  fixture('viewlevel_revoke')
+  viewLevelRevoked = True
+  _,level_revoked,_=request(student,dashboard)
+  blocked_card(level_revoked,f['active'],'Ask the administrator to check the Joomla viewing access required')
+  request(student,resume+str(f['active'])+'&lang=en',expected=403)
+  request(student,'/index.php?option=com_jlms&view=classroom&id='+str(f['active'])+'&lang=en',expected=403)
+  _,level_revoked_course,_=request(student,'/index.php?option=com_jlms&view=course&id='+str(f['course'])+'&lang=en')
+  expect('LEARNING_PRIVATE_BODY' not in level_revoked_course and 'PRIVATE_CATEGORY_LESSON' not in level_revoked_course,
+   'viewing-level revocation blocks lesson bodies in the course page')
+  _,level_revoked_catalog,_=request(student,'/index.php?option=com_jlms&view=courses&lang=en')
+  expect('LEARNING_PRIVATE_BODY' not in level_revoked_catalog and 'PRIVATE_CATEGORY_LESSON' not in level_revoked_catalog,
+   'viewing-level revocation blocks private lesson bodies in the public catalog')
+  fixture('viewlevel_restore')
+  viewLevelRevoked = False
+  _,restored_level_classroom,_=request(student,resume+str(f['active'])+'&lang=en')
+  expect('id="jlms-classroom"' in restored_level_classroom and 'LEARNING_PRIVATE_BODY_2' in restored_level_classroom,
+   'restoring viewing level immediately restores the owned classroom in the same session')
   fixture('course_off')
   _,unpublished,_=request(student,dashboard)
   blocked_card(unpublished,f['active'],'Contact the site administrator to check the course publication and availability')
@@ -254,6 +279,8 @@ finally:
   fixture('language_restore')
   fixture('course_on')
   fixture('grant')
+  if viewLevelRevoked:
+   fixture('viewlevel_restore')
   fixture('unblock')
  except Exception:
   pass

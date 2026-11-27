@@ -6,7 +6,7 @@
 
 **Aggiornamento 27/11/2026 — PR #1091 candidata:** il test `tests/joomla-teachers.php` copre ora lo snapshot effettivo dei tag nativi, inclusa la lista vuota, e il relativo ripristino per un docente assegnato. Questo chiude solo una combinazione concreta del residuo CORE-16; i casi cross-entity, checkout concorrente e restore delle altre relazioni restano sviluppo/CI aperti. Accettazione manuale ancora in attesa.
 
-**Aggiornamento 27/11/2026 — CORE-04/record_acl:** la CI candidata aggiunge al test editoriale corsi la matrice dei docenti: `core.edit.own` senza `core.edit`, transizione singola autorizzata e batch misto con diniego del secondo record e rollback del primo. Percorsi già coperti da prova analoga di ACL per record e batch atomico. `TeacherModel::changeStates()` ora condivide `TeacherProfiles::canEdit()` con l’editor singolo, conservando il controllo `core.edit.state` e checkout. Registro: CORE-04/record_acl `implemented`; CORE-04/teacher_edit resta `unverifiable`; accettazione Joomla non eseguita. Conteggio CORE corrente 27 implemented / 20 unverifiable.
+**Aggiornamento 27/11/2026 — CORE-04/record_acl:** la CI candidata aggiunge al test editoriale corsi la matrice dei docenti: `core.edit.own` senza `core.edit`, transizione singola autorizzata e batch misto con diniego del secondo record e rollback del primo. Percorsi già coperti da prova analoga di ACL per record e batch atomico. `TeacherModel::changeStates()` ora condivide `TeacherProfiles::canEdit()` con l’editor singolo, conservando il controllo `core.edit.state` e checkout. Registro: CORE-04/record_acl `implemented`; CORE-04/teacher_edit resta `unverifiable`; accettazione Joomla non eseguita. Conteggio CORE corrente 28 implemented / 19 unverifiable.
 
 
 - Fotografia al **25 novembre 2026**: il registro contava **23 servizi CORE**, con **47 criteri granulari**, **24 implemented** e **23 unverifiable**. I criteri residui erano distribuiti su **22 servizi**, perché **CORE-17 aveva già entrambi i criteri implementati**.
@@ -22,7 +22,6 @@ Il documento e il JSON associato sono una **riconciliazione operativa**: non sos
 |---|---|---|---|
 | `CORE-01/all_hierarchy` | Sviluppo/CI da completare | Ampliare le prove automatizzate su permessi, lingua, ordinamento e antenati delle categorie in ogni entità editoriale. | Collaudare manualmente gerarchia e ricollocazioni con ruoli e lingue distinti. |
 | `CORE-02/auth_variants` | Sito/esterno | Nessuna reimplementazione di com_users/MFA; integrare solo eventuali difetti riproducibili in flussi JD Learn. | Provare login, recupero account, blocchi, MFA e provider effettivamente configurati. |
-| `CORE-03/cross_context` | Sviluppo/CI da completare | Estendere una matrice CI a revoca ruoli/livelli durante iscrizione, aula, catalogo e navigazione personale. | Verificare revoca sessione e livelli di accesso con differenti gruppi Joomla. |
 | `CORE-04/record_acl` | Implementazione software provata in CI | Corsi, percorsi e docenti hanno test di permesso per record e selezioni miste con rollback; i docenti coprono anche `core.edit.own` senza `core.edit`. | Accettazione manuale da eseguire con ruoli delegati e selezioni miste. |
 | `CORE-04/teacher_edit` | Sviluppo/CI da completare | Prove di salvataggio forgiato e modifica profilo proprio, pubblicazione, categoria, lingua e tag. | Testare profilo proprio e deleghe con operazioni edit, publish e denied. |
 | `CORE-05/layout_coverage` | Sviluppo/CI da completare | Censire ogni vista e modulo distribuito, esercitare override e documentare i contratti DOM/CSS. | Collaudare override su template e viewport desktop/mobile. |
@@ -43,6 +42,10 @@ Il documento e il JSON associato sono una **riconciliazione operativa**: non sos
 | `CORE-21/private_cache` | Sviluppo/CI da completare | Estendere manifesto HTTP a nuove route personali e verificare header/errori con sessioni isolate. | Verificare cache e sessione fra account differenti anche dietro CDN/proxy. |
 | `CORE-22/release_updates` | Sito/esterno | I workflow di rilascio/upgrade sono già implementati; rollback e migrazioni cross-hosting richiedono prove ambientali. | Provare update server e ripristino backup/migrazione su hosting di destinazione. |
 | `CORE-23/event_contracts` | Sito/esterno | Contratto provider e test esempio presenti; eventuale ampliamento eventi va giustificato da consumer/plugin terzi reali. | Provare plugin terzi, sottoscrizione eventi e payload minimi su installazione reale. |
+
+## Aggiornamento 27 novembre 2026 — CORE-03/cross_context
+
+La nuova regressione copre la revoca indipendente del viewing access level Joomla mentre l’utente resta nel gruppo: il test servizio blocca aula, completamento e replay iscrizione; il test HTTP blocca ripresa, aula e corpi privati in scheda/catalogo, preserva lo storico e verifica il ripristino nella stessa sessione. `CORE-03/cross_context` passa a `implemented` nel perimetro dei contesti core coperti. Restano accettazione manuale su ruoli ulteriori, URL SEF e installazione di destinazione. Il residuo tecnico scende da 14 a 13 criteri; le verifiche esterne restano 6.
 
 ## Criterio di chiusura
 

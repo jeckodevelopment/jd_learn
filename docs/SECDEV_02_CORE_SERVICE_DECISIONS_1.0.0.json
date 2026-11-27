@@ -64,26 +64,26 @@
       "service": "Gruppi e livelli",
       "decision": "native",
       "rationale": "Joomla gestisce gruppi e viewing access levels; le iscrizioni sono relazioni didattiche, non nuove identità",
-      "remaining_verification": "Rimozione accessi tra tutti i contesti",
+      "remaining_verification": "Accettazione manuale su ruoli ulteriori, SEF e installazione Joomla di destinazione",
       "implementation_evidence": [
         "component/administrator/src/Application/LearningService.php",
-        "tests/joomla-learning.php"
+        "tests/joomla-learning.php",
+        "tests/dashboard-http.py"
       ],
       "automated_test_evidence": [
-        "tests/joomla-learning.php"
+        "tests/joomla-learning.php",
+        "tests/dashboard-http.py"
       ],
       "reconciliation": {
-        "reviewed_on": "2026-11-25",
-        "pending_criteria": [
-          "cross_context"
-        ],
+        "reviewed_on": "2026-11-27",
+        "pending_criteria": [],
         "existing_automated_evidence": [
           "tests/joomla-learning.php",
           "tests/dashboard-http.py"
         ],
-        "acceptance_mode": "ci_plus_site",
-        "assessment": "partial_test_coverage",
-        "limitation": "Rimozione accessi tra tutti i contesti"
+        "acceptance_mode": "code_complete_site_pending",
+        "assessment": "code_criteria_implemented",
+        "limitation": "Accettazione manuale su ruoli ulteriori, SEF e installazione Joomla di destinazione"
       }
     },
     {

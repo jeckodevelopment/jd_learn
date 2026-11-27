@@ -80,6 +80,35 @@ if ($mode === 'enable') {
         $q = $db->prepare('UPDATE joomla_users SET block=? WHERE id=?');
         $q->execute([$mode === 'block' ? 1 : 0,$f['owner']]);
     }
+} elseif (in_array($mode, ['viewlevel_revoke','viewlevel_restore'], true)) {
+    $levelId = (int) ($f['access_level_id'] ?? 0);
+    if ($levelId < 1) {
+        throw new \RuntimeException('Dashboard fixture viewing access level missing');
+    }
+    $q = $db->prepare('SELECT rules FROM joomla_viewlevels WHERE id=?');
+    $q->execute([$levelId]);
+    $rules = $q->fetchColumn();
+    if ($rules === false) {
+        throw new \RuntimeException('Dashboard fixture viewing access level not found');
+    }
+    $state = dirname($root) . '/dashboard-http-viewlevel-original.json';
+    if ($mode === 'viewlevel_revoke') {
+        $q = $db->prepare('SELECT 1 FROM joomla_user_usergroup_map WHERE user_id=? AND group_id=?');
+        $q->execute([$f['owner'],$f['group']]);
+        if (!$q->fetchColumn()) {
+            throw new \RuntimeException('Viewing access test requires the owner to remain in its Joomla group');
+        }
+        file_put_contents($state, json_encode(['id' => $levelId,'rules' => $rules], JSON_THROW_ON_ERROR));
+        $q = $db->prepare("UPDATE joomla_viewlevels SET rules='[]' WHERE id=?");
+        $q->execute([$levelId]);
+    } else {
+        $saved = json_decode(file_get_contents($state), true, 8, JSON_THROW_ON_ERROR);
+        if ((int) $saved['id'] !== $levelId) {
+            throw new \RuntimeException('Dashboard fixture viewing access level changed unexpectedly');
+        }
+        $q = $db->prepare('UPDATE joomla_viewlevels SET rules=? WHERE id=?');
+        $q->execute([$saved['rules'],$levelId]);
+    }
 } elseif (in_array($mode, ['course_off','course_on'], true)) {
     $q = $db->prepare('UPDATE joomla_jlms_courses SET state=? WHERE id=?');
     $q->execute([$mode === 'course_off' ? 0 : 1,$f['course']]);

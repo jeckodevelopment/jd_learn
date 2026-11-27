@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **512**.
+- Implementati: **513**.
 - Mancanti con lacuna accertata: **9**.
-- Esaminati con esito non verificabile: **236**.
+- Esaminati con esito non verificabile: **235**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -273,13 +273,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `CORE-02/auth_variants` — MFA, recupero account e provider configurati in tutti i percorsi. I controlli applicativi ricontrollano l'identità e l'accesso Joomla in flussi selezionati. MFA, recupero account e provider d'identità sono configurazioni del sito e non è disponibile una prova di tutti i percorsi/supporti d'autenticazione del deployment.
   - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
-- `CORE-03/cross_context` — Coerenza senza livelli proprietari in tutte le viste e le iscrizioni. Automated evidence covers key course-access and enrollment contexts, and now exercises same-session group revocation across personal history, resume, classroom, course detail and catalog HTTP routes. It still does not establish the full cross-product of every view, transition and role without proprietary levels.
-  - [docs/LEARNING.md#L17-L23](../docs/LEARNING.md#L17-L23)
-  - [tests/dashboard-http.py#mid-session revocation retains history and removes resume action](../tests/dashboard-http.py)
-  - [tests/dashboard-http.py#role revocation preserves owner-scoped personal navigation and history](../tests/dashboard-http.py)
-  - [tests/dashboard-http.py#revoked learner retains only public catalog metadata](../tests/dashboard-http.py)
-  - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
-  - [tests/joomla-manual-enrollment.php#L1-L20](../tests/joomla-manual-enrollment.php#L1-L20)
 - `CORE-04/teacher_edit` — Modifiche di profilo docente e limitazioni campi/pubblicazione. Il modello docente applica capacità di gestione e permessi record sulle modifiche note; non è attestata l'intera matrice di campi, pubblicazione e accessi multipli per tutti i ruoli e contesti richiesti.
   - [component/administrator/src/Model/TeacherModel.php#L21-L78](../component/administrator/src/Model/TeacherModel.php#L21-L78)
   - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
@@ -1083,6 +1076,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/View/Dashboard/HtmlView.php#schedulerHealth](../component/administrator/src/View/Dashboard/HtmlView.php)
   - [component/administrator/tmpl/dashboard/default.php#jlms-admin-scheduler-health](../component/administrator/tmpl/dashboard/default.php)
   - [tests/scheduler-health-joo04.php#checkState](../tests/scheduler-health-joo04.php)
+- `CORE-03/cross_context` — Coerenza senza livelli proprietari in tutte le viste e le iscrizioni. La verifica implementativa copre la revoca indipendente del viewing access level Joomla mantenendo il gruppo dell’utente: servizio (aula, completamento e replay iscrizione) e HTTP nella stessa sessione (storico, ripresa, classroom, scheda corso e catalogo), con ripristino immediato. Il perimetro tecnico dei contesti principali è implementato; ruoli ulteriori, SEF e accettazione sul sito restano collaudo manuale.
+  - [component/administrator/src/Application/LearningService.php#getAuthorisedViewLevels](../component/administrator/src/Application/LearningService.php)
+  - [tests/joomla-learning.php#fresh authorization denies classroom after viewing-level revocation](../tests/joomla-learning.php)
+  - [tests/dashboard-http.py#viewing-level revocation blocks private lesson bodies in the public catalog](../tests/dashboard-http.py)
 - `CORE-04/record_acl` — ACL su singolo record/docente e selezioni multiple in tutti i contesti. La matrice automatica ora attraversa i tre contesti editoriali core: i corsi verificano grant, deny record-level e revoca con rollback atomico; i percorsi verificano selezioni miste con deny e rollback; i docenti provano esplicitamente core.edit.own senza core.edit, la transizione singola autorizzata e la selezione multipla con un profilo negato, preservando stato e revisione. Il controllo di checkout docente e i test Joomla esistenti restano nel perimetro. Questo chiude il criterio implementativo software; non attribuisce accettazione manuale Joomla.
   - [component/administrator/src/Model/TeacherModel.php#TeacherProfiles::canEdit($actor, $record)](../component/administrator/src/Model/TeacherModel.php)
   - [tests/joomla-editor-access.php#CORE-04: delegated teacher has edit-own but not general record edit](../tests/joomla-editor-access.php)
