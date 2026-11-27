@@ -528,6 +528,7 @@ try {
              'future' => $future,
              'lesson' => $f['lessons'][1],
              'group' => $f['group_id'],
+             'access_level_id' => $f['access_level_id'],
              'course' => $f['course_id'],
              'italian' => $italian,
              'menus' => $menus,

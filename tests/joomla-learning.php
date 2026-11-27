@@ -483,6 +483,37 @@ learningExpect(
     $learning->classroom($student, "en-GB", $enrollment)["percent"] === 33,
     "restoring group retains history",
 );
+$viewLevelRules = $db->setQuery(
+    "SELECT rules FROM #__viewlevels WHERE id=" . $learningLevel,
+)->loadResult();
+$viewLevelUpdate = (object) ["id" => $learningLevel, "rules" => "[]"];
+$db->updateObject("#__viewlevels", $viewLevelUpdate, "id");
+$student->clearAccessRights();
+try {
+    learningDenied(
+        fn() => $learning->classroom($student, "en-GB", $enrollment),
+        403,
+        "fresh authorization denies classroom after viewing-level revocation",
+    );
+    learningDenied(
+        fn() => $learning->complete($student, "en-GB", $enrollment, $lessons[0], $completeKey),
+        403,
+        "viewing-level revocation blocks completion replay before any write",
+    );
+    learningDenied(
+        fn() => $learning->start($student, "en-GB", $course, $key),
+        403,
+        "viewing-level revocation blocks enrollment replay without restoring access",
+    );
+} finally {
+    $viewLevelRestore = (object) ["id" => $learningLevel, "rules" => $viewLevelRules];
+    $db->updateObject("#__viewlevels", $viewLevelRestore, "id");
+    $student->clearAccessRights();
+}
+learningExpect(
+    $learning->classroom($student, "en-GB", $enrollment)["percent"] === 33,
+    "restoring the viewing level refreshes the same session and preserves history",
+);
 fixtureUpdate("users", (object) ["id" => (int) $student->id, "block" => 1]);
 learningDenied(
     fn() => $learning->classroom($student, "en-GB", $enrollment),
@@ -605,6 +636,7 @@ file_put_contents(
             "lessons" => $lessons,
             "http_user_id" => (int) $httpStudent->id,
             "group_id" => $learningGroup,
+            "access_level_id" => $learningLevel,
         ],
         JSON_THROW_ON_ERROR,
     ),

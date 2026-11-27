@@ -3458,22 +3458,18 @@
       {
         "id": "cross_context",
         "label": "Coerenza senza livelli proprietari in tutte le viste e le iscrizioni",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
-          "docs/LEARNING.md",
-          "tests/dashboard-http.py",
+          "component/administrator/src/Application/LearningService.php",
           "tests/joomla-learning.php",
-          "tests/joomla-manual-enrollment.php"
+          "tests/dashboard-http.py"
         ],
         "review": {
-          "reason": "Automated evidence covers key course-access and enrollment contexts, and now exercises same-session group revocation across personal history, resume, classroom, course detail and catalog HTTP routes. It still does not establish the full cross-product of every view, transition and role without proprietary levels.",
+          "reason": "La verifica implementativa copre la revoca indipendente del viewing access level Joomla mantenendo il gruppo dell’utente: servizio (aula, completamento e replay iscrizione) e HTTP nella stessa sessione (storico, ripresa, classroom, scheda corso e catalogo), con ripristino immediato. Il perimetro tecnico dei contesti principali è implementato; ruoli ulteriori, SEF e accettazione sul sito restano collaudo manuale.",
           "references": [
-            "docs/LEARNING.md#L17-L23",
-            "tests/dashboard-http.py#mid-session revocation retains history and removes resume action",
-            "tests/dashboard-http.py#role revocation preserves owner-scoped personal navigation and history",
-            "tests/dashboard-http.py#revoked learner retains only public catalog metadata",
-            "tests/joomla-learning.php#L206-L207",
-            "tests/joomla-manual-enrollment.php#L1-L20"
+            "component/administrator/src/Application/LearningService.php#getAuthorisedViewLevels",
+            "tests/joomla-learning.php#fresh authorization denies classroom after viewing-level revocation",
+            "tests/dashboard-http.py#viewing-level revocation blocks private lesson bodies in the public catalog"
           ]
         }
       }

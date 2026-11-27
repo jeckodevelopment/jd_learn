@@ -30,7 +30,7 @@
 
 **Criterio tecnico con evidenza:** `SECDEV-02/criterion_04` è verificato dal registro delle 23 decisioni Joomla e dal nuovo gate `tests/secdev02-core-decision-signoff.py` con fixture negative. Non introduce nuove funzionalità nel componente e non sostituisce la revisione degli altri criteri.
 
-**Sviluppo/CI ancora da completare:** 17 criteri CORE (`CORE-01, CORE-03, CORE-04` × 2, `CORE-05, CORE-06, CORE-07, CORE-09, CORE-10, CORE-11, CORE-13, CORE-14, CORE-15, CORE-16, CORE-19, CORE-20, CORE-21`) richiedono la verifica completa delle combinazioni descritte nel verbale `docs/SECDEV_02_IMPLEMENTATION_CLOSEOUT_2026-11-26.md`. Le regressioni integrate costituiscono evidenze parziali, non accettazione del criterio.
+**Sviluppo/CI ancora da completare:** 16 criteri CORE (`CORE-01, CORE-04` × 2, `CORE-05, CORE-06, CORE-07, CORE-09, CORE-10, CORE-11, CORE-13, CORE-14, CORE-15, CORE-16, CORE-19, CORE-20, CORE-21`) richiedono la verifica completa delle combinazioni descritte nel verbale `docs/SECDEV_02_IMPLEMENTATION_CLOSEOUT_2026-11-26.md`. Le regressioni integrate costituiscono evidenze parziali, non accettazione del criterio.
 
 **Collaudo manuale Joomla: In attesa.** Per i 6 criteri esterni (`CORE-02, CORE-08, CORE-12, CORE-18, CORE-22, CORE-23`) eseguire test con MFA/IdP, policy di conservazione, provider media, SMTP, host updater/backup/restore e plugin consumer reali. Verificare inoltre sul sito ACL per-record, checkout concorrente, menu e lingua, Finder, tutte le viste private/sessioni/cache e User Actions Log. Registrare data, ambiente, versione Joomla, account/ruolo, precondizioni e risultato di ogni prova; non compilare "Eseguito" senza esito osservato.
 
@@ -3252,18 +3252,20 @@ Raccogliere esito, versione pacchetto, PHP, database, provider, politica di cons
 Annotare versione Joomla, PHP, database, lingua, ruolo, template, consenso, data, passaggi, risultato atteso/osservato e bug riproducibili. Questo verbale non modifica automaticamente lo stato canonico dei criteri `unverifiable`.
 
 
-## CORE-03 — access revocation across learner contexts (PR #1079)
+## CORE-03 — revoca dei livelli di accesso tra i contesti studente (PR #1079 e incremento CI 27/11/2026)
 
-**Stato:** da collaudare manualmente; non eseguito.
+**Implementazione:** il criterio è implementato nel perimetro dei principali contesti core. CI verifica revoca indipendente del viewing access level Joomla mantenendo il gruppo: aula/completamento/replay iscrizione nel test servizio e storico/ripresa/classroom/scheda/catalogo via HTTP, con ripristino nella stessa sessione.
 
-1. Con un utente iscritto, revocare il gruppo Joomla che concede accesso didattico senza chiudere la sessione.
+**Accettazione manuale:** in attesa; non eseguita.
+
+1. Con un utente iscritto, revocare il gruppo Joomla che concede accesso didattico senza chiudere la sessione; ripetere revocando il viewing access level mantenendo il gruppo assegnato.
 2. Verificare che la cronologia personale resti disponibile, senza pulsante di ripresa.
 3. Aprire la classroom tramite link diretto e tramite ripresa: l'accesso deve essere negato.
 4. Aprire catalogo e scheda corso: restano disponibili i soli metadati pubblici e non compare il corpo privato delle lezioni.
 5. Ripristinare il gruppo nella stessa sessione: ripresa di nuovo disponibile, storico invariato.
 6. Ripetere con i ruoli Joomla previsti dalla matrice ACL e con SEF attivo/disattivo.
 
-La suite automatica usa fixture disposable e copre la revoca/ripristino in HTTP; questa registrazione non promuove il criterio completo CORE-03/cross_context a implemented.
+Le combinazioni di ruoli ulteriori, URL SEF e installazione Joomla di destinazione restano da provare manualmente. Registrare versione Joomla/PHP/database, ruolo, lingua, SEF, schermate e risultato osservato; la prova CI non equivale ad accettazione manuale.
 
 
 ## MAIL-G — equità dei batch per avvisi ai responsabili

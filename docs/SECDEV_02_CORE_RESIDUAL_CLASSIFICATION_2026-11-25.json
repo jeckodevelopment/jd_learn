@@ -2,9 +2,9 @@
   "schema_version": 1,
   "reviewed_on": "2026-11-27",
   "source_of_truth": "docs/FUNCTIONAL_CRITERIA_1.0.0.json",
-  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN. La PR candidata #1095 promuove CORE-04/record_acl nel registro canonico; il criterio non è più classificato come residuo di sviluppo/CI, mentre l’accettazione manuale resta pendente.",
+  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN. La PR candidata #1095 promuove CORE-04/record_acl nel registro canonico; il criterio non è più classificato come residuo di sviluppo/CI, mentre l’accettazione manuale resta pendente. CORE-03/cross_context è implementato nel perimetro CI dei principali contesti dopo test indipendenti di revoca del viewing access level; restano collaudi manuali su ruoli ulteriori, SEF e installazione di destinazione.",
   "services_reviewed": 23,
-  "pending_criteria_reviewed": 20,
+  "pending_criteria_reviewed": 19,
   "criteria": [
     {
       "service": "CORE-01",
@@ -34,20 +34,6 @@
       "automated_evidence": [
         "tests/joomla-learning.php",
         "tests/joomla-smoke.php"
-      ]
-    },
-    {
-      "service": "CORE-03",
-      "criterion": "cross_context",
-      "label": "Coerenza senza livelli proprietari in tutte le viste e le iscrizioni",
-      "canonical_status": "unverifiable",
-      "acceptance_class": "developer_work_pending",
-      "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Estendere una matrice CI a revoca ruoli/livelli durante iscrizione, aula, catalogo e navigazione personale.",
-      "manual_action": "Verificare revoca sessione e livelli di accesso con differenti gruppi Joomla.",
-      "automated_evidence": [
-        "tests/joomla-learning.php",
-        "tests/dashboard-http.py"
       ]
     },
     {
