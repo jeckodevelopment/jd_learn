@@ -16,6 +16,9 @@ final class HtmlView extends BaseHtmlView
     public $pagination;
     public $rosterForm;
     public array $pendingRequests = [];
+    public array $rosterFilters = [];
+    public string $rosterOrdering = 'id';
+    public string $rosterDirection = 'DESC';
 
     public function display($tpl = null)
     {
@@ -24,6 +27,9 @@ final class HtmlView extends BaseHtmlView
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->rosterForm = $this->get('RosterForm');
+        $this->rosterFilters = $this->getModel()->getState('filter.roster', []);
+        $this->rosterOrdering = (string) ($this->rosterFilters['ordering'] ?? 'id');
+        $this->rosterDirection = strtoupper((string) ($this->rosterFilters['direction'] ?? 'DESC'));
         $this->pendingRequests = Factory::getApplication()->bootComponent('com_jlms')
             ->getEnrollmentApprovalService()->pending(Factory::getApplication()->getIdentity(), (int) $this
                 ->course->id);

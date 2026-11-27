@@ -37,6 +37,7 @@ def login(http,name,password):
  fields=form['fields']|{'username':name,'passwd':password,'return':base64.b64encode(('/administrator/index.php?option=com_jlms&view=enrollments&id='+str(f['course'])).encode()).decode()}
  request(http,urljoin(url,form['action']),fields)
 def enrollments(html):return set(map(int,re.findall(r'data-enrollment-id="([1-9][0-9]*)"',html)))
+def enrollment_order(html):return list(map(int,re.findall(r'data-enrollment-id="([1-9][0-9]*)"',html)))
 roster='/administrator/index.php?option=com_jlms&view=enrollments&id='+str(f['course'])
 try:
  before=json.loads(fixture('snapshot'))
@@ -57,6 +58,15 @@ try:
  expect('name="filter[version]"' in html and 'name="filter[user]"' in html and str(f['owner']) in html,'authorized filter choices are native selects populated from this course')
  expect('no-store'in headers.get('Cache-Control',''),'private no-store administrative response')
  expect(len(enrollments(html))==20 and f['foreign_enrollment']not in enrollments(html),'bounded course-only first page')
+ expect(all('data-roster-sort="' + key + '"' in html for key in ['learner','version','status','progress','activity']),
+  'sortable roster headers rendered')
+ _,id_ascending,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[ordering]':'id','filter[direction]':'ASC'}))
+ expect(enrollment_order(id_ascending)==sorted(enrollment_order(id_ascending)),'roster sorts by ID ascending')
+ expect('name="filter[ordering]"' in id_ascending and 'value="id"' in id_ascending,
+  'filter form preserves roster ordering')
+ _,id_descending,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[ordering]':'id','filter[direction]':'DESC'}))
+ expect(enrollment_order(id_descending)==sorted(enrollment_order(id_descending),reverse=True),
+  'roster sorts by ID descending')
  # Audit the IDs owned by this component, including the native filter controls.
  owned=[value for value in p.ids if value.startswith(('jlms-','filter_'))]
  duplicates=sorted({value for value in p.ids if p.ids.count(value)>1})
@@ -78,7 +88,7 @@ try:
  expect(len(enrollments(by_name))==26,'learner search combines with the user filter')
  _,literal,_=request(admin,roster+'&limitstart=0&'+urlencode({'filter[search]':'%'}))
  expect('jlms-roster-empty'in Page(literal).ids,'LIKE wildcard is treated literally')
- for query in [{'filter[status]':"active' OR 1=1 --"},{'filter[user]':'1 OR 1=1'},{'filter[version]':-1},{'filter[progress][]':'completed'},{'filter[search]':'x'*101},{'filter[search][]':'cidash'}]:
+ for query in [{'filter[status]':"active' OR 1=1 --"},{'filter[user]':'1 OR 1=1'},{'filter[version]':-1},{'filter[progress][]':'completed'},{'filter[search]':'x'*101},{'filter[search][]':'cidash'},{'filter[ordering]':'e.id; DROP TABLE x'},{'filter[direction]':'SIDEWAYS'}]:
   request(admin,roster+'&'+urlencode(query),expected=400)
  _,courses,_=request(admin,'/administrator/index.php?option=com_jlms&view=courses')
  expect('view=enrollments'in courses,'authorized course list links to roster')
