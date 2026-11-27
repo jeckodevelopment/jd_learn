@@ -16,7 +16,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Two independent checked scenarios for EACH of the 15 technical residuals,
+# Two independent checked scenarios for EACH of the 14 technical residuals,
 # reviewed against merged native Joomla / HTTP integration regressions.
 # format: source file, ((executable test, exact scenario marker), ...)
 CASES = {
@@ -29,11 +29,6 @@ CASES = {
         "component/administrator/src/Application/CatalogService.php",
         ("tests/joomla-categories.php", "CORE-03: restoring "),
         ("tests/joomla-editor-access.php", "CORE-03/04: same-session state permission revocation denies previously editable course"),
-    ),
-    "CORE-04/record_acl": (
-        "component/administrator/src/Model/CourseModel.php",
-        ("tests/joomla-editor-access.php", "CORE-04: mixed record-level allow and explicit deny rejects whole course lifecycle batch"),
-        ("tests/joomla-teachers.php", "CORE-04: foreign checkout in mixed teacher batch rejects entire restoration"),
     ),
     "CORE-04/teacher_edit": (
         "component/administrator/src/Model/TeacherModel.php",
@@ -144,8 +139,8 @@ def inspect(root: Path, cases: dict = CASES,
         errors.append("Historical residual ledger differs from the canonical CORE inventory")
     if set(cases) & set(external) or set(cases) | set(external) != set(expected):
         errors.append("Every pending CORE criterion must be assigned to development or site exactly once")
-    if len(cases) != 15 or len(external) != 6:
-        errors.append("Technical/site separation must be reviewed: expected 15/6")
+    if len(cases) != 14 or len(external) != 6:
+        errors.append("Technical/site separation must be reviewed: expected 14/6")
     if {x["id"] for x in criteria["requirements"]["SECDEV-02"]} != EXPECTED_SECDEV:
         errors.append("SECDEV-02 general criteria inventory drifted")
     if any(x["status"] != "unverifiable" for x in criteria["requirements"]["SECDEV-02"][:3]):
@@ -239,7 +234,7 @@ def main() -> int:
     args = p.parse_args()
     if args.self_test:
         self_test()
-        print("SECDEV-02 16-criterion engineering evidence negative fixtures: OK")
+        print("SECDEV-02 14-criterion engineering evidence negative fixtures: OK")
         return 0
     failures, report = inspect(ROOT)
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "reviewed_on": "2026-11-26",
+  "reviewed_on": "2026-11-27",
   "source_of_truth": "docs/FUNCTIONAL_CRITERIA_1.0.0.json",
-  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN.",
+  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN. La PR candidata #1095 promuove CORE-04/record_acl nel registro canonico; il criterio non è più classificato come residuo di sviluppo/CI, mentre l’accettazione manuale resta pendente.",
   "services_reviewed": 23,
-  "pending_criteria_reviewed": 21,
+  "pending_criteria_reviewed": 20,
   "criteria": [
     {
       "service": "CORE-01",
@@ -48,22 +48,6 @@
       "automated_evidence": [
         "tests/joomla-learning.php",
         "tests/dashboard-http.py"
-      ]
-    },
-    {
-      "service": "CORE-04",
-      "criterion": "record_acl",
-      "label": "ACL su singolo record/docente e selezioni multiple in tutti i contesti",
-      "canonical_status": "unverifiable",
-      "acceptance_class": "developer_work_pending",
-      "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Prove native di batch con permessi misti, checkout concorrente e rollback per record/docente.",
-      "manual_action": "Provare selezioni multiple con un solo record vietato e ruoli delegati.",
-      "automated_evidence": [
-        "tests/joomla-editor-access.php",
-        "tests/joomla-courses-ui.php",
-        "tests/joomla-teachers.php",
-        "tests/joomla-pathways.php"
       ]
     },
     {
