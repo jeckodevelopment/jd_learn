@@ -3870,8 +3870,8 @@
           "references": [
             "tests/joomla-programme-restore.php#L80-L110",
             "tests/joomla-smoke.php#L1-L30",
-            "component/administrator/src/Model/TeacherModel.php",
-            "tests/joomla-teachers.php"
+            "component/administrator/src/Model/TeacherModel.php#L20-L29",
+            "tests/joomla-teachers.php#L873-L929"
           ]
         }
       }
