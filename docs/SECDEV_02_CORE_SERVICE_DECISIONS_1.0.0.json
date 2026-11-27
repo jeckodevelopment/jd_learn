@@ -384,26 +384,29 @@
       "service": "Smart Search",
       "decision": "native_plus_domain",
       "rationale": "com_finder indicizza contenuti pubblicabili tramite plugin del componente",
-      "remaining_verification": "Invalidazione indice per ACL, stato e lingua",
+      "remaining_verification": "Accettazione Smart Search su installazione Joomla reale, template e plugin di ricerca effettivamente attivi",
       "implementation_evidence": [
         "plugins/finder/jlms/src/Extension/Jlms.php",
-        "tests/install-package.php"
+        "tests/install-package.php",
+        "tests/joomla-categories.php",
+        "tests/joomla-courses-ui.php"
       ],
       "automated_test_evidence": [
-        "tests/install-package.php"
+        "tests/install-package.php",
+        "tests/joomla-categories.php",
+        "tests/joomla-courses-ui.php"
       ],
       "reconciliation": {
-        "reviewed_on": "2026-11-25",
-        "pending_criteria": [
-          "index_acl"
-        ],
+        "reviewed_on": "2026-11-27",
+        "pending_criteria": [],
         "existing_automated_evidence": [
-          "tests/joomla-courses-ui.php",
-          "tests/joomla-categories.php"
+          "tests/install-package.php",
+          "tests/joomla-categories.php",
+          "tests/joomla-courses-ui.php"
         ],
-        "acceptance_mode": "ci_plus_site",
-        "assessment": "partial_test_coverage",
-        "limitation": "Invalidazione indice per ACL, stato e lingua"
+        "acceptance_mode": "code_complete_site_pending",
+        "assessment": "code_criteria_implemented",
+        "limitation": "Accettazione Smart Search su installazione Joomla reale, template e plugin di ricerca effettivamente attivi"
       }
     },
     {

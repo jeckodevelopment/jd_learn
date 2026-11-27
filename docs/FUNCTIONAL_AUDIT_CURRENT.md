@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **513**.
+- Implementati: **514**.
 - Mancanti con lacuna accertata: **9**.
-- Esaminati con esito non verificabile: **235**.
+- Esaminati con esito non verificabile: **234**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -307,10 +307,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Controller/DisplayController.php#L1-L30](../component/administrator/src/Controller/DisplayController.php#L1-L30)
   - [tests/categories-http.py#L1-L30](../tests/categories-http.py#L1-L30)
   - [tests/associations-http.py#L1-L30](../tests/associations-http.py#L1-L30)
-- `CORE-14/index_acl` — Aggiornamento indici e visibilità su ogni cambio ACL, stato e lingua. Il plugin Finder reagisce a salvataggio, eliminazione e cambio stato e filtra i risultati secondo la visibilità; la verifica di ogni variazione ACL, stato e lingua su tutte le entità non risulta completa.
-  - [plugins/finder/jlms/src/Extension/Jlms.php#L29-L77](../plugins/finder/jlms/src/Extension/Jlms.php#L29-L77)
-  - [docs/CATEGORIES.md#L17-L17](../docs/CATEGORIES.md#L17-L17)
-  - [docs/QA_TESTBOOK.md#L1013-L1013](../docs/QA_TESTBOOK.md#L1013-L1013)
 - `CORE-15/native_workflow` — Transizioni e permessi per lezioni e tutte le entità editoriali. Il workflow nativo del corso applica transizioni con test Joomla; la richiesta copre anche lezioni e tutte le entità editoriali e relative autorizzazioni, una matrice più ampia non provata integralmente.
   - [docs/PUBLICATION.md#L27-L27](../docs/PUBLICATION.md#L27-L27)
   - [component/administrator/src/Application/PublicationService.php#L1-L40](../component/administrator/src/Application/PublicationService.php#L1-L40)
@@ -1085,6 +1081,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/joomla-editor-access.php#CORE-04: delegated teacher has edit-own but not general record edit](../tests/joomla-editor-access.php)
   - [tests/joomla-editor-access.php#CORE-04: mixed record-level allow and explicit deny rejects whole course lifecycle batch](../tests/joomla-editor-access.php)
   - [tests/joomla-pathways.php#delegated mixed selection is rejected atomically on record-level ACL deny](../tests/joomla-pathways.php)
+- `CORE-14/index_acl` — Aggiornamento indici e visibilità su ogni cambio ACL, stato e lingua. La matrice Joomla disposable verifica i link Finder realmente persistiti dopo gli eventi nativi del corso (salvataggio, cambio stato e rimozione) e della categoria (salvataggio ACL/lingua e cambio stato). Ogni revoca rimuove il link e il ripristino lo ricrea; le query applicano anche stato, ACL, lingua effettiva e pubblicazione. Il perimetro tecnico del plugin Finder core è implementato; la ricerca Smart Search sul sito/template effettivi resta accettazione manuale.
+  - [plugins/finder/jlms/src/Extension/Jlms.php#onFinderAfterSave](../plugins/finder/jlms/src/Extension/Jlms.php)
+  - [tests/joomla-categories.php#CORE-14: course save event removes an index link after access is restricted](../tests/joomla-categories.php)
+  - [tests/joomla-courses-ui.php#Finder refresh after restore observes committed unpublished and gated](../tests/joomla-courses-ui.php)
 - `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. Il plugin Joomla Action Log è presente nel pacchetto ed è abilitato al primo impianto, conservando la disabilitazione amministrativa agli upgrade. Il servizio di pubblicazione emette l'evento solo dopo il commit; il subscriber registra i dati tecnici in User Actions Log senza duplicare i log transazionali già scritti da AssessmentAudit. La CI 4/4 verifica installazione/upgrade e la singola voce per pubblicazione committata; collaudo Joomla manuale ancora pendente.
   - [plugins/actionlog/jdlearn/src/Extension/Jdlearn.php#public function onJlmsCourseTransition](../plugins/actionlog/jdlearn/src/Extension/Jdlearn.php)
   - [plugins/actionlog/jdlearn/installer.php#postflight](../plugins/actionlog/jdlearn/installer.php)

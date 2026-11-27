@@ -2,9 +2,9 @@
   "schema_version": 1,
   "reviewed_on": "2026-11-27",
   "source_of_truth": "docs/FUNCTIONAL_CRITERIA_1.0.0.json",
-  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN. La PR candidata #1095 promuove CORE-04/record_acl nel registro canonico; il criterio non è più classificato come residuo di sviluppo/CI, mentre l’accettazione manuale resta pendente. CORE-03/cross_context è implementato nel perimetro CI dei principali contesti dopo test indipendenti di revoca del viewing access level; restano collaudi manuali su ruoli ulteriori, SEF e installazione di destinazione.",
+  "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN. La PR candidata #1095 promuove CORE-04/record_acl nel registro canonico; il criterio non è più classificato come residuo di sviluppo/CI, mentre l’accettazione manuale resta pendente. CORE-03/cross_context è implementato nel perimetro CI dei principali contesti dopo test indipendenti di revoca del viewing access level; restano collaudi manuali su ruoli ulteriori, SEF e installazione di destinazione. CORE-14/index_acl è implementato nel perimetro del Finder Joomla dopo regressioni che attraversano gli eventi nativi e verificano i link indicizzati persistiti; resta l’accettazione Smart Search sul sito reale.",
   "services_reviewed": 23,
-  "pending_criteria_reviewed": 19,
+  "pending_criteria_reviewed": 18,
   "criteria": [
     {
       "service": "CORE-01",
@@ -166,20 +166,6 @@
         "tests/categories-http.py",
         "tests/associations-http.py",
         "tests/secdev02-core21-task-matrix.py"
-      ]
-    },
-    {
-      "service": "CORE-14",
-      "criterion": "index_acl",
-      "label": "Aggiornamento indici e visibilità su ogni cambio ACL, stato e lingua",
-      "canonical_status": "unverifiable",
-      "acceptance_class": "developer_work_pending",
-      "implementation_finding": "no_additional_defect_confirmed",
-      "development_action": "Prove di reindicizzazione Finder con cambio categoria/lingua/stato/ACL e lettura indice reale.",
-      "manual_action": "Ricostruire e consultare Smart Search con articoli protetti e cambio permessi.",
-      "automated_evidence": [
-        "tests/joomla-courses-ui.php",
-        "tests/joomla-categories.php"
       ]
     },
     {

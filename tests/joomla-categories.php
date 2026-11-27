@@ -519,6 +519,64 @@ catExpect($finderLink() === [], 'CORE-14: relevant category event removes entry 
 $update($en, ['published' => 1]);
 $finderCategoryEvent('com_jlms.course', $en, 1);
 catExpect($finderLink() !== [], 'CORE-14: native category event restores course after ACL change');
+$finderSaveEvent = static function (string $context, object $subject) use ($app): void {
+    $app->getDispatcher()->dispatch(
+        'onFinderAfterSave',
+        new \Joomla\CMS\Event\Finder\AfterSaveEvent(
+            'onFinderAfterSave',
+            ['context' => $context, 'subject' => $subject, 'isNew' => false]
+        )
+    );
+};
+$finderStateEvent = static function (string $context, int $id, int $value) use ($app): void {
+    $app->getDispatcher()->dispatch(
+        'onFinderChangeState',
+        new \Joomla\CMS\Event\Finder\AfterChangeStateEvent(
+            'onFinderChangeState',
+            ['context' => $context, 'subject' => [$id], 'value' => $value]
+        )
+    );
+};
+$finderDeleteEvent = static function (string $context, object $subject) use ($app): void {
+    $app->getDispatcher()->dispatch(
+        'onFinderAfterDelete',
+        new \Joomla\CMS\Event\Finder\AfterDeleteEvent(
+            'onFinderAfterDelete',
+            ['context' => $context, 'subject' => $subject]
+        )
+    );
+};
+// Exercise the installed Finder subscriber through Joomla's real event types.
+// These transitions verify persisted links instead of invoking refreshCourse.
+$courseFinderRecord = (object) ['id' => $course];
+$db->setQuery('UPDATE #__jlms_courses SET content_access=2 WHERE id=' . $course)->execute();
+$finderSaveEvent('com_jlms.course', $courseFinderRecord);
+catExpect($finderLink() === [], 'CORE-14: course save event removes an index link after access is restricted');
+$db->setQuery('UPDATE #__jlms_courses SET content_access=1 WHERE id=' . $course)->execute();
+$finderSaveEvent('com_jlms.course', $courseFinderRecord);
+catExpect($finderLink() !== [], 'CORE-14: course save event restores the public Finder link');
+$db->setQuery("UPDATE #__jlms_courses SET language='it-IT' WHERE id=" . $course)->execute();
+$finderSaveEvent('com_jlms.course', $courseFinderRecord);
+catExpect($finderLink() === [], 'CORE-14: course save event removes a stale language link');
+$db->setQuery("UPDATE #__jlms_courses SET language='en-GB' WHERE id=" . $course)->execute();
+$finderSaveEvent('com_jlms.course', $courseFinderRecord);
+catExpect($finderLink() !== [], 'CORE-14: course save event restores the matching language link');
+$db->setQuery('UPDATE #__jlms_courses SET state=0 WHERE id=' . $course)->execute();
+$finderStateEvent('com_jlms.course', $course, 0);
+catExpect($finderLink() === [], 'CORE-14: native course state event removes an unpublished Finder link');
+$db->setQuery('UPDATE #__jlms_courses SET state=1 WHERE id=' . $course)->execute();
+$finderStateEvent('com_jlms.course', $course, 1);
+catExpect($finderLink() !== [], 'CORE-14: native course state event restores the published Finder link');
+$db->setQuery('UPDATE #__categories SET access=2 WHERE id=' . $child)->execute();
+$finderSaveEvent('com_categories.category', (object) ['id' => $child, 'extension' => 'com_jlms.course']);
+catExpect($finderLink() === [], 'CORE-14: native category save event removes a descendant index link');
+$db->setQuery('UPDATE #__categories SET access=1 WHERE id=' . $child)->execute();
+$finderSaveEvent('com_categories.category', (object) ['id' => $child, 'extension' => 'com_jlms.course']);
+catExpect($finderLink() !== [], 'CORE-14: native category save event restores a descendant index link');
+$finderDeleteEvent('com_jlms.course', $courseFinderRecord);
+catExpect($finderLink() === [], 'CORE-14: native course delete event removes its persisted Finder link');
+$finderRefresh->invoke($finderLive, $course);
+catExpect($finderLink() !== [], 'CORE-14: reindexing a retained course restores its Finder link');
 $update($en, ["access" => 2]);
 $finderRefresh->invoke($finderLive, $course);
 catExpect(
