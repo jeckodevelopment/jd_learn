@@ -322,6 +322,12 @@ final class PathwayModel extends AdminModel
                 }
             }
 
+            $history = $table->getProperties();
+            $history['courses'] = $db->setQuery($db->createQuery()->select('course_id, ordering')
+                ->from('#__jlms_pathway_courses')->where('pathway_id=' . $pathwayId)->order('ordering,course_id'))
+                ->loadAssocList();
+            $history['tags'] = $tagIds;
+            $this->persistHistory($history, $this->typeAlias);
             $db->transactionCommit();
             $transactionStarted = false;
             $preparedAsset = 0;
