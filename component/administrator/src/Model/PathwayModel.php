@@ -20,6 +20,7 @@ final class PathwayModel extends AdminModel implements VersionableModelInterface
     use VersionableModelTrait {
         saveHistory as private persistHistory;
     }
+
     public $typeAlias = 'com_jlms.pathway';
 
     protected function versionHistoryEnabled(string $context): bool
