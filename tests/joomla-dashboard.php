@@ -180,9 +180,11 @@ dashExpect($byId[$active]['learning_state'] === 'not_started' && $byId[$active][
     && $byId[$active]['percent'] === 0, 'new enrollment status independent from access');
 dashExpect($byId[$completed]['learning_state'] === 'completed' && $byId[$completed]['access'] === 'expired'
     && $byId[$completed]['percent'] === 100, 'completed history remains visible after window expiry');
-dashExpect($byId[$suspended]['access'] === 'suspended' && $byId[$cancelled]['access'] === 'cancelled'
-    && $byId[$future]['access'] === 'not_open' && $byId[$pending]['access'] === 'pending',
-    'distinct classroom block reasons');
+dashExpect(
+$byId[$suspended]['access'] === 'suspended' && $byId[$cancelled]['access'] === 'cancelled'
+&& $byId[$future]['access'] === 'not_open' && $byId[$pending]['access'] === 'pending',
+'distinct classroom block reasons'
+);
 dashExpect($byId[$active]['next_action'] === null, 'available course relies on its resume action');
 $nextActions = [
     $completed => 'COM_JLMS_DASHBOARD_NEXT_EXPIRED',
@@ -447,9 +449,11 @@ try {
  $db->setQuery("UPDATE #__languages SET published=0 WHERE lang_code='it-IT'")->execute();
  try {
      $c = array_column($read($owner), null, 'id');
-     dashExpect($c[$italian]['access'] === 'language'
-          && $c[$italian]['next_action'] === 'COM_JLMS_DASHBOARD_NEXT_LANGUAGE',
-          'unpublished course language removes current availability');
+     dashExpect(
+     $c[$italian]['access'] === 'language'
+     && $c[$italian]['next_action'] === 'COM_JLMS_DASHBOARD_NEXT_LANGUAGE',
+     'unpublished course language removes current availability'
+     );
      dashDenied(
          fn()=>$learning->resumeTarget($owner, 'en-GB', $italian),
          403,
