@@ -1,4 +1,4 @@
-**CORE-20 — ordinamento del registro iscritti (PR candidata, 27/11/2026):** la lista iscrizioni per corso ordina per studente, versione, stato, progresso, attività e ID, con allowlist SQL, direzione validata e link che preservano filtri. Test HTTP estesi. CI/accettazione Joomla in attesa; nessun criterio o percentuale promosso prima dei gate.
+**CORE-20 — ordinamento del registro iscritti (PR #1089 candidata, 27/11/2026):** la lista iscrizioni per corso ordina per studente, versione, stato, progresso, attività e ID, con allowlist SQL, direzione validata e link che preservano filtri. Test HTTP estesi. CI #4857 4/4 e matrice #2260 verdi; pacchetto [JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/46015551625/artifacts/15206585001). Accettazione Joomla in attesa; nessun criterio o percentuale promosso.
 
 **CORE-20 — ricerca e filtri nell’elenco Percorsi (PR #1088 merged, 27/11/2026):** Search Tools nativi per ricerca titolo/alias/ID e filtri categoria/accesso/lingua/stato, ordinamento e paginazione limitata. CI #4852 4/4 e matrice #2256 verdi; accettazione Joomla in attesa. Batch avanzati differiti; nessun aggiornamento percentuale.
 
