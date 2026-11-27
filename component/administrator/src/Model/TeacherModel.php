@@ -249,11 +249,12 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             if (!parent::save($data)) {
                 throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
             }
-            $history = $this->getTable('Teacher')->getProperties();
-            $teacherId = (int) ($history['id'] ?? 0);
+            $teacherId = (int) $this->getState('teacher.id');
             if ($teacherId < 1) {
-                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+                throw new \\RuntimeException('COM_JLMS_SAVE_FAILED');
             }
+            $history = $data;
+            $history['id'] = $teacherId;
             $history['tags'] = array_map(
                 'intval',
                 $db->setQuery($db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
