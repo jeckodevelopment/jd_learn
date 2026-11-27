@@ -195,6 +195,7 @@ try:
   fixture('revoke')
   _,revoked,_=request(student,dashboard)
   expect(f['active']in enrollments(revoked)and'jlms-my-course-resume-'+str(f['active'])not in Page(revoked).ids,'mid-session revocation retains history and removes resume action')
+  expect('Ask the administrator to check the Joomla viewing access required for the course content.' in revoked,'blocked history offers a current-access next step')
   request(student,resume+str(f['active'])+'&lang=en',expected=403)
   request(student,'/index.php?option=com_jlms&view=classroom&id='+str(f['active'])+'&lang=en',expected=403)
   _,revoked_overview,_=request(student,overview)
