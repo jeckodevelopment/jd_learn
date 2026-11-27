@@ -12,3 +12,11 @@ Le schede pubbliche mostrano il profilo corrente. Gli snapshot delle versioni di
 ## Gestione amministrativa e conteggio corsi
 
 La lista Docenti usa Search Tools e toolbar Joomla. La colonna Corsi conta le associazioni ai corsi che l’utente può gestire; il collegamento apre Corsi con il filtro Docente selezionato. La lista Corsi offre lo stesso filtro, combinabile con ricerca e filtri esistenti. I risultati restano limitati ai corsi gestibili dall’utente e le etichette della vista sono tradotte nella lingua amministrativa. La prova completa è in [QA_TESTBOOK.md, AC-133](QA_TESTBOOK.md#ac-133--conteggio-corsi-e-filtro-docente-issue-117).
+
+## Schermata illustrativa accessibile
+
+L’illustrazione schematica seguente mostra un profilo docente pubblico con presentazione e corsi visibili. I dati sono fittizi; il collegamento **Modifica profilo** compare nella UI solo agli utenti autorizzati. La descrizione alternativa esplicita i contenuti principali.
+
+![Illustrazione del profilo pubblico docente con presentazione, collegamento di modifica condizionato all’autorizzazione e corsi accessibili.](assets/doc03/teacher-profile.svg)
+
+La vista pubblica mostra solo i campi e i corsi accessibili al visitatore. Il docente collegato può modificare il profilo solo nei limiti dei permessi Joomla assegnati.

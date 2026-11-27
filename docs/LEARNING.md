@@ -57,3 +57,25 @@ La lezione audio può includere una trascrizione facoltativa, inserita manualmen
 ## Alternativa locale alle lezioni video (SCR-08)
 
 Se l'autore ha configurato una lezione alternativa per un video, l'aula propone un link **interno** solo quando il contenuto è disponibile per lo studente nella versione didattica assegnata. Le lezioni alternative sono testo, documento o audio, non rimandi esterni ai video. Il link non viene mostrato per un target programmato, bloccato o assente. L'apertura della lezione usa lo stesso controllo server di iscrizione, categoria, accesso corrente e prerequisiti; non avvia il player esterno. L'attività alternativa non completa automaticamente il video obbligatorio e non modifica i progressi storici. La sua configurazione e i collaudi sono descritti in `docs/VIDEO.md` e `docs/QA_TESTBOOK.md`.
+
+## Schermate illustrative accessibili
+
+Queste illustrazioni schematiche mostrano le aree principali del percorso studente; testi e dati sono fittizi e non sostituiscono una schermata acquisita dal sito installato. Le descrizioni alternative riportano struttura e azioni essenziali.
+
+### Catalogo corsi
+
+![Illustrazione del catalogo corsi con ricerca, filtro categoria e tre schede con collegamento alla scheda del corso.](assets/doc03/learner-catalog.svg)
+
+Il catalogo consente di cercare e filtrare i corsi. Apri la scheda per vedere disponibilità e condizioni; l’iscrizione e l’avanzamento dipendono dai permessi e dalla configurazione del corso.
+
+### Area personale
+
+![Illustrazione dell’area personale con riepilogo dei corsi, attestati, preferenze e azione Riprendi per un corso accessibile.](assets/doc03/learner-dashboard.svg)
+
+L’area personale mostra lo storico del tuo account Joomla. **Riprendi** è disponibile solo quando il corso è attualmente accessibile; non crea un’iscrizione né modifica da solo il progresso.
+
+### Aula
+
+![Illustrazione dell’aula con avanzamento, programma delle lezioni, contenuto corrente e comando di completamento.](assets/doc03/learner-classroom.svg)
+
+Il programma indica le lezioni completate e quella corrente. I comandi disponibili dipendono dal tipo di attività e dalle regole del corso. Il completamento non va dedotto dalla sola apertura della pagina.

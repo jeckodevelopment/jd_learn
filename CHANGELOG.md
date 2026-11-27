@@ -2,7 +2,9 @@
 
 Prima versione stabile di JD Learn
 
-- **CORE-09 (PR #1081, CI #4747 verde):** tag nativi Joomla completati per corsi, docenti e percorsi, inclusi mapping UCM, persistenza, rimozione e reidratazione. `CORE-09/tags_context` è implementato nel perimetro software. AC-19/AC-64 sul pacchetto installato, ricerca e ACL restano collaudo manuale in attesa.
+- **CORE-09 (PR #1081, CI #4754 verde):** tag nativi Joomla completati per corsi, docenti e percorsi, inclusi mapping UCM, persistenza, rimozione e reidratazione. `CORE-09/tags_context` è implementato nel perimetro software. AC-19/AC-64 sul pacchetto installato, ricerca e ACL restano collaudo manuale in attesa.
+- **DOC-03/criterion_03 (PR #1082, candidata):** aggiunte quattro illustrazioni SVG schematiche e descritte in modo accessibile per catalogo, area personale, aula e profilo docente. I dati sono fittizi; il confronto con il pacchetto installato resta collaudo manuale.
+
 - DOC-10 implementativo completato (PR #1074, merge `37d3cd17f7afabb192ce429c36d9f1517eacb227`): le note della candidata sono legate alla sezione versionata del changelog e il digest è verificato prima della pubblicazione. Stato candidato e accettazione manuale restano separati.
 
 - **LCM-05 — chiusura gate lifecycle implementativo (22/11/2026, PR #965 e #966):** 7/7 criteri documentati e testati nel perimetro software. Le query del plugin Finder rispettano stati, lingua, accesso e calendario; transizioni notificano dopo commit; metadati SEO HTTP e snapshot di percorso/associazioni dopo upgrade sono verificati. La CI #45076048707 è 4/4 verde, compreso il backup/ripristino disposable eseguito nella pipeline. Collaudo Smart Search e recovery dell'hosting reale non eseguiti.
