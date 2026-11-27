@@ -13,9 +13,9 @@ use Joomla\CMS\User\User;
 use Jlms\Component\Jlms\Administrator\Application\CourseArtwork;
 use Joomla\Database\ParameterType;
 
-final class PathwayModel extends AdminModel implements \\Joomla\\CMS\\Versioning\\VersionableModelInterface
+final class PathwayModel extends AdminModel implements \Joomla\CMS\Versioning\VersionableModelInterface
 {
-    use \\Joomla\\CMS\\Versioning\\VersionableModelTrait { saveHistory as private persistHistory; }
+    use \Joomla\CMS\Versioning\VersionableModelTrait { saveHistory as private persistHistory; }
 
     public $typeAlias = 'com_jlms.pathway';
 
