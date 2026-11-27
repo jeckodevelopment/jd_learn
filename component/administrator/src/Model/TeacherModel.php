@@ -339,7 +339,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
                 $record = $db->setQuery($query)->loadObject()
                     ?: throw new \DomainException('JERROR_LAYOUT_PAGE_NOT_FOUND');
                 if (
-                    !$actor->authorise('core.edit', 'com_jlms.teacher.' . $id)
+                    !\Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::canEdit($actor, $record)
                     || !$actor->authorise('core.edit.state', 'com_jlms.teacher.' . $id)
                     || ((int) $record->checked_out > 0 && (int) $record->checked_out !== (int) $actor->id)
                 ) {

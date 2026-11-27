@@ -73,6 +73,7 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 
 use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess as EditorAccess;
+use Jlms\Component\Jlms\Administrator\Application\TeacherProfiles;
 $checks = 0;
 
 $fixture = dirname($root) . '/editor-access-fixture.json';
@@ -314,6 +315,91 @@ try {
     $asset->rules = $stateRulesBefore;
     $asset->store();
 }
+
+// CORE-04: the teacher lifecycle batch must apply the same edit-own rule as
+// the single-record editor while remaining atomic when a later record is denied.
+$teacherCategoryModel = $app->bootComponent('com_categories')->getMVCFactory()->createModel(
+    'Category',
+    'Administrator',
+    ['ignore_request' => true]
+);
+editorExpect($teacherCategoryModel->save([
+    'id' => 0,
+    'parent_id' => 1,
+    'extension' => 'com_jlms.teacher',
+    'title' => 'Editor teachers',
+    'alias' => 'editor-teachers',
+    'published' => 1,
+    'language' => '*',
+    'access' => 1,
+]), 'CORE-04: delegated teacher category fixture saved');
+$teacherCategory = (int) $teacherCategoryModel->getState('category.id');
+$asset->loadByName('com_jlms');
+$teacherComponentRules = json_decode($asset->rules, true, 32, JSON_THROW_ON_ERROR);
+$teacherComponentRules['jlms.teachers.manage'][(string) $group] = true;
+$asset->rules = json_encode($teacherComponentRules, JSON_THROW_ON_ERROR);
+$asset->store();
+$asset->loadByName('com_jlms.teacher.category.' . $teacherCategory);
+$teacherCategoryRules = json_decode($asset->rules, true, 32, JSON_THROW_ON_ERROR);
+$teacherCategoryRules['core.create'][(string) $group] = true;
+$asset->rules = json_encode($teacherCategoryRules, JSON_THROW_ON_ERROR);
+$asset->store();
+$teacherModel = $factory->createModel('Teacher', 'Administrator', ['ignore_request' => true]);
+$teacherBase = [
+    'id' => 0,
+    'revision' => 1,
+    'title' => 'Delegated teacher',
+    'alias' => 'delegated-teacher',
+    'catid' => $teacherCategory,
+    'bio' => '',
+    'language' => '*',
+    'access' => 1,
+    'state' => 1,
+];
+editorExpect($teacherModel->save($teacherBase), 'CORE-04: first teacher record saved');
+$ownTeacher = (int) $teacherModel->getState('teacher.id');
+$teacherBase['title'] = 'Denied teacher';
+$teacherBase['alias'] = 'denied-teacher';
+editorExpect($teacherModel->save($teacherBase), 'CORE-04: second teacher record saved');
+$deniedTeacher = (int) $teacherModel->getState('teacher.id');
+$ownTeacherUpdate = (object) ['id' => $ownTeacher, 'created_by' => (int) $user->id, 'user_id' => (int) $user->id];
+$db->updateObject('#__jlms_teachers', $ownTeacherUpdate, 'id');
+$deniedTeacherUpdate = (object) ['id' => $deniedTeacher, 'created_by' => (int) $operator->id, 'user_id' => 0];
+$db->updateObject('#__jlms_teachers', $deniedTeacherUpdate, 'id');
+foreach ([$ownTeacher => true, $deniedTeacher => false] as $teacherId => $isOwn) {
+    $asset->loadByName('com_jlms.teacher.' . $teacherId);
+    $rules = json_decode($asset->rules, true, 32, JSON_THROW_ON_ERROR);
+    $rules['core.edit'][(string) $group] = false;
+    $rules['core.edit.own'][(string) $group] = $isOwn;
+    $rules['core.edit.state'][(string) $group] = true;
+    $asset->rules = json_encode($rules, JSON_THROW_ON_ERROR);
+    $asset->store();
+}
+$teacherModel->setCurrentUser($user);
+$ownTeacherActor = EditorAccess::fresh($user);
+$ownTeacherRecord = (object) ['id' => $ownTeacher, 'created_by' => (int) $user->id, 'user_id' => (int) $user->id];
+editorExpect(
+    !$ownTeacherActor->authorise('core.edit', 'com_jlms.teacher.' . $ownTeacher)
+    && $ownTeacherActor->authorise('core.edit.own', 'com_jlms.teacher.' . $ownTeacher)
+    && TeacherProfiles::canEdit($ownTeacherActor, $ownTeacherRecord),
+    'CORE-04: delegated teacher has edit-own but not general record edit'
+);
+editorExpect(
+    $teacherModel->changeStates([$ownTeacher], 0),
+    'CORE-04: edit-own permission authorizes its teacher lifecycle transition'
+);
+$teacherBatchBefore = $db->setQuery('SELECT id,state,revision FROM #__jlms_teachers WHERE id IN ('
+    . $ownTeacher . ',' . $deniedTeacher . ') ORDER BY id')->loadAssocList();
+editorExpect(
+    !$teacherModel->changeStates([$ownTeacher, $deniedTeacher], -2),
+    'CORE-04: mixed teacher batch denies a later record without edit-own'
+);
+editorExpect(
+    $db->setQuery('SELECT id,state,revision FROM #__jlms_teachers WHERE id IN ('
+        . $ownTeacher . ',' . $deniedTeacher . ') ORDER BY id')->loadAssocList() === $teacherBatchBefore,
+    'CORE-04: denied mixed teacher batch rolls back the authorized earlier record'
+);
+$teacherModel->setCurrentUser($operator);
 
 // The same model and user objects must not retain cached records after ACL revocation.
 $asset->loadByName('com_jlms.course.category.' . $categories['allowed']);
