@@ -8,6 +8,7 @@
   <field name="description" type="editor" label="COM_JLMS_PATHWAY_DESCRIPTION" buttons="true" filter="raw" />
   <field name="catid" type="category" label="JCATEGORY" extension="com_jlms.pathway" required="true" filter="integer" />
   <field name="access" type="accesslevel" label="JFIELD_ACCESS_LABEL" default="1" required="true" filter="integer" />
+  <field name="tags" type="tag" label="JTAG" multiple="true" />
   <field name="language" type="contentlanguage" label="JFIELD_LANGUAGE_LABEL" default="*"><option value="*">JALL</option></field>
   <field name="state" type="list" label="JSTATUS" default="0" filter="integer"><option value="0">JUNPUBLISHED</option><option value="1">JPUBLISHED</option><option value="2">JARCHIVED</option><option value="-2">JTRASHED</option></field>
  </fieldset>

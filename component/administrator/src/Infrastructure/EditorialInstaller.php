@@ -23,7 +23,12 @@ final class EditorialInstaller
                 throw new \RuntimeException('JD Learn teacher setup failed');
             }
         }
-        foreach (['course' => 'CourseTable', 'teacher' => 'TeacherTable'] as $type => $table) {
+        $editorialTables = [
+            'course' => 'CourseTable',
+            'teacher' => 'TeacherTable',
+            'pathway' => 'PathwayTable',
+        ];
+        foreach ($editorialTables as $type => $table) {
             $record = new ContentType($db);
             $exists = $record->load(['type_alias' => 'com_jlms.' . $type]);
             if (!$exists) {
@@ -55,15 +60,21 @@ final class EditorialInstaller
                 'core_created_time' => 'created_at',
                 'core_modified_user_id' => 'modified_by',
                 'core_modified_time' => 'modified_at',
-                'core_body' => $type === 'course' ? 'summary' : 'bio',
+                'core_body' => match ($type) {
+                    'course' => 'summary',
+                    'teacher' => 'bio',
+                    default => 'description',
+                },
                 'core_access' => $type === 'course' ? 'content_access' : 'access',
                 'core_language' => 'language',
                 'core_params' => 'params_json',
                 'core_catid' => 'catid',
-                'core_images' => 'image',
                 'core_version' => 'revision',
                 'asset_id' => 'asset_id',
             ];
+            if ($type !== 'pathway') {
+                $common['core_images'] = 'image';
+            }
             if ($type === 'course') {
                 $common['core_metadata'] = 'metadata_json';
                 $common['core_publish_up'] = 'publish_up';

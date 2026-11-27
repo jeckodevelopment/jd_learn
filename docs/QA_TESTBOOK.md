@@ -30,6 +30,10 @@
 
 **Collaudo manuale Joomla: In attesa.** Eseguire URL diretti e breadcrumb di corso, docente e percorso con SEF attivo/disattivo, lingua IT/EN, alias modificati e menu associati. Verificare separatamente transizioni singole e massive su percorsi, lezioni e docenti con due editor e checkout/ACL distinti; un solo record negato non deve causare aggiornamenti parziali. Non confondere evidenza CI e accettazione del sito.
 
+## CORE-09 — Tag Joomla nativi sui percorsi (PR #1081 candidata)
+
+**Stato:** collaudo manuale In attesa; CI candidata da completare. Crea un tag Joomla pubblicato, assegnalo a un percorso, salva e ricarica la scheda. Verifica che la selezione si ripristini, che la rimozione elimini soltanto il collegamento del percorso, che il riassegnamento funzioni e che il contenuto tag/UCM sia registrato con il contesto `com_jlms.pathway`. Controlla inoltre visibilità della scheda in base a ACL e lingua prima di accettare l'accesso dalla ricerca per tag.
+
 ## SECDEV-02 / CORE-10 e CORE-11 — Campi multilingua e content plugin (26/11/2026)
 
 **Prova automatica candidata:** `tests/joomla-course-fields.php` crea due campi `com_jlms.course` nei cataloghi di lingua `en-GB` e `it-IT` attraverso il modello nativo Joomla, richiede la preparazione dei valori per entrambe le lingue e verifica che non compaiano campi della lingua opposta. Sul content plugin verifica la sanitizzazione prima della ricezione dell'evento e dopo la modifica, impedendo script, handler inline e URL attivi. Un oggetto sorgente con ID diverso da quello autorizzato deve essere respinto prima del dispatch. Restano le prove esistenti su campi docente e contenuti pubblici; la CI deve attestare il risultato sull'HEAD.

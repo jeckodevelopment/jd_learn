@@ -4,7 +4,7 @@
   "source_of_truth": "docs/FUNCTIONAL_CRITERIA_1.0.0.json",
   "note": "La classificazione non modifica gli status canonici. Mancanza di prova automatica non significa requisito non implementato; test su hosting, SMTP e provider terzi non sono sviluppo codice. Il criterio CORE-21/private_cache è stato promosso a implemented nella riconciliazione PR #1078 sulla base della matrice HTTP completa e CI; resta il collaudo hosting proxy/CDN.",
   "services_reviewed": 23,
-  "pending_criteria_reviewed": 22,
+  "pending_criteria_reviewed": 21,
   "criteria": [
     {
       "service": "CORE-01",
@@ -140,21 +140,6 @@
       "automated_evidence": [
         "tests/joomla-smoke.php",
         "tests/sec-p3-data-inventory.py"
-      ]
-    },
-    {
-      "service": "CORE-09",
-      "criterion": "tags_context",
-      "label": "Registrazione ed esposizione dei tag in tutte le entità previste",
-      "canonical_status": "unverifiable",
-      "acceptance_class": "developer_work_pending",
-      "implementation_finding": "teacher_tags_fixed_pr1042",
-      "development_action": "PR #1042 corregge il mapping Content Types/UCM e l'import del plugin Joomla Taggable per persistenza reale dei tag docente/corso; la CI esercita salvataggio, ricaricamento, cancellazione e diniego ACL. Restano da dimostrare tutti i contesti previsti dal criterio.",
-      "manual_action": "Provare aggiunta, cambio e rimozione tag nelle entità approvate con ACL.",
-      "automated_evidence": [
-        "tests/secdev02-core-native-contracts.py",
-        "tests/joomla-courses-ui.php",
-        "tests/joomla-teachers.php"
       ]
     },
     {

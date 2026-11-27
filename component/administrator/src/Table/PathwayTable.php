@@ -6,15 +6,26 @@ namespace Jlms\Component\Jlms\Administrator\Table;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Table\Table;
+use Joomla\CMS\Tag\TaggableTableInterface;
+use Joomla\CMS\Tag\TaggableTableTrait;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 
-final class PathwayTable extends Table
+final class PathwayTable extends Table implements TaggableTableInterface
 {
     use PathwayTableAssetMethods {
         assetName as protected _getAssetName;
         assetTitle as protected _getAssetTitle;
         assetParentId as protected _getAssetParentId;
+    }
+
+    use TaggableTableTrait;
+
+    public $typeAlias = 'com_jlms.pathway';
+
+    public function getTypeAlias(): string
+    {
+        return $this->typeAlias;
     }
 
     private int $preparedAsset = 0;

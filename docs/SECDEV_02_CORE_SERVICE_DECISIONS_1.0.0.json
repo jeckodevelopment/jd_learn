@@ -235,28 +235,38 @@
       "service": "Tag",
       "decision": "native",
       "rationale": "com_tags e le mappe native associano tag ai contenuti, senza tassonomia duplicata",
-      "remaining_verification": "Tutti i contesti e filtri previsti",
+      "remaining_verification": "Ricerca tag, ACL, lingua, visibilità e upgrade sul pacchetto installato (AC-19/AC-64).",
       "implementation_evidence": [
         "component/administrator/src/Table/CourseTable.php",
+        "component/administrator/src/Model/CourseModel.php",
+        "component/administrator/forms/course.xml",
+        "component/administrator/src/Table/TeacherTable.php",
+        "component/administrator/src/Model/TeacherModel.php",
+        "component/administrator/forms/teacher.xml",
+        "component/administrator/src/Table/PathwayTable.php",
+        "component/administrator/src/Model/PathwayModel.php",
+        "component/administrator/forms/pathway.xml",
         "component/administrator/src/Infrastructure/EditorialInstaller.php",
+        "tests/joomla-teachers.php",
+        "tests/joomla-pathways.php",
         "tests/secdev02-core-native-contracts.py"
       ],
       "automated_test_evidence": [
+        "tests/joomla-teachers.php",
+        "tests/joomla-pathways.php",
         "tests/secdev02-core-native-contracts.py"
       ],
       "reconciliation": {
-        "reviewed_on": "2026-11-25",
-        "pending_criteria": [
-          "tags_context"
-        ],
+        "reviewed_on": "2026-11-27",
+        "pending_criteria": [],
         "existing_automated_evidence": [
-          "tests/secdev02-core-native-contracts.py",
-          "tests/joomla-courses-ui.php",
-          "tests/joomla-teachers.php"
+          "tests/joomla-teachers.php",
+          "tests/joomla-pathways.php",
+          "tests/secdev02-core-native-contracts.py"
         ],
-        "acceptance_mode": "ci_plus_site",
-        "assessment": "partial_test_coverage",
-        "limitation": "Tutti i contesti e filtri previsti"
+        "acceptance_mode": "code_complete_site_pending",
+        "assessment": "code_criteria_implemented",
+        "limitation": "Ricerca tag, ACL, lingua, visibilità e upgrade sul pacchetto installato (AC-19/AC-64)."
       }
     },
     {

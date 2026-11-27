@@ -35,6 +35,8 @@ final class PathwayModel extends AdminModel
     {
         $item = parent::getItem($pk);
         if ($item && !empty($item->id)) {
+            $item->tags = new \Joomla\CMS\Helper\TagsHelper();
+            $item->tags->getTagIds((int) $item->id, $this->typeAlias);
             $pathwayId = (int) $item->id;
             $query = $this->getDatabase()->createQuery()->select('course_id, ordering')->from('#__jlms_pathway_courses')
                 ->where('pathway_id = :pathway')
@@ -55,6 +57,7 @@ final class PathwayModel extends AdminModel
 
     public function save($input)
     {
+        \Joomla\CMS\Plugin\PluginHelper::importPlugin('behaviour', 'taggable');
         $db = $this->getDatabase();
         $preparedAsset = 0;
         $transactionStarted = false;
@@ -131,6 +134,7 @@ final class PathwayModel extends AdminModel
                 'language',
                 'state',
                 'courses',
+                'tags',
                 'cover_image',
                 'cover_alt',
                 'cover_decorative'
@@ -266,6 +270,30 @@ final class PathwayModel extends AdminModel
                     $table->$key = $value;
                 }
             }
+            if (array_key_exists('tags', $data)) {
+                if (!is_array($data['tags'])) {
+                    throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+                }
+                $tagIds = [];
+                foreach ($data['tags'] as $tagId) {
+                    if (
+                        (!is_int($tagId) && !is_string($tagId))
+                        || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $tagId)
+                    ) {
+                        throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+                    }
+                    $tagIds[] = (int) $tagId;
+                }
+                $tagIds = array_values(array_unique($tagIds));
+            } elseif ($id) {
+                $tagQuery = $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
+                    ->where('type_alias = ' . $db->quote('com_jlms.pathway'))
+                    ->where('content_item_id = ' . $id)->order('tag_id');
+                $tagIds = array_map('intval', $db->setQuery($tagQuery)->loadColumn());
+            } else {
+                $tagIds = [];
+            }
+            $table->newTags = $tagIds;
             if (!$table->bind($data)) {
                 throw new \RuntimeException('pathway bind: ' . $table->getError());
             }
