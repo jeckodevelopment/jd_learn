@@ -270,6 +270,23 @@ final class PathwayModel extends AdminModel
                     $table->$key = $value;
                 }
             }
+            if (array_key_exists('tags', $data)) {
+                if (!is_array($data['tags'])) {
+                    throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+                }
+                $tagIds = array_map('intval', $data['tags']);
+            } elseif ($id) {
+                $tagIds = array_map('intval', $db->createQuery()
+                    ->select('tag_id')->from('#__contentitem_tag_map')
+                    ->where('type_alias = ' . $db->quote('com_jlms.pathway'))
+                    ->where('content_item_id = ' . $id)
+                    ->order('tag_id')
+                    ->setQuery($db->createQuery())
+                );
+            } else {
+                $tagIds = [];
+            }
+            $table->newTags = $tagIds;
             if (!$table->bind($data)) {
                 throw new \RuntimeException('pathway bind: ' . $table->getError());
             }
