@@ -220,6 +220,24 @@ pubExpect(
     && $lessonAfterReview->body === $reviewedLesson->body,
     'CORE-15: lesson writes are rejected without mutation while its course version is in review'
 );
+$moduleBeforeReview = $db->setQuery('SELECT * FROM #__jlms_modules WHERE id=' . (int)$module)->loadObject();
+$moduleWriteDeniedInReview = false;
+try {
+    $authoring->saveModule($actor, pubScope() + [
+        'id' => $module,
+        'revision' => (int)$moduleBeforeReview->revision,
+        'title' => 'Edited module during review',
+    ]);
+} catch (\\DomainException $error) {
+    $moduleWriteDeniedInReview = $error->getMessage() === 'COM_JLMS_VERSION_IN_REVIEW';
+}
+$moduleAfterReview = $db->setQuery('SELECT * FROM #__jlms_modules WHERE id=' . (int)$module)->loadObject();
+pubExpect(
+    $moduleWriteDeniedInReview
+    && (int)$moduleAfterReview->revision === (int)$moduleBeforeReview->revision
+    && $moduleAfterReview->title === $moduleBeforeReview->title,
+    'CORE-15: programme writes are rejected without mutation while its course version is in review'
+);
 $returnChoice = null;
 foreach ($publication->transitions($actor, $course, $version) as $candidate) {
     $options = new \\Joomla\\Registry\\Registry($candidate->options);
