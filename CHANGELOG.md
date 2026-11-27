@@ -1,4 +1,5 @@
-- **CORE-16 — accesso allo storico dei percorsi (PR #1084, candidata):** l’editor amministrativo mostra il comando Joomla Versioni per i percorsi salvati. Il ripristino resta subordinato ai permessi nativi e al modello versionabile aggiunto con PR #1083; collaudo manuale pendente.
+- **CORE-16 — accesso allo storico dei percorsi (PR #1084, integrata):** l’editor amministrativo mostra il comando Joomla Versioni per i percorsi salvati. Merge `d66bc394c9000b7746ee5f86abcd182bb518b673`; CI completa #4797 verde. Collaudo manuale pendente.
+- **STU-01 — prossima azione per i blocchi di accesso (PR #1085, candidata):** le schede personali affiancano al motivo una guida IT/EN specifica per lingua, ACL, stato iscrizione e finestra; nessuna CTA Riprendi/Rivedi se l’accesso non è disponibile. CI e collaudo manuale pendenti.
 ## 1.0.0 — candidata non pubblicata
 
 Prima versione stabile di JD Learn
