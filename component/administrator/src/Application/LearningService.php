@@ -719,8 +719,13 @@ final class LearningService
         $fieldSnapshot = json_decode((string) ($lesson->fields_snapshot_json ?? '{}'), true, 32, JSON_THROW_ON_ERROR);
         $viewLevels = array_map('intval', $actor->getAuthorisedViewLevels());
         $customFields = [];
+        $fieldLanguage = (string) ($course->language ?? '*') === '*' ? $language : (string) $course->language;
         foreach (($fieldSnapshot['fields'] ?? []) as $name => $field) {
-            if (!is_array($field) || !in_array((int) ($field['access'] ?? 0), $viewLevels, true)) {
+            if (
+                !is_array($field)
+                || !in_array((int) ($field['access'] ?? 0), $viewLevels, true)
+                || !in_array((string) ($field['language'] ?? '*'), ['*', $fieldLanguage], true)
+            ) {
                 continue;
             }
             $customFields[] = ['name' => (string) $name, 'label' => (string) ($field['label'] ?? $name),
