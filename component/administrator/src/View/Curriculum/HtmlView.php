@@ -178,7 +178,9 @@ final class HtmlView extends BaseHtmlView
                 $this->videoProviders[$label] = $status;
             }
             $this->moduleForm = $this->get('Form');
-            $this->lessonForm = $this->get('LessonForm');
+            $lessonLanguage = (string) $course->language === '*'
+                ? $app->getLanguage()->getTag() : (string) $course->language;
+            $this->lessonForm = $this->getModel()->getLessonForm($lessonLanguage);
             $common = ['course_id' => $course->id, 'version_id' => $version->id,
                 'expected_version_revision' => $version->revision, 'id' => 0, 'revision' => 1];
             $moduleData = $common;
