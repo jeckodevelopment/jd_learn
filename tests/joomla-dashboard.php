@@ -429,9 +429,11 @@ try {
  $model->setState('filter.progress', 'all');
  $model->setState('list.limit', 20);
  $model->setState('list.start', 20);
+ $pageItems = $model->getItems();
+ $pageTotal = (int) $model->getTotal();
  dashExpect(
-     count($model->getItems()) === 6 && (int)$model->getTotal() === 26,
-     'native pagination bounded to own history'
+     count($pageItems) === 6 && $pageTotal === 26,
+     'native pagination bounded to own history: page=' . count($pageItems) . ', total=' . $pageTotal
  );
  dashExpect((bool)$model->getProgressForm()->getField('progress'), 'native progress filter form available');
  $categoryFixture = json_decode(file_get_contents(dirname($root)
