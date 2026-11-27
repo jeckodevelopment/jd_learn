@@ -143,9 +143,10 @@ foreach (['en-GB' => 'lesson-reference-en', 'it-IT' => 'lesson-reference-it'] as
     }
     $lessonLocaleFields[$locale] = (int) $fieldModel->getState('field.id');
 }
-$curriculumModel = $factory->createModel('Curriculum', 'Administrator', ['ignore_request' => true]);
-$englishLessonForm = $curriculumModel->getLessonForm('en-GB');
-$italianLessonForm = $curriculumModel->getLessonForm('it-IT');
+$englishCurriculumModel = $factory->createModel('Curriculum', 'Administrator', ['ignore_request' => true]);
+$italianCurriculumModel = $factory->createModel('Curriculum', 'Administrator', ['ignore_request' => true]);
+$englishLessonForm = $englishCurriculumModel->getLessonForm('en-GB');
+$italianLessonForm = $italianCurriculumModel->getLessonForm('it-IT');
 pubExpect(
     $englishLessonForm->getField('lesson-reference-en', 'com_fields') !== false
     && $englishLessonForm->getField('lesson-reference-it', 'com_fields') === false
