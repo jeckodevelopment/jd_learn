@@ -24,8 +24,8 @@
     }
   },
   "implementation_progress": {
-    "percent": 65.78,
-    "development_evidence_floor_percent": 65.78,
+    "percent": 65.94,
+    "development_evidence_floor_percent": 65.94,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -34,7 +34,7 @@
       "requirements_passed": 0,
       "requirements_failed": 0,
       "coverage_percent": 4.67,
-      "fully_accepted_percent": 0.0
+      "fully_accepted_percent": 0
     },
     "macroareas": [
       {
@@ -44,7 +44,7 @@
         "weight_percent": 10.75,
         "development_evidence_floor_percent": 84.12,
         "manual_acceptance_coverage_percent": 13.04,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 11,
         "unassessed_criteria": 0
@@ -55,8 +55,8 @@
         "requirements": 20,
         "weight_percent": 9.35,
         "development_evidence_floor_percent": 80.33,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 13,
         "unassessed_criteria": 0
@@ -66,9 +66,9 @@
         "label": "Iscrizioni, lezioni e progressi",
         "requirements": 19,
         "weight_percent": 8.88,
-        "development_evidence_floor_percent": 75.0,
+        "development_evidence_floor_percent": 75,
         "manual_acceptance_coverage_percent": 5.26,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 15,
         "unassessed_criteria": 0
@@ -79,8 +79,8 @@
         "requirements": 18,
         "weight_percent": 8.41,
         "development_evidence_floor_percent": 71.2,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 20,
         "unassessed_criteria": 0
@@ -92,7 +92,7 @@
         "weight_percent": 7.94,
         "development_evidence_floor_percent": 70.59,
         "manual_acceptance_coverage_percent": 17.65,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 14,
         "unassessed_criteria": 0
@@ -104,7 +104,7 @@
         "weight_percent": 6.07,
         "development_evidence_floor_percent": 71.15,
         "manual_acceptance_coverage_percent": 15.38,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
         "unverifiable_criteria": 10,
         "unassessed_criteria": 0
@@ -114,11 +114,11 @@
         "label": "Joomla, ACL e configurazione",
         "requirements": 38,
         "weight_percent": 17.76,
-        "development_evidence_floor_percent": 61.62,
+        "development_evidence_floor_percent": 62.5,
         "manual_acceptance_coverage_percent": 2.63,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 0,
-        "unverifiable_criteria": 32,
+        "unverifiable_criteria": 31,
         "unassessed_criteria": 0
       },
       {
@@ -127,8 +127,8 @@
         "requirements": 51,
         "weight_percent": 23.83,
         "development_evidence_floor_percent": 50.75,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 3,
         "unverifiable_criteria": 95,
         "unassessed_criteria": 0
@@ -139,8 +139,8 @@
         "requirements": 15,
         "weight_percent": 7.01,
         "development_evidence_floor_percent": 51.67,
-        "manual_acceptance_coverage_percent": 0.0,
-        "manual_fully_accepted_percent": 0.0,
+        "manual_acceptance_coverage_percent": 0,
+        "manual_fully_accepted_percent": 0,
         "missing_criteria": 6,
         "unverifiable_criteria": 24,
         "unassessed_criteria": 0
@@ -151,7 +151,7 @@
       {
         "id": "development",
         "label": "Sviluppo documentato (minimo confermato)",
-        "percent": 65.78
+        "percent": 65.94
       },
       {
         "id": "manual_acceptance",
