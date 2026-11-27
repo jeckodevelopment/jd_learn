@@ -433,7 +433,7 @@ try {
  $pageTotal = (int) $model->getTotal();
  dashExpect(
      count($pageItems) === 6 && $pageTotal === 26,
-     'native pagination bounded to own history: page=' . count($pageItems) . ', total=' . $pageTotal
+     'native pagination bounded to own history'
  );
  dashExpect((bool)$model->getProgressForm()->getField('progress'), 'native progress filter form available');
  $categoryFixture = json_decode(file_get_contents(dirname($root)
@@ -441,7 +441,7 @@ try {
  $italian = $learning->start($owner, 'it-IT', $categoryFixture['italianCourse'], bin2hex(random_bytes(16)));
  $c = array_column($read($owner), null, 'id');
  dashExpect(
-     count($c) === 26 && $c[$italian]['access'] === 'available',
+     count($c) === 27 && $c[$italian]['access'] === 'available',
      'history spans installed course languages independently of UI'
  );
  dashExpect(
