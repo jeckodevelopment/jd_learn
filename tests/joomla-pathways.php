@@ -139,7 +139,7 @@ $pathModel = $component->getMVCFactory()->createModel('Pathway', 'Administrator'
 $pathTable = $pathModel->getTable('Pathway');
 $pathForm = $pathModel->getForm([], false);
 $check(
-    $pathTable instanceof \\Joomla\\CMS\\Tag\\TaggableTableInterface
+    $pathTable instanceof \Joomla\CMS\Tag\TaggableTableInterface
     && $pathTable->getTypeAlias() === 'com_jlms.pathway',
     'CORE-09: pathway uses Joomla native taggable table'
 );
@@ -245,7 +245,7 @@ $pathTagIds = static function () use ($db, $pathwayId): array {
 $check($pathTagIds() === [$pathTagId], 'CORE-09: Joomla persists pathway tag association');
 $loadedPathway = $pathModel->getItem($pathwayId);
 $check(
-    $loadedPathway->tags instanceof \\Joomla\\CMS\\Helper\\TagsHelper,
+    $loadedPathway->tags instanceof \Joomla\CMS\Helper\TagsHelper,
     'CORE-09: pathway editor rehydrates native tag field'
 );
 // SECDEV-03: submitted association IDs are literal integer identifiers,
