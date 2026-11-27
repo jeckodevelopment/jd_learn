@@ -274,7 +274,17 @@ final class PathwayModel extends AdminModel
                 if (!is_array($data['tags'])) {
                     throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
                 }
-                $tagIds = array_map('intval', $data['tags']);
+                $tagIds = [];
+                foreach ($data['tags'] as $tagId) {
+                    if (
+                        (!is_int($tagId) && !is_string($tagId))
+                        || !preg_match('/^[1-9][0-9]{0,9}$/D', (string) $tagId)
+                    ) {
+                        throw new \InvalidArgumentException('COM_JLMS_PATHWAY_INVALID');
+                    }
+                    $tagIds[] = (int) $tagId;
+                }
+                $tagIds = array_values(array_unique($tagIds));
             } elseif ($id) {
                 $tagQuery = $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
                     ->where('type_alias = ' . $db->quote('com_jlms.pathway'))
