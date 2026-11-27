@@ -3256,3 +3256,10 @@ La suite automatica usa fixture disposable e copre la revoca/ripristino in HTTP;
 **Automatico:** `tests/joomla-pathways.php` salva un percorso e verifica la revisione in `#__history`; modifica titolo, descrizione, tag e associazioni, poi ripristina la revisione e confronta campi, tag e ordine dei corsi. La copertura automatica non sostituisce il controllo con due editor e non promuove l'intero criterio CORE-16.
 
 **Collaudo Joomla manuale: In attesa.** In un sito di prova disposable, crea un percorso con almeno due corsi in ordine definito e tag; salva, modifica descrizione e associazioni, poi ripristina la revisione precedente. Conferma titolo, descrizione, tag e ordine. Ripeti il ripristino con il percorso in checkout da un altro editor e verifica che venga negato. Controlla che stato dei corsi, versioni didattiche assegnate, iscrizioni e progressi restino invariati.
+
+
+## CORE-16 — accesso allo storico dei percorsi (PR #1084)
+
+**Automatico:** il gate dei contratti CORE controlla che la vista amministrativa di un percorso esistente esponga la toolbar Joomla Versioni e che PathwayModel implementi il contratto versionabile. La regressione del modello e del ripristino è coperta separatamente dalla PR #1083.
+
+**Collaudo Joomla manuale: In attesa.** Aprire un percorso con revisioni, accedere allo storico dalla toolbar, confrontare revisioni e ripristinare. Verificare permessi di modifica e integrità dei tag, ordine dei corsi e stato didattico assegnato.
