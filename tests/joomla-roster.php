@@ -146,10 +146,10 @@ rosterExpect(
     'authorized operator sees all course owners'
 );
 rosterExpect(!in_array($f['italian'], $allIds, true), 'another course is excluded');
-rosterExpect(count($read($actor, ['user' => $f['owner']])) === 25, 'exact native user ID filter');
+rosterExpect(count($read($actor, ['user' => $f['owner']])) === 26, 'exact native user ID filter');
 $ownerUsername = (string)$db->setQuery('SELECT username FROM #__users WHERE id=' . (int)$f['owner'])->loadResult();
 $usernameMatches = $read($actor, ['user' => $f['owner'],'search' => substr($ownerUsername, 0, 6)]);
-rosterExpect(count($usernameMatches) === 25, 'search finds learner by username');
+rosterExpect(count($usernameMatches) === 26, 'search finds learner by username');
 $ownerName = (string)$db->setQuery('SELECT name FROM #__users WHERE id=' . (int)$f['owner'])->loadResult();
 $searchFixtureName = 'Unique Roster Search Name';
 $ownerId = (int)$f['owner'];
@@ -164,7 +164,7 @@ $rename = $db->createQuery()->update('#__users')->set('name = :name')->where('id
 $db->setQuery($rename)->execute();
 try {
     rosterExpect(
-        count($read($actor, ['user' => $f['owner'],'search' => 'Roster Search Name'])) === 25,
+        count($read($actor, ['user' => $f['owner'],'search' => 'Roster Search Name'])) === 26,
         'search finds learner by display name'
     );
 } finally {
@@ -195,7 +195,7 @@ rosterExpect(
     'completion filter independent of expiration'
 );
 rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'in_progress'])) === 1, 'activity filter');
-rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'not_started'])) === 23, 'not started filter');
+rosterExpect(count($read($actor, ['user' => $f['owner'],'progress' => 'not_started'])) === 24, 'not started filter');
 rosterExpect(count($read($actor, ['user' => $f['empty']])) === 0, 'empty filter has no writes');
 rosterExpect(count($read($actor, ['version' => $version])) === count($rows), 'version filter');
 $foreignVersion = (int)$db->setQuery('SELECT course_version_id FROM #__jlms_enrollments WHERE id=' .
@@ -602,7 +602,7 @@ $m->setState('filter.course', $course);
 $m->setState('filter.roster', ['user' => $f['owner']]);
 $m->setState('list.start', 20);
 $m->setState('list.limit', 20);
-rosterExpect($m->getTotal() === 25 && count($m->getItems()) === 5, 'native list total and pagination');
+rosterExpect($m->getTotal() === 26 && count($m->getItems()) === 6, 'native list total and pagination');
 rosterExpect(
     $m->getRosterForm()->getField('version') !== false && $m->getRosterForm()->getField('search') !== false,
     'native filter form includes learner search'

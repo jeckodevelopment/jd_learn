@@ -176,7 +176,7 @@ try:
   expect(enrollments(filtered)=={f['completed']}and'jlms-dashboard-completed'in Page(filtered).ids,'native progress filter keeps expired completion history')
   expect('jlms-my-course-resume-'+str(f['completed'])not in Page(filtered).ids,'expired completed history does not expose review action')
   _,second,_=request(student,dashboard+'&limit=20&limitstart=20')
-  expect(len(enrollments(second))==6,'pagination counts owner history across course languages')
+  expect(len(enrollments(second))==7,'pagination counts owner history across course languages')
   # Native ListModel retains limitstart in the session; return to the page containing the active enrollment.
   _,first_again,_=request(student,dashboard+'&limitstart=0')
   expect(f['active']in enrollments(first_again),'return from retained pagination to active enrollment')
@@ -195,6 +195,7 @@ try:
   fixture('revoke')
   _,revoked,_=request(student,dashboard)
   expect(f['active']in enrollments(revoked)and'jlms-my-course-resume-'+str(f['active'])not in Page(revoked).ids,'mid-session revocation retains history and removes resume action')
+  expect('Ask the administrator to check the Joomla viewing access required for the course content.' in revoked,'blocked history offers a current-access next step')
   request(student,resume+str(f['active'])+'&lang=en',expected=403)
   request(student,'/index.php?option=com_jlms&view=classroom&id='+str(f['active'])+'&lang=en',expected=403)
   _,revoked_overview,_=request(student,overview)

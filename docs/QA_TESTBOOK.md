@@ -3263,3 +3263,10 @@ La suite automatica usa fixture disposable e copre la revoca/ripristino in HTTP;
 **Automatico:** il gate dei contratti CORE controlla che la vista amministrativa di un percorso esistente esponga la toolbar Joomla Versioni e che PathwayModel implementi il contratto versionabile. La regressione del modello e del ripristino è coperta separatamente dalla PR #1083.
 
 **Collaudo Joomla manuale: In attesa.** Aprire un percorso con revisioni, accedere allo storico dalla toolbar, confrontare revisioni e ripristinare. Verificare permessi di modifica e integrità dei tag, ordine dei corsi e stato didattico assegnato.
+
+
+## STU-01 — motivazione di blocco e prossima azione per lo studente (PR #1085)
+
+**Copertura automatica:** `DashboardService::cards` restituisce un'azione localizzata per ciascun blocco: lingua, corso non disponibile, livello Joomla, iscrizione sospesa/annullata/in attesa, finestra scaduta o non ancora aperta. La fixture Joomla controlla la mappatura completa e che un'iscrizione disponibile non mostri guida di blocco; il test HTTP verifica il testo nella cronologia privata dopo la revoca del livello.
+
+**Collaudo manuale Joomla: In attesa.** Con un account studente, provare ogni stato elencato nella guida [`LEARNER_DASHBOARD.md`](LEARNER_DASHBOARD.md): lingua non disponibile, corso ritirato/non disponibile, livello insufficiente, sospensione, finestra scaduta, iscrizione annullata, richiesta pending e finestra futura. Verificare che motivo e suggerimento corrispondano alla causa reale, siano in IT/EN e non mostrino dati didattici protetti. Confermare che Riprendi/Rivedi sia presente solo con accesso disponibile e che la revoca/ripresa nella stessa sessione aggiorni motivo, suggerimento e azione.

@@ -8,7 +8,15 @@ La pagina raggruppa le iscrizioni non iniziate, in corso e completate, con filtr
 
 Il titolo proviene dallo snapshot della versione a cui l'utente è iscritto. Coerentemente con D-09, titolo storico e avanzamento rimangono consultabili quando la scheda viene ritirata o il livello di accesso viene revocato. Non vengono inclusi descrizioni delle lezioni, risorse, URL video, domande, risposte corrette, regole interne, chiavi soggetto o dati di altri utenti.
 
-Lo stato didattico usa `completed_at`, altrimenti attività/contatori persistenti; il solo avvio di un'iscrizione non equivale a un'attività svolta. L'accesso all'aula è un'altra informazione: disponibile, livello insufficiente, lingua non disponibile, iscrizione sospesa/annullata/non attiva, finestra futura/scaduta oppure contenuto non disponibile. Un completamento non riapre una finestra scaduta. Le percentuali seguono la proiezione persistente, con limite99 in assenza di completamento registrato; contatori mancanti o incoerenti non generano una percentuale inventata.
+Lo stato didattico usa `completed_at`, altrimenti attività/contatori persistenti; il solo avvio di un'iscrizione non equivale a un'attività svolta. L'accesso all'aula è un'altra informazione: disponibile, livello insufficiente, lingua non disponibile, iscrizione sospesa/annullata/non attiva, finestra futura/scaduta oppure contenuto non disponibile. Per ogni stato non disponibile, la scheda aggiunge una prossima azione localizzata; l'azione Riprendi/Rivedi appare soltanto quando l'accesso è disponibile:
+- lingua non disponibile: cambia lingua o verifica la disponibilità del corso in quella lingua;
+- corso non disponibile: chiedi all'amministratore di verificare pubblicazione e disponibilità;
+- livello insufficiente: chiedi di controllare il livello di accesso Joomla richiesto;
+- iscrizione sospesa: contatta il responsabile per la verifica;
+- finestra scaduta: cerca una nuova edizione o chiedi informazioni al responsabile;
+- iscrizione annullata: controlla nel catalogo se è possibile inviare una nuova richiesta;
+- richiesta in attesa: attendi la decisione, che precede l'accesso alle lezioni;
+- finestra futura: riprova dopo l'apertura. Un completamento non riapre una finestra scaduta. Le percentuali seguono la proiezione persistente, con limite99 in assenza di completamento registrato; contatori mancanti o incoerenti non generano una percentuale inventata.
 
 Letture e azioni ricaricano identità e livelli Joomla. Un account bloccato non può consultare questa area. Revoche/ripristini dei gruppi sono visibili anche mantenendo la stessa sessione. Il componente non assegna gruppi e non gestisce vendite o abbonamenti.
 

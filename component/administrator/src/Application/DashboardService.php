@@ -132,6 +132,23 @@ final class DashboardService
         return $states;
     }
 
+    /** Give learners a concrete next step for each distinct current access block. */
+    private static function nextAction(string $reason): ?string
+    {
+        return match ($reason) {
+            'available' => null,
+            'language' => 'COM_JLMS_DASHBOARD_NEXT_LANGUAGE',
+            'unavailable' => 'COM_JLMS_DASHBOARD_NEXT_UNAVAILABLE',
+            'access' => 'COM_JLMS_DASHBOARD_NEXT_ACCESS',
+            'suspended' => 'COM_JLMS_DASHBOARD_NEXT_SUSPENDED',
+            'expired' => 'COM_JLMS_DASHBOARD_NEXT_EXPIRED',
+            'cancelled' => 'COM_JLMS_DASHBOARD_NEXT_CANCELLED',
+            'pending' => 'COM_JLMS_DASHBOARD_NEXT_PENDING',
+            'not_open' => 'COM_JLMS_DASHBOARD_NEXT_NOT_OPEN',
+            default => 'COM_JLMS_DASHBOARD_NEXT_CONTACT_ADMIN',
+        };
+    }
+
     public function cards(User $identity, string $uiLanguage, array $rows): array
     {
         $actor = $this->learning->freshActor($identity);
@@ -207,8 +224,8 @@ final class DashboardService
                  null ? 100 : 99, (int) floor(100 * $done / $total)) : null;
             $cards[] = ['id' => (int) $row->id, 'title' => (string) ($row->title_snapshot ?? '')
                 , 'learning_state' => $state,
-                'access' => $reason, 'percent' => $percent, 'progress_applicable' => !$consultation
-                    , 'completed' => $row->completed_at !== null];
+                'access' => $reason, 'next_action' => self::nextAction($reason), 'percent' => $percent,
+                'progress_applicable' => !$consultation, 'completed' => $row->completed_at !== null];
         }
         return $cards;
     }
