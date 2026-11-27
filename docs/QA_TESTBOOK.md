@@ -1,3 +1,9 @@
+## CORE-20 — ricerca e filtri dell’elenco Percorsi (PR #1088)
+
+**Collaudo manuale Joomla: In attesa.** Nell’amministrazione aprire JD Learn → Percorsi. Verificare ricerca per titolo, alias e ID; filtri categoria, livello di accesso, lingua e cestino; ordinamento per titolo, categoria, stato, accesso, lingua e revisione; paginazione e limite righe. Provare combinazioni di filtri, pulizia della ricerca, risultati vuoti e ritorno da una modifica o da una transizione toolbar. Con un operatore autorizzato verificare che le azioni toolbar esistenti continuino a operare sui soli elementi selezionati. Registrare versione Joomla, ruolo, lingua, combinazione e risultato osservato.
+
+---
+
 ## DOC-03 — illustrazioni accessibili di catalogo, aula e profilo docente (PR #1082)
 
 **Verifica automatica:** la CI esegue `tests/doc03-accessible-illustrations.py` tramite `tools/check.py`; controlla i quattro SVG, semantica immagine, titolo/descrizione ARIA, link alle guide e testi alternativi.

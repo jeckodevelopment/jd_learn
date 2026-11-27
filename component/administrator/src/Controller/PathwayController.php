@@ -22,8 +22,41 @@ final class PathwayController extends FormController
         return parent::execute($task);
     }
 
+    /** Return to the pathway list while preserving only validated Search Tools filters. */
+    private function redirectToList(string $state): void
+    {
+        $raw = $this->input->post->get('filter', [], 'array');
+        $filters = [];
+        foreach (['search', 'category_id', 'access', 'language'] as $name) {
+            $value = $raw[$name] ?? null;
+            if (!is_scalar($value)) {
+                continue;
+            }
+            $value = (string) $value;
+            if ($name === 'search') {
+                $value = substr(trim($value), 0, 200);
+            } elseif ($name === 'language') {
+                if ($value !== '' && !preg_match('/^(?:\*|[A-Za-z0-9_-]{1,32})$/D', $value)) {
+                    continue;
+                }
+            } elseif ($value !== '' && !preg_match('/^[1-9][0-9]{0,9}$/D', $value)) {
+                continue;
+            }
+            if ($value !== '') {
+                $filters[$name] = $value;
+            }
+        }
+        $filters['pathway_state'] = $state === 'trashed' ? 'trashed' : 'active';
+        $url = 'index.php?' . http_build_query([
+            'option' => 'com_jlms',
+            'view' => 'pathways',
+            'filter' => $filters,
+        ]);
+        $this->setRedirect(\Joomla\CMS\Router\Route::link('administrator', $url, false));
+    }
+
     /** State-changing list actions are POST-only, CSRF-protected and atomic. */
-    private function transition(int $target): void
+    private function transition(int $target, string $filterAfter = 'active'): void
     {
         if (strtoupper($this->input->getMethod()) !== 'POST') {
             throw new \RuntimeException('COM_JLMS_METHOD_NOT_ALLOWED', 405);
@@ -50,21 +83,16 @@ final class PathwayController extends FormController
         if (!$model->changeStates($ids, $target)) {
             throw new \RuntimeException((string) $model->getError(), 403);
         }
-        $this->setRedirect(\Joomla\CMS\Router\Route::link(
-            'administrator',
-            'index.php?option=com_jlms&view=pathways'
-            . ($target === 0 ? '&filter_pathway_state=trashed' : ''),
-            false
-        ));
+        $this->redirectToList($filterAfter);
     }
 
     public function trash(): void
     {
-        $this->transition(-2);
+        $this->transition(-2, 'trashed');
     }
     public function restore(): void
     {
-        $this->transition(0);
+        $this->transition(0, 'trashed');
     }
     public function archive(): void
     {
@@ -100,11 +128,7 @@ final class PathwayController extends FormController
         if (!$model->purgeEmpty((int) $raw[0])) {
             throw new \RuntimeException((string) $model->getError(), 403);
         }
-        $this->setRedirect(\Joomla\CMS\Router\Route::link(
-            'administrator',
-            'index.php?option=com_jlms&view=pathways&filter_pathway_state=trashed',
-            false
-        ));
+        $this->redirectToList('trashed');
     }
 
     protected function allowAdd($data = [])

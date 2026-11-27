@@ -348,6 +348,35 @@ $check((bool)$pathModel->save(['id' => $pathwayId,'revision' => 1,'title' => 'CI
     'description' => '<p>Pathway summary</p>','catid' => $categoryId,'access' => 1,'language' => '*','state' => 1,
     'courses' => [['course_id' => $courseId,'ordering' => 10],['course_id' => $hiddenCourseId,'ordering'
         => 20]]]), 'second course association saves');
+
+$pathwayListItems = static function (array $filters) use ($component, $operator): array {
+    $list = $component->getMVCFactory()->createModel('Pathways', 'Administrator', ['ignore_request' => true]);
+    $list->setCurrentUser($operator);
+    $list->setState('filter.pathway_state', $filters['pathway_state'] ?? 'active');
+    foreach ($filters as $name => $value) {
+        $list->setState('filter.' . $name, $value);
+    }
+    return $list->getItems();
+};
+$filteredPathways = array_map(
+    static fn($item): int => (int) $item->id,
+    $pathwayListItems(['search' => 'CI learning pathway'])
+);
+$check(in_array($pathwayId, $filteredPathways, true), 'CORE-20: pathway list searches titles');
+$filteredPathways = array_map(
+    static fn($item): int => (int) $item->id,
+    $pathwayListItems(['search' => (string) $pathwayId])
+);
+$check(in_array($pathwayId, $filteredPathways, true), 'CORE-20: pathway list searches exact IDs');
+$check(
+    $pathwayListItems(['search' => 'no pathway with this title']) === [],
+    'CORE-20: unmatched pathway search stays empty'
+);
+$filteredPathways = array_map(
+    static fn($item): int => (int) $item->id,
+    $pathwayListItems(['category_id' => (string) $categoryId])
+);
+$check(in_array($pathwayId, $filteredPathways, true), 'CORE-20: pathway list filters by category');
 $detail = $service->detail($operator, 'en-GB', $pathwayId);
 $check(
     count($detail['courses']) === 2 && $detail['courses'][0]['id'] === $courseId,

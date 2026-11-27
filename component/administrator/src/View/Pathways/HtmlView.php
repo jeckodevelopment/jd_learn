@@ -6,14 +6,16 @@ namespace Jlms\Component\Jlms\Administrator\View\Pathways;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\User\User;
 
 final class HtmlView extends BaseHtmlView
 {
     public array $items = [];
     public $pagination;
+    public $state;
+    public $filterForm;
     public string $stateFilter = 'active';
 
     public function display($tpl = null)
@@ -21,14 +23,21 @@ final class HtmlView extends BaseHtmlView
         $actor = new User((int) Factory::getApplication()->getIdentity()->id);
         $actor->clearAccessRights();
         if (
-            !$actor->id || $actor->block || !$actor->authorise('core.manage', 'com_jlms')
+            !$actor->id
+            || $actor->block
+            || !$actor->authorise('core.manage', 'com_jlms')
             || !$actor->authorise('jlms.pathways.manage', 'com_jlms')
         ) {
             throw new \RuntimeException(Text::_('JERROR_ALERTNOAUTHOR'), 403);
         }
-        $this->stateFilter = (string) ($this->getModel()->getState('filter.pathway_state') ?: 'active');
+
+        $model = $this->getModel();
+        $this->state = $model->getState();
+        $this->stateFilter = (string) ($this->state->get('filter.pathway_state') ?: 'active');
+        $this->filterForm = $this->get('FilterForm');
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
+
         ToolbarHelper::title(Text::_('COM_JLMS_PATHWAYS'), 'map-signs');
         if ($actor->authorise('core.create', 'com_jlms')) {
             ToolbarHelper::addNew('pathway.add');
@@ -47,6 +56,7 @@ final class HtmlView extends BaseHtmlView
             }
         }
         ToolbarHelper::help('pathways', true);
+
         parent::display($tpl);
     }
 }
