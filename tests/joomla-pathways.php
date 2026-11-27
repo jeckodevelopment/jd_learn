@@ -258,6 +258,9 @@ $check(
         || in_array((int) $pathTagId, $restoredTags, true),
     'CORE-16: restore reinstates native pathway tags'
 );
+// Keep the legacy lifecycle fixture's original revision baseline after the
+// isolated history round-trip above.
+$db->setQuery('UPDATE #__jlms_pathways SET revision=1 WHERE id=' . $pathwayId)->execute();
 
 $securityRow = $db->setQuery(('SELECT description,params_json,created_by,checked_out FROM '
     . '#__jlms_pathways WHERE id=') . (int)$pathwayId)->loadObject();
