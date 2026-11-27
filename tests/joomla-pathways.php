@@ -197,6 +197,71 @@ $check(
 $check((bool)$pathModel->save($payload), 'native pathway model saves pathway and course order: ' . $pathModel
     ->getError());
 $pathwayId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='ci-learning-pathway'")->loadResult();
+$historyId = (int) $db->setQuery(
+    $db->createQuery()->select('version_id')->from('#__history')
+        ->where('item_id=' . $db->quote('com_jlms.pathway.' . $pathwayId))
+        ->order('version_id DESC')
+)->loadResult();
+$check($historyId > 0, 'CORE-16: pathway save records native Joomla content history');
+$historyData = json_decode(
+    (string) $db->setQuery(
+        $db->createQuery()->select('version_data')->from('#__history')
+            ->where('version_id=' . $historyId)
+    )->loadResult(),
+    true,
+    64,
+    JSON_THROW_ON_ERROR
+);
+$check(
+    isset($historyData['courses'][0]['course_id']) && isset($historyData['tags']),
+    'CORE-16: native history snapshot includes ordered relations and tags'
+);
+$check(
+    (bool) $pathModel->save([
+        'id' => $pathwayId,
+        'revision' => 1,
+        'title' => 'CI learning pathway changed',
+        'description' => '<p>Changed description</p>',
+        'catid' => $categoryId,
+        'access' => 1,
+        'language' => '*',
+        'state' => 1,
+        'courses' => [],
+        'tags' => [],
+    ]),
+    'CORE-16: pathway edit creates a later history revision'
+);
+$check(
+    (bool) $pathModel->loadHistory($historyId),
+    'CORE-16: pathway history can be restored'
+);
+$restored = $db->setQuery(
+    'SELECT title,description FROM #__jlms_pathways WHERE id=' . $pathwayId
+)->loadObject();
+$restoredCourses = $db->setQuery(
+    'SELECT course_id,ordering FROM #__jlms_pathway_courses WHERE pathway_id='
+        . $pathwayId . ' ORDER BY ordering,course_id'
+)->loadAssocList();
+$check(
+    $restored && $restored->title === 'CI learning pathway'
+        && str_contains($restored->description, 'Pathway summary')
+        && count($restoredCourses) === 1 && (int) $restoredCourses[0]['course_id'] === $courseId,
+    'CORE-16: restore reinstates pathway fields and ordered course relations'
+);
+$restoredTags = $db->setQuery(
+    $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
+        ->where('type_alias=' . $db->quote('com_jlms.pathway'))
+        ->where('content_item_id=' . $pathwayId)
+)->loadColumn();
+$check(
+    in_array((string) $pathTagId, $restoredTags, true)
+        || in_array((int) $pathTagId, $restoredTags, true),
+    'CORE-16: restore reinstates native pathway tags'
+);
+// Keep the legacy lifecycle fixture's original revision baseline after the
+// isolated history round-trip above.
+$db->setQuery('UPDATE #__jlms_pathways SET revision=1 WHERE id=' . $pathwayId)->execute();
+
 $securityRow = $db->setQuery(('SELECT description,params_json,created_by,checked_out FROM '
     . '#__jlms_pathways WHERE id=') . (int)$pathwayId)->loadObject();
 $check(

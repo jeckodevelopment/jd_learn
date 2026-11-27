@@ -3,6 +3,7 @@
 Prima versione stabile di JD Learn
 
 - **CORE-09 (PR #1081, CI #4754 verde):** tag nativi Joomla completati per corsi, docenti e percorsi, inclusi mapping UCM, persistenza, rimozione e reidratazione. `CORE-09/tags_context` è implementato nel perimetro software. AC-19/AC-64 sul pacchetto installato, ricerca e ACL restano collaudo manuale in attesa.
+- **CORE-16 — storico dei percorsi (PR #1083, candidata):** aggiunti snapshot Joomla Content History con tag e ordine dei corsi; il ripristino passa dal modello transazionale e crea una nuova revisione. CI e collaudo Joomla restano pendenti; nessuna promozione dell'intero criterio.
 - **DOC-03/criterion_03 (PR #1082, candidata):** aggiunte quattro illustrazioni SVG schematiche e descritte in modo accessibile per catalogo, area personale, aula e profilo docente. I dati sono fittizi; il confronto con il pacchetto installato resta collaudo manuale.
 
 - DOC-10 implementativo completato (PR #1074, merge `37d3cd17f7afabb192ce429c36d9f1517eacb227`): le note della candidata sono legate alla sezione versionata del changelog e il digest è verificato prima della pubblicazione. Stato candidato e accettazione manuale restano separati.
