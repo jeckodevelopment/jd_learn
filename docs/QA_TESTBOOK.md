@@ -3252,9 +3252,9 @@ Raccogliere esito, versione pacchetto, PHP, database, provider, politica di cons
 Annotare versione Joomla, PHP, database, lingua, ruolo, template, consenso, data, passaggi, risultato atteso/osservato e bug riproducibili. Questo verbale non modifica automaticamente lo stato canonico dei criteri `unverifiable`.
 
 
-## CORE-03 — revoca dei livelli di accesso tra i contesti studente (PR #1079 e incremento CI 27/11/2026)
+## CORE-03 — revoca dei livelli di accesso tra i contesti studente (PR #1097 integrata)
 
-**Implementazione:** il criterio è implementato nel perimetro dei principali contesti core. CI verifica revoca indipendente del viewing access level Joomla mantenendo il gruppo: aula/completamento/replay iscrizione nel test servizio e storico/ripresa/classroom/scheda/catalogo via HTTP, con ripristino nella stessa sessione.
+**Implementazione:** il criterio è implementato nel perimetro dei principali contesti core. La [PR #1097](https://github.com/jeckodevelopment/jd_learn/pull/1097), merge `93b241a98e400a4bbe7fd03ff8946eafd8623de2`, verifica revoca indipendente del viewing access level Joomla mantenendo il gruppo: aula/completamento/replay iscrizione nel test servizio e storico/ripresa/classroom/scheda/catalogo via HTTP, con ripristino nella stessa sessione. CI [#4939](https://github.com/jeckodevelopment/jd_learn/actions/runs/46072672529) 4/4 verde; gate CSV [#2297](https://github.com/jeckodevelopment/jd_learn/actions/runs/46072672532) superato. Pacchetto [JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/46072672529/artifacts/15234490645), SHA-256 interno `5bdd680bc3b2cfee32dc1feaa643936fbccece17b41011d5c0414dc7daa09500` (estrarre il contenitore Actions una volta).
 
 **Accettazione manuale:** in attesa; non eseguita.
 

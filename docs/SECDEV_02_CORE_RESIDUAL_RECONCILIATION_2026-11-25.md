@@ -6,6 +6,8 @@
 
 **Aggiornamento 27/11/2026 — PR #1091 candidata:** il test `tests/joomla-teachers.php` copre ora lo snapshot effettivo dei tag nativi, inclusa la lista vuota, e il relativo ripristino per un docente assegnato. Questo chiude solo una combinazione concreta del residuo CORE-16; i casi cross-entity, checkout concorrente e restore delle altre relazioni restano sviluppo/CI aperti. Accettazione manuale ancora in attesa.
 
+**Aggiornamento 27/11/2026 — CORE-03/cross_context, PR #1097 integrata:** la matrice CI verifica revoca indipendente del viewing access level tra aula, progressi/replay iscrizione, cronologia, ripresa, scheda e catalogo, con restore nella stessa sessione. CI #4939 4/4 e gate CSV #2297 superati. Residui correnti: 13 criteri tecnici e 6 esterni/manuali; CORE-03 esce dai residui sviluppo/CI ma resta accettazione manuale pendente.
+
 **Aggiornamento 27/11/2026 — CORE-04/record_acl:** la CI candidata aggiunge al test editoriale corsi la matrice dei docenti: `core.edit.own` senza `core.edit`, transizione singola autorizzata e batch misto con diniego del secondo record e rollback del primo. Percorsi già coperti da prova analoga di ACL per record e batch atomico. `TeacherModel::changeStates()` ora condivide `TeacherProfiles::canEdit()` con l’editor singolo, conservando il controllo `core.edit.state` e checkout. Registro: CORE-04/record_acl `implemented`; CORE-04/teacher_edit resta `unverifiable`; accettazione Joomla non eseguita. Conteggio CORE corrente 28 implemented / 19 unverifiable.
 
 
