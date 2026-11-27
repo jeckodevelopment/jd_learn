@@ -1,4 +1,7 @@
-**JD Learn 0.64.23-dev — CORE-20, ricerca e filtri amministrativi dei percorsi (PR #1088, candidata 27/11/2026):** l’elenco Percorsi usa Search Tools Joomla per ricerca titolo/alias/ID, categoria, accesso, lingua e stato; ordinamento per colonne e limitazione dei parametri lato server. I batch avanzati restano differiti. CI e accettazione manuale Joomla pendenti; nessun aggiornamento percentuale.
+**JD Learn 0.64.23-dev — CORE-20, ordinamento del registro iscritti (PR candidata 27/11/2026):** la lista contestuale delle iscrizioni ordina per studente, versione, stato, progresso, attività o ID; espressioni e direzione sono allowlist server-side. I link conservano i filtri e azzerano la pagina. Test HTTP estesi; CI e accettazione manuale Joomla pendenti; nessuna variazione percentuale.
+
+**JD Learn 0.64.23-dev — CORE-20, ricerca e filtri amministrativi dei percorsi (PR #1088 merged 27/11/2026):** Search Tools Joomla per titolo/alias/ID, categoria, accesso, lingua e stato. CI #4852 4/4 e matrice #2256 superate. Accettazione manuale ancora in attesa; batch avanzati differiti. Nessuna variazione percentuale.
+
 
 **JD Learn 0.64.22-dev — STU-01, motivo di blocco e prossima azione (PR #1085, candidata 27/11/2026):** le schede personali mostrano ora un suggerimento localizzato per lingua non disponibile, pubblicazione/accesso non disponibile, livello Joomla, sospensione, scadenza, annullamento, richiesta in attesa e finestra futura. La CTA Riprendi/Rivedi resta riservata alle iscrizioni con accesso disponibile. Suite Joomla e HTTP ampliate; CI in attesa. Il requisito STU-01 resta Parziale e l'accettazione manuale è pendente. Nessun aggiornamento percentuale prima della riconciliazione.
 

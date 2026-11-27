@@ -1,4 +1,7 @@
-**CORE-20 — ricerca e filtri nell’elenco Percorsi (PR #1088 candidata, 27/11/2026):** completata la vista Search Tools Joomla per percorsi: ricerca titolo/alias/ID, filtri categoria/accesso/lingua/stato, ordinamento e paginazione con limiti server-side. La toolbar di lifecycle esistente resta invariata; batch avanzati differiti. In attesa di CI e accettazione Joomla. Nessun criterio o percentuale promosso prima dei gate.
+**CORE-20 — ordinamento del registro iscritti (PR candidata, 27/11/2026):** la lista iscrizioni per corso ordina per studente, versione, stato, progresso, attività e ID, con allowlist SQL, direzione validata e link che preservano filtri. Test HTTP estesi. CI/accettazione Joomla in attesa; nessun criterio o percentuale promosso prima dei gate.
+
+**CORE-20 — ricerca e filtri nell’elenco Percorsi (PR #1088 merged, 27/11/2026):** Search Tools nativi per ricerca titolo/alias/ID e filtri categoria/accesso/lingua/stato, ordinamento e paginazione limitata. CI #4852 4/4 e matrice #2256 verdi; accettazione Joomla in attesa. Batch avanzati differiti; nessun aggiornamento percentuale.
+
 
 **CORE-20 — selettori amministrativi ricercabili (PR #1087, CI #4836 e matrice #2245 verdi, 27/11/2026):** layout nativo Joomla searchable attivato nei quattro filtri Search Tools della lista Corsi e nel selettore multi-docente del form; `tests/courses-ui-http.py` verifica il rendering dei controlli. Artefatto `JD-Learn-0.64.22-dev`: https://github.com/jeckodevelopment/jd_learn/actions/runs/46005172831/artifacts/15201566250. CORE-20 resta Parziale, il collaudo manuale è in attesa e le percentuali restano invariate.
 

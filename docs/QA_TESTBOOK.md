@@ -1,3 +1,9 @@
+## CORE-20 — ordinamento del registro iscritti (PR candidata)
+
+**Collaudo manuale Joomla: In attesa.** Aprire il registro iscritti di un corso e ordinare per studente, versione, stato, progresso e attività, verificando il verso crescente/decrescente e l’ordine stabile quando i valori coincidono. Applicare prima ricerca, stato e versione, quindi cambiare ordinamento: i filtri devono restare attivi e la lista ripartire dalla prima pagina. Verificare anche il comportamento con lista vuota e con un ordinamento non valido, che deve essere rifiutato senza mostrare risultati non filtrati.
+
+---
+
 ## CORE-20 — ricerca e filtri dell’elenco Percorsi (PR #1088)
 
 **Collaudo manuale Joomla: In attesa.** Nell’amministrazione aprire JD Learn → Percorsi. Verificare ricerca per titolo, alias e ID; filtri categoria, livello di accesso, lingua e cestino; ordinamento per titolo, categoria, stato, accesso, lingua e revisione; paginazione e limite righe. Provare combinazioni di filtri, pulizia della ricerca, risultati vuoti e ritorno da una modifica o da una transizione toolbar. Con un operatore autorizzato verificare che le azioni toolbar esistenti continuino a operare sui soli elementi selezionati. Registrare versione Joomla, ruolo, lingua, combinazione e risultato osservato.
