@@ -43,12 +43,12 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
      </td>
      <td><?= $this->escape((string) ($item->category_title ?? '')) ?></td>
      <td>
-      <?= Text::_(match ((int) $item->state) {
-        1 => 'JPUBLISHED',
-        2 => 'JARCHIVED',
-        -2 => 'JTRASHED',
-        default => 'JUNPUBLISHED',
-      }) ?>
+        <?= Text::_(match ((int) $item->state) {
+            1 => 'JPUBLISHED',
+            2 => 'JARCHIVED',
+            -2 => 'JTRASHED',
+            default => 'JUNPUBLISHED',
+        }) ?>
      </td>
      <td><?= $this->escape((string) ($item->access_title ?? '')) ?></td>
      <td><?= $this->escape((string) $item->language) ?></td>
