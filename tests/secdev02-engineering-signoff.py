@@ -214,8 +214,12 @@ def self_test() -> None:
     )
     assert any("scenario missing" in x for x in inspect(ROOT, evidence)[0])
     evidence = deepcopy(CASES)
-    evidence.pop("CORE-09/tags_context")
-    assert any("exactly once" in x or "expected 17/6" in x for x in inspect(ROOT, evidence)[0])
+    evidence["CORE-09/tags_context"] = (
+        "component/administrator/src/Table/TeacherTable.php",
+        ("tests/joomla-teachers.php", "CORE-09: Joomla persists tag association by teacher item ID"),
+        ("tests/joomla-teachers.php", "CORE-09: native teacher tag can be removed"),
+    )
+    assert any("exactly once" in x for x in inspect(ROOT, evidence)[0])
     workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
     assert any("Mandatory" in x for x in inspect(
         ROOT, override={".github/workflows/ci.yml": workflow.replace(MANDATORY_CI[0], "")}
