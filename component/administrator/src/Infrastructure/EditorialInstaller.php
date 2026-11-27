@@ -23,7 +23,12 @@ final class EditorialInstaller
                 throw new \RuntimeException('JD Learn teacher setup failed');
             }
         }
-        foreach (['course' => 'CourseTable', 'teacher' => 'TeacherTable', 'pathway' => 'PathwayTable'] as $type => $table) {
+        $editorialTables = [
+            'course' => 'CourseTable',
+            'teacher' => 'TeacherTable',
+            'pathway' => 'PathwayTable',
+        ];
+        foreach ($editorialTables as $type => $table) {
             $record = new ContentType($db);
             $exists = $record->load(['type_alias' => 'com_jlms.' . $type]);
             if (!$exists) {
