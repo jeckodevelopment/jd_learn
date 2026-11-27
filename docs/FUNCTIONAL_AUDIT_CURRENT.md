@@ -329,9 +329,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/PUBLICATION.md#L27-L27](../docs/PUBLICATION.md#L27-L27)
   - [component/administrator/src/Application/PublicationService.php#L1-L40](../component/administrator/src/Application/PublicationService.php#L1-L40)
   - [tests/joomla-publication.php#L1-L30](../tests/joomla-publication.php#L1-L30)
-- `CORE-16/all_entities` — Ristabilimento dello storico, check-in/out e versioni assegnate in ogni scenario. Test di upgrade e ripristino esistono per entità core specifiche, ma non attestano storico, check-in/out e versioni assegnate per ogni entità e scenario richiesto.
+- `CORE-16/all_entities` — Ristabilimento dello storico, check-in/out e versioni assegnate in ogni scenario. Le prove ora coprono snapshot e restore dei tag nativi nel modello docente, oltre ai casi già verificati su corso e percorso; restano non attestati storico/check-in-out e versioni assegnate per tutte le entità e combinazioni previste.
   - [tests/joomla-programme-restore.php#L80-L110](../tests/joomla-programme-restore.php#L80-L110)
   - [tests/joomla-smoke.php#L1-L30](../tests/joomla-smoke.php#L1-L30)
+  - [component/administrator/src/Model/TeacherModel.php#L20-L29](../component/administrator/src/Model/TeacherModel.php#L20-L29)
+  - [tests/joomla-teachers.php#L873-L929](../tests/joomla-teachers.php#L873-L929)
 - `CORE-18/smtp` — Verifica SMTP e personalizzazioni tradotte su tutti gli eventi. La coda e i modelli nativi sono integrati e CI esercita la logica locale; la verifica SMTP, le personalizzazioni tradotte e la consegna per ogni evento richiedono collaudi Joomla/SMTP esplicitamente pendenti.
   - [docs/MAIL_TEMPLATES.md#L13-L13](../docs/MAIL_TEMPLATES.md#L13-L13)
   - [docs/MAIL_SCHEDULER_SETUP.md#L17-L17](../docs/MAIL_SCHEDULER_SETUP.md#L17-L17)
