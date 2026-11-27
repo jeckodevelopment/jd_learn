@@ -3653,18 +3653,22 @@
       {
         "id": "tags_context",
         "label": "Registrazione ed esposizione dei tag in tutte le entità previste",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
+          "component/administrator/src/Table/CourseTable.php",
           "component/administrator/src/Model/CourseModel.php",
-          "component/administrator/src/Infrastructure/EditorialInstaller.php"
-        ],
-        "review": {
-          "reason": "L'integrazione con tag Joomla è presente nel modello editoriale del corso, ma le evidenze selezionate non dimostrano registrazione ed esposizione di tag in tutte le entità previste dal criterio.",
-          "references": [
-            "component/administrator/src/Model/CourseModel.php#L1-L35",
-            "component/administrator/src/Infrastructure/EditorialInstaller.php#L1-L58"
-          ]
-        }
+          "component/administrator/forms/course.xml",
+          "component/administrator/src/Table/TeacherTable.php",
+          "component/administrator/src/Model/TeacherModel.php",
+          "component/administrator/forms/teacher.xml",
+          "component/administrator/src/Table/PathwayTable.php",
+          "component/administrator/src/Model/PathwayModel.php",
+          "component/administrator/forms/pathway.xml",
+          "component/administrator/src/Infrastructure/EditorialInstaller.php",
+          "tests/joomla-teachers.php",
+          "tests/joomla-pathways.php",
+          "tests/secdev02-core-native-contracts.py"
+        ]
       }
     ],
     "CORE-10": [

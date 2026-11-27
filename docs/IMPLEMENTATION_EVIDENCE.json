@@ -2,8 +2,8 @@
   "audited_at": "2026-11-26",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 64.81,
-    "development_evidence_floor_percent": 64.81,
+    "percent": 65.04,
+    "development_evidence_floor_percent": 65.04,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -14150,6 +14150,40 @@
           }
         ]
       }
+    },
+    {
+      "feature": "CORE-09 native Joomla tags for courses, teachers and pathways; PR #1081",
+      "version": "0.64.22-dev",
+      "ci": {
+        "run_id": 45915885755,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/45915885755",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      },
+      "manual_joomla_acceptance": "Pending: AC-19 and AC-64 across courses, teachers and pathways; search, ACL, language, visibility and upgrade."
     }
   ],
   "latest_feature": {

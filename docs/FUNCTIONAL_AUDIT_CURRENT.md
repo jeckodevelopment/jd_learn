@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **509**.
+- Implementati: **510**.
 - Mancanti con lacuna accertata: **9**.
-- Esaminati con esito non verificabile: **239**.
+- Esaminati con esito non verificabile: **238**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -305,9 +305,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [plugins/privacy/jdlearn/src/Extension/Jdlearn.php#L1-L30](../plugins/privacy/jdlearn/src/Extension/Jdlearn.php#L1-L30)
   - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L14-L15)
   - [docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L32-L32](../docs/JOOMLA_PRIVACY_CONSENT_INTEGRATION.md#L32-L32)
-- `CORE-09/tags_context` — Registrazione ed esposizione dei tag in tutte le entità previste. L'integrazione con tag Joomla è presente nel modello editoriale del corso, ma le evidenze selezionate non dimostrano registrazione ed esposizione di tag in tutte le entità previste dal criterio.
-  - [component/administrator/src/Model/CourseModel.php#L1-L35](../component/administrator/src/Model/CourseModel.php#L1-L35)
-  - [component/administrator/src/Infrastructure/EditorialInstaller.php#L1-L58](../component/administrator/src/Infrastructure/EditorialInstaller.php#L1-L58)
 - `CORE-10/teacher_scoping` — Campi docente e lezione con ACL e lingua in tutti gli scenari. Il modello docente lato sito restringe i corsi ai profili associati e il form integra campi Joomla; la copertura completa di ACL e lingua su ogni combinazione di profili, docenti, corsi e lezioni non è attestata.
   - [component/site/src/Model/TeacherModel.php#L21-L40](../component/site/src/Model/TeacherModel.php#L21-L40)
   - [component/administrator/src/Model/TeacherModel.php#L21-L34](../component/administrator/src/Model/TeacherModel.php#L21-L34)
