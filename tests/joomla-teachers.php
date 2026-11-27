@@ -928,7 +928,7 @@ teacherExpect(
 );
 $publicRevision = (int) $db->setQuery('SELECT revision FROM #__jlms_teachers WHERE id=' . $public)->loadResult();
 teacherExpect($teacherModel->save(array_replace($teacherBase, [
-    'id' => $public, 'revision' => $publicRevision, 'title' => 'Original public teacher', 'tags' => [],
+    'id' => $public, 'revision' => $publicRevision, 'title' => 'Updated public teacher', 'tags' => [],
 ])), 'CORE-16: fixture teacher tags can be removed after history restore');
 
 file_put_contents($fixture, json_encode(['course' => $course,'version' => $version,'ids'
