@@ -13,9 +13,45 @@ use Joomla\CMS\User\User;
 use Jlms\Component\Jlms\Administrator\Application\CourseArtwork;
 use Joomla\Database\ParameterType;
 
-final class PathwayModel extends AdminModel
+final class PathwayModel extends AdminModel implements \\Joomla\\CMS\\Versioning\\VersionableModelInterface
 {
+    use \\Joomla\\CMS\\Versioning\\VersionableModelTrait { saveHistory as private persistHistory; }
+
     public $typeAlias = 'com_jlms.pathway';
+
+    protected function versionHistoryEnabled(string $context): bool
+    {
+        return (bool) ComponentHelper::getParams('com_jlms')->get('save_history', 1);
+    }
+
+    public function saveHistory(array $data, string $context)
+    {
+        return true;
+    }
+
+    public function loadHistory(int $historyId)
+    {
+        $history = $this->getHistoryTable($historyId);
+        if (!$history) {
+            return false;
+        }
+        $data = json_decode($history->version_data, true, 64, JSON_THROW_ON_ERROR);
+        $id = (int) ($data['id'] ?? 0);
+        if ($id < 1 || $history->item_id !== $this->typeAlias . '.' . $id) {
+            return false;
+        }
+        $current = $this->getItem($id);
+        if (!$current) {
+            return false;
+        }
+        $data['revision'] = (int) $current->revision;
+        $artwork = json_decode((string) ($data['params_json'] ?? '{}'), true, 16, JSON_THROW_ON_ERROR);
+        $data['cover_image'] = (string) ($artwork['cover_image'] ?? '');
+        $data['cover_alt'] = (string) ($artwork['cover_alt'] ?? '');
+        $data['cover_decorative'] = !empty($artwork['cover_decorative']) ? '1' : '0';
+        return $this->save($data);
+    }
+
 
     public function getForm($data = [], $loadData = true)
     {
