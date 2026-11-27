@@ -15,12 +15,11 @@ use Joomla\CMS\Versioning\VersionableModelTrait;
 use Jlms\Component\Jlms\Administrator\Application\CourseArtwork;
 use Joomla\Database\ParameterType;
 
-final class PathwayModel extends AdminModel implements \Joomla\CMS\Versioning\VersionableModelInterface
+final class PathwayModel extends AdminModel implements VersionableModelInterface
 {
-    use \Joomla\CMS\Versioning\VersionableModelTrait {
+    use VersionableModelTrait {
         saveHistory as private persistHistory;
     }
-
     public $typeAlias = 'com_jlms.pathway';
 
     protected function versionHistoryEnabled(string $context): bool
