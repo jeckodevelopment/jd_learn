@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **514**.
+- Implementati: **515**.
 - Mancanti con lacuna accertata: **9**.
-- Esaminati con esito non verificabile: **234**.
+- Esaminati con esito non verificabile: **233**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -273,9 +273,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `CORE-02/auth_variants` — MFA, recupero account e provider configurati in tutti i percorsi. I controlli applicativi ricontrollano l'identità e l'accesso Joomla in flussi selezionati. MFA, recupero account e provider d'identità sono configurazioni del sito e non è disponibile una prova di tutti i percorsi/supporti d'autenticazione del deployment.
   - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
   - [docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7](../docs/SECURITY_PRIVACY_RELEASE_GATE_1.0.0.md#L3-L7)
-- `CORE-04/teacher_edit` — Modifiche di profilo docente e limitazioni campi/pubblicazione. Il modello docente applica capacità di gestione e permessi record sulle modifiche note; non è attestata l'intera matrice di campi, pubblicazione e accessi multipli per tutti i ruoli e contesti richiesti.
-  - [component/administrator/src/Model/TeacherModel.php#L21-L78](../component/administrator/src/Model/TeacherModel.php#L21-L78)
-  - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
 - `CORE-05/layout_coverage` — Override verificati per tutte le viste e i moduli distribuiti. Il contratto CSS descrive override e hook per diverse viste e alcuni test automatici ne controllano parti; non risultano verificati tutti gli override delle viste e dei moduli distribuiti sui template/viewport supportati.
   - [docs/FRONTEND_CSS.md#L90-L93](../docs/FRONTEND_CSS.md#L90-L93)
   - [docs/FRONTEND_CSS.md#L113-L113](../docs/FRONTEND_CSS.md#L113-L113)
@@ -1081,6 +1078,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/joomla-editor-access.php#CORE-04: delegated teacher has edit-own but not general record edit](../tests/joomla-editor-access.php)
   - [tests/joomla-editor-access.php#CORE-04: mixed record-level allow and explicit deny rejects whole course lifecycle batch](../tests/joomla-editor-access.php)
   - [tests/joomla-pathways.php#delegated mixed selection is rejected atomically on record-level ACL deny](../tests/joomla-pathways.php)
+- `CORE-04/teacher_edit` — Modifiche di profilo docente e limitazioni campi/pubblicazione. La prova Joomla disposable su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6 verifica il salvataggio editoriale di un docente delegato con core.edit.own senza core.edit, respinge il payload forgiato sui campi amministrativi e nega la modifica del profilo altrui preservando i dati. Entrambi gli ambienti CI standard superano (run #46078241684). Il criterio è implementato per la superficie verificata; l’accettazione manuale Joomla e gli altri ruoli restano separati.
+  - [component/administrator/src/Model/TeacherModel.php#TeacherProfiles::canEdit($actor, $record)](../component/administrator/src/Model/TeacherModel.php)
+  - [tests/joomla-editor-access.php#CORE-04: edit-own authorizes editing the delegated editor’s own teacher profile](../tests/joomla-editor-access.php)
+  - [tests/joomla-editor-access.php#CORE-04: edit-own cannot modify another owner’s teacher profile](../tests/joomla-editor-access.php)
 - `CORE-14/index_acl` — Aggiornamento indici e visibilità su ogni cambio ACL, stato e lingua. La matrice Joomla disposable verifica i link Finder realmente persistiti dopo gli eventi nativi del corso (salvataggio, cambio stato e rimozione) e della categoria (salvataggio ACL/lingua e cambio stato). Ogni revoca rimuove il link e il ripristino lo ricrea; le query applicano anche stato, ACL, lingua effettiva e pubblicazione. Il perimetro tecnico del plugin Finder core è implementato; la ricerca Smart Search sul sito/template effettivi resta accettazione manuale.
   - [plugins/finder/jlms/src/Extension/Jlms.php#onFinderAfterSave](../plugins/finder/jlms/src/Extension/Jlms.php)
   - [tests/joomla-categories.php#CORE-14: course save event removes an index link after access is restricted](../tests/joomla-categories.php)
