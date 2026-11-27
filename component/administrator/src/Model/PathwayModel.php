@@ -276,13 +276,10 @@ final class PathwayModel extends AdminModel
                 }
                 $tagIds = array_map('intval', $data['tags']);
             } elseif ($id) {
-                $tagIds = array_map('intval', $db->createQuery()
-                    ->select('tag_id')->from('#__contentitem_tag_map')
+                $tagQuery = $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
                     ->where('type_alias = ' . $db->quote('com_jlms.pathway'))
-                    ->where('content_item_id = ' . $id)
-                    ->order('tag_id')
-                    ->setQuery($db->createQuery())
-                );
+                    ->where('content_item_id = ' . $id)->order('tag_id');
+                $tagIds = array_map('intval', $db->setQuery($tagQuery)->loadColumn());
             } else {
                 $tagIds = [];
             }
