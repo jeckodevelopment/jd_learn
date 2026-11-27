@@ -57,7 +57,7 @@ final class PathwayModel extends AdminModel
 
     public function save($input)
     {
-        \\Joomla\\CMS\\Plugin\\PluginHelper::importPlugin('behaviour', 'taggable');
+        \Joomla\CMS\Plugin\PluginHelper::importPlugin('behaviour', 'taggable');
         $db = $this->getDatabase();
         $preparedAsset = 0;
         $transactionStarted = false;
