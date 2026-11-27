@@ -139,7 +139,7 @@ foreach (['en-GB' => 'lesson-reference-en', 'it-IT' => 'lesson-reference-it'] as
             'group_id' => 0, 'default_value' => '', 'description' => '', 'params' => [],
             'fieldparams' => ['filter' => 'string']])
     ) {
-        throw new \\RuntimeException('Localized lesson field fixture failed: ' . $fieldModel->getError());
+        throw new \RuntimeException('Localized lesson field fixture failed: ' . $fieldModel->getError());
     }
     $lessonLocaleFields[$locale] = (int) $fieldModel->getState('field.id');
 }
