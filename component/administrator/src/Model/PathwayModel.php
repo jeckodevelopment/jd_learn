@@ -19,7 +19,7 @@ use Joomla\Database\ParameterType;
 
 final class PathwayModel extends AdminModel implements \Joomla\CMS\Versioning\VersionableModelInterface
 {
-    use \\Joomla\\CMS\\Versioning\\VersionableModelTrait {
+    use \Joomla\CMS\Versioning\VersionableModelTrait {
         saveHistory as private persistHistory;
     }
 
