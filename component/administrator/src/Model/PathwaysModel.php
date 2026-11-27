@@ -121,7 +121,8 @@ final class PathwaysModel extends ListModel
             );
             $query->bind(':search_title', $pattern);
             $query->bind(':search_alias', $pattern);
-            $query->bind(':search_id', trim($search));
+            $searchId = trim($search);
+            $query->bind(':search_id', $searchId);
         }
 
         $filters = [
