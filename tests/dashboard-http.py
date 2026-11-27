@@ -38,6 +38,17 @@ def login(http,name):
  url,html,_=request(http,'/index.php?option=com_users&view=login&lang=en');form=next(x for x in Page(html).forms if'username'in x['fields']and'password'in x['fields'])
  request(http,urljoin(url,form['action']),form['fields']|{'username':name,'password':'Ci-only-Dashboard-Password-2026'})
 def enrollments(html):return set(map(int,re.findall(r'data-enrollment-id="([1-9][0-9]*)"',html)))
+def card(html,enrollment):
+ match=re.search(r'<article\b[^>]*id="jlms-my-course-'+str(enrollment)+r'"[^>]*>.*?</article>',html,re.S)
+ if not match:
+  raise RuntimeError('Missing rendered learner card '+str(enrollment))
+ return match.group(0)
+def blocked_card(html,enrollment,message):
+ markup=card(html,enrollment)
+ expect('jlms-my-course__next-action' in markup and message in markup,
+  'blocked card shows its specific next action: '+str(enrollment))
+ expect('jlms-my-course-resume-'+str(enrollment) not in markup,
+  'blocked card has no resume/review action: '+str(enrollment))
 dashboard='/index.php?option=com_jlms&view=mycourses&lang=en'
 overview='/index.php?option=com_jlms&view=dashboard&lang=en'
 resume='/index.php?option=com_jlms&task=enrollment.resume&id='
@@ -155,7 +166,7 @@ try:
   text,count=re.subn(r'public\s+\$sef\s*=\s*[^;]+;',f'public $sef = {sef};',original)
   if count!=1:raise RuntimeError('SEF fixture missing')
   config.write_text(text)
-  url,html,headers=request(student,dashboard)
+  url,html,headers=request(student,dashboard+'&limit=50&limitstart=0')
   page=Page(html)
   _,summary_html,summary_headers=request(student,overview)
   summary_page=Page(summary_html)
@@ -182,6 +193,17 @@ try:
   expect(f['active']in enrollments(first_again),'return from retained pagination to active enrollment')
   form=next(x for x in page.forms if x['id']=='jlms-dashboard-filters')
   expect('filter[progress]'in html and'completed'in html,'native filter form rendered')
+  # STU-01: every normal access diagnosis is shown in the rendered learner
+  # card, with a distinct suggestion and no unavailable CTA.
+  for enrollment,message in [
+   (f['completed'],'Check the catalogue for a new edition'),
+   (f['suspended'],'Contact the course manager to review the suspended enrollment'),
+   (f['cancelled'],'Check the catalogue to see whether you can submit a new enrollment request'),
+   (f['pending'],'Wait for a decision on your request'),
+   (f['future'],'Try again after the course access window opens')]:
+   blocked_card(html,enrollment,message)
+  expect('jlms-my-course-resume-'+str(f['active']) in Page(html).ids,
+   'available card keeps its resume action')
   target=next(a['href']for a in page.links if a.get('id')=='jlms-my-course-resume-'+str(f['active']))
   target_url,classroom,_=request(student,target)
   expect('id="jlms-classroom"'in classroom and'LEARNING_PRIVATE_BODY_2'in classroom,'resume opens last valid owned activity')
@@ -196,6 +218,7 @@ try:
   _,revoked,_=request(student,dashboard)
   expect(f['active']in enrollments(revoked)and'jlms-my-course-resume-'+str(f['active'])not in Page(revoked).ids,'mid-session revocation retains history and removes resume action')
   expect('Ask the administrator to check the Joomla viewing access required for the course content.' in revoked,'blocked history offers a current-access next step')
+  blocked_card(revoked,f['active'],'Ask the administrator to check the Joomla viewing access required')
   request(student,resume+str(f['active'])+'&lang=en',expected=403)
   request(student,'/index.php?option=com_jlms&view=classroom&id='+str(f['active'])+'&lang=en',expected=403)
   _,revoked_overview,_=request(student,overview)
@@ -207,6 +230,14 @@ try:
   fixture('grant')
   _,restored,_=request(student,dashboard)
   expect('jlms-my-course-resume-'+str(f['active'])in Page(restored).ids,'same-session restored access reflected')
+  fixture('course_off')
+  _,unpublished,_=request(student,dashboard)
+  blocked_card(unpublished,f['active'],'Contact the site administrator to check the course publication and availability')
+  fixture('course_on')
+  fixture('language_missing')
+  _,missing_language,_=request(student,dashboard)
+  blocked_card(missing_language,f['active'],'Change the site language and check whether the course is available')
+  fixture('language_restore')
   fixture('block');request(student,dashboard,expected=403);fixture('unblock')
  _,html,_=request(empty,dashboard)
  expect('jlms-dashboard-empty'in Page(html).ids and not enrollments(html),'empty state without new enrollment')
@@ -219,6 +250,13 @@ try:
 except Exception:
  log.flush();log.seek(0);print(log.read()[-12000:],file=sys.stderr);raise
 finally:
+ try:
+  fixture('language_restore')
+  fixture('course_on')
+  fixture('grant')
+  fixture('unblock')
+ except Exception:
+  pass
  if navActivated: fixture('navigation_off')
  config.write_text(original)
  if server is not None:

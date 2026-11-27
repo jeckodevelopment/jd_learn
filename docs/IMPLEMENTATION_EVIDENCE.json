@@ -2,8 +2,8 @@
   "audited_at": "2026-11-26",
   "product": "JD Learn",
   "current_implementation_estimate": {
-    "percent": 65.04,
-    "development_evidence_floor_percent": 65.04,
+    "percent": 65.16,
+    "development_evidence_floor_percent": 65.16,
     "manual_acceptance_coverage_percent": 4.67,
     "manual_acceptance": {
       "requirements_with_recorded_result": 10,
@@ -12,7 +12,7 @@
       "requirements_passed": 0,
       "requirements_failed": 0,
       "coverage_percent": 4.67,
-      "fully_accepted_percent": 0
+      "fully_accepted_percent": 0.0
     },
     "basis": "Criterion-based evidence floor with equal weight per in-scope requirement; unverifiable and unassessed criteria count as zero. Manual acceptance is calculated independently from REQUIREMENTS_STATUS.csv.",
     "source": "docs/RELEASE_DASHBOARD.md"

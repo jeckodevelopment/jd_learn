@@ -196,6 +196,37 @@ $nextActions = [
 foreach ($nextActions as $id => $action) {
     dashExpect($byId[$id]['next_action'] === $action, 'blocked enrollment provides its specific next action');
 }
+$actionKeys = [
+    'COM_JLMS_DASHBOARD_NEXT_LANGUAGE',
+    'COM_JLMS_DASHBOARD_NEXT_UNAVAILABLE',
+    'COM_JLMS_DASHBOARD_NEXT_ACCESS',
+    'COM_JLMS_DASHBOARD_NEXT_SUSPENDED',
+    'COM_JLMS_DASHBOARD_NEXT_EXPIRED',
+    'COM_JLMS_DASHBOARD_NEXT_CANCELLED',
+    'COM_JLMS_DASHBOARD_NEXT_PENDING',
+    'COM_JLMS_DASHBOARD_NEXT_NOT_OPEN',
+];
+$languageTexts = [];
+foreach (['en-GB','it-IT'] as $language) {
+    $source = file_get_contents(dirname(__DIR__) . '/component/site/language/' . $language . '/com_jlms.ini');
+    if ($source === false) {
+        throw new \RuntimeException('Dashboard language file is missing: ' . $language);
+    }
+    foreach ($actionKeys as $action) {
+        preg_match('/^' . preg_quote($action, '/') . '="([^"]+)"$/m', $source, $match);
+        dashExpect(
+            isset($match[1]) && trim($match[1]) !== '',
+            'blocked next action is translated: ' . $language . ' ' . $action
+        );
+        $languageTexts[$language][$action] = $match[1];
+    }
+}
+foreach ($actionKeys as $action) {
+    dashExpect(
+        $languageTexts['en-GB'][$action] !== $languageTexts['it-IT'][$action],
+        'blocked next action has distinct English and Italian copy'
+    );
+}
 dashExpect(count($read($owner, 'completed')) === 1 && count($read($owner, 'not_started')) === 25
     && $read($owner, 'in_progress') === [], 'progress filter does not conflate access status');
 $target = $learning->resumeTarget($owner, 'en-GB', $active);
@@ -481,9 +512,27 @@ try {
      $menus[$tag] = (int)$table->id;
  }
  require __DIR__ . '/dashboard-catalog-latest-regression.php';
- file_put_contents($path, json_encode(['owner' => (int)$owner->id,'other' => (int)$other->id,'empty'
-     => (int)$empty->id,'active' => $active,'other_enrollment' => $otherEnrollment,'completed'
-         => $completed,'suspended' => $suspended,'cancelled' => $cancelled,'future' => $future,'lesson'
-             => $f['lessons'][1],'group' => $f['group_id'],'course' => $f['course_id'],'italian'
-                 => $italian,'menus' => $menus], JSON_THROW_ON_ERROR));
+ file_put_contents(
+     $path,
+     json_encode(
+         [
+             'owner' => (int)$owner->id,
+             'other' => (int)$other->id,
+             'empty' => (int)$empty->id,
+             'active' => $active,
+             'other_enrollment' => $otherEnrollment,
+             'completed' => $completed,
+             'suspended' => $suspended,
+             'cancelled' => $cancelled,
+             'pending' => $pending,
+             'future' => $future,
+             'lesson' => $f['lessons'][1],
+             'group' => $f['group_id'],
+             'course' => $f['course_id'],
+             'italian' => $italian,
+             'menus' => $menus,
+         ],
+         JSON_THROW_ON_ERROR
+     )
+ );
  echo json_encode(['dashboard_checks' => $checks,'status' => 'passed'], JSON_THROW_ON_ERROR) . PHP_EOL;
