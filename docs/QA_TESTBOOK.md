@@ -1,3 +1,11 @@
+## CORE-16 — storico del profilo docente e tag nativi (PR #1091)
+
+**Collaudo manuale Joomla: In attesa.** In un sito di test con cronologia contenuti abilitata, aprire un docente associato a un corso pubblicato. Aggiungere un tag Joomla, salvare e creare una seconda revisione rimuovendo il tag e modificando la biografia. Dal pannello Versioni ripristinare la prima revisione: il titolo/biografia e il tag devono tornare ai valori salvati; la revisione corrente deve avanzare. Verificare che la versione didattica assegnata al corso mantenga contenuto, hash e data originali. Ripetere con cronologia disabilitata e confermare che il salvataggio resti possibile senza voci Versioni. Annotare versione Joomla, ruolo, lingua, corso/versione assegnata e risultato.
+
+**Verifica automatica:** `tests/joomla-teachers.php` controlla snapshot taggato/vuoto, ripristino tramite il modello Joomla e immutabilità della versione assegnata; la suite è eseguita dalla CI su sito disposable.
+
+---
+
 ## CORE-20 — ordinamento del registro iscritti (PR candidata)
 
 **Collaudo manuale Joomla: In attesa.** Aprire il registro iscritti di un corso e ordinare per studente, versione, stato, progresso e attività, verificando il verso crescente/decrescente e l’ordine stabile quando i valori coincidono. Applicare prima ricerca, stato e versione, quindi cambiare ordinamento: i filtri devono restare attivi e la lista ripartire dalla prima pagina. Verificare anche il comportamento con lista vuota e con un ordinamento non valido, che deve essere rifiutato senza mostrare risultati non filtrati.

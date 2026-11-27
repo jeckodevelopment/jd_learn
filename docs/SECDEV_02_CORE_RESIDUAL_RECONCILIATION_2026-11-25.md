@@ -4,6 +4,9 @@
 
 ## Sintesi delle evidenze
 
+**Aggiornamento 27/11/2026 — PR #1091 candidata:** il test `tests/joomla-teachers.php` copre ora lo snapshot effettivo dei tag nativi, inclusa la lista vuota, e il relativo ripristino per un docente assegnato. Questo chiude solo una combinazione concreta del residuo CORE-16; i casi cross-entity, checkout concorrente e restore delle altre relazioni restano sviluppo/CI aperti. Accettazione manuale ancora in attesa.
+
+
 - Il registro canonico conta **23 servizi CORE**, con **47 criteri granulari**: **24 implemented** e **23 unverifiable**. I criteri residui sono distribuiti su **22 servizi**, perché **CORE-17 ha già entrambi i criteri implementati**.
 - Dei **23 residui**, **17** richiedono ancora lavoro tecnico: verifiche di implementazione, eventuali correzioni e ampliamento della prova automatica/matrice end-to-end; **6** dipendono soprattutto da ambiente Joomla, servizi esterni, policy o accettazione sul sito.
 - Il lotto corregge **un difetto di codice trasversale** (rilevante per **CORE-18** e **CORE-19**): il default globale email disabilitato non può impedire l'opt-in esplicito del corso. La query MariaDB/MySQL è provata contro `MailPreferences::enabled` per 5 preferenze × 2 stati globali e mantiene deduplicazione pre-LIMIT.
@@ -31,7 +34,7 @@ Il documento e il JSON associato sono una **riconciliazione operativa**: non sos
 | `CORE-13/all_routes` | Sviluppo/CI da completare | Completare matrice di route dirette, breadcrumb, SEF, alias modificati, lingua e ACL per tutte le viste. | Verificare link diretti e breadcrumb con ruoli, menu e lingue. |
 | `CORE-14/index_acl` | Sviluppo/CI da completare | Prove di reindicizzazione Finder con cambio categoria/lingua/stato/ACL e lettura indice reale. | Ricostruire e consultare Smart Search con articoli protetti e cambio permessi. |
 | `CORE-15/native_workflow` | Sviluppo/CI da completare | Provare con CI il blocco delle scritture su programma/lezioni durante la revisione nativa del corso; completare la matrice di transizioni e ACL per docenti e percorsi, incluse le selezioni multiple. Le lezioni ereditano il workflow del corso perché appartengono a una versione didattica immutabile. | Provare permessi/toolbar e blocchi di transizione nei flussi editoriali. |
-| `CORE-16/all_entities` | Sviluppo/CI da completare | Prove di history/checkout concorrente, restore per entità e immutabilità delle versioni assegnate. | Provare check-in/out, ripristini storici e lezioni assegnate con due editor. |
+| `CORE-16/all_entities` | Sviluppo/CI da completare | PR #1091 aggiunge snapshot taggato/vuoto e restore dei tag Joomla nel modello docente, verificando che la versione assegnata non cambi; restano prove cross-entity di history/checkout concorrente e restore di tutte le relazioni. | Provare check-in/out, ripristini storici e lezioni assegnate con due editor. |
 | `CORE-18/smtp` | Sito/esterno | Correzione in questa PR: il promemoria scadenza rispetta l'opt-in per corso anche con default globale off; la consegna SMTP resta prova esterna. | Provare SMTP e modelli IT/EN, errori, retry e opt-in/opt-out per corso. |
 | `CORE-19/idempotent_tasks` | Sviluppo/CI da completare | Correzione in questa PR: selezione SQL e MailPreferences concordano per default globale e override; ampliare il test di retry scheduler multi-batch. | Eseguire task su database realistico, disabilitazioni e ripetizioni senza duplicati. |
 | `CORE-20/native_completeness` | Sviluppo/CI da completare | Inventariare toolbar, filtri, batch, errori e recupero input e aggiungere test HTTP per i casi non coperti. | Provare tutte le azioni dell'amministrazione in più ruoli e browser. |
