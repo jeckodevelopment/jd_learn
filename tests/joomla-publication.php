@@ -119,6 +119,7 @@ pubExpect(!(int)$db->setQuery(('SELECT COUNT(*) FROM #__workflow_associations WH
     . 'extension=\'com_jlms.course\' AND item_id=') . $course)
         ->loadResult(), 'failed publish has no workflow side effects');
 $module = $authoring->saveModule($actor, pubScope() + ['id' => 0,'title' => 'Published chapter']);
+$app->loadLanguage();
 \Joomla\CMS\Plugin\PluginHelper::importPlugin('system', 'fields');
 $fieldModel = $app->bootComponent('com_fields')->getMVCFactory()
     ->createModel('Field', 'Administrator', ['ignore_request' => true]);
