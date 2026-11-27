@@ -602,7 +602,7 @@ final class PublicationService
             throw new \DomainException('COM_JLMS_INVALID_INPUT');
         }
         $item = (string) $itemId;
-        $q = $this->db->createQuery()->select('f.id, f.name, f.title, f.type, f.access, v.value')
+        $q = $this->db->createQuery()->select('f.id, f.name, f.title, f.type, f.access, f.language, v.value')
             ->from('#__fields AS f')->innerJoin('#__fields_values AS v ON v.field_id = f.id')
             ->where('f.context = :context')->where('f.state = 1')->where('v.item_id = :item')
             ->bind(':context', $context)->bind(':item', $item)->order('f.id');
@@ -616,7 +616,7 @@ final class PublicationService
                 continue;
             }
             $fields[$row->name] ??= ['label' => (string) $row->title, 'type' => (string) $row->type,
-                'access' => (int) $row->access, 'values' => []];
+                'access' => (int) $row->access, 'language' => (string) $row->language, 'values' => []];
             $fields[$row->name]['values'][] = (string) $row->value;
         }
         ksort($fields, SORT_STRING);
