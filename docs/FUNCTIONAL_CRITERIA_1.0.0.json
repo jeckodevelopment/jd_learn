@@ -3869,7 +3869,9 @@
           "reason": "Le prove ora coprono snapshot e restore dei tag nativi nel modello docente, oltre ai casi già verificati su corso e percorso; restano non attestati storico/check-in-out e versioni assegnate per tutte le entità e combinazioni previste.",
           "references": [
             "tests/joomla-programme-restore.php#L80-L110",
-            "tests/joomla-smoke.php#L1-L30"
+            "tests/joomla-smoke.php#L1-L30",
+            "component/administrator/src/Model/TeacherModel.php",
+            "tests/joomla-teachers.php"
           ]
         }
       }
