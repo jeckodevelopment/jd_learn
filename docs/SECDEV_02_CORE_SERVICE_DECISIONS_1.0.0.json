@@ -94,15 +94,17 @@
       "remaining_verification": "Matrice ruoli e protezioni su tutti i record",
       "implementation_evidence": [
         "component/administrator/src/Application/CourseEditorAccess.php",
-        "tests/joomla-editor-access.php"
+        "component/administrator/src/Model/TeacherModel.php",
+        "tests/joomla-editor-access.php",
+        "tests/joomla-pathways.php"
       ],
       "automated_test_evidence": [
-        "tests/joomla-editor-access.php"
+        "tests/joomla-editor-access.php",
+        "tests/joomla-pathways.php"
       ],
       "reconciliation": {
-        "reviewed_on": "2026-11-25",
+        "reviewed_on": "2026-11-27",
         "pending_criteria": [
-          "record_acl",
           "teacher_edit"
         ],
         "existing_automated_evidence": [
