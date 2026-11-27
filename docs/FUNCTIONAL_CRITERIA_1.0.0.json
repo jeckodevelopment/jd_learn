@@ -3980,7 +3980,10 @@
         "evidence": [
           "docs/COURSE_EDITOR.md",
           "docs/AUTHORING.md",
-          "tests/joomla-courses-ui.php"
+          "tests/joomla-courses-ui.php",
+          "component/administrator/src/Model/PathwaysModel.php",
+          "component/administrator/tmpl/pathways/default.php",
+          "tests/joomla-pathways.php"
         ],
         "review": {
           "reason": "Sono presenti viste e test Joomla nativi per corsi, programma e iscrizione manuale; non è stata verificata la completezza di ogni toolbar, filtro, operazione batch, errore e ripristino input nell'intero backend.",
