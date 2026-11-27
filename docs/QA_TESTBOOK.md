@@ -32,6 +32,8 @@
 
 **Collaudo manuale Joomla: In attesa.** Da due sessioni editor contemporanee provare checkout, modifica, revisione e ripristino storico su corso, lezione, docente e percorso, verificando che le versioni didattiche già assegnate non cambino. Sulle liste amministrative verificare toolbar per ruoli diversi, Search Tools e filtri combinati, paginazione, batch, messaggi d'errore, recupero dei dati dopo validazione fallita e accesso a record non autorizzati. Documentare gli esiti separatamente dalla CI.
 
+**Test manuale aggiunto — PR #1087, CORE-20:** nella lista Corsi cercare e selezionare categoria, livello di accesso, autore e docente con i controlli Joomla; verificare filtro, combinazioni, reset e paginazione. Nel form corso cercare e assegnare due o più docenti, salvare, riaprire e verificare i valori selezionati. Controllare uso da tastiera, nome/descrizione accessibile e resa mobile/desktop. **Stato: in attesa del merge e del pacchetto CI; non eseguito.**
+
 ## SECDEV-02 / CORE-13 e CORE-15 — Router editoriali e transizioni massime (26/11/2026)
 
 **Evidenza automatica candidata:** `tests/joomla-pathways.php` esegue direttamente il decoder nativo del router per sette viste editoriali (corso, categoria, percorso, docente, modifica docente, aula, quiz), verificando ID semplici, ID con alias, alias storici, zeri iniziali e rifiuto di segmenti non validi, con query string o troppo grandi. La stessa fixture verifica sei batch non validi di transizioni sui percorsi (vuoto, duplicato, ID stringa/zero, oltre 100 record, stato non supportato), preservando stati, revisioni e ordine delle associazioni ai corsi. Si aggiunge ai test già presenti su permessi per-record e checkout concorrente. L'esito resta da attestare sulla CI finale.

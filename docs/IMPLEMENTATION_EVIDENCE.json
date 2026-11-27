@@ -22,8 +22,8 @@
   "baseline": "docs/specifications/Matrice_requisiti_test_LMS_1.0.csv",
   "specification": "docs/specifications/Specifica_funzionale_LMS_Joomla_1.0.md",
   "ci": {
-    "run_id": 45899449372,
-    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/45899449372",
+    "run_id": 46005172831,
+    "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/46005172831",
     "status": "completed",
     "conclusion": "success",
     "standard_jobs": 4,
@@ -88,6 +88,39 @@
   ],
   "status_semantics": "Stato implementazione Non iniziata/Parziale/Completata indipendente da verifica automatica e accettazione Joomla. Completata riguarda il sottoinsieme core esplicito per i requisiti misti. Fonti e CI parziale non sono scenari baseline integralmente superati. Conteggi e metodo in REQUIREMENTS_RECONCILIATION.json e REQUIREMENTS_STATUS_GUIDE.md.",
   "prior_evidence": [
+    {
+      "feature": "CI previous baseline before CORE-20 searchable selectors",
+      "version": "0.57.7-dev",
+      "ci": {
+        "run_id": 45899449372,
+        "url": "https://github.com/jeckodevelopment/jd_learn/actions/runs/45899449372",
+        "status": "completed",
+        "conclusion": "success",
+        "standard_jobs": 4,
+        "jobs": [
+          {
+            "name": "Candidate plan and lightweight checks",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.3 / mysql:8.4",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "PHP 8.4 / mariadb:10.6",
+            "status": "completed",
+            "conclusion": "success"
+          },
+          {
+            "name": "Curriculum navigation in Chromium (controlled fixture)",
+            "status": "completed",
+            "conclusion": "success"
+          }
+        ]
+      }
+    },
     {
       "feature": "LCM-02 native multilingual association purge guard, PR #953; four Joomla CI jobs successful",
       "version": "0.64.22-dev",
@@ -14244,7 +14277,7 @@
     "artifact": "https://github.com/jeckodevelopment/jd_learn/actions/runs/43482627796/artifacts/14065717873"
   },
   "note": "Main 0.56.19-dev integra PR #344 (merge 0fc688bfdbcdacb99616378b69cac30260eef5fb); CI standard 4/4. Avanzamento implementativo 78,67% (79% arrotondato), email 64%. MAIL-04 implementato; accettazione manuale Joomla/SMTP pendente. | Installer updateObject by-reference fixed in merged PR #373; reverting additional packaging, official 79% baseline unchanged pending weighted recalculation after #367. Manual Joomla 6.2.0 installation must be retested.",
-  "updated_at": "2026-11-20",
+  "updated_at": "2026-11-27T13:22:00Z",
   "sec_p1_mail_transport_candidate": {
     "pull_request": 338,
     "runtime_commit": "5d38e6e47582422be581247de085206abc2c0296",
