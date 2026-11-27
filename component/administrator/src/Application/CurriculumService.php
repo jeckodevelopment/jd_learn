@@ -896,7 +896,9 @@ final class CurriculumService
             }
             $this->savePrerequisites($versionId, $id, $requiredLessons);
             if (array_key_exists('com_fields', $input)) {
-                $this->saveLessonCustomFields($actor, $id, $input['com_fields']);
+                $effectiveLanguage = (string) $course->language === '*'
+                    ? \Joomla\CMS\Factory::getApplication()->getLanguage()->getTag() : (string) $course->language;
+                $this->saveLessonCustomFields($actor, $id, $input['com_fields'], $effectiveLanguage);
             }
             $this->update('course_versions', $version, [], $actor);
             return $id;
@@ -984,13 +986,13 @@ final class CurriculumService
     }
 
     /** Persist configured lesson fields through Joomla's field model in the same transaction. */
-    private function saveLessonCustomFields(User $actor, int $lessonId, mixed $values): void
+    private function saveLessonCustomFields(User $actor, int $lessonId, mixed $values, string $language): void
     {
         if (!is_array($values)) {
             throw new \InvalidArgumentException('COM_JLMS_INVALID_INPUT');
         }
         $context = 'com_jlms.lesson';
-        $q = $this->db->createQuery()->select('id, name, access')->from('#__fields')
+        $q = $this->db->createQuery()->select('id, name, access, language')->from('#__fields')
             ->where('context = :context')->where('state = 1')->bind(':context', $context);
         $definitions = $this->db->setQuery($q, 0, 501)->loadObjectList();
         if (count($definitions) > 500) {
@@ -998,6 +1000,9 @@ final class CurriculumService
         }
         $byName = [];
         foreach ($definitions as $field) {
+            if (!in_array((string) $field->language, ['*', $language], true)) {
+                continue;
+            }
             $byName[$field->name] = $field;
         }
         foreach (array_keys($values) as $name) {
@@ -1029,7 +1034,7 @@ final class CurriculumService
         // Keep a draft baseline for publication impact review. Publication rebuilds
         // this snapshot from the same native Fields values before the version freezes.
         $item = (string) $lessonId;
-        $snapshotQuery = $this->db->createQuery()->select('f.name, f.title, f.type, f.access, v.value')
+        $snapshotQuery = $this->db->createQuery()->select('f.name, f.title, f.type, f.access, f.language, v.value')
             ->from('#__fields AS f')->innerJoin('#__fields_values AS v ON v.field_id = f.id')
             ->where('f.context = :context')->where('f.state = 1')->where('v.item_id = :item')
             ->bind(':context', $context)->bind(':item', $item)->order('f.id');
@@ -1040,7 +1045,7 @@ final class CurriculumService
                 continue;
             }
             $snapshot[$field->name] ??= ['label' => (string) $field->title, 'type' => (string) $field->type,
-                'access' => (int) $field->access, 'values' => []];
+                'access' => (int) $field->access, 'language' => (string) $field->language, 'values' => []];
             $snapshot[$field->name]['values'][] = (string) $field->value;
         }
         ksort($snapshot, SORT_STRING);

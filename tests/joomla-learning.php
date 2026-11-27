@@ -221,6 +221,33 @@ learningExpect(
     $learning->start($student, "en-GB", $course, bin2hex(random_bytes(16))) === $enrollment,
     "natural enrollment uniqueness across keys",
 );
+$localizedSnapshot = [
+    "_schema" => 1,
+    "fields" => [
+        "lesson-field-default" => ["label" => "Default", "type" => "text", "access" => 1,
+            "language" => "*", "values" => ["SHARED_VALUE"]],
+        "lesson-field-en" => ["label" => "English", "type" => "text", "access" => 1,
+            "language" => "en-GB", "values" => ["ENGLISH_VALUE"]],
+        "lesson-field-it" => ["label" => "Italian", "type" => "text", "access" => 1,
+            "language" => "it-IT", "values" => ["ITALIAN_VALUE"]],
+        "lesson-field-private" => ["label" => "Private", "type" => "text", "access" => 999,
+            "language" => "en-GB", "values" => ["PRIVATE_VALUE"]],
+    ],
+];
+$localizedSnapshotRow = (object) [
+    "id" => $lessons[0],
+    "fields_snapshot_json" => json_encode($localizedSnapshot, JSON_THROW_ON_ERROR),
+];
+$db->updateObject("#__jlms_lessons", $localizedSnapshotRow, "id");
+$englishClassroom = $learning->classroom($student, "en-GB", $enrollment, $lessons[0]);
+$italianClassroom = $learning->classroom($student, "it-IT", $enrollment, $lessons[0]);
+$englishFieldNames = array_column($englishClassroom["lesson"]->custom_fields, "name");
+$italianFieldNames = array_column($italianClassroom["lesson"]->custom_fields, "name");
+learningExpect(
+    $englishFieldNames === ["lesson-field-default", "lesson-field-en"]
+    && $italianFieldNames === ["lesson-field-default", "lesson-field-it"],
+    "CORE-10: classroom lesson fields follow effective course language and Joomla view-level access"
+);
 fixtureUpdate("jlms_courses", (object) ["id" => $course, "admissions_open" => 0]);
 learningExpect(
     $learning->start($student, "en-GB", $course, bin2hex(random_bytes(16))) === $enrollment,
