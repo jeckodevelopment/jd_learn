@@ -430,7 +430,7 @@ try {
  $model->setState('list.limit', 20);
  $model->setState('list.start', 20);
  dashExpect(
-     count($model->getItems()) === 5 && (int)$model->getTotal() === 25,
+     count($model->getItems()) === 6 && (int)$model->getTotal() === 26,
      'native pagination bounded to own history'
  );
  dashExpect((bool)$model->getProgressForm()->getField('progress'), 'native progress filter form available');
