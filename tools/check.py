@@ -1217,3 +1217,6 @@ runpy.run_path(str(ROOT/'tests/secdev03-implementation-coverage.py'), run_name='
 # DOC-10: keep candidate release notes verifiable in the standard CI gate.
 import runpy
 runpy.run_path(str(ROOT / 'tests/doc10-release-notes.py'))
+
+# DOC-03: manual screen illustrations require accessible semantics and guide alt text.
+runpy.run_path(str(ROOT / 'tests/doc03-accessible-illustrations.py'))
