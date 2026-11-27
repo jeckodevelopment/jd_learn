@@ -870,6 +870,67 @@ teacherExpect($teacherModel->save(array_replace($taggedTeacher, [
 ])), 'CORE-09: native teacher tag can be removed');
 teacherExpect($tagAssociations() === [], 'CORE-09: removed tag association leaves no stale Joomla mapping');
 
+// CORE-16: teacher content history snapshots the persisted Joomla tag set and
+// restores it alongside editorial fields without touching assigned course versions.
+$publicRevision = (int) $db->setQuery('SELECT revision FROM #__jlms_teachers WHERE id=' . $public)->loadResult();
+teacherExpect($teacherModel->save(array_replace($teacherBase, [
+    'id' => $public,
+    'revision' => $publicRevision,
+    'title' => 'Original public teacher',
+    'tags' => [$tagId],
+])), 'CORE-16: assigned teacher snapshot captures native tags');
+$teacherHistoryId = (int) $db->setQuery(
+    $db->createQuery()->select('version_id')->from('#__history')
+        ->where('item_id=' . $db->quote('com_jlms.teacher.' . $public))
+        ->order('version_id DESC')
+)->loadResult();
+$teacherHistoryData = json_decode((string) $db->setQuery(
+    $db->createQuery()->select('version_data')->from('#__history')->where('version_id=' . $teacherHistoryId)
+)->loadResult(), true, 64, JSON_THROW_ON_ERROR);
+teacherExpect(
+    $teacherHistoryId > 0 && ($teacherHistoryData['tags'] ?? null) === [$tagId],
+    'CORE-16: teacher history stores the actual persisted native tag IDs'
+);
+$publicRevision = (int) $db->setQuery('SELECT revision FROM #__jlms_teachers WHERE id=' . $public)->loadResult();
+teacherExpect($teacherModel->save(array_replace($teacherBase, [
+    'id' => $public,
+    'revision' => $publicRevision,
+    'title' => 'Changed public teacher',
+    'tags' => [],
+])), 'CORE-16: teacher edit records removal of native tags');
+$latestTeacherHistory = json_decode((string) $db->setQuery(
+    $db->createQuery()->select('version_data')->from('#__history')
+        ->where('item_id=' . $db->quote('com_jlms.teacher.' . $public))
+        ->order('version_id DESC')
+)->loadResult(), true, 64, JSON_THROW_ON_ERROR);
+teacherExpect(
+    ($latestTeacherHistory['tags'] ?? null) === [],
+    'CORE-16: teacher history distinguishes an empty tag set from missing data'
+);
+teacherExpect(
+    (bool) $teacherModel->loadHistory($teacherHistoryId),
+    'CORE-16: teacher history restore succeeds'
+);
+$restoredTeacher = $db->setQuery('SELECT title FROM #__jlms_teachers WHERE id=' . $public)->loadObject();
+$restoredTeacherTags = array_map('intval', $db->setQuery(
+    $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
+        ->where('type_alias=' . $db->quote('com_jlms.teacher'))->where('content_item_id=' . $public)
+)->loadColumn());
+teacherExpect(
+    $restoredTeacher && $restoredTeacher->title === 'Original public teacher'
+        && $restoredTeacherTags === [$tagId],
+    'CORE-16: restore reinstates teacher fields and native Joomla tags'
+);
+teacherExpect(
+    $db->setQuery('SELECT presentation_json,structure_hash,published_at FROM #__jlms_course_versions WHERE id='
+        . $version)->loadAssoc() === $beforeSnapshot,
+    'CORE-16: teacher history restore leaves the assigned course version immutable'
+);
+$publicRevision = (int) $db->setQuery('SELECT revision FROM #__jlms_teachers WHERE id=' . $public)->loadResult();
+teacherExpect($teacherModel->save(array_replace($teacherBase, [
+    'id' => $public, 'revision' => $publicRevision, 'title' => 'Original public teacher', 'tags' => [],
+])), 'CORE-16: fixture teacher tags can be removed after history restore');
+
 file_put_contents($fixture, json_encode(['course' => $course,'version' => $version,'ids'
     => [$public,$private],'public' => $public,'private' => $private,'teacher_category'
         => $teacherCategory,'snapshot' => $snapshot], JSON_THROW_ON_ERROR));

@@ -13,7 +13,15 @@ use Jlms\Component\Jlms\Administrator\Application\CourseArtwork;
 
 class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\VersionableModelInterface
 {
-    use \Joomla\CMS\Versioning\VersionableModelTrait;
+    use \Joomla\CMS\Versioning\VersionableModelTrait {
+        saveHistory as private persistHistory;
+    }
+
+    public function saveHistory(array $data, string $context)
+    {
+        // Save one authoritative snapshot after Joomla has persisted native tags.
+        return true;
+    }
 
     protected function versionHistoryEnabled(string $context): bool
     {
@@ -241,6 +249,21 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             if (!parent::save($data)) {
                 throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
             }
+            $history = $this->getTable('Teacher')->getProperties();
+            $teacherId = (int) ($history['id'] ?? 0);
+            if ($teacherId < 1) {
+                throw new \RuntimeException('COM_JLMS_SAVE_FAILED');
+            }
+            $history['tags'] = array_map(
+                'intval',
+                $db->setQuery($db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
+                    ->where('type_alias = ' . $db->quote($this->typeAlias))
+                    ->where('content_item_id = ' . $teacherId)->order('tag_id'))->loadColumn()
+            );
+            $history['version_note'] = is_string($inputNote = $input['version_note'] ?? '')
+                ? strip_tags($inputNote) : '';
+            $this->setState('teacher.id', $teacherId);
+            $this->persistHistory($history, $this->typeAlias);
             $db->transactionCommit();
             return true;
         } catch (\Throwable $error) {
