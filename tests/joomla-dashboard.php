@@ -271,7 +271,9 @@ try {
         $update('jlms_courses', $f['course_id'], ['state' => $inactiveState]);
         $c = array_column($read($owner), null, 'id');
         dashExpect(
-            count($c) === 26 && $c[$active]['access'] === 'unavailable' && $c[$active]['title'] !== ''
+            count($c) === 26 && $c[$active]['access'] === 'unavailable'
+                && $c[$active]['next_action'] === 'COM_JLMS_DASHBOARD_NEXT_UNAVAILABLE'
+                && $c[$active]['title'] !== ''
                 && $c[$completed]['completed'] && $c[$completed]['percent'] === 100,
             'inactive course keeps owner title, completions and historical counters'
         );
