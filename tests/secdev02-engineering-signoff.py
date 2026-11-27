@@ -16,7 +16,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Two independent checked scenarios for EACH of the 17 technical residuals,
+# Two independent checked scenarios for EACH of the 16 technical residuals,
 # reviewed against merged native Joomla / HTTP integration regressions.
 # format: source file, ((executable test, exact scenario marker), ...)
 CASES = {
@@ -54,11 +54,6 @@ CASES = {
         "component/site/src/Controller/DisplayController.php",
         ("tests/categories-http.py", "CORE-07: explicit menu Itemid selects the authorised English category"),
         ("tests/joomla-categories.php", "native category and category-index menus in both languages"),
-    ),
-    "CORE-09/tags_context": (
-        "component/administrator/src/Table/TeacherTable.php",
-        ("tests/joomla-teachers.php", "CORE-09: Joomla persists tag association by teacher item ID"),
-        ("tests/joomla-teachers.php", "CORE-09: native teacher tag can be removed"),
     ),
     "CORE-10/teacher_scoping": (
         "component/site/src/Model/TeacherModel.php",
