@@ -234,11 +234,11 @@ $localizedSnapshot = [
             "language" => "en-GB", "values" => ["PRIVATE_VALUE"]],
     ],
 ];
-$db->updateObject(
-    "#__jlms_lessons",
-    (object) ["id" => $lessons[0], "fields_snapshot_json" => json_encode($localizedSnapshot, JSON_THROW_ON_ERROR)],
-    "id",
-);
+$localizedSnapshotRow = (object) [
+    "id" => $lessons[0],
+    "fields_snapshot_json" => json_encode($localizedSnapshot, JSON_THROW_ON_ERROR),
+];
+$db->updateObject("#__jlms_lessons", $localizedSnapshotRow, "id");
 $englishClassroom = $learning->classroom($student, "en-GB", $enrollment, $lessons[0]);
 $italianClassroom = $learning->classroom($student, "it-IT", $enrollment, $lessons[0]);
 $englishFieldNames = array_column($englishClassroom["lesson"]->custom_fields, "name");
