@@ -68,3 +68,7 @@ L'[inventario documentale versionato dei flussi 1.0.0](CORE_FLOW_DOCUMENTATION_1
 ## Consolidamento DOC-02 (20/11/2026)
 
 Il manuale amministratore offline incluso nel pacchetto, in `component/administrator/help/it-IT/manual.html` e `component/administrator/help/en-GB/manual.html`, contiene i nuovi capitoli `operations-video`, `operations-mail`, `operations-certificates`, `operations-security` per provider, email, attestati, ACL, privacy e manutenzione. Il gate `tests/doc02-admin-manual.py` verifica la presenza di sezioni equivalenti e la validità dei collegamenti. La presenza delle guide è evidenza di implementazione documentale; rimane da collaudare la corrispondenza con tutte le 29 viste Joomla reali.
+
+## DOC-03 — illustrazioni accessibili (PR #1082)
+
+La candidata contiene quattro illustrazioni SVG schematiche con titolo, descrizione e alternative testuali, collegate alle guide studente/docente. Rappresentano dati fittizi e non sono screenshot del sito Joomla. Il gate documentale automatico è nella CI; il walkthrough con utenti non sviluppatori e il confronto con le schermate reali installate restano da eseguire.
