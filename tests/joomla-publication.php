@@ -179,6 +179,65 @@ $lesson = $authoring->saveLesson($actor, pubScope() + ['id' => 0,'module_id' => 
 pubDenied(fn()=>pubTransition(), 'public preview requires explicit course setting');
 $authoring->saveTeachingRules($actor, pubScope() + ['mode' => 'learning','sequence_mode'
     => 'free','video_threshold' => '90','public_previews' => '1']);
+
+$reviewChoice = null;
+foreach ($publication->transitions($actor, $course, $version) as $candidate) {
+    $options = new \\Joomla\\Registry\\Registry($candidate->options);
+    if ((string)$options->get('jlms_action', '') === 'review') {
+        $reviewChoice = $candidate;
+        break;
+    }
+}
+pubExpect((bool)$reviewChoice, 'native workflow exposes a review transition for the course version');
+$publication->transition(
+    $actor,
+    $course,
+    $version,
+    pubRevision('courses', $course),
+    pubRevision('course_versions', $version),
+    (int)$reviewChoice->id
+);
+pubExpect($publication->isInReview($course), 'course version enters native review');
+$reviewedLesson = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . (int)$lesson)->loadObject();
+$lessonWriteDeniedInReview = false;
+try {
+    $authoring->saveLesson($actor, pubScope() + [
+        'id' => $lesson,
+        'revision' => (int)$reviewedLesson->revision,
+        'module_id' => $module,
+        'title' => 'Edited during review',
+        'kind' => 'text',
+        'required' => '1',
+        'body' => '<p>Must remain unchanged during review</p>',
+    ]);
+} catch (\\DomainException $error) {
+    $lessonWriteDeniedInReview = $error->getMessage() === 'COM_JLMS_VERSION_IN_REVIEW';
+}
+$lessonAfterReview = $db->setQuery('SELECT * FROM #__jlms_lessons WHERE id=' . (int)$lesson)->loadObject();
+pubExpect(
+    $lessonWriteDeniedInReview
+    && (int)$lessonAfterReview->revision === (int)$reviewedLesson->revision
+    && $lessonAfterReview->body === $reviewedLesson->body,
+    'CORE-15: lesson writes are rejected without mutation while its course version is in review'
+);
+$returnChoice = null;
+foreach ($publication->transitions($actor, $course, $version) as $candidate) {
+    $options = new \\Joomla\\Registry\\Registry($candidate->options);
+    if ((string)$options->get('jlms_action', '') === 'return') {
+        $returnChoice = $candidate;
+        break;
+    }
+}
+pubExpect((bool)$returnChoice, 'native workflow exposes return from review to draft');
+$publication->transition(
+    $actor,
+    $course,
+    $version,
+    pubRevision('courses', $course),
+    pubRevision('course_versions', $version),
+    (int)$returnChoice->id
+);
+pubExpect(!$publication->isInReview($course), 'course version returns to draft and unlocks authoring');
 pubExpect(
     (string)$db->setQuery('SELECT value FROM #__fields_values WHERE field_id=' . $lessonField . ' AND item_id='
         . $db->quote((string)$lesson))->loadResult() === 'LESSON_FIELD_SNAPSHOT',
