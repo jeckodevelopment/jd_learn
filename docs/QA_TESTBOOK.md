@@ -1,3 +1,11 @@
+## DOC-03 — illustrazioni accessibili di catalogo, aula e profilo docente (PR #1082)
+
+**Verifica automatica:** la CI esegue `tests/doc03-accessible-illustrations.py` tramite `tools/check.py`; controlla i quattro SVG, semantica immagine, titolo/descrizione ARIA, link alle guide e testi alternativi.
+
+**Collaudo manuale Joomla: In attesa.** Su un pacchetto installato confrontare ogni illustrazione con la vista corrispondente; verificare ordine dei contenuti, etichette e comandi visibili per uno studente e un docente autenticati. Provare la lettura con screen reader o funzione equivalente e accertare che l’alternativa testuale descriva struttura e azioni. Segnalare ogni differenza, senza usare esempi fittizi come prova del comportamento runtime. Registrare build, lingua, ruolo, viewport, risultato e riferimento visivo. Le illustrazioni sono schematiche e non costituiscono screenshot di un sito reale.
+
+---
+
 ## SECDEV-02 — Verifica formale 23 servizi Joomla e collaudi residui (26/11/2026 · PR #1057)
 
 **Criterio tecnico con evidenza:** `SECDEV-02/criterion_04` è verificato dal registro delle 23 decisioni Joomla e dal nuovo gate `tests/secdev02-core-decision-signoff.py` con fixture negative. Non introduce nuove funzionalità nel componente e non sostituisce la revisione degli altri criteri.
