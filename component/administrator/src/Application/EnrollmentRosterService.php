@@ -144,6 +144,26 @@ final class EnrollmentRosterService
             $q->where(('e.completed_at IS NULL AND (e.started_at IS NOT NULL OR '
                 . 'e.last_activity_at IS NOT NULL OR e.completed_total > 0)'));
         }
-        return $q->order('e.id DESC');
+        $ordering = $filters['ordering'] ?? 'id';
+        $direction = $filters['direction'] ?? 'DESC';
+        $orders = [
+            'id' => 'e.id',
+            'learner' => 'u.name',
+            'version' => 'v.version_no',
+            'status' => 'e.status',
+            'progress' => "CASE WHEN e.completed_at IS NOT NULL THEN 2 "
+                . "WHEN e.started_at IS NOT NULL OR e.last_activity_at IS NOT NULL OR e.completed_total > 0 THEN 1 "
+                . 'ELSE 0 END',
+            'activity' => 'COALESCE(e.last_activity_at, e.completed_at, e.started_at)',
+        ];
+        if (!is_string($ordering) || !isset($orders[$ordering]) || !is_string($direction)) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
+        $direction = strtoupper($direction);
+        if (!in_array($direction, ['ASC', 'DESC'], true)) {
+            throw new \RuntimeException('COM_JLMS_INVALID_INPUT', 400);
+        }
+
+        return $q->order($orders[$ordering] . ' ' . $direction . ', e.id DESC');
     }
 }

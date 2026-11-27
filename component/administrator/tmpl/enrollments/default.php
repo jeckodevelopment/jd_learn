@@ -5,6 +5,29 @@ declare(strict_types=1);
 \defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+$courseId = (int) $this->course->id;
+$rosterFilters = $this->rosterFilters;
+$sortUrl = static function (string $field) use ($courseId, $rosterFilters): string {
+    $currentField = (string) ($rosterFilters['ordering'] ?? 'id');
+    $currentDirection = strtoupper((string) ($rosterFilters['direction'] ?? 'DESC'));
+    $direction = $currentField === $field && $currentDirection === 'ASC' ? 'DESC' : 'ASC';
+    $filters = $rosterFilters;
+    $filters['ordering'] = $field;
+    $filters['direction'] = $direction;
+    return Route::_('index.php?' . http_build_query([
+        'option' => 'com_jlms',
+        'view' => 'enrollments',
+        'id' => $courseId,
+        'filter' => $filters,
+        'limitstart' => 0,
+    ]));
+};
+$sortAria = function (string $field): string {
+    if ($this->rosterOrdering !== $field) {
+        return 'none';
+    }
+    return $this->rosterDirection === 'ASC' ? 'ascending' : 'descending';
+};
 ?>
 <section id="jlms-admin-enrollments">
  <h1><?= Text::_('COM_JLMS_ENROLLMENTS_TITLE') ?>: <?= $this->escape($this->course->title) ?></h1>
@@ -83,17 +106,25 @@ use Joomla\CMS\Router\Route;
     value="<?= (int) $this->course->id ?>"><input type="hidden"
     name="limitstart"
     value="0">
+  <input type="hidden" name="filter[ordering]" value="<?= $this->escape($this->rosterOrdering) ?>">
+  <input type="hidden" name="filter[direction]" value="<?= $this->escape($this->rosterDirection) ?>">
   <button type="submit" class="btn btn-primary"><?= Text::_('COM_JLMS_ROSTER_FILTER') ?></button>
  </form>
  <p id="jlms-roster-total"><?= Text::_('COM_JLMS_ROSTER_TOTAL') ?>: <?= (int) $this->pagination->total ?></p>
  <div class="table-responsive"><table id="jlms-roster-table" class="table">
   <caption><?= Text::_('COM_JLMS_ROSTER_CAPTION') ?></caption>
-  <thead><tr><?php foreach (
-    ['JGLOBAL_USERNAME', 'COM_JLMS_ROSTER_VERSION'
-    , 'COM_JLMS_ROSTER_STATUS', 'COM_JLMS_ROSTER_PROGRESS', 'COM_JLMS_ROSTER_DATES'] as $key
-) :
-                ?><th scope="col"><?= Text::_($key) ?></th><?php
-             endforeach; ?></tr></thead>
+  <thead><tr>
+   <th scope="col" aria-sort="<?= $sortAria('learner') ?>"><a data-roster-sort="learner"
+    href="<?= $sortUrl('learner') ?>"><?= Text::_('JGLOBAL_USERNAME') ?></a></th>
+   <th scope="col" aria-sort="<?= $sortAria('version') ?>"><a data-roster-sort="version"
+    href="<?= $sortUrl('version') ?>"><?= Text::_('COM_JLMS_ROSTER_VERSION') ?></a></th>
+   <th scope="col" aria-sort="<?= $sortAria('status') ?>"><a data-roster-sort="status"
+    href="<?= $sortUrl('status') ?>"><?= Text::_('COM_JLMS_ROSTER_STATUS') ?></a></th>
+   <th scope="col" aria-sort="<?= $sortAria('progress') ?>"><a data-roster-sort="progress"
+    href="<?= $sortUrl('progress') ?>"><?= Text::_('COM_JLMS_ROSTER_PROGRESS') ?></a></th>
+   <th scope="col" aria-sort="<?= $sortAria('activity') ?>"><a data-roster-sort="activity"
+    href="<?= $sortUrl('activity') ?>"><?= Text::_('COM_JLMS_ROSTER_DATES') ?></a></th>
+  </tr></thead>
   <tbody><?php foreach ($this->items as $item) :
         $state = $item->completed_at !== null ? 'completed' : (($item->started_at !== null || $item
             ->last_activity_at !== null || (int) $item->completed_total > 0) ? 'in_progress' : 'not_started');
