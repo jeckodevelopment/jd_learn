@@ -3249,3 +3249,10 @@ La suite automatica usa fixture disposable e copre la revoca/ripristino in HTTP;
 **Automatico:** la query `EnrollmentManagerNotice::enqueueDue()` esclude gli eventi responsabile già accodati prima del limite Scheduler; `tests/secdev02-core19-mail-batch-bound.py` protegge il predicato e la sua posizione tramite fixture negative. La CI della PR deve eseguire il gate e le matrici Joomla.
 
 **Collaudo Joomla manuale: In attesa.** Creare più di un batch di richieste `pending` con responsabili autorizzati e verificare su esecuzioni Scheduler successive che le richieste successive avanzino senza duplicare gli avvisi. Provare anche preferenza OFF, cambio/blocco del responsabile e richiesta chiusa prima dell'invio. Registrare il risultato SMTP separatamente dalla CI.
+
+
+## CORE-16 — storico nativo percorsi formativi (PR #1083)
+
+**Automatico:** `tests/joomla-pathways.php` salva un percorso e verifica la revisione in `#__history`; modifica titolo, descrizione, tag e associazioni, poi ripristina la revisione e confronta campi, tag e ordine dei corsi. La copertura automatica non sostituisce il controllo con due editor e non promuove l'intero criterio CORE-16.
+
+**Collaudo Joomla manuale: In attesa.** In un sito di prova disposable, crea un percorso con almeno due corsi in ordine definito e tag; salva, modifica descrizione e associazioni, poi ripristina la revisione precedente. Conferma titolo, descrizione, tag e ordine. Ripeti il ripristino con il percorso in checkout da un altro editor e verifica che venga negato. Controlla che stato dei corsi, versioni didattiche assegnate, iscrizioni e progressi restino invariati.
