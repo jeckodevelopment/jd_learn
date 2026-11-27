@@ -1,4 +1,4 @@
-## 27 novembre 2026 — CORE-04/record_acl: permessi docente e selezioni miste (PR candidata)
+## 27 novembre 2026 — CORE-04/record_acl: permessi docente e selezioni miste ([PR #1095 candidata](https://github.com/jeckodevelopment/jd_learn/pull/1095))
 
 `TeacherModel::changeStates()` usa ora `TeacherProfiles::canEdit()` per applicare alle transizioni massive la stessa decisione di modifica dell’editor singolo, includendo il caso `core.edit.own` senza `core.edit`; mantiene il permesso separato `core.edit.state`, il blocco checkout altrui e le transazioni atomiche. `tests/joomla-editor-access.php` copre un record docente autorizzato con edit-own e una selezione mista in cui il secondo profilo è negato: l’intero batch deve lasciare invariati stato e revisione. Le prove esistenti coprono i batch misti per corsi e percorsi.
 
