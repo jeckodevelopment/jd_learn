@@ -82,6 +82,14 @@ def validate(root: Path) -> list[str]:
     pathway_table = (root / "component/administrator/src/Table/PathwayTable.php").read_text(encoding="utf-8")
     pathway_model = (root / "component/administrator/src/Model/PathwayModel.php").read_text(encoding="utf-8")
     pathway_form = (root / "component/administrator/forms/pathway.xml").read_text(encoding="utf-8")
+    pathway_view = (root / "component/administrator/src/View/Pathway/HtmlView.php").read_text(
+        encoding="utf-8"
+    )
+    if "ToolbarHelper::versions('com_jlms.pathway', $id)" not in pathway_view:
+        errors.append("CORE-16: pathway editor must expose Joomla version history for saved records")
+    if "implements VersionableModelInterface" not in pathway_model:
+        errors.append("CORE-16: pathway model must implement Joomla version history")
+
     for token in ("TaggableTableInterface", "use TaggableTableTrait;", "com_jlms.pathway"):
         if token not in pathway_table:
             errors.append(f"CORE-09: pathway Joomla taggable table contract removed: {token}")

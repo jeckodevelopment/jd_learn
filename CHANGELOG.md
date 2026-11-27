@@ -1,3 +1,4 @@
+- **CORE-16 — accesso allo storico dei percorsi (PR #1084, candidata):** l’editor amministrativo mostra il comando Joomla Versioni per i percorsi salvati. Il ripristino resta subordinato ai permessi nativi e al modello versionabile aggiunto con PR #1083; collaudo manuale pendente.
 ## 1.0.0 — candidata non pubblicata
 
 Prima versione stabile di JD Learn
