@@ -2,9 +2,9 @@
 
 Requisiti in perimetro: **214**. Criteri: **757**.
 
-- Implementati: **511**.
+- Implementati: **512**.
 - Mancanti con lacuna accertata: **9**.
-- Esaminati con esito non verificabile: **237**.
+- Esaminati con esito non verificabile: **236**.
 - Da esaminare: **0**.
 
 Percentuale funzionale globale: **non determinabile**.
@@ -280,9 +280,6 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/dashboard-http.py#revoked learner retains only public catalog metadata](../tests/dashboard-http.py)
   - [tests/joomla-learning.php#L206-L207](../tests/joomla-learning.php#L206-L207)
   - [tests/joomla-manual-enrollment.php#L1-L20](../tests/joomla-manual-enrollment.php#L1-L20)
-- `CORE-04/record_acl` — ACL su singolo record/docente e selezioni multiple in tutti i contesti. Il test editoriale dimostra grant di categoria, deny per singolo corso e revoca in sessione per le operazioni coperte. Il criterio estende il controllo a docenti, selezioni multiple e tutti i contesti; la matrice completa non è stata eseguita.
-  - [tests/joomla-editor-access.php#L101-L116](../tests/joomla-editor-access.php#L101-L116)
-  - [docs/EDITOR_PERMISSIONS.md#L1-L15](../docs/EDITOR_PERMISSIONS.md#L1-L15)
 - `CORE-04/teacher_edit` — Modifiche di profilo docente e limitazioni campi/pubblicazione. Il modello docente applica capacità di gestione e permessi record sulle modifiche note; non è attestata l'intera matrice di campi, pubblicazione e accessi multipli per tutti i ruoli e contesti richiesti.
   - [component/administrator/src/Model/TeacherModel.php#L21-L78](../component/administrator/src/Model/TeacherModel.php#L21-L78)
   - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
@@ -1086,6 +1083,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/View/Dashboard/HtmlView.php#schedulerHealth](../component/administrator/src/View/Dashboard/HtmlView.php)
   - [component/administrator/tmpl/dashboard/default.php#jlms-admin-scheduler-health](../component/administrator/tmpl/dashboard/default.php)
   - [tests/scheduler-health-joo04.php#checkState](../tests/scheduler-health-joo04.php)
+- `CORE-04/record_acl` — ACL su singolo record/docente e selezioni multiple in tutti i contesti. La matrice automatica ora attraversa i tre contesti editoriali core: i corsi verificano grant, deny record-level e revoca con rollback atomico; i percorsi verificano selezioni miste con deny e rollback; i docenti provano esplicitamente core.edit.own senza core.edit, la transizione singola autorizzata e la selezione multipla con un profilo negato, preservando stato e revisione. Il controllo di checkout docente e i test Joomla esistenti restano nel perimetro. Questo chiude il criterio implementativo software; non attribuisce accettazione manuale Joomla.
+  - [component/administrator/src/Model/TeacherModel.php#TeacherProfiles::canEdit($actor, $record)](../component/administrator/src/Model/TeacherModel.php)
+  - [tests/joomla-editor-access.php#CORE-04: delegated teacher has edit-own but not general record edit](../tests/joomla-editor-access.php)
+  - [tests/joomla-editor-access.php#CORE-04: mixed record-level allow and explicit deny rejects whole course lifecycle batch](../tests/joomla-editor-access.php)
+  - [tests/joomla-pathways.php#delegated mixed selection is rejected atomically on record-level ACL deny](../tests/joomla-pathways.php)
 - `CORE-17/joomla_actions` — Plugin User Actions Log nativo per operazioni previste. Il plugin Joomla Action Log è presente nel pacchetto ed è abilitato al primo impianto, conservando la disabilitazione amministrativa agli upgrade. Il servizio di pubblicazione emette l'evento solo dopo il commit; il subscriber registra i dati tecnici in User Actions Log senza duplicare i log transazionali già scritti da AssessmentAudit. La CI 4/4 verifica installazione/upgrade e la singola voce per pubblicazione committata; collaudo Joomla manuale ancora pendente.
   - [plugins/actionlog/jdlearn/src/Extension/Jdlearn.php#public function onJlmsCourseTransition](../plugins/actionlog/jdlearn/src/Extension/Jdlearn.php)
   - [plugins/actionlog/jdlearn/installer.php#postflight](../plugins/actionlog/jdlearn/installer.php)

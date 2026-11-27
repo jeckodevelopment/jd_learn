@@ -10,6 +10,10 @@ Il registro canonico contiene **23 servizi CORE**, **47 criteri CORE** (24 `impl
 
 Il **24 novembre 2026** è stata pubblicata **Joomla 6.2.1** come release di sicurezza e bugfix. Fonti: [annuncio Joomla](https://www.joomla.org/announcements/release-news/joomla-6-2-1-security-bugfix-release.html), [download e SHA ufficiale](https://downloads.joomla.org/cms/joomla6/6-2-1), [release GitHub e SHA-256](https://github.com/joomla/joomla-cms/releases/tag/6.2.1). Questa PR aggiorna la fixture CI alla patch 6.2.1, conserva il controllo `compat6` disabilitato e la verifica dell'archivio con SHA-256 ufficiale. **Il risultato è da accettare con la CI sull'HEAD definitivo**, senza assumere che il sito reale sia aggiornato.
 
+## Aggiornamento 27 novembre 2026 — CORE-04/record_acl
+
+La CI della PR candidata #1095 completa le prove di permesso per record e batch misti nei contesti corsi, percorsi e docenti, includendo `core.edit.own` senza `core.edit` e rollback atomico. CORE-04/record_acl passa a `implemented`; CORE-04 resta parziale per `teacher_edit`. Il ledger servizi ora riflette 2/3 criteri CORE-04 implementati e mantiene le restanti verifiche manuali separate.
+
 ## Inventario residui CORE-01–23
 
 Fonte unica di stato: `docs/FUNCTIONAL_CRITERIA_1.0.0.json`. Per servizio, le decisioni di uso nativo e le motivazioni sono nel registro `docs/SECDEV_02_CORE_SERVICE_DECISIONS_1.0.0.json`. Le righe qui sotto servono a indirizzare le verifiche, non costituiscono una seconda matrice autoritativa.
@@ -19,7 +23,7 @@ Fonte unica di stato: `docs/FUNCTIONAL_CRITERIA_1.0.0.json`. Per servizio, le de
 | CORE-01 | 1/2 | all_hierarchy | Gerarchia, lingua, permessi e riordino end-to-end |
 | CORE-02 | 1/2 | auth_variants | MFA e provider esterni reali |
 | CORE-03 | 1/2 | cross_context | Rimozione accessi tra tutti i contesti |
-| CORE-04 | 1/3 | record_acl, teacher_edit | Matrice ruoli e protezioni su tutti i record |
+| CORE-04 | 2/3 | teacher_edit | Campi, pubblicazione e profilo docente per tutti i ruoli |
 | CORE-05 | 1/2 | layout_coverage | Override di ogni vista e modulo distribuito |
 | CORE-06 | 1/2 | strings | Copertura totale stringhe e messaggi |
 | CORE-07 | 1/2 | menu_matrix | Combinazioni menu, filtri e fallback |
@@ -80,7 +84,7 @@ Sono state analizzate **tutte le 23 decisioni di riuso Joomla**, confrontando ma
 | CORE-01 | all_hierarchy | `joomla-categories.php`, `categories-http.py` | CI parziale + matrice Joomla |
 | CORE-02 | auth_variants | `joomla-learning.php`, `joomla-smoke.php` | Dipendenza dal sito/provider |
 | CORE-03 | cross_context | `joomla-learning.php`, `dashboard-http.py` | CI parziale + matrice Joomla |
-| CORE-04 | record_acl, teacher_edit | `joomla-editor-access.php`, `joomla-courses-ui.php` | CI parziale + matrice Joomla |
+| CORE-04 | teacher_edit | `joomla-editor-access.php`, `joomla-pathways.php`, `joomla-courses-ui.php` | CI parziale + matrice Joomla |
 | CORE-05 | layout_coverage | `frontend-css-contract.py`, `frontend-dom-runtime.py` | CI parziale + matrice Joomla |
 | CORE-06 | strings | `secdev02-core06-locale-integrity.py`, `secdev02-core-native-contracts.py` | CI parziale + matrice Joomla |
 | CORE-07 | menu_matrix | `joomla-associations.php`, `associations-http.py` | CI parziale + matrice Joomla |

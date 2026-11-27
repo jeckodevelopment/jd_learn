@@ -1,3 +1,7 @@
+## Aggiornamento 27 novembre 2026 — PR candidata #1095
+
+La promozione di `CORE-04/record_acl` a `implemented` nel registro funzionale riduce il residuo CORE a **20 criteri** complessivi (27 implemented / 20 unverifiable); il ledger tecnico separa ora **14 verifiche di sviluppo/CI** e **6 dipendenze ambientali o di accettazione**. Il criterio è coperto nei contesti corsi, percorsi e docenti; `CORE-04/teacher_edit` resta aperto. Questo aggiornamento non attribuisce accettazione manuale e non equivale alla chiusura di SECDEV-02.
+
 # SECDEV-02 — riconciliazione per la chiusura implementativa (26 novembre 2026)
 
 ## Aggiornamento implementativo — lotto #1059

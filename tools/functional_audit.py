@@ -244,7 +244,7 @@ def generate_matrix(rows, columns, inventory):
     if AUDIT_COLUMN not in columns:
         columns = [*columns, AUDIT_COLUMN]
     output = io.StringIO(newline="")
-    writer = csv.DictWriter(output, fieldnames=columns, lineterminator="\r\n")
+    writer = csv.DictWriter(output, fieldnames=columns, lineterminator="\n")
     writer.writeheader()
     for row in rows:
         units = inventory["requirements"].get(row["Requisito"], [])

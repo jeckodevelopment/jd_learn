@@ -1,3 +1,9 @@
+## 27 novembre 2026 — CORE-04/record_acl: permessi docente e selezioni miste ([PR #1095 candidata](https://github.com/jeckodevelopment/jd_learn/pull/1095))
+
+`TeacherModel::changeStates()` usa ora `TeacherProfiles::canEdit()` per applicare alle transizioni massive la stessa decisione di modifica dell’editor singolo, includendo il caso `core.edit.own` senza `core.edit`; mantiene il permesso separato `core.edit.state`, il blocco checkout altrui e le transazioni atomiche. `tests/joomla-editor-access.php` copre un record docente autorizzato con edit-own e una selezione mista in cui il secondo profilo è negato: l’intero batch deve lasciare invariati stato e revisione. Le prove esistenti coprono i batch misti per corsi e percorsi.
+
+Il criterio `CORE-04/record_acl` è riconciliato come `implemented` nel solo perimetro software core dei tre contesti; `CORE-04/teacher_edit` resta `unverifiable`, quindi il requisito rimane `Parziale`. Sviluppo minimo candidato **65,32%** (512 implemented / 9 missing / 236 unverifiable); accettazione manuale Joomla invariata e non eseguita.
+
 ## 27 novembre 2026 — STU-01/blocked_reason: matrice diagnostica completa (PR #1093)
 
 [PR #1093](https://github.com/jeckodevelopment/jd_learn/pull/1093) integrata con squash `9514c86381b90ce3e0b6d84f16bbf1433c49140c`. La CI [#4903](https://github.com/jeckodevelopment/jd_learn/actions/runs/46060467814) è **4/4 verde** (controlli leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium); gate matrice [#2285](https://github.com/jeckodevelopment/jd_learn/actions/runs/46060467672) superato. [Artefatto installabile](https://github.com/jeckodevelopment/jd_learn/actions/runs/46060467814/artifacts/15229126833): ZIP Joomla interno `pkg_jlms-0.64.22-dev.zip`, SHA-256 `9b7761117a33ff8f3999d7580f2224d44d97cdb63ab71b539254b0503c004e86` (estrarre una volta il contenitore Actions).

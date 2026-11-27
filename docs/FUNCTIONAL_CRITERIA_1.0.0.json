@@ -3491,16 +3491,19 @@
       {
         "id": "record_acl",
         "label": "ACL su singolo record/docente e selezioni multiple in tutti i contesti",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
+          "component/administrator/src/Model/TeacherModel.php",
           "tests/joomla-editor-access.php",
-          "docs/EDITOR_PERMISSIONS.md"
+          "tests/joomla-pathways.php"
         ],
         "review": {
-          "reason": "Il test editoriale dimostra grant di categoria, deny per singolo corso e revoca in sessione per le operazioni coperte. Il criterio estende il controllo a docenti, selezioni multiple e tutti i contesti; la matrice completa non è stata eseguita.",
+          "reason": "La matrice automatica ora attraversa i tre contesti editoriali core: i corsi verificano grant, deny record-level e revoca con rollback atomico; i percorsi verificano selezioni miste con deny e rollback; i docenti provano esplicitamente core.edit.own senza core.edit, la transizione singola autorizzata e la selezione multipla con un profilo negato, preservando stato e revisione. Il controllo di checkout docente e i test Joomla esistenti restano nel perimetro. Questo chiude il criterio implementativo software; non attribuisce accettazione manuale Joomla.",
           "references": [
-            "tests/joomla-editor-access.php#L101-L116",
-            "docs/EDITOR_PERMISSIONS.md#L1-L15"
+            "component/administrator/src/Model/TeacherModel.php#TeacherProfiles::canEdit($actor, $record)",
+            "tests/joomla-editor-access.php#CORE-04: delegated teacher has edit-own but not general record edit",
+            "tests/joomla-editor-access.php#CORE-04: mixed record-level allow and explicit deny rejects whole course lifecycle batch",
+            "tests/joomla-pathways.php#delegated mixed selection is rejected atomically on record-level ACL deny"
           ]
         }
       },
