@@ -200,6 +200,10 @@ $pathwayId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='ci
 $historyId = (int) $db->setQuery($db->createQuery()->select('version_id')->from('#__history')
     ->where('item_id=' . $db->quote('com_jlms.pathway.' . $pathwayId))->order('version_id DESC'))->loadResult();
 $check($historyId > 0, 'CORE-16: pathway save records native Joomla content history');
+$historyData = json_decode((string) $db->setQuery($db->createQuery()->select('version_data')->from('#__history')
+    ->where('version_id=' . $historyId))->loadResult(), true, 64, JSON_THROW_ON_ERROR);
+$check(isset($historyData['courses'][0]['course_id']) && isset($historyData['tags']),
+    'CORE-16: native history snapshot includes ordered relations and tags');
 $check((bool) $pathModel->save([
     'id' => $pathwayId, 'revision' => 1, 'title' => 'CI learning pathway changed',
     'description' => '<p>Changed description</p>', 'catid' => $categoryId, 'access' => 1,
