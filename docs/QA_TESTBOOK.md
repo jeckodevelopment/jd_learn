@@ -30,7 +30,7 @@
 
 **Criterio tecnico con evidenza:** `SECDEV-02/criterion_04` è verificato dal registro delle 23 decisioni Joomla e dal nuovo gate `tests/secdev02-core-decision-signoff.py` con fixture negative. Non introduce nuove funzionalità nel componente e non sostituisce la revisione degli altri criteri.
 
-**Sviluppo/CI ancora da completare:** 16 criteri CORE (`CORE-01, CORE-04` × 2, `CORE-05, CORE-06, CORE-07, CORE-09, CORE-10, CORE-11, CORE-13, CORE-14, CORE-15, CORE-16, CORE-19, CORE-20, CORE-21`) richiedono la verifica completa delle combinazioni descritte nel verbale `docs/SECDEV_02_IMPLEMENTATION_CLOSEOUT_2026-11-26.md`. Le regressioni integrate costituiscono evidenze parziali, non accettazione del criterio.
+**Sviluppo/CI ancora da completare:** 15 criteri CORE (`CORE-01, CORE-04` × 2, `CORE-05, CORE-06, CORE-07, CORE-09, CORE-10, CORE-11, CORE-13, CORE-15, CORE-16, CORE-19, CORE-20, CORE-21`) richiedono la verifica completa delle combinazioni descritte nel verbale `docs/SECDEV_02_IMPLEMENTATION_CLOSEOUT_2026-11-26.md`. Le regressioni integrate costituiscono evidenze parziali, non accettazione del criterio.
 
 **Collaudo manuale Joomla: In attesa.** Per i 6 criteri esterni (`CORE-02, CORE-08, CORE-12, CORE-18, CORE-22, CORE-23`) eseguire test con MFA/IdP, policy di conservazione, provider media, SMTP, host updater/backup/restore e plugin consumer reali. Verificare inoltre sul sito ACL per-record, checkout concorrente, menu e lingua, Finder, tutte le viste private/sessioni/cache e User Actions Log. Registrare data, ambiente, versione Joomla, account/ruolo, precondizioni e risultato di ogni prova; non compilare "Eseguito" senza esito osservato.
 
@@ -3267,6 +3267,18 @@ Annotare versione Joomla, PHP, database, lingua, ruolo, template, consenso, data
 
 Le combinazioni di ruoli ulteriori, URL SEF e installazione Joomla di destinazione restano da provare manualmente. Registrare versione Joomla/PHP/database, ruolo, lingua, SEF, schermate e risultato osservato; la prova CI non equivale ad accettazione manuale.
 
+
+## CORE-14 — aggiornamento dell’indice Finder (PR candidata)
+
+**Implementazione:** la matrice automatica verifica i link reali in `#__finder_links` dopo eventi Joomla di salvataggio, cambio stato e rimozione per i corsi e dopo salvataggio ACL/lingua e cambio stato delle categorie native. La revoca rimuove i link, il ripristino li ricrea; le prove includono filtro su antenati e lingua effettiva.
+
+**Accettazione manuale Joomla: In attesa.**
+
+1. Abilitare Smart Search e il plugin Finder JD Learn sul sito di test.
+2. Indicizzare un corso pubblico e verificare la presenza del risultato.
+3. Revocare accesso o pubblicazione del corso/categoria, cambiare lingua e ritirare il corso: il risultato e lo snippet devono sparire.
+4. Ripristinare i valori e ricostruire l’indice: deve apparire solo la scheda pubblica nella lingua corretta.
+5. Ripetere con il template e i plugin di ricerca realmente attivi, registrando ambiente ed esito.
 
 ## MAIL-G — equità dei batch per avvisi ai responsabili
 

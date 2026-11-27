@@ -3795,18 +3795,18 @@
       {
         "id": "index_acl",
         "label": "Aggiornamento indici e visibilità su ogni cambio ACL, stato e lingua",
-        "status": "unverifiable",
+        "status": "implemented",
         "evidence": [
           "plugins/finder/jlms/src/Extension/Jlms.php",
-          "docs/CATEGORIES.md",
-          "docs/QA_TESTBOOK.md"
+          "tests/joomla-categories.php",
+          "tests/joomla-courses-ui.php"
         ],
         "review": {
-          "reason": "Il plugin Finder reagisce a salvataggio, eliminazione e cambio stato e filtra i risultati secondo la visibilità; la verifica di ogni variazione ACL, stato e lingua su tutte le entità non risulta completa.",
+          "reason": "La matrice Joomla disposable verifica i link Finder realmente persistiti dopo gli eventi nativi del corso (salvataggio, cambio stato e rimozione) e della categoria (salvataggio ACL/lingua e cambio stato). Ogni revoca rimuove il link e il ripristino lo ricrea; le query applicano anche stato, ACL, lingua effettiva e pubblicazione. Il perimetro tecnico del plugin Finder core è implementato; la ricerca Smart Search sul sito/template effettivi resta accettazione manuale.",
           "references": [
-            "plugins/finder/jlms/src/Extension/Jlms.php#L29-L77",
-            "docs/CATEGORIES.md#L17-L17",
-            "docs/QA_TESTBOOK.md#L1013-L1013"
+            "plugins/finder/jlms/src/Extension/Jlms.php#onFinderAfterSave",
+            "tests/joomla-categories.php#CORE-14: course save event removes an index link after access is restricted",
+            "tests/joomla-courses-ui.php#Finder refresh after restore observes committed unpublished and gated"
           ]
         }
       }
