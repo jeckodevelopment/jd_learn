@@ -131,6 +131,28 @@ if (
     throw new \RuntimeException('Native lesson field fixture failed: ' . $fieldModel->getError());
 }
 $lessonField = (int)$fieldModel->getState('field.id');
+$lessonLocaleFields = [];
+foreach (['en-GB' => 'lesson-reference-en', 'it-IT' => 'lesson-reference-it'] as $locale => $name) {
+    if (
+        !$fieldModel->save(['id' => 0, 'context' => 'com_jlms.lesson', 'title' => $name, 'label' => $name,
+            'name' => $name, 'type' => 'text', 'state' => 1, 'access' => 2, 'language' => $locale,
+            'group_id' => 0, 'default_value' => '', 'description' => '', 'params' => [],
+            'fieldparams' => ['filter' => 'string']])
+    ) {
+        throw new \\RuntimeException('Localized lesson field fixture failed: ' . $fieldModel->getError());
+    }
+    $lessonLocaleFields[$locale] = (int) $fieldModel->getState('field.id');
+}
+$curriculumModel = $factory->createModel('Curriculum', 'Administrator', ['ignore_request' => true]);
+$englishLessonForm = $curriculumModel->getLessonForm('en-GB');
+$italianLessonForm = $curriculumModel->getLessonForm('it-IT');
+pubExpect(
+    $englishLessonForm->getField('lesson-reference-en', 'com_fields') !== false
+    && $englishLessonForm->getField('lesson-reference-it', 'com_fields') === false
+    && $italianLessonForm->getField('lesson-reference-it', 'com_fields') !== false
+    && $italianLessonForm->getField('lesson-reference-en', 'com_fields') === false,
+    'lesson form exposes only fields matching the selected content language plus neutral fields'
+);
 foreach (['course' => 'Course context fixture', 'teacher' => 'Teacher context fixture'] as $section => $title) {
     if (
         !$fieldModel->save(['id' => 0,'context' => 'com_jlms.' . $section,'title' => $title,'label' => $title,
@@ -142,10 +164,16 @@ foreach (['course' => 'Course context fixture', 'teacher' => 'Teacher context fi
     }
 }
 
+pubDenied(
+    fn() => $authoring->saveLesson($actor, pubScope() + ['id' => 0, 'module_id' => $module, 'title'
+        => 'Wrong-language lesson', 'kind' => 'text', 'required' => '1', 'body' => '<p>Wrong locale</p>',
+        'com_fields' => ['lesson-reference-it' => 'ITALIAN_VALUE']]),
+    'COM_JLMS_INVALID_INPUT'
+);
 $lesson = $authoring->saveLesson($actor, pubScope() + ['id' => 0,'module_id' => $module,'title'
     => 'Published lesson','kind' => 'text','required' => '1',
     'body' => '<p>SECRET_LESSON_BODY</p>','public_preview' => '1','com_fields' => ['lesson-reference'
-        => 'LESSON_FIELD_SNAPSHOT']]);
+        => 'LESSON_FIELD_SNAPSHOT', 'lesson-reference-en' => 'LESSON_FIELD_EN']]);
 pubDenied(fn()=>pubTransition(), 'public preview requires explicit course setting');
 $authoring->saveTeachingRules($actor, pubScope() + ['mode' => 'learning','sequence_mode'
     => 'free','video_threshold' => '90','public_previews' => '1']);
@@ -280,6 +308,11 @@ $lessonSnapshot = json_decode(
 );
 pubExpect(($lessonSnapshot['fields']['lesson-reference']['values'][0]
     ?? '') === 'LESSON_FIELD_SNAPSHOT', 'publication freezes lesson custom field value');
+pubExpect(
+    ($lessonSnapshot['fields']['lesson-reference-en']['language'] ?? '') === 'en-GB'
+    && ($lessonSnapshot['fields']['lesson-reference-en']['values'][0] ?? '') === 'LESSON_FIELD_EN',
+    'publication freezes lesson custom field locale with its value'
+);
 pubExpect(
     (bool)$courseFieldModel->setFieldValue($courseField, $course, 'COURSE_FIELD_CURRENT_VALUE'),
     'course editorial field can change after publishing'
