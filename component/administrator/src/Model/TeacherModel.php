@@ -256,7 +256,7 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             $history = $data;
             $history['id'] = $teacherId;
             $history['com_fields'] =
-                \\Jlms\\Component\\Jlms\\Administrator\\Application\\EditorialFieldHistory::snapshot(
+                \Jlms\Component\Jlms\Administrator\Application\EditorialFieldHistory::snapshot(
                     $db,
                     $this->typeAlias,
                     $teacherId,
