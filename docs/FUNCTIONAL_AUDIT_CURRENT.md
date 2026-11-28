@@ -308,10 +308,11 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/PUBLICATION.md#L27-L27](../docs/PUBLICATION.md#L27-L27)
   - [component/administrator/src/Application/PublicationService.php#L1-L40](../component/administrator/src/Application/PublicationService.php#L1-L40)
   - [tests/joomla-publication.php#L1-L30](../tests/joomla-publication.php#L1-L30)
-- `CORE-16/all_entities` — Ristabilimento dello storico, check-in/out e versioni assegnate in ogni scenario. Le prove ora coprono snapshot e restore dei tag nativi nel modello docente, oltre ai casi già verificati su corso e percorso; restano non attestati storico/check-in-out e versioni assegnate per tutte le entità e combinazioni previste.
-  - [tests/joomla-programme-restore.php#L80-L110](../tests/joomla-programme-restore.php#L80-L110)
-  - [tests/joomla-smoke.php#L1-L30](../tests/joomla-smoke.php#L1-L30)
-  - [component/administrator/src/Model/TeacherModel.php#L20-L29](../component/administrator/src/Model/TeacherModel.php#L20-L29)
+- `CORE-16/all_entities` — Ristabilimento dello storico, check-in/out e versioni assegnate in ogni scenario. Course e teacher ora rileggono dal database i valori com_fields persistiti per lo snapshot Content History anche quando il salvataggio è parziale. La cattura rispetta sia core.edit.value sia il livello di accesso del campo. Restano non attestati il checkout concorrente e il restore completo di relazioni, versioni assegnate e dipendenze per tutte le entità.
+  - [component/administrator/src/Application/EditorialFieldHistory.php#public static function snapshot](../component/administrator/src/Application/EditorialFieldHistory.php)
+  - [component/administrator/src/Model/CourseModel.php#EditorialFieldHistory::snapshot](../component/administrator/src/Model/CourseModel.php)
+  - [component/administrator/src/Model/TeacherModel.php#EditorialFieldHistory::snapshot](../component/administrator/src/Model/TeacherModel.php)
+  - [tests/joomla-editorial.php#L188-L242](../tests/joomla-editorial.php#L188-L242)
   - [tests/joomla-teachers.php#L873-L929](../tests/joomla-teachers.php#L873-L929)
 - `CORE-18/smtp` — Verifica SMTP e personalizzazioni tradotte su tutti gli eventi. La coda e i modelli nativi sono integrati e CI esercita la logica locale; la verifica SMTP, le personalizzazioni tradotte e la consegna per ogni evento richiedono collaudi Joomla/SMTP esplicitamente pendenti.
   - [docs/MAIL_TEMPLATES.md#L13-L13](../docs/MAIL_TEMPLATES.md#L13-L13)

@@ -596,6 +596,13 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $courseId = (int) $this->getState('course.id');
             $history['teacher_ids'] =
                 \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $courseId);
+            $history['com_fields'] =
+                \Jlms\Component\Jlms\Administrator\Application\EditorialFieldHistory::snapshot(
+                    $db,
+                    $this->typeAlias,
+                    $courseId,
+                    $user
+                );
             // Capture persisted relationship state, not only fields submitted by this request.
             $tagQuery = $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
                 ->where('type_alias = ' . $db->quote($this->typeAlias))
