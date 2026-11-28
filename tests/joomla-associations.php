@@ -107,7 +107,8 @@ $helper = $component->getAssociationsExtension();
 // to an anonymous account, even when a content language is public.
 $app->loadIdentity(new \Joomla\CMS\User\User());
 assocExpect(
-    !$helper->allowEdit('course', 1) && !$helper->allowEdit('course.category', 1),
+    !$helper->allowEdit('course', 1) && !$helper->allowEdit('teacher', 1)
+        && !$helper->allowEdit('course.category', 1),
     'anonymous account cannot edit native multilingual associations'
 );
 $app->loadIdentity($actor);
@@ -116,7 +117,8 @@ assocExpect(
     'native association service registered'
 );
 assocExpect(
-    $helper->getItemTypes() === ['course', 'course.category'] && !$helper->getTypeSupport('course')['save2copy'],
+    $helper->getItemTypes() === ['course', 'teacher', 'course.category']
+        && !$helper->getTypeSupport('course')['save2copy'],
     'only implemented native association types advertised'
 );
 $fixturePath = dirname($root) . '/associations-fixture.json';
