@@ -593,9 +593,20 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                     ->copy($user, $programme, 1, true, (int) $copySource->version->id);
             }
             $history = $data;
+            $courseId = (int) $this->getState('course.id');
             $history['teacher_ids'] =
-                \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, (int)
-                $this->getState('course.id'));
+                \\Jlms\\Component\\Jlms\\Administrator\\Application\\TeacherProfiles::selected($db, $courseId);
+            // Capture persisted relationship state, not only fields submitted by this request.
+            $tagQuery = $db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
+                ->where('type_alias = ' . $db->quote($this->typeAlias))
+                ->where('content_item_id = ' . $courseId)->order('tag_id');
+            $history['tags'] = array_map('intval', $db->setQuery($tagQuery)->loadColumn());
+            $history['associations'] = [];
+            foreach ($this->associationMembers($courseId) as $member) {
+                if ((int) $member->id !== $courseId) {
+                    $history['associations'][(string) $member->language] = (int) $member->id;
+                }
+            }
             $history['version_note'] = is_string($inputNote = Factory::getApplication()->getInput()->post
                 ->get('jform', [], 'array')['version_note'] ?? '') ? strip_tags($inputNote) : '';
             $this->persistHistory($history, $this->typeAlias);
