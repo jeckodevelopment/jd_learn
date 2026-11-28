@@ -601,7 +601,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 ->where('type_alias = ' . $db->quote($this->typeAlias))
                 ->where('content_item_id = ' . $courseId)->order('tag_id');
             $history['tags'] = array_map('intval', $db->setQuery($tagQuery)->loadColumn());
-            if (\\Joomla\\CMS\\Language\\Associations::isEnabled()) {
+            if (\Joomla\CMS\Language\Associations::isEnabled()) {
                 $history['associations'] = [];
                 foreach ($this->associationMembers($courseId) as $member) {
                     if ((int) $member->id !== $courseId) {
