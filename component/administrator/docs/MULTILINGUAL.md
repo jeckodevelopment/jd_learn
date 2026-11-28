@@ -1,6 +1,6 @@
 # Associazioni multilingua dei corsi — incremento 0.14
 
-JD Learn implementa `AssociationServiceInterface`/`AssociationServiceTrait` e un `AssociationExtensionHelper` per il tipo `com_jlms.course`. I collegamenti sono salvati dal `AdminModel` nativo nella tabella Joomla `#__associations`, contesto `com_jlms.item`. Nessuna tabella parallela o modifica al core. Il gestore Associazioni multilingua può elencare i corsi; l'editor di destinazione rimane il form MVC del componente, con i suoi vincoli di bozza.
+JD Learn implementa `AssociationServiceInterface`/`AssociationServiceTrait` e un `AssociationExtensionHelper` per corsi, profili docente e categorie del catalogo. I collegamenti usano la tabella Joomla `#__associations` nei contesti nativi `com_jlms.item`, `com_jlms.teacher` e `com_categories.item`. Nessuna tabella parallela o modifica al core. Il gestore Associazioni multilingua può elencare corsi e docenti; i collegamenti pubblici dei docenti vengono filtrati per pubblicazione, lingua, accesso e visibilità della categoria.
 
 ## Configurazione e authoring
 
@@ -19,7 +19,10 @@ Il salvataggio richiede sessione/CSRF del controller nativo, identità corrente 
 
 Una breve transazione serializza i salvataggi editoriali sulla riga asset del componente e blocca i corsi coinvolti; Per un salvataggio delle associazioni il corso deve già esistere e il suo asset ACL deve rimanere identico (ID, parent, titolo e regole). `CourseTable` conserva l’asset nativo senza riscriverlo quando non cambia: evita così il `LOCK TABLES` di `Asset/Nested::store`, che su MySQL/MariaDB causa commit impliciti. Se l’asset deve cambiare, l’operazione delle associazioni viene rifiutata: salvare prima i metadati separatamente. Il salvataggio core del corso e dei collegamenti sul percorso con asset stabile resta nella stessa transazione. La creazione/spostamento degli asset segue invece il lifecycle nativo Joomla e non viene dichiarata una transazione DDL/tree globale. Non vengono acquisiti questi lock durante la lettura pubblica o la fruizione degli studenti. La revisione ottimistica è quella del corso sorgente: tra modifiche valide effettuate da membri diversi vale l'ordine di serializzazione, come per un gruppo condiviso; non esiste un token di revisione separato del gruppo. Nessuna chiamata di rete nella transazione.
 
-## Navigazione pubblica
+## Associazioni e breadcrumb delle schede docente
+
+Le schede docente tradotte si collegano tramite il gestore nativo Associazioni multilingua di Joomla. Il sito mostra il selettore di lingua solo se il profilo sorgente e quello di destinazione sono entrambi visibili nella lingua richiesta; non riutilizza l'Itemid sorgente. Le associazioni usano l'identità `com_jlms.teacher` e non coinvolgono iscrizioni o corsi collegati.
+
 
 Joomla Language Filter e `mod_languages` chiamano l'helper registrato. Per la vista `course` esso restituisce il link alla scheda tradotta, con codice lingua e senza riutilizzare l'Itemid sorgente. Il router nativo seleziona il menu della lingua di destinazione. Ogni lettura verifica visibilità corrente di sorgente e destinazione, pubblicazione, finestre temporali, livello catalogo, categoria e antenati, lingua contenuto pubblicata e relativo accesso. I collegamenti non impiegano la cache statica delle associazioni, per evitare di riusare risultati precedenti dopo modifiche nello stesso processo.
 
