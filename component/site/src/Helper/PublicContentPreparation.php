@@ -11,14 +11,14 @@ use Joomla\Registry\Registry;
 use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
 
 /**
- * Prepare only promotional content already authorised for the current visitor.
- * Never pass lessons, enrollment metadata or other private material to plugins.
+ * Prepare content that is already authorised for public display.
+ * Never pass enrollment metadata or private lesson material to content plugins.
  */
 final class PublicContentPreparation
 {
     public static function html(string $context, int $id, string $html, ?object $source = null): string
     {
-        if (!in_array($context, ['com_jlms.course', 'com_jlms.teacher'], true) || $id < 1) {
+        if (!in_array($context, ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.lesson'], true) || $id < 1) {
             throw new \InvalidArgumentException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
 
