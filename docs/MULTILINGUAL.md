@@ -1,6 +1,6 @@
 # Associazioni multilingua dei corsi
 
-JD Learn implementa `AssociationServiceInterface`/`AssociationServiceTrait` e un `AssociationExtensionHelper` per il tipo `com_jlms.course`. I collegamenti sono salvati dal `AdminModel` nativo nella tabella Joomla `#__associations`, contesto `com_jlms.item`. Nessuna tabella parallela o modifica al core. Il gestore Associazioni multilingua può elencare i corsi; l'editor di destinazione rimane il form MVC del componente. Dal build 0.41.68-dev i selettori includono corsi pubblicati e bozze valide e il gruppo può essere modificato senza riscrivere le versioni didattiche. Il build 0.41.69-dev aggiunge la ricerca locale per titolo o ID. ACL, checkout, lingua, unicità e coerenza dello stato sono sempre verificati; il limite dichiarato è 2000 candidati per lingua. Le modifiche a titolo/categoria restano separate dalle operazioni sul grafo di associazione.
+JD Learn implementa `AssociationServiceInterface`/`AssociationServiceTrait` e un `AssociationExtensionHelper` per corsi, profili docente e categorie del catalogo. I collegamenti usano la tabella Joomla `#__associations` nei contesti nativi `com_jlms.item`, `com_jlms.teacher` e `com_categories.item`. Nessuna tabella parallela o modifica al core. Il gestore Associazioni multilingua può elencare corsi e docenti; i collegamenti pubblici dei docenti vengono filtrati per pubblicazione, lingua, accesso e visibilità della categoria. Dal build 0.41.68-dev i selettori includono corsi pubblicati e bozze valide e il gruppo può essere modificato senza riscrivere le versioni didattiche. Il build 0.41.69-dev aggiunge la ricerca locale per titolo o ID. ACL, checkout, lingua, unicità e coerenza dello stato sono sempre verificati; il limite dichiarato è 2000 candidati per lingua. Le modifiche a titolo/categoria restano separate dalle operazioni sul grafo di associazione.
 
 ## Configurazione e authoring
 
@@ -27,7 +27,10 @@ Se manca una traduzione visibile il componente non restituisce quel collegamento
 
 Le viste `classroom`, `quiz` e gli altri contesti non espongono associazioni a iscrizioni o tentativi. Ciascun corso tradotto mantiene programma, materiali, iscrizioni, progressi e risultati indipendenti. Il cambio lingua non attribuisce gruppi, non concede accesso al contenuto e non trasferisce completamenti.
 
-## Breadcrumb delle schede docente
+## Associazioni e breadcrumb delle schede docente
+
+Le schede docente tradotte si collegano tramite il gestore nativo Associazioni multilingua di Joomla. Il sito mostra il selettore di lingua solo se il profilo sorgente e quello di destinazione sono entrambi visibili nella lingua richiesta; non riutilizza l'Itemid sorgente. Le associazioni usano l'identità `com_jlms.teacher` e non coinvolgono iscrizioni o corsi collegati.
+
 
 La scheda pubblica del docente completa il breadcrumb Joomla quando viene raggiunta da un elenco o da una scheda corso. Se la voce menu attiva punta già a quel profilo, la vista non duplica il titolo. L'helper confronta anche l'ultimo elemento già presente nel breadcrumb. Questo incremento copre il dettaglio docente; restano da verificare le combinazioni complete di menu, alias, lingua e route.
 
@@ -35,4 +38,4 @@ La scheda pubblica del docente completa il breadcrumb Joomla quando viene raggiu
 
 La CI predispone corsi e lingue con le API native e installa il pacchetto italiano ufficiale 6.0.0v1 (pagina di provenienza: https://downloads.joomla.org/cms/joomla6-italian/6-0-0-1). Verifica associazioni tramite core, form, input manomessi, account bloccato, ACL target, checkout, gruppi separati, concorrenza fra richieste native, rimozione, pubblicazione, visibilità corrente, modulo lingua, gestore Associazioni, navigazione SEF attiva/disattiva e conservazione al reinstall. Gli esiti effettivi sono quelli delle Actions. Il collaudo manuale del filtro per titolo/ID è documentato in [ASSOCIATION_SEARCH_TEST.md](ASSOCIATION_SEARCH_TEST.md).
 
-Le associazioni delle categorie e le viste dedicate sono aggiunte nella 0.15: vedere CATEGORIES.md. Restano fuori da questo sottoinsieme l'editing delle associazioni per altri oggetti editoriali, il routing completo con alias/breadcrumbs, override lingua end-to-end e collaudo browser/accessibilità. CORE-07 e CORE-13 rimangono parziali. Nessuna equivalenza didattica automatica, benchmark di carico o certificazione della patch Joomla corrente.
+Le associazioni delle categorie e le viste dedicate sono aggiunte nella 0.15: vedere CATEGORIES.md. Restano fuori da questo sottoinsieme l'editing delle associazioni per altri oggetti editoriali, il routing completo con alias/breadcrumbs, override lingua end-to-end e collaudo browser/accessibilità. La matrice completa di menu, URL SEF e breadcrumb docente richiede ancora verifica. CORE-07 e CORE-13 rimangono parziali. Nessuna equivalenza didattica automatica, benchmark di carico o certificazione della patch Joomla corrente.
