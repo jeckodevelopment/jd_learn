@@ -3723,7 +3723,7 @@
           "references": [
             "docs/AUTHORING.md#L38-L40",
             "docs/PUBLICATION.md#L94-L96",
-            "component/site/src/Helper/PublicContentPreparation.php#L17-L52",
+            "component/site/src/Helper/PublicContentPreparation.php#L19-L66",
             "component/site/src/Model/LessonpreviewModel.php#L13-L34",
             "component/administrator/src/Application/CurriculumService.php#L1-L35",
             "tests/joomla-curriculum.php#L1-L30"
