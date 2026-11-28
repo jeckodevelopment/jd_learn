@@ -18,7 +18,8 @@ final class AssociationHelper
         $view ??= $app->getInput()->getCmd('view', '');
         $id = $id ?: $app->getInput()->getInt($view === 'categories' ? 'parent_id' : 'id', 0);
         $categoryView = in_array($view, ['category', 'categories'], true);
-        if (($view !== 'course' && !$categoryView) || $id < 1 || !Associations::isEnabled()) {
+        $teacherView = $view === 'teacher';
+        if (($view !== 'course' && !$categoryView && !$teacherView) || $id < 1 || !Associations::isEnabled()) {
             return [];
         }
         $actor = $app->getIdentity();
@@ -28,23 +29,36 @@ final class AssociationHelper
         $actor->clearAccessRights();
         $levels = $actor->block ? [0] : array_map('intval', $actor->getAuthorisedViewLevels());
         $catalog = $app->bootComponent('com_jlms')->getCatalogService();
-        try {
-            $source = $categoryView
-                ? $catalog->category($actor, $app->getLanguage()->getTag(), $id)
-                : $catalog->course($actor, $app->getLanguage()->getTag(), $id);
-        } catch (\RuntimeException $error) {
-            if ($error->getCode() !== 404) {
-                throw $error;
+        $language = $app->getLanguage()->getTag();
+        if ($teacherView) {
+            $source = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::available(
+                Factory::getContainer()->get(DatabaseInterface::class),
+                $actor,
+                $language,
+                [$id]
+            )[$id] ?? null;
+            if (!$source) {
+                return [];
             }
-            return [];
+        } else {
+            try {
+                $source = $categoryView
+                    ? $catalog->category($actor, $language, $id)
+                    : $catalog->course($actor, $language, $id);
+            } catch (\RuntimeException $error) {
+                if ($error->getCode() !== 404) {
+                    throw $error;
+                }
+                return [];
+            }
         }
         if ($source->language === '*') {
             return [];
         }
         // Do not use the core static association cache here: changes/revocations must be current.
         $db = Factory::getContainer()->get(DatabaseInterface::class);
-        $context = $categoryView ? 'com_categories.item' : 'com_jlms.item';
-        $table = $categoryView ? '#__categories' : '#__jlms_courses';
+        $context = $categoryView ? 'com_categories.item' : ($teacherView ? 'com_jlms.teacher' : 'com_jlms.item');
+        $table = $categoryView ? '#__categories' : ($teacherView ? '#__jlms_teachers' : '#__jlms_courses');
         $query = $db->createQuery()->select('c.id, c.language')->from('#__associations AS a')
             ->innerJoin('#__associations AS b ON b.' . $db->quoteName('key') . ' = a.' . $db->quoteName('key')
                 . ' AND b.context = a.context')
@@ -69,17 +83,29 @@ final class AssociationHelper
             if ($tag === '*' || $tag === $source->language || !isset($languages[$tag])) {
                 continue;
             }
-            try {
-                if ($categoryView) {
-                    $catalog->category($actor, $tag, (int) $item->id);
-                } else {
-                    $catalog->course($actor, $tag, (int) $item->id);
+            if ($teacherView) {
+                $visible = \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::available(
+                    $db,
+                    $actor,
+                    $tag,
+                    [(int) $item->id]
+                );
+                if (!isset($visible[$item->id])) {
+                    continue;
                 }
-            } catch (\RuntimeException $error) {
-                if ($error->getCode() !== 404) {
-                    throw $error;
+            } else {
+                try {
+                    if ($categoryView) {
+                        $catalog->category($actor, $tag, (int) $item->id);
+                    } else {
+                        $catalog->course($actor, $tag, (int) $item->id);
+                    }
+                } catch (\RuntimeException $error) {
+                    if ($error->getCode() !== 404) {
+                        throw $error;
+                    }
+                    continue;
                 }
-                continue;
             }
             // Never carry a source Itemid, enrollment, lesson or attempt into another language.
             $links[$tag] = 'index.php?option=com_jlms&view=' . $view
