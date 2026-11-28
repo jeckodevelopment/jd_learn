@@ -21,6 +21,7 @@ final class PublicContentPreparation
         'com_jlms.course',
         'com_jlms.teacher',
         'com_jlms.category',
+        'com_jlms.pathway',
         'com_jlms.lesson',
     ];
 
