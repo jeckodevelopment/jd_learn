@@ -293,7 +293,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/TeacherModel.php#L21-L34](../component/administrator/src/Model/TeacherModel.php#L21-L34)
   - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
 - `CORE-11/content_events` — Eventi content plugin e filtri in tutti i contesti authoring. Gli eventi coprono descrizioni pubbliche di corso/docente e anteprima pubblica autorizzata delle lezioni testuali, con filtraggio HTML prima e dopo il plugin; restano non attestati tutti gli altri contesti e flussi authoring richiesti.
-  - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
+  - [docs/AUTHORING.md#L38-L40](../docs/AUTHORING.md#L38-L40)
+  - [docs/PUBLICATION.md#L94-L96](../docs/PUBLICATION.md#L94-L96)
+  - [component/site/src/Helper/PublicContentPreparation.php#L17-L52](../component/site/src/Helper/PublicContentPreparation.php#L17-L52)
+  - [component/site/src/Model/LessonpreviewModel.php#L13-L34](../component/site/src/Model/LessonpreviewModel.php#L13-L34)
   - [component/administrator/src/Application/CurriculumService.php#L1-L35](../component/administrator/src/Application/CurriculumService.php#L1-L35)
   - [tests/joomla-curriculum.php#L1-L30](../tests/joomla-curriculum.php#L1-L30)
 - `CORE-12/media_providers` — Provider media e separazione risorse protette in tutti i contesti. Sono implementati provider media e presentazione protetta in alcuni flussi; le guide documentano ancora prerequisiti e prove reali dei provider, quindi non è dimostrata la separazione delle risorse protette in tutti i contesti.
