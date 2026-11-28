@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jlms\Component\Jlms\Site\View\Teacher;
 
+use Jlms\Component\Jlms\Site\Helper\PublicBreadcrumbHelper;
+
 final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
 {
     public object $profile;
@@ -30,6 +32,7 @@ final class HtmlView extends \Joomla\CMS\MVC\View\HtmlView
         $this->items = $this->get('Items');
         $this->pagination = $this->get('Pagination');
         $this->getDocument()->setTitle($this->profile->title);
+        PublicBreadcrumbHelper::addDetail('teacher', (int) $this->profile->id, (string) $this->profile->title);
         $this->getDocument()->getWebAssetManager()->useStyle('com_jlms.site');
         return parent::display($tpl);
     }
