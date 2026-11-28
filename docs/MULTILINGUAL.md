@@ -27,6 +27,10 @@ Se manca una traduzione visibile il componente non restituisce quel collegamento
 
 Le viste `classroom`, `quiz` e gli altri contesti non espongono associazioni a iscrizioni o tentativi. Ciascun corso tradotto mantiene programma, materiali, iscrizioni, progressi e risultati indipendenti. Il cambio lingua non attribuisce gruppi, non concede accesso al contenuto e non trasferisce completamenti.
 
+## Breadcrumb delle schede docente
+
+La scheda pubblica del docente completa il breadcrumb Joomla quando viene raggiunta da un elenco o da una scheda corso. Se la voce menu attiva punta già a quel profilo, la vista non duplica il titolo. L'helper confronta anche l'ultimo elemento già presente nel breadcrumb. Questo incremento copre il dettaglio docente; restano da verificare le combinazioni complete di menu, alias, lingua e route.
+
 ## Verifiche e perimetro residuo
 
 La CI predispone corsi e lingue con le API native e installa il pacchetto italiano ufficiale 6.0.0v1 (pagina di provenienza: https://downloads.joomla.org/cms/joomla6-italian/6-0-0-1). Verifica associazioni tramite core, form, input manomessi, account bloccato, ACL target, checkout, gruppi separati, concorrenza fra richieste native, rimozione, pubblicazione, visibilità corrente, modulo lingua, gestore Associazioni, navigazione SEF attiva/disattiva e conservazione al reinstall. Gli esiti effettivi sono quelli delle Actions. Il collaudo manuale del filtro per titolo/ID è documentato in [ASSOCIATION_SEARCH_TEST.md](ASSOCIATION_SEARCH_TEST.md).
