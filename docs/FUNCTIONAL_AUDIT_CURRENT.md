@@ -313,6 +313,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [tests/associations-http.py#L1-L30](../tests/associations-http.py#L1-L30)
   - [component/administrator/src/Helper/AssociationsHelper.php#'com_jlms.teacher'](../component/administrator/src/Helper/AssociationsHelper.php)
   - [component/site/src/Helper/AssociationHelper.php#TeacherProfiles::available](../component/site/src/Helper/AssociationHelper.php)
+  - [tests/joomla-associations.php#only implemented native association types advertised](../tests/joomla-associations.php)
 - `CORE-15/native_workflow` — Transizioni e permessi per lezioni e tutte le entità editoriali. Il workflow nativo del corso applica transizioni con test Joomla; la richiesta copre anche lezioni e tutte le entità editoriali e relative autorizzazioni, una matrice più ampia non provata integralmente.
   - [docs/PUBLICATION.md#L27-L27](../docs/PUBLICATION.md#L27-L27)
   - [component/administrator/src/Application/PublicationService.php#L1-L40](../component/administrator/src/Application/PublicationService.php#L1-L40)
