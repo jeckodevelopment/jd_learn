@@ -27,8 +27,9 @@ final class TeacherauthorsField extends \Joomla\CMS\Form\Field\ListField
             ->innerJoin('#__jlms_teachers AS t ON t.created_by = u.id')
             ->where('t.created_by > 0');
         if (!$actor->authorise('jlms.teachers.manage', 'com_jlms')) {
-            $query->where('(t.created_by = :actor OR t.user_id = :actor)')
-                ->bind(':actor', (int) $actor->id, \Joomla\Database\ParameterType::INTEGER);
+            $query->where('(t.created_by = :created_by OR t.user_id = :linked_user)')
+                ->bind(':created_by', (int) $actor->id, \Joomla\Database\ParameterType::INTEGER)
+                ->bind(':linked_user', (int) $actor->id, \Joomla\Database\ParameterType::INTEGER);
         }
         $query->order('u.name, u.id');
 
