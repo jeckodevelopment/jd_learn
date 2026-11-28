@@ -109,3 +109,7 @@ Sidebar definitiva: **Dashboard, Corsi, Percorsi formativi, Docenti, Banca doman
 Scelta UX **A**: le viste operative interne mantengono il focus su Corsi / Percorsi formativi / Docenti / Banca domande. Per le viste secondarie di `com_jlms` (Coda email, Variabili modelli email, Dipendenze categorie, Attestati) la selezione del solo nodo principale Joomla mantiene JD Learn come contesto senza evidenziare un'area operativa. I collegamenti ad altri componenti Joomla (`com_categories`, `com_fields`, `com_plugins`, `com_mails`) conservano la navigazione nativa del componente ospite, non forzata da JD Learn. Niente JS per manipolare il DOM del menu e niente Pathway amministrativo.
 
 Issue #394: `icon-folder-tree` non rende l'icona in Atum; sostituita con la classe Joomla già utilizzata `icon-folder`. Verificare visivamente su Joomla di prova, con menu in IT/EN, ACL limitati e upgrade; CI verde non è accettazione manuale.
+
+## CORE-20 — lista Docenti: filtro autore e ordinamento corsi assegnati
+
+La lista Docenti offre ora un filtro Search Tools per autore del profilo e un ordinamento crescente/decrescente per numero di corsi associati. Le opzioni autore rispettano l’ambito ACL dell’operatore; IT/EN sono localizzate. Il requisito generale resta parziale: toolbar, filtri, batch, errori e recupero input delle altre viste backend richiedono ancora audit. Il collaudo Joomla è registrato separatamente nel [testbook](QA_TESTBOOK.md).
