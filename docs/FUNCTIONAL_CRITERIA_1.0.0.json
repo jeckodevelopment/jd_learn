@@ -3712,13 +3712,19 @@
         "status": "unverifiable",
         "evidence": [
           "docs/AUTHORING.md",
+          "docs/PUBLICATION.md",
+          "component/site/src/Helper/PublicContentPreparation.php",
+          "component/site/src/Model/LessonpreviewModel.php",
           "component/administrator/src/Application/CurriculumService.php",
           "tests/joomla-curriculum.php"
         ],
         "review": {
-          "reason": "Esistono contratti di authoring e servizi per il programma didattico, ma l'evidenza non dimostra eventi e filtri del Content Plugin Joomla per tutti i contesti e flussi di authoring richiesti.",
+          "reason": "Gli eventi Joomla sono applicati alle descrizioni pubbliche di corso e docente e, con questo incremento, al testo delle lezioni esplicitamente abilitate per l'anteprima pubblica dopo il controllo di autorizzazione e con rifiltraggio HTML. Restano non attestati tutti gli altri contesti e flussi di authoring richiesti da CORE-11.",
           "references": [
-            "docs/AUTHORING.md#L1-L31",
+            "docs/AUTHORING.md#L38-L40",
+            "docs/PUBLICATION.md#L94-L96",
+            "component/site/src/Helper/PublicContentPreparation.php#L19-L66",
+            "component/site/src/Model/LessonpreviewModel.php#L13-L34",
             "component/administrator/src/Application/CurriculumService.php#L1-L35",
             "tests/joomla-curriculum.php#L1-L30"
           ]

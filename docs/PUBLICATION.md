@@ -90,3 +90,7 @@ La pubblicazione verifica che la soglia sia un intero valido in centesimi di per
 ## Ricerca testuale del catalogo (0.64.1-dev)
 
 Il filtro pubblico cerca in titolo e descrizione usando il testo inserito come sottostringa letterale: il carattere percentuale (`%`), l'underscore (`_`) e il carattere di escape (`!`) non sono operatori wildcard. La query applica `LIKE` con escape esplicito `!` e parametri bindati, mantenendo la proiezione Joomla per lingua, pubblicazione, categorie e livelli di accesso. Non modifica filtri, ordinamenti o lo stato degli utenti. La verifica manuale con titoli simili è registrata in `docs/QA_TESTBOOK.md`.
+
+## Plugin di contenuto nell’anteprima pubblica
+
+Nell’anteprima pubblica di una lezione testuale, JD Learn esegue `onContentPrepare` soltanto dopo aver verificato visibilità pubblica del corso, versione corrente pubblicata, flag di anteprima della lezione e periodo di disponibilità. Il plugin riceve il testo già filtrato e metadati editoriali minimi; l’output viene filtrato nuovamente. Il dispatch non viene eseguito per contenuti privati dell’aula e non riceve dati di iscrizione. Questo incremento copre il contesto di anteprima pubblica e non attesta ancora tutti i flussi authoring previsti da CORE-11.
