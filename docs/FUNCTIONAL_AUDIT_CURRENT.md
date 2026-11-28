@@ -325,10 +325,18 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [plugins/task/jlms/src/Extension/Jlms.php#L1-L45](../plugins/task/jlms/src/Extension/Jlms.php#L1-L45)
   - [docs/QUIZ_RUNTIME.md#L48-L58](../docs/QUIZ_RUNTIME.md#L48-L58)
   - [docs/MAIL_SCHEDULER_SETUP.md#L27-L29](../docs/MAIL_SCHEDULER_SETUP.md#L27-L29)
-- `CORE-20/native_completeness` — Ogni toolbar, filtro, batch, errore e ripresa input. Sono presenti viste e test Joomla nativi per corsi, programma e iscrizione manuale; non è stata verificata la completezza di ogni toolbar, filtro, operazione batch, errore e ripristino input nell'intero backend.
+- `CORE-20/native_completeness` — Ogni toolbar, filtro, batch, errore e ripresa input. CORE-20 ha aggiunto Search Tools con filtro autore e ordinamento del numero di corsi assegnati nella lista Docenti, con opzioni autore limitate all’ambito ACL; le liste Corsi e Percorsi e il registro iscritti hanno già filtri e ordinamenti documentati. La copertura di tutte le toolbar, operazioni batch, messaggi d’errore e recupero input nell’intero backend non è ancora attestata.
   - [docs/COURSE_EDITOR.md#L1-L30](../docs/COURSE_EDITOR.md#L1-L30)
   - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
   - [tests/joomla-courses-ui.php#L1-L30](../tests/joomla-courses-ui.php#L1-L30)
+  - [component/administrator/src/Model/TeachersModel.php#L14-L120](../component/administrator/src/Model/TeachersModel.php#L14-L120)
+  - [component/administrator/src/Field/TeacherauthorsField.php#L11-L37](../component/administrator/src/Field/TeacherauthorsField.php#L11-L37)
+  - [component/administrator/tmpl/teachers/default.php#L22-L31](../component/administrator/tmpl/teachers/default.php#L22-L31)
+  - [component/administrator/forms/filter_teachers.xml#L3-L16](../component/administrator/forms/filter_teachers.xml#L3-L16)
+  - [component/administrator/language/it-IT/com_jlms.ini#L630-L632](../component/administrator/language/it-IT/com_jlms.ini#L630-L632)
+  - [component/administrator/language/en-GB/com_jlms.ini#L607-L609](../component/administrator/language/en-GB/com_jlms.ini#L607-L609)
+  - [docs/ADMIN_UX_PLAN.md#L113-L116](../docs/ADMIN_UX_PLAN.md#L113-L116)
+  - [docs/QA_TESTBOOK.md#L15-L17](../docs/QA_TESTBOOK.md#L15-L17)
 - `CORE-22/release_updates` — Update server e rollback di migrazione in hosting variabili. Il feed e la pipeline esistono. La compatibilità del rollback di dati e migrazioni in hosting diversi richiede esecuzioni documentate.
   - [packages/pkg_jlms.xml#<updateservers>](../packages/pkg_jlms.xml)
   - [docs/RELEASE_PROCEDURE.md#Gestione errori e recupero](../docs/RELEASE_PROCEDURE.md)

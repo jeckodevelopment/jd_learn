@@ -11,8 +11,10 @@ use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 
 final class TeachersModel extends ListModel
 {
-    private const FILTERS = ['search', 'published', 'language'];
-    private const ORDERS = ['a.id', 'a.title', 'a.state', 'a.created_by', 'a.language', 'a.modified_at'];
+    private const FILTERS = ['search', 'published', 'language', 'created_by'];
+    private const ORDERS = [
+        'a.id', 'a.title', 'a.state', 'a.created_by', 'a.language', 'a.modified_at', 'course_count',
+    ];
 
     public function __construct($config = [], $factory = null)
     {
@@ -104,6 +106,13 @@ final class TeachersModel extends ListModel
                     $query->where('(a.title LIKE :title OR a.alias LIKE :alias)')->bind(':title', $search)
                         ->bind(':alias', $search);
                 }
+            } elseif ($name === 'created_by') {
+                if (!preg_match('/^[1-9][0-9]{0,9}$/D', $value)) {
+                    $query->where('1=0');
+                    continue;
+                }
+                $authorId = (int) $value;
+                $query->where('a.created_by = :created_by')->bind(':created_by', $authorId, ParameterType::INTEGER);
             } elseif ($name === 'published') {
                 if (!in_array($value, ['-2', '0', '1'], true)) {
                     $query->where('1=0');

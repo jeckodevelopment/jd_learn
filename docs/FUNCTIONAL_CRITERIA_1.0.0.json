@@ -3988,14 +3988,30 @@
         "evidence": [
           "docs/COURSE_EDITOR.md",
           "docs/AUTHORING.md",
-          "tests/joomla-courses-ui.php"
+          "tests/joomla-courses-ui.php",
+          "component/administrator/src/Model/TeachersModel.php",
+          "component/administrator/src/Field/TeacherauthorsField.php",
+          "component/administrator/tmpl/teachers/default.php",
+          "component/administrator/forms/filter_teachers.xml",
+          "component/administrator/language/it-IT/com_jlms.ini",
+          "component/administrator/language/en-GB/com_jlms.ini",
+          "docs/ADMIN_UX_PLAN.md",
+          "docs/QA_TESTBOOK.md"
         ],
         "review": {
-          "reason": "Sono presenti viste e test Joomla nativi per corsi, programma e iscrizione manuale; non è stata verificata la completezza di ogni toolbar, filtro, operazione batch, errore e ripristino input nell'intero backend.",
+          "reason": "CORE-20 ha aggiunto Search Tools con filtro autore e ordinamento del numero di corsi assegnati nella lista Docenti, con opzioni autore limitate all’ambito ACL; le liste Corsi e Percorsi e il registro iscritti hanno già filtri e ordinamenti documentati. La copertura di tutte le toolbar, operazioni batch, messaggi d’errore e recupero input nell’intero backend non è ancora attestata.",
           "references": [
             "docs/COURSE_EDITOR.md#L1-L30",
             "docs/AUTHORING.md#L1-L31",
-            "tests/joomla-courses-ui.php#L1-L30"
+            "tests/joomla-courses-ui.php#L1-L30",
+            "component/administrator/src/Model/TeachersModel.php#L14-L120",
+            "component/administrator/src/Field/TeacherauthorsField.php#L11-L37",
+            "component/administrator/tmpl/teachers/default.php#L22-L31",
+            "component/administrator/forms/filter_teachers.xml#L3-L16",
+            "component/administrator/language/it-IT/com_jlms.ini#L630-L632",
+            "component/administrator/language/en-GB/com_jlms.ini#L607-L609",
+            "docs/ADMIN_UX_PLAN.md#L113-L116",
+            "docs/QA_TESTBOOK.md#L15-L17"
           ]
         }
       }

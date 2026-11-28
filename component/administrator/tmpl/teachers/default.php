@@ -27,7 +27,8 @@ $direction = $this->escape($this->state->get('list.direction', 'ASC'));
           HTMLHelper::_('searchtools.sort', 'JAUTHOR', 'a.created_by', $direction, $order) ?></th>
      <th scope="col" class="d-none d-md-table-cell"><?=
           HTMLHelper::_('searchtools.sort', 'JGRID_HEADING_LANGUAGE', 'a.language', $direction, $order) ?></th>
-     <th scope="col" class="text-center"><?= Text::_('COM_JLMS_TEACHER_COURSE_COUNT') ?></th>
+     <th scope="col" class="text-center"><?=
+          HTMLHelper::_('searchtools.sort', 'COM_JLMS_TEACHER_COURSE_COUNT', 'course_count', $direction, $order) ?></th>
      <th scope="col" class="d-none d-lg-table-cell"><?=
           HTMLHelper::_('searchtools.sort', 'COM_JLMS_COURSES_MODIFIED', 'a.modified_at', $direction, $order) ?></th>
      <th scope="col" class="d-none d-lg-table-cell"><?=

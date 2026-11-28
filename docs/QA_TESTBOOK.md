@@ -12,6 +12,12 @@
 
 ---
 
+## CORE-20 — filtri e ordinamento della lista Docenti (PR candidata)
+
+**Collaudo manuale Joomla: In attesa.** In **JD Learn → Docenti**, filtrare per autore del profilo e verificare che compaiano solo i profili creati dall’utente selezionato. Ordinare il numero di corsi assegnati in entrambi i versi e verificare che i conteggi corrispondano ai corsi visibili all’operatore. Combinare autore, stato, lingua e ricerca; provare reset, paginazione e lista vuota. Con un ruolo che non gestisce tutti i docenti, verificare che le opzioni autore non rivelino profili fuori dal proprio ambito. Registrare versione Joomla, ruolo e risultati osservati.
+
+---
+
 ## CORE-20 — ricerca e filtri dell’elenco Percorsi (PR #1088)
 
 **Collaudo manuale Joomla: In attesa.** Nell’amministrazione aprire JD Learn → Percorsi. Verificare ricerca per titolo, alias e ID; filtri categoria, livello di accesso, lingua e cestino; ordinamento per titolo, categoria, stato, accesso, lingua e revisione; paginazione e limite righe. Provare combinazioni di filtri, pulizia della ricerca, risultati vuoti e ritorno da una modifica o da una transizione toolbar. Con un operatore autorizzato verificare che le azioni toolbar esistenti continuino a operare sui soli elementi selezionati. Registrare versione Joomla, ruolo, lingua, combinazione e risultato osservato.
