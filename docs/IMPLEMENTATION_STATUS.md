@@ -1,3 +1,5 @@
+**CORE-11 — descrizioni dei percorsi formativi (candidate PR):** aggiunto il contesto pubblico `com_jlms.pathway` a `onContentPrepare`. Il dispatcher è raggiunto soltanto dopo l’autorizzazione corrente del dettaglio del percorso; l’HTML viene filtrato prima e dopo i plugin e i metadati passati restano editoriali. CORE-11 rimane parziale: altri contesti authoring e il collaudo Joomla reale sono ancora aperti. Avanzamento globale invariato finché CI e audit non confermano le evidenze.
+
 **Schema attuale: 47 tabelle / 66 FK; pacchetto installabile di base 0.64.22-dev.**
 
 **JD Learn 0.64.23-dev — CORE-04/teacher_edit (PR #1101 candidata):** il test Joomla disposable copre l’editor delegato con `core.edit.own` senza `core.edit`, respinge modifiche forzate ai campi amministrativi e blocca la modifica del profilo altrui senza alterare i dati. CI standard #46078241684 superata 4/4. La matrice funzionale e il dashboard registrano 515 implementati, 9 lacune accertate e 233 non verificabili; avanzamento minimo 65,94%. Accettazione manuale sul sito Joomla ancora pendente.

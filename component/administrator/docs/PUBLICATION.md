@@ -1,6 +1,6 @@
 # Pubblicazione e catalogo
 
-La prima pubblicazione è disponibile ed è stata confermata dall’utente sul percorso provato. Questa guida descrive l’uso corrente; per funzioni e collaudi mancanti vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
+La prima pubblicazione è disponibile ed è stata confermata dall’utente sul percorso provato. Le descrizioni dei percorsi visibili passano da `onContentPrepare` dopo i controlli del servizio e vengono filtrate prima e dopo l’evento. Questa guida descrive l’uso corrente; per funzioni e collaudi mancanti vedere [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 ## Procedura amministrativa attuale
 

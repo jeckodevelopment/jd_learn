@@ -1,6 +1,6 @@
 # Prossimi passi verso JD Learn 1.0.0
 
-**Riconciliazione aggiornata sulla CI della PR #1101 (27/11/2026; merge documentale #1100 incluso).** Il registro copre 214 requisiti e 757 criteri: **515 implementati**, 9 lacune accertate, 233 non verificabili e 0 non esaminati; avanzamento minimo documentato **65,94%**. CORE-04/teacher_edit è verificato in CI standard su PHP 8.3/MySQL 8.4 e PHP 8.4/MariaDB 10.6; il collaudo manuale del profilo delegato resta in attesa. Accettazione manuale Joomla invariata (4,67%, zero requisiti completi). CI PR [#1101](https://github.com/jeckodevelopment/jd_learn/pull/1101/checks) 4/4; report corrente: [RELEASE_DASHBOARD.md](RELEASE_DASHBOARD.md).
+**Main aggiornato al 28/11/2026:** le tranche CORE recenti sono integrate fino alla PR #1108; nessuna PR è aperta da recuperare. Il registro mantiene 214 requisiti e 757 criteri, con sviluppo minimo 65,94% (515 implementati, 9 lacune accertate, 233 non verificabili); l’accettazione manuale Joomla è 4,67% e resta separata. In questa candidata prosegue CORE-11 con il contesto `com_jlms.pathway`; il requisito non viene promosso sulla base della sola estensione e attende la CI.
 
 Prossime priorità: i criteri CORE ancora non verificabili che richiedono prove di sviluppo/CI; i collaudi manuali restano tracciati separatamente.
 

@@ -1,3 +1,7 @@
+## CORE-11 — descrizione pubblica dei percorsi formativi (CORE-11-pathway-content)
+
+**Collaudo manuale Joomla: In attesa.** Abilitare un content plugin di prova che formatti un marcatore sicuro e aggiunga markup attivo; aprire un percorso formativo pubblicato e accessibile e verificare che la formattazione sicura compaia, mentre script, iframe e handler restino rimossi. Ripetere con lingua/accesso/categoria non visibili e verificare che il percorso non sia esposto. Provare inoltre la descrizione SEO e l'accesso autenticato.
+
 ## CORE-13 — breadcrumb della scheda docente (PR candidata)
 
 **Collaudo manuale Joomla: In attesa.** Aprire un profilo docente da una scheda corso o da un elenco: il breadcrumb deve terminare con il titolo del docente. Aprire poi lo stesso profilo tramite una voce menu diretta configurata con il docente selezionato: il titolo non deve comparire due volte. Ripetere con il menu in italiano e inglese e con URL SEF attivi, quindi verificare che il profilo resti accessibile anche via URL diretto. Annotare voce menu, lingua, URL e breadcrumb risultante.
