@@ -255,6 +255,13 @@ class TeacherModel extends AdminModel implements \Joomla\CMS\Versioning\Versiona
             }
             $history = $data;
             $history['id'] = $teacherId;
+            $history['com_fields'] =
+                \\Jlms\\Component\\Jlms\\Administrator\\Application\\EditorialFieldHistory::snapshot(
+                    $db,
+                    $this->typeAlias,
+                    $teacherId,
+                    $actor
+                );
             $history['tags'] = array_map(
                 'intval',
                 $db->setQuery($db->createQuery()->select('tag_id')->from('#__contentitem_tag_map')
