@@ -7,6 +7,7 @@ namespace Jlms\Component\Jlms\Site\Model;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Model\ItemModel;
 use Joomla\CMS\User\User;
+use Jlms\Component\Jlms\Site\Helper\PublicContentPreparation;
 
 final class LessonpreviewModel extends ItemModel
 {
@@ -25,8 +26,7 @@ final class LessonpreviewModel extends ItemModel
         $course = $service->course($actor, $app->getLanguage()->getTag(), $courseId);
         $lesson = $service->publicLessonPreview($actor, $app->getLanguage()->getTag(), $courseId, $lessonId);
         // This service only returns a currently public, explicitly previewable text lesson.
-        $lesson->body = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
-            'com_jlms.lesson',
+        $lesson->body = PublicContentPreparation::publicLessonPreview(
             (int) $lesson->id,
             (string) $lesson->body,
             $lesson
