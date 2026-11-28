@@ -295,7 +295,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
 - `CORE-11/content_events` — Eventi content plugin e filtri in tutti i contesti authoring. Gli eventi Joomla sono applicati alle descrizioni pubbliche di corso e docente e, con questo incremento, al testo delle lezioni esplicitamente abilitate per l'anteprima pubblica dopo il controllo di autorizzazione e con rifiltraggio HTML. Restano non attestati tutti gli altri contesti e flussi di authoring richiesti da CORE-11.
   - [docs/AUTHORING.md#L38-L40](../docs/AUTHORING.md#L38-L40)
   - [docs/PUBLICATION.md#L94-L96](../docs/PUBLICATION.md#L94-L96)
-  - [component/site/src/Helper/PublicContentPreparation.php#L17-L52](../component/site/src/Helper/PublicContentPreparation.php#L17-L52)
+  - [component/site/src/Helper/PublicContentPreparation.php#L19-L66](../component/site/src/Helper/PublicContentPreparation.php#L19-L66)
   - [component/site/src/Model/LessonpreviewModel.php#L13-L34](../component/site/src/Model/LessonpreviewModel.php#L13-L34)
   - [component/administrator/src/Application/CurriculumService.php#L1-L35](../component/administrator/src/Application/CurriculumService.php#L1-L35)
   - [tests/joomla-curriculum.php#L1-L30](../tests/joomla-curriculum.php#L1-L30)
