@@ -12,7 +12,9 @@ use Jlms\Component\Jlms\Administrator\Application\CourseEditorAccess;
 final class TeachersModel extends ListModel
 {
     private const FILTERS = ['search', 'published', 'language', 'created_by'];
-    private const ORDERS = ['a.id', 'a.title', 'a.state', 'a.created_by', 'a.language', 'a.modified_at', 'course_count'];
+    private const ORDERS = [
+        'a.id', 'a.title', 'a.state', 'a.created_by', 'a.language', 'a.modified_at', 'course_count',
+    ];
 
     public function __construct($config = [], $factory = null)
     {
