@@ -3783,16 +3783,20 @@
           "component/site/src/Helper/PublicBreadcrumbHelper.php",
           "component/administrator/src/Controller/DisplayController.php",
           "tests/categories-http.py",
-          "tests/associations-http.py"
+          "tests/associations-http.py",
+          "component/administrator/src/Helper/AssociationsHelper.php",
+          "component/site/src/Helper/AssociationHelper.php"
         ],
         "review": {
-          "reason": "La vista profilo docente aggiunge il breadcrumb Joomla tramite PublicBreadcrumbHelper, che evita duplicati quando la voce menu attiva punta già al profilo o quando il titolo è l'ultimo elemento presente. Restano non attestati accessi diretti, breadcrumb e associazioni lingua su tutte le route e configurazioni menu.",
+          "reason": "Il gestore Joomla supporta le associazioni native dei profili docente nel contesto com_jlms.teacher; AssociationHelper espone solo traduzioni la cui scheda è disponibile per attore, lingua e categoria. La vista docente completa il breadcrumb senza duplicati. Restano non attestati accessi diretti, breadcrumb e associazioni lingua su tutte le route e configurazioni menu.",
           "references": [
             "component/site/src/View/Teacher/HtmlView.php#PublicBreadcrumbHelper::addDetail",
             "component/site/src/Helper/PublicBreadcrumbHelper.php#public static function addDetail",
             "component/administrator/src/Controller/DisplayController.php#L1-L30",
             "tests/categories-http.py#L1-L30",
-            "tests/associations-http.py#L1-L30"
+            "tests/associations-http.py#L1-L30",
+            "component/administrator/src/Helper/AssociationsHelper.php#'com_jlms.teacher'",
+            "component/site/src/Helper/AssociationHelper.php#TeacherProfiles::available"
           ]
         }
       }
