@@ -305,7 +305,9 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/COURSE_EDITOR.md#L1-L30](../docs/COURSE_EDITOR.md#L1-L30)
   - [docs/VIDEO.md#L1-L23](../docs/VIDEO.md#L1-L23)
   - [component/administrator/src/Application/CoursePresentation.php#L1-L40](../component/administrator/src/Application/CoursePresentation.php#L1-L40)
-- `CORE-13/all_routes` — Route docenti, breadcrumb e accessi diretti con associazioni lingua. Sono presenti rotte di catalogo, categoria e profilo docente con verifiche in test selezionati. Il criterio comprende accessi diretti, breadcrumb e associazioni lingua su tutte le route; questa copertura combinata non è registrata come completata.
+- `CORE-13/all_routes` — Route docenti, breadcrumb e accessi diretti con associazioni lingua. La vista profilo docente completa il breadcrumb Joomla con deduplicazione del menu diretto e dell'ultimo elemento già presente; restano non attestati gli accessi diretti e le associazioni lingua in tutte le route e configurazioni menu.
+  - [component/site/src/View/Teacher/HtmlView.php#PublicBreadcrumbHelper::addDetail](../component/site/src/View/Teacher/HtmlView.php)
+  - [component/site/src/Helper/PublicBreadcrumbHelper.php#public static function addDetail](../component/site/src/Helper/PublicBreadcrumbHelper.php)
   - [component/administrator/src/Controller/DisplayController.php#L1-L30](../component/administrator/src/Controller/DisplayController.php#L1-L30)
   - [tests/categories-http.py#L1-L30](../tests/categories-http.py#L1-L30)
   - [tests/associations-http.py#L1-L30](../tests/associations-http.py#L1-L30)
