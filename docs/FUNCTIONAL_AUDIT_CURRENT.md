@@ -293,10 +293,10 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/administrator/src/Model/TeacherModel.php#L21-L34](../component/administrator/src/Model/TeacherModel.php#L21-L34)
   - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
 - `CORE-11/content_events` — Eventi content plugin e filtri in tutti i contesti authoring. Gli eventi Joomla sono applicati alle descrizioni pubbliche di corso, docente e categoria e al testo delle lezioni esplicitamente abilitate per l'anteprima pubblica, dopo i rispettivi controlli di visibilità e con rifiltraggio HTML. Restano non attestati gli altri contesti e flussi di authoring richiesti da CORE-11.
+  - [component/site/src/View/Category/HtmlView.php#PublicContentPreparation::html](../component/site/src/View/Category/HtmlView.php)
+  - [component/site/tmpl/category/default.php#jlms-category-description](../component/site/tmpl/category/default.php)
   - [docs/AUTHORING.md#L38-L40](../docs/AUTHORING.md#L38-L40)
   - [docs/PUBLICATION.md#L94-L96](../docs/PUBLICATION.md#L94-L96)
-  - [component/site/src/View/Category/HtmlView.php#PublicContentPreparation::html](../component/site/src/View/Category/HtmlView.php#PublicContentPreparation::html)
-  - [component/site/tmpl/category/default.php#jlms-category-description](../component/site/tmpl/category/default.php#jlms-category-description)
   - [component/site/src/Helper/PublicContentPreparation.php#L19-L66](../component/site/src/Helper/PublicContentPreparation.php#L19-L66)
   - [component/site/src/Model/LessonpreviewModel.php#L13-L34](../component/site/src/Model/LessonpreviewModel.php#L13-L34)
   - [component/administrator/src/Application/CurriculumService.php#L1-L35](../component/administrator/src/Application/CurriculumService.php#L1-L35)
