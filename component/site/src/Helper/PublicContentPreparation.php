@@ -16,11 +16,12 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
  */
 final class PublicContentPreparation
 {
-    private const PUBLIC_CONTEXTS = ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.category'];
+    private const PUBLIC_CONTEXTS = ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.category', 'com_jlms.pathway'];
     private const PREPARABLE_CONTEXTS = [
         'com_jlms.course',
         'com_jlms.teacher',
         'com_jlms.category',
+        'com_jlms.pathway',
         'com_jlms.lesson',
     ];
 

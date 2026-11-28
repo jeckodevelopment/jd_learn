@@ -197,6 +197,51 @@ $check(
 $check((bool)$pathModel->save($payload), 'native pathway model saves pathway and course order: ' . $pathModel
     ->getError());
 $pathwayId = (int)$db->setQuery("SELECT id FROM #__jlms_pathways WHERE alias='ci-learning-pathway'")->loadResult();
+$pathwayDetail = $service->detail($app->getIdentity(), 'en-GB', $pathwayId);
+$preparedPathwayEvents = [];
+$app->getDispatcher()->addListener(
+    'onContentPrepare',
+    static function (\Joomla\CMS\Event\Content\ContentPrepareEvent $event) use (&$preparedPathwayEvents): void {
+        if ($event->getContext() !== 'com_jlms.pathway') {
+            return;
+        }
+        $item = $event->getItem();
+        if (!str_contains((string) $item->text, 'CI_PATHWAY_PLUGIN_MARKER')) {
+            return;
+        }
+        $preparedPathwayEvents[] = [
+            (int) $item->id,
+            $event->getContext(),
+            $event->getParams() instanceof \Joomla\Registry\Registry,
+            (int) ($item->catid ?? 0),
+            (string) ($item->language ?? ''),
+        ];
+        $item->text = str_replace(
+            'CI_PATHWAY_PLUGIN_MARKER',
+            '<strong>PREPARED_PATHWAY_MARKER</strong><script>CI_PATHWAY_SCRIPT</script>'
+                . '<iframe src="https://example.invalid"></iframe>',
+            $item->text
+        );
+    }
+);
+$preparedPathwayDescription = \Jlms\Component\Jlms\Site\Helper\PublicContentPreparation::html(
+    'com_jlms.pathway',
+    $pathwayId,
+    '<p>CI_PATHWAY_PLUGIN_MARKER</p>',
+    $pathwayDetail['pathway']
+);
+$check(
+    $preparedPathwayEvents === [[
+        $pathwayId,
+        'com_jlms.pathway',
+        true,
+        $categoryId,
+        '*',
+    ]]
+    && str_contains($preparedPathwayDescription, '<strong>PREPARED_PATHWAY_MARKER</strong>')
+    && !preg_match('~<(?:script|iframe)\\b|\\bonclick\\s*=|javascript:~i', $preparedPathwayDescription),
+    'CORE-11: public pathway descriptions pass through Joomla content plugins and HTML filtering'
+);
 $historyId = (int) $db->setQuery(
     $db->createQuery()->select('version_id')->from('#__history')
         ->where('item_id=' . $db->quote('com_jlms.pathway.' . $pathwayId))
@@ -986,5 +1031,5 @@ file_put_contents(
 );
 file_put_contents($fixture, json_encode(['pathway' => $pathwayId,'course' => $courseId,'hidden_course'
     => $hiddenCourseId,'student' => (int)$operator->id], JSON_THROW_ON_ERROR));
-echo json_encode(['pathway_checks' => 14,'status' => 'passed','pathway_id' => $pathwayId,'student_enrollment'
+echo json_encode(['pathway_checks' => 15,'status' => 'passed','pathway_id' => $pathwayId,'student_enrollment'
     => $student], JSON_THROW_ON_ERROR) . PHP_EOL;
