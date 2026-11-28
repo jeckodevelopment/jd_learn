@@ -27,6 +27,7 @@ final class EditorialFieldHistory
             return [];
         }
 
+        $item = (string) $itemId;
         $query = $db->createQuery()
             ->select(['f.id', 'f.name', 'f.access', 'v.value'])
             ->from('#__fields_values AS v')
@@ -34,7 +35,7 @@ final class EditorialFieldHistory
             ->where('f.context = :context')
             ->where('v.item_id = :item')
             ->bind(':context', $context)
-            ->bind(':item', (string) $itemId);
+            ->bind(':item', $item);
 
         $viewLevels = $actor->getAuthorisedViewLevels();
         $values = [];
