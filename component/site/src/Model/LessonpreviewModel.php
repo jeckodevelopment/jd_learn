@@ -25,7 +25,7 @@ final class LessonpreviewModel extends ItemModel
         $course = $service->course($actor, $app->getLanguage()->getTag(), $courseId);
         $lesson = $service->publicLessonPreview($actor, $app->getLanguage()->getTag(), $courseId, $lessonId);
         // This service only returns a currently public, explicitly previewable text lesson.
-        $lesson->body = \\Jlms\\Component\\Jlms\\Site\\Helper\\PublicContentPreparation::html(
+        $lesson->body = \Jlms\\Component\\Jlms\\Site\\Helper\\PublicContentPreparation::html(
             'com_jlms.lesson',
             (int) $lesson->id,
             (string) $lesson->body,
