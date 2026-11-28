@@ -292,7 +292,7 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [component/site/src/Model/TeacherModel.php#L21-L40](../component/site/src/Model/TeacherModel.php#L21-L40)
   - [component/administrator/src/Model/TeacherModel.php#L21-L34](../component/administrator/src/Model/TeacherModel.php#L21-L34)
   - [docs/TEACHERS.md#L3-L5](../docs/TEACHERS.md#L3-L5)
-- `CORE-11/content_events` — Eventi content plugin e filtri in tutti i contesti authoring. Esistono contratti di authoring e servizi per il programma didattico, ma l'evidenza non dimostra eventi e filtri del Content Plugin Joomla per tutti i contesti e flussi di authoring richiesti.
+- `CORE-11/content_events` — Eventi content plugin e filtri in tutti i contesti authoring. Gli eventi coprono descrizioni pubbliche di corso/docente e anteprima pubblica autorizzata delle lezioni testuali, con filtraggio HTML prima e dopo il plugin; restano non attestati tutti gli altri contesti e flussi authoring richiesti.
   - [docs/AUTHORING.md#L1-L31](../docs/AUTHORING.md#L1-L31)
   - [component/administrator/src/Application/CurriculumService.php#L1-L35](../component/administrator/src/Application/CurriculumService.php#L1-L35)
   - [tests/joomla-curriculum.php#L1-L30](../tests/joomla-curriculum.php#L1-L30)
