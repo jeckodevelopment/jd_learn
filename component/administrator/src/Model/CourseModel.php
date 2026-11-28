@@ -601,11 +601,15 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
                 ->where('type_alias = ' . $db->quote($this->typeAlias))
                 ->where('content_item_id = ' . $courseId)->order('tag_id');
             $history['tags'] = array_map('intval', $db->setQuery($tagQuery)->loadColumn());
-            $history['associations'] = [];
-            foreach ($this->associationMembers($courseId) as $member) {
-                if ((int) $member->id !== $courseId) {
-                    $history['associations'][(string) $member->language] = (int) $member->id;
+            if (\\Joomla\\CMS\\Language\\Associations::isEnabled()) {
+                $history['associations'] = [];
+                foreach ($this->associationMembers($courseId) as $member) {
+                    if ((int) $member->id !== $courseId) {
+                        $history['associations'][(string) $member->language] = (int) $member->id;
+                    }
                 }
+            } else {
+                unset($history['associations']);
             }
             $history['version_note'] = is_string($inputNote = Factory::getApplication()->getInput()->post
                 ->get('jform', [], 'array')['version_note'] ?? '') ? strip_tags($inputNote) : '';
