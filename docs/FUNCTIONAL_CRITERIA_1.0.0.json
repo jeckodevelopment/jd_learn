@@ -3711,6 +3711,8 @@
         "label": "Eventi content plugin e filtri in tutti i contesti authoring",
         "status": "unverifiable",
         "evidence": [
+          "component/site/src/View/Category/HtmlView.php",
+          "component/site/tmpl/category/default.php",
           "docs/AUTHORING.md",
           "docs/PUBLICATION.md",
           "component/site/src/Helper/PublicContentPreparation.php",
@@ -3719,8 +3721,10 @@
           "tests/joomla-curriculum.php"
         ],
         "review": {
-          "reason": "Gli eventi Joomla sono applicati alle descrizioni pubbliche di corso e docente e, con questo incremento, al testo delle lezioni esplicitamente abilitate per l'anteprima pubblica dopo il controllo di autorizzazione e con rifiltraggio HTML. Restano non attestati tutti gli altri contesti e flussi di authoring richiesti da CORE-11.",
+          "reason": "Gli eventi Joomla sono applicati alle descrizioni pubbliche di corso, docente e categoria e al testo delle lezioni esplicitamente abilitate per l'anteprima pubblica, dopo i rispettivi controlli di visibilità e con rifiltraggio HTML. Restano non attestati gli altri contesti e flussi di authoring richiesti da CORE-11.",
           "references": [
+            "component/site/src/View/Category/HtmlView.php#PublicContentPreparation::html",
+            "component/site/tmpl/category/default.php#jlms-category-description",
             "docs/AUTHORING.md#L38-L40",
             "docs/PUBLICATION.md#L94-L96",
             "component/site/src/Helper/PublicContentPreparation.php#L19-L66",
