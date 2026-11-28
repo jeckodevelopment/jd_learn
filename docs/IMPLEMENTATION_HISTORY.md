@@ -1,3 +1,11 @@
+## 28 novembre 2026 — CORE-13: associazioni lingua dei profili docente ([PR #1108 integrata](https://github.com/jeckodevelopment/jd_learn/pull/1108))
+
+Merge squash: `4c62e390bbae51e2268f67754effc2f0d2003f4b`. Il gestore Joomla Associazioni multilingua include il tipo `com_jlms.teacher`; l'helper pubblico restituisce soltanto profili tradotti visibili per lingua, pubblicazione, ACL e categoria. Il contratto sui tipi nativi è stato aggiornato. Guide, registro requisiti e audit funzionale sono allineati.
+
+La CI [#5046](https://github.com/jeckodevelopment/jd_learn/actions/runs/46160943466) è **4/4 verde**: gate leggeri, PHP 8.3/MySQL 8.4, PHP 8.4/MariaDB 10.6 e Chromium. Il gate CSV [#2362](https://github.com/jeckodevelopment/jd_learn/actions/runs/46160924886) è superato. [Pacchetto installabile JD-Learn-0.64.22-dev](https://github.com/jeckodevelopment/jd_learn/actions/runs/46160943466/artifacts/15270206234).
+
+CORE-13 resta **Parziale**: le combinazioni complete di menu, URL SEF, accesso diretto e breadcrumb non sono ancora attestate. Il collaudo manuale Joomla resta separato e in attesa. Sviluppo minimo documentato invariato a **65,94%** (515 implementati, 9 lacune accertate, 233 non verificabili); accettazione manuale **4,67%**.
+
 ## 27 novembre 2026 — CORE-04/record_acl: permessi docente e selezioni miste ([PR #1095 integrata](https://github.com/jeckodevelopment/jd_learn/pull/1095))
 
 La PR è stata integrata con merge `ab4b9adccd3c12e3cf49e6f876b841e25a5c5248`. `TeacherModel::changeStates()` carica i campi proprietario `created_by` e `user_id` e usa `TeacherProfiles::canEdit()` per applicare alle transizioni massive la stessa regola di modifica dell’editor singolo, includendo `core.edit.own` senza `core.edit`; mantiene `core.edit.state`, checkout altrui e transazioni atomiche. La fixture salva e ripristina il grant temporaneo del gestore docenti per non alterare i test successivi.
