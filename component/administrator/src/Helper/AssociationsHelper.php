@@ -9,11 +9,11 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Associations;
 use Jlms\Component\Jlms\Site\Helper\AssociationHelper;
 
-/** Native association contract; course sheets and section-scoped native categories. */
+/** Native association contract for course, teacher, and section-scoped category routes. */
 final class AssociationsHelper extends AssociationExtensionHelper
 {
     protected $extension = 'com_jlms';
-    protected $itemTypes = ['course', 'course.category'];
+    protected $itemTypes = ['course', 'teacher', 'course.category'];
     protected $associationsSupport = true;
 
     public function getAssociationsForItem($id = 0, $view = null)
@@ -28,6 +28,17 @@ final class AssociationsHelper extends AssociationExtensionHelper
                 'com_jlms.course',
                 '#__categories',
                 'com_categories.item',
+                (int) $id,
+                'id',
+                null,
+                null
+            );
+        }
+        if ($typeName === 'teacher') {
+            return Associations::getAssociations(
+                'com_jlms',
+                '#__jlms_teachers',
+                'com_jlms.teacher',
                 (int) $id,
                 'id',
                 null,
@@ -49,6 +60,11 @@ final class AssociationsHelper extends AssociationExtensionHelper
             $table = new \Joomla\CMS\Table\Category(Factory::getContainer()
                 ->get(\Joomla\Database\DatabaseInterface::class));
             return $table->load((int) $id) && $table->extension === 'com_jlms.course' ? $table : null;
+        }
+        if ($typeName === 'teacher') {
+            $table = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()
+                ->createTable('Teacher', 'Administrator');
+            return $table->load((int) $id) ? $table : null;
         }
         $table = Factory::getApplication()->bootComponent('com_jlms')->getMVCFactory()
             ->createTable('Course', 'Administrator');
@@ -72,6 +88,13 @@ final class AssociationsHelper extends AssociationExtensionHelper
                 && ($actor->authorise('core.edit', $asset) || ((int) $item->created_user_id === (int) $actor
                     ->id && $actor->authorise('core.edit.own', $asset)));
         }
+        if ($typeName === 'teacher') {
+            $asset = 'com_jlms.teacher.' . (int) $id;
+            return $item && !$actor->guest && !$actor->block
+                && (!$item->checked_out || (int) $item->checked_out === (int) $actor->id)
+                && ($actor->authorise('core.edit', $asset) || ((int) $item->created_by === (int) $actor->id
+                    && $actor->authorise('core.edit.own', $asset)));
+        }
         $asset = 'com_jlms.course.' . (int) $id;
         return $item && !$actor->guest && !$actor->block && (int) $item->state === 0 && $item
             ->current_version_id === null
@@ -93,6 +116,15 @@ final class AssociationsHelper extends AssociationExtensionHelper
             $support['category'] = $support['save2copy'] = false;
             $tables = ['a' => '#__jlms_courses'];
         }
+        if ($typeName === 'teacher') {
+            $fields['access'] = 'a.access';
+            $fields['created_by'] = 'a.created_by';
+            $fields['ordering'] = 'a.id';
+            $fields['catid'] = '';
+            $support['state'] = $support['acl'] = $support['checkout'] = true;
+            $support['category'] = $support['save2copy'] = false;
+            $tables = ['a' => '#__jlms_teachers'];
+        }
         if ($typeName === 'course.category') {
             $fields['created_user_id'] = 'a.created_user_id';
             $fields['ordering'] = 'a.lft';
@@ -103,6 +135,7 @@ final class AssociationsHelper extends AssociationExtensionHelper
             $tables = ['a' => '#__categories'];
         }
         return ['fields' => $fields, 'support' => $support, 'tables' => $tables, 'joins' => [], 'title'
-            => $typeName === 'course' ? 'course' : ($typeName === 'course.category' ? 'category' : '')];
+            => $typeName === 'course' ? 'course' : ($typeName === 'teacher' ? 'teacher'
+                : ($typeName === 'course.category' ? 'category' : ''))];
     }
 }
