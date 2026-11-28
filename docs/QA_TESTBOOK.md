@@ -1,3 +1,9 @@
+## CORE-13 — breadcrumb della scheda docente (PR candidata)
+
+**Collaudo manuale Joomla: In attesa.** Aprire un profilo docente da una scheda corso o da un elenco: il breadcrumb deve terminare con il titolo del docente. Aprire poi lo stesso profilo tramite una voce menu diretta configurata con il docente selezionato: il titolo non deve comparire due volte. Ripetere con il menu in italiano e inglese e con URL SEF attivi, quindi verificare che il profilo resti accessibile anche via URL diretto. Annotare voce menu, lingua, URL e breadcrumb risultante.
+
+---
+
 ## CORE-11 — plugin di contenuto nella descrizione pubblica delle categorie (PR candidata)
 
 **Collaudo manuale Joomla: In attesa.** Configurare un plugin `content` che aggiunga una marcatura innocua al testo ricevuto. Aprire una categoria pubblica da ospite e verificare che la descrizione venga elaborata una sola volta nel contesto `com_jlms.category`, mantenendo titolo e lingua corretti. Provare input con script, handler inline e iframe: nessun markup attivo deve sopravvivere. Aprire poi una categoria non pubblica come utente autorizzato e verificare che il contenuto resti visibile secondo ACL senza invocare il plugin. Verificare SEO description e layout mobile.
