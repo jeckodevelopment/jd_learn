@@ -31,6 +31,11 @@ Le viste `classroom`, `quiz` e gli altri contesti non espongono associazioni a i
 
 Le schede docente tradotte si collegano tramite il gestore nativo Associazioni multilingua di Joomla. Il sito mostra il selettore di lingua solo se il profilo sorgente e quello di destinazione sono entrambi visibili nella lingua richiesta; non riutilizza l'Itemid sorgente. Le associazioni usano l'identità `com_jlms.teacher` e non coinvolgono iscrizioni o corsi collegati.
 
+### Navigazione pubblica
+
+Joomla Language Filter e `mod_languages` chiamano l'helper registrato anche per i docenti. Le traduzioni non visibili per stato, lingua, ACL o categoria non vengono esposte; il router nativo seleziona il menu della lingua di destinazione. Le associazioni dei corsi e delle categorie sono descritte sotto.
+
+### Breadcrumb del profilo docente
 
 La scheda pubblica del docente completa il breadcrumb Joomla quando viene raggiunta da un elenco o da una scheda corso. Se la voce menu attiva punta già a quel profilo, la vista non duplica il titolo. L'helper confronta anche l'ultimo elemento già presente nel breadcrumb. Questo incremento copre il dettaglio docente; restano da verificare le combinazioni complete di menu, alias, lingua e route.
 
