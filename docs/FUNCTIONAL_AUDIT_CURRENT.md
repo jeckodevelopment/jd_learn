@@ -305,12 +305,14 @@ Il calcolo pesa allo stesso modo ogni requisito. Gli esiti dell’audit sono dis
   - [docs/COURSE_EDITOR.md#L1-L30](../docs/COURSE_EDITOR.md#L1-L30)
   - [docs/VIDEO.md#L1-L23](../docs/VIDEO.md#L1-L23)
   - [component/administrator/src/Application/CoursePresentation.php#L1-L40](../component/administrator/src/Application/CoursePresentation.php#L1-L40)
-- `CORE-13/all_routes` — Route docenti, breadcrumb e accessi diretti con associazioni lingua. Il gestore nativo Joomla registra le associazioni del profilo docente (`com_jlms.teacher`); il selettore pubblico filtra le traduzioni in base a visibilità, lingua e accesso. La vista profilo docente completa il breadcrumb senza duplicati quando la voce menu punta già al profilo. Restano non attestati accessi diretti, breadcrumb e associazioni lingua su tutte le route e configurazioni menu.
+- `CORE-13/all_routes` — Route docenti, breadcrumb e accessi diretti con associazioni lingua. Il gestore Joomla supporta le associazioni native dei profili docente nel contesto com_jlms.teacher; AssociationHelper espone solo traduzioni la cui scheda è disponibile per attore, lingua e categoria. La vista docente completa il breadcrumb senza duplicati. Restano non attestati accessi diretti, breadcrumb e associazioni lingua su tutte le route e configurazioni menu.
   - [component/site/src/View/Teacher/HtmlView.php#PublicBreadcrumbHelper::addDetail](../component/site/src/View/Teacher/HtmlView.php)
   - [component/site/src/Helper/PublicBreadcrumbHelper.php#public static function addDetail](../component/site/src/Helper/PublicBreadcrumbHelper.php)
-  - [component/administrator/src/Controller/DisplayController.php#L1-L30](../component/administrator/src/Controller/DisplayController.php#L1-L30)
-  - [tests/categories-http.py#L1-L30](../tests/categories-http.py#L1-L30)
-  - [tests/associations-http.py#L1-L30](../tests/associations-http.py#L1-L30)
+  - [component/administrator/src/Controller/DisplayController.php#L1-L30](../component/administrator/src/Controller/DisplayController.php)
+  - [tests/categories-http.py#L1-L30](../tests/categories-http.py)
+  - [tests/associations-http.py#L1-L30](../tests/associations-http.py)
+  - [component/administrator/src/Helper/AssociationsHelper.php#'com_jlms.teacher'](../component/administrator/src/Helper/AssociationsHelper.php)
+  - [component/site/src/Helper/AssociationHelper.php#TeacherProfiles::available](../component/site/src/Helper/AssociationHelper.php)
 - `CORE-15/native_workflow` — Transizioni e permessi per lezioni e tutte le entità editoriali. Il workflow nativo del corso applica transizioni con test Joomla; la richiesta copre anche lezioni e tutte le entità editoriali e relative autorizzazioni, una matrice più ampia non provata integralmente.
   - [docs/PUBLICATION.md#L27-L27](../docs/PUBLICATION.md#L27-L27)
   - [component/administrator/src/Application/PublicationService.php#L1-L40](../component/administrator/src/Application/PublicationService.php#L1-L40)
