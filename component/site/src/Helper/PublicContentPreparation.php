@@ -18,7 +18,7 @@ final class PublicContentPreparation
 {
     public static function html(string $context, int $id, string $html, ?object $source = null): string
     {
-        if (!in_array($context, ['com_jlms.course', 'com_jlms.teacher'], true) || $id < 1) {
+        if (!in_array($context, ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.category'], true) || $id < 1) {
             throw new \InvalidArgumentException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
 
@@ -32,7 +32,7 @@ final class PublicContentPreparation
 
     private static function prepare(string $context, int $id, string $html, ?object $source): string
     {
-        if (!in_array($context, ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.lesson'], true) || $id < 1) {
+        if (!in_array($context, ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.category', 'com_jlms.lesson'], true) || $id < 1) {
             throw new \InvalidArgumentException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
 
