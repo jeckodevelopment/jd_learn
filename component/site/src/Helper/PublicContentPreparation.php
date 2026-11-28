@@ -16,13 +16,17 @@ use Jlms\Component\Jlms\Administrator\Application\CoursePresentation;
  */
 final class PublicContentPreparation
 {
+    private const PUBLIC_CONTEXTS = ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.category'];
+    private const PREPARABLE_CONTEXTS = [
+        'com_jlms.course',
+        'com_jlms.teacher',
+        'com_jlms.category',
+        'com_jlms.lesson',
+    ];
+
     public static function html(string $context, int $id, string $html, ?object $source = null): string
     {
-        if (!in_array(
-            $context,
-            ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.category'],
-            true
-        ) || $id < 1) {
+        if (!in_array($context, self::PUBLIC_CONTEXTS, true) || $id < 1) {
             throw new \InvalidArgumentException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
 
@@ -36,7 +40,7 @@ final class PublicContentPreparation
 
     private static function prepare(string $context, int $id, string $html, ?object $source): string
     {
-        if (!in_array($context, ['com_jlms.course', 'com_jlms.teacher', 'com_jlms.category', 'com_jlms.lesson'], true) || $id < 1) {
+        if (!in_array($context, self::PREPARABLE_CONTEXTS, true) || $id < 1) {
             throw new \InvalidArgumentException('COM_JLMS_RESOURCE_NOT_FOUND');
         }
 
