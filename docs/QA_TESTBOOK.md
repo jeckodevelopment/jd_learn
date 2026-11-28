@@ -1,3 +1,9 @@
+## CORE-11 — plugin di contenuto nella descrizione pubblica delle categorie (PR candidata)
+
+**Collaudo manuale Joomla: In attesa.** Configurare un plugin `content` che aggiunga una marcatura innocua al testo ricevuto. Aprire una categoria pubblica da ospite e verificare che la descrizione venga elaborata una sola volta nel contesto `com_jlms.category`, mantenendo titolo e lingua corretti. Provare input con script, handler inline e iframe: nessun markup attivo deve sopravvivere. Aprire poi una categoria non pubblica come utente autorizzato e verificare che il contenuto resti visibile secondo ACL senza invocare il plugin. Verificare SEO description e layout mobile.
+
+---
+
 ## CORE-16 — storico del profilo docente e tag nativi (PR #1091)
 
 **Collaudo manuale Joomla: In attesa.** In un sito di test con cronologia contenuti abilitata, aprire un docente associato a un corso pubblicato. Aggiungere un tag Joomla, salvare e creare una seconda revisione rimuovendo il tag e modificando la biografia. Dal pannello Versioni ripristinare la prima revisione: il titolo/biografia e il tag devono tornare ai valori salvati; la revisione corrente deve avanzare. Verificare che la versione didattica assegnata al corso mantenga contenuto, hash e data originali. Ripetere con cronologia disabilitata e confermare che il salvataggio resti possibile senza voci Versioni. Annotare versione Joomla, ruolo, lingua, corso/versione assegnata e risultato.
@@ -12,7 +18,7 @@
 
 ---
 
-## CORE-20 — filtri e ordinamento della lista Docenti (PR candidata)
+## CORE-20 — filtri e ordinamento della lista Docenti (PR #1105)
 
 **Collaudo manuale Joomla: In attesa.** In **JD Learn → Docenti**, filtrare per autore del profilo e verificare che compaiano solo i profili creati dall’utente selezionato. Ordinare il numero di corsi assegnati in entrambi i versi e verificare che i conteggi corrispondano ai corsi visibili all’operatore. Combinare autore, stato, lingua e ricerca; provare reset, paginazione e lista vuota. Con un ruolo che non gestisce tutti i docenti, verificare che le opzioni autore non rivelino profili fuori dal proprio ambito. Registrare versione Joomla, ruolo e risultati osservati.
 

@@ -12,6 +12,7 @@ use Jlms\Component\Jlms\Site\Helper\CategoryOptions;
 use Jlms\Component\Jlms\Site\Helper\CatalogOptions;
 use Jlms\Component\Jlms\Site\Helper\CatalogPagination;
 use Jlms\Component\Jlms\Site\Helper\PublicMetadataHelper;
+use Jlms\Component\Jlms\Site\Helper\PublicContentPreparation;
 
 final class HtmlView extends BaseHtmlView
 {
@@ -102,6 +103,12 @@ final class HtmlView extends BaseHtmlView
             $guestCategory = null;
         }
         if ($guestCategory) {
+            $this->category->description = PublicContentPreparation::html(
+                'com_jlms.category',
+                (int) $this->category->id,
+                (string) ($this->category->description ?? ''),
+                $this->category
+            );
             PublicMetadataHelper::apply(
                 $this->getDocument(),
                 (string) $this->category->title,

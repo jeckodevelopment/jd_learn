@@ -91,6 +91,8 @@ La pubblicazione verifica che la soglia sia un intero valido in centesimi di per
 
 Il filtro pubblico cerca in titolo e descrizione usando il testo inserito come sottostringa letterale: il carattere percentuale (`%`), l'underscore (`_`) e il carattere di escape (`!`) non sono operatori wildcard. La query applica `LIKE` con escape esplicito `!` e parametri bindati, mantenendo la proiezione Joomla per lingua, pubblicazione, categorie e livelli di accesso. Non modifica filtri, ordinamenti o lo stato degli utenti. La verifica manuale con titoli simili è registrata in `docs/QA_TESTBOOK.md`.
 
-## Plugin di contenuto nell’anteprima pubblica
+## Plugin di contenuto nelle viste pubbliche
 
-Nell’anteprima pubblica di una lezione testuale, JD Learn esegue `onContentPrepare` soltanto dopo aver verificato visibilità pubblica del corso, versione corrente pubblicata, flag di anteprima della lezione e periodo di disponibilità. Il plugin riceve il testo già filtrato e metadati editoriali minimi; l’output viene filtrato nuovamente. Il dispatch non viene eseguito per contenuti privati dell’aula e non riceve dati di iscrizione. Questo incremento copre il contesto di anteprima pubblica e non attesta ancora tutti i flussi authoring previsti da CORE-11.
+Le descrizioni pubbliche di corso, docente e categoria passano da `onContentPrepare` dopo aver verificato che il contenuto sia visibile agli ospiti. Per la categoria il contesto è `com_jlms.category`; sono passati solo ID, titolo, categoria e lingua pubblici. Il testo viene filtrato con l’allowlist JD Learn prima e dopo il plugin.
+
+Nell’anteprima pubblica di una lezione testuale, JD Learn esegue `onContentPrepare` soltanto dopo aver verificato visibilità pubblica del corso, versione corrente pubblicata, flag di anteprima della lezione e periodo di disponibilità. Il plugin riceve il testo già filtrato e metadati editoriali minimi; l’output viene filtrato nuovamente. Il dispatch non viene eseguito per contenuti privati dell’aula e non riceve dati di iscrizione. L’estensione alle categorie copre un ulteriore contesto pubblico, ma non attesta ancora tutti i flussi authoring previsti da CORE-11.
