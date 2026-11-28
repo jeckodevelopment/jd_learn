@@ -597,7 +597,7 @@ final class CourseModel extends AdminModel implements \Joomla\CMS\Versioning\Ver
             $history['teacher_ids'] =
                 \Jlms\Component\Jlms\Administrator\Application\TeacherProfiles::selected($db, $courseId);
             $history['com_fields'] =
-                \\Jlms\\Component\\Jlms\\Administrator\\Application\\EditorialFieldHistory::snapshot(
+                \Jlms\Component\Jlms\Administrator\Application\EditorialFieldHistory::snapshot(
                     $db,
                     $this->typeAlias,
                     $courseId,
