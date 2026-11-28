@@ -3785,7 +3785,8 @@
           "tests/categories-http.py",
           "tests/associations-http.py",
           "component/administrator/src/Helper/AssociationsHelper.php",
-          "component/site/src/Helper/AssociationHelper.php"
+          "component/site/src/Helper/AssociationHelper.php",
+          "tests/joomla-associations.php"
         ],
         "review": {
           "reason": "Il gestore Joomla supporta le associazioni native dei profili docente nel contesto com_jlms.teacher; AssociationHelper espone solo traduzioni la cui scheda è disponibile per attore, lingua e categoria. La vista docente completa il breadcrumb senza duplicati. Restano non attestati accessi diretti, breadcrumb e associazioni lingua su tutte le route e configurazioni menu.",
@@ -3796,7 +3797,8 @@
             "tests/categories-http.py#L1-L30",
             "tests/associations-http.py#L1-L30",
             "component/administrator/src/Helper/AssociationsHelper.php#'com_jlms.teacher'",
-            "component/site/src/Helper/AssociationHelper.php#TeacherProfiles::available"
+            "component/site/src/Helper/AssociationHelper.php#TeacherProfiles::available",
+            "tests/joomla-associations.php#only implemented native association types advertised"
           ]
         }
       }
