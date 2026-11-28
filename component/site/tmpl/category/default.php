@@ -19,8 +19,7 @@ $hasActiveCategoryFilters = $this->search !== ''
 <section id="jlms-category" class="jlms-category" data-category-id="<?= (int) $this->category->id ?>">
  <header id="jlms-category-header">
    <h1 id="jlms-category-title"><?= $this->escape($this->category->title) ?></h1></header>
- <div id="jlms-category-description"><?=
-     nl2br($this->escape(strip_tags((string) $this->category->description))) ?></div>
+ <div id="jlms-category-description"><?= (string) ($this->category->description ?? '') ?></div>
  <?php if ($this->showSubcategories) : ?>
  <section id="jlms-subcategories"><h2><?= Text::_('COM_JLMS_SUBCATEGORIES') ?></h2>
   <ul id="jlms-subcategories-list" class="jlms-category-grid"><?php foreach ($this->children as $child) : ?>
