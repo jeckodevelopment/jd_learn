@@ -23,12 +23,17 @@ Una breve transazione serializza i salvataggi editoriali sulla riga asset del co
 
 Le schede docente tradotte si collegano tramite il gestore nativo Associazioni multilingua di Joomla. Il sito mostra il selettore di lingua solo se il profilo sorgente e quello di destinazione sono entrambi visibili nella lingua richiesta; non riutilizza l'Itemid sorgente. Le associazioni usano l'identità `com_jlms.teacher` e non coinvolgono iscrizioni o corsi collegati.
 
+### Navigazione pubblica
 
 Joomla Language Filter e `mod_languages` chiamano l'helper registrato. Per la vista `course` esso restituisce il link alla scheda tradotta, con codice lingua e senza riutilizzare l'Itemid sorgente. Il router nativo seleziona il menu della lingua di destinazione. Ogni lettura verifica visibilità corrente di sorgente e destinazione, pubblicazione, finestre temporali, livello catalogo, categoria e antenati, lingua contenuto pubblicata e relativo accesso. I collegamenti non impiegano la cache statica delle associazioni, per evitare di riusare risultati precedenti dopo modifiche nello stesso processo.
 
 Se manca una traduzione visibile il componente non restituisce quel collegamento: il modulo e il filtro Joomla applicano il fallback nativo alle associazioni menu o alla home della lingua. Lingue sito non installate, home mancanti e lingue non accessibili sono filtrate dal modulo core. Lo stile e l'override del selettore lingua appartengono a `mod_languages`.
 
 Le viste `classroom`, `quiz` e gli altri contesti non espongono associazioni a iscrizioni o tentativi. Ciascun corso tradotto mantiene programma, materiali, iscrizioni, progressi e risultati indipendenti. Il cambio lingua non attribuisce gruppi, non concede accesso al contenuto e non trasferisce completamenti.
+
+### Breadcrumb del profilo docente
+
+La scheda pubblica del docente completa il breadcrumb Joomla se arriva da un elenco, da un corso o da accesso diretto. Se una voce menu punta già al profilo, il titolo non viene duplicato. Le combinazioni complete di menu, alias, lingua e route restano da verificare.
 
 ## Verifiche e perimetro residuo
 
